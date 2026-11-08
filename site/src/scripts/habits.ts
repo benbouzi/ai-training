@@ -18,15 +18,15 @@ export interface HabitBindOptions {
 export function habitStatusText(entry: HabitEntry | undefined, day: string, lesson?: LessonEntry): string {
 	switch (progress.habitCardState(entry, day, lesson)) {
 		case 'unfinished':
-			return 'Offered once you finish the lesson.';
+			return 'Proposée une fois la leçon terminée.';
 		case 'hidden':
 			return '';
 		case 'waiting':
-			return `Next on ${entry?.next ?? ''}.`;
+			return `Prochaine fois : ${entry?.next ?? ''}.`;
 		case 'due':
-			return 'Due today. Did you do it?';
+			return 'Prévue aujourd’hui. L’avez-vous faite ?';
 		case 'retired':
-			return 'Done with this habit.';
+			return 'Habitude acquise.';
 	}
 }
 

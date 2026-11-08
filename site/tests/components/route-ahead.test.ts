@@ -28,7 +28,7 @@ describe('RouteAhead', () => {
 			props: { items: [{ label: 'Governance', href: '/topics/safety/governance/', external: false, exists: false }] },
 		});
 		expect(html).not.toContain('<a ');
-		expect(html).toContain('Governance <span class="route-where">(not written yet)</span>');
+		expect(html).toContain('Governance <span class="route-where">(pas encore écrite)</span>');
 	});
 	it('renders an external entry as a plain link with rel="noopener" and a visible marker', async () => {
 		const url = 'https://academy.claude.com/courses/ai-capabilities-and-limitations';
@@ -38,7 +38,7 @@ describe('RouteAhead', () => {
 			},
 		});
 		expect(html).toContain(`<a href="${url}" rel="noopener">AI capabilities and limitations (Claude Academy)</a>`);
-		expect(html).toContain('<span class="route-where">(external link)</span>');
+		expect(html).toContain('<span class="route-where">(lien externe)</span>');
 		expect(html).not.toContain('/ai-training/https://');
 	});
 	it('renders nothing for an empty list', async () => {

@@ -27,7 +27,7 @@ describe('TutorBlock', () => {
 	});
 	it('links the "Study with the tutor" guide with the base path, and leaves the install detail to it', async () => {
 		const html = await container.renderToString(TutorBlock, { props: { lessonUrl } });
-		expect(html).toContain('<a href="/ai-training/guides/tutor/">Study with the tutor</a>');
+		expect(html).toContain('<a href="/ai-training/guides/tutor/">Étudier avec le tuteur</a>');
 		expect(html).not.toContain('npx skills add');
 		expect(html).not.toContain('route-card');
 	});

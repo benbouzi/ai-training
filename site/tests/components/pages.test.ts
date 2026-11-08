@@ -275,9 +275,9 @@ describe('TopicReference', () => {
 		expect(html).toContain('data-reference-lesson="safety/agent-risk"');
 		// The Prompt and Response components themselves, so the caption matches the lesson page.
 		expect(html).toContain('<figure class="prompt-block" data-illustrative="true">');
-		expect(html).toContain('Prompt (illustrative, not a recorded transcript)');
+		expect(html).toContain('Prompt (illustration écrite pour la leçon)');
 		expect(html).toContain('<ul><li>Keep every date.</li><li>Add nothing.</li></ul>');
-		expect(html).toContain('<figure class="response-block"><figcaption>Response</figcaption>');
+		expect(html).toContain('<figure class="response-block"><figcaption>Réponse</figcaption>');
 		expect(html).toContain('This lesson has no recap takeaways yet.');
 		// safety/deeper covers nothing, and safety/risk has only a planned lesson.
 		expect(html).not.toContain('data-reference-lesson="safety/deeper"');

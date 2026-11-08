@@ -23,9 +23,9 @@ export function mountTutorBlock(root: ParentNode = document): number {
 		button.addEventListener('click', async () => {
 			try {
 				await navigator.clipboard.writeText(text);
-				button.textContent = 'Copied';
+				button.textContent = 'Copié';
 			} catch {
-				button.textContent = 'Select and copy';
+				button.textContent = 'Sélectionner et copier';
 			}
 			window.setTimeout(() => {
 				button.textContent = label;

@@ -37,8 +37,8 @@ function checkpoint(id: string, attrs: string): string {
 			</div></div>
 			<div class="cp-controls">
 				<button type="button" class="cp-check">Check</button>
-				<button type="button" class="cp-skip">Skip</button>
-				<button type="button" class="cp-giveup" hidden>Give up</button>
+				<button type="button" class="cp-skip">Passer</button>
+				<button type="button" class="cp-giveup" hidden>Voir la réponse</button>
 			</div>
 			<p class="cp-feedback"></p>
 			<div class="cp-after" hidden><a class="cp-lesson-link" href="${HREF}#${id}">In the lesson</a></div>

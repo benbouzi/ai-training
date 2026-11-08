@@ -21,7 +21,7 @@ interface Props {
 const { id, objective, title, hint, concepts, context, broken, model, revision, phase } = Astro.props;
 ---
 
-<CheckpointShell {id} {objective} {title} {hint} {concepts} {context} {revision} {phase} kind="repair" checkLabel="Record grade">
+<CheckpointShell {id} {objective} {title} {hint} {concepts} {context} {revision} {phase} kind="repair" checkLabel="Enregistrer la note">
 	<slot />
 	<Fragment slot="body">
 		<div class="cp-repair">

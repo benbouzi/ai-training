@@ -22,8 +22,8 @@ function checkpoint(id: string, extra = ''): string {
 			<div class="cp-controls">
 				<button type="button" class="cp-check">Check</button>
 				<button type="button" class="cp-hint-btn">Hint</button>
-				<button type="button" class="cp-skip">Skip</button>
-				<button type="button" class="cp-giveup" hidden>Give up</button>
+				<button type="button" class="cp-skip">Passer</button>
+				<button type="button" class="cp-giveup" hidden>Voir la réponse</button>
 			</div>
 			<p class="cp-hint" hidden>A hint.</p>
 			<p class="cp-feedback"></p>
@@ -40,7 +40,7 @@ function page(skills = true): void {
 					? `<aside data-skills-check data-items="a b missing" hidden>
 				<p data-skills-note></p>
 				<button type="button" data-skills-start></button>
-				<button type="button" data-skills-dismiss>Not now</button>
+				<button type="button" data-skills-dismiss>Pas maintenant</button>
 				<div data-skills-items hidden></div>
 			</aside>`
 					: ''
@@ -84,7 +84,7 @@ describe('mountLesson', () => {
 		expect(mountLesson(document)).toBe(true);
 		expect(progress.load().lessons[LESSON]?.state).toBe('read');
 		expect(q<HTMLButtonElement>('[data-finish]').disabled).toBe(true);
-		expect(q('[data-finish-note]').textContent).toBe('Pass or skip 2 more checkpoints to finish this lesson.');
+		expect(q('[data-finish-note]').textContent).toBe('Réussissez ou passez encore 2 questions de contrôle pour terminer cette leçon.');
 		expect(q('[data-route=behind]').hidden).toBe(true);
 		expect(q('[data-route=ahead]').hidden).toBe(true);
 		expect(q('[data-skills-check]').hidden).toBe(true);
@@ -115,7 +115,7 @@ describe('mountLesson', () => {
 		expect(rec.lessons[LESSON]?.state).toBe('finished');
 		expect(Object.keys(rec.reviews)).toEqual([`${LESSON}#a`]);
 		expect(Object.keys(rec.habits)).toEqual([`${LESSON}#h`]);
-		expect(q('[data-finish]').textContent).toMatch(/^Finished ✓/);
+		expect(q('[data-finish]').textContent).toMatch(/^Terminée ✓/);
 		expect(q<HTMLButtonElement>('#tip-skip').disabled).toBe(true);
 	});
 	it('skips the lesson from either skip button', () => {
@@ -152,7 +152,7 @@ describe('mountLesson', () => {
 		expect(progress.load().checkpoints[`${LESSON}#a`]?.state).toBe('passed');
 		expect(Object.keys(progress.load().reviews)).toEqual([`${LESSON}#a`]);
 		answer('b', false, items);
-		expect(q('[data-skills-dismiss]').textContent).toBe('Close');
+		expect(q('[data-skills-dismiss]').textContent).toBe('Fermer');
 		q('[data-skills-dismiss]').click();
 		expect(card.hidden).toBe(true);
 	});

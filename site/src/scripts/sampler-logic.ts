@@ -7,18 +7,18 @@
 
 /** The logits of the next token after "The cat sat on the". Each token starts with its space. */
 export const LOGITS: Readonly<Record<string, number>> = {
-	' mat': 2.0,
-	' sofa': 1.2,
-	' roof': 0.6,
-	' moon': -0.5,
-	' spreadsheet': -1.5,
+	' tapis': 2.0,
+	' canapé': 1.2,
+	' toit': 0.6,
+	' quai': -0.5,
+	' tableur': -1.5,
 };
 
 /** The lowest temperature the math uses. The slider's minimum is the same, and a lower value is raised to it. */
 export const MIN_TEMPERATURE = 0.05;
 
 /** The token picked when rounding leaves `r` above zero after the last token. */
-export const FALLBACK_TOKEN = ' mat';
+export const FALLBACK_TOKEN = ' tapis';
 
 /** The probability of each token at temperature `t`, in the order of `LOGITS`. The probabilities sum to 1. */
 export function probs(t: number, logits: Readonly<Record<string, number>> = LOGITS): [string, number][] {
@@ -49,5 +49,5 @@ export function percent(p: number): string {
 
 /** The sentence the widget prints for a picked token. */
 export function sentence(token: string): string {
-	return `The cat sat on the${token}.`;
+	return `Le chat dort sur le${token}.`;
 }

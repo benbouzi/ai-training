@@ -38,7 +38,7 @@ describe('Footer', () => {
 		const updated = html.indexOf(`<time datetime="${lastUpdated.toISOString()}">`);
 		expect(review).toBeGreaterThan(-1);
 		expect(updated).toBeGreaterThan(review);
-		expect(html).toContain('Sources checked on September 20, 2026. Review due by March 20, 2027.');
+		expect(html).toContain('Sources vérifiées le 20 septembre 2026. Révision prévue d’ici le 20 mars 2027.');
 		expect(html).toContain('page.lastUpdated');
 	});
 	it('shows "Last updated" on a page without review-by', async () => {

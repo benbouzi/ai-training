@@ -67,7 +67,7 @@ test('comfort more: a repair copy (the non-reviewable fallback) grades and passe
 	await copy.locator('.cp-reveal-btn').click();
 	await copy.locator('input[value=pass]').check();
 	await copy.locator('.cp-check').click();
-	await expect(copy.locator('.cp-feedback')).toHaveText('Recorded as a pass.');
+	await expect(copy.locator('.cp-feedback')).toHaveText('Enregistrée comme réussie.');
 	await expect(copy).toHaveAttribute('data-state', 'passed');
 	const body = page.locator('#fix-the-instructions');
 	await expect(body).toHaveAttribute('data-state', 'passed');

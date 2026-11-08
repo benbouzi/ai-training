@@ -56,7 +56,7 @@ test('the review page records one result per item: pass on Check, fail on Give U
 	// Item 1: a correct answer records a pass and closes the item.
 	await cp.locator('label[data-correct]').first().click();
 	await cp.locator('.cp-check').first().click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Correct.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Juste.');
 	await expect(cp.locator('.cp-stage-label')).toHaveText('stage 2 of 5');
 	await expect(cp.locator('.cp-check').first()).toBeDisabled();
 	await expect(cp.locator('.cp-giveup')).toBeDisabled();
@@ -107,7 +107,7 @@ test('the review page clones an order checkpoint that drags like the lesson copy
 	await expect(items.first()).toHaveCSS('cursor', 'grab');
 	await orderByDrag(page, items);
 	await cp.locator('.cp-check').first().click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Correct order.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Ordre juste.');
 	await expect(cp.locator('.cp-stage-label')).toHaveText('stage 2 of 5');
 	const record = await storedRecord(page);
 	const recorded =
@@ -146,7 +146,7 @@ test('the review page asks an alternate never asked before in place of the item,
 	await expect(cp.locator('.cp-lesson-link')).toHaveAttribute('href', `/ai-training/${ALT_LESSON}/#${OWN_ID}`);
 	for (const label of await cp.locator('label[data-correct]').all()) await label.click();
 	await cp.locator('.cp-check').first().click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Correct.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Juste.');
 	await expect(cp.locator('.cp-stage-label')).toHaveText('stage 2 of 5');
 
 	const record = await storedRecord(page);

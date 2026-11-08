@@ -84,7 +84,7 @@ function bindChoice(el: HTMLElement): Grader {
 		const picked = $<HTMLInputElement>(el, 'input[type=radio]:checked');
 		const label = picked?.closest('label');
 		if (!label) {
-			announce(el, note('Pick an answer first.'));
+			announce(el, note('Choisissez d’abord une réponse.'));
 			return null;
 		}
 		const ok = label.dataset.correct === 'true';
@@ -101,7 +101,7 @@ function bindPredict(el: HTMLElement): Grader {
 		return () => {
 			const grade = $<HTMLInputElement>(el, 'input[name$="-selfgrade"]:checked');
 			if (!grade) {
-				announce(el, note('Run it, then say how your prediction held up.'));
+				announce(el, note('Lancez-le, puis dites si votre prédiction a tenu.'));
 				return null;
 			}
 			const ok = grade.value === 'pass';
@@ -111,7 +111,7 @@ function bindPredict(el: HTMLElement): Grader {
 	}
 	return () => {
 		if (!ta?.value.trim()) {
-			announce(el, note('Type your prediction first.'));
+			announce(el, note('Tapez d’abord votre prédiction.'));
 			return null;
 		}
 		const ok = answersMatch(ta.value, answer);
@@ -249,7 +249,7 @@ function bindSort(el: HTMLElement): Grader {
 		zone.addEventListener('click', (ev) => {
 			if (ev.target instanceof Element && ev.target.closest('.cp-chip')) return;
 			if (!selected) {
-				announce(el, note('Select an item first, then a bucket.'));
+				announce(el, note('Sélectionnez d’abord un élément, puis une case.'));
 				return;
 			}
 			containerOf(zone)?.appendChild(selected);
@@ -289,15 +289,15 @@ function bindRepair(el: HTMLElement): Grader {
 	return () => {
 		const picked = $<HTMLInputElement>(el, 'input[name$="-selfgrade"]:checked');
 		if (!model || model.hidden) {
-			announce(el, note('Write your fix, then reveal the model answer and compare.'));
+			announce(el, note('Écrivez votre correction, puis affichez la réponse modèle et comparez.'));
 			return null;
 		}
 		if (!picked) {
-			announce(el, note('Compare with the model answer and grade yourself.'));
+			announce(el, note('Comparez avec la réponse modèle et notez-vous.'));
 			return null;
 		}
 		if (picked.value === 'retry') {
-			announce(el, note('Edit your version and grade again.'));
+			announce(el, note('Modifiez votre version et notez-vous de nouveau.'));
 			return null;
 		}
 		const ok = picked.value === 'pass';
@@ -332,7 +332,7 @@ function bindMatch(el: HTMLElement): Grader {
 				const ok = $<HTMLSelectElement>(r, 'select')?.value === r.dataset.option;
 				r.dataset.state = ok ? 'right' : 'wrong';
 				const fb = $(r, '.cp-row-feedback');
-				if (fb) fb.textContent = ok ? 'Right.' : (r.dataset.why ?? 'Not this one.');
+				if (fb) fb.textContent = ok ? 'Juste.' : (r.dataset.why ?? 'Pas celle-ci.');
 				if (!ok) wrong++;
 			}
 		}
@@ -432,7 +432,7 @@ export function bindCheckpoint(el: HTMLElement, opts: BindOptions = {}): void {
 
 	$(el, '.cp-skip')?.addEventListener('click', () => {
 		progress.skipCheckpoint(id);
-		announce(el, note('Skipped. It stays available, and comes back in review.'));
+		announce(el, note('Passée. Elle reste disponible et reviendra en révision.'));
 		drawState(el);
 		opts.onResult?.(el, false);
 	});
@@ -453,10 +453,10 @@ function revealAnswer(el: HTMLElement) {
 	if (kind === 'choice' || kind === 'scenario') {
 		const right = $<HTMLElement>(el, 'label[data-correct=true]');
 		right?.classList.add('cp-answer');
-		announce(el, note(`The answer is marked. ${right?.dataset.consequence ?? ''}`.trim()));
+		announce(el, note(`La réponse est indiquée. ${right?.dataset.consequence ?? ''}`.trim()));
 	} else if (kind === 'multi-choice') {
 		for (const l of el.querySelectorAll<HTMLElement>('label[data-correct=true]')) l.classList.add('cp-answer');
-		announce(el, note('The correct items are marked.'));
+		announce(el, note('Les bons éléments sont indiqués.'));
 	} else if (kind === 'match') {
 		for (const r of el.querySelectorAll<HTMLElement>('.cp-match-row')) {
 			const select = $<HTMLSelectElement>(r, 'select');
@@ -466,22 +466,22 @@ function revealAnswer(el: HTMLElement) {
 			const fb = $(r, '.cp-row-feedback');
 			if (fb) fb.textContent = '';
 		}
-		announce(el, note(`Each row now shows its answer. ${$(el, '.cp-match')?.dataset.rationale ?? ''}`.trim()));
+		announce(el, note(`Chaque ligne affiche maintenant sa réponse. ${$(el, '.cp-match')?.dataset.rationale ?? ''}`.trim()));
 	} else if (kind === 'predict') {
 		const reveal = $(el, '.cp-reveal');
 		if (reveal) reveal.hidden = false;
-		announce(el, note('The output is shown below.'));
+		announce(el, note('La sortie est affichée ci-dessous.'));
 	} else if (kind === 'order') {
 		const list = $<HTMLOListElement>(el, 'ol.cp-order');
 		if (!list) return;
 		for (const li of [...list.children].sort((a, b) => posOf(a) - posOf(b))) list.appendChild(li);
-		announce(el, note('The steps are now in the right order.'));
+		announce(el, note('Les étapes sont maintenant dans le bon ordre.'));
 	} else if (kind === 'sort') {
 		for (const chip of el.querySelectorAll<HTMLElement>('.cp-chip')) {
 			const bucket = el.querySelector<HTMLElement>(`.cp-bucket[data-bucket="${chip.dataset.bucket}"] .cp-bucket-items`);
 			bucket?.appendChild(chip);
 		}
-		announce(el, note('Every item is now in its bucket.'));
+		announce(el, note('Chaque élément est maintenant dans sa case.'));
 	}
 }
 

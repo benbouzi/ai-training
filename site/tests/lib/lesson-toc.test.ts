@@ -47,8 +47,8 @@ describe('examplesOf', () => {
 describe('lessonTocGroups', () => {
 	it('lists the checkpoints then the examples, and drops an empty group', () => {
 		expect(lessonTocGroups(body(`${checkpoint}\n\n${example}`))).toEqual([
-			{ label: 'Checkpoints', slug: 'checkpoints', entries: [{ id: 'cp', title: 'A choice' }] },
-			{ label: 'Examples', slug: 'examples', entries: [{ id: 'ex', title: 'Run it' }] },
+			{ label: 'Questions de contrôle', slug: 'checkpoints', entries: [{ id: 'cp', title: 'A choice' }] },
+			{ label: 'Exemples', slug: 'examples', entries: [{ id: 'ex', title: 'Run it' }] },
 		]);
 		expect(lessonTocGroups(body(example)).map((g) => g.label)).toEqual(['Examples']);
 		expect(lessonTocGroups(body(checkpoint)).map((g) => g.label)).toEqual(['Checkpoints']);
@@ -75,7 +75,7 @@ describe('isLessonEntry and showToc', () => {
 		expect(isLessonEntry(entry())).toBe(false);
 	});
 	it('hides the menu without toc data or when the page title would be its only entry, unless a group has entries', () => {
-		const group = { label: 'Checkpoints' as const, slug: 'checkpoints' as const, entries: [{ id: 'a', title: 'A' }] };
+		const group = { label: 'Questions de contrôle' as const, slug: 'checkpoints' as const, entries: [{ id: 'a', title: 'A' }] };
 		expect(showToc(undefined, [group])).toBe(false);
 		expect(showToc({ items: [{ children: [] }] }, [])).toBe(false);
 		expect(showToc({ items: [{ children: [] }] }, [group])).toBe(true);

@@ -20,13 +20,13 @@ describe('ReviewLine', () => {
 			props: { reviewBy: new Date('2027-03-20'), sourcesChecked: new Date('2026-09-20') },
 		});
 		expect(html).toContain('<p class="lesson-review" data-review-by="2027-03-20">');
-		expect(html).toContain('Sources checked on September 20, 2026. Review due by March 20, 2027.');
+		expect(html).toContain('Sources vérifiées le 20 septembre 2026. Révision prévue d’ici le 20 mars 2027.');
 	});
 	it('renders only the due date when sourcesChecked is absent', async () => {
 		const html = await container.renderToString(ReviewLine, { props: { reviewBy: new Date('2027-03-20') } });
 		expect(html).toContain('data-review-by="2027-03-20"');
 		expect(html).not.toContain('Sources checked');
-		expect(html).toContain('Review due by March 20, 2027.');
+		expect(html).toContain('Révision prévue d’ici le 20 mars 2027.');
 	});
 	it('renders nothing without review-by', async () => {
 		const html = await container.renderToString(ReviewLine, { props: { sourcesChecked: new Date('2026-09-20') } });

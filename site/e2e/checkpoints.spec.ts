@@ -17,7 +17,7 @@ test('choice: a wrong pick shows its why, the right one passes', async ({ page }
 	await page.goto('concepts/how-models-work/');
 	const cp = page.locator('#what-the-model-does');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Pick an answer first.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Choisissez d’abord une réponse.');
 	await cp.locator('label').nth(2).click();
 	await cp.locator('.cp-check').click();
 	await expect(cp.locator('.cp-feedback')).toHaveText(
@@ -26,7 +26,7 @@ test('choice: a wrong pick shows its why, the right one passes', async ({ page }
 	await expect(cp).toHaveAttribute('data-state', 'attempted');
 	await cp.locator('label[data-correct]').click();
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Correct.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Juste.');
 	await expect(cp).toHaveAttribute('data-state', 'passed');
 	const record = await storedRecord(page);
 	expect(record.checkpoints?.['concepts/how-models-work#what-the-model-does']).toEqual({
@@ -53,10 +53,10 @@ test('predict: normalized comparison, the answer is revealed on a pass', async (
 	await expect(cp.locator('.cp-stage')).toBeHidden();
 	await cp.locator('textarea').fill('27°C, rain');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Not quite. Trace it once more.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Pas tout à fait. Suivez-le encore une fois.');
 	await cp.locator('textarea').fill(' 27°c, sun');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Correct. That is exactly the output.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Juste. C’est exactement la sortie.');
 	await expect(cp.locator('.cp-reveal')).toBeVisible();
 });
 
@@ -64,10 +64,10 @@ test('order: opens shuffled and passes once sorted', async ({ page }) => {
 	await page.goto('building-agents/agent-loop/');
 	const cp = page.locator('#order-the-loop');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Not the right order yet.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Pas encore le bon ordre.');
 	await orderByButtons(cp);
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Correct order.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Ordre juste.');
 	await expect(cp).toHaveAttribute('data-state', 'passed');
 });
 
@@ -84,11 +84,11 @@ test('order: drag a row to its place, the arrows and the grader still agree', as
 		.poll(() => items.evaluateAll((lis) => lis.map((l) => Number((l as HTMLElement).dataset.pos))))
 		.toEqual(Array.from({ length: count }, (_, i) => i + 1));
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Correct order.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Ordre juste.');
 	// One drag out of place fails again.
 	await drag(page, items.first(), items.last(), 0.9);
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Not the right order yet.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Pas encore le bon ordre.');
 });
 
 test('sort: select a chip, then a bucket; all correct passes', async ({ page }) => {
@@ -106,7 +106,7 @@ test('sort: select a chip, then a bucket; all correct passes', async ({ page }) 
 		await cp.locator(`.cp-bucket[data-bucket="${bucket}"] .cp-bucket-target`).click();
 	}
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('All placed correctly.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Tout est bien classé.');
 	await expect(cp).toHaveAttribute('data-state', 'passed');
 });
 
@@ -116,7 +116,7 @@ test('sort: the dashed area places a selected chip, and chips drag between conta
 	await page.goto('safety/responsible-use/');
 	const cp = page.locator('#can-i-sort');
 	await expect(cp.locator('.cp-pool-target')).toHaveText(
-		'Unplaced (drag an item to a bucket, or select it and then click the bucket)',
+		'Non classés (faites glisser un élément vers une case, ou sélectionnez-le puis cliquez sur la case)',
 	);
 	const pool = cp.locator('.cp-pool');
 	const chips = cp.locator('.cp-pool .cp-chip');
@@ -127,7 +127,7 @@ test('sort: the dashed area places a selected chip, and chips drag between conta
 	// Click the empty area below the title, with and without a selection.
 	const items0 = cp.locator('.cp-bucket[data-bucket="0"] .cp-bucket-items');
 	await items0.click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Select an item first, then a bucket.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Sélectionnez d’abord un élément, puis une case.');
 	await chips.first().click();
 	await items0.click();
 	await expect(items0.locator('.cp-chip')).toHaveCount(1);
@@ -157,7 +157,7 @@ test('sort: the dashed area places a selected chip, and chips drag between conta
 	}
 	await expect(pool.locator('.cp-chip')).toHaveCount(0);
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('All placed correctly.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Tout est bien classé.');
 	await expect(cp).toHaveAttribute('data-state', 'passed');
 });
 
@@ -165,12 +165,12 @@ test('repair: reveal the model answer, then self-grade', async ({ page }) => {
 	await page.goto('using-agents/delegating/');
 	const cp = page.locator('#fix-the-brief');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Write your fix, then reveal the model answer and compare.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Écrivez votre correction, puis affichez la réponse modèle et comparez.');
 	await cp.locator('.cp-reveal-btn').click();
 	await expect(cp.locator('.cp-model')).toBeVisible();
 	await cp.locator('input[value=pass]').check();
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Recorded as a pass.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Enregistrée comme réussie.');
 	await expect(cp).toHaveAttribute('data-state', 'passed');
 });
 
@@ -235,7 +235,7 @@ test('multi-choice: exactly the correct boxes, a wrong pick shows its why', asyn
 		if (!(await label.locator('input').isChecked())) await label.click();
 	}
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Correct.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Juste.');
 	await expect(cp).toHaveAttribute('data-state', 'passed');
 });
 

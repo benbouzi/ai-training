@@ -52,7 +52,7 @@ for (const r of rows) {
 					<div class="cp-match-row" data-option={r.option} data-why={r.why}>
 						<label for={`${id}-row-${i}`}>{r.statement}</label>
 						<select id={`${id}-row-${i}`} aria-describedby={`${id}-row-${i}-fb`}>
-							<option value="">Choose…</option>
+							<option value="">Choisir…</option>
 							{options.map((o, j) => (
 								<option value={j}>{o}</option>
 							))}

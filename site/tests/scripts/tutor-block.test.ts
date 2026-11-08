@@ -46,7 +46,7 @@ describe('mountTutorBlock', () => {
 		expect(mountTutorBlock(document)).toBe(2);
 		await click(buttons()[1]);
 		expect(writeText).toHaveBeenCalledExactlyOnceWith('/ai-tutor https://example.org/l/');
-		expect(buttons()[1]?.textContent).toBe('Copied');
+		expect(buttons()[1]?.textContent).toBe('Copié');
 		expect(buttons()[0]?.textContent).toBe('Copy');
 		await vi.advanceTimersByTimeAsync(RESTORE_MS);
 		expect(buttons()[1]?.textContent).toBe('Copy');
@@ -55,7 +55,7 @@ describe('mountTutorBlock', () => {
 		writeText.mockRejectedValue(new Error('denied'));
 		mountTutorBlock(document);
 		await click(buttons()[0]);
-		expect(buttons()[0]?.textContent).toBe('Select and copy');
+		expect(buttons()[0]?.textContent).toBe('Sélectionner et copier');
 		await vi.advanceTimersByTimeAsync(RESTORE_MS);
 		expect(buttons()[0]?.textContent).toBe('Copy');
 	});

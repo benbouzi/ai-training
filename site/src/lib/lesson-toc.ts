@@ -19,7 +19,7 @@ export interface TocEntry {
 }
 
 export interface TocGroup {
-	label: 'Checkpoints' | 'Examples';
+	label: 'Questions de contrôle' | 'Exemples';
 	/** The label in lower case, for element ids. */
 	slug: 'checkpoints' | 'examples';
 	entries: TocEntry[];
@@ -87,8 +87,8 @@ export function lessonTocGroups(lesson: Lesson): TocGroup[] {
 		.map(({ id, title }) => ({ id, title }));
 	const examples = examplesIn(tree, lesson.id);
 	const groups: TocGroup[] = [
-		{ label: 'Checkpoints', slug: 'checkpoints', entries: checkpoints },
-		{ label: 'Examples', slug: 'examples', entries: examples },
+		{ label: 'Questions de contrôle', slug: 'checkpoints', entries: checkpoints },
+		{ label: 'Exemples', slug: 'examples', entries: examples },
 	];
 	return groups.filter((g) => g.entries.length > 0);
 }

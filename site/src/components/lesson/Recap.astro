@@ -22,15 +22,15 @@ if (missing.length) throw new Error(`${entry.id}: serves unknown objective(s): $
 ---
 
 <section class="recap" id="recap">
-	<h2>Recap</h2>
+	<h2>À retenir</h2>
 	<slot />
-	<p class="recap-can"><strong>You can now</strong></p>
+	<p class="recap-can"><strong>Vous savez maintenant</strong></p>
 	<ul class="recap-objectives">
 		{served.map((s) => <li data-objective={s.id}>{s.statement}</li>)}
 	</ul>
 	<div class="not-content recap-actions">
-		<button type="button" class="recap-finish" data-finish>Mark lesson finished</button>
-		<button type="button" class="recap-skip" data-skip-lesson>I know this, skip it</button>
+		<button type="button" class="recap-finish" data-finish>Marquer la leçon comme terminée</button>
+		<button type="button" class="recap-skip" data-skip-lesson>Je connais déjà, passer</button>
 		<p class="recap-finish-note" data-finish-note role="status"></p>
 	</div>
 </section>

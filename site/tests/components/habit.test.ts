@@ -23,13 +23,13 @@ describe('Habit', () => {
 		expect(html).toMatch(
 			/<aside class="habit not-content" id="name-the-blast-radius" data-habit(="")? data-progress-id="safety\/agent-risk#name-the-blast-radius" data-state="unfinished">/,
 		);
-		expect(html).toContain('<p class="habit-title">Habit</p>');
+		expect(html).toContain('<p class="habit-title">Habitude</p>');
 		expect(html).toContain('<div class="habit-text"><p>Say what it can reach.</p></div>');
 		expect(html).toMatch(/<p class="habit-status" data-habit-status(="")? role="status"><\/p>/);
 		// Done and Skip are rendered hidden; the script shows them when the habit is due.
 		expect(html).toMatch(/<div class="habit-actions" data-habit-actions(="")? hidden>/);
-		expect(html).toContain('<button type="button" class="habit-done" data-habit-done>Done</button>');
-		expect(html).toContain('<button type="button" class="habit-skip" data-habit-skip>Skip</button>');
+		expect(html).toContain('<button type="button" class="habit-done" data-habit-done>Fait</button>');
+		expect(html).toContain('<button type="button" class="habit-skip" data-habit-skip>Passer</button>');
 		expect(html).toMatch(/<ol class="habit-results" data-habit-results(="")? hidden><\/ol>/);
 	});
 	it('fails the build on a missing or malformed id', async () => {
