@@ -7,7 +7,7 @@ description: >-
   conversation.
 mode: tutorial
 covers: concepts/tokens-and-cost
-serves: [concepts/reasons-about-cost/reads-token-counts, 
+serves: [concepts/reasons-about-cost/reads-token-counts,
       concepts/reasons-about-cost/explains-growing-cost]
 introduces: [input-and-output-tokens, growing-session-cost]
 assumes:

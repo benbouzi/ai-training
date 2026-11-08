@@ -10,6 +10,6 @@
     order: 2
     name: Ingénierie
     audience: Ingénieurs logiciels
-    description: Pour les ingénieurs logiciels qui ont terminé les Fondamentaux, à deux niveaux 
+    description: Pour les ingénieurs logiciels qui ont terminé les Fondamentaux, à deux niveaux
       d’aisance.
     areas: [coding-with-agents, customizing-agents, building-agents]

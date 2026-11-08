@@ -6,7 +6,7 @@ description: >-
   trouver ce qu’économise le cache et ce qui l’empêche de fonctionner.
 mode: explanation
 covers: concepts/tokens-and-cost
-serves: [concepts/reasons-about-cost/chooses-effort-level, 
+serves: [concepts/reasons-about-cost/chooses-effort-level,
       concepts/reasons-about-cost/explains-prompt-caching]
 introduces: [prompt-caching, effort-level]
 assumes:

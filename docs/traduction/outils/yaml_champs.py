@@ -15,6 +15,7 @@ forme du fichier est gardée (ruamel.yaml en aller-retour), et un texte qui
 
 from __future__ import annotations
 
+import io
 import json
 import sys
 from pathlib import Path
@@ -113,8 +114,13 @@ def injecter(source: str) -> None:
                 parent[acces[-1]] = replie(texte)
             else:
                 parent[acces[-1]] = texte
-        with chemin.open("w", encoding="utf-8") as sortie:
-            y.dump(doc, sortie)
+        tampon = io.StringIO()
+        y.dump(doc, tampon)
+        # ruamel laisse une espace en fin de ligne quand il coupe une liste ou
+        # un texte simple. Le hook trailing-whitespace la refuse, et le YAML
+        # lu est le même sans elle.
+        propre = "\n".join(ligne.rstrip() for ligne in tampon.getvalue().split("\n"))
+        chemin.write_text(propre, encoding="utf-8")
         print(f"injecté : {rel} ({len(champs)} champs)")
 
 
