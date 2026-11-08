@@ -1,9 +1,9 @@
 id: concepts/one-prompt-many-requests
-title: One prompt, many requests
+title: Un prompt, de nombreuses requêtes
 description: >-
-  Follow one prompt to an agent through every model request it causes, see what the harness sends
-  each time and what comes back from the environment, and learn why the model needs the whole history
-  on every request.
+  Suivre un prompt adressé à un agent à travers toutes les requêtes au modèle qu’il déclenche,
+  voir ce qu’envoie le harnais à chaque fois et ce qui revient de l’environnement, et apprendre
+  pourquoi le modèle a besoin de tout l’historique à chaque requête.
 mode: explanation
 covers: concepts/what-is-an-agent
 serves: [concepts/recognizes-agents/follows-one-prompt]
@@ -13,15 +13,16 @@ assumes:
     lesson: concepts/agent-loop
     section: observer-réfléchir-agir
 extends-to:
-  - label: How the agent loop works
+  - label: Comment fonctionne la boucle d’agent
     href: https://code.claude.com/docs/en/agent-sdk/agent-loop
 after: [concepts/agent-loop]
 shorts: []
 exercise:
   kind: judge
   brief: >-
-    Follow one prompt to an agent through its log, count the model requests it caused, and say for
-    each request what the harness sent and what came back from the environment.
+    Suivre un prompt adressé à un agent à travers son journal, compter les requêtes au modèle qu’il
+    a déclenchées, et dire pour chaque requête ce qu’a envoyé le harnais et ce qui est revenu de
+    l’environnement.
 sources: [Claude Code agent loop, Claude docs messages]
 issue: 682
 minutes: 12

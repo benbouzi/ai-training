@@ -1,9 +1,10 @@
 id: concepts/thin-path
-title: Where a model makes things up
+title: Les endroits où un modèle invente
 description: >-
-  Why one model gives a reliable summary and an invented citation in the same afternoon, which
-  tasks earn a spot-check and which earn a check of every specific, and how naming the two
-  properties behind a wrong answer picks the fix.
+  Pourquoi un même modèle donne un résumé fiable et une référence inventée le même après-midi,
+  quelles tâches méritent une vérification par sondage et lesquelles une vérification de chaque
+  élément précis, et comment nommer les deux propriétés derrière une réponse fausse permet de
+  choisir la correction.
 mode: explanation
 covers: concepts/limits
 serves: [concepts/explains-models/names-failure-modes]
@@ -19,12 +20,12 @@ assumes:
     lesson: concepts/how-models-work
     section: les-défaillances-nommées
 after: [concepts/how-models-work]
-shorts: [checking a citation]
+shorts: [vérifier une référence]
 exercise:
   kind: judge
   brief: >-
-    For five tasks, decide whether to spot-check or to verify every specific, and for one wrong
-    answer name the two properties that met to produce it.
+    Pour cinq tâches, décider s’il faut sonder ou vérifier chaque élément précis, et pour une
+    réponse fausse, nommer les deux propriétés qui se sont rencontrées pour la produire.
 sources: [Academy ai-capabilities-and-limitations, Academy ai-fluency-framework-foundations]
 minutes: 15
 notes: >-

@@ -1,9 +1,9 @@
 id: concepts/autonomy-scale
-title: Who decides the next step
+title: Qui décide de l’étape suivante
 description: >-
-  Place a product or workflow on the autonomy scale by asking who decides the next step, see one
-  coding agent land on three points in three permission settings, and name the step that moves a
-  workflow up or down.
+  Placer un produit ou un processus sur l’échelle d’autonomie en demandant qui décide de l’étape
+  suivante, voir un même agent de code occuper trois points selon trois réglages de permission, et
+  nommer l’étape qui fait monter ou descendre un processus.
 mode: explanation
 covers: concepts/what-is-an-agent
 serves: [concepts/recognizes-agents/places-on-autonomy-scale]
@@ -17,8 +17,8 @@ shorts: []
 exercise:
   kind: judge
   brief: >-
-    Place one coding agent in three permission settings on the scale and say what moves each one
-    step up or down.
+    Placer un agent de code sur l’échelle dans trois réglages de permission, et dire ce qui fait
+    monter ou descendre chacun d’un cran.
 sources: [AEC-01, DLAI-11, Claude Code permission modes]
 sources-checked: 2026-09-24
 review-by: 2027-03-24

@@ -1,8 +1,9 @@
 id: concepts/one-example
-title: Show one example
+title: Montrer un exemple
 description: >-
-  Replace a paragraph of formatting rules with one worked input and output pair, see the model copy
-  the pattern, and learn when to show an example instead of describing and how many to give.
+  Remplacer un paragraphe de règles de mise en forme par une seule paire complète entrée-sortie,
+  voir le modèle copier le motif, et apprendre quand montrer un exemple, quand décrire, et combien
+  d’exemples donner.
 mode: tutorial
 covers: concepts/prompting
 serves: [concepts/prompts-reliably/structures-a-prompt]
@@ -21,16 +22,17 @@ assumes:
     lesson: concepts/prompt-anatomy
     section: format-et-longueur
 extends-to:
-  - label: Output the next step can use
+  - label: Une sortie que l’étape suivante peut utiliser
     href: /concepts/structured-output/
-  - label: The prompt before the conversation
+  - label: Le prompt avant la conversation
     href: /concepts/system-prompt/
 after: [concepts/prompt-anatomy]
-shorts: [when an example teaches the wrong thing]
+shorts: [quand un exemple enseigne la mauvaise chose]
 exercise:
   kind: do
   brief: >-
-    Replace a paragraph of formatting rules with one worked example and compare the two outputs.
+    Remplacer un paragraphe de règles de mise en forme par un seul exemple complet et comparer les
+    deux sorties.
 sources:
   - Brown 2020
   - Academy building-with-the-claude-api

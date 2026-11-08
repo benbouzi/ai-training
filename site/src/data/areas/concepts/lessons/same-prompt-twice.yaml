@@ -1,8 +1,9 @@
 id: concepts/same-prompt-twice
-title: Same prompt, different answer
+title: Même prompt, réponse différente
 description: >-
-  Run a toy model on the page ten times at two temperatures, count how often the answers agree, and
-  see why one good run proves nothing and what check a workflow built on a model needs.
+  Lancer dix fois un modèle jouet sur la page, à deux températures, compter combien de fois les
+  réponses concordent, et voir pourquoi un bon essai ne prouve rien et de quel contrôle a besoin
+  un processus fondé sur un modèle.
 mode: tutorial
 covers: concepts/limits
 serves:
@@ -17,15 +18,16 @@ assumes:
     lesson: concepts/how-models-work
     section: les-défaillances-nommées
 extends-to:
-  - label: Output the next step can use
+  - label: Une sortie que l’étape suivante peut utiliser
     href: /concepts/structured-output/
 after: [concepts/how-models-work]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Run the toy model on the page ten times at two temperatures, tabulate how often the answers
-    agree, and write the check a workflow would need to accept that variation.
+    Lancer dix fois le modèle jouet de la page à deux températures, noter dans un tableau combien de
+    fois les réponses concordent, et écrire le contrôle dont un processus aurait besoin pour
+    accepter cette variation.
 sources: [Academy ai-capabilities-and-limitations, Claude docs messages]
 minutes: 15
 proofs:

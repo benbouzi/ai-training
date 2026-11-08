@@ -1,14 +1,15 @@
-- id: foundations
-  order: 1
-  name: Foundations
-  audience: Everyone
-  description: >-
-    Written at one level for every knowledge worker. No lesson needs programming or agent
-    configuration.
-  areas: [concepts, safety, using-agents]
-- id: engineering
-  order: 2
-  name: Engineering
-  audience: Software engineers
-  description: For software engineers who have finished Foundations, at two comfort levels.
-  areas: [coding-with-agents, customizing-agents, building-agents]
+  - id: foundations
+    order: 1
+    name: Fondamentaux
+    audience: Tout le monde
+    description: >-
+      Écrit à un même niveau pour toute personne qui travaille avec des connaissances. Aucune leçon ne
+      demande de programmer ni de configurer un agent.
+    areas: [concepts, safety, using-agents]
+  - id: engineering
+    order: 2
+    name: Ingénierie
+    audience: Ingénieurs logiciels
+    description: Pour les ingénieurs logiciels qui ont terminé les Fondamentaux, à deux niveaux 
+      d’aisance.
+    areas: [coding-with-agents, customizing-agents, building-agents]

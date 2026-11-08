@@ -1,9 +1,9 @@
 id: concepts/assistant-or-agent
-title: Assistant or agent?
+title: Assistant ou agent ?
 description: >-
-  Separate the model from the software around it, apply one test that tells an assistant from an
-  agent whatever the interface looks like, name the parts of the harness, and list an agent's tools
-  before judging its reach.
+  Séparer le modèle du logiciel qui l’entoure, appliquer un test qui distingue un assistant d’un
+  agent quelle que soit l’interface, nommer les parties du harnais, et lister les outils d’un
+  agent avant de juger sa portée.
 mode: explanation
 covers: concepts/what-is-an-agent
 serves: [concepts/recognizes-agents/tells-agent-from-assistant]
@@ -17,8 +17,9 @@ shorts: []
 exercise:
   kind: judge
   brief: >-
-    Find five AI products or features you use or were offered, classify each by what it can do
-    without another prompt, and list the tools of the ones that are agents.
+    Trouver cinq produits ou fonctions d’IA que vous utilisez ou qu’on vous a proposés, classer
+    chacun d’après ce qu’il peut faire sans nouveau prompt, et lister les outils de ceux qui sont
+    des agents.
 sources: [AEC-01, DLAI-11, Academy claude-platform-101]
 issue: 143
 minutes: 12

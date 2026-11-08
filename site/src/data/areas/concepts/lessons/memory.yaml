@@ -1,8 +1,9 @@
 id: concepts/memory
-title: Where memory comes from
+title: D’où vient la mémoire
 description: >-
-  Take the phrase "it remembered" apart into what was stored and what was read back, see how a long
-  session drifts as its window fills, and pick summarize, start fresh or retrieve as the way out.
+  Décomposer l’expression « il s’en est souvenu » en ce qui a été stocké et ce qui a été relu,
+  voir comment une longue session dérive à mesure que sa fenêtre se remplit, et choisir résumer,
+  repartir de zéro ou récupérer pour en sortir.
 mode: explanation
 covers: concepts/grounding
 serves:
@@ -24,8 +25,8 @@ shorts: []
 exercise:
   kind: judge
   brief: >-
-    Read a long transcript, mark where the answers start to drift, and say which of summarize, start
-    fresh or retrieve would have helped.
+    Lire une longue transcription, marquer l’endroit où les réponses commencent à dériver, et dire
+    lequel des trois remèdes (résumer, repartir de zéro ou récupérer) aurait aidé.
 sources:
   - AEC-05
   - Academy ai-capabilities-and-limitations

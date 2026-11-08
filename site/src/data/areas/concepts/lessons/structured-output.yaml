@@ -1,8 +1,9 @@
 id: concepts/structured-output
-title: Output the next step can use
+title: Une sortie que l’étape suivante peut utiliser
 description: >-
-  Ask a chat assistant for action items as named fields with allowed values, check the result with
-  the program that has to read it, and fix the prompt until it passes.
+  Demander à un assistant conversationnel des actions à mener sous forme de champs nommés avec des
+  valeurs autorisées, vérifier le résultat avec le programme qui doit le lire, et corriger le
+  prompt jusqu’à ce qu’il passe.
 mode: tutorial
 covers: concepts/prompting
 serves: [concepts/prompts-reliably/asks-for-structure]
@@ -18,15 +19,15 @@ assumes:
     lesson: concepts/prompt-anatomy
     section: format-et-longueur
 extends-to:
-  - label: Change the prompt before you retry
+  - label: Changer le prompt avant de réessayer
     href: /concepts/iterating-on-a-prompt/
 after: [concepts/prompt-anatomy]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Ask for named fields with allowed values, paste the result into the checker on the page, and fix
-    the prompt until it passes.
+    Demander des champs nommés avec des valeurs autorisées, coller le résultat dans le vérificateur
+    de la page, et corriger le prompt jusqu’à ce qu’il passe.
 sources:
   - Academy building-with-the-claude-api
   - DLAI-1

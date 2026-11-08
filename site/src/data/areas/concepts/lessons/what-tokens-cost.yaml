@@ -1,8 +1,9 @@
 id: concepts/what-tokens-cost
-title: What every token costs
+title: Ce que coûte chaque jeton
 description: >-
-  Price a short prompt and a long one on a small model and a large one, see why the answer and the
-  model size set the bill and the wait, and find the rule a long instruction file buried.
+  Calculer le prix d’un prompt court et d’un prompt long sur un petit et un grand modèle, voir
+  pourquoi la réponse et la taille du modèle fixent la facture et l’attente, et retrouver la règle
+  qu’un long fichier d’instructions a enfouie.
 mode: tutorial
 covers: concepts/limits
 serves: [concepts/explains-models/explains-generation]
@@ -18,12 +19,13 @@ assumes:
     lesson: concepts/context-window
     section: quand-les-premiers-faits-sortent-de-la-fenêtre
 after: [concepts/context-window]
-shorts: [why long instruction files fail]
+shorts: [pourquoi les longs fichiers d’instructions échouent]
 exercise:
   kind: do
   brief: >-
-    Price a long prompt and a short one with the token counter and a price table for a small and a
-    large model, then find the rule that a long instruction file buried.
+    Calculer le prix d’un prompt long et d’un prompt court avec le compteur de jetons et une grille
+    de prix pour un petit et un grand modèle, puis retrouver la règle qu’un long fichier
+    d’instructions a enfouie.
 sources:
   - Claude docs pricing
   - Claude docs models-overview

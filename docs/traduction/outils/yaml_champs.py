@@ -84,7 +84,10 @@ def replie(texte: str, largeur: int = 96) -> FoldedScalarString:
     debut = 0
     dernier = None
     for i, ch in enumerate(texte):
-        if ch == " ":
+        # Pas de coupure devant une ponctuation haute ni après un guillemet ouvrant.
+        suivant = texte[i + 1] if i + 1 < len(texte) else ""
+        precedent = texte[i - 1] if i > 0 else ""
+        if ch == " " and suivant not in ":;!?»" and precedent != "«":
             if i - debut > largeur and dernier is not None:
                 positions.append(dernier)
                 debut = dernier + 1

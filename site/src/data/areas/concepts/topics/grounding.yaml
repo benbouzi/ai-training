@@ -1,49 +1,50 @@
 id: concepts/grounding
 area: concepts
-name: Grounding and memory
+name: Ancrage et mémoire
 definition: >-
-  A model only knows its training data and what is in its context window.
-  Grounding supplies the facts a task needs at the moment of asking, usually
-  by retrieving documents. Memory carries information across turns and
-  sessions. This topic explains both, what they fix, what they do not, and
-  how a crowded context degrades.
+  Un modèle ne connaît que ses données d’entraînement et ce qui se trouve dans sa fenêtre de
+  contexte. L’ancrage fournit les faits dont une tâche a besoin au moment de la question, le plus
+  souvent en récupérant des documents. La mémoire transporte l’information d’un tour et d’une
+  session à l’autre. Ce thème explique les deux, ce qu’ils corrigent, ce qu’ils ne corrigent pas,
+  et comment un contexte encombré se dégrade.
 concepts:
   - id: retrieval-rag
-    name: Retrieval (RAG)
+    name: Récupération (RAG)
     definition: >-
-      Retrieval-augmented generation: before the model answers, a search
-      finds the passages most relevant to the question and pastes them into
-      the prompt, so the answer can rest on documents the model never saw in
-      training. It is how assistants answer about your files or a company
-      wiki. Its quality is bounded by the search; irrelevant passages produce
-      confident wrong answers.
+      Génération augmentée par récupération (retrieval-augmented generation) : avant que le modèle
+      réponde, une recherche trouve les passages les plus pertinents pour la question et les colle
+      dans le prompt, pour que la réponse puisse s’appuyer sur des documents que le modèle n’a jamais
+      vus à l’entraînement. C’est ainsi que les assistants répondent sur vos fichiers ou sur le wiki
+      d’une entreprise. Sa qualité est bornée par la recherche, et des passages hors sujet produisent
+      des réponses fausses et assurées.
   - id: grounding
-    name: Grounding
+    name: Ancrage
     definition: >-
-      Tying a model's answer to sources it was given rather than to what it
-      remembers. A grounded answer cites the passage it relied on and says so
-      when the sources do not cover the question. Grounding reduces
-      hallucination about the supplied material but does not make the model
-      check facts on its own, and it cannot fix a source that is wrong.
+      Le fait de rattacher la réponse d’un modèle aux sources qui lui ont été données, plutôt qu’à ce
+      dont il se souvient. Une réponse ancrée cite le passage sur lequel elle s’appuie et le dit quand
+      les sources ne couvrent pas la question. L’ancrage réduit l’hallucination sur le matériau
+      fourni, sans pousser le modèle à vérifier les faits de lui-même, et il ne peut pas corriger une
+      source fausse.
   - id: short-and-long-term-memory
-    name: Short- and long-term memory
+    name: Mémoire à court et à long terme
     definition: >-
-      Short-term memory is the current context window: everything said and
-      seen in this session, gone when it ends. Long-term memory is anything
-      written down outside the window and read back later, such as notes
-      files, summaries or a database the agent searches. Models have no other
-      memory; "it remembered" always means something was stored and re-read.
+      La mémoire à court terme est la fenêtre de contexte en cours : tout ce qui a été dit et vu dans
+      cette session, effacé à sa fin. La mémoire à long terme est tout ce qui est écrit hors de la
+      fenêtre et relu plus tard, comme des fichiers de notes, des résumés ou une base de données que
+      l’agent interroge. Les modèles n’ont pas d’autre mémoire : « il s’en est souvenu » signifie
+      toujours que quelque chose a été stocké puis relu.
   - id: context-rot
-    name: Context rot
+    name: Dégradation du contexte
     definition: >-
-      The decline in a model's performance as its context window fills with
-      old turns, tool output and stale instructions. Important details get
-      lost among irrelevant ones, early instructions are followed less
-      reliably and answers drift. Long sessions and large pasted documents
-      cause it. The cure is to keep context short and deliberate: summarize,
-      start fresh, or retrieve only what is needed.
+      Le déclin des performances d’un modèle à mesure que sa fenêtre de contexte se remplit d’anciens
+      tours, de sorties d’outils et d’instructions périmées. Les détails importants se perdent parmi
+      les autres, les premières instructions sont suivies moins fidèlement et les réponses dérivent.
+      Les longues sessions et les gros documents collés en sont la cause. Le remède consiste à garder
+      un contexte court et choisi : résumer, repartir de zéro, ou ne récupérer que ce qui est
+      nécessaire.
 links:
   prerequisites: [concepts/what-is-an-agent]
   related: []
   specializations: []
-sources: [AEC-05, AEC-08, Academy ai-capabilities-and-limitations, OpenAI Academy build-with-retrieval-augmented-generation-2v6xg]
+sources: [AEC-05, AEC-08, Academy ai-capabilities-and-limitations, OpenAI Academy 
+      build-with-retrieval-augmented-generation-2v6xg]

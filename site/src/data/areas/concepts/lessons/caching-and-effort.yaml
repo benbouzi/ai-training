@@ -1,27 +1,31 @@
 id: concepts/caching-and-effort
-title: Caching and effort
+title: Mise en cache et effort
 description: >-
-  See what an effort level changes in everything the model writes, choose a level for a kind of
-  work, and read a long chat priced with and without a prompt cache to find what the cache saves
-  and what makes it stop working.
+  Voir ce que change un niveau d’effort dans tout ce qu’écrit le modèle, choisir un niveau pour un
+  type de travail, et lire le prix d’une longue conversation avec et sans cache de prompt pour
+  trouver ce qu’économise le cache et ce qui l’empêche de fonctionner.
 mode: explanation
 covers: concepts/tokens-and-cost
-serves: [concepts/reasons-about-cost/chooses-effort-level, concepts/reasons-about-cost/explains-prompt-caching]
+serves: [concepts/reasons-about-cost/chooses-effort-level, 
+      concepts/reasons-about-cost/explains-prompt-caching]
 introduces: [prompt-caching, effort-level]
 assumes:
   - objective: concepts/reasons-about-cost/explains-growing-cost
     lesson: concepts/reading-token-counts
     section: une-courte-conversation-requête-par-requête
 extends-to:
-  - label: "Optimize AI Application Performance: OpenAI's caching rules and effort levels, worked through with prices (OpenAI Academy, free account)"
+  - label: >-
+      Optimize AI Application Performance : les règles de cache et les niveaux d’effort d’OpenAI, avec
+      des calculs de prix (OpenAI Academy, compte gratuit, en anglais)
     href: https://academy.openai.com/public/courses/optimize-ai-application-performance-1k50h
 after: [concepts/reading-token-counts]
 shorts: []
 exercise:
   kind: judge
   brief: >-
-    For three tasks, choose an effort level and say what it changes, then say which part of a long
-    session prompt caching makes cheaper and which part it leaves alone.
+    Pour trois tâches, choisir un niveau d’effort et dire ce qu’il change, puis dire quelle partie
+    d’une longue session la mise en cache du prompt rend moins chère et quelle partie elle ne touche
+    pas.
 sources: [Claude docs effort, Claude docs prompt-caching, Claude Code costs, Claude docs pricing]
 sources-checked: 2026-10-07
 review-by: 2027-04-07

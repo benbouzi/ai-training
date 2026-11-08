@@ -1,87 +1,128 @@
 id: concepts/reasons-about-cost
 area: concepts
-statement: Reasons about what a model request costs and why
+statement: Raisonne sur ce que coûte une requête à un modèle, et pourquoi
 topics: [concepts/tokens-and-cost, concepts/what-is-an-agent]
 objectives:
   - id: concepts/reasons-about-cost/reads-token-counts
-    statement: Reads the token counts of a request and says where its cost comes from
+    statement: Lit le nombre de jetons d’une requête et dit d’où vient son coût
     level: base
     behaviors:
-      - claim: The learner tells the input tokens from the output tokens in a usage report and knows that an
-          output token costs more.
-        why: The two kinds are priced differently, so the same total can mean very different bills
-          (@Claude docs pricing).
-        example: A summary job reports 40,000 input and 500 output tokens, and the learner sees that the
-          long document, and not the short summary, is most of the cost.
-      - claim: The learner finds the part of the input that was read from the cache.
-        why: Input read from the cache is billed at a small fraction of the normal price, so the input
-          count alone overstates the cost (@Claude docs prompt-caching).
-        example: A report shows 30,000 tokens read from the cache and 800 new input tokens, and the learner
-          explains that most of the request was the same as the one before.
-      - claim: The learner looks at the counts before guessing why a task was expensive.
-        why: The counts show which part of the request grew, and a guess usually blames the wrong part.
-        example: The learner expected the long answers to be the problem, and the counts show the cost is
-          a large document attached to every message.
+      - claim: >-
+          L’apprenant distingue les jetons d’entrée des jetons de sortie dans un rapport d’utilisation
+          et
+          sait qu’un jeton de sortie coûte plus cher.
+        why: >-
+          Les deux types n’ont pas le même prix : un même total peut donc correspondre à des factures
+          très
+          différentes (@Claude docs pricing).
+        example: >-
+          Une tâche de résumé indique 40 000 jetons d’entrée et 500 de sortie, et l’apprenant voit que
+          c’est le long document, bien plus que le court résumé, qui fait l’essentiel du coût.
+      - claim: L’apprenant trouve la partie de l’entrée qui a été lue depuis le cache.
+        why: >-
+          L’entrée lue depuis le cache est facturée à une petite fraction du prix normal : le nombre
+          d’entrée seul surestime donc le coût (@Claude docs prompt-caching).
+        example: >-
+          Un rapport indique 30 000 jetons lus depuis le cache et 800 nouveaux jetons d’entrée, et
+          l’apprenant explique que l’essentiel de la requête était identique à la précédente.
+      - claim: L’apprenant regarde les nombres avant de deviner pourquoi une tâche a coûté cher.
+        why: >-
+          Les nombres montrent quelle partie de la requête a grandi, et une supposition accuse en général
+          la mauvaise partie.
+        example: >-
+          L’apprenant pensait que les longues réponses posaient problème, et les nombres montrent que
+          le
+          coût vient d’un gros document joint à chaque message.
   - id: concepts/reasons-about-cost/explains-growing-cost
-    statement: Explains why a session costs more per request as it grows
+    statement: Explique pourquoi une session coûte plus cher par requête à mesure qu’elle s’allonge
     level: base
     behaviors:
-      - claim: The learner explains that the tool sends the whole conversation with every request, so each
-          request carries all the text before it.
-        why: The model is stateless, so a long history is paid for again on every request
-          (@Claude Code costs).
-        example: Asked why a one-line question late in a long chat used so many tokens, the learner says
-          the question was sent together with an hour of history.
-      - claim: The learner starts a new conversation for an unrelated task.
-        why: The old history adds to the cost of every new request and does not help with the new task.
-        example: After finishing the report, the learner opens a new chat for the unrelated email instead
-          of continuing in the long one.
-      - claim: The learner counts the requests an agent sends, which is more than the prompts they typed.
-        why: An agent sends a new request after each tool result, and each of those carries the history
-          (@Claude Code agent loop).
-        example: The learner sees one instruction lead to a dozen tool calls and expects about a dozen
-          requests in the usage report.
+      - claim: >-
+          L’apprenant explique que l’outil envoie toute la conversation avec chaque requête, et que chaque
+          requête transporte donc tout le texte qui la précède.
+        why: >-
+          Le modèle est sans état : un long historique est donc payé de nouveau à chaque requête (@Claude
+          Code costs).
+        example: >-
+          Quand on lui demande pourquoi une question d’une ligne, tard dans une longue conversation, a
+          utilisé autant de jetons, l’apprenant répond que la question a été envoyée avec une heure
+          d’historique.
+      - claim: L’apprenant ouvre une nouvelle conversation pour une tâche sans rapport.
+        why: >-
+          L’ancien historique s’ajoute au coût de chaque nouvelle requête et n’aide en rien la nouvelle
+          tâche.
+        example: >-
+          Après avoir terminé le rapport, l’apprenant ouvre une nouvelle conversation pour le courriel
+          sans rapport, au lieu de continuer dans la longue.
+      - claim: >-
+          L’apprenant compte les requêtes qu’envoie un agent, plus nombreuses que les prompts qu’il a
+          tapés.
+        why: >-
+          Un agent envoie une nouvelle requête après chaque résultat d’outil, et chacune transporte
+          l’historique (@Claude Code agent loop).
+        example: >-
+          L’apprenant voit une instruction déclencher une douzaine d’appels d’outils et s’attend à une
+          douzaine de requêtes dans le rapport d’utilisation.
   - id: concepts/reasons-about-cost/chooses-effort-level
-    statement: Chooses an effort level for a kind of work and keeps it fixed
+    statement: Choisit un niveau d’effort pour un type de travail et le garde fixe
     level: base
     behaviors:
-      - claim: The learner picks a low effort level for simple, well-defined work and a higher one for hard
-          or open problems.
-        why: Higher effort spends more tokens on thinking and on tool use, and simple work gains nothing
-          from that (@Claude docs effort).
-        example: Reformatting a list of addresses runs at low effort, and comparing the terms of two
-          contracts runs at high effort.
-      - claim: The learner tries a level on a few real examples of the work before settling on it.
-        why: The right level depends on the task, and the vendor's own advice is to test on your own
-          work.
-        example: The learner runs three typical requests at medium and at high effort, sees no difference
-          in quality, and keeps medium.
-      - claim: The learner keeps the level fixed within one conversation and changes it only between kinds
-          of work.
-        why: Changing the effort level between requests can invalidate the prompt cache, so the next
-          request writes the whole history to the cache again, at more than the normal input price
-          (@Claude docs effort) (@Claude docs pricing).
-        example: The learner sets the level when starting the review session and leaves it there, and uses
-          another level in a separate drafting session.
+      - claim: >-
+          L’apprenant choisit un niveau d’effort bas pour un travail simple et bien défini, et un niveau
+          plus élevé pour les problèmes difficiles ou ouverts.
+        why: >-
+          Un effort plus élevé dépense plus de jetons en réflexion et en usage d’outils, et un travail
+          simple n’y gagne rien (@Claude docs effort).
+        example: >-
+          La remise en forme d’une liste d’adresses tourne à effort bas, et la comparaison des clauses
+          de
+          deux contrats à effort élevé.
+      - claim: L’apprenant essaie un niveau sur quelques exemples réels du travail avant de 
+          l’adopter.
+        why: >-
+          Le bon niveau dépend de la tâche, et le fournisseur lui-même conseille de tester sur son propre
+          travail.
+        example: >-
+          L’apprenant lance trois requêtes typiques à effort moyen et à effort élevé, ne voit aucune
+          différence de qualité, et garde le niveau moyen.
+      - claim: >-
+          L’apprenant garde le niveau fixe au sein d’une conversation et ne le change qu’entre deux types
+          de travail.
+        why: >-
+          Changer le niveau d’effort entre deux requêtes peut invalider le cache du prompt : la requête
+          suivante réécrit alors tout l’historique dans le cache, à un prix supérieur au prix d’entrée
+          normal (@Claude docs effort) (@Claude docs pricing).
+        example: >-
+          L’apprenant fixe le niveau au début de la session de relecture et n’y touche plus, et il utilise
+          un autre niveau dans une session de rédaction distincte.
   - id: concepts/reasons-about-cost/explains-prompt-caching
-    statement: Explains what prompt caching saves and what breaks it
+    statement: Explique ce qu’économise la mise en cache du prompt et ce qui la casse
     level: expert
     behaviors:
-      - claim: The learner explains that a request reuses the cache only when it starts with exactly the
-          same tokens as a recent request.
-        why: The cache stores the opening part of a request, and any difference ends the match at that
-          point (@Claude docs prompt-caching).
-        example: The learner explains why two requests with the same long document but a different
-          first instruction both write the document to the cache instead of reading it.
-      - claim: The learner puts content that stays the same at the start of a request and content that
-          changes at the end.
-        why: A change invalidates the cache from that point on, so changing text near the start wastes
-          everything after it.
-        example: The learner puts the shared reference document before the question, so the next
-          question reuses the document from the cache.
-      - claim: "The learner names what breaks the cache: changed instructions or tools, a changed setting
-          such as the effort level, and a pause longer than the cache lifetime."
-        why: Each of these makes the next request pay again for everything from the change on
-          (@Claude Code costs).
-        example: After a long lunch break, the first message in the old session costs much more than
-          the one before the break, and the learner knows why.
+      - claim: >-
+          L’apprenant explique qu’une requête ne réutilise le cache que si elle commence par exactement
+          les mêmes jetons qu’une requête récente.
+        why: >-
+          Le cache stocke la partie initiale d’une requête, et toute différence arrête la correspondance
+          à
+          cet endroit (@Claude docs prompt-caching).
+        example: >-
+          L’apprenant explique pourquoi deux requêtes avec le même long document, mais une première
+          instruction différente, écrivent toutes deux le document dans le cache au lieu de le lire.
+      - claim: >-
+          L’apprenant place au début d’une requête ce qui reste identique, et à la fin ce qui change.
+        why: >-
+          Une modification invalide le cache à partir de ce point : changer un texte proche du début gâche
+          donc tout ce qui suit.
+        example: >-
+          L’apprenant place le document de référence partagé avant la question, pour que la question
+          suivante réutilise le document depuis le cache.
+      - claim: >-
+          L’apprenant nomme ce qui casse le cache : des instructions ou des outils modifiés, un réglage
+          modifié comme le niveau d’effort, et une pause plus longue que la durée de vie du cache.
+        why: >-
+          Chacun de ces éléments fait payer de nouveau à la requête suivante tout ce qui suit la
+          modification (@Claude Code costs).
+        example: >-
+          Après une longue pause déjeuner, le premier message de l’ancienne session coûte bien plus que
+          celui d’avant la pause, et l’apprenant sait pourquoi.

@@ -1,75 +1,74 @@
 id: concepts/limits
 area: concepts
-name: Capabilities and limits
+name: Capacités et limites
 definition: >-
-  Language models are fluent and broadly knowledgeable, and they fail in
-  predictable ways. This topic names the failures a user must expect:
-  confident invention, knowledge that stops at a date, answers that vary
-  between runs, agreement that flatters instead of informs, instructions that
-  fade as the context fills, and the cost and delay that grow with every
-  token.
+  Les modèles de langage s’expriment avec aisance et ont de vastes connaissances, et ils échouent
+  de façons prévisibles. Ce thème nomme les défaillances auxquelles un utilisateur doit
+  s’attendre : l’invention assurée, une connaissance qui s’arrête à une date, des réponses qui
+  varient d’un essai à l’autre, un accord qui flatte au lieu d’informer, des instructions qui
+  s’estompent à mesure que le contexte se remplit, et le coût et le délai qui augmentent avec
+  chaque jeton.
 concepts:
   - id: hallucination
     name: Hallucination
     definition: >-
-      Output that is fluent and confident but false: an invented citation, a
-      function that does not exist, a plausible date that is wrong. It happens
-      because the model predicts likely text, not verified facts, and it has
-      no built-in signal for "I do not know". Hallucination is most likely on
-      specifics, rare topics and anything the model cannot look up.
+      Une sortie fluide et assurée, mais fausse : une référence inventée, une fonction qui n’existe
+      pas, une date plausible qui est fausse. Elle se produit parce que le modèle prédit un texte
+      probable, sans vérifier les faits, et qu’il n’a aucun signal intégré pour « je ne sais pas ».
+      L’hallucination est la plus probable sur les éléments précis, les sujets rares et tout ce que le
+      modèle ne peut pas aller chercher.
   - id: knowledge-cutoff
-    name: Knowledge cutoff
+    name: Date limite des connaissances
     definition: >-
-      The date after which a model's training data stops. Events, releases and
-      documentation newer than the cutoff are unknown to the model unless they
-      are pasted into the context or fetched by a tool. A model will often
-      answer about recent things anyway, from older patterns, so the cutoff is
-      a common and quiet source of wrong answers.
+      La date après laquelle s’arrêtent les données d’entraînement d’un modèle. Les événements, les
+      versions et la documentation postérieurs à cette date sont inconnus du modèle, sauf s’ils sont
+      collés dans le contexte ou récupérés par un outil. Un modèle répond souvent quand même sur des
+      choses récentes, à partir de schémas plus anciens : la date limite est donc une source courante
+      et discrète de réponses fausses.
   - id: non-determinism
-    name: Non-determinism
+    name: Non-déterminisme
     definition: >-
-      The same prompt can produce different answers on different runs because
-      output is sampled from probabilities. Even at the lowest temperature,
-      small differences in serving can change results. This means one good
-      answer does not prove a prompt is reliable, and any process built on a
-      model needs checks that tolerate variation.
+      Le même prompt peut produire des réponses différentes d’un essai à l’autre, parce que la sortie
+      est tirée dans des probabilités. Même à la température la plus basse, de petites différences
+      dans le service peuvent changer les résultats. Une bonne réponse ne prouve donc pas qu’un prompt
+      est fiable, et tout processus fondé sur un modèle a besoin de contrôles qui tolèrent la
+      variation.
   - id: sycophancy
-    name: Sycophancy
+    name: Flagornerie
     definition: >-
-      The tendency of a model to agree with the user, praise their idea or
-      change a correct answer when challenged, because agreeable text was
-      rewarded during training. Sycophancy makes a model a poor judge of your
-      own work unless you ask for criticism explicitly, hide your preference,
-      or have it argue the other side.
+      La tendance d’un modèle à donner raison à l’utilisateur, à faire l’éloge de son idée ou à
+      changer une réponse juste quand on la conteste, parce que les textes conciliants ont été
+      récompensés pendant l’entraînement (sycophancy en anglais). La flagornerie fait d’un modèle un
+      mauvais juge de votre propre travail, sauf si vous demandez explicitement des critiques, cachez
+      votre préférence ou lui faites plaider l’autre camp.
   - id: cost-and-latency
-    name: Cost and latency
+    name: Coût et latence
     definition: >-
-      Every token read or written costs money and time. Long prompts, large
-      documents, big models and multi-step agents multiply both. Latency grows
-      with output length because tokens are produced one at a time. Cost and
-      latency are why a smaller model or a shorter prompt is often the right
-      engineering choice even when a larger one would answer slightly better.
+      Chaque jeton lu ou écrit coûte de l’argent et du temps. Les longs prompts, les gros documents,
+      les grands modèles et les agents à plusieurs étapes multiplient les deux. La latence augmente
+      avec la longueur de la sortie, parce que les jetons sont produits un à la fois. Coût et latence
+      expliquent pourquoi un modèle plus petit ou un prompt plus court est souvent le bon choix
+      technique, même quand un modèle plus grand répondrait un peu mieux.
   - id: instruction-dilution
-    name: Instruction dilution
+    name: Dilution des instructions
     definition: >-
-      The weakening of an instruction as more text piles up after it in the
-      context window. A rule stated once at the start competes with
-      everything said since; in a long conversation or a long instruction
-      file the model follows some rules and quietly drops others. Dilution is
-      why short instruction files work better than long ones and why a rule
-      that must always hold belongs in a mechanical check, not in prose.
+      L’affaiblissement d’une instruction à mesure que du texte s’accumule après elle dans la fenêtre
+      de contexte. Une règle énoncée une fois au début est en concurrence avec tout ce qui a été dit
+      depuis : dans une longue conversation ou un long fichier d’instructions, le modèle suit
+      certaines règles et en abandonne d’autres sans bruit. C’est pourquoi les fichiers d’instructions
+      courts marchent mieux que les longs, et pourquoi une règle qui doit toujours valoir a sa place
+      dans un contrôle mécanique.
   - id: factuality-and-faithfulness
-    name: Factuality and faithfulness
+    name: Factualité et fidélité
     definition: >-
-      Two kinds of hallucination that research on the subject separates. A
-      factuality error is wrong about the world, such as an invented date or
-      a citation that does not exist. A faithfulness error departs from what
-      the person gave the model: it ignores an instruction, contradicts the
-      document it was handed or contradicts itself. The first is found by
-      checking an outside source, and the second by comparing the output
-      with the input.
+      Deux types d’hallucination que distingue la recherche sur le sujet. Une erreur de factualité se
+      trompe sur le monde, comme une date inventée ou une référence qui n’existe pas. Une erreur de
+      fidélité s’écarte de ce que la personne a donné au modèle : elle ignore une instruction,
+      contredit le document fourni ou se contredit elle-même. La première se repère en consultant une
+      source extérieure, la seconde en comparant la sortie avec l’entrée.
 links:
   prerequisites: [concepts/how-models-work]
   related: []
   specializations: []
-sources: [DLAI-3, Academy ai-capabilities-and-limitations, Academy ai-fluency-framework-foundations, Sharma 2023, Huang 2025]
+sources: [DLAI-3, Academy ai-capabilities-and-limitations, Academy ai-fluency-framework-foundations, 
+      Sharma 2023, Huang 2025]

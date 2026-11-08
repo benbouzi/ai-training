@@ -1,8 +1,8 @@
 id: concepts/prompt-anatomy
-title: Instruction, context and format
+title: Instruction, contexte et format
 description: >-
-  Turn a one-line request into a prompt with a clear instruction, marked context, a named audience
-  and a stated output format, and see what each part changes.
+  Transformer une demande d’une ligne en un prompt avec une instruction claire, un contexte
+  délimité, un public nommé et un format de sortie énoncé, et voir ce que change chaque partie.
 mode: tutorial
 covers: concepts/prompting
 serves: [concepts/prompts-reliably/structures-a-prompt]
@@ -21,17 +21,17 @@ assumes:
     lesson: concepts/how-models-work
     section: les-défaillances-nommées
 extends-to:
-  - label: Show one example
+  - label: Montrer un exemple
     href: /concepts/one-example/
-  - label: Output the next step can use
+  - label: Une sortie que l’étape suivante peut utiliser
     href: /concepts/structured-output/
 after: [concepts/how-models-work]
-shorts: [delimiters and why they matter]
+shorts: [les délimiteurs et leur importance]
 exercise:
   kind: do
   brief: >-
-    Rewrite a one-line request into instruction, marked context, audience and format, and run both
-    versions in a chat.
+    Réécrire une demande d’une ligne en instruction, contexte délimité, public et format, et lancer
+    les deux versions dans une conversation.
 sources:
   - Academy ai-fluency-framework-foundations
   - DLAI-1

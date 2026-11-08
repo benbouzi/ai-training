@@ -1,23 +1,24 @@
 id: concepts/agent-loop
-title: Watch a tiny agent work
+title: Regarder travailler un petit agent
 description: >-
-  Read the transcript of a toy agent that lists a folder and reads a note, name each phase as observe,
-  think or act, see how a tool is described to the model, and learn the ways the loop ends.
+  Lire la transcription d’un agent jouet qui liste un dossier et lit une note, nommer chaque phase
+  (observer, réfléchir ou agir), voir comment un outil est décrit au modèle, et apprendre comment
+  la boucle se termine.
 mode: tutorial
 covers: concepts/what-is-an-agent
 serves: [concepts/recognizes-agents/names-the-loop]
 introduces: [tool, agent-loop]
 assumes: []
 extends-to:
-  - label: Building your first agent
+  - label: Construire votre premier agent
     href: /building-agents/agent-loop/
 after: [concepts/iterating-on-a-prompt, concepts/thin-path]
-shorts: [how a tool is described to the model]
+shorts: [comment un outil est décrit au modèle]
 exercise:
   kind: do
   brief: >-
-    Read the third transcript of the toy agent (a scripted model with two tools), and list each phase
-    as observe, think or act with the tool it used.
+    Lire la troisième transcription de l’agent jouet (un modèle scripté doté de deux outils), et
+    noter chaque phase (observer, réfléchir ou agir) avec l’outil utilisé.
 sources: [AEC-01, DLAI-11, Academy claude-platform-101]
 issue: 140
 minutes: 15
@@ -27,7 +28,8 @@ notes: >-
   site/examples/concepts/agent-loop/tiny_agent.py, a scripted model with two tools (list_dir,
   read_file) over three committed notes. The page shows its three transcripts (find, count, limit)
   in text fences, pasted from its output. The fixture is in proofs, so mise run examples fails
-  when it prints a line that no text fence on the page shows (#311). The engineering version with the code
+  when it prints a line that no text fence on the page shows (#311). The engineering version with the
+  code
   is building-agents/agent-loop, linked from extends-to. The pitfall's half-written file is prose
   about an agent with a write tool, which the toy doesn't have. AEC-01 is cited for ideas in our own
   words, so THIRD_PARTY.md gets no new entry.

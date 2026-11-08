@@ -1,9 +1,9 @@
 id: concepts/retrieval
-title: Answers from documents the model never saw
+title: Des réponses tirées de documents que le modèle n’a jamais vus
 description: >-
-  Read the output of a small keyword search over four policy texts, see it find the leave policy in
-  the document's own words and miss it in a colleague's words, and learn what grounding promises
-  and what it leaves for you to check.
+  Lire la sortie d’une petite recherche par mots-clés sur quatre textes de politique interne, la
+  voir trouver la politique sur les congés avec les mots du document et la manquer avec ceux d’un
+  collègue, et apprendre ce que promet l’ancrage et ce qu’il vous laisse à vérifier.
 mode: tutorial
 covers: concepts/grounding
 serves: [concepts/explains-models/explains-grounding]
@@ -13,16 +13,18 @@ assumes:
     lesson: concepts/agent-loop
     section: un-modèle-dans-une-boucle-avec-deux-outils
 extends-to:
-  - label: "Build with Retrieval-Augmented Generation: how embeddings find a passage that uses different words, on the OpenAI API (OpenAI Academy, free account)"
+  - label: >-
+      Build with Retrieval-Augmented Generation : comment les plongements trouvent un passage qui
+      emploie d’autres mots, sur l’API OpenAI (OpenAI Academy, compte gratuit, en anglais)
     href: https://academy.openai.com/public/courses/build-with-retrieval-augmented-generation-2v6xg
 after: [concepts/agent-loop]
-shorts: [keyword search versus similarity search]
+shorts: [recherche par mots-clés et recherche par similarité]
 exercise:
   kind: judge
   brief: >-
-    Read the pasted output of the keyword search on a question asked in other words than the
-    document uses, and write down which document held the answer, which the search retrieved, and
-    what a reader would have to open to notice the answer is wrong.
+    Lire la sortie collée de la recherche par mots-clés pour une question posée avec d’autres mots
+    que ceux du document, et noter quel document contenait la réponse, lequel la recherche a
+    récupéré, et ce qu’un lecteur devrait ouvrir pour remarquer que la réponse est fausse.
 sources: [AEC-05, AEC-08, Academy ai-capabilities-and-limitations]
 issue: 149
 minutes: 15

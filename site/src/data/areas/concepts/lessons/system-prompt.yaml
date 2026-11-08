@@ -1,8 +1,8 @@
 id: concepts/system-prompt
-title: The prompt before the conversation
+title: Le prompt avant la conversation
 description: >-
-  The system prompt sets the role, the tone and the standing rules before the first message, and it
-  is where behavior that should hold every time gets fixed.
+  Le prompt système fixe le rôle, le ton et les règles permanentes avant le premier message, et
+  c’est là que l’on règle un comportement qui doit valoir à chaque fois.
 mode: explanation
 covers: concepts/prompting
 serves: [concepts/prompts-reliably/structures-a-prompt]
@@ -21,16 +21,17 @@ assumes:
     lesson: concepts/how-models-work
     section: les-défaillances-nommées
 extends-to:
-  - label: "Project instructions: AGENTS.md"
+  - label: "Instructions de projet : AGENTS.md"
     href: /customizing-agents/instructions/
-  - label: Change the prompt before you retry
+  - label: Changer le prompt avant de réessayer
     href: /concepts/iterating-on-a-prompt/
 after: [concepts/prompt-anatomy]
 shorts: []
 exercise:
   kind: judge
   brief: >-
-    Read two short system prompts and predict, for three user messages, how the answers differ.
+    Lire deux courts prompts système et prédire, pour trois messages d’utilisateur, en quoi les
+    réponses diffèrent.
 sources:
   - AEC-02
   - Academy building-with-the-claude-api

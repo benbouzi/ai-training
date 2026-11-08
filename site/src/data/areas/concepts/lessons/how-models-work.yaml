@@ -1,8 +1,8 @@
 id: concepts/how-models-work
-title: How a language model works
+title: Comment fonctionne un modèle de langage
 description: >-
-  What a language model actually does when it answers, why that explains its strengths, and why it
-  explains its failures too.
+  Ce que fait réellement un modèle de langage quand il répond, pourquoi cela explique ses points
+  forts, et pourquoi cela explique aussi ses défaillances.
 mode: explanation
 covers: concepts/how-models-work
 serves:
@@ -16,16 +16,17 @@ introduces:
   - knowledge-cutoff
 assumes: []
 extends-to:
-  - label: Why agent safety is different
+  - label: Pourquoi la sécurité des agents est différente
     href: /safety/agent-risk/
-  - label: AI capabilities and limitations (Claude Academy)
+  - label: AI capabilities and limitations (Claude Academy, en anglais)
     href: https://academy.claude.com/courses/ai-capabilities-and-limitations
 after: []
 shorts: []
 exercise:
   kind: judge
   brief: >-
-    Ask the same question twice, read both answers, and explain the difference in terms of sampling.
+    Poser deux fois la même question, lire les deux réponses, et expliquer la différence par
+    l’échantillonnage.
 sources:
   - Academy ai-capabilities-and-limitations
   - AEC-02
