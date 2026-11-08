@@ -303,7 +303,9 @@ describe('Order and Sort', () => {
 		expect(html.match(/class="cp-chip"/g)).toHaveLength(2);
 		expect(html.match(/draggable="true"/g)).toHaveLength(2);
 		expect(html).toContain('data-bucket="1"');
-		expect(html).toContain('Non classés (faites glisser un élément vers une case, ou sélectionnez-le puis cliquez sur la case)');
+		expect(html).toContain(
+			'Non classés (faites glisser un élément vers une case, ou sélectionnez-le puis cliquez sur la case)',
+		);
 		expect(html.match(/class="cp-bucket-target"/g)).toHaveLength(2);
 	});
 	it('Sort rejects an item pointing outside the buckets', async () => {

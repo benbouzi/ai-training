@@ -84,7 +84,9 @@ describe('mountLesson', () => {
 		expect(mountLesson(document)).toBe(true);
 		expect(progress.load().lessons[LESSON]?.state).toBe('read');
 		expect(q<HTMLButtonElement>('[data-finish]').disabled).toBe(true);
-		expect(q('[data-finish-note]').textContent).toBe('Réussissez ou passez encore 2 questions de contrôle pour terminer cette leçon.');
+		expect(q('[data-finish-note]').textContent).toBe(
+			'Réussissez ou passez encore 2 questions de contrôle pour terminer cette leçon.',
+		);
 		expect(q('[data-route=behind]').hidden).toBe(true);
 		expect(q('[data-route=ahead]').hidden).toBe(true);
 		expect(q('[data-skills-check]').hidden).toBe(true);

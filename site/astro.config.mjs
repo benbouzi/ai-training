@@ -241,10 +241,7 @@ export default defineConfig({
 						{
 							label: 'Carte des thèmes',
 							collapsed: true,
-							items: [
-								{ slug: 'map', label: 'Carte des thèmes', attrs: { 'data-group-link': '' } },
-								...topicSidebar(),
-							],
+							items: [{ slug: 'map', label: 'Carte des thèmes', attrs: { 'data-group-link': '' } }, ...topicSidebar()],
 						},
 						// The competency map is the heading of the per-area competency groups, as the topic map is (#514).
 						{

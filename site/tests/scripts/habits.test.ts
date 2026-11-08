@@ -32,7 +32,9 @@ describe('habitStatusText', () => {
 	it('has one line per card state', () => {
 		expect(habitStatusText(undefined, '2026-03-10')).toBe('Proposée une fois la leçon terminée.');
 		expect(habitStatusText(entry({ next: '2026-03-11' }), '2026-03-10')).toBe('Next on 2026-03-11.');
-		expect(habitStatusText(entry({ next: '2026-03-10' }), '2026-03-10')).toBe('Prévue aujourd’hui. L’avez-vous faite ?');
+		expect(habitStatusText(entry({ next: '2026-03-10' }), '2026-03-10')).toBe(
+			'Prévue aujourd’hui. L’avez-vous faite ?',
+		);
 		expect(habitStatusText(entry({ next: null }), '2026-03-10')).toBe('Habitude acquise.');
 		expect(habitStatusText(undefined, '2026-03-10', { state: 'finished', at: '2026-03-10' })).toBe('');
 	});

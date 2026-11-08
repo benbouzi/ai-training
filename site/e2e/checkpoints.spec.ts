@@ -165,7 +165,9 @@ test('repair: reveal the model answer, then self-grade', async ({ page }) => {
 	await page.goto('using-agents/delegating/');
 	const cp = page.locator('#fix-the-brief');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Écrivez votre correction, puis affichez la réponse modèle et comparez.');
+	await expect(cp.locator('.cp-feedback')).toHaveText(
+		'Écrivez votre correction, puis affichez la réponse modèle et comparez.',
+	);
 	await cp.locator('.cp-reveal-btn').click();
 	await expect(cp.locator('.cp-model')).toBeVisible();
 	await cp.locator('input[value=pass]').check();

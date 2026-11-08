@@ -466,7 +466,10 @@ function revealAnswer(el: HTMLElement) {
 			const fb = $(r, '.cp-row-feedback');
 			if (fb) fb.textContent = '';
 		}
-		announce(el, note(`Chaque ligne affiche maintenant sa réponse. ${$(el, '.cp-match')?.dataset.rationale ?? ''}`.trim()));
+		announce(
+			el,
+			note(`Chaque ligne affiche maintenant sa réponse. ${$(el, '.cp-match')?.dataset.rationale ?? ''}`.trim()),
+		);
 	} else if (kind === 'predict') {
 		const reveal = $(el, '.cp-reveal');
 		if (reveal) reveal.hidden = false;
