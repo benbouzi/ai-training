@@ -47,6 +47,32 @@ changement de terme se fait ici d’abord, puis dans toutes les pages.
   singulier) dans la leçon qui le couvre : le site transforme sa première
   mention en lien vers le glossaire.
 
+## Exemples et sorties de programme
+
+Les fichiers d’exemple (`site/examples/`) alimentent les widgets et les blocs
+de sortie des leçons, et `mise run examples` vérifie que chaque ligne qu’un
+script affiche figure dans un bloc `text` de la page. Quand le contenu d’un
+exemple se traduit (notes, politiques, prompts), le script et la page changent
+ensemble :
+
+- Les données lues par le programme sont traduites (textes de notes, tâches,
+  questions). Les étiquettes que le programme affiche (`task:`, `loop: ran`,
+  `ok`, `FAIL`, `match`) restent en anglais, comme dans un vrai outil, et la
+  leçon en donne le sens à leur première apparition.
+- Les noms de champs d’un format d’import (`owner`, `task`, `due`,
+  `priority`) et leurs valeurs (`high`, `medium`, `low`) restent en anglais.
+- Après une modification, on relance le script et on recopie sa sortie telle
+  quelle dans la leçon.
+
+## Outils
+
+- `docs/traduction/outils/ancres.py` : met à jour les ancres après la
+  traduction des titres, et vérifie qu’aucun lien ne vise une ancre absente.
+- `docs/traduction/outils/yaml_champs.py` : extrait les champs affichés des
+  YAML en JSON, puis réinjecte la traduction sans toucher au reste du fichier.
+- `docs/traduction/outils/interface.py` : table des libellés de l’interface,
+  appliquée aux composants et aux tests qui les citent.
+
 ## Structure du site
 
 | Anglais | Français |
@@ -89,6 +115,9 @@ changement de terme se fait ici d’abord, puis dans toutes les pages.
 | role | rôle |
 | iteration | itération |
 | structured output | sortie structurée |
+| prompt template | gabarit de prompt |
+| delimiter | délimiteur |
+| house style | style maison |
 | token | jeton |
 | input / output tokens | jetons d’entrée / de sortie |
 | context window | fenêtre de contexte |
