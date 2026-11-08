@@ -28,6 +28,10 @@ const reviewBy = data['review-by'];
 		<EditLink />
 		{reviewBy && <ReviewLine reviewBy={reviewBy} sourcesChecked={data['sources-checked']} />}
 		<LastUpdated />
-		<p class="ai-notice">Content co-authored by AI.</p>
+		<p class="ai-notice">
+			Contenu coécrit avec l’IA. Traduction française non officielle de la
+			<a href="https://schubergphilis.github.io/ai-training/">formation de Schuberg Philis</a>, sous licence
+			<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>.
+		</p>
 	</div>
 </footer>

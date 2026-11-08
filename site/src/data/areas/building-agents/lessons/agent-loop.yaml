@@ -12,7 +12,7 @@ introduces: [loop-from-scratch]
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
 extends-to:
   - label: Design patterns
     href: /building-agents/patterns/

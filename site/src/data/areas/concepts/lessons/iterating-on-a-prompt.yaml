@@ -16,7 +16,7 @@ assumes:
     section: format-and-length
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
 extends-to:
   - label: Where a model makes things up
     href: /concepts/thin-path/

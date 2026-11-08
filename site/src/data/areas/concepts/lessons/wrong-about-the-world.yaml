@@ -10,7 +10,7 @@ introduces: [factuality-and-faithfulness]
 assumes:
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
 extends-to:
   - label: Spotting a hallucination
     href: /safety/spotting-hallucination/

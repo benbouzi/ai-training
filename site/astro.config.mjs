@@ -183,12 +183,17 @@ export default defineConfig({
 					exclude: ({ link }) => link.startsWith(`${base}/glossary/#`),
 				}),
 			],
-			title: 'AI Training',
+			title: 'Formation IA',
+			// French translation: the root locale is French, so Starlight's own interface
+			// strings (search, table of contents, pagination) are in French and the URLs
+			// keep no /fr/ prefix.
+			defaultLocale: 'root',
+			locales: { root: { label: 'Français', lang: 'fr' } },
 			// The footer's "Last updated" date is the file's last git commit, so it moves
 			// on every edit. `sources-checked` in the lesson file is a separate date.
 			lastUpdated: true,
 			description:
-				'An open training suite for getting started with AI: concepts, safety, using agents, AI-assisted software engineering, customizing and building agents.',
+				'Une formation ouverte pour débuter avec l’IA : concepts, sécurité, usage des agents, génie logiciel assisté par l’IA, personnalisation et construction d’agents. Traduction française non officielle du cours de Schuberg Philis.',
 			favicon: '/favicon.svg',
 			// Adds the Markdown alternate head hint to the pages that have one (spec S12 "Head hints").
 			routeMiddleware: './src/route-data.ts',
@@ -203,60 +208,68 @@ export default defineConfig({
 				},
 			],
 			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/schubergphilis/ai-training' },
-				// The organization site this is a sub-site of (spec S14).
-				{ icon: 'external', label: 'Schuberg Philis open source', href: 'https://schubergphilis.github.io/' },
+				{ icon: 'github', label: 'GitHub (traduction)', href: 'https://github.com/benbouzi/ai-training' },
+				// The original English course this site translates.
+				{
+					icon: 'external',
+					label: 'Version originale (Schuberg Philis)',
+					href: 'https://schubergphilis.github.io/ai-training/',
+				},
 			],
-			editLink: { baseUrl: 'https://github.com/schubergphilis/ai-training/edit/main/site/' },
+			editLink: { baseUrl: 'https://github.com/benbouzi/ai-training/edit/main/site/' },
 			// Inter is self-hosted from its package, so a page load sends no request to a font service (spec S14).
 			customCss: ['@fontsource-variable/inter', './src/styles/custom.css', './src/styles/lesson.css'],
 			sidebar: [
 				// Ordered by what a learner needs first. "Your data" holds the tutor guide
 				// too, so it is near the top, but collapsed until the learner opens it.
 				{
-					label: 'Your data',
+					label: 'Vos données',
 					collapsed: true,
 					items: [
-						{ slug: 'progress', label: 'Your progress' },
-						{ slug: 'reference', label: 'Your reference' },
-						{ slug: 'settings', label: 'Your settings' },
-						{ slug: 'guides/tutor', label: 'Study with the tutor' },
+						{ slug: 'progress', label: 'Votre progression' },
+						{ slug: 'reference', label: 'Votre référence' },
+						{ slug: 'settings', label: 'Vos réglages' },
+						{ slug: 'guides/tutor', label: 'Étudier avec le tuteur' },
 					],
 				},
 				// The Foundations and Engineering groups come from the data tree; see courseSidebar().
 				...courseSidebar(),
 				{
-					label: 'Reference',
+					label: 'Référence',
 					items: [
 						// The topic map is the heading of the per-area topic groups (issue #228).
 						{
-							label: 'Topic map',
+							label: 'Carte des thèmes',
 							collapsed: true,
-							items: [{ slug: 'map', label: 'Topic map', attrs: { 'data-group-link': '' } }, ...topicSidebar()],
+							items: [
+								{ slug: 'map', label: 'Carte des thèmes', attrs: { 'data-group-link': '' } },
+								...topicSidebar(),
+							],
 						},
 						// The competency map is the heading of the per-area competency groups, as the topic map is (#514).
 						{
-							label: 'Competency map',
+							label: 'Carte des compétences',
 							collapsed: true,
 							items: [
-								{ slug: 'competencies', label: 'Competency map', attrs: { 'data-group-link': '' } },
+								{ slug: 'competencies', label: 'Carte des compétences', attrs: { 'data-group-link': '' } },
 								...competencySidebar(),
 							],
 						},
-						{ slug: 'glossary', label: 'Glossary' },
+						{ slug: 'glossary', label: 'Glossaire' },
 					],
 				},
 				{
-					label: 'Contributing',
+					label: 'Contribuer',
 					collapsed: true,
 					items: [
-						{ slug: 'contributing', label: 'Contributing' },
-						{ slug: 'guides/writing-pages', label: 'Writing pages' },
+						{ slug: 'contributing', label: 'Contribuer' },
+						{ slug: 'guides/writing-pages', label: 'Rédiger des pages' },
 					],
 				},
-				{ slug: 'guides/running-a-workshop', label: 'Run a workshop' },
+				{ slug: 'guides/running-a-workshop', label: 'Animer un atelier' },
 				// One page on the whole project: why, what, how it was built and is run (#762).
-				{ slug: 'about', label: 'About this project' },
+				{ slug: 'about', label: 'À propos du projet' },
+				{ slug: 'traduction', label: 'À propos de cette traduction' },
 			],
 			components: {
 				// Lesson frame: routing cards, finish/skip, checkpoint script.

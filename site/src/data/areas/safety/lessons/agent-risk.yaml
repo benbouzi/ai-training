@@ -18,7 +18,7 @@ introduces:
 assumes:
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
   - objective: safety/verifies-output/calibrates-trust
     lesson: safety/checking-what-an-agent-changed
     section: pause-before-the-step-you-cant-undo

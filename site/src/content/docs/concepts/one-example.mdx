@@ -1,69 +1,75 @@
 import { Choice, Match, Pitfall, Exercise, Recap, Prompt, Response, Sort, Scenario } from '@components/lesson';
 
-In the previous lesson you stated the format in words and in numbers, and
-that worked because "three bullets, each under 15 words" is a format words
-can state. Some formats resist that. In this lesson we take one of those, a
-team's house style for meeting notes, and watch a paragraph of rules fail
-to produce it. Then we replace the rules with one worked example and run
-both prompts.
+Dans la leçon précédente, vous avez indiqué le format en mots et en
+chiffres, et cela a marché parce que « trois puces de moins de 15 mots
+chacune » est un format que des mots peuvent énoncer. Certains formats s’y
+prêtent mal. Dans cette leçon, nous en prenons un, le style maison d’une
+équipe pour ses comptes rendus de réunion, et nous regardons un paragraphe de
+règles échouer à le produire. Nous remplaçons ensuite les règles par un seul
+exemple complet et nous lançons les deux prompts.
 
-You need any chat assistant you have access to. Every response shown here
-is illustrative. The author wrote it to show the pattern, and the component
-labels it that way. Your model gives a different text, and each response
-here is one possible answer. The comparison that matters is between your
-own two runs.
+Il vous faut un assistant conversationnel auquel vous avez accès. Toutes les
+réponses présentées ici sont des illustrations. L’auteur les a écrites pour
+montrer le mécanisme, et le composant les signale comme telles. Votre modèle
+donnera un autre texte, et chaque réponse présentée ici est une réponse
+possible parmi d’autres. La comparaison qui compte se fait entre vos deux
+essais.
 
-## A format that words describe badly
+## Un format que les mots décrivent mal
 
-Here is a note in the house style of a fictional team. They have written
-notes this way for years and nobody has ever written the rules down.
-
-```text
-Thu 4 Sep, office move (MK, JV, SR)
-DECIDED  Move on Sat 27 Sep, not Fri 26.        -> MK books movers by Tue
-DECIDED  Old desks go to the charity shop.        -> SR
-OPEN     Who packs the server room?               -> JV asks IT
-NOTED    Parking permits arrive after the move; no action.
-```
-
-Try to describe this format in words. The first line has the weekday and
-date, a short subject, and the attendees' initials in brackets. Each later
-line starts with a tag in capitals, padded so the items line up. An item is
-a fragment rather than a sentence. An arrow at the end gives the owner's
-initials, with a deadline where there is one, and a `NOTED` line has no
-arrow. The note has no heading, and it has no bullets or blank lines. You
-already have a paragraph, and it still leaves out the column widths and
-what counts as a fragment. It doesn't say whether the deadline is a day or
-a date.
-
-Here are the rough notes from a second meeting, as someone typed them
-during the call. We want them in the house style.
+Voici un compte rendu dans le style maison d’une équipe fictive. Elle écrit
+ses comptes rendus ainsi depuis des années, et personne n’en a jamais mis les
+règles par écrit.
 
 ```text
-18 sept, meeting about the Varrowmere delivery, present: Mia K, Jonas V, Sara R
-- varrowmere moved order 4471 from tue 14 oct to fri 17 oct morning
-- we said yes to friday, mia will confirm to them before thursday
-- the tuesday unloading shift can be cancelled, sara does it
-- not clear who takes the two replacement chairs when they arrive, jonas will ask facilities
-- reason is a port strike, nothing for us to do
+jeu. 4 sept., déménagement du bureau (MK, JV, SR)
+DÉCIDÉ  Déménager sam. 27 sept., pas ven. 26.     -> MK réserve les déménageurs d’ici mar.
+DÉCIDÉ  Vieux bureaux donnés à une association.   -> SR
+OUVERT  Qui emballe la salle des serveurs ?       -> JV demande à l’informatique
+NOTÉ    Badges de parking reçus après le déménagement ; rien à faire.
 ```
 
-Send the rules paragraph with the rough notes, and see how close the
-model gets.
+Essayez de décrire ce format avec des mots. La première ligne donne le jour
+de la semaine et la date, un sujet court, et les initiales des participants
+entre parenthèses. Chaque ligne suivante commence par une étiquette en
+capitales, complétée par des espaces pour que les éléments soient alignés. Un
+élément est un fragment de phrase. Une flèche à la fin donne les initiales du
+responsable, avec une échéance s’il y en a une, et une ligne `NOTÉ` n’a pas de
+flèche. Le compte rendu n’a pas de titre, ni puces, ni lignes vides. Vous
+avez déjà un paragraphe, et il laisse encore de côté la largeur des colonnes
+et ce qui compte comme fragment. Il ne dit pas si l’échéance est un jour de la
+semaine ou une date.
+
+Voici les notes brutes d’une seconde réunion, telles que quelqu’un les a
+tapées pendant l’appel. Nous les voulons dans le style maison.
+
+```text
+18 sept, réunion sur la livraison Varrowmere, présents : Mia K, Jonas V, Sara R
+- varrowmere a déplacé la commande 4471 du mar 14 oct au ven 17 oct matin
+- on a dit oui pour vendredi, mia leur confirme avant jeudi
+- le créneau de déchargement de mardi peut être annulé, sara s’en charge
+- pas clair qui récupère les deux chaises de remplacement à leur arrivée, jonas va demander aux services généraux
+- la raison est une grève au port, rien à faire de notre côté
+```
+
+Envoyez le paragraphe de règles avec les notes brutes, et voyez à quel point
+le modèle s’en approche.
 
 <Prompt model="illustrative" recorded="illustrative">
 
-Rewrite the rough meeting notes between the triple quotes in our house
-style. The first line has the weekday and the date, a short subject, and
-the attendees' initials in brackets. Lines after the first start with a tag in
-capitals: DECIDED, OPEN or NOTED. The tags are padded so the items start in
-the same column. Each item is a short fragment. At the end of a DECIDED or
-OPEN line, an arrow and the owner's initials, with a deadline if there is
-one. NOTED lines have no arrow. Use no heading, bullets or blank lines.
+Réécris dans notre style maison les notes de réunion brutes placées entre
+les triples guillemets. La première ligne donne le jour de la semaine et la
+date, un sujet court, et les initiales des participants entre parenthèses.
+Les lignes suivantes commencent par une étiquette en capitales : DÉCIDÉ,
+OUVERT ou NOTÉ. Les étiquettes sont complétées par des espaces pour que les
+éléments commencent dans la même colonne. Chaque élément est un fragment
+court. À la fin d’une ligne DÉCIDÉ ou OUVERT, une flèche et les initiales du
+responsable, avec une échéance s’il y en a une. Les lignes NOTÉ n’ont pas de
+flèche. N’utilise ni titre, ni puces, ni lignes vides.
 
 ```text
 """
-[the rough notes, pasted in full]
+[les notes brutes, collées en entier]
 """
 ```
 
@@ -71,61 +77,64 @@ one. NOTED lines have no arrow. Use no heading, bullets or blank lines.
 <Response>
 
 ```text
-**Meeting notes, 18 September: Varrowmere delivery**
-Attendees: MK, JV, SR
+**Compte rendu de réunion, 18 septembre : livraison Varrowmere**
+Participants : MK, JV, SR
 
-- DECIDED: Accept the new delivery date of Friday 17 October (morning). -> MK to confirm with Varrowmere before Thursday.
-- DECIDED: Cancel the Tuesday unloading shift. -> SR
-- OPEN: Who will receive the two replacement chairs on arrival? -> JV to ask Facilities.
-- NOTED: The delay is caused by a port strike. No action required for us.
+- DÉCIDÉ : Accepter la nouvelle date de livraison du vendredi 17 octobre (matin). -> MK confirme à Varrowmere avant jeudi.
+- DÉCIDÉ : Annuler le créneau de déchargement du mardi. -> SR
+- OUVERT : Qui réceptionnera les deux chaises de remplacement à leur arrivée ? -> JV se renseigne auprès des services généraux.
+- NOTÉ : Le retard est dû à une grève au port. Aucune action requise de notre part.
 ```
 
 </Response>
 
-Every rule is in the prompt and the answer breaks most of them. There is a
-heading, there are bullets, the tags have a colon, the items are full
-sentences, and the weekday is missing. In the lesson on how models work
-you saw that the model predicts the most likely next token given the whole
-prompt. The phrase "meeting notes" in your prompt pulls toward the millions
-of meeting notes in its training text, and those have headings and
-bullets. Your paragraph of rules is a weak pull against that,
-because each rule is one sentence, and the model has to turn a sentence
-into a pattern before it can follow it.
+Toutes les règles figurent dans le prompt, et la réponse enfreint la plupart
+d’entre elles. Il y a un titre, il y a des puces, les étiquettes sont suivies
+de deux points, les éléments sont des phrases complètes, et le jour de la
+semaine manque. Dans la leçon sur le fonctionnement des modèles, vous avez vu
+que le modèle prédit le jeton suivant le plus probable compte tenu de tout le
+prompt. Les mots « notes de réunion » de votre prompt attirent la prédiction
+vers les millions de comptes rendus de réunion de son texte d’entraînement,
+qui ont des titres et des puces. Votre paragraphe de règles exerce une
+attraction faible en sens inverse, parce que chaque règle tient en une
+phrase, et le modèle doit transformer une phrase en motif avant de pouvoir la
+suivre.
 
-## One worked pair instead
+## Une seule paire complète à la place
 
-Now give the model the pattern directly. Delete the rules and put the
-office-move note in their place, together with the rough notes it was
-written from. The model then has an input and an output side by side, and
-your instruction becomes "do the same for this one".
+Donnez maintenant le motif directement au modèle. Supprimez les règles et
+mettez à leur place le compte rendu du déménagement, accompagné des notes
+brutes à partir desquelles il a été écrit. Le modèle dispose alors d’une
+entrée et d’une sortie côte à côte, et votre instruction devient « fais la
+même chose pour celles-ci ».
 
 <Prompt model="illustrative" recorded="illustrative">
 
-Rewrite rough meeting notes in our house style. Here is one example of
-rough notes and the finished note.
+Réécris des notes de réunion brutes dans notre style maison. Voici un
+exemple de notes brutes et le compte rendu final correspondant.
 
 ```text
-Rough notes:
+Notes brutes :
 """
-4 sep, office move planning, Mia K, Jonas V, Sara R
-- decided to move saturday 27th instead of friday 26th, mia books the movers, needs to happen by tuesday
-- old desks to the charity shop, sara arranges
-- nobody knows yet who packs the server room, jonas will ask IT
-- parking permits only arrive after the move, nothing we can do
-"""
-
-Finished note:
-"""
-Thu 4 Sep, office move (MK, JV, SR)
-DECIDED  Move on Sat 27 Sep, not Fri 26.        -> MK books movers by Tue
-DECIDED  Old desks go to the charity shop.        -> SR
-OPEN     Who packs the server room?               -> JV asks IT
-NOTED    Parking permits arrive after the move; no action.
+4 sept, préparation du déménagement, Mia K, Jonas V, Sara R
+- décidé de déménager samedi 27 au lieu de vendredi 26, mia réserve les déménageurs, à faire avant mardi
+- vieux bureaux pour une association, sara s’en occupe
+- personne ne sait encore qui emballe la salle des serveurs, jonas va demander à l’informatique
+- les badges de parking n’arrivent qu’après le déménagement, on n’y peut rien
 """
 
-Now write the finished note for these rough notes:
+Compte rendu final :
 """
-[the Varrowmere rough notes, pasted in full]
+jeu. 4 sept., déménagement du bureau (MK, JV, SR)
+DÉCIDÉ  Déménager sam. 27 sept., pas ven. 26.     -> MK réserve les déménageurs d’ici mar.
+DÉCIDÉ  Vieux bureaux donnés à une association.   -> SR
+OUVERT  Qui emballe la salle des serveurs ?       -> JV demande à l’informatique
+NOTÉ    Badges de parking reçus après le déménagement ; rien à faire.
+"""
+
+Écris maintenant le compte rendu final pour ces notes brutes :
+"""
+[les notes brutes sur Varrowmere, collées en entier]
 """
 ```
 
@@ -133,188 +142,199 @@ Now write the finished note for these rough notes:
 <Response>
 
 ```text
-Thu 18 Sep, Varrowmere delivery (MK, JV, SR)
-DECIDED  Accept Fri 17 Oct morning slot.          -> MK confirms by Thu
-DECIDED  Cancel Tue unloading shift.              -> SR
-OPEN     Who receives the two replacement chairs? -> JV asks facilities
-NOTED    Delay caused by port strike; no action.
+jeu. 18 sept., livraison Varrowmere (MK, JV, SR)
+DÉCIDÉ  Accepter le ven. 17 oct. matin.           -> MK confirme d’ici jeu.
+DÉCIDÉ  Annuler le déchargement du mar.           -> SR
+OUVERT  Qui récupère les deux chaises ?           -> JV demande aux services généraux
+NOTÉ    Retard dû à une grève au port ; rien à faire.
 ```
 
 </Response>
 
-Put this next to the first run. The rules paragraph is gone and the format
-is right: the first line, the padded tags, the fragments, the arrows, the
-missing arrow on `NOTED`. You never wrote "pad the tags" or "write
-fragments". The model saw one input turned into one output and
-continued the pattern, the same way it continues any text. The pair you
-gave it is a [few-shot example](/glossary/#few-shot-example), a term made
-common by the paper that showed how much a large model picks up from a
-few worked examples in the prompt, with no training involved
-(@Brown 2020). "Shot" means one example, so a prompt with one pair is
-one-shot and a prompt with none is zero-shot, which is what the rules
-paragraph was.
+Mettez ce résultat à côté du premier essai. Le paragraphe de règles a disparu
+et le format est juste : la première ligne, les étiquettes alignées, les
+fragments, les flèches, l’absence de flèche sur `NOTÉ`. Vous n’avez jamais
+écrit « aligne les étiquettes » ni « écris des fragments ». Le modèle a vu une
+entrée transformée en une sortie et il a prolongé le motif, comme il prolonge
+n’importe quel texte. La paire que vous lui avez donnée est un
+[exemple few-shot](/glossary/#few-shot-example), un terme popularisé par
+l’article qui a montré tout ce qu’un grand modèle tire de quelques exemples
+complets placés dans le prompt, sans aucun entraînement (@Brown 2020).
+« Shot » désigne un exemple : un prompt avec une paire est dit one-shot, et
+un prompt sans exemple est dit zero-shot, ce qu’était le paragraphe de
+règles.
 
-The example also did something the rules didn't try to. The rough notes
-in the example say "nothing we can do", and the finished note turns that
-into `no action` with no arrow. Your second input had "nothing for us to
-do", and the model treated it the same way. One example covered an edge
-case, and the rules paragraph would have needed another sentence for it.
+L’exemple a aussi fait une chose que les règles n’avaient pas tentée. Les
+notes brutes de l’exemple disent « on n’y peut rien », et le compte rendu
+final transforme cela en `rien à faire`, sans flèche. Votre seconde entrée
+disait « rien à faire de notre côté », et le modèle l’a traitée de la même
+façon. Un exemple a couvert un cas particulier pour lequel le paragraphe de
+règles aurait eu besoin d’une phrase de plus.
 
-## When to show an example instead of describing
+## Quand montrer un exemple plutôt que décrire
 
-Show an example when the thing you want is easier to recognize than to
-state. That happens for a format, for a tone and for an edge case.
+Montrez un exemple quand ce que vous voulez est plus facile à reconnaître
+qu’à énoncer. C’est le cas pour un format, pour un ton et pour un cas
+particulier.
 
-A **format** with layout in it: columns, padding, where the line breaks
-go, what a short item looks like next to a long one. Words for layout are
-long and still ambiguous, and one example settles every one of those
-questions at once.
+Un **format** qui comporte une mise en page : des colonnes, des espaces
+d’alignement, l’endroit où passent les retours à la ligne, l’allure d’un
+élément court à côté d’un élément long. Décrire une mise en page avec des mots
+prend du temps et reste ambigu, et un seul exemple tranche toutes ces
+questions à la fois.
 
-A **tone**. "Friendly but brief" means something different to every reader.
-Two sentences written in the tone you want mean one thing, and the model
-matches them more closely than it matches an adjective.
+Un **ton**. « Aimable mais bref » signifie une chose différente pour chaque
+lecteur. Deux phrases écrites dans le ton voulu n’ont qu’un sens, et le
+modèle les imite de plus près qu’il ne suit un adjectif.
 
-An **edge case**. What to do with a missing owner, an item that is neither
-a decision nor a question, a line that says nothing needs doing. A rule
-for each case makes the prompt long, and the model may still not connect
-the rule to the case when it meets it. An example that contains the case
-shows the answer in place (@Academy building-with-the-claude-api).
+Un **cas particulier**. Que faire d’un responsable manquant, d’un élément qui
+n’est ni une décision ni une question, d’une ligne qui dit que rien n’est à
+faire. Une règle pour chaque cas allonge le prompt, et le modèle peut encore
+ne pas relier la règle au cas quand il le rencontre. Un exemple qui contient
+le cas montre la réponse en situation (@Academy building-with-the-claude-api).
 
-Describe in words when the requirement is one number or one word. "Under
-100 words", "in Dutch", "three bullets" need no example, and an example
-would add tokens and a topic the model might copy along with the format.
-The lesson on structured output shows the case where both are used at
-once: the field names described and one filled-in example of the format.
+Décrivez avec des mots quand l’exigence tient en un nombre ou en un mot.
+« Moins de 100 mots », « en néerlandais », « trois puces » n’ont besoin
+d’aucun exemple, et un exemple ajouterait des jetons ainsi qu’un sujet que
+le modèle risquerait de recopier en même temps que le format. La leçon sur
+la sortie structurée montre le cas où l’on utilise les deux à la fois : les
+noms de champs décrits et un exemple rempli du format.
 
-How many examples? The paper that made the term common found the biggest
-jump from no example to one, with smaller gains from each example after
-that (@Brown 2020). This course's advice for a chat prompt follows from
-that. One example is often enough for a format, as you just saw. Add a second
-or a third when one example can't show the variety you need, for example
-a short note next to a long one, or a meeting with no decisions. Pick each
-one to show something the others don't, because every example costs
-tokens that the model has to read on each call. The order of a prompt
-engineering course for developers follows the same path this lesson does,
-a clear instruction first and examples where the instruction isn't enough
-(@DLAI-1).
+Combien d’exemples ? L’article qui a popularisé le terme a constaté le plus
+grand saut entre zéro et un exemple, et des gains plus faibles pour chaque
+exemple ajouté ensuite (@Brown 2020). Le conseil de ce cours pour un prompt
+conversationnel en découle. Un exemple suffit souvent pour un format, comme
+vous venez de le voir. Ajoutez-en un deuxième ou un troisième quand un seul
+exemple ne peut pas montrer la variété dont vous avez besoin, par exemple un
+compte rendu court à côté d’un long, ou une réunion sans aucune décision.
+Choisissez chacun pour montrer quelque chose que les autres ne montrent pas,
+parce que chaque exemple coûte des jetons que le modèle doit lire à chaque
+appel. Un cours de rédaction de prompts pour développeurs suit le même ordre
+que cette leçon : une instruction claire d’abord, et des exemples là où
+l’instruction ne suffit pas (@DLAI-1).
 
 <Match id="describe-or-show" objective="concepts/prompts-reliably/structures-a-prompt"
   concepts={['few-shot-example']}
-  context="The lesson showed a paragraph of formatting rules fail to produce a team's house style for meeting notes, and one worked input and output pair succeed."
-  title="Describe it or show it?"
-  hint="Ask of each request: can you state the requirement in one number or one word, or would a reader recognize it faster than you could write it out?"
-  options={['Describe the format in words', 'Show one worked example']}
+  context="La leçon a montré un paragraphe de règles de mise en forme qui échoue à produire le style maison d’une équipe pour ses comptes rendus de réunion, et une seule paire complète entrée-sortie qui y parvient."
+  title="Le décrire ou le montrer ?"
+  hint="Pour chaque demande, demandez-vous : pouvez-vous énoncer l’exigence en un nombre ou en un mot, ou un lecteur la reconnaîtrait-il plus vite que vous ne pourriez l’écrire ?"
+  options={['Décrire le format avec des mots', 'Montrer un exemple complet']}
   rows={[
-    { statement: 'The answer must be under 100 words and written in Dutch.', option: 0, why: 'What would an example add to a number and a language name that the model can already act on?' },
-    { statement: 'Rewrite this notice in the tone of our previous notices to residents.', option: 1, why: 'How many adjectives would it take to pin down a tone, and would two readers agree on what they mean?' },
-    { statement: 'Write the phone numbers the way the staff directory does, including what it shows when a number is unknown.', option: 1, why: 'The layout has spacing and an edge case in it. How long is the sentence that describes the grouping, compared with one line that shows it?' },
+    { statement: 'La réponse doit faire moins de 100 mots et être rédigée en néerlandais.', option: 0, why: 'Qu’apporterait un exemple à un nombre et à un nom de langue sur lesquels le modèle peut déjà agir ?' },
+    { statement: 'Réécris cet avis dans le ton de nos précédents avis aux habitants.', option: 1, why: 'Combien d’adjectifs faudrait-il pour cerner un ton, et deux lecteurs seraient-ils d’accord sur leur sens ?' },
+    { statement: 'Écris les numéros de téléphone comme le fait l’annuaire du personnel, y compris ce qu’il affiche quand un numéro est inconnu.', option: 1, why: 'La mise en page comporte des espacements et un cas particulier. Quelle longueur fait la phrase qui décrit le regroupement des chiffres, comparée à une ligne qui le montre ?' },
   ]}
-  rationale="A number or a word is a description the model can act on directly. Layout, tone and edge cases are easier to recognize than to state, so one example carries them better than a paragraph.">
+  rationale="Un nombre ou un mot est une description sur laquelle le modèle peut agir directement. Une mise en page, un ton ou un cas particulier sont plus faciles à reconnaître qu’à énoncer, et un seul exemple les transmet mieux qu’un paragraphe.">
 
-For each request, decide whether you would describe the format in words
-or show one worked example.
+Pour chaque demande, décidez si vous décririez le format avec des mots ou si
+vous montreriez un exemple complet.
 
 </Match>
 
-<Pitfall title="A mistake in the example is a rule">
+<Pitfall title="Une erreur dans l’exemple devient une règle">
 
-The office-move note above is correct, and that was on purpose. Suppose
-instead that the person who typed it slipped on one line and wrote the
-owner without the arrow: `OPEN     Who packs the server room?   JV asks IT`.
-The model has no way to tell that this is a slip. To it, the missing
-arrow is as much a part of the pattern as the padded tags, and the
-Varrowmere note comes back with the arrow missing on its `OPEN` line too.
-Adding a sentence "always use the arrow" often doesn't fix it, because the
-example pulls harder than the sentence, which is the reason you used an
-example in the first place. A model often copies the example more closely
-than it follows a rule, so read every example as if it were a rule, and
-fix the example rather than writing a rule against it.
+Le compte rendu du déménagement ci-dessus est juste, et c’est voulu.
+Supposez qu’à la place, la personne qui l’a tapé ait glissé sur une ligne et
+écrit le responsable sans la flèche :
+`OUVERT  Qui emballe la salle des serveurs ?       JV demande à l’informatique`.
+Le modèle n’a aucun moyen de savoir qu’il s’agit d’une étourderie. Pour lui,
+la flèche absente fait autant partie du motif que les étiquettes alignées, et
+le compte rendu Varrowmere revient avec, lui aussi, une flèche absente sur sa
+ligne `OUVERT`. Ajouter la phrase « mets toujours la flèche » ne règle souvent
+rien, parce que l’exemple attire plus fort que la phrase, et c’est justement
+pour cela que vous avez utilisé un exemple. Un modèle copie souvent l’exemple
+de plus près qu’il ne suit une règle : lisez donc chaque exemple comme une
+règle, et corrigez l’exemple au lieu d’écrire une règle contre lui.
 
 </Pitfall>
 
 <Choice id="fix-the-example" objective="concepts/prompts-reliably/structures-a-prompt"
   concepts={['few-shot-example']}
-  context="A prompt contains one worked example of a team's meeting-note format. The example has a slip on one line, and the model's output repeats the slip."
-  title="The output repeats the slip"
-  hint="Which part of the prompt is the model copying most closely, and what is the smallest change that makes that part say what you want?"
+  context="Un prompt contient un exemple complet du format de compte rendu de réunion d’une équipe. L’exemple comporte une erreur sur une ligne, et la sortie du modèle reproduit cette erreur."
+  title="La sortie reproduit l’erreur"
+  hint="Quelle partie du prompt le modèle copie-t-il de plus près, et quelle est la plus petite modification qui fait dire à cette partie ce que vous voulez ?"
   options={[
-    { text: 'Add a rule after the example: "Always end OPEN lines with an arrow."', why: 'The example still shows a line without an arrow.' },
-    { text: 'Correct the slip in the example and send the prompt again.', correct: true },
-    { text: 'Ask the model why it left out the arrow, then fix whatever it says.', why: 'The explanation is new text predicted from your question. The lesson on how models work says what to treat it as.' },
-    { text: 'Add two more examples so the model has more to learn from.', why: 'If the new examples are right, the odds improve.' },
+    { text: 'Ajouter une règle après l’exemple : « Termine toujours les lignes OUVERT par une flèche. »', why: 'L’exemple montre toujours une ligne sans flèche.' },
+    { text: 'Corriger l’erreur dans l’exemple et renvoyer le prompt.', correct: true },
+    { text: 'Demander au modèle pourquoi il a omis la flèche, puis corriger ce qu’il indique.', why: 'L’explication est un nouveau texte prédit à partir de votre question. La leçon sur le fonctionnement des modèles dit comment la traiter.' },
+    { text: 'Ajouter deux exemples de plus pour que le modèle ait davantage de quoi apprendre.', why: 'Si les nouveaux exemples sont justes, les chances s’améliorent.' },
   ]}>
 
-You gave the model one example of the house style, and one `OPEN` line in
-it has no arrow by mistake. The output leaves the arrow off its `OPEN` line
-too. What is the right fix?
+Vous avez donné au modèle un exemple du style maison, et une ligne `OUVERT`
+de cet exemple n’a pas de flèche, par erreur. La sortie omet elle aussi la
+flèche sur sa ligne `OUVERT`. Quelle est la bonne correction ?
 
 </Choice>
 
 <Sort id="show-or-say" phase="review" objective="concepts/prompts-reliably/structures-a-prompt"
   concepts={['few-shot-example']}
-  context="The lesson shows that one worked input and output pair gets a format that a paragraph of rules couldn't, and says when to describe a requirement in words instead."
-  title="Show it or say it?" hint="Does the requirement have a layout, a tone or an edge case in it, or is it one number or word?"
-  buckets={['Show one worked example', 'Describe it in words']}
+  context="La leçon montre qu’une seule paire complète entrée-sortie obtient un format qu’un paragraphe de règles n’obtenait pas, et indique quand décrire une exigence avec des mots."
+  title="Le montrer ou le dire ?" hint="L’exigence comporte-t-elle une mise en page, un ton ou un cas particulier, ou tient-elle en un nombre ou en un mot ?"
+  buckets={['Montrer un exemple complet', 'Le décrire avec des mots']}
   items={[
-    { text: 'Invoice lines in the finance team\'s layout, empty fields included', bucket: 0 },
-    { text: 'The tone of the team\'s earlier replies', bucket: 0 },
-    { text: 'A date range as the booking system prints it, one-day ranges too', bucket: 0 },
-    { text: 'No more than 80 words in the whole answer', bucket: 1 },
-    { text: 'Written in Spanish', bucket: 1 },
-    { text: 'Exactly three bullets, one for each decision', bucket: 1 },
+    { text: 'Des lignes de facture dans la mise en page de l’équipe financière, champs vides compris', bucket: 0 },
+    { text: 'Le ton des réponses précédentes de l’équipe', bucket: 0 },
+    { text: 'Une période telle que l’affiche le système de réservation, y compris les périodes d’un seul jour', bucket: 0 },
+    { text: 'Pas plus de 80 mots pour toute la réponse', bucket: 1 },
+    { text: 'Rédigé en espagnol', bucket: 1 },
+    { text: 'Exactement trois puces, une par décision', bucket: 1 },
   ]} />
 
 <Scenario id="the-example-with-a-slip" phase="review" objective="concepts/prompts-reliably/structures-a-prompt"
   concepts={['few-shot-example']}
-  context="A prompt shows the model one worked example of a team's format for a list of open tickets. In the example, one ticket number was typed without its leading zero."
-  title="The example had a slip" hint="What does the model copy most closely: the rules or the example?"
+  context="Un prompt montre au modèle un exemple complet du format d’une équipe pour une liste de tickets ouverts. Dans l’exemple, un numéro de ticket a été tapé sans son zéro initial."
+  title="L’exemple contenait une erreur" hint="Que copie le modèle de plus près : les règles ou l’exemple ?"
   options={[
-    { text: 'Correct the ticket number in the example and run the prompt again.', correct: true, consequence: 'The model copies the corrected example, and every ticket number keeps its leading zero.' },
-    { text: 'Add a rule under the example that says to keep the leading zeros.', consequence: 'The example still shows a number without its zero, and the model follows the example on some runs.' },
-    { text: 'Remove the example and describe the whole format in rules.', consequence: 'The layout the example showed gets lost, and the rules don\'t bring it back.' },
-    { text: 'Ask the model to explain why it dropped the zeros.', consequence: 'The model writes a plausible reason, and the example with the slip is still in the prompt.' },
+    { text: 'Corriger le numéro de ticket dans l’exemple et relancer le prompt.', correct: true, consequence: 'Le modèle copie l’exemple corrigé, et chaque numéro de ticket garde son zéro initial.' },
+    { text: 'Ajouter sous l’exemple une règle qui demande de garder les zéros initiaux.', consequence: 'L’exemple montre toujours un numéro sans son zéro, et le modèle suit l’exemple lors de certains essais.' },
+    { text: 'Supprimer l’exemple et décrire tout le format sous forme de règles.', consequence: 'La mise en page que montrait l’exemple se perd, et les règles ne la font pas revenir.' },
+    { text: 'Demander au modèle d’expliquer pourquoi il a supprimé les zéros.', consequence: 'Le modèle écrit une raison plausible, et l’exemple qui contient l’erreur reste dans le prompt.' },
   ]}>
 
-The output drops the leading zero from some ticket numbers, the same way
-your one example does by mistake. What do you do?
+La sortie supprime le zéro initial de certains numéros de ticket, comme le
+fait par erreur votre unique exemple. Que faites-vous ?
 
 </Scenario>
 
-<Exercise stretch="Add a deliberate mistake to your example, such as a wrong date format or a missing field, and run again. Did the output copy it? Then fix the example and confirm the copy is gone.">
+<Exercise stretch="Introduisez volontairement une erreur dans votre exemple, comme un mauvais format de date ou un champ manquant, et relancez. La sortie l’a-t-elle recopiée ? Corrigez ensuite l’exemple et vérifiez que la copie a disparu.">
 
-Pick a format from your own work that you know by sight, such as the way
-your team writes a status update or a shift handover.
-Find one finished piece in that format and the rough material it was made
-from, or write both in five minutes. In a fresh chat, describe the format in
-a paragraph of rules and ask the model to convert a second piece of rough
-material. In another fresh chat, replace the paragraph with the finished
-piece and its rough material, fenced and labeled as in this lesson, and ask
-for the same conversion. Fifteen minutes is enough. Doing this once on a
-format you know by heart shows you which of your requirements were never
-in your rules.
+Choisissez dans votre propre travail un format que vous reconnaissez au
+premier coup d’œil, comme la façon dont votre équipe rédige un point d’étape
+ou une passation de consignes. Trouvez un document fini dans ce format et le
+matériau brut à partir duquel il a été produit, ou écrivez les deux en cinq
+minutes. Dans une nouvelle conversation, décrivez le format en un paragraphe
+de règles et demandez au modèle de convertir un second matériau brut. Dans
+une autre nouvelle conversation, remplacez le paragraphe par le document fini
+et son matériau brut, enclos et étiquetés comme dans cette leçon, et demandez
+la même conversion. Quinze minutes suffisent. Le faire une fois sur un format
+que vous connaissez par cœur vous montre lesquelles de vos exigences n’ont
+jamais figuré dans vos règles.
 
-A good result is a second output that a colleague would accept as written
-by the team, and a first output that you can mark up with the rules it
-broke. Which rule did the model break in round one that you had not
-thought to write down at all?
+Un bon résultat est une seconde sortie qu’un collègue accepterait comme
+écrite par l’équipe, et une première sortie que vous pouvez annoter avec les
+règles qu’elle a enfreintes. Quelle règle le modèle a-t-il enfreinte au
+premier essai alors que vous n’aviez même pas pensé à l’écrire ?
 
 </Exercise>
 
 <Recap>
 
-1. A paragraph of rules is one sentence per requirement, and the model
-   has to turn each sentence into a pattern before it can follow it. The
-   default from its training text often pulls harder.
-2. One worked input and output pair shows the pattern directly, and the
-   model continues it, layout and edge cases included. The pair is a
-   few-shot example, a term the paper on the effect made common (@Brown 2020).
-3. Show an example for a format with layout in it, a tone, or an edge
-   case. Describe in words when the requirement is a number or a word.
-4. The biggest gain is from no example to one (@Brown 2020). One example
-   is often enough for a format, and this course's advice is two or three
-   chosen to show variety before a page of rules. Each one costs tokens.
-5. The model often copies the example more closely than it follows a
-   rule, so it copies a mistake in the example too. Read every example as
-   a spec, and fix the example rather than writing a rule against it.
+1. Un paragraphe de règles consacre une phrase à chaque exigence, et le
+   modèle doit transformer chaque phrase en motif avant de pouvoir la suivre.
+   La valeur par défaut de son texte d’entraînement attire souvent plus fort.
+2. Une seule paire complète entrée-sortie montre le motif directement, et le
+   modèle le prolonge, mise en page et cas particuliers compris. Cette paire
+   est un exemple few-shot, un terme popularisé par l’article sur cet effet
+   (@Brown 2020).
+3. Montrez un exemple pour un format qui comporte une mise en page, pour un
+   ton ou pour un cas particulier. Décrivez avec des mots quand l’exigence
+   tient en un nombre ou en un mot.
+4. Le plus grand gain se fait entre zéro et un exemple (@Brown 2020). Un
+   exemple suffit souvent pour un format, et ce cours conseille deux ou trois
+   exemples choisis pour montrer la variété avant d’écrire une page de
+   règles. Chacun coûte des jetons.
+5. Le modèle copie souvent l’exemple de plus près qu’il ne suit une règle, et
+   il en copie donc aussi les erreurs. Lisez chaque exemple comme une
+   spécification, et corrigez l’exemple au lieu d’écrire une règle contre lui.
 
 </Recap>

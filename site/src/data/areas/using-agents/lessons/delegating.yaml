@@ -13,7 +13,7 @@ introduces: [task-brief, giving-context, choosing-a-degree-of-autonomy, checking
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
 extends-to:
   - label: Decomposing work
     href: /using-agents/decomposition/

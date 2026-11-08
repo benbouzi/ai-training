@@ -13,7 +13,7 @@ assumes:
     section: why-the-retry-gives-the-same-class-of-mistake
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
 extends-to:
   - label: Breaking work into pieces
     href: /using-agents/breaking-work-into-pieces/

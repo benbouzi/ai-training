@@ -10,7 +10,7 @@ introduces: [few-shot-example]
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
   - objective: concepts/prompts-reliably/structures-a-prompt
     lesson: concepts/prompt-anatomy
     section: the-instruction

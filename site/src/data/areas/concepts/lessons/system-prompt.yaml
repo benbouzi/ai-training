@@ -19,7 +19,7 @@ assumes:
     section: format-and-length
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
 extends-to:
   - label: "Project instructions: AGENTS.md"
     href: /customizing-agents/instructions/

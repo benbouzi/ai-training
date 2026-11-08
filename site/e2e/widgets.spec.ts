@@ -14,7 +14,7 @@ test('the token counter prints the two reports the page shows for the sample', a
 	await page.goto('concepts/context-window/');
 	const counter = page.locator('[data-token-counter]');
 	await expect(counter).toHaveCount(1);
-	await counter.getByRole('button', { name: 'Count' }).click();
+	await counter.getByRole('button', { name: 'Compter' }).click();
 	const countsFence = page.locator('pre').filter({ hasText: 'tokens (estimate):' });
 	const pagesFence = page.locator('pre').filter({ hasText: 'one page:' });
 	await expect(countsFence).toHaveCount(1);
@@ -25,7 +25,7 @@ test('the token counter prints the two reports the page shows for the sample', a
 	expect((await counter.locator('.tc-pages li').allInnerTexts()).join('\n')).toBe(pages);
 	await counter.locator('textarea').fill('Hello, world!');
 	await expect(counter.locator('.tc-counts li')).toHaveCount(0);
-	await counter.getByRole('button', { name: 'Count' }).click();
+	await counter.getByRole('button', { name: 'Compter' }).click();
 	await expect(counter.locator('.tc-counts li').last()).toHaveText('tokens (estimate): 4');
 });
 
@@ -35,15 +35,15 @@ test('the repeated runs widget prints the summary the page shows at temperature 
 	await expect(widget).toHaveCount(1);
 	await widget.locator('input[type=range]').fill('0');
 	await expect(widget.locator('output')).toHaveText('0.0');
-	await widget.getByRole('button', { name: 'Run 10 times' }).click();
+	await widget.getByRole('button', { name: 'Lancer 10 fois' }).click();
 	await expect(widget.locator('.rr-lines li')).toHaveCount(10);
 	const fenceLocator = page.locator('pre').filter({ hasText: '10 of 10 runs give the same answer' });
 	await expect(fenceLocator).toHaveCount(1);
 	const fence = (await fenceLocator.innerText()).trim();
 	await expect(widget.locator('.rr-summary li')).toHaveText([fence]);
-	await widget.getByLabel('Check each answer').check();
+	await widget.getByLabel('Vérifier chaque réponse').check();
 	await expect(widget.locator('.rr-lines li')).toHaveCount(0);
-	await widget.getByRole('button', { name: 'Run 10 times' }).click();
+	await widget.getByRole('button', { name: 'Lancer 10 fois' }).click();
 	await expect(widget.locator('.rr-summary li')).toHaveText([
 		'10 of 10 runs give the same answer as run 1',
 		'10 of 10 runs pass the check: the answer names Canberra',
@@ -64,7 +64,7 @@ test('the format checker prints the report the page shows after each sample', as
 	expect(count).toBeGreaterThan(0);
 	for (let i = 0; i < count; i++) {
 		const checker = samples.nth(i);
-		await checker.getByRole('button', { name: 'Check' }).click();
+		await checker.getByRole('button', { name: 'Vérifier' }).click();
 		const fence = (await checker.locator('xpath=following::pre[1]').innerText()).trim();
 		const report = [...(await checker.locator('.fc-lines li').allInnerTexts())];
 		const summary = await checker.locator('.fc-summary').innerText();
@@ -81,7 +81,7 @@ test('the format checker checks a pasted answer', async ({ page }) => {
 		.fill(
 			'owner: Jonas | task: fix the reset email | due: 2026-10-03 | priority: high\nowner: Sam | task: get quotes | due: 17 October | priority: low',
 		);
-	await checker.getByRole('button', { name: 'Check' }).click();
+	await checker.getByRole('button', { name: 'Vérifier' }).click();
 	await expect(checker.locator('.fc-lines li')).toHaveText([
 		'ok 1: Jonas, fix the reset email, 2026-10-03, high',
 		'FAIL 2: due "17 October" is not a date written as YYYY-MM-DD',

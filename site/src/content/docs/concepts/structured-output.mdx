@@ -1,340 +1,363 @@
 import { Choice, Pitfall, Exercise, Recap, Prompt, Response, MultiChoice, Scenario } from '@components/lesson';
 import FormatChecker from '@components/widgets/FormatChecker.astro';
 
-In the lesson on instruction, context, and format you asked for three
-bullets under 15 words, and a person read them. In this lesson the reader
-of the answer is a program. We ask a chat assistant for the action items
-in the notes of a project meeting, and we paste each answer into a small
-checker that accepts the same items as a task tracker's import. The first
-answer is prose and the checker can't read it. By the end the answer
-passes, and the difference is what the prompt now says about the format.
+Dans la leçon sur l’instruction, le contexte et le format, vous avez demandé
+trois puces de moins de 15 mots, et une personne les a lues. Dans cette
+leçon, le lecteur de la réponse est un programme. Nous demandons à un
+assistant conversationnel les actions à mener tirées du compte rendu d’une
+réunion de projet, et nous collons chaque réponse dans un petit vérificateur
+qui accepte les mêmes éléments que l’import d’un outil de suivi des tâches.
+La première réponse est de la prose, et le vérificateur ne peut pas la lire.
+À la fin, la réponse passe, et la différence tient à ce que le prompt dit
+désormais du format.
 
-You need any chat assistant, and the checker is on this page. Every
-response shown here is illustrative: the author wrote it to show the
-pattern, and the component says so. Your model gives a different text,
-and the checker tells you whether that text passes.
+Il vous faut un assistant conversationnel, et le vérificateur se trouve sur
+cette page. Toutes les réponses présentées ici sont des illustrations :
+l’auteur les a écrites pour montrer le mécanisme, et le composant le
+signale. Votre modèle donnera un autre texte, et le vérificateur vous dit si
+ce texte passe.
 
-## Prose that someone retypes
+## De la prose que quelqu’un recopie
 
-Here are the meeting notes. They're fictional, and every round uses them
-unchanged.
+Voici le compte rendu de la réunion. Il est fictif, et chaque essai l’utilise
+sans modification.
 
-> Project meeting, 29 September. Present: Dana, Jonas, Maria, Sam.
+> Réunion de projet, 29 septembre. Présents : Dana, Jonas, Maria, Sam.
 >
-> Maria shows the new login page. Jonas found that the password reset email
-> still goes to the old address. Jonas fixes that before the test round on
-> Friday 3 October. Everyone agrees this is the most urgent item.
+> Maria présente la nouvelle page de connexion. Jonas a constaté que le
+> courriel de réinitialisation du mot de passe part toujours vers l’ancienne
+> adresse. Jonas corrige cela avant la session de tests du vendredi
+> 3 octobre. Tout le monde s’accorde à dire que c’est le point le plus urgent.
 >
-> The contract for the search box ends in December. Dana asks Sam to get
-> two quotes for a replacement, by 17 October. Nobody sees it as urgent
-> yet.
+> Le contrat du champ de recherche se termine en décembre. Dana demande à Sam
+> d’obtenir deux devis pour un remplacement, d’ici le 17 octobre. Personne ne
+> le juge encore urgent.
 >
-> The help texts still use the old system name. Maria takes that, target 10
-> October, low priority.
+> Les textes d’aide utilisent encore l’ancien nom du système. Maria s’en
+> charge, objectif le 10 octobre, priorité basse.
 >
-> Sam notes that the accessibility check isn't booked yet. Dana books it
-> with the agency by 8 October. Medium priority.
+> Sam signale que le contrôle d’accessibilité n’est pas encore réservé. Dana
+> le réserve auprès de l’agence d’ici le 8 octobre. Priorité moyenne.
 
-The team's tracker imports items from a file, and each item needs four
-fields: an owner, a task, a due date written as `YYYY-MM-DD`, and a
-priority that's `high`, `medium`, or `low`. Paste the notes into your chat
-tool with a one-line request above them.
+L’outil de suivi de l’équipe importe les tâches depuis un fichier, et chaque
+tâche a besoin de quatre champs : un responsable (`owner`), une tâche
+(`task`), une échéance (`due`) écrite sous la forme `YYYY-MM-DD`, et une
+priorité (`priority`) qui vaut `high`, `medium` ou `low`. Les noms de champs
+et les valeurs de priorité sont ceux de l’outil, en anglais, comme c’est
+souvent le cas d’un format d’import. Collez le compte rendu dans votre outil
+conversationnel avec une demande d’une ligne au-dessus.
 
 <Prompt model="illustrative" recorded="illustrative">
-List the action items from the notes between the triple quotes.
+Liste les actions à mener tirées du compte rendu placé entre les triples guillemets.
 
 """
-[the notes, pasted in full]
+[le compte rendu, collé en entier]
 """
 </Prompt>
 <Response>
-Here are the action items from the meeting:
+Voici les actions à mener issues de la réunion :
 
-1. **Jonas** will fix the password reset email so that it goes to the new
-   address. This needs to be done before the test round on Friday 3
-   October and is the most urgent item.
-2. **Sam** will get two quotes for a new search box by 17 October,
-   since the current contract ends in December.
-3. **Maria** will update the help texts to use the new system name, with a
-   target of 10 October.
-4. **Dana** will book the accessibility check with the agency by 8 October.
+1. **Jonas** corrigera le courriel de réinitialisation du mot de passe pour
+   qu’il parte vers la nouvelle adresse. C’est à faire avant la session de
+   tests du vendredi 3 octobre, et c’est le point le plus urgent.
+2. **Sam** obtiendra deux devis pour un nouveau champ de recherche d’ici le
+   17 octobre, puisque le contrat actuel se termine en décembre.
+3. **Maria** mettra à jour les textes d’aide avec le nouveau nom du système,
+   avec un objectif au 10 octobre.
+4. **Dana** réservera le contrôle d’accessibilité auprès de l’agence d’ici
+   le 8 octobre.
 </Response>
 
-This response is illustrative, like every one on this page, and yours
-reads a little differently. It is a good answer for a person. For the tracker it is four paragraphs
-that someone retypes. While retyping they decide what the priority of item
-2 is, and they decide which year "17 October" is in. Each decision is a
-place for a mistake, and a second person retyping the same notes would
-decide some of them the other way. The prompt said nothing about the format, so the model chose the
-format it uses for a general reader, as it did in the lesson on instruction, context, and format.
+Cette réponse est une illustration, comme toutes celles de cette page, et la
+vôtre sera formulée un peu autrement. C’est une bonne réponse pour une
+personne. Pour l’outil de suivi, ce sont quatre paragraphes que quelqu’un
+doit recopier. En recopiant, cette personne décide de la priorité du point 2,
+et de l’année à laquelle appartient « 17 octobre ». Chaque décision est une
+occasion d’erreur, et une deuxième personne qui recopierait le même compte
+rendu trancherait certaines d’entre elles autrement. Le prompt ne disait rien
+du format, et le modèle a donc choisi celui qu’il utilise pour un lecteur
+général, comme dans la leçon sur l’instruction, le contexte et le format.
 
-## One line per item
+## Une ligne par élément
 
-**Structured output** is an answer in a fixed format that the next step
-can read without a person reformatting it. The simplest such format is
-one line per item, with the fields named in the line. Ask for exactly that,
-and name the allowed values where a field has a fixed set of them.
+Une **sortie structurée** est une réponse dans un format fixe que l’étape
+suivante peut lire sans qu’une personne la remette en forme. Le format le
+plus simple est une ligne par élément, avec les champs nommés dans la ligne.
+Demandez exactement cela, et nommez les valeurs autorisées quand un champ a
+un ensemble fixe de valeurs.
 
 <Prompt model="illustrative" recorded="illustrative">
-List every action item from the notes between the triple quotes. Write
-one line per item and nothing else, in this exact format:
+Liste toutes les actions à mener tirées du compte rendu placé entre les
+triples guillemets. Écris une ligne par action et rien d’autre, exactement
+dans ce format :
 
-owner: first name | task: what they do, under 12 words | due: YYYY-MM-DD | priority: high, medium, or low
+owner: prénom | task: ce que la personne fait, en moins de 12 mots | due: YYYY-MM-DD | priority: high, medium ou low
 
-Use the first names as written in the notes. The year is 2026. Take the
-priority from what the notes say about urgency.
+Utilise les prénoms tels qu’ils sont écrits dans le compte rendu. L’année est
+2026. Déduis la priorité de ce que dit le compte rendu sur l’urgence.
 
 """
-[the notes, pasted in full]
+[le compte rendu, collé en entier]
 """
 </Prompt>
 <Response>
-owner: Jonas | task: fix the password reset email address | due: 2026-10-03 | priority: high
-owner: Sam | task: get two quotes for a new search box | due: 2026-10-17 | priority: low
-owner: Maria | task: replace the old system name in the help texts | due: 2026-10-10 | priority: low
-owner: Dana | task: book the accessibility check with the agency | due: 2026-10-08 | priority: medium
+owner: Jonas | task: corriger le courriel de réinitialisation du mot de passe | due: 2026-10-03 | priority: high
+owner: Sam | task: obtenir deux devis pour un nouveau champ de recherche | due: 2026-10-17 | priority: low
+owner: Maria | task: remplacer l’ancien nom du système dans les textes d’aide | due: 2026-10-10 | priority: low
+owner: Dana | task: réserver le contrôle d’accessibilité auprès de l’agence | due: 2026-10-08 | priority: medium
 </Response>
 
-Now check the answer. The checker below accepts the same items as the
-tracker's import. It reads the text in its box and shows one line per
-item, `ok` or `FAIL`, then a summary line. It reads the one-line format
-from this round. The next round asks for the same fields as JSON
-(JavaScript Object Notation, a common text format for data that programs
-exchange), and the checker takes that format too. The box already holds
-the answer shown above, so you can try the checker before you paste your
-own.
+Vérifiez maintenant la réponse. Le vérificateur ci-dessous accepte les mêmes
+éléments que l’import de l’outil de suivi. Il lit le texte de sa zone de
+saisie et affiche une ligne par élément, `ok` ou `FAIL` (échec), puis une
+ligne de synthèse. Il lit le format d’une ligne par élément de cet essai.
+L’essai suivant demande les mêmes champs en JSON (JavaScript Object Notation,
+un format texte courant pour les données que s’échangent des programmes), et
+le vérificateur accepte aussi ce format. La zone contient déjà la réponse
+présentée ci-dessus, pour que vous puissiez essayer le vérificateur avant de
+coller la vôtre.
 
 <FormatChecker sample="concepts/structured-output/sample/lines.txt" />
 
-Press Check. The report should read:
+Appuyez sur Vérifier. Le rapport doit indiquer :
 
 ```text
-ok 1: Jonas, fix the password reset email address, 2026-10-03, high
-ok 2: Sam, get two quotes for a new search box, 2026-10-17, low
-ok 3: Maria, replace the old system name in the help texts, 2026-10-10, low
-ok 4: Dana, book the accessibility check with the agency, 2026-10-08, medium
+ok 1: Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high
+ok 2: Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low
+ok 3: Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low
+ok 4: Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium
 4 of 4 items pass
 ```
 
-Now check your own answer. Replace the text in the box with the answer
-from your chat tool, and press Check again. The checker skips a line that
-starts with three backticks, so you can leave a code fence around the
-answer in place. If an item fails, the line tells you which field is
-missing or which value is outside the allowed set. That failure is about
-your prompt, so change the prompt, run it again in a fresh chat, and check
-again.
+Vérifiez maintenant votre propre réponse. Remplacez le texte de la zone par
+la réponse de votre outil conversationnel, et appuyez de nouveau sur
+Vérifier. Le vérificateur ignore une ligne qui commence par trois accents
+graves, vous pouvez donc laisser en place un bloc de code autour de la
+réponse. Si un élément échoue, la ligne vous indique quel champ manque ou
+quelle valeur sort de l’ensemble autorisé. Cet échec concerne votre prompt :
+modifiez le prompt, relancez-le dans une nouvelle conversation, et vérifiez
+de nouveau.
 
-## Named keys and allowed values
+## Des clés nommées et des valeurs autorisées
 
-The one-line format is easy to read and easy to break: a task that
-contains a `|` splits into an extra field, and there is no agreed way to
-write a value that's empty or a list. When the next step is a program,
-ask for the format the program reads. For many trackers and scripts that's
-JSON. The request has the same parts as before: the type, the fields, and
-the allowed values of each field.
+Le format d’une ligne par élément est facile à lire et facile à casser : une
+tâche qui contient un `|` se coupe en un champ de plus, et il n’existe aucune
+façon convenue d’écrire une valeur vide ou une liste. Quand l’étape suivante
+est un programme, demandez le format que ce programme lit. Pour de nombreux
+outils de suivi et de nombreux scripts, c’est du JSON. La demande comporte les
+mêmes parties qu’avant : le type, les champs, et les valeurs autorisées de
+chaque champ.
 
 <Prompt model="illustrative" recorded="illustrative" canonical>
-List every action item from the notes between the triple quotes. Return a
-JSON array with one object per item. Each object has exactly these four
-keys, and no others:
+Liste toutes les actions à mener tirées du compte rendu placé entre les
+triples guillemets. Renvoie un tableau JSON avec un objet par action. Chaque
+objet a exactement ces quatre clés, et aucune autre :
 
-- "owner": the first name as written in the notes
-- "task": what they do, under 12 words
-- "due": the date as "YYYY-MM-DD", in the year 2026
-- "priority": one of "high", "medium", or "low", taken from what the notes say about urgency
+- "owner" : le prénom tel qu’il est écrit dans le compte rendu
+- "task" : ce que la personne fait, en moins de 12 mots
+- "due" : la date sous la forme "YYYY-MM-DD", en 2026
+- "priority" : "high", "medium" ou "low", d’après ce que dit le compte rendu sur l’urgence
 
-Return only the JSON, with no text before or after it.
+Renvoie uniquement le JSON, sans texte avant ni après.
 
 """
-[the notes, pasted in full]
+[le compte rendu, collé en entier]
 """
 </Prompt>
 <Response>
 
 ```text
 [
-  {"owner": "Jonas", "task": "fix the password reset email address", "due": "2026-10-03", "priority": "high"},
-  {"owner": "Sam", "task": "get two quotes for a new search box", "due": "2026-10-17", "priority": "low"},
-  {"owner": "Maria", "task": "replace the old system name in the help texts", "due": "2026-10-10", "priority": "low"},
-  {"owner": "Dana", "task": "book the accessibility check with the agency", "due": "2026-10-08", "priority": "medium"}
+  {"owner": "Jonas", "task": "corriger le courriel de réinitialisation du mot de passe", "due": "2026-10-03", "priority": "high"},
+  {"owner": "Sam", "task": "obtenir deux devis pour un nouveau champ de recherche", "due": "2026-10-17", "priority": "low"},
+  {"owner": "Maria", "task": "remplacer l’ancien nom du système dans les textes d’aide", "due": "2026-10-10", "priority": "low"},
+  {"owner": "Dana", "task": "réserver le contrôle d’accessibilité auprès de l’agence", "due": "2026-10-08", "priority": "medium"}
 ]
 ```
 
 </Response>
 
-The checker reads an answer that starts with `[` as JSON and applies the same
-four checks: every key present, no extra keys, a date the import can
-parse, and a priority from the allowed set. The box below contains the
-same answer, laid out one key per line.
+Le vérificateur lit comme du JSON une réponse qui commence par `[` et applique
+les mêmes quatre contrôles : chaque clé présente, aucune clé en trop, une date
+que l’import sait lire, et une priorité prise dans l’ensemble autorisé. La
+zone ci-dessous contient la même réponse, présentée avec une clé par ligne.
 
 <FormatChecker sample="concepts/structured-output/sample/items.json" />
 
-Press Check, and compare the report with this one:
+Appuyez sur Vérifier, et comparez le rapport avec celui-ci :
 
 ```text
-ok 1: Jonas, fix the password reset email address, 2026-10-03, high
-ok 2: Sam, get two quotes for a new search box, 2026-10-17, low
-ok 3: Maria, replace the old system name in the help texts, 2026-10-10, low
-ok 4: Dana, book the accessibility check with the agency, 2026-10-08, medium
+ok 1: Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high
+ok 2: Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low
+ok 3: Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low
+ok 4: Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium
 4 of 4 items pass
 ```
 
-Paste your own JSON answer into the box and check it too. Both rounds
-show the same report, because the checker looks at the fields and the
-values, whatever the packaging. Naming the fields is what made the two
-answers comparable, and it is also what makes a missing value visible: an
-item without a due date fails a check instead of disappearing into a
-paragraph.
+Collez aussi votre propre réponse JSON dans la zone et vérifiez-la. Les deux
+essais donnent le même rapport, parce que le vérificateur regarde les champs
+et les valeurs, quel que soit l’emballage. C’est le fait de nommer les champs
+qui a rendu les deux réponses comparables, et c’est aussi ce qui rend visible
+une valeur manquante : une tâche sans échéance échoue à un contrôle au lieu de
+disparaître dans un paragraphe.
 
-Vendors' developer tools add ways to force a format on the output, and
-the public course on the Claude API describes one of them
-(@Academy building-with-the-claude-api). The rule in this lesson is
-older than those features and works in any chat tool: say what the format
-is, in enough detail that a program can check it (@DLAI-1).
+Les outils pour développeurs des fournisseurs ajoutent des moyens d’imposer
+un format à la sortie, et le cours public sur l’API Claude en décrit un
+(@Academy building-with-the-claude-api). La règle de cette leçon est plus
+ancienne que ces fonctions et marche dans n’importe quel outil
+conversationnel : dites quel est le format, avec assez de détail pour qu’un
+programme puisse le vérifier (@DLAI-1).
 
-## Check the first result
+## Vérifier le premier résultat
 
-A usable format request names the output type (a JSON array, or one line
-per item), the fields of each item, and the allowed values of every
-field that has a fixed set of them, including how dates and numbers are
-written. Leave one out and the model fills the gap with its own default,
-and that default can change from one run to the next.
+Une demande de format utilisable nomme le type de sortie (un tableau JSON,
+ou une ligne par élément), les champs de chaque élément, et les valeurs
+autorisées de chaque champ qui a un ensemble fixe de valeurs, y compris la
+façon d’écrire les dates et les nombres. Oubliez-en un, et le modèle comble
+le vide avec sa propre valeur par défaut, qui peut changer d’un essai à
+l’autre.
 
-<Pitfall title="Return JSON">
-A learner types "Return the action items as JSON" and gets an array of
-four objects with `assignee`, `action`, `deadline` and `priority` keys,
-where the deadline is "Friday 3 October" and the priority is "urgent".
-The import rejects every item. They run the same prompt again and get a
-JSON object with an `action_items` key holding objects with `who`, `what`
-and `when` keys. Both answers are valid JSON, and neither matches the other or
-the tracker. Rule: name the keys and the allowed values, because "return
-JSON" fixes the packaging and leaves the contents to the model.
+<Pitfall title="Renvoie du JSON">
+Un apprenant tape « Renvoie les actions à mener en JSON » et obtient un
+tableau de quatre objets avec les clés `assignee`, `action`, `deadline` et
+`priority`, où l’échéance vaut « vendredi 3 octobre » et la priorité
+« urgente ». L’import rejette toutes les tâches. Il relance le même prompt et
+obtient un objet JSON avec une clé `action_items` qui contient des objets aux
+clés `who`, `what` et `when`. Les deux réponses sont du JSON valide, et aucune
+ne correspond à l’autre ni à l’outil de suivi. Règle : nommez les clés et les
+valeurs autorisées. « Renvoie du JSON » fixe l’emballage et laisse le contenu
+au choix du modèle.
 </Pitfall>
 
-The box below holds the first of those two answers, with the code fence
-the chat tool put around it. Check it to see what the checker reports when
-the type is right and the fields are not.
+La zone ci-dessous contient la première de ces deux réponses, avec le bloc de
+code que l’outil conversationnel a placé autour. Vérifiez-la pour voir ce que
+signale le vérificateur quand le type est bon et que les champs ne le sont
+pas.
 
 <FormatChecker sample="concepts/structured-output/sample/bare.json" />
 
-Press Check. The report should read:
+Appuyez sur Vérifier. Le rapport doit indiquer :
 
 ```text
 FAIL 1: missing owner, task, due (found assignee, action, deadline)
-FAIL 1: priority "urgent" is not one of high, low, medium
+FAIL 1: priority "urgente" is not one of high, low, medium
 FAIL 2: missing owner, task, due (found assignee, action, deadline)
-FAIL 2: priority "normal" is not one of high, low, medium
+FAIL 2: priority "normale" is not one of high, low, medium
 FAIL 3: missing owner, task, due (found assignee, action, deadline)
-FAIL 3: priority "normal" is not one of high, low, medium
+FAIL 3: priority "normale" is not one of high, low, medium
 FAIL 4: missing owner, task, due (found assignee, action, deadline)
 0 of 4 items pass
 ```
 
-The last part of the rule is about order of work. Check the first result
-against the program that has to read it before you produce the rest. A
-format that looks right on the screen can still fail on the one detail the
-consumer is strict about, such as a date format or an empty field, and
-finding that on item 1 costs one prompt change. Finding it after 200 items
-costs 200 corrections. The checker in this lesson is a stand-in for that
-consumer. At work the consumer is the import button or the script that
-reads the file, and you use that instead.
+La dernière partie de la règle porte sur l’ordre du travail. Vérifiez le
+premier résultat auprès du programme qui doit le lire avant de produire la
+suite. Un format qui semble juste à l’écran peut encore échouer sur le seul
+détail sur lequel le destinataire est strict, comme un format de date ou un
+champ vide, et le découvrir sur la tâche 1 coûte une modification du prompt.
+Le découvrir après 200 tâches coûte 200 corrections. Le vérificateur de
+cette leçon tient lieu de ce destinataire. Au travail, le destinataire est le
+bouton d’import ou le script qui lit le fichier, et c’est lui que vous
+utilisez.
 
 <Choice id="which-request-imports" objective="concepts/prompts-reliably/asks-for-structure"
   concepts={['structured-output']}
-  context="A colleague has the notes of a meeting and wants a chat assistant to turn the action items into a file that a task tracker imports. The tracker needs an owner, a task, a due date written as YYYY-MM-DD and a priority that is high, medium or low."
-  title="Which request can the tracker import?"
-  hint="For each request, ask: does it name the fields the tracker needs, and does it say which values each field may hold?"
+  context="Une collègue dispose du compte rendu d’une réunion et veut qu’un assistant conversationnel transforme les actions à mener en un fichier qu’importe un outil de suivi des tâches. L’outil a besoin d’un responsable, d’une tâche, d’une échéance écrite YYYY-MM-DD et d’une priorité qui vaut high, medium ou low."
+  title="Quelle demande l’outil de suivi peut-il importer ?"
+  hint="Pour chaque demande, demandez-vous : nomme-t-elle les champs dont l’outil a besoin, et dit-elle quelles valeurs chaque champ peut prendre ?"
   options={[
-    { text: '"Put the action items from these notes in a table with owner, task, due date and priority, so I can import them into the tracker."', why: 'A table names the columns and nothing about their values. The model picks the date form, and the priority is whatever word it chooses, so the import still needs a person to fix the file.' },
-    { text: '"Return the action items from these notes as JSON, one object per item with the usual fields. I will import the file into our tracker."', why: 'JSON is the type the import reads, but the keys are unnamed and the values are free. The next run gives other keys, and a priority of "urgent" fails the import.' },
-    { text: '"One line per item, fields separated by tabs, in this order: owner (first name), task (under 12 words), due (YYYY-MM-DD, year 2026), priority (high, medium or low)."', correct: true },
+    { text: '« Mets les actions à mener de ce compte rendu dans un tableau avec responsable, tâche, échéance et priorité, pour que je puisse les importer dans l’outil de suivi. »', why: 'Un tableau nomme les colonnes et ne dit rien de leurs valeurs. Le modèle choisit la forme des dates, et la priorité est le mot qu’il retient, si bien que l’import demande encore qu’une personne corrige le fichier.' },
+    { text: '« Renvoie les actions à mener de ce compte rendu en JSON, un objet par action avec les champs habituels. J’importerai le fichier dans notre outil de suivi. »', why: 'JSON est le type que lit l’import, mais les clés ne sont pas nommées et les valeurs sont libres. L’essai suivant donne d’autres clés, et une priorité « urgente » fait échouer l’import.' },
+    { text: '« Une ligne par action, champs séparés par des tabulations, dans cet ordre : owner (prénom), task (moins de 12 mots), due (YYYY-MM-DD, année 2026), priority (high, medium ou low). »', correct: true },
   ]}>
 
-A colleague shows you three requests for the same meeting notes. Which
-one gives the tracker a file it can import without anyone editing it?
+Une collègue vous montre trois demandes pour le même compte rendu. Laquelle
+donne à l’outil de suivi un fichier qu’il peut importer sans que personne ne
+le retouche ?
 
 </Choice>
 
 <Choice id="first-result-looks-right" objective="concepts/prompts-reliably/asks-for-structure"
   concepts={['structured-output']}
-  context="A learner has a prompt that asks for action items as JSON with named keys and allowed values. They have 40 sets of meeting notes to process and the first set gave an answer that looks right on the screen."
-  title="The first result looks right"
-  hint="Who is strict about the details in this format, the learner reading the screen or the program that reads the file?"
+  context="Un apprenant dispose d’un prompt qui demande les actions à mener en JSON avec des clés nommées et des valeurs autorisées. Il a 40 comptes rendus à traiter, et le premier a donné une réponse qui semble juste à l’écran."
+  title="Le premier résultat semble juste"
+  hint="Qui est strict sur les détails de ce format : l’apprenant qui lit l’écran, ou le programme qui lit le fichier ?"
   options={[
-    { text: 'Run the other 39 sets of notes with the same prompt, then import every result at once.', why: 'A file that looks right can still fail on a detail the import is strict about. If it does, the fix is now 40 corrections instead of one prompt change.' },
-    { text: 'Import the first result into the tracker now, and change the prompt if the import rejects anything.', correct: true },
-    { text: 'Ask the assistant to check its own answer for mistakes, then run the other 39 sets.', why: 'The assistant does not know what the import accepts, and its check is another prediction. The consumer of the file is the check that counts.' },
+    { text: 'Lancer les 39 autres comptes rendus avec le même prompt, puis importer tous les résultats d’un coup.', why: 'Un fichier qui semble juste peut encore échouer sur un détail sur lequel l’import est strict. Si c’est le cas, la correction représente maintenant 40 reprises au lieu d’une modification du prompt.' },
+    { text: 'Importer tout de suite le premier résultat dans l’outil de suivi, et modifier le prompt si l’import rejette quoi que ce soit.', correct: true },
+    { text: 'Demander à l’assistant de vérifier lui-même sa réponse, puis lancer les 39 autres comptes rendus.', why: 'L’assistant ne sait pas ce qu’accepte l’import, et sa vérification est une prédiction de plus. Le destinataire du fichier est le seul contrôle qui compte.' },
   ]}>
 
-The first result looks right. What do you do next?
+Le premier résultat semble juste. Que faites-vous ensuite ?
 
 </Choice>
 
 <MultiChoice id="what-the-request-names" phase="review" objective="concepts/prompts-reliably/asks-for-structure"
   concepts={['structured-output']}
-  context="A learner wants a chat assistant to turn meeting notes into lines that a spreadsheet imports. The spreadsheet has the columns owner, task and due date."
-  title="What belongs in the format request?" hint="Which lines could a program check, and which leave a choice to the model?"
+  context="Un apprenant veut qu’un assistant conversationnel transforme un compte rendu de réunion en lignes qu’importe un tableur. Le tableur a les colonnes responsable, tâche et échéance."
+  title="Qu’est-ce qui a sa place dans la demande de format ?" hint="Quelles lignes un programme pourrait-il vérifier, et lesquelles laissent un choix au modèle ?"
   options={[
-    { text: 'Make the result look neat and professional.', why: 'A spreadsheet can\'t check neat. The model picks a layout, and it can pick another one on the next run.' },
-    { text: 'Each line has three fields in this order: owner, task, due date.', correct: true },
-    { text: 'Use your best judgment for the layout of the lines.', why: 'This leaves the layout to the model, and the import needs the same layout every time.' },
-    { text: 'Write each due date as YYYY-MM-DD.', correct: true },
+    { text: 'Donne au résultat un aspect soigné et professionnel.', why: 'Un tableur ne peut pas vérifier « soigné ». Le modèle choisit une mise en page, et il peut en choisir une autre à l’essai suivant.' },
+    { text: 'Chaque ligne a trois champs dans cet ordre : responsable, tâche, échéance.', correct: true },
+    { text: 'Choisis au mieux la mise en page des lignes.', why: 'Cela laisse la mise en page au modèle, alors que l’import a besoin de la même mise en page à chaque fois.' },
+    { text: 'Écris chaque échéance sous la forme YYYY-MM-DD.', correct: true },
   ]}>
 
-Which two of these lines belong in the request?
+Lesquelles de ces deux lignes ont leur place dans la demande ?
 
 </MultiChoice>
 
 <Scenario id="thirty-descriptions" phase="review" objective="concepts/prompts-reliably/asks-for-structure"
   concepts={['structured-output']}
-  context="A learner asks a chat assistant for product descriptions as lines that a web shop imports, one line per product with a name, a price and a short text. There are 30 products, and the first answer looks right on the screen."
-  title="The first answer looks right" hint="What is the only reader whose opinion of the format counts?"
+  context="Un apprenant demande à un assistant conversationnel des descriptions de produits sous forme de lignes qu’importe une boutique en ligne, une ligne par produit avec un nom, un prix et un court texte. Il y a 30 produits, et la première réponse semble juste à l’écran."
+  title="La première réponse semble juste" hint="Quel est le seul lecteur dont l’avis sur le format compte ?"
   options={[
-    { text: 'Run the other 29 products with the same prompt, then import all of the lines at once.', consequence: 'The import rejects every line, because each price has a comma where the shop expects a point. You fix the prompt and run all 30 again.' },
-    { text: 'Ask the assistant whether its answer is valid for the web shop.', consequence: 'It says yes. It has never seen the shop, and the import later rejects the prices.' },
-    { text: 'Import the first answer now, and change the prompt if the shop rejects anything.', correct: true, consequence: 'The shop rejects the comma in the price. You add one line about the decimal point, and the other 29 import cleanly.' },
-    { text: 'Read the first answer again, slowly, to make sure the lines look the same.', consequence: 'The lines do look the same. The comma in each price looks fine to a person, and the import still rejects it.' },
+    { text: 'Lancer les 29 autres produits avec le même prompt, puis importer toutes les lignes d’un coup.', consequence: 'L’import rejette chaque ligne, parce que chaque prix contient une virgule là où la boutique attend un point. Vous corrigez le prompt et relancez les 30.' },
+    { text: 'Demander à l’assistant si sa réponse est valide pour la boutique en ligne.', consequence: 'Il répond oui. Il n’a jamais vu la boutique, et l’import rejette ensuite les prix.' },
+    { text: 'Importer tout de suite la première réponse, et modifier le prompt si la boutique rejette quoi que ce soit.', correct: true, consequence: 'La boutique rejette la virgule du prix. Vous ajoutez une ligne sur le séparateur décimal, et les 29 autres s’importent sans problème.' },
+    { text: 'Relire lentement la première réponse pour s’assurer que les lignes se ressemblent.', consequence: 'Les lignes se ressemblent bien. La virgule de chaque prix paraît normale à une personne, et l’import la rejette quand même.' },
   ]}>
 
-The first of 30 product descriptions looks right on the screen. What do
-you do next?
+La première des 30 descriptions de produits semble juste à l’écran. Que
+faites-vous ensuite ?
 
 </Scenario>
 
-<Exercise stretch="Add a fifth field to your request, such as a status that is one of open, blocked or done, and change the prompt until every item has a status with one of those values. The checker knows only the four fields, so it reports the status as unexpected on each item. The tracker's import would reject the fifth field too, so at work you would add the field to the import first. Here, check that no other failure is left, and read the status values yourself.">
+<Exercise stretch="Ajoutez un cinquième champ à votre demande, comme un statut qui vaut open, blocked ou done, et modifiez le prompt jusqu’à ce que chaque tâche ait un statut avec l’une de ces valeurs. Le vérificateur ne connaît que les quatre champs, il signale donc le statut comme inattendu pour chaque tâche. L’import de l’outil de suivi rejetterait aussi ce cinquième champ : au travail, vous ajouteriez d’abord le champ à l’import. Ici, vérifiez qu’il ne reste aucun autre échec, et lisez vous-même les valeurs du statut.">
 
-Take the sample notes from this lesson, and write your own format request
-from scratch without looking at the ones on this page. Ask for the four
-fields with their allowed values, in the one-line format or as JSON. Run
-the prompt in your chat tool, paste the answer into the checker below and
-press Check. If any item fails, change one thing in the prompt, run it
-again in a fresh chat, and check again. Stop when the report says
-`4 of 4 items pass`. Fifteen minutes is enough. Doing this once against a
-checker you can't argue with is what makes you name the fields the next
-time, before the first run.
+Reprenez le compte rendu d’exemple de cette leçon, et écrivez votre propre
+demande de format sans regarder celles de cette page. Demandez les quatre
+champs avec leurs valeurs autorisées, au format d’une ligne par élément ou en
+JSON. Lancez le prompt dans votre outil conversationnel, collez la réponse
+dans le vérificateur ci-dessous et appuyez sur Vérifier. Si un élément
+échoue, changez une seule chose dans le prompt, relancez-le dans une nouvelle
+conversation, et vérifiez de nouveau. Arrêtez-vous quand le rapport indique
+`4 of 4 items pass`. Quinze minutes suffisent. Le faire une fois face à un
+vérificateur avec lequel on ne peut pas discuter vous amène, la fois
+suivante, à nommer les champs avant le premier essai.
 
 <FormatChecker />
 
-A good result is a passing report and a prompt that names the type, the
-four fields and the allowed values of `due` and `priority`. Which part of
-your first request did the checker catch, and would a person retyping the
-answer have caught it?
+Un bon résultat est un rapport sans échec et un prompt qui nomme le type, les
+quatre champs et les valeurs autorisées de `due` et de `priority`. Quelle
+partie de votre première demande le vérificateur a-t-il relevée, et une
+personne qui recopie la réponse l’aurait-elle relevée ?
 
 </Exercise>
 
 <Recap>
 
-1. Prose is for a person to read. When the next step is a program, ask for
-   the format that program reads, and the retyping and the decisions made
-   while retyping disappear.
-2. A usable format request names the output type, the fields of
-   each item, and the allowed values of every field that has a fixed set
-   of them, including how dates and numbers are written.
-3. "Return JSON" fixes the packaging and leaves the keys and values to the
-   model, which may choose differently on each run. Named keys make runs
-   comparable and make a missing value visible.
-4. Check the first result against its consumer, the import or the script
-   that reads the file, before you produce the rest. Fixing the
-   prompt after item 1 costs one change.
+1. La prose est faite pour être lue par une personne. Quand l’étape suivante
+   est un programme, demandez le format que ce programme lit : la recopie
+   disparaît, avec les décisions prises en recopiant.
+2. Une demande de format utilisable nomme le type de sortie, les champs de
+   chaque élément, et les valeurs autorisées de chaque champ qui a un
+   ensemble fixe de valeurs, y compris la façon d’écrire les dates et les
+   nombres.
+3. « Renvoie du JSON » fixe l’emballage et laisse les clés et les valeurs au
+   modèle, qui peut choisir différemment à chaque essai. Des clés nommées
+   rendent les essais comparables et rendent visible une valeur manquante.
+4. Vérifiez le premier résultat auprès de son destinataire, l’import ou le
+   script qui lit le fichier, avant de produire la suite. Corriger le prompt
+   après la première tâche coûte une seule modification.
 
 </Recap>

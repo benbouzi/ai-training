@@ -1,327 +1,349 @@
 import { Choice, Sort, Pitfall, Exercise, Recap, Prompt, Response, Match, Scenario } from '@components/lesson';
 
-In this lesson we start from a one-line request that gets a vague answer.
-We rebuild it one part at a time, and after each part you run the result in
-your own chat tool and see what changed. By the end you have a four-item
-checklist you can apply to any request.
+Dans cette leçon, nous partons d’une demande d’une ligne qui obtient une
+réponse vague. Nous la reconstruisons une partie à la fois, et après chaque
+partie, vous lancez le résultat dans votre propre outil conversationnel pour
+voir ce qui a changé. À la fin, vous disposez d’une liste de contrôle en
+quatre points, applicable à n’importe quelle demande.
 
-You need a chat assistant, and any product you already have access to
-works. Every response shown here is illustrative: the author wrote it to
-show the pattern. Your model gives a different text, and the comparison you
-care about is between your own rounds.
+Il vous faut un assistant conversationnel, et n’importe quel produit auquel
+vous avez déjà accès convient. Toutes les réponses présentées ici sont des
+illustrations : l’auteur les a écrites pour montrer le mécanisme. Votre modèle
+donnera un autre texte, et la comparaison qui compte se fait entre vos
+propres essais.
 
-## The one-line request
+## La demande d’une ligne
 
-Here is the material we work with in every round. It is a fictional email
-from a supplier. Read it once now, so you can judge each answer later.
+Voici le matériau sur lequel nous travaillons à chaque essai. C’est un
+courriel fictif d’un fournisseur. Lisez-le une fois maintenant, pour pouvoir
+juger chaque réponse ensuite.
 
-> Subject: Change to your delivery of 14 October
+> Objet : Modification de votre livraison du 14 octobre
 >
-> Dear customer,
+> Madame, Monsieur,
 >
-> Thank you for your order 4471. Because of a strike at the port, the
-> pallets for this order arrive at our warehouse three days later than
-> planned. We now expect to deliver on Friday 17 October between 8:00 and
-> 12:00 instead of Tuesday 14 October. The two replacement chairs you asked
-> about are on the same pallet. If Friday morning doesn't work for you,
-> reply to this email with two other dates this week, and we book the first
-> one that has a slot. Please confirm by Thursday whether Friday works, so
-> we can release the pallet.
+> Nous vous remercions pour votre commande 4471. En raison d’une grève au
+> port, les palettes de cette commande arriveront à notre entrepôt avec
+> trois jours de retard sur le calendrier prévu. Nous prévoyons désormais de
+> livrer le vendredi 17 octobre entre 8 h et 12 h, au lieu du mardi
+> 14 octobre. Les deux chaises de remplacement que vous aviez demandées se
+> trouvent sur la même palette. Si le vendredi matin ne vous convient pas,
+> répondez à ce courriel en proposant deux autres dates cette semaine, et
+> nous réserverons la première qui a un créneau libre. Merci de nous
+> confirmer d’ici jeudi si le vendredi vous convient, afin que nous
+> puissions libérer la palette.
 >
-> Kind regards,
+> Cordialement,
 > Varrowmere Freight
 
-Paste the email into your chat tool, and type one line above it.
+Collez le courriel dans votre outil conversationnel et tapez une ligne
+au-dessus.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize this.
+Résume ceci.
 
-[the email, pasted in full]
+[le courriel, collé en entier]
 </Prompt>
 <Response>
-This email from Varrowmere Freight informs the customer that their order
-4471 has been delayed by three days due to a port strike. The delivery has
-been rescheduled from Tuesday 14 October to Friday 17 October between 8:00
-and 12:00, and includes the two replacement chairs. The customer is asked to
-confirm by Thursday whether the new time works, or to propose two
-alternative dates.
+Ce courriel de Varrowmere Freight informe le client que sa commande 4471 a
+pris trois jours de retard en raison d’une grève au port. La livraison a été
+reportée du mardi 14 octobre au vendredi 17 octobre entre 8 h et 12 h, et
+elle comprend les deux chaises de remplacement. Le client est prié de
+confirmer d’ici jeudi si le nouvel horaire lui convient, ou de proposer deux
+autres dates.
 </Response>
 
-You probably got something like this illustrative answer. It is correct
-and it is a paragraph
-that restates the email in slightly fewer words. Whoever reads it still
-has to work out what changed and what they have to do. That is the
-default a model falls back on when the prompt leaves everything unsaid:
-the prediction that fits most "summarize this" requests in its training
-text. In the lesson on how models work you saw that the model has no
-picture of what you want beyond the tokens you gave it, so the answer to a
-vague prompt is an average of everyone's answer. Every part we add below
-takes one of those guesses away from the model.
+Vous avez probablement obtenu quelque chose comme cette réponse
+d’illustration. Elle est juste, et c’est un paragraphe qui redit le courriel
+en un peu moins de mots. La personne qui la lit doit encore déterminer ce qui
+a changé et ce qu’elle doit faire. C’est la réponse par défaut vers laquelle
+un modèle se replie quand le prompt laisse tout dans l’implicite : la
+prédiction qui convient à la plupart des demandes « résume ceci » de son
+texte d’entraînement. Dans la leçon sur le fonctionnement des modèles, vous
+avez vu que le modèle n’a aucune idée de ce que vous voulez au-delà des
+jetons que vous lui donnez : la réponse à un prompt vague est donc une
+moyenne des réponses de tout le monde. Chaque partie que nous ajoutons
+ci-dessous retire au modèle l’une de ces suppositions.
 
-## The instruction
+## L’instruction
 
-The **instruction** is the part of the prompt that says what to do. A
-clear one names the task, the input it applies to and the constraints to
-respect. "Summarize" names a task and nothing else. What counts as a good
-summary here is the changes and the actions, and the model has no way to
-know that unless you say it.
+L’**instruction** est la partie du prompt qui dit quoi faire. Une
+instruction claire nomme la tâche, l’entrée à laquelle elle s’applique et les
+contraintes à respecter. « Résume » nomme une tâche et rien d’autre. Ici, un
+bon résumé, ce sont les changements et les actions à mener, et le modèle n’a
+aucun moyen de le savoir si vous ne le dites pas.
 
-Rewrite the line so it says what to keep and what to leave out, then run
-it on the same email.
+Réécrivez la ligne pour qu’elle dise ce qu’il faut garder et ce qu’il faut
+laisser de côté, puis lancez-la sur le même courriel.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize the email below. Keep only what changed compared to the original
-plan and what we have to do about it. Leave out greetings, apologies and
-the reason for the delay. Do not add anything the email doesn't say.
+Résume le courriel ci-dessous. Garde uniquement ce qui a changé par rapport
+au plan initial et ce que nous devons faire en conséquence. Laisse de côté
+les formules de politesse, les excuses et la raison du retard. N’ajoute rien
+que le courriel ne dise pas.
 
-[the email, pasted in full]
+[le courriel, collé en entier]
 </Prompt>
 <Response>
-The delivery of order 4471 moves from Tuesday 14 October to Friday 17
-October, 8:00 to 12:00. The two replacement chairs are on the same
-delivery. You need to confirm by Thursday whether Friday works. If not,
-reply with two other dates this week.
+La livraison de la commande 4471 passe du mardi 14 octobre au vendredi
+17 octobre, de 8 h à 12 h. Les deux chaises de remplacement font partie de
+la même livraison. Vous devez confirmer d’ici jeudi si le vendredi convient.
+Sinon, répondez en proposant deux autres dates cette semaine.
 </Response>
 
-The greeting and the strike are gone, and the reader gets the change and
-the actions. Compare with your first round. Most of the difference comes
-from the two constraints, "keep only" and "leave out", and from the one
-rule against additions. A model fills any gap with a plausible default,
-so most prompt failures trace back to something the instruction left
-unsaid (@Academy ai-fluency-framework-foundations).
+La formule de politesse et la grève ont disparu, et le lecteur obtient le
+changement et les actions. Comparez avec votre premier essai. L’essentiel de
+la différence vient des deux contraintes, « garde uniquement » et « laisse de
+côté », et de la règle unique contre les ajouts. Un modèle comble tout vide
+avec une valeur par défaut plausible, et la plupart des échecs d’un prompt
+remontent donc à quelque chose que l’instruction n’a pas dit
+(@Academy ai-fluency-framework-foundations).
 
-## Mark the boundary
+## Marquer la frontière
 
-The prompt now has two kinds of text. The instruction is yours and tells
-the model what to do. The email is the **context**: the material you give
-the model to work on. In the prompt they are one stream of tokens, and the
-model has to guess where one ends and the other begins. On a polite,
-one-topic email the guess is right. When the material itself contains
-sentences that look like requests, it often isn't.
+Le prompt contient maintenant deux sortes de texte. L’instruction vient de
+vous et dit au modèle quoi faire. Le courriel est le **contexte** : le
+matériau que vous donnez au modèle pour qu’il travaille dessus. Dans le
+prompt, les deux forment un seul flux de jetons, et le modèle doit deviner où
+l’un s’arrête et où l’autre commence. Sur un courriel poli qui traite d’un
+seul sujet, il devine juste. Quand le matériau lui-même contient des phrases
+qui ressemblent à des demandes, il se trompe souvent.
 
-<Pitfall title="A line of the email becomes an order">
-A learner pastes a longer version of the same email and types "summarize"
-below it. The email ends with "Please confirm by Thursday whether Friday
-works". The model answers: "Confirmed, Friday 17 October works for us."
-It has written a reply to the supplier instead of a summary for the
-learner. The prompt holds two requests, the supplier's "please confirm"
-and the learner's "summarize", and it never says which one is addressed to
-the model. Both are plain text in one stream. With a one-word instruction
-and a long email, the email's request is the one with more detail behind
-it, and the model answered that one. Rule: mark where your instruction ends
-and the pasted material begins, so a line of the material can't pass for
-the order.
+<Pitfall title="Une ligne du courriel devient un ordre">
+Un apprenant colle une version plus longue du même courriel et tape
+« résume » en dessous. Le courriel se termine par « Merci de nous confirmer
+d’ici jeudi si le vendredi vous convient ». Le modèle répond : « Confirmé,
+le vendredi 17 octobre nous convient. » Il a écrit une réponse au
+fournisseur à la place d’un résumé pour l’apprenant. Le prompt contient deux
+demandes, le « merci de confirmer » du fournisseur et le « résume » de
+l’apprenant, et il ne dit jamais laquelle s’adresse au modèle. Les deux sont
+du texte brut dans un même flux. Avec une instruction d’un mot et un long
+courriel, la demande du courriel est celle qui a le plus de détails derrière
+elle, et c’est à elle que le modèle a répondu. Règle : marquez où votre
+instruction s’arrête et où commence le matériau collé, pour qu’aucune ligne
+du matériau ne puisse passer pour l’ordre.
 </Pitfall>
 
-A **delimiter** is a marker that fences off the material. Triple quotes
-work, and so does a pair of tags such as `<email>` and `</email>`. Which
-marker you pick matters less than using one, and saying in the instruction
-which marker you used. The model then has a way to tell the fenced text
-(the input) from the text outside it (the instruction) (@DLAI-1). Where
-the instruction goes, before or after the material, differs by model and
-by how long the material is. For a short paste like this one, either
-works.
+Un **délimiteur** est un marqueur qui enclôt le matériau. Les triples
+guillemets fonctionnent, tout comme une paire de balises telles que `<email>`
+et `</email>`. Le choix du marqueur compte moins que le fait d’en utiliser
+un et de nommer, dans l’instruction, celui que vous avez choisi. Le modèle a
+alors un moyen de distinguer le texte enclos (l’entrée) du texte qui est à
+l’extérieur (l’instruction) (@DLAI-1). La place de l’instruction, avant ou
+après le matériau, varie selon le modèle et la longueur du matériau. Pour un
+court texte collé comme celui-ci, les deux fonctionnent.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize the email between the triple quotes. Keep only what changed
-compared to the original plan and what we have to do about it. Leave out
-greetings, apologies and the reason for the delay. Do not add anything
-the email doesn't say.
+Résume le courriel placé entre les triples guillemets. Garde uniquement ce
+qui a changé par rapport au plan initial et ce que nous devons faire en
+conséquence. Laisse de côté les formules de politesse, les excuses et la
+raison du retard. N’ajoute rien que le courriel ne dise pas.
 
 """
-[the email, pasted in full]
+[le courriel, collé en entier]
 """
 </Prompt>
 <Response>
-The delivery of order 4471 moves from Tuesday 14 October to Friday 17
-October, 8:00 to 12:00. The replacement chairs come with it. Confirm by
-Thursday whether Friday works, or reply with two other dates this week.
+La livraison de la commande 4471 passe du mardi 14 octobre au vendredi
+17 octobre, de 8 h à 12 h. Les chaises de remplacement arrivent avec elle.
+Confirmez d’ici jeudi si le vendredi convient, ou répondez en proposant deux
+autres dates cette semaine.
 </Response>
 
-On a short, polite email the answer barely changes, as
-expected. The boundary costs one line. It pays off when the material is long
-or contains requests of its own. It pays off again later, once a tool
-rather than you puts the material into the prompt. The safety lessons come back to
-this boundary, for the case where the pasted material was written by
-someone who wants the model to obey it. A delimiter alone doesn't stop
-that, but without one you can't even tell the model which text is input.
+Sur un courriel court et poli, la réponse change à peine, comme prévu. La
+frontière coûte une ligne. Elle est rentable quand le matériau est long ou
+contient ses propres demandes. Elle le sera encore plus tard, quand ce sera
+un outil, et plus vous, qui placera le matériau dans le prompt. Les leçons
+sur la sécurité reviennent sur cette frontière, pour le cas où le matériau
+collé a été écrit par quelqu’un qui veut que le modèle lui obéisse. Un
+délimiteur seul ne suffit pas à l’empêcher. C’est pourtant lui qui vous
+permet de dire au modèle quel texte est l’entrée.
 
 <Choice id="which-marks-the-boundary" objective="concepts/prompts-reliably/structures-a-prompt"
   concepts={['instruction']}
-  context="A colleague wants a chat assistant to summarize an email from a supplier. The email ends with a request to confirm a delivery date."
-  title="Which prompt marks the boundary?"
-  hint="In each prompt, where does the model's order end and the pasted material begin, and does the prompt say so?"
+  context="Un collègue veut qu’un assistant conversationnel résume le courriel d’un fournisseur. Le courriel se termine par une demande de confirmation d’une date de livraison."
+  title="Quel prompt marque la frontière ?"
+  hint="Dans chaque prompt, où s’arrête l’ordre donné au modèle et où commence le matériau collé, et le prompt le dit-il ?"
   options={[
-    { text: 'The email, pasted in full, and on the next line: "summarize".', why: 'Nothing separates the instruction from the email. The request at the end of the email sits right next to it, and the model can read either one as the order.' },
-    { text: '"Summarize the email between the triple quotes for me, in three bullets." Then the email between two lines of """.', correct: true },
-    { text: '"Summarize this email:" followed directly by the email text, ending with the supplier\'s request to confirm.', why: 'The instruction is outside the email, but nothing marks where the email ends. The supplier\'s request to confirm is the last sentence the model reads, with no fence around it.' },
-    { text: '"Please read the email below carefully and summarize it. Thank you!" followed by the email.', why: 'Politeness is not a boundary. The model still has to guess where your text stops and the email starts, and the email\'s own request is unfenced.' },
+    { text: 'Le courriel, collé en entier, et à la ligne suivante : « résume ».', why: 'Rien ne sépare l’instruction du courriel. La demande qui termine le courriel est juste à côté, et le modèle peut prendre l’une ou l’autre pour l’ordre.' },
+    { text: '« Résume pour moi en trois puces le courriel placé entre les triples guillemets. » Puis le courriel entre deux lignes de """.', correct: true },
+    { text: '« Résume ce courriel : » suivi directement du texte du courriel, qui se termine par la demande de confirmation du fournisseur.', why: 'L’instruction est à l’extérieur du courriel, mais rien ne marque où le courriel s’arrête. La demande de confirmation du fournisseur est la dernière phrase que lit le modèle, sans aucune clôture autour.' },
+    { text: '« Merci de lire attentivement le courriel ci-dessous et de le résumer. Merci ! » suivi du courriel.', why: 'La politesse ne trace aucune frontière. Le modèle doit toujours deviner où votre texte s’arrête et où le courriel commence, et la demande du courriel reste sans clôture.' },
   ]}>
 
-A colleague asks you which of these prompts to use for the supplier
-email. Which one marks the boundary between the instruction and the
-material?
+Un collègue vous demande lequel de ces prompts utiliser pour le courriel du
+fournisseur. Lequel marque la frontière entre l’instruction et le matériau ?
 
 </Choice>
 
-## Audience and purpose
+## Public et objectif
 
-The summary so far is for nobody in particular. In practice a summary is
-for someone, who needs it for something, and those two facts decide what
-goes in. The same email summarized for the warehouse team lead who plans the
-shifts and for a customer who is waiting for the chairs differs in what it
-keeps and in how it says it. The model cannot
-guess which reader you have in mind, so it picks a general one.
+Jusqu’ici, le résumé ne s’adresse à personne en particulier. En pratique, un
+résumé s’adresse à quelqu’un, qui en a besoin pour faire quelque chose, et ces
+deux faits décident de ce qu’il contient. Le même courriel résumé pour le
+chef d’équipe de l’entrepôt, qui organise les créneaux de travail, et pour un
+client qui attend ses chaises ne garde pas les mêmes éléments et ne les dit
+pas de la même façon. Le modèle ne peut pas deviner à quel lecteur vous
+pensez, il choisit donc un lecteur général.
 
-Add one sentence that names the reader and what they do with the text.
+Ajoutez une phrase qui nomme le lecteur et ce qu’il fait du texte.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize the email between the triple quotes for the warehouse team lead,
-who has not seen it and needs to decide whether to move Tuesday's unloading
-shift. Keep only what changed compared to the original plan and what we
-have to do about it. Leave out greetings, apologies and the reason for the
-delay. Do not add anything the email doesn't say.
+Résume le courriel placé entre les triples guillemets pour le chef d’équipe
+de l’entrepôt, qui ne l’a pas vu et doit décider s’il déplace le créneau de
+déchargement du mardi. Garde uniquement ce qui a changé par rapport au plan
+initial et ce que nous devons faire en conséquence. Laisse de côté les
+formules de politesse, les excuses et la raison du retard. N’ajoute rien que
+le courriel ne dise pas.
 
 """
-[the email, pasted in full]
+[le courriel, collé en entier]
 """
 </Prompt>
 <Response>
-Varrowmere moved the delivery of order 4471 from Tuesday 14 October to
-Friday 17 October, 8:00 to 12:00, so the Tuesday unloading shift is not
-needed for this order. The replacement chairs arrive on the same pallet.
-We have to confirm the Friday slot by Thursday. If Friday morning is a
-problem, we can reply with two other dates this week instead.
+Varrowmere a reporté la livraison de la commande 4471 du mardi 14 octobre au
+vendredi 17 octobre, de 8 h à 12 h : le créneau de déchargement du mardi
+n’est donc pas nécessaire pour cette commande. Les chaises de remplacement
+arrivent sur la même palette. Nous devons confirmer le créneau du vendredi
+d’ici jeudi. Si le vendredi matin pose problème, nous pouvons répondre en
+proposant deux autres dates cette semaine.
 </Response>
 
-The same facts now lead with the one the team lead acts on, the Tuesday
-shift, and the confirmation is stated as something "we" have to do. The
-prompt didn't ask for either of those. Naming the reader and the purpose
-let the model choose them, and it chose better than it did for a general
-reader (@Academy ai-fluency-framework-foundations).
+Les mêmes faits commencent maintenant par celui sur lequel le chef d’équipe
+agit, le créneau du mardi, et la confirmation est présentée comme une chose
+que « nous » devons faire. Le prompt ne demandait ni l’un ni l’autre. Nommer
+le lecteur et l’objectif a permis au modèle de faire ces choix, et il a mieux
+choisi que pour un lecteur général
+(@Academy ai-fluency-framework-foundations).
 
-## Format and length
+## Format et longueur
 
-Left to itself, the model usually answers in a paragraph whose length
-follows the input, written for a general reader. The next step, a person
-scanning a chat message or a program reading the answer, usually wants
-something else, and the only way it gets that is if the prompt says so.
-State the format and the length, in numbers where you can, and say what
-not to put around the answer, such as a heading. "Keep it short" means a different thing to every
-reader, and "three bullets, each under 15 words" means one thing.
+Livré à lui-même, le modèle répond généralement par un paragraphe dont la
+longueur suit celle de l’entrée, écrit pour un lecteur général. L’étape
+suivante, une personne qui parcourt un message de discussion ou un programme
+qui lit la réponse, attend en général autre chose, et elle ne l’obtient que
+si le prompt le dit. Indiquez le format et la longueur, en chiffres quand
+vous le pouvez, et dites ce qu’il ne faut pas mettre autour de la réponse,
+comme un titre. « Fais court » signifie une chose différente pour chaque
+lecteur, et « trois puces de moins de 15 mots chacune » n’a qu’un sens.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize the email between the triple quotes for the warehouse team lead,
-who has not seen it and needs to decide whether to move Tuesday's unloading
-shift. Keep only what changed compared to the original plan and what we
-have to do about it. Leave out greetings, apologies and the reason for the
-delay. Do not add anything the email doesn't say.
+Résume le courriel placé entre les triples guillemets pour le chef d’équipe
+de l’entrepôt, qui ne l’a pas vu et doit décider s’il déplace le créneau de
+déchargement du mardi. Garde uniquement ce qui a changé par rapport au plan
+initial et ce que nous devons faire en conséquence. Laisse de côté les
+formules de politesse, les excuses et la raison du retard. N’ajoute rien que
+le courriel ne dise pas.
 
-Format: three bullets, each under 15 words, no heading and no introduction
-line.
+Format : trois puces de moins de 15 mots chacune, sans titre ni phrase
+d’introduction.
 
 """
-[the email, pasted in full]
+[le courriel, collé en entier]
 """
 </Prompt>
 <Response>
-- Order 4471 delivery moves from Tuesday 14 to Friday 17 October, 8:00 to 12:00.
-- Replacement chairs arrive on the same pallet.
-- Confirm Friday by Thursday, or reply with two other dates this week.
+- Livraison de la commande 4471 déplacée du mardi 14 au vendredi 17 octobre, 8 h à 12 h.
+- Les chaises de remplacement arrivent sur la même palette.
+- Confirmer vendredi d’ici jeudi, ou proposer deux autres dates cette semaine.
 </Response>
 
-Put the first round next to this one. The email is the same and the model
-is the same. The difference is four sentences of prompt, and each one
-closed a gap the model would otherwise fill with a default. The next two
-lessons add two more parts: one worked example of the output, for when
-the format is hard to describe, and a fixed shape a program can read
-(@DLAI-3).
+Mettez le premier essai à côté de celui-ci. Le courriel est le même et le
+modèle est le même. La différence tient en quatre phrases de prompt, et
+chacune a comblé un vide que le modèle aurait sinon rempli avec une valeur
+par défaut. Les deux leçons suivantes ajoutent deux parties : un exemple
+complet de la sortie, pour les cas où le format est difficile à décrire, et
+une forme fixe qu’un programme peut lire (@DLAI-3).
 
 <Sort id="sort-the-fragments" objective="concepts/prompts-reliably/structures-a-prompt"
   concepts={['instruction']}
-  context="The fragments come from, or could be added to, a prompt that asks a chat assistant to summarize a supplier's email about a delayed delivery for a warehouse team lead."
-  title="Which part is this?"
-  hint="Ask of each fragment: does it say what to do, is it the material to work on, does it say who reads the result and why, or does it say what the result looks like?"
-  buckets={['Instruction', 'Context', 'Audience and purpose', 'Format']}
+  context="Les fragments proviennent d’un prompt, ou pourraient y être ajoutés, qui demande à un assistant conversationnel de résumer pour un chef d’équipe d’entrepôt le courriel d’un fournisseur au sujet d’une livraison retardée."
+  title="De quelle partie s’agit-il ?"
+  hint="Pour chaque fragment, demandez-vous : dit-il quoi faire, est-ce le matériau à traiter, dit-il qui lit le résultat et pourquoi, ou dit-il à quoi ressemble le résultat ?"
+  buckets={['Instruction', 'Contexte', 'Public et objectif', 'Format']}
   items={[
-    { text: 'Summarize the email between the triple quotes.', bucket: 0 },
-    { text: 'Do not add anything the email doesn\'t say.', bucket: 0 },
-    { text: 'Leave out greetings and apologies.', bucket: 0 },
-    { text: 'The pasted email, between two lines of """.', bucket: 1 },
-    { text: 'Our order number is 4471.', bucket: 1 },
-    { text: 'The reader is the warehouse team lead, who hasn\'t seen the email.', bucket: 2 },
-    { text: 'They need to decide whether to move Tuesday\'s unloading shift.', bucket: 2 },
-    { text: 'Three bullets, each under 15 words.', bucket: 3 },
-    { text: 'Plain text, no heading, no introduction line.', bucket: 3 },
+    { text: 'Résume le courriel placé entre les triples guillemets.', bucket: 0 },
+    { text: 'N’ajoute rien que le courriel ne dise pas.', bucket: 0 },
+    { text: 'Laisse de côté les formules de politesse et les excuses.', bucket: 0 },
+    { text: 'Le courriel collé, entre deux lignes de """.', bucket: 1 },
+    { text: 'Notre numéro de commande est le 4471.', bucket: 1 },
+    { text: 'Le lecteur est le chef d’équipe de l’entrepôt, qui n’a pas vu le courriel.', bucket: 2 },
+    { text: 'Il doit décider s’il déplace le créneau de déchargement du mardi.', bucket: 2 },
+    { text: 'Trois puces de moins de 15 mots chacune.', bucket: 3 },
+    { text: 'Texte brut, sans titre ni phrase d’introduction.', bucket: 3 },
   ]}>
 
-Place each fragment of the prompt in the bucket for the part it belongs
-to.
+Placez chaque fragment du prompt dans la case de la partie à laquelle il
+appartient.
 
 </Sort>
 
 <Match id="name-the-part" phase="review" objective="concepts/prompts-reliably/structures-a-prompt"
   concepts={['instruction']}
-  context="The lesson divides a prompt into four parts: the instruction, the context the model works on, the audience and purpose, and the format and length. The lines here come from a prompt that asks for a summary of a customer complaint."
-  title="Which part is this?" hint="Does the line say what to do, give the material, say who reads it and why, or say what the result looks like?"
-  options={['Instruction', 'Context', 'Audience and purpose', 'Format and length']}
+  context="La leçon divise un prompt en quatre parties : l’instruction, le contexte sur lequel travaille le modèle, le public et l’objectif, le format et la longueur. Les lignes ci-dessous proviennent d’un prompt qui demande le résumé d’une réclamation de client."
+  title="De quelle partie s’agit-il ?" hint="La ligne dit-elle quoi faire, donne-t-elle le matériau, dit-elle qui lit et pourquoi, ou dit-elle à quoi ressemble le résultat ?"
+  options={['Instruction', 'Contexte', 'Public et objectif', 'Format et longueur']}
   rows={[
-    { statement: 'Summarize the complaint between the two lines of dashes.', option: 0, why: 'Which part says what the model should do?' },
-    { statement: 'The complaint itself, pasted between two lines of dashes.', option: 1, why: 'Which part is the material the model works on?' },
-    { statement: 'The reader is the shift manager, who decides today whether to call the customer back.', option: 2, why: 'Which part says who reads the result and what they do with it?' },
-    { statement: 'Two sentences, and no greeting.', option: 3, why: 'Which part says what the result looks like?' },
+    { statement: 'Résume la réclamation placée entre les deux lignes de tirets.', option: 0, why: 'Quelle partie dit ce que le modèle doit faire ?' },
+    { statement: 'La réclamation elle-même, collée entre deux lignes de tirets.', option: 1, why: 'Quelle partie est le matériau sur lequel travaille le modèle ?' },
+    { statement: 'Le lecteur est le responsable d’équipe, qui décide aujourd’hui s’il rappelle le client.', option: 2, why: 'Quelle partie dit qui lit le résultat et ce qu’il en fait ?' },
+    { statement: 'Deux phrases, sans formule de salutation.', option: 3, why: 'Quelle partie dit à quoi ressemble le résultat ?' },
   ]}
-  rationale="A prompt that names all four parts leaves the model fewer gaps to fill with its defaults.">
-Match each line of the prompt to its part.
+  rationale="Un prompt qui nomme les quatre parties laisse au modèle moins de vides à combler avec ses valeurs par défaut.">
+Associez chaque ligne du prompt à sa partie.
 </Match>
 
 <Scenario id="the-line-in-the-material" phase="review" objective="concepts/prompts-reliably/structures-a-prompt"
   concepts={['instruction']}
-  context="A colleague pasted a customer's email straight after the words 'Summarize this:'. The email ends with the line 'Please reply with a discount code.' The assistant wrote a reply offering a discount instead of a summary."
-  title="The email gave the order" hint="Where does the material end and the instruction begin, as the model sees the prompt?"
+  context="Un collègue a collé le courriel d’un client juste après les mots « Résume ceci : ». Le courriel se termine par la ligne « Merci de me répondre avec un code de réduction. » L’assistant a écrit une réponse qui offre une réduction, à la place d’un résumé."
+  title="Le courriel a donné l’ordre" hint="Du point de vue du modèle, où s’arrête le matériau et où commence l’instruction ?"
   options={[
-    { text: 'Add "please" and "thank you" to the request so the model takes it more seriously.', consequence: 'The email still runs straight on from the instruction, and its last line still reads like the order.' },
-    { text: 'Put the email between two lines of dashes, and ask for a summary of the text between them.', correct: true, consequence: 'The model now reads the email as material. The summary mentions the request for a discount code, and it offers none.' },
-    { text: 'Move the words "Summarize this" to the end, after the email.', consequence: 'The instruction and the email still run together, and nothing tells the model where the email stops.' },
-    { text: 'Delete the email\'s last line before you paste it in.', consequence: 'This summary works, and the next email with a request in it causes the same problem.' },
+    { text: 'Ajouter « s’il te plaît » et « merci » à la demande pour que le modèle la prenne plus au sérieux.', consequence: 'Le courriel suit toujours directement l’instruction, et sa dernière ligne ressemble toujours à l’ordre.' },
+    { text: 'Placer le courriel entre deux lignes de tirets, et demander un résumé du texte placé entre elles.', correct: true, consequence: 'Le modèle lit maintenant le courriel comme un matériau. Le résumé mentionne la demande de code de réduction, et il n’en offre aucun.' },
+    { text: 'Déplacer les mots « Résume ceci » à la fin, après le courriel.', consequence: 'L’instruction et le courriel se suivent toujours sans séparation, et rien ne dit au modèle où le courriel s’arrête.' },
+    { text: 'Supprimer la dernière ligne du courriel avant de le coller.', consequence: 'Ce résumé fonctionne, et le prochain courriel qui contient une demande pose le même problème.' },
   ]}>
 
-The assistant answered the customer's request instead of summarizing the
-email. What do you change?
+L’assistant a répondu à la demande du client au lieu de résumer le courriel.
+Que changez-vous ?
 
 </Scenario>
 
-<Exercise stretch="Take the four-part prompt and remove one part at a time, running each version. Which part changes the answer the most for your text?">
+<Exercise stretch="Reprenez le prompt en quatre parties et retirez une partie à la fois, en lançant chaque version. Quelle partie change le plus la réponse pour votre texte ?">
 
-Pick a short text of your own that you don't mind pasting into a chat
-assistant: a notice or a meeting invitation. Send it with a
-one-line request first, such as "summarize this" or "what does this
-mean". Then rewrite the request with all four parts: an instruction with
-its constraints, the text fenced by a delimiter that the instruction
-names, one sentence naming the reader and what they do with the result,
-and a format with a length in numbers. Send that too, in a fresh chat, and
-put the two answers side by side. Ten minutes is enough. Doing this once
-on your own text is what makes the checklist stick.
+Choisissez un court texte à vous que vous acceptez de coller dans un
+assistant conversationnel : un avis ou une invitation à une réunion.
+Envoyez-le d’abord avec une demande d’une ligne, comme « résume ceci » ou
+« qu’est-ce que ça veut dire ». Réécrivez ensuite la demande avec ses quatre
+parties : une instruction avec ses contraintes, le texte enclos par un
+délimiteur que l’instruction nomme, une phrase qui nomme le lecteur et ce
+qu’il fait du résultat, et un format avec une longueur chiffrée. Envoyez-la
+aussi, dans une nouvelle conversation, et mettez les deux réponses côte à
+côte. Dix minutes suffisent. C’est en le faisant une fois sur votre propre
+texte que la liste de contrôle s’installe.
 
-A good result is one where you can point at each sentence of the second
-answer and name the part of the prompt that put it there. Which part of
-your first request was the model guessing at most?
+Un bon résultat est celui où vous pouvez désigner chaque phrase de la seconde
+réponse et nommer la partie du prompt qui l’a produite. Quelle partie de
+votre première demande le modèle devait-il le plus deviner ?
 
 </Exercise>
 
 <Recap>
 
-1. A one-line request gets the average answer, because the model fills
-   every gap with the most common default from its training text.
-2. The instruction says what to do and under which constraints. Most
-   prompt failures trace back to something it left unsaid.
-3. The context is the material the model works on. Fence it with a
-   delimiter, name that delimiter in the instruction, and keep the
-   instruction outside the fence. Material and instruction that run
-   together let a line of the material become the order.
-4. Name the audience and the purpose. They decide what the summary keeps
-   and what it leads with.
-5. State the format and the length in numbers. "Short" is a guess and
-   "three bullets under 15 words" is a check.
+1. Une demande d’une ligne obtient la réponse moyenne, parce que le modèle
+   comble chaque vide avec la valeur par défaut la plus courante de son
+   texte d’entraînement.
+2. L’instruction dit quoi faire et sous quelles contraintes. La plupart des
+   échecs d’un prompt remontent à quelque chose qu’elle n’a pas dit.
+3. Le contexte est le matériau sur lequel travaille le modèle. Enclosez-le
+   avec un délimiteur, nommez ce délimiteur dans l’instruction, et gardez
+   l’instruction hors de la clôture. Un matériau et une instruction qui se
+   suivent sans séparation permettent à une ligne du matériau de devenir
+   l’ordre.
+4. Nommez le public et l’objectif. Ils décident de ce que le résumé garde et
+   de ce par quoi il commence.
+5. Indiquez le format et la longueur en chiffres. « Court » est une
+   supposition, et « trois puces de moins de 15 mots » est un critère que
+   l’on peut vérifier.
 
 </Recap>
