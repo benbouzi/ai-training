@@ -33,7 +33,7 @@ test('an unfinished lesson keeps the unlock note, also when it was skipped', asy
 	const section = page.locator('[data-reference-lesson="concepts/how-models-work"]');
 	await expect(section).toHaveAttribute('data-unlocked', 'false');
 	await expect(section.locator('[data-reference-locked]')).toHaveText(
-		'Unlocks when you finish How a language model works.',
+		'Unlocks when you finish Comment fonctionne un modèle de langage.',
 	);
 	await expect(section.locator('[data-reference-locked] a')).toHaveAttribute(
 		'href',

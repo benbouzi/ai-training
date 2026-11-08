@@ -127,7 +127,7 @@ describe('mountLesson', () => {
 		q('#tip-skip').click();
 		expect(progress.load().lessons[LESSON]?.state).toBe('skipped');
 		expect(q<HTMLButtonElement>('#recap-skip').disabled).toBe(true);
-		expect(q('#recap-skip').textContent).toMatch(/^Skipped \(/);
+		expect(q('#recap-skip').textContent).toMatch(/^Passée \(/);
 	});
 	it('offers no skills check below comfort more, or without a card', () => {
 		page();
