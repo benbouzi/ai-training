@@ -40,8 +40,8 @@ type SearchEvents = { enter: number; enterCancelled: number; submits: number; su
 test('search finds pages under the policy, and its form submits nothing', async ({ page, errors }) => {
 	await page.goto('');
 	await page.locator('button[data-open-modal]').click();
-	const dialog = page.getByRole('dialog', { name: 'Search' });
-	const box = dialog.getByRole('textbox', { name: 'Search' });
+	const dialog = page.getByRole('dialog', { name: 'Rechercher' });
+	const box = dialog.getByRole('textbox', { name: 'Rechercher' });
 	await box.fill('agent');
 	await expect(page.locator('.pagefind-ui__result').first()).toBeVisible();
 	// Pagefind's form has `action="javascript:void(0);"`, which `form-action 'self'` blocks if a submit goes through.
