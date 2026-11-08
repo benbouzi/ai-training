@@ -19,7 +19,7 @@ describe('the head hint middleware', () => {
 	async function headOf(pathname: string) {
 		const head: unknown[] = [];
 		const context = {
-			url: new URL(`https://schubergphilis.github.io${pathname}`),
+			url: new URL(`https://benbouzi.github.io${pathname}`),
 			locals: { starlightRoute: { head } },
 		};
 		await onRequest(context as never, async () => {});
@@ -27,7 +27,7 @@ describe('the head hint middleware', () => {
 	}
 	const describedBy = {
 		tag: 'link',
-		attrs: { rel: 'describedby', href: 'https://schubergphilis.github.io/ai-training/llms.txt' },
+		attrs: { rel: 'describedby', href: 'https://benbouzi.github.io/ai-training/llms.txt' },
 	};
 	it('adds the alternate link to a lesson page and a course page', async () => {
 		expect(await headOf('/ai-training/safety/agent-risk/')).toEqual([
@@ -37,7 +37,7 @@ describe('the head hint middleware', () => {
 				attrs: {
 					rel: 'alternate',
 					type: 'text/markdown',
-					href: 'https://schubergphilis.github.io/ai-training/safety/agent-risk/index.md',
+					href: 'https://benbouzi.github.io/ai-training/safety/agent-risk/index.md',
 				},
 			},
 		]);
@@ -53,7 +53,7 @@ describe('the landing page date', () => {
 	async function lastUpdatedOf(pathname: string) {
 		const pageDate = new Date('2026-09-29');
 		const route = { head: [], lastUpdated: pageDate as Date | undefined };
-		const context = { url: new URL(`https://schubergphilis.github.io${pathname}`), locals: { starlightRoute: route } };
+		const context = { url: new URL(`https://benbouzi.github.io${pathname}`), locals: { starlightRoute: route } };
 		await onRequest(context as never, async () => {});
 		return route.lastUpdated;
 	}

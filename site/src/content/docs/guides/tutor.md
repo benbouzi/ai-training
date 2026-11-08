@@ -20,7 +20,7 @@ Install the skill into your user directory, so it is found from any folder
 you start the agent in:
 
 ```sh
-npx skills add schubergphilis/ai-training --skill ai-tutor -g
+npx skills add benbouzi/ai-training --skill ai-tutor -g
 ```
 
 The `skills` command detects which agents you have and installs the skill

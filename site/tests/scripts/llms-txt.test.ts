@@ -5,7 +5,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { checkLlmsTxt, describedByLinks } from '../../scripts/lib/llms-txt.mjs';
 import { SITE_ROOT } from '../../scripts/lib/site-address.mjs';
 
-const ROOT = 'https://schubergphilis.github.io/ai-training';
+const ROOT = 'https://benbouzi.github.io/ai-training';
 const roots: string[] = [];
 afterAll(() => {
 	for (const r of roots) rmSync(r, { recursive: true, force: true });

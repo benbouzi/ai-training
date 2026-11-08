@@ -25,7 +25,7 @@ describe('ReviewLine', () => {
 	it('renders only the due date when sourcesChecked is absent', async () => {
 		const html = await container.renderToString(ReviewLine, { props: { reviewBy: new Date('2027-03-20') } });
 		expect(html).toContain('data-review-by="2027-03-20"');
-		expect(html).not.toContain('Sources checked');
+		expect(html).not.toContain('Sources vérifiées');
 		expect(html).toContain('Révision prévue d’ici le 20 mars 2027.');
 	});
 	it('renders nothing without review-by', async () => {

@@ -44,9 +44,9 @@ test('finish is enabled once every checkpoint is passed, and persists across a r
 	}
 	await expect(finish).toBeEnabled();
 	await finish.click();
-	await expect(finish).toHaveText(/^Finished ✓ \(\d{4}-\d{2}-\d{2}\)$/);
+	await expect(finish).toHaveText(/^Terminée ✓ \(\d{4}-\d{2}-\d{2}\)$/);
 	await page.reload();
-	await expect(finish).toHaveText(/^Finished ✓/);
+	await expect(finish).toHaveText(/^Terminée ✓/);
 	await expect(finish).toBeDisabled();
 	const record = await storedRecord(page);
 	expect(Object.keys(record.reviews ?? {}).sort()).toEqual(FIRST.map((id) => `${LESSON}#${id}`).sort());
@@ -59,7 +59,7 @@ test('the finish note counts the open checkpoints', async ({ page }) => {
 	const open = lessonCheckpoints('building-agents/agent-loop').filter((c) => c.phase === 'first').length;
 	expect(open).toBeGreaterThan(1);
 	await expect(page.locator('[data-finish-note]')).toHaveText(
-		`Pass or skip ${open} more checkpoints to finish this lesson.`,
+		`Réussissez ou passez encore ${open} questions de contrôle pour terminer cette leçon.`,
 	);
 	await expect(page.locator('.recap-sources')).toHaveCount(0);
 	await expect(page.locator('.recap-next')).toHaveCount(0);

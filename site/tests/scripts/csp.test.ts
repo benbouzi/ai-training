@@ -166,7 +166,7 @@ describe('pageProblems', () => {
 
 	it('passes a site script, a site stylesheet and an off-site link that is no stylesheet', () => {
 		const html = page({
-			head: '<script src="/ai-training/_astro/a.js"></script><link rel="stylesheet" href="/ai-training/_astro/a.css"><link rel="canonical" href="https://schubergphilis.github.io/ai-training/">',
+			head: '<script src="/ai-training/_astro/a.js"></script><link rel="stylesheet" href="/ai-training/_astro/a.css"><link rel="canonical" href="https://benbouzi.github.io/ai-training/">',
 		});
 		expect(pageProblems(html)).toEqual([]);
 	});
@@ -238,7 +238,7 @@ describe('pageProblems', () => {
 			'<link rel="alternate" href="https://evil.example/feed.xml">',
 			'<link rel="iconic" href="https://evil.example/x">',
 			'<link rel="icon" href="/ai-training/favicon.svg">',
-			'<link rel="preload" href="https://schubergphilis.github.io/ai-training/a.woff2">',
+			'<link rel="preload" href="https://benbouzi.github.io/ai-training/a.woff2">',
 		].join('');
 		expect(pageProblems(page({ head }))).toEqual([]);
 	});
@@ -247,14 +247,14 @@ describe('pageProblems', () => {
 		const body = [
 			'<script src="//evil.example/a.js"></script>',
 			'<script src="data:text/javascript,1"></script>',
-			'<script src="blob:https://schubergphilis.github.io/0-1"></script>',
+			'<script src="blob:https://benbouzi.github.io/0-1"></script>',
 			// The browser loads nothing from a URL it cannot parse, so it is no request to another site.
 			'<script src="https://[::1/a.js"></script>',
 		].join('');
 		expect(pageProblems(page({ body }))).toEqual([
 			'<script> loads an off-site file: //evil.example/a.js (resolves to https://evil.example/a.js)',
 			'<script> loads an off-site file: data:text/javascript,1',
-			'<script> loads an off-site file: blob:https://schubergphilis.github.io/0-1',
+			'<script> loads an off-site file: blob:https://benbouzi.github.io/0-1',
 		]);
 	});
 
@@ -281,10 +281,10 @@ describe('offSite', () => {
 		expect(offSite('/ai-training/a.js')).toBeUndefined();
 		expect(offSite('a.js')).toBeUndefined();
 		expect(offSite('../../a.js')).toBeUndefined();
-		expect(offSite('https://schubergphilis.github.io/a.js')).toBeUndefined();
-		expect(offSite('http://schubergphilis.github.io/a.js')).toBe('http://schubergphilis.github.io/a.js');
-		expect(offSite('https://schubergphilis.github.io.evil.example/a.js')).toBe(
-			'https://schubergphilis.github.io.evil.example/a.js',
+		expect(offSite('https://benbouzi.github.io/a.js')).toBeUndefined();
+		expect(offSite('http://benbouzi.github.io/a.js')).toBe('http://benbouzi.github.io/a.js');
+		expect(offSite('https://benbouzi.github.io.evil.example/a.js')).toBe(
+			'https://benbouzi.github.io.evil.example/a.js',
 		);
 		expect(offSite('https://[::1')).toBeUndefined();
 	});

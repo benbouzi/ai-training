@@ -41,7 +41,7 @@ export function describedByLinks(html) {
 /**
  * Every problem with `llms.txt`, `llms-full.txt` and the `describedby` links under `distDir`.
  * @param {string} distDir
- * @param {string} root the site root, such as `https://schubergphilis.github.io/ai-training/`
+ * @param {string} root the site root, such as `https://benbouzi.github.io/ai-training/`
  * @returns {{ errors: string[], links: number }}
  */
 export function checkLlmsTxt(distDir, root) {

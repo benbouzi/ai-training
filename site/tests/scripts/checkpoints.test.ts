@@ -105,7 +105,7 @@ describe('bindCheckpoint', () => {
 		bindCheckpoint(shell('choice', 'c', choiceBody), { onResult });
 		click('.cp-skip');
 		expect(state()).toBe('skipped');
-		expect(feedback()).toContain('Skipped');
+		expect(feedback()).toContain('Passée');
 		expect(onResult).toHaveBeenCalledWith(expect.anything(), false);
 		expect(progress.load().checkpoints[`${LESSON}#c`]).toEqual({ state: 'skipped', attempts: 1 });
 	});
@@ -171,7 +171,7 @@ describe('predict', () => {
 		expect(feedback()).toBe('Lancez-le, puis dites si votre prédiction a tenu.');
 		q<HTMLInputElement>('input[value=partial]').checked = true;
 		click('.cp-check');
-		expect(feedback()).toContain('Adjust your prediction');
+		expect(feedback()).toContain('Ajustez votre prédiction');
 		expect(state()).toBe('attempted');
 		q<HTMLInputElement>('input[value=pass]').checked = true;
 		click('.cp-check');
@@ -421,7 +421,7 @@ describe('repair', () => {
 		expect(state()).toBe('untouched');
 		q<HTMLInputElement>('input[value=partial]').checked = true;
 		click('.cp-check');
-		expect(feedback()).toContain('Recorded as partial');
+		expect(feedback()).toContain('Partielle');
 		expect(state()).toBe('attempted');
 		q<HTMLInputElement>('input[value=pass]').checked = true;
 		click('.cp-check');

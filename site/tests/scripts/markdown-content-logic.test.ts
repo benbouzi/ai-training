@@ -40,7 +40,7 @@ describe('finishView', () => {
 	it('blocks finishing and names the count while checkpoints are open', () => {
 		expect(finishView(undefined, 1)).toEqual({
 			disabled: true,
-			label: 'Mark lesson finished',
+			label: 'Marquer la leçon comme terminée',
 			note: 'Réussissez ou passez encore 1 question de contrôle pour terminer cette leçon.',
 		});
 		expect(finishView({ state: 'read', at: '2026-09-20' }, 3).note).toBe(
@@ -50,7 +50,7 @@ describe('finishView', () => {
 	it('enables finishing when nothing is open', () => {
 		expect(finishView({ state: 'read', at: '2026-09-20' }, 0)).toEqual({
 			disabled: false,
-			label: 'Mark lesson finished',
+			label: 'Marquer la leçon comme terminée',
 			note: '',
 		});
 	});
@@ -65,12 +65,12 @@ describe('finishView', () => {
 
 describe('skipView', () => {
 	it('offers the skip until the lesson is skipped or finished', () => {
-		expect(skipView(undefined)).toEqual({ disabled: false, label: 'I know this, skip it' });
+		expect(skipView(undefined)).toEqual({ disabled: false, label: 'Je connais déjà, passer' });
 		expect(skipView({ state: 'read', at: '2026-09-20' }).disabled).toBe(false);
 		expect(skipView({ state: 'skipped', at: '2026-09-20' })).toEqual({ disabled: true, label: 'Passée (2026-09-20)' });
 		expect(skipView({ state: 'finished', at: '2026-09-20' })).toEqual({
 			disabled: true,
-			label: 'I know this, skip it',
+			label: 'Je connais déjà, passer',
 		});
 	});
 });

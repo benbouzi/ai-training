@@ -5,7 +5,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { alternateHints, checkAlternateHints, hasNoAlternate } from '../../scripts/lib/alternate-hints.mjs';
 import { SITE_ROOT } from '../../scripts/lib/site-address.mjs';
 
-const ROOT = 'https://schubergphilis.github.io/ai-training';
+const ROOT = 'https://benbouzi.github.io/ai-training';
 const roots: string[] = [];
 afterAll(() => {
 	for (const r of roots) rmSync(r, { recursive: true, force: true });
@@ -80,11 +80,11 @@ describe('checkAlternateHints', () => {
 	it('rejects a hint on another origin or under another base, even when all hints agree', () => {
 		const root = dist({
 			'c/index.html': page('https://example.org/ai-training/c/index.md'),
-			'd/index.html': page('https://schubergphilis.github.io/other/d/index.md'),
+			'd/index.html': page('https://benbouzi.github.io/other/d/index.md'),
 		});
 		expect(checkAlternateHints(root, ROOT).errors).toEqual([
 			`c/index.html: the Markdown alternate hint https://example.org/ai-training/c/index.md is not under the site root ${ROOT}`,
-			`d/index.html: the Markdown alternate hint https://schubergphilis.github.io/other/d/index.md is not under the site root ${ROOT}`,
+			`d/index.html: the Markdown alternate hint https://benbouzi.github.io/other/d/index.md is not under the site root ${ROOT}`,
 		]);
 	});
 	it('rejects a hint with a query or a fragment', () => {

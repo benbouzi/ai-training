@@ -63,7 +63,7 @@ test('the reference page lists finished lessons by area and links to the topic p
 
 test('the reference page shows the empty state without progress, and the sidebar links to it', async ({ page }) => {
 	await page.goto('progress/');
-	const link = page.locator('nav.sidebar a', { hasText: 'Your reference' });
+	const link = page.locator('nav.sidebar a', { hasText: 'Votre référence' });
 	await expect(link).toHaveAttribute('href', '/ai-training/reference/');
 	await link.click();
 	await expect(page.locator('[data-reference-empty]')).toBeVisible();

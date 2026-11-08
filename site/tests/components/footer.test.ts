@@ -50,6 +50,6 @@ describe('Footer', () => {
 	it('keeps the pagination before the meta line, and the AI notice on every page', async () => {
 		const html = await render({ title: 'Concepts' });
 		expect(html).toMatch(/<a href="\/ai-training\/safety\/" rel="next"[\s\S]*<div class="site-footer-meta">/);
-		expect(html).toContain('<p class="ai-notice">Content co-authored by AI.</p>');
+		expect(html).toMatch(/<p class="ai-notice">\s*Contenu coécrit avec l’IA\./);
 	});
 });

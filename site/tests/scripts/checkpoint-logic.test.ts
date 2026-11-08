@@ -82,8 +82,8 @@ describe('feedback', () => {
 		expect(orderFeedback(true).text).toBe('Ordre juste.');
 		expect(orderFeedback(false).kind).toBe('nope');
 		expect(selfGradeFeedback(true, 'predict').text).toBe('Enregistrée comme réussie.');
-		expect(selfGradeFeedback(false, 'predict').text).toContain('Adjust your prediction');
-		expect(selfGradeFeedback(false, 'repair').text).toContain('Recorded as partial');
+		expect(selfGradeFeedback(false, 'predict').text).toContain('Ajustez votre prédiction');
+		expect(selfGradeFeedback(false, 'repair').text).toContain('Partielle');
 	});
 	it('sort: unplaced items block grading', () => {
 		expect(sortFeedback(1, true)).toEqual({ kind: 'note', text: '1 item still to place.' });
@@ -131,7 +131,7 @@ describe('multiChoiceVerdict', () => {
 	it('asks for picks, names the first wrong why, counts what is still missing, then passes', () => {
 		expect(multiChoiceVerdict(3, 0, 0, undefined)).toEqual({
 			ok: null,
-			feedback: { kind: 'note', text: 'Pick 3 answers first.' },
+			feedback: { kind: 'note', text: 'Choisissez d’abord 3 réponses.' },
 		});
 		expect(multiChoiceVerdict(3, 2, 1, 'Clear to whom?')).toEqual({
 			ok: false,

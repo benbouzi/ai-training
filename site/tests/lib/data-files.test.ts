@@ -9,8 +9,8 @@ import {
 } from '@lib/data-files';
 import { describe, expect, it } from 'vitest';
 
-const site = 'https://schubergphilis.github.io';
-const ROOT = 'https://schubergphilis.github.io/ai-training';
+const site = 'https://benbouzi.github.io';
+const ROOT = 'https://benbouzi.github.io/ai-training';
 
 describe('publishedPath', () => {
 	it('maps each data-tree file to its path under /data/ per S12 "Files"', () => {

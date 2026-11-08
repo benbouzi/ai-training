@@ -10,9 +10,9 @@ export function href(path: string): string {
 }
 
 /**
- * Astro's `site` (an origin such as `https://schubergphilis.github.io`, with
+ * Astro's `site` (an origin such as `https://benbouzi.github.io`, with
  * or without a trailing slash) plus the base path, without a trailing slash:
- * `https://schubergphilis.github.io/ai-training`. The one place the origin and
+ * `https://benbouzi.github.io/ai-training`. The one place the origin and
  * the base meet, for text that leaves the page: the lesson bundles and the tutor
  * instruction file (spec S08).
  */

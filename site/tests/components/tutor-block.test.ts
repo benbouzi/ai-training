@@ -13,7 +13,7 @@ beforeAll(async () => {
 	container = await AstroContainer.create();
 });
 
-const lessonUrl = 'https://schubergphilis.github.io/ai-training/coding-with-agents/first-session/';
+const lessonUrl = 'https://benbouzi.github.io/ai-training/coding-with-agents/first-session/';
 
 describe('TutorBlock', () => {
 	it('renders the /ai-tutor line for the lesson with a copy button', async () => {
@@ -23,7 +23,7 @@ describe('TutorBlock', () => {
 		expect(html).toContain(`<code>/ai-tutor ${lessonUrl}</code>`);
 		expect(html.match(/class="tutor-copy" data-copy="/g)).toHaveLength(1);
 		expect(html).toContain(`data-copy="/ai-tutor ${lessonUrl}"`);
-		expect(html).toContain('aria-label="Copy the /ai-tutor line"');
+		expect(html).toContain('aria-label="Copier la ligne /ai-tutor"');
 	});
 	it('links the "Study with the tutor" guide with the base path, and leaves the install detail to it', async () => {
 		const html = await container.renderToString(TutorBlock, { props: { lessonUrl } });

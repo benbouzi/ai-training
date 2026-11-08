@@ -10,7 +10,7 @@ export function isoDate(date: Date): string {
 	return date.toISOString().slice(0, 10);
 }
 
-/** `March 20, 2027`: American English, in UTC so a YAML date renders the same on every machine. */
+/** `20 mars 2027`: French, in UTC so a YAML date renders the same on every machine. */
 export function longDate(date: Date): string {
 	return date.toLocaleDateString('fr-FR', { dateStyle: 'long', timeZone: 'UTC' });
 }

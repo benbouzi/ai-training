@@ -135,7 +135,7 @@ describe('phase (spec S03 "Checkpoints")', () => {
 	});
 	it('More practice is an H2 section around its checkpoints', async () => {
 		const html = await render(MorePractice, {}, { default: '<p>inside</p>' });
-		expect(html).toMatch(/<section class="more-practice" id="more-practice"><h2>More practice<\/h2>/);
+		expect(html).toMatch(/<section class="more-practice" id="more-practice"><h2>Pour s’entraîner davantage<\/h2>/);
 		expect(html).toContain('<p>inside</p>');
 	});
 });
@@ -225,17 +225,17 @@ describe('Predict', () => {
 		const html = await render(Predict, { ...base, answer: '27°C, sun', run: 'x/tool.sh' });
 		expect(html).toContain('data-answer="27°C, sun"');
 		expect(html).toMatch(/<pre class="cp-reveal" hidden>27°C, sun<\/pre>/);
-		expect(html).toContain('Output verified in CI from');
+		expect(html).toContain('Sortie vérifiée en intégration continue à partir de');
 		expect(html).toContain('data-reviewable="true"');
 	});
 	it('graded without run says the output was checked by hand', async () => {
 		const html = await render(Predict, { ...base, answer: 'x' });
-		expect(html).toContain('not run in CI');
+		expect(html).toContain('ne tourne pas en intégration continue');
 	});
 	it('graded without run on a lesson whose file lists proofs shows no notice (#311)', async () => {
 		const html = await render(Predict, { ...base, answer: 'x' }, undefined, routeTo('safety/proved'));
 		expect(html).toContain('data-answer="x"');
-		expect(html).not.toContain('not run in CI');
+		expect(html).not.toContain('ne tourne pas en intégration continue');
 		expect(html).not.toContain('class="cp-verified"');
 	});
 	it('ungraded example (no objective): output shown, CI note, and no checkpoint markup', async () => {
@@ -250,7 +250,7 @@ describe('Predict', () => {
 			/<div class="sl-heading-wrapper cp-title-wrap"><h3 class="cp-title">Show the list<\/h3><a class="sl-anchor-link" href="#run-list">/,
 		);
 		expect(html).toContain('<span class="sr-only">Section titled “Show the list”</span>');
-		expect(html).toContain('Output verified in CI from');
+		expect(html).toContain('Sortie vérifiée en intégration continue à partir de');
 		expect(html).toContain('Run this.');
 		for (const s of [
 			'data-checkpoint',
@@ -276,7 +276,7 @@ describe('Predict', () => {
 	it('honor system: self-grade radios, Record label, never reviewed', async () => {
 		const html = await render(Predict, base);
 		expect(html).toContain('name="cp-selfgrade"');
-		expect(html).toContain('>Record</button>');
+		expect(html).toContain('>Enregistrer</button>');
 		expect(html).toContain('data-reviewable="false"');
 		expect(html).not.toContain('data-answer');
 	});
@@ -289,7 +289,7 @@ describe('Order and Sort', () => {
 			/<li data-pos="1" draggable="true">[\s\S]*first[\s\S]*<li data-pos="2" draggable="true">[\s\S]*second/,
 		);
 		expect(html).toContain('data-move="up"');
-		expect(html).toContain('aria-label="Move &quot;first&quot; up"');
+		expect(html).toContain('aria-label="Monter « first »"');
 	});
 	it('Sort renders chips with their bucket and one target per bucket', async () => {
 		const html = await render(Sort, {
@@ -322,7 +322,7 @@ describe('Repair', () => {
 		expect(html).toMatch(/<div class="cp-model" hidden>/);
 		expect(html).toContain('fixed</pre>');
 		expect(html).toContain('data-reviewable="false"');
-		expect(html).toContain('>Record grade</button>');
+		expect(html).toContain('>Enregistrer la note</button>');
 	});
 });
 

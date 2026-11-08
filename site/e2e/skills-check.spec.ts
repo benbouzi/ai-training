@@ -10,9 +10,9 @@ test('comfort more: a pass in the card passes the body checkpoint and schedules 
 	await page.goto(`${LESSON}/`);
 	const card = page.locator('[data-skills-check]');
 	await expect(card).toBeVisible();
-	await expect(card.locator('[data-skills-title]')).toHaveText('Skip ahead?');
+	await expect(card.locator('[data-skills-title]')).toHaveText('Passer directement ?');
 	await expect(card.locator('[data-skills-items]')).toBeHidden();
-	await card.getByRole('button', { name: 'Answer 2 questions' }).click();
+	await card.getByRole('button', { name: 'Répondre à 2 questions' }).click();
 
 	// The copies are the two chosen checkpoints, one per served objective, without Skip.
 	const copies = card.locator('[data-skills-item]');
@@ -27,7 +27,7 @@ test('comfort more: a pass in the card passes the body checkpoint and schedules 
 	await expect(first).toHaveAttribute('data-state', 'passed');
 	await expect(first.locator('.cp-check')).toBeDisabled();
 	await expect(page.locator(`#${FIRST}`)).toHaveAttribute('data-state', 'passed');
-	await expect(card.locator('[data-skills-note]')).toHaveText('Passed 1 of 1 so far.');
+	await expect(card.locator('[data-skills-note]')).toHaveText('1 réussie(s) sur 1 pour l’instant.');
 
 	// A fail records `attempted` and creates no review item.
 	const second = card.locator(`[data-skills-item="${SECOND}"]`);
@@ -35,8 +35,8 @@ test('comfort more: a pass in the card passes the body checkpoint and schedules 
 	await second.locator('.cp-check').click();
 	await expect(second).toHaveAttribute('data-state', 'attempted');
 	await expect(page.locator(`#${SECOND}`)).toHaveAttribute('data-state', 'attempted');
-	await expect(card.locator('[data-skills-note]')).toContainText('Passed 1 of 2.');
-	await expect(card.getByRole('button', { name: 'Close' })).toBeVisible();
+	await expect(card.locator('[data-skills-note]')).toContainText('1 réussie(s) sur 2.');
+	await expect(card.getByRole('button', { name: 'Fermer' })).toBeVisible();
 
 	const record = await storedRecord(page);
 	expect(record.checkpoints?.[`${LESSON}#${FIRST}`]).toEqual({ state: 'passed', attempts: 1 });
@@ -51,7 +51,7 @@ test('comfort more: a pass in the card passes the body checkpoint and schedules 
 	await body.locator('.cp-check').click();
 	await expect(body).toHaveAttribute('data-state', 'passed');
 
-	await card.getByRole('button', { name: 'Close' }).click();
+	await card.getByRole('button', { name: 'Fermer' }).click();
 	await expect(card).toBeHidden();
 });
 
@@ -62,7 +62,7 @@ test('comfort more: a repair copy (the non-reviewable fallback) grades and passe
 	await seed({ comfort: 'more' });
 	await page.goto('customizing-agents/instructions/');
 	const card = page.locator('[data-skills-check]');
-	await card.getByRole('button', { name: 'Answer 1 question' }).click();
+	await card.getByRole('button', { name: 'Répondre à 1 question' }).click();
 	const copy = card.locator('[data-skills-item="fix-the-instructions"]');
 	await copy.locator('.cp-reveal-btn').click();
 	await copy.locator('input[value=pass]').check();
@@ -84,12 +84,12 @@ test('comfort more: a checkpoint passed in the body after load is not asked', as
 	await seed({ comfort: 'more' });
 	await page.goto(`${LESSON}/`);
 	const card = page.locator('[data-skills-check]');
-	await expect(card.getByRole('button', { name: 'Answer 2 questions' })).toBeVisible();
+	await expect(card.getByRole('button', { name: 'Répondre à 2 questions' })).toBeVisible();
 	const body = page.locator(`#${FIRST}`);
 	await body.locator('textarea').fill('27°C, sun');
 	await body.locator('.cp-check').click();
 	await expect(body).toHaveAttribute('data-state', 'passed');
-	await card.getByRole('button', { name: 'Answer 1 question' }).click();
+	await card.getByRole('button', { name: 'Répondre à 1 question' }).click();
 	await expect(card.locator('[data-skills-item]')).toHaveCount(1);
 	await expect(card.locator(`[data-skills-item="${SECOND}"]`)).toBeVisible();
 });
@@ -104,11 +104,11 @@ test('comfort more: the card skips passed checkpoints and stays hidden when all 
 	await page.goto(`${LESSON}/`);
 	const card = page.locator('[data-skills-check]');
 	await expect(card).toBeVisible();
-	await card.getByRole('button', { name: 'Answer 1 question' }).click();
+	await card.getByRole('button', { name: 'Répondre à 1 question' }).click();
 	await expect(card.locator('[data-skills-item]')).toHaveCount(1);
 	await expect(card.locator(`[data-skills-item="${SECOND}"]`)).toBeVisible();
 
-	await card.getByRole('button', { name: 'Not now' }).click();
+	await card.getByRole('button', { name: 'Pas maintenant' }).click();
 	await expect(card).toBeHidden();
 
 	// With every chosen checkpoint passed, no check is offered.

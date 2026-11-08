@@ -10,8 +10,8 @@ import {
 } from '@lib/markdown-alternate';
 import { describe, expect, it } from 'vitest';
 
-const site = 'https://schubergphilis.github.io';
-const ROOT = 'https://schubergphilis.github.io/ai-training';
+const site = 'https://benbouzi.github.io';
+const ROOT = 'https://benbouzi.github.io/ai-training';
 
 describe('alternate URLs', () => {
 	it('is the page URL plus index.md, under site and base', () => {

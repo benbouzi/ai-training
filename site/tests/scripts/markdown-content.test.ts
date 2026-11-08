@@ -123,7 +123,7 @@ describe('mountLesson', () => {
 	it('skips the lesson from either skip button', () => {
 		page();
 		mountLesson(document);
-		expect(q('#recap-skip').textContent).toBe('I know this, skip it');
+		expect(q('#recap-skip').textContent).toBe('Je connais déjà, passer');
 		q('#tip-skip').click();
 		expect(progress.load().lessons[LESSON]?.state).toBe('skipped');
 		expect(q<HTMLButtonElement>('#recap-skip').disabled).toBe(true);
@@ -144,7 +144,7 @@ describe('mountLesson', () => {
 		mountLesson(document);
 		const card = q('[data-skills-check]');
 		expect(card.hidden).toBe(false);
-		expect(q('[data-skills-note]').textContent).toContain('One checkpoint per objective');
+		expect(q('[data-skills-note]').textContent).toContain('Une question de contrôle par objectif');
 		q('[data-skills-start]').click();
 		const items = q('[data-skills-items]');
 		expect(items.hidden).toBe(false);
