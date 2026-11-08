@@ -113,7 +113,7 @@ coûte donc les jetons des dix tours précédents, en plus des nouveaux
   hint="Quels jetons portent le prix le plus élevé, et combien chaque changement en supprime-t-il ?"
   options={[
     { text: 'Supprimer la salutation et les remerciements du prompt de résumé.', why: 'Cela supprime des jetons d’entrée, les moins chers, et le tableau montre que le prix ne bouge que d’environ un tiers.' },
-    { text: 'Demander cinq puces au lieu du résumé d’une page que l’équipe a demandé la semaine dernière.', correct: true },
+    { text: 'Demander cinq puces au lieu du résumé d’une page demandé la semaine dernière.', correct: true },
     { text: 'Envoyer le compte rendu en pièce jointe au lieu de le coller.', why: 'Une pièce jointe devient des jetons comme le texte collé. Le modèle lit les mêmes mots dans les deux cas.' },
     { text: 'Demander au modèle de répondre plus vite.', why: 'La vitesse dépend du modèle et de la longueur de la réponse. Une demande dans le prompt ajoute des jetons et ne change rien d’autre.' },
   ]}>
@@ -294,7 +294,7 @@ Aux prix d’exemple de cette leçon, lequel de ces jetons coûte le moins cher 
   hint="Comptez ce que le modèle écrit, et demandez-vous combien de temps prend chaque jeton sur ce modèle."
   options={[
     { text: 'Le prompt était poli, et le modèle a passé du temps sur la salutation.', why: 'La salutation est faite de jetons d’entrée, lus au départ. Elle ajoute un peu à l’attente, et bien moins que la réponse.' },
-    { text: 'La réponse fait deux pages sur le grand modèle, et chacun de ses jetons prend plus de temps sur ce modèle.', correct: true },
+    { text: 'La réponse est longue, et ce modèle met plus de temps à écrire chaque jeton.', correct: true },
     { text: 'Le fournisseur ralentit les longues réponses pour faire des économies.', why: 'Une longue réponse prend plus de temps parce que le modèle la produit un jeton à la fois. Un modèle plus lent coûte aussi au fournisseur, et il n’y a là aucune économie.' },
     { text: 'Le fichier d’instructions contient trop de règles.', why: 'Les règles sont de l’entrée, lue au départ. Un long fichier dilue les règles et ajoute un peu de délai, mais il ne fixe pas le rythme de la réponse.' },
   ]}>

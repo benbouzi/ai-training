@@ -38,7 +38,7 @@ essais.
   title="Prédire la synthèse à la température 0"
   hint="À la température 0, quelle part de probabilité reste-t-il à une candidate en dessous du meilleur score ?"
   options={[
-    { text: '10 of 10 runs give the same answer as run 1 (les 10 essais donnent la même réponse que l’essai 1)', correct: true },
+    { text: '10 of 10 runs give the same answer as run 1 (10 essais sur 10)', correct: true },
     { text: '9 of 10 runs give the same answer as run 1 (9 essais sur 10)', why: 'Pour qu’un essai diffère, une autre candidate doit avoir une part de probabilité. À la température 0, toute la probabilité est sur la meilleure candidate.' },
     { text: 'Un nombre entre 3 et 6, différent à chaque clic', why: 'Chaque clic tire de nouveaux nombres aléatoires, mais à la température 0 chaque tirage tombe sur la seule candidate qui a toute la probabilité.' },
     { text: '1 of 10 runs give the same answer as run 1 (1 essai sur 10)', why: 'L’essai 1 se compte lui-même. À la température 0, quelle candidate prennent les neuf autres essais ?' },
@@ -194,7 +194,7 @@ chaque exécution.
   options={[
     { text: 'Oui. Le prompt a donné le bon total, et le modèle est assez déterministe pour un courriel fixe.', consequence: 'Le processus lance le prompt sur des centaines de courriels, et certains totaux reviennent sous forme de texte, dans une autre devise, ou avec un second nombre ajouté. Personne ne s’en aperçoit avant de comparer les paiements au relevé bancaire.' },
     { text: 'Oui, si la température est réglée à 0, parce qu’alors chaque essai donne la même réponse et le processus ne voit jamais un autre total.', consequence: 'Si le processus utilise l’un des modèles récents qui n’acceptent que la température par défaut, le réglage est refusé. Sur un modèle qui l’accepte, les essais sont plus réguliers et diffèrent encore de temps en temps, et un total faux à la température 0 est aussi faux qu’à la température 1. Le processus le paie.' },
-    { text: 'Pas encore. Il faut le lancer sur un ensemble de courriels dont on connaît les totaux, compter les réponses justes et dans la bonne forme, et ajouter un contrôle qui rejette une réponse qui échoue sur l’un ou l’autre point.', correct: true, consequence: 'L’essai à blanc montre le taux d’échec et les formes que prend une mauvaise réponse, et le contrôle transforme chacune d’elles en élément rejeté au lieu d’un paiement.' },
+    { text: 'Pas encore. Il faut le lancer sur des courriels dont on connaît les totaux, compter les réponses justes et bien formées, et ajouter un contrôle qui rejette toute réponse fausse ou mal formée.', correct: true, consequence: 'L’essai à blanc montre le taux d’échec et les formes que prend une mauvaise réponse, et le contrôle transforme chacune d’elles en élément rejeté au lieu d’un paiement.' },
     { text: 'Pas encore. Il faut demander au modèle s’il est sûr du total, et ne payer que s’il répond oui. Un modèle sait généralement quand il n’est pas sûr.', consequence: 'La déclaration de confiance est un texte prédit de plus, et elle varie d’un essai à l’autre comme le total. Le contrôle a maintenant deux réponses auxquelles se fier au lieu d’une.' },
   ]}>
 

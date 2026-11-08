@@ -210,7 +210,7 @@ en fait un élément de preuve.
   hint="Lisez chaque formulation comme le modèle la lirait. Laquelle ne donne aucun indice sur la réponse qui vous ferait plaisir ?"
   options={[
     { text: 'Je remplace notre réunion hebdomadaire de suivi par un point écrit. Peux-tu me confirmer que c’est une bonne idée ?', why: 'La question annonce la décision et demande une confirmation : confirmer est donc le texte probable.' },
-    { text: 'Deux options pour une équipe de huit personnes sur deux fuseaux horaires : garder la réunion hebdomadaire de suivi, ou déposer un point écrit avant vendredi midi. Compare les deux pour cette équipe.', correct: true },
+    { text: 'Pour une équipe de huit personnes sur deux fuseaux horaires, compare deux options : garder la réunion hebdomadaire de suivi, ou un point écrit avant vendredi midi.', correct: true },
     { text: 'Je pense qu’un point écrit ferait gagner du temps à tout le monde. Que penses-tu de mon plan de remplacer la réunion hebdomadaire de suivi ?', why: '« Je pense » et « mon plan » disent au modèle de quel côté vous êtes avant même qu’il réponde.' },
     { text: 'Ma responsable veut garder la réunion hebdomadaire de suivi, mais moi je veux passer à un point écrit. Qui a raison ?', why: 'La question indique votre camp et demande au modèle de désigner un gagnant. Donner raison à la personne qui pose la question est le texte probable.' },
   ]}>
@@ -240,7 +240,7 @@ travailler, ou vérifiez la réponse ailleurs que dans la conversation.
   hint="Qu’est-ce qui a changé entre la première et la seconde réponse, et cela vous apprend-il quoi que ce soit sur la formule ?"
   options={[
     { text: 'Accepter la seconde réponse. Le modèle a reconsidéré la question et s’est corrigé.', consequence: 'Rien de nouveau n’est entré dans la conversation entre les deux réponses, sauf votre désaccord : la seconde réponse est donc celle qui vous donne raison. La formule oublie toujours la dernière ligne, et le total mensuel est trop faible.' },
-    { text: 'Considérer que le revirement ne prouve rien, et vérifier la formule sur une colonne dont vous connaissez le bon total.', correct: true, consequence: 'Le total de test manque d’une ligne, ce qui tranche la question. Le modèle avait raison la première fois et vous a suivi la seconde.' },
+    { text: 'Considérer que le revirement ne prouve rien, et tester le calcul sur une colonne dont le bon total est connu.', correct: true, consequence: 'Le total de test manque d’une ligne, ce qui tranche la question. Le modèle avait raison la première fois et vous a suivi la seconde.' },
     { text: 'Demander « tu es vraiment sûr ? » une troisième fois et garder la réponse qu’il donne.', consequence: 'Une troisième contestation est un signal de plus de ce que vous voulez entendre. La réponse qui revient est de nouveau la réponse conciliante, quelle qu’elle soit à ce moment-là.' },
     { text: 'Ouvrir une nouvelle conversation, poser la même question dans les mêmes termes, et se fier à la réponse obtenue.', consequence: 'Une nouvelle conversation supprime la contestation, ce qui aide, et vous laisse avec une réponse non vérifiée au lieu de deux. Vous n’avez toujours pas regardé la colonne.' },
   ]}>

@@ -89,7 +89,7 @@ jour », « exécute » et « continue jusqu’à » décrivent des actions.
   options={[
     { text: 'Affiche-t-il une fenêtre de conversation ou un bouton ?', why: 'Une fenêtre de conversation peut servir de façade à un agent, et un bouton peut déclencher un simple appel au modèle. Le test doit justement voir au-delà de l’interface.' },
     { text: 'Le fournisseur l’appelle-t-il agent, copilote ou assistant ?', why: 'Les fournisseurs utilisent les trois noms pour les deux types de produits. Le nom renseigne sur le marketing, et rien sur ce que fait le logiciel après votre prompt.' },
-    { text: 'Après un prompt, peut-il agir au moyen d’un outil et choisir lui-même l’étape suivante ?', correct: true },
+    { text: 'Après un prompt, peut-il agir avec un outil et choisir seul l’étape suivante ?', correct: true },
     { text: 'Utilise-t-il un modèle plus récent ou plus grand que l’autre ?', why: 'Le même modèle se trouve derrière des assistants et des agents. La différence tient au logiciel qui l’entoure, et la taille du modèle n’en dit rien.' },
   ]}>
 Deux produits se ressemblent à l’écran. Quelle question unique vous dit si
@@ -160,7 +160,7 @@ eux sont fixées dans le harnais ?
   title="Où va la correction ?" hint="Quelle partie du système a décidé que l’action pouvait avoir lieu ?"
   options={[
     { text: 'Passer à un modèle plus récent pour qu’il prenne de meilleures décisions.', why: 'Un modèle plus récent décidera peut-être autrement un jour donné. L’outil et la vérification qui ont laissé partir le message sont toujours là, et un autre jour produit le même résultat.' },
-    { text: 'Retirer l’outil d’envoi, ou ajouter une vérification qui demande l’accord d’une personne avant un envoi.', correct: true },
+    { text: 'Retirer l’outil d’envoi, ou exiger l’accord d’une personne avant chaque envoi.', correct: true },
     { text: 'Expliquer au client que les agents se trompent parfois.', why: 'Cela explique l’événement et ne change rien au logiciel. L’exécution suivante a le même outil et la même vérification manquante.' },
   ]}>
 Un agent qui rédige des réponses aux clients a envoyé un message inachevé à un
