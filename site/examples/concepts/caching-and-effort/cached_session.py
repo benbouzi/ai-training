@@ -85,8 +85,7 @@ def main() -> None:
         "une conversation, au prix sans et avec cache de prompt",
         f"prix par million de jetons : entrée {money2(INPUT_PRICE)}, sortie {money2(OUTPUT_PRICE)},"
         f" écriture cache {money2(CACHE_WRITE_PRICE)}, lecture cache {money2(CACHE_READ_PRICE)}",
-        f"{'requête':42}{'entrée':>8}{'écrits':>8}{'lus':>8}{'sortie':>7}"
-        f"{'sans':>10}{'avec':>10}",
+        f"{'requête':42}{'entrée':>8}{'écrits':>8}{'lus':>8}{'sortie':>7}{'sans':>10}{'avec':>10}",
     ]
     rows = requests()
     for number, (label, input_tokens, written, read, output) in enumerate(rows, start=1):
