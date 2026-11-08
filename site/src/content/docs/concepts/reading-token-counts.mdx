@@ -1,383 +1,404 @@
 import { Choice, MultiChoice, Match, Sort, Scenario, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-A colleague spends a morning in one chat with an assistant. She asks what a
-kickoff email should contain, pastes her meeting notes, asks for a draft,
-pastes a budget sheet, and at the end asks for a subject line. The last
-question is one short line, and yet it cost about twice as much as the first one.
-In this lesson we read the token counts of every request in that chat and
-find out where the money went. Then we do the same for one prompt to an
-agent. You install and run nothing: every count on the page is in a table.
+Une collègue passe une matinée dans une même conversation avec un assistant.
+Elle demande ce que doit contenir un courriel de lancement de projet, colle ses
+notes de réunion, demande un brouillon, colle un tableau budgétaire, et à la fin
+demande une ligne d’objet. La dernière question tient en une courte ligne, et
+pourtant elle a coûté environ deux fois plus que la première. Dans cette leçon,
+nous lisons le nombre de jetons de chaque requête de cette conversation et nous
+cherchons où est passé l’argent. Puis nous faisons de même pour un prompt
+adressé à un agent. Vous n’installez et ne lancez rien : chaque nombre de la
+page figure dans un tableau.
 
-The [lesson on what every token costs](/concepts/what-tokens-cost/#what-a-token-costs)
-priced one call. The [lesson on one prompt and many
-requests](/concepts/one-prompt-many-requests/#what-is-in-each-request)
-showed that each request holds the whole history so far. This lesson puts
-the two together.
+La [leçon sur le coût de chaque jeton](/concepts/what-tokens-cost/#ce-que-coûte-un-jeton)
+a calculé le prix d’un appel. La
+[leçon sur un prompt et ses nombreuses requêtes](/concepts/one-prompt-many-requests/#ce-que-contient-chaque-requête)
+a montré que chaque requête contient tout l’historique jusque-là. Cette leçon
+réunit les deux.
 
-## Two counts on every request
+## Deux nombres sur chaque requête
 
-When software sends a request to a model, the reply comes back with a
-short usage report, and that report holds two counts, the **input and output tokens** of the request
-(@Claude docs messages). The vendor bills by these counts.
+Quand un logiciel envoie une requête à un modèle, la réponse revient avec un
+court rapport d’utilisation, et ce rapport contient deux nombres : les **jetons
+d’entrée et de sortie** de la requête (@Claude docs messages). Le fournisseur
+facture d’après ces nombres.
 
-The input count is everything the request sent to the model. It's the
-instructions, the tool descriptions if the assistant has tools, the history
-of the conversation and the new message. The tool descriptions are input
-tokens, and so are the tool results that come back (@Claude docs pricing).
+Le nombre d’entrée couvre tout ce que la requête a envoyé au modèle. Ce sont
+les instructions, les descriptions d’outils si l’assistant a des outils,
+l’historique de la conversation et le nouveau message. Les descriptions d’outils
+sont des jetons d’entrée, tout comme les résultats d’outils qui reviennent
+(@Claude docs pricing).
 
-The output count is everything the model wrote. That includes the visible
-answer and a request for a tool. A model that thinks before it answers
-writes its thinking as tokens too, and those are billed as output tokens
-(@Claude Code costs). So the output count can be larger than the answer you
-see. Neither count is a count of words, because a token is a piece of
-text and not a word. The counts also include text you don't see, because
-the vendor turns the request into its own format before the model reads
-it (@Claude docs messages).
+Le nombre de sortie couvre tout ce que le modèle a écrit. Cela comprend la
+réponse visible et une demande d’outil. Un modèle qui réfléchit avant de
+répondre écrit aussi sa réflexion sous forme de jetons, et ceux-ci sont
+facturés comme des jetons de sortie (@Claude Code costs). Le nombre de sortie
+peut donc dépasser la réponse que vous voyez. Aucun des deux nombres ne compte
+des mots, parce qu’un jeton est un morceau de texte. Les nombres comprennent
+aussi du texte que vous ne voyez pas, parce que le fournisseur convertit la
+requête dans son propre format avant que le modèle la lise
+(@Claude docs messages).
 
-The two counts have different prices. On one vendor's price list an
-output token costs five times as much as an input token, on every model it
-lists (@Claude docs pricing), and the example prices in the lesson on what every
-token costs follow the same pattern. So the same total can mean two
-different bills. Read the two counts separately, and price each one.
+Les deux nombres ont des prix différents. Sur la grille tarifaire d’un
+fournisseur, un jeton de sortie coûte cinq fois plus qu’un jeton d’entrée, pour
+chaque modèle de la liste (@Claude docs pricing), et les prix d’exemple de la
+leçon sur le coût de chaque jeton suivent la même structure. Un même total peut
+donc correspondre à deux factures différentes. Lisez les deux nombres
+séparément, et calculez le prix de chacun.
 
-Some usage reports split the input count further: tokens written to a cache,
-tokens read from it, and the rest. Together those parts are the whole input
-(@Claude docs messages). The usage screen of one coding agent shows the
-same split for a session (@Claude Code costs). The cache is the subject of
-the [lesson on caching and effort](/concepts/caching-and-effort/). In this
-lesson every request is billed at the normal input price.
+Certains rapports d’utilisation découpent encore le nombre d’entrée : jetons
+écrits dans un cache, jetons lus depuis ce cache, et le reste. Ensemble, ces
+parties forment toute l’entrée (@Claude docs messages). L’écran d’utilisation
+d’un agent de code montre le même découpage pour une session
+(@Claude Code costs). Le cache est le sujet de la
+[leçon sur la mise en cache et l’effort](/concepts/caching-and-effort/). Dans
+cette leçon, chaque requête est facturée au prix d’entrée normal.
 
 <Choice id="where-the-bill-comes-from" objective="concepts/reasons-about-cost/reads-token-counts"
   concepts={['input-and-output-tokens']}
-  context="The lesson prices input tokens at $6 and output tokens at $30 per million, so an output token costs five times an input token."
-  title="Where is most of the cost?"
-  hint="Multiply each count by its price. Which product is larger?"
+  context="La leçon fixe le prix des jetons d’entrée à 6 $ et celui des jetons de sortie à 30 $ par million : un jeton de sortie coûte donc cinq fois un jeton d’entrée."
+  title="Où se trouve l’essentiel du coût ?"
+  hint="Multipliez chaque nombre par son prix. Quel produit est le plus grand ?"
   options={[
-    { text: 'The summary, because each output token costs five times as much.', why: 'At five times the price, 500 output tokens cost as much as 2,500 input tokens, and the input is 40,000.' },
-    { text: 'The input and the output cost about the same, because the prices make up for the counts.', why: 'Price each count at its own rate and compare. The higher price does not make up for a count eighty times smaller.' },
-    { text: 'The instructions, because they are sent first.', why: 'The instructions are a small part of the input. Most of the forty thousand tokens is the report.' },
-    { text: 'The report that was sent in, because the input count is eighty times the output.', correct: true },
+    { text: 'Le résumé, parce que chaque jeton de sortie coûte cinq fois plus.', why: 'À cinq fois le prix, 500 jetons de sortie coûtent autant que 2 500 jetons d’entrée, et l’entrée en compte 40 000.' },
+    { text: 'L’entrée et la sortie coûtent à peu près autant, parce que les prix compensent les nombres.', why: 'Calculez le prix de chaque nombre à son propre tarif et comparez. Le prix plus élevé ne compense pas un nombre quatre-vingts fois plus petit.' },
+    { text: 'Les instructions, parce qu’elles sont envoyées en premier.', why: 'Les instructions sont une petite partie de l’entrée. L’essentiel des quarante mille jetons, c’est le rapport.' },
+    { text: 'Le rapport envoyé, parce que le nombre d’entrée est quatre-vingts fois celui de sortie.', correct: true },
   ]}>
 
-A summary job sends a long report and asks for a short summary. Its usage
-report shows 40,000 input tokens and 500 output tokens, at $6 per million
-input tokens and $30 per million output tokens. Where does most of the cost
-of this request come from?
+Une tâche de résumé envoie un long rapport et demande un court résumé. Son
+rapport d’utilisation indique 40 000 jetons d’entrée et 500 jetons de sortie, à
+6 $ le million de jetons d’entrée et 30 $ le million de jetons de sortie. D’où
+vient l’essentiel du coût de cette requête ?
 
 </Choice>
 
 <Match id="input-or-output" objective="concepts/reasons-about-cost/reads-token-counts"
   concepts={['input-and-output-tokens', 'model-request']}
-  context="Every request to a model reports two counts: input tokens, for everything the request sent, and output tokens, for everything the model wrote in reply."
-  title="Which count does it go in?"
-  hint="Did the harness send this part to the model, or did the model write it in this reply?"
-  options={['Input tokens', 'Output tokens']}
+  context="Chaque requête à un modèle indique deux nombres : les jetons d’entrée, pour tout ce que la requête a envoyé, et les jetons de sortie, pour tout ce que le modèle a écrit en réponse."
+  title="Dans quel nombre cela entre-t-il ?"
+  hint="Le harnais a-t-il envoyé cette partie au modèle, ou le modèle l’a-t-il écrite dans cette réponse ?"
+  options={['Jetons d’entrée', 'Jetons de sortie']}
   rows={[
-    { statement: 'The instructions the assistant reads before every task', option: 0, why: 'Who sent this text to the model, and who wrote it?' },
-    { statement: 'The descriptions of the tools the assistant can use', option: 0, why: 'Is this text part of the package the harness sends?' },
-    { statement: 'The thinking the model writes before its answer', option: 1, why: 'Who produced these tokens in this reply?' },
-    { statement: 'A request for a tool in the model\'s reply', option: 1, why: 'Is a tool request something the model writes or something it reads?' },
-    { statement: 'A tool result that goes back to the model', option: 0, why: 'Which side wrote the result, the model or the tool?' },
-    { statement: 'The model\'s own reply from two requests ago, sent again in the history', option: 0, why: 'In this request, did the model write that reply or read it?' },
+    { statement: 'Les instructions que l’assistant lit avant chaque tâche', option: 0, why: 'Qui a envoyé ce texte au modèle, et qui l’a écrit ?' },
+    { statement: 'Les descriptions des outils que l’assistant peut utiliser', option: 0, why: 'Ce texte fait-il partie du paquet qu’envoie le harnais ?' },
+    { statement: 'La réflexion que le modèle écrit avant sa réponse', option: 1, why: 'Qui a produit ces jetons dans cette réponse ?' },
+    { statement: 'Une demande d’outil dans la réponse du modèle', option: 1, why: 'Une demande d’outil est-elle quelque chose que le modèle écrit, ou quelque chose qu’il lit ?' },
+    { statement: 'Un résultat d’outil qui retourne au modèle', option: 0, why: 'Quel côté a écrit le résultat, le modèle ou l’outil ?' },
+    { statement: 'La propre réponse du modèle d’il y a deux requêtes, renvoyée dans l’historique', option: 0, why: 'Dans cette requête, le modèle a-t-il écrit cette réponse ou l’a-t-il lue ?' },
   ]}
-  rationale="Everything the harness sends is input, even text the model wrote earlier. Only what the model writes in this reply is output.">
+  rationale="Tout ce qu’envoie le harnais est de l’entrée, même un texte que le modèle a écrit plus tôt. Seul ce que le modèle écrit dans cette réponse est de la sortie.">
 
-Sort each part of a request into the count it adds to.
+Classez chaque partie d’une requête dans le nombre auquel elle s’ajoute.
 
 </Match>
 
-## A short chat, request by request
+## Une courte conversation, requête par requête
 
-Here is the usage of the chat from the top of the page, one row per
-request. The counts are round numbers written for this lesson, and the
-prices are the example prices for a large model from the [lesson on what
-every token costs](/concepts/what-tokens-cost/#what-a-token-costs): $6 per
-million input tokens and $30 per million output tokens. The left column
-says what was new in each request. The assistant's instructions are 500
-tokens.
+Voici l’utilisation de la conversation du début de la page, une ligne par
+requête. Les nombres sont des chiffres ronds écrits pour cette leçon, et les
+prix sont les prix d’exemple d’un grand modèle tirés de la
+[leçon sur le coût de chaque jeton](/concepts/what-tokens-cost/#ce-que-coûte-un-jeton) :
+6 $ par million de jetons d’entrée et 30 $ par million de jetons de sortie. La
+colonne de gauche indique ce qui était nouveau dans chaque requête. Les
+instructions de l’assistant font 500 jetons.
 
 ```text
-chat session
-request                                       input  output   input $  output $   total $
-1. asks what a kickoff email holds              515     400   $0.0031   $0.0120   $0.0151
-2. pastes meeting notes, asks for a draft     2,435     350   $0.0146   $0.0105   $0.0251
-3. asks to make it shorter                    2,795     200   $0.0168   $0.0060   $0.0228
-4. pastes a budget sheet, asks to add it      5,015     250   $0.0301   $0.0075   $0.0376
-5. asks for a subject line                    5,277      15   $0.0317   $0.0004   $0.0321
+session de conversation
+requête                                      entrée  sortie  entrée $  sortie $   total $
+1. demande le contenu d’un courriel             515     400   $0.0031   $0.0120   $0.0151
+2. colle des notes, demande un brouillon      2,435     350   $0.0146   $0.0105   $0.0251
+3. demande de raccourcir                      2,795     200   $0.0168   $0.0060   $0.0228
+4. colle un budget, demande de l’ajouter      5,015     250   $0.0301   $0.0075   $0.0376
+5. demande une ligne d’objet                  5,277      15   $0.0317   $0.0004   $0.0321
 total                                        16,037   1,215   $0.0962   $0.0365   $0.1327
 ```
 
-Read the table one column at a time. The output column goes up and down
-with the length of each answer. The input column only goes up. Request 1
-sent the instructions and one question. Request 2 sent those again, plus
-the first answer, plus the pasted notes. Each request after that held
-everything before it, because the model keeps nothing between requests and
-the earlier messages are passed in again with each new one
-(@Claude docs messages). This is **growing session cost**: every request in
-a conversation costs at least as much input as the one before it.
+Lisez le tableau une colonne à la fois. La colonne de sortie monte et descend
+avec la longueur de chaque réponse. La colonne d’entrée ne fait que monter. La
+requête 1 a envoyé les instructions et une question. La requête 2 les a
+renvoyées, avec la première réponse et les notes collées. Chaque requête
+suivante contenait tout ce qui la précédait, parce que le modèle ne garde rien
+d’une requête à l’autre et que les messages précédents sont renvoyés avec chaque
+nouvelle requête (@Claude docs messages). C’est le **coût croissant d’une
+session** : chaque requête d’une conversation coûte au moins autant d’entrée que
+la précédente.
 
-The total row prices the summed counts, so a column added up by hand can
-differ from it by $0.0001.
+La ligne du total calcule le prix des nombres additionnés : une colonne
+additionnée à la main peut donc s’en écarter de 0,0001 $.
 
-Now compare the first and the last row. Both questions are one short line.
-In request 1, most of the cost is output: 400 tokens of answer at the higher
-price. In request 5 the answer is 15 tokens, and almost all of the cost is
-input, the 5,277 tokens of conversation the subject line was sent with.
-The two pasted documents are in that input, and they were paid for again in
-every request after they arrived.
+Comparez maintenant la première et la dernière ligne. Les deux questions
+tiennent en une courte ligne. Dans la requête 1, l’essentiel du coût est de la
+sortie : 400 jetons de réponse au prix le plus élevé. Dans la requête 5, la
+réponse fait 15 jetons, et presque tout le coût est de l’entrée, les 5 277
+jetons de conversation envoyés avec la ligne d’objet. Les deux documents collés
+font partie de cette entrée, et ils ont été payés de nouveau dans chaque requête
+qui a suivi leur arrivée.
 
-The row below is the same subject-line question asked
-alone in a new chat, with only the instructions in front of it. The model
-then sees nothing of the email, so this row is for the price only.
+La ligne ci-dessous correspond à la même question sur la ligne d’objet, posée
+seule dans une nouvelle conversation, avec seulement les instructions devant
+elle. Le modèle ne voit alors rien du courriel : cette ligne ne sert qu’à
+comparer le prix.
 
 ```text
-question 5 alone, in a new chat                 512      15   $0.0031   $0.0004   $0.0035
+question 5 seule, nouvelle conversation         512      15   $0.0031   $0.0004   $0.0035
 ```
 
-The same question costs $0.0321 at the end of the chat and $0.0035 alone,
-about nine times as much.
+La même question coûte 0,0321 $ à la fin de la conversation et 0,0035 $ seule,
+soit environ neuf fois plus.
 
 <Choice id="why-the-last-cost-more" objective="concepts/reasons-about-cost/explains-growing-cost"
   concepts={['growing-session-cost', 'stateless-model']}
-  context="A chat had five requests. Two of them added a document. Request 1 was a one-line question with 515 input and 400 output tokens. Request 5 was a one-line question with 5,277 input and 15 output tokens."
-  title="Why did request 5 cost more?"
-  hint="What did the assistant send along with the fifth question?"
+  context="Une conversation a compté cinq requêtes. Deux d’entre elles ont ajouté un document. La requête 1 était une question d’une ligne, avec 515 jetons d’entrée et 400 de sortie. La requête 5 était une question d’une ligne, avec 5 277 jetons d’entrée et 15 de sortie."
+  title="Pourquoi la requête 5 a-t-elle coûté plus ?"
+  hint="Qu’est-ce que l’assistant a envoyé avec la cinquième question ?"
   options={[
-    { text: 'Request 5 was sent with the whole conversation, both pasted documents included.', correct: true },
-    { text: 'The price per token goes up the longer a chat stays open.', why: 'The price per token is the same in every row. The input count is what changed.' },
-    { text: 'The answer to request 5 was longer than the answer to request 1.', why: 'Look at the output column: 15 tokens against 400. The answer was much shorter.' },
-    { text: 'The model had to search its memory of the chat for the earlier documents.', why: 'The model keeps no memory between requests. The documents were in front of it because they were sent again.' },
+    { text: 'La requête 5 a été envoyée avec toute la conversation, y compris les deux documents collés.', correct: true },
+    { text: 'Le prix par jeton augmente à mesure qu’une conversation reste ouverte.', why: 'Le prix par jeton est le même sur chaque ligne. C’est le nombre d’entrée qui a changé.' },
+    { text: 'La réponse à la requête 5 était plus longue que la réponse à la requête 1.', why: 'Regardez la colonne de sortie : 15 jetons contre 400. La réponse était bien plus courte.' },
+    { text: 'Le modèle a dû chercher les documents précédents dans sa mémoire de la conversation.', why: 'Le modèle ne garde aucune mémoire d’une requête à l’autre. Les documents étaient sous ses yeux parce qu’ils ont été renvoyés.' },
   ]}>
 
-In the chat above, request 1 and request 5 were both a one-line question.
-Why did request 5 cost about twice as much as request 1?
+Dans la conversation ci-dessus, la requête 1 et la requête 5 étaient toutes deux
+une question d’une ligne. Pourquoi la requête 5 a-t-elle coûté environ deux fois
+plus que la requête 1 ?
 
 </Choice>
 
-## One prompt to an agent
+## Un prompt adressé à un agent
 
-A chat sends one request for each message you type, and an agent sends one
-for each step of its loop. One coding agent's cost guide explains that
-the agent calls the model again whenever tool results are ready, and that
-each of those calls holds the whole conversation so far (@Claude Code costs). So one
-prompt to an agent can fill several rows of a usage report.
+Une conversation envoie une requête pour chaque message que vous tapez, et un
+agent en envoie une pour chaque étape de sa boucle. Le guide des coûts d’un
+agent de code explique que l’agent rappelle le modèle chaque fois que des
+résultats d’outils sont prêts, et que chacun de ces appels contient toute la
+conversation jusque-là (@Claude Code costs). Un seul prompt adressé à un agent
+peut donc remplir plusieurs lignes d’un rapport d’utilisation.
 
-Here is the toy run from the [lesson on one prompt and many
-requests](/concepts/one-prompt-many-requests/#what-is-in-each-request): find
-the meeting note that mentions the June delivery, with a tool that lists a
-folder and a tool that reads a file. The agent's instructions and its tool
-descriptions are 1,400 tokens together. The counts are again written for
-this lesson.
+Voici l’exécution du jouet tirée de la
+[leçon sur un prompt et ses nombreuses requêtes](/concepts/one-prompt-many-requests/#ce-que-contient-chaque-requête) :
+trouver la note de réunion qui mentionne la livraison de juin, avec un outil qui
+liste un dossier et un outil qui lit un fichier. Les instructions de l’agent et
+ses descriptions d’outils font ensemble 1 400 jetons. Les nombres sont là encore
+écrits pour cette leçon.
 
 ```text
-one prompt to an agent
-request                                       input  output   input $  output $   total $
-1. the prompt                                 1,430      40   $0.0086   $0.0012   $0.0098
-2. result: 3 file names                       1,530      40   $0.0092   $0.0012   $0.0104
-3. result: the text of one note               3,970     120   $0.0238   $0.0036   $0.0274
+un prompt adressé à un agent
+requête                                      entrée  sortie  entrée $  sortie $   total $
+1. le prompt                                  1,430      40   $0.0086   $0.0012   $0.0098
+2. résultat : 3 noms de fichiers              1,530      40   $0.0092   $0.0012   $0.0104
+3. résultat : le texte d’une note             3,970     120   $0.0238   $0.0036   $0.0274
 total                                         6,930     200   $0.0416   $0.0060   $0.0476
 ```
 
-The person typed one line, and the report has three rows. The first two
-outputs are short, because a request for a tool is short. The input of
-request 3 is more than twice that of request 2, because the full note came
-back as a tool result and went into the history. If the agent had gone on
-to a fourth step, the note would have been in that request too.
+La personne a tapé une ligne, et le rapport a trois lignes. Les deux premières
+sorties sont courtes, parce qu’une demande d’outil est courte. L’entrée de la
+requête 3 fait plus du double de celle de la requête 2, parce que la note
+complète est revenue comme résultat d’outil et est entrée dans l’historique. Si
+l’agent était passé à une quatrième étape, la note aurait figuré aussi dans
+cette requête.
 
 <Choice id="how-many-rows" objective="concepts/reasons-about-cost/explains-growing-cost"
   concepts={['growing-session-cost', 'model-request']}
-  context="An agent sends a new request to the model after every batch of tool results. In this run, every reply of the model asked for exactly one tool, until the last reply, which gave the answer."
-  title="How many requests?"
-  hint="Count the replies the model wrote, the final answer included."
+  context="Un agent envoie une nouvelle requête au modèle après chaque lot de résultats d’outils. Dans cette exécution, chaque réponse du modèle demandait exactement un outil, jusqu’à la dernière réponse, qui donnait la réponse finale."
+  title="Combien de requêtes ?"
+  hint="Comptez les réponses écrites par le modèle, réponse finale comprise."
   options={[
-    { text: 'One request, because the person gave the agent one instruction.', why: 'The instruction starts the run. The harness sends a new request after each tool result.' },
-    { text: 'Eleven requests, one for each tool the agent used.', why: 'Which reply held the answer, and did it come after the last tool result?' },
-    { text: 'Two requests, one before the tools ran and one after.', why: 'The tools ran one at a time, each in its own step, so each result went back in a request of its own.' },
-    { text: 'Twelve requests, one for each tool and one for the answer.', correct: true },
+    { text: 'Une requête, parce que la personne a donné une seule instruction à l’agent.', why: 'L’instruction lance l’exécution. Le harnais envoie une nouvelle requête après chaque résultat d’outil.' },
+    { text: 'Onze requêtes, une pour chaque outil utilisé par l’agent.', why: 'Quelle réponse contenait la réponse finale, et venait-elle après le dernier résultat d’outil ?' },
+    { text: 'Deux requêtes, une avant l’exécution des outils et une après.', why: 'Les outils se sont exécutés un par un, chacun dans sa propre étape : chaque résultat est donc reparti dans sa propre requête.' },
+    { text: 'Douze requêtes, une pour chaque outil et une pour la réponse finale.', correct: true },
   ]}>
 
-You give an agent one instruction. It uses eleven tools, one per reply, and
-then writes its answer. How many requests do you expect to see in the usage
-report for this instruction?
+Vous donnez une instruction à un agent. Il utilise onze outils, un par réponse,
+puis il écrit sa réponse finale. Combien de requêtes vous attendez-vous à voir
+dans le rapport d’utilisation de cette instruction ?
 
 </Choice>
 
-## Starting fresh
+## Repartir de zéro
 
-The history is what makes a late request expensive, so the cheapest way to
-lower the cost is to drop the history. When you move to a task that has
-nothing to do with the conversation so far, start a new conversation. The
-old history adds to the cost of every new request and gives the new task
-nothing it needs. The vendor's cost advice for its coding agent gives the
-same rule for a switch to unrelated work, because text from the old task
-is paid for again with each new message (@Claude Code costs).
+C’est l’historique qui rend chère une requête tardive : la façon la moins
+coûteuse de réduire le coût est donc de laisser tomber l’historique. Quand vous
+passez à une tâche sans rapport avec la conversation en cours, ouvrez une
+nouvelle conversation. L’ancien historique s’ajoute au coût de chaque nouvelle
+requête et n’apporte rien dont la nouvelle tâche ait besoin. Les conseils de coût
+du fournisseur pour son agent de code donnent la même règle pour un passage à un
+travail sans rapport, parce que le texte de l’ancienne tâche est payé de nouveau
+à chaque nouveau message (@Claude Code costs).
 
-When you need to keep going on the same task, some tools can compact the
-conversation: they ask the model to write a short version of the history
-and continue from that. The requests after the summary are smaller.
-Making the summary is itself one large request, because the model has to
-read the whole history to write it. Opening a new conversation costs
-nothing by itself (@Claude Code costs).
+Quand vous devez poursuivre la même tâche, certains outils peuvent compacter la
+conversation : ils demandent au modèle d’écrire une version courte de
+l’historique et repartent de là. Les requêtes qui suivent le résumé sont plus
+petites. Produire le résumé est en soi une grosse requête, parce que le modèle
+doit lire tout l’historique pour l’écrire. Ouvrir une nouvelle conversation ne
+coûte rien en soi (@Claude Code costs).
 
 <Scenario id="new-task-same-chat" objective="concepts/reasons-about-cost/explains-growing-cost"
   concepts={['growing-session-cost']}
-  context="A chat has been open all morning and holds a long history about one email, including two pasted documents. The person now has an unrelated question about booking a train."
-  title="The next question is about something else"
-  hint="What will every request after this one hold, and does the new question need any of it?"
+  context="Une conversation est ouverte depuis le matin et contient un long historique sur un courriel, dont deux documents collés. La personne a maintenant une question sans rapport sur la réservation d’un train."
+  title="La question suivante porte sur autre chose"
+  hint="Que contiendra chaque requête après celle-ci, et la nouvelle question a-t-elle besoin de quoi que ce soit de tout cela ?"
   options={[
-    { text: 'Ask in the same chat, so the assistant has more context to work with.', consequence: 'Every request about the train now holds the whole email conversation. It costs more each time and adds nothing the train question needs.' },
-    { text: 'Ask the assistant to forget the email first, then ask about the train.', consequence: 'The request to forget is one more message in the history. The email conversation is still sent with every request after it.' },
-    { text: 'Open a new chat and ask about the train there.', correct: true, consequence: 'The first request holds only the instructions and the question. The email chat is still there to go back to.' },
-    { text: 'Ask the assistant to summarize the chat, then ask about the train.', consequence: 'The summary is one large request that reads the whole history, and the summary of the email then goes with every train question.' },
+    { text: 'Poser la question dans la même conversation, pour que l’assistant ait plus de contexte.', consequence: 'Chaque requête sur le train contient désormais toute la conversation sur le courriel. Elle coûte plus cher à chaque fois et n’apporte rien dont la question du train ait besoin.' },
+    { text: 'Demander d’abord à l’assistant d’oublier le courriel, puis poser la question sur le train.', consequence: 'La demande d’oubli est un message de plus dans l’historique. La conversation sur le courriel est toujours envoyée avec chaque requête suivante.' },
+    { text: 'Ouvrir une nouvelle conversation et y poser la question sur le train.', correct: true, consequence: 'La première requête ne contient que les instructions et la question. La conversation sur le courriel reste disponible si vous voulez y revenir.' },
+    { text: 'Demander à l’assistant de résumer la conversation, puis poser la question sur le train.', consequence: 'Le résumé est une grosse requête qui lit tout l’historique, et le résumé du courriel accompagne ensuite chaque question sur le train.' },
   ]}>
 
-You have spent the morning on one email in one chat. Now you want to
-ask about booking a train for next week, which has nothing to do with the
-email. What do you do?
+Vous avez passé la matinée sur un courriel, dans une même conversation. Vous
+voulez maintenant poser une question sur la réservation d’un train pour la
+semaine prochaine, sans aucun rapport avec le courriel. Que faites-vous ?
 
 </Scenario>
 
-<Pitfall title="Blaming the long answers">
-A team's assistant costs more than they expected, and the first guess is that
-its answers are too long. They add "keep answers short" to the instructions.
-The bill barely moves. The usage report shows why: the output counts were a
-few hundred tokens a request, and the input counts were tens of thousands,
-because a reference document was attached to every conversation and the
-conversations ran all day. The rule: read the input and the output counts
-before you guess, and look at what the input holds before you shorten the
-answers.
+<Pitfall title="Accuser les longues réponses">
+L’assistant d’une équipe coûte plus cher que prévu, et la première hypothèse est
+que ses réponses sont trop longues. L’équipe ajoute « réponds brièvement » aux
+instructions. La facture bouge à peine. Le rapport d’utilisation montre
+pourquoi : les nombres de sortie tournaient autour de quelques centaines de
+jetons par requête, et les nombres d’entrée atteignaient des dizaines de
+milliers, parce qu’un document de référence était joint à chaque conversation et
+que les conversations duraient toute la journée. La règle : lisez les nombres
+d’entrée et de sortie avant de faire une hypothèse, et regardez ce que contient
+l’entrée avant de raccourcir les réponses.
 </Pitfall>
 
 <MultiChoice id="read-one-row" phase="review" objective="concepts/reasons-about-cost/reads-token-counts"
   concepts={['input-and-output-tokens']}
-  context="A usage report for one request shows 12,000 input tokens and 300 output tokens. Output tokens cost five times as much per token as input tokens."
-  title="What does this row tell you?"
-  hint="Which count covers what was sent, which covers what was written, and what does each cost?"
+  context="Le rapport d’utilisation d’une requête indique 12 000 jetons d’entrée et 300 jetons de sortie. Un jeton de sortie coûte cinq fois plus qu’un jeton d’entrée."
+  title="Que vous apprend cette ligne ?"
+  hint="Quel nombre couvre ce qui a été envoyé, lequel couvre ce qui a été écrit, et combien coûte chacun ?"
   options={[
-    { text: 'Most of the cost of this request is the text that was sent to the model.', correct: true },
-    { text: 'The model wrote about 12,000 tokens, and most of them were thinking.', why: 'Thinking is output, and the output count is 300. The 12,000 is what the request sent.' },
-    { text: 'The 300 output tokens can include thinking that the visible answer does not show.', correct: true },
-    { text: 'Output costs more per token, so the output is most of the cost here.', why: 'Five times 300 is 1,500 input tokens at the same price, and the input is 12,000.' },
+    { text: 'L’essentiel du coût de cette requête est le texte envoyé au modèle.', correct: true },
+    { text: 'Le modèle a écrit environ 12 000 jetons, dont la plupart étaient de la réflexion.', why: 'La réflexion est de la sortie, et le nombre de sortie est de 300. Les 12 000 correspondent à ce que la requête a envoyé.' },
+    { text: 'Les 300 jetons de sortie peuvent inclure une réflexion que la réponse visible ne montre pas.', correct: true },
+    { text: 'La sortie coûte plus cher par jeton, donc la sortie représente l’essentiel du coût ici.', why: 'Cinq fois 300 équivaut à 1 500 jetons d’entrée au même prix, et l’entrée en compte 12 000.' },
   ]}>
 
-A request's usage report shows 12,000 input tokens and 300 output tokens.
-Which two statements are true?
+Le rapport d’utilisation d’une requête indique 12 000 jetons d’entrée et 300
+jetons de sortie. Quelles sont les deux affirmations vraies ?
 
 </MultiChoice>
 
 <Choice id="same-total-two-bills" phase="review" objective="concepts/reasons-about-cost/reads-token-counts"
   concepts={['input-and-output-tokens']}
-  context="Output tokens cost five times as much per token as input tokens. Two requests each used 10,000 tokens in total."
-  title="Which request costs more?"
-  hint="Price the output part of each request at five times the input price."
+  context="Un jeton de sortie coûte cinq fois plus qu’un jeton d’entrée. Deux requêtes ont chacune utilisé 10 000 jetons au total."
+  title="Quelle requête coûte le plus ?"
+  hint="Calculez le prix de la partie sortie de chaque requête à cinq fois le prix d’entrée."
   options={[
-    { text: 'They cost the same, because the total is 10,000 tokens in both.', why: 'The total hides the split, and the two kinds have different prices.' },
-    { text: 'Request B, because 8,000 of its tokens were written by the model.', correct: true },
-    { text: 'Request A, because a larger input takes the model longer to read.', why: 'Reading time is not what the bill counts. Input is the cheaper kind of token.' },
-    { text: 'Request A, because 9,500 of its tokens were sent to the model.', why: 'Sent tokens are input, the cheaper kind. Request B wrote sixteen times as many output tokens.' },
+    { text: 'Elles coûtent autant, parce que le total est de 10 000 jetons dans les deux cas.', why: 'Le total cache la répartition, et les deux types de jetons n’ont pas le même prix.' },
+    { text: 'La requête B, parce que 8 000 de ses jetons ont été écrits par le modèle.', correct: true },
+    { text: 'La requête A, parce qu’une entrée plus grande demande plus de temps de lecture au modèle.', why: 'Le temps de lecture n’est pas ce que compte la facture. L’entrée est le type de jeton le moins cher.' },
+    { text: 'La requête A, parce que 9 500 de ses jetons ont été envoyés au modèle.', why: 'Les jetons envoyés sont de l’entrée, le type le moins cher. La requête B a écrit seize fois plus de jetons de sortie.' },
   ]}>
 
-Request A had 9,500 input tokens and 500 output tokens. Request B had 2,000
-input tokens and 8,000 output tokens. Which request costs more?
+La requête A comptait 9 500 jetons d’entrée et 500 jetons de sortie. La
+requête B comptait 2 000 jetons d’entrée et 8 000 jetons de sortie. Quelle
+requête coûte le plus ?
 
 </Choice>
 
 <Choice id="one-line-late-in-the-day" phase="review" objective="concepts/reasons-about-cost/explains-growing-cost"
   concepts={['growing-session-cost', 'stateless-model']}
-  context="A person has worked in one chat since the morning. In the afternoon they ask a one-line question, and its usage report shows 40,000 input tokens."
-  title="Why so much input?"
-  hint="What does the assistant send with each new message, and what does the model keep between requests?"
+  context="Une personne travaille dans la même conversation depuis le matin. L’après-midi, elle pose une question d’une ligne, et son rapport d’utilisation indique 40 000 jetons d’entrée."
+  title="Pourquoi autant d’entrée ?"
+  hint="Qu’est-ce que l’assistant envoie avec chaque nouveau message, et que garde le modèle d’une requête à l’autre ?"
   options={[
-    { text: 'The assistant counts every word of the question many times over.', why: 'Each token of the question is counted once. The count is large because of what came with it.' },
-    { text: 'The model looked up the morning\'s messages in its memory, and the lookup is billed.', why: 'The model keeps nothing between requests. The morning\'s messages were sent again as part of this request.' },
-    { text: 'The question was sent together with all of the morning\'s conversation.', correct: true },
-    { text: 'Long chats switch to a larger model, which counts more tokens per word.', why: 'The model is the same all day. The count grew because the history grew.' },
+    { text: 'L’assistant compte chaque mot de la question de nombreuses fois.', why: 'Chaque jeton de la question est compté une fois. Le nombre est élevé à cause de ce qui l’accompagnait.' },
+    { text: 'Le modèle a cherché les messages du matin dans sa mémoire, et cette recherche est facturée.', why: 'Le modèle ne garde rien d’une requête à l’autre. Les messages du matin ont été renvoyés dans le cadre de cette requête.' },
+    { text: 'La question a été envoyée avec toute la conversation de la matinée.', correct: true },
+    { text: 'Les longues conversations passent à un modèle plus grand, qui compte plus de jetons par mot.', why: 'Le modèle est le même toute la journée. Le nombre a grandi parce que l’historique a grandi.' },
   ]}>
 
-A one-line question late in a long chat shows 40,000 input tokens in its
-usage report. Why?
+Une question d’une ligne, tard dans une longue conversation, affiche 40 000
+jetons d’entrée dans son rapport d’utilisation. Pourquoi ?
 
 </Choice>
 
 <Sort id="paid-once-or-again" phase="review" objective="concepts/reasons-about-cost/explains-growing-cost"
   concepts={['growing-session-cost', 'input-and-output-tokens']}
-  context="In a chat, the assistant sends the whole conversation so far with every new request. The question is which text is paid for in one request only and which is paid for again in later requests of the same chat."
-  title="Paid once, or again later?"
-  hint="Will this text be in the history of a later request in the same chat?"
-  buckets={['Paid again in later requests', 'Paid for in one request only']}
+  context="Dans une conversation, l’assistant envoie toute la conversation jusque-là avec chaque nouvelle requête. La question est de savoir quel texte n’est payé que dans une requête et lequel est payé de nouveau dans les requêtes suivantes de la même conversation."
+  title="Payé une fois, ou de nouveau plus tard ?"
+  hint="Ce texte figurera-t-il dans l’historique d’une requête ultérieure de la même conversation ?"
+  buckets={['Payé de nouveau dans les requêtes suivantes', 'Payé dans une seule requête']}
   items={[
-    { text: 'A report pasted into the first message of a chat that goes on all day', bucket: 0 },
-    { text: 'A long answer the model wrote early in the chat', bucket: 0 },
-    { text: 'A tool result in the second step of an agent run with five steps', bucket: 0 },
-    { text: 'The answer to the last question, after which the chat is closed', bucket: 1 },
-    { text: 'A one-line question asked in a new chat that ends after one reply', bucket: 1 },
+    { text: 'Un rapport collé dans le premier message d’une conversation qui dure toute la journée', bucket: 0 },
+    { text: 'Une longue réponse que le modèle a écrite tôt dans la conversation', bucket: 0 },
+    { text: 'Un résultat d’outil à la deuxième étape d’une exécution d’agent en cinq étapes', bucket: 0 },
+    { text: 'La réponse à la dernière question, après laquelle la conversation est fermée', bucket: 1 },
+    { text: 'Une question d’une ligne posée dans une nouvelle conversation qui s’arrête après une réponse', bucket: 1 },
   ]} />
 
 <MultiChoice id="agent-run-rows" phase="review" objective="concepts/reasons-about-cost/explains-growing-cost"
   concepts={['growing-session-cost', 'model-request']}
-  context="An agent sends a new request after each batch of tool results. In this run the model asked for one tool per reply: first a folder listing, then two files one after the other, and then it gave its answer."
-  title="What is true of this run?"
-  hint="Count the replies, and ask what the history of the last request holds."
+  context="Un agent envoie une nouvelle requête après chaque lot de résultats d’outils. Dans cette exécution, le modèle a demandé un outil par réponse : d’abord la liste d’un dossier, puis deux fichiers l’un après l’autre, puis il a donné sa réponse."
+  title="Qu’est-ce qui est vrai de cette exécution ?"
+  hint="Comptez les réponses, et demandez-vous ce que contient l’historique de la dernière requête."
   options={[
-    { text: 'The usage report shows four requests for this one prompt.', correct: true },
-    { text: 'The usage report shows one request, because the person typed one prompt.', why: 'The harness sends a new request after each tool result, so one prompt fills several rows.' },
-    { text: 'The last request holds the listing and both files as input.', correct: true },
-    { text: 'Every request has about the same input, because the instructions are the same.', why: 'The instructions are the same, but the history grows with every result.' },
+    { text: 'Le rapport d’utilisation montre quatre requêtes pour ce seul prompt.', correct: true },
+    { text: 'Le rapport d’utilisation montre une seule requête, parce que la personne a tapé un seul prompt.', why: 'Le harnais envoie une nouvelle requête après chaque résultat d’outil : un seul prompt remplit donc plusieurs lignes.' },
+    { text: 'La dernière requête contient en entrée la liste et les deux fichiers.', correct: true },
+    { text: 'Chaque requête a à peu près la même entrée, parce que les instructions sont les mêmes.', why: 'Les instructions sont les mêmes, mais l’historique grandit avec chaque résultat.' },
   ]}>
 
-An agent gets one prompt. It asks for a folder listing, then reads one
-file, then reads another, each in its own reply, and then answers. Which two
-statements are true?
+Un agent reçoit un prompt. Il demande la liste d’un dossier, puis lit un
+fichier, puis en lit un autre, chacun dans sa propre réponse, puis il répond.
+Quelles sont les deux affirmations vraies ?
 
 </MultiChoice>
 
-<Exercise stretch="If a tool you use shows a usage screen with input and output counts, open it after your next long session. Find the request with the largest input and say what was in its history.">
+<Exercise stretch="Si un outil que vous utilisez affiche un écran d’utilisation avec les nombres d’entrée et de sortie, ouvrez-le après votre prochaine longue session. Trouvez la requête qui a la plus grande entrée et dites ce que contenait son historique.">
 
-Here is the usage report of another chat, about planning a team day. The
-counts are written for this lesson, at the same example prices. On paper or
-in a note, write for each request its input and output count, and say in
-one line what made the input grow. Then write two or three sentences on why
-request 4, a one-line question, cost more than request 1, and what you
-would do differently next time. Ten minutes is enough.
+Voici le rapport d’utilisation d’une autre conversation, consacrée à
+l’organisation d’une journée d’équipe. Les nombres sont écrits pour cette
+leçon, aux mêmes prix d’exemple. Sur papier ou dans une note, écrivez pour
+chaque requête ses nombres d’entrée et de sortie, et dites en une ligne ce qui a
+fait grandir l’entrée. Écrivez ensuite deux ou trois phrases sur la raison pour
+laquelle la requête 4, une question d’une ligne, a coûté plus que la requête 1,
+et sur ce que vous feriez autrement la prochaine fois. Dix minutes suffisent.
 
 ```text
-exercise: chat about a team day
-request                                       input  output   input $  output $   total $
-1. asks for team day ideas                      520     600   $0.0031   $0.0180   $0.0211
-2. pastes a price list, asks which fits       4,120     300   $0.0247   $0.0090   $0.0337
-3. asks for the invitation                    4,435     250   $0.0266   $0.0075   $0.0341
-4. asks if Friday is better                   4,693      60   $0.0282   $0.0018   $0.0300
+exercice : conversation sur une journée d’équipe
+requête                                      entrée  sortie  entrée $  sortie $   total $
+1. demande des idées de journée d’équipe        520     600   $0.0031   $0.0180   $0.0211
+2. colle des tarifs, demande le bon choix     4,120     300   $0.0247   $0.0090   $0.0337
+3. demande l’invitation                       4,435     250   $0.0266   $0.0075   $0.0341
+4. demande si vendredi est mieux              4,693      60   $0.0282   $0.0018   $0.0300
 total                                        13,768   1,210   $0.0826   $0.0363   $0.1189
 ```
 
-A good result notes that the input grows on every row and the output does
-not. It names the pasted price list as the jump in request 2 and says the
-list was sent again with requests 3 and 4. It says that most of the cost of
-request 1 is its long answer, and most of the cost of request 4 is the
-history it was sent with. A good answer to the last part asks whether the
-Friday question needed the price list at all. To close, ask yourself: in
-your own last long chat, which pasted text did you pay for most often?
+Un bon résultat note que l’entrée grandit à chaque ligne, ce que ne fait pas la
+sortie. Il désigne la liste de tarifs collée comme le saut de la requête 2 et
+dit que cette liste a été renvoyée avec les requêtes 3 et 4. Il dit que
+l’essentiel du coût de la requête 1 est sa longue réponse, et que l’essentiel
+du coût de la requête 4 est l’historique envoyé avec elle. Une bonne réponse à
+la dernière partie se demande si la question sur le vendredi avait besoin de la
+liste de tarifs. Pour finir, demandez-vous : dans votre dernière longue
+conversation, quel texte collé avez-vous payé le plus souvent ?
 
 </Exercise>
 
 <Recap>
 
-1. Every request reports two counts. Input tokens are everything the
-   request sent: instructions, tool descriptions, the history and the new
-   message. Output tokens are everything the model wrote, thinking and tool
-   requests included (@Claude docs pricing) (@Claude Code costs).
-2. An output token costs several times an input token, so read the two
-   counts separately and price each one (@Claude docs pricing).
-3. Each request in a conversation holds the whole history, so the input
-   count only goes up. A short question late in a long chat can cost more
-   than a long one at the start (@Claude Code costs).
-4. An agent sends a request for every step of its loop, and every tool
-   result goes into the input of the requests after it.
-5. Start a new conversation for an unrelated task. Compacting makes later
-   requests smaller, and the summary is one large request of its own.
+1. Chaque requête indique deux nombres. Les jetons d’entrée couvrent tout ce
+   que la requête a envoyé : instructions, descriptions d’outils, historique et
+   nouveau message. Les jetons de sortie couvrent tout ce que le modèle a écrit,
+   réflexion et demandes d’outil comprises (@Claude docs pricing)
+   (@Claude Code costs).
+2. Un jeton de sortie coûte plusieurs fois un jeton d’entrée : lisez donc les
+   deux nombres séparément et calculez le prix de chacun
+   (@Claude docs pricing).
+3. Chaque requête d’une conversation contient tout l’historique, et le nombre
+   d’entrée ne fait donc que monter. Une courte question tard dans une longue
+   conversation peut coûter plus qu’une longue question au début
+   (@Claude Code costs).
+4. Un agent envoie une requête à chaque étape de sa boucle, et chaque résultat
+   d’outil entre dans l’entrée des requêtes qui le suivent.
+5. Ouvrez une nouvelle conversation pour une tâche sans rapport. Le compactage
+   réduit les requêtes suivantes, et le résumé est lui-même une grosse requête.
 
 </Recap>
 
 <Habit id="new-task-new-chat">
-The next time a chat with an assistant moves on to a task that has nothing to do with the conversation so far, open a new chat for it.
+La prochaine fois qu’une conversation avec un assistant passe à une tâche sans rapport avec ce qui précède, ouvrez une nouvelle conversation pour cette tâche.
 </Habit>

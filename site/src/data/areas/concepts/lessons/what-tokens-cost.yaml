@@ -16,7 +16,7 @@ assumes:
     section: les-défaillances-nommées
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/context-window
-    section: when-the-early-facts-fall-out
+    section: quand-les-premiers-faits-sortent-de-la-fenêtre
 after: [concepts/context-window]
 shorts: [why long instruction files fail]
 exercise:

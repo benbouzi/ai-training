@@ -17,7 +17,7 @@ Le slug reproduit `github-slugger`, que le site utilise : minuscules, on garde
 les lettres, chiffres, marques, `-` et `_`, et les espaces deviennent `-`.
 Un titre répété reçoit `-1`, `-2`, etc.
 
-Usage : scripts/traduction_ancres.py [--verifier] <page.mdx>...
+Usage : docs/traduction/outils/ancres.py [--verifier] <page.mdx>...
 Avec --verifier, le script signale seulement les ancres cassées.
 """
 
@@ -29,7 +29,7 @@ import sys
 import unicodedata
 from pathlib import Path
 
-RACINE = Path(__file__).resolve().parent.parent
+RACINE = Path(__file__).resolve().parents[3]
 DOCS = RACINE / "site/src/content/docs"
 DATA = RACINE / "site/src/data"
 REF = "upstream/main"
@@ -100,7 +100,7 @@ def correspondance(chemin: Path) -> dict[str, str]:
             f"{chemin}: les titres ne correspondent pas à l’anglais "
             f"({len(avant)} titres avant, {len(apres)} après, ou niveaux différents)."
         )
-    return {a: b for (_, a), (_, b) in zip(avant, apres) if a != b}
+    return {a: b for (_, a), (_, b) in zip(avant, apres, strict=True) if a != b}
 
 
 def fichiers_cibles() -> list[Path]:
@@ -138,7 +138,8 @@ def verifier() -> int:
     for p in [*DOCS.rglob("*.md"), *DOCS.rglob("*.mdx")]:
         source = p.read_text(encoding="utf-8")
         # Les questions de contrôle et les habitudes ont aussi une ancre : leur `id`.
-        slugs[id_de_page(p)] = {s for _, s in titres(source)} | set(re.findall(r'\bid="([^"]+)"', source))
+        ids = set(re.findall(r'\bid="([^"]+)"', source))
+        slugs[id_de_page(p)] = {s for _, s in titres(source)} | ids
     erreurs = 0
     lien = re.compile(r"\]\(/([a-z0-9/-]+?)/#([^)\s]+)\)")
     section = re.compile(r"lesson:\s*([a-z0-9/-]+)\s*\n\s*section:\s*(\S+)")

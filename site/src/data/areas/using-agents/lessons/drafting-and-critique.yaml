@@ -13,7 +13,7 @@ introduces: [drafting, critique]
 assumes:
   - objective: concepts/prompts-reliably/structures-a-prompt
     lesson: concepts/prompt-anatomy
-    section: audience-and-purpose
+    section: public-et-objectif
   - objective: safety/verifies-output/spots-sycophancy
     lesson: safety/asking-a-model-to-disagree
     section: habits-on-the-prompt-side

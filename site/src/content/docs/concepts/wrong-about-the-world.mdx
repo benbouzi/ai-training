@@ -1,229 +1,236 @@
 import { Choice, MultiChoice, Match, Sort, Pitfall, Exercise, Recap, Prompt, Response } from '@components/lesson';
 
-The lesson on how models work named
-[hallucination](/concepts/how-models-work/#les-défaillances-nommées): fluent,
-confident text with nothing behind it. A wrong answer can be wrong in two
-different ways, though. It can be wrong about the world, such as a date
-that never happened. It can also be wrong about the text you gave the
-model, such as a summary that changes a date in the memo you pasted. In
-this lesson we split one wrong summary into those two kinds and find the
-check that catches each one.
+La leçon sur le fonctionnement des modèles a nommé
+l’[hallucination](/concepts/how-models-work/#les-défaillances-nommées) : un
+texte fluide et assuré qui ne repose sur rien. Une réponse peut pourtant être
+fausse de deux manières différentes. Elle peut se tromper sur le monde, comme
+une date qui n’a jamais existé. Elle peut aussi se tromper sur le texte que
+vous avez donné au modèle, comme un résumé qui change une date de la note que
+vous avez collée. Dans cette leçon, nous séparons un résumé erroné en ces deux
+types d’erreur et nous trouvons le contrôle qui repère chacun.
 
-## One summary, five mistakes
+## Un résumé, cinq erreurs
 
-You paste a short memo into a chat assistant and ask for a summary. The
-exchange below is illustrative: the author wrote it to show the pattern,
-and a real model makes different mistakes.
+Vous collez une courte note interne dans un assistant conversationnel et
+demandez un résumé. L’échange ci-dessous est une illustration : l’auteur l’a
+écrit pour montrer le mécanisme, et un vrai modèle fait d’autres erreurs.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize this memo in two bullet points, and say which country the
-offsite is in.
+Résume cette note en deux puces, et dis dans quel pays se tient le séminaire.
 
-Memo: The team offsite moves from 12 March to 19 March. It is held in
-our Lisbon office. The budget is capped at 4,000 euros. The office manager
-books the rooms.
+Note : Le séminaire d’équipe passe du 12 mars au 19 mars. Il se tient dans
+nos bureaux de Lisbonne. Le budget est plafonné à 4 000 euros. La
+responsable des services généraux réserve les salles.
 </Prompt>
 <Response>
 
 ```text
-- The offsite moves from 12 March to 26 March, one week later
-  than planned, and takes place in the Lisbon office.
-- The budget is capped at 4,000 euros.
-- The office manager books the rooms and the flights.
+- Le séminaire passe du 12 mars au 26 mars, une semaine plus tard
+  que prévu, et se tient dans les bureaux de Lisbonne.
+- Le budget est plafonné à 4 000 euros.
+- La responsable des services généraux réserve les salles et les vols.
 
-The offsite is in Spain, since Lisbon is the capital of Spain.
+Le séminaire a lieu en Espagne, puisque Lisbonne est la capitale de l’Espagne.
 ```
 
 </Response>
 
-The reply reads well, and it gets five things wrong.
+La réponse se lit bien, et elle comporte cinq erreurs.
 
-- It gives 26 March, and the memo says 19 March.
-- It says the move is one week, and 12 to 26 March is two weeks. The reply
-  contradicts itself.
-- It has three bullet points, and you asked for two.
-- It says the office manager books the flights, which the memo never
-  mentions.
-- It puts Lisbon in Spain. Lisbon is the capital of Portugal.
+- Elle donne le 26 mars, alors que la note dit le 19 mars.
+- Elle parle d’un report d’une semaine, alors que du 12 au 26 mars il y a
+  deux semaines. La réponse se contredit.
+- Elle a trois puces, alors que vous en aviez demandé deux.
+- Elle dit que la responsable des services généraux réserve les vols, ce que
+  la note ne mentionne jamais.
+- Elle situe Lisbonne en Espagne. Lisbonne est la capitale du Portugal.
 
-The first four mistakes you can find with the memo alone. The fifth
-one you can't, because the memo never says which country Lisbon is in.
+Les quatre premières erreurs se repèrent avec la seule note. La cinquième non,
+parce que la note ne dit jamais dans quel pays se trouve Lisbonne.
 
-## Two kinds of hallucination
+## Deux types d’hallucination
 
-A survey of research on hallucination in large language models sorts
-these mistakes into two groups, and the names of the groups are
-factuality and faithfulness (@Huang 2025).
+Une revue de la recherche sur l’hallucination dans les grands modèles de
+langage classe ces erreurs en deux groupes, et les noms de ces groupes sont
+factualité et fidélité (@Huang 2025).
 
-A **factuality** error is wrong about the world. The survey separates a
-claim about something real that gets it wrong, such as the wrong person
-named as the inventor of a device, or Lisbon placed in Spain, from a
-claim that can't be checked against anything that exists, such as a
-quote from a person who never said it or a reference to a paper nobody
-wrote (@Huang 2025).
+Une erreur de **factualité** se trompe sur le monde. La revue distingue une
+affirmation sur quelque chose de réel qui est fausse, comme une mauvaise
+personne désignée comme l’inventeur d’un appareil, ou Lisbonne placée en
+Espagne, d’une affirmation qu’on ne peut confronter à rien d’existant, comme
+une citation d’une personne qui ne l’a jamais prononcée ou la référence d’un
+article que personne n’a écrit (@Huang 2025).
 
-A **faithfulness** error departs from what the user gave the model, or
-from itself. The survey divides it by what the output departs from
-(@Huang 2025):
+Une erreur de **fidélité** s’écarte de ce que l’utilisateur a donné au modèle,
+ou de ce que la sortie dit elle-même. La revue la divise selon ce dont la
+sortie s’écarte (@Huang 2025) :
 
-- The output ignores the instruction, such as three bullet points where
-  you asked for two.
-- The output changes or adds to the text it was given, such as 26 March
-  where the memo says 19 March, or flights that the memo doesn't mention.
-- The output contradicts itself, such as "one week later" next to two
-  dates that are two weeks apart.
+- La sortie ignore l’instruction, comme trois puces là où vous en demandiez
+  deux.
+- La sortie modifie le texte qui lui a été donné ou y ajoute quelque chose,
+  comme le 26 mars là où la note dit le 19 mars, ou des vols que la note ne
+  mentionne pas.
+- La sortie se contredit, comme « une semaine plus tard » à côté de deux dates
+  séparées de deux semaines.
 
-So the summary above has one factuality error and four faithfulness
-errors. A faithfulness error can sound true. "The office manager books
-the flights" is a reasonable thing for an office manager to do, and it
-can even be true in your company. It is still a mistake in this
-summary. A summary reports what the memo says, and the memo doesn't say
-it.
+Le résumé ci-dessus comporte donc une erreur de factualité et quatre erreurs
+de fidélité. Une erreur de fidélité peut sembler vraie. « La responsable des
+services généraux réserve les vols » est une tâche plausible pour ce poste, et
+elle peut même être vraie dans votre entreprise. C’est quand même une erreur
+dans ce résumé. Un résumé rapporte ce que dit la note, et la note ne le dit
+pas.
 
 <Sort id="world-or-text" objective="concepts/explains-models/names-failure-modes"
   concepts={['factuality-and-faithfulness']}
-  context="Each item is one mistake in a reply from a chat assistant. Most items say what the user gave the model: a document, an instruction, or only a question."
-  title="Wrong about the world, or about the input?"
-  hint="Could you find this mistake with the user's input and the reply alone, or do you need to know something the input doesn't say?"
-  buckets={['Wrong about the world (factuality)', 'Departs from the input or from itself (faithfulness)']}
+  context="Chaque élément est une erreur dans la réponse d’un assistant conversationnel. La plupart des éléments indiquent ce que l’utilisateur a donné au modèle : un document, une instruction, ou seulement une question."
+  title="Une erreur sur le monde, ou sur l’entrée ?"
+  hint="Pourriez-vous repérer cette erreur avec la seule entrée de l’utilisateur et la réponse, ou faut-il savoir quelque chose que l’entrée ne dit pas ?"
+  buckets={['Erreur sur le monde (factualité)', 'Écart avec l’entrée ou avec elle-même (fidélité)']}
   items={[
-    { text: 'Given a memo that says the meeting is on Tuesday, the reply says Wednesday.', bucket: 1 },
-    { text: 'Asked with no document for the boiling point of water at sea level, the reply says 90 °C.', bucket: 0 },
-    { text: 'Asked for one sentence, the reply is five sentences long.', bucket: 1 },
-    { text: 'Asked with no document for research on remote work, the reply cites a study that was never published.', bucket: 0 },
-    { text: 'The reply says the agenda has two items, then lists three.', bucket: 1 },
+    { text: 'À partir d’une note qui fixe la réunion au mardi, la réponse dit mercredi.', bucket: 1 },
+    { text: 'Interrogée sans document sur le point d’ébullition de l’eau au niveau de la mer, la réponse dit 90 °C.', bucket: 0 },
+    { text: 'Alors qu’on lui demandait une phrase, la réponse en fait cinq.', bucket: 1 },
+    { text: 'Interrogée sans document sur la recherche consacrée au télétravail, la réponse cite une étude jamais publiée.', bucket: 0 },
+    { text: 'La réponse dit que l’ordre du jour a deux points, puis en énumère trois.', bucket: 1 },
   ]} />
 
-## Which check finds each kind
+## Quel contrôle repère chaque type
 
-The two kinds need different checks, and this is the reason to tell them
-apart.
+Les deux types demandent des contrôles différents, et c’est la raison pour
+laquelle il faut les distinguer.
 
-To find a **factuality** error, you check the claim against a source
-outside the chat, such as a reference work or the official page.
-The survey describes detection methods that split an answer into single
-facts and look each one up in a trusted source of knowledge (@Huang 2025).
-Asking the same model isn't that check. The survey notes that a model
-isn't a reliable store of facts (@Huang 2025).
+Pour repérer une erreur de **factualité**, vous confrontez l’affirmation à une
+source extérieure à la conversation, comme un ouvrage de référence ou la page
+officielle. La revue décrit des méthodes de détection qui découpent une réponse
+en faits isolés et vérifient chacun dans une source de connaissances fiable
+(@Huang 2025). Demander au même modèle ne constitue pas ce contrôle. La revue
+note qu’un modèle n’est pas un dépôt de faits fiable (@Huang 2025).
 
-To find a **faithfulness** error, you compare the output with the input:
-the instruction you wrote and the text you pasted. The survey describes
-detection methods that measure how many of the facts in the output also
-appear in the source content (@Huang 2025). For you, that means reading
-the memo and the summary side by side. This check doesn't need outside
-knowledge, and outside knowledge doesn't help. A web search can tell you a
-lot about Lisbon, and nothing about which date this memo gave. The lesson on
-[spotting a hallucination](/safety/spotting-hallucination/) runs this
-check on a summary of a council report.
+Pour repérer une erreur de **fidélité**, vous comparez la sortie avec
+l’entrée : l’instruction que vous avez écrite et le texte que vous avez collé.
+La revue décrit des méthodes de détection qui mesurent combien des faits de la
+sortie figurent aussi dans le contenu source (@Huang 2025). Pour vous, cela
+revient à lire la note et le résumé côte à côte. Ce contrôle ne demande aucune
+connaissance extérieure, et une connaissance extérieure n’y aide pas. Une
+recherche sur le web peut vous apprendre beaucoup sur Lisbonne, et rien sur la
+date que donnait cette note. La leçon sur le
+[repérage d’une hallucination](/safety/spotting-hallucination/) applique ce
+contrôle au résumé d’un rapport de conseil municipal.
 
-The two checks don't replace each other. A summary can be faithful to a
-memo that is itself wrong. An outside source is the check that catches
-that. An answer can be true about the world and still unfaithful, like
-the flights that the office manager may well book.
+Aucun des deux contrôles ne remplace l’autre. Un résumé peut être fidèle à une
+note qui est elle-même fausse. C’est une source extérieure qui repère ce cas.
+Une réponse peut être vraie sur le monde et pourtant infidèle, comme les vols
+que la responsable des services généraux réserve peut-être bel et bien.
 
-The survey groups the ways to reduce hallucination by their cause in
-the training data, the training and the way the model generates text
-(@Huang 2025), so it doesn't give one remedy for each kind. What you can
-do as a user is know which check a claim needs.
+La revue regroupe les moyens de réduire l’hallucination selon leur cause, dans
+les données d’entraînement, dans l’entraînement et dans la façon dont le
+modèle génère du texte (@Huang 2025) : elle ne donne donc pas un remède par
+type. Ce que vous pouvez faire en tant qu’utilisateur, c’est savoir de quel
+contrôle une affirmation a besoin.
 
 <Choice id="which-check-finds-it" objective="concepts/explains-models/names-failure-modes"
   concepts={['factuality-and-faithfulness']}
-  context="A user pasted a contract into a chat assistant and asked for the notice period. The reply says three months. The user wants to know whether that is what the contract says."
-  title="Which check finds it?"
-  hint="Is the question about the world, or about one document you already have?"
+  context="Un utilisateur a collé un contrat dans un assistant conversationnel et lui a demandé le délai de préavis. La réponse dit trois mois. L’utilisateur veut savoir si c’est bien ce que dit le contrat."
+  title="Quel contrôle la repère ?"
+  hint="La question porte-t-elle sur le monde, ou sur un document que vous avez déjà ?"
   options={[
-    { text: 'Search the web for the usual notice period in contracts of this kind.', why: 'A usual period says nothing about this contract. The answer has to match the text you pasted.' },
-    { text: 'Ask the same assistant whether it is sure, in a new chat.', why: 'The model is not a reliable store of facts, and a new chat has never seen the contract.' },
-    { text: 'Find the clause on notice in the contract and read it.', correct: true },
-    { text: 'Ask a second assistant, without the contract, what notice periods usually are.', why: 'A second model without the contract can only guess what is usual. It never sees the clause.' },
+    { text: 'Chercher sur le web le délai de préavis habituel pour ce type de contrat.', why: 'Un délai habituel ne dit rien de ce contrat-ci. La réponse doit correspondre au texte que vous avez collé.' },
+    { text: 'Demander au même assistant, dans une nouvelle conversation, s’il en est sûr.', why: 'Le modèle n’est pas un dépôt de faits fiable, et une nouvelle conversation n’a jamais vu le contrat.' },
+    { text: 'Trouver la clause sur le préavis dans le contrat et la lire.', correct: true },
+    { text: 'Demander à un second assistant, sans le contrat, quels sont les délais de préavis habituels.', why: 'Un second modèle sans le contrat ne peut que deviner ce qui est habituel. Il ne voit jamais la clause.' },
   ]}>
 
-You paste a contract into a chat assistant and ask for the notice period.
-It answers "three months". Which check tells you whether that answer is
-right for this contract?
+Vous collez un contrat dans un assistant conversationnel et demandez le délai
+de préavis. Il répond « trois mois ». Quel contrôle vous dit si cette réponse
+est juste pour ce contrat ?
 
 </Choice>
 
-<Pitfall title="Checking a summary against the web">
-You ask an assistant for a short version of a supplier's letter, and it
-says the price goes up by 5 percent from January. That sounds plausible.
-A web search shows that prices in that market rose about 5 percent this
-year, so you send the summary on. The letter said 8 percent
-from April. The search answered a question about the world, and the
-mistake was about the letter. Rule: when the model worked from a text
-you gave it, check its output against that text first.
+<Pitfall title="Vérifier un résumé sur le web">
+Vous demandez à un assistant une version courte de la lettre d’un fournisseur,
+et il indique que le prix augmente de 5 % à partir de janvier. Cela semble
+plausible. Une recherche sur le web montre que les prix de ce marché ont
+augmenté d’environ 5 % cette année, et vous transmettez le résumé. La lettre
+disait 8 % à partir d’avril. La recherche a répondu à une question sur le
+monde, et l’erreur portait sur la lettre. Règle : quand le modèle a travaillé à
+partir d’un texte que vous lui avez donné, vérifiez d’abord sa sortie au regard
+de ce texte.
 </Pitfall>
 
 <MultiChoice id="spot-the-faithfulness-errors" phase="review" objective="concepts/explains-models/names-failure-modes"
   concepts={['factuality-and-faithfulness']}
-  context="A factuality error is wrong about the world. A faithfulness error departs from what the user gave the model: the instruction, the text it was handed, or what the output said earlier."
-  title="Which errors are about the input?"
-  hint="Which of these could you find with the input alone, without knowing anything else?"
+  context="Une erreur de factualité se trompe sur le monde. Une erreur de fidélité s’écarte de ce que l’utilisateur a donné au modèle : l’instruction, le texte qui lui a été remis, ou ce que la sortie a dit plus tôt."
+  title="Quelles erreurs portent sur l’entrée ?"
+  hint="Lesquelles de ces erreurs pourriez-vous repérer avec la seule entrée, sans rien savoir d’autre ?"
   options={[
-    { text: 'You ask for a reply in French, and the model answers in English.', correct: true },
-    { text: 'Asked with no document when a well-known bridge opened, the model says 1950, and it opened in 1937.', why: 'The prompt gave no date, so the error is about the world. Only an outside source shows it.' },
-    { text: 'You paste a report that names six cities, and the summary lists seven.', correct: true },
-    { text: 'Asked with no document for reading tips, the model names a real-looking book that no library holds.', why: 'Nothing in the input mentioned the book. The claim is about the world, and a search finds no such book.' },
+    { text: 'Vous demandez une réponse en français, et le modèle répond en anglais.', correct: true },
+    { text: 'Interrogé sans document sur la date d’ouverture d’un pont célèbre, le modèle dit 1950, alors qu’il a ouvert en 1937.', why: 'Le prompt ne donnait aucune date : l’erreur porte donc sur le monde. Seule une source extérieure la révèle.' },
+    { text: 'Vous collez un rapport qui nomme six villes, et le résumé en énumère sept.', correct: true },
+    { text: 'Interrogé sans document pour des conseils de lecture, le modèle cite un livre d’apparence réelle qu’aucune bibliothèque ne possède.', why: 'Rien dans l’entrée ne mentionnait ce livre. L’affirmation porte sur le monde, et une recherche ne trouve aucun livre de ce genre.' },
   ]}>
 
-Which two of these mistakes are faithfulness errors?
+Lesquelles de ces erreurs sont deux erreurs de fidélité ?
 
 </MultiChoice>
 
 <Match id="match-the-check" phase="review" objective="concepts/explains-models/names-failure-modes"
   concepts={['factuality-and-faithfulness']}
-  context="A factuality error is wrong about the world, and a faithfulness error departs from what the user gave the model. Each row is one mistake in a chat reply."
-  title="Which check finds it?"
-  hint="Where is the standard that the claim fails: outside the chat, or in what you gave the model?"
-  options={['Look it up in a source outside the chat', 'Compare it with the instruction and the text you gave the model']}
+  context="Une erreur de factualité se trompe sur le monde, et une erreur de fidélité s’écarte de ce que l’utilisateur a donné au modèle. Chaque ligne est une erreur dans une réponse conversationnelle."
+  title="Quel contrôle la repère ?"
+  hint="Où se trouve la référence à laquelle l’affirmation ne satisfait pas : hors de la conversation, ou dans ce que vous avez donné au modèle ?"
+  options={['La vérifier dans une source extérieure à la conversation', 'La comparer avec l’instruction et le texte donnés au modèle']}
   rows={[
-    { statement: 'The model says a law took effect in 2019, and you gave it no text.', option: 0, why: 'Nothing in the chat states the year, so the standard is outside it.' },
-    { statement: 'You asked for a table, and the model wrote a paragraph.', option: 1, why: 'The standard is the instruction you wrote.' },
-    { statement: 'The summary of your notes gives a deadline your notes never mention.', option: 1, why: 'The standard is the notes you pasted.' },
-    { statement: 'You gave the model no text, and it quotes a speech that has no record anywhere.', option: 0, why: 'Only an outside search shows that no such speech exists.' },
+    { statement: 'Le modèle dit qu’une loi est entrée en vigueur en 2019, et vous ne lui avez donné aucun texte.', option: 0, why: 'Rien dans la conversation n’indique l’année : la référence est donc à l’extérieur.' },
+    { statement: 'Vous avez demandé un tableau, et le modèle a écrit un paragraphe.', option: 1, why: 'La référence est l’instruction que vous avez écrite.' },
+    { statement: 'Le résumé de vos notes donne une échéance que vos notes ne mentionnent jamais.', option: 1, why: 'La référence est l’ensemble des notes que vous avez collées.' },
+    { statement: 'Vous n’avez donné aucun texte au modèle, et il cite un discours dont il n’existe aucune trace.', option: 0, why: 'Seule une recherche extérieure montre qu’aucun discours de ce genre n’existe.' },
   ]}
-  rationale="The kind of error decides the check: an outside source for factuality, the input for faithfulness.">
-Match each mistake to the check that finds it.
+  rationale="Le type d’erreur décide du contrôle : une source extérieure pour la factualité, l’entrée pour la fidélité.">
+Associez chaque erreur au contrôle qui la repère.
 </Match>
 
-<Exercise stretch="Paste a short email you wrote, one with nothing confidential in it, into a chat assistant, ask for a two-line summary and one fact about a place or a date the email names, and sort every mistake you find in the reply the same way.">
+<Exercise stretch="Collez dans un assistant conversationnel un court courriel que vous avez écrit, sans rien de confidentiel, demandez un résumé en deux lignes et un fait sur un lieu ou une date que le courriel mentionne, et classez de la même façon chaque erreur que vous trouvez dans la réponse.">
 
-Copy the wrong answers below, all from chat assistants, into a note,
-and for each one write two things: the kind of error (factuality or
-faithfulness) and the check that finds it, in one line, such as "compare
-with the menu". The point is to practice choosing the check before you
-start checking, because the wrong check can pass a wrong answer.
+Copiez dans une note les réponses fausses ci-dessous, toutes issues
+d’assistants conversationnels, et pour chacune écrivez deux choses : le type
+d’erreur (factualité ou fidélité) et le contrôle qui la repère, en une ligne,
+par exemple « comparer avec le menu ». Le but est de vous entraîner à choisir
+le contrôle avant de commencer à vérifier, parce qu’un mauvais contrôle peut
+laisser passer une réponse fausse.
 
 ```text
-1. Asked to translate a menu, the reply adds a dish the menu doesn't have.
-2. Asked who wrote a well-known novel, the reply names the wrong author.
-3. Asked for three options, the reply gives five.
-4. Asked about a city's population, the reply quotes a census that was
-   never held.
-5. Asked to summarize a letter, the reply says the letter was signed by
-   the manager, and later in the same reply that nobody signed it.
+1. Chargée de traduire un menu, la réponse ajoute un plat que le menu n’a pas.
+2. Interrogée sur l’auteur d’un roman célèbre, la réponse nomme le mauvais auteur.
+3. Alors qu’on lui demandait trois options, la réponse en donne cinq.
+4. Interrogée sur la population d’une ville, la réponse cite un recensement
+   qui n’a jamais eu lieu.
+5. Chargée de résumer une lettre, la réponse dit que la lettre a été signée par
+   le responsable, puis, plus loin dans la même réponse, que personne ne l’a
+   signée.
 ```
 
-It takes about ten minutes. A good result puts 2 and 4 under factuality
-and 1, 3 and 5 under faithfulness. Each check line for factuality names
-an outside source you would open, and each line for faithfulness names
-the part of the input you would compare with. Reflection: for answer 5,
-do you need the letter to see the mistake, or the reply alone?
+Cela prend une dizaine de minutes. Un bon résultat classe 2 et 4 en factualité,
+et 1, 3 et 5 en fidélité. Chaque ligne de contrôle pour la factualité nomme une
+source extérieure que vous ouvririez, et chaque ligne pour la fidélité nomme la
+partie de l’entrée avec laquelle vous compareriez. Réflexion : pour la
+réponse 5, avez-vous besoin de la lettre pour voir l’erreur, ou la réponse
+seule suffit-elle ?
 
 </Exercise>
 
 <Recap>
 
-1. A factuality error is wrong about the world: a real thing described
-   wrongly, or a claim nothing can confirm, such as a quote nobody said
-   (@Huang 2025).
-2. A faithfulness error departs from what you gave the model, or from
-   itself: it ignores the instruction, changes or adds to the text you
-   pasted, or contradicts itself (@Huang 2025).
-3. Check a factuality claim against a source outside the chat. Check a
-   faithfulness claim against your own input, side by side.
-4. A faithful answer can still be wrong about the world, and a true
-   statement can still be unfaithful, so a claim that matters may need
-   both checks.
+1. Une erreur de factualité se trompe sur le monde : une chose réelle décrite
+   de façon fausse, ou une affirmation que rien ne peut confirmer, comme une
+   citation que personne n’a prononcée (@Huang 2025).
+2. Une erreur de fidélité s’écarte de ce que vous avez donné au modèle, ou
+   d’elle-même : elle ignore l’instruction, modifie le texte que vous avez collé
+   ou y ajoute quelque chose, ou se contredit (@Huang 2025).
+3. Vérifiez une affirmation de factualité dans une source extérieure à la
+   conversation. Vérifiez une affirmation de fidélité au regard de votre propre
+   entrée, côte à côte.
+4. Une réponse fidèle peut encore se tromper sur le monde, et une affirmation
+   vraie peut encore être infidèle : une affirmation qui compte peut donc avoir
+   besoin des deux contrôles.
 
 </Recap>

@@ -1,349 +1,358 @@
 import { Choice, MultiChoice, Sort, Order, Pitfall, Exercise, Recap } from '@components/lesson';
 
-In the last lesson you watched a toy agent work through a task step by
-step. Nobody typed anything between those steps, and yet the model was called
-again at every one of them. This lesson slows the loop down to single
-calls. You follow one prompt through every call it caused and see what
-is sent to the model each time and what comes back. Then you learn why
-the model needs the whole history again on every call. By the end you can
-read an agent's log and count the calls a prompt cost.
+Dans la leçon précédente, vous avez regardé un agent jouet avancer dans une
+tâche étape par étape. Personne n’a rien tapé entre ces étapes, et pourtant le
+modèle a été rappelé à chacune d’elles. Cette leçon ralentit la boucle jusqu’à
+l’appel unique. Vous suivez un prompt à travers tous les appels qu’il a
+déclenchés et vous voyez ce qui est envoyé au modèle à chaque fois et ce qui
+revient. Vous apprenez ensuite pourquoi le modèle a besoin de tout
+l’historique à chaque appel. À la fin, vous saurez lire le journal d’un agent
+et compter les appels qu’un prompt a coûtés.
 
-## One prompt, three requests
+## Un prompt, trois requêtes
 
-Here is the first transcript from the last lesson again.
+Voici de nouveau la première transcription de la leçon précédente.
 
 ```text
-task: Which meeting note mentions the June delivery?
+task: Quelle note de réunion mentionne la livraison de juin ?
 1. model: call list_dir with path "notes"
    loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
 2. model: call read_file with path "notes/2026-03-14-lantern.txt"
-   loop: ran read_file, result: Project Lantern, 14 March. Sensor boards moved from April to June. Ana confirms the date by Friday.
-3. model: done. The note of 14 March: the sensor boards moved from April to June.
+   loop: ran read_file, result: Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
+3. model: done. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
 loop: stopped, the model said it is done after 3 steps
 ```
 
-A person asked one question. Behind it, the software around the model
-called the model three times, once for each `model:` line. Each of those
-calls is a **model request**: the software sends the model one package of
-text, and the model sends back one reply (@Claude docs messages). A
-request ends when its reply comes back. If the reply asks for a tool, the
-software runs it, and the result goes to the model in the next request.
-If the reply asks for nothing, the run is over (@Claude Code agent loop).
+Une personne a posé une question. Derrière elle, le logiciel qui entoure le
+modèle a appelé le modèle trois fois, une fois pour chaque ligne `model:`.
+Chacun de ces appels est une **requête au modèle** : le logiciel envoie au
+modèle un paquet de texte, et le modèle renvoie une réponse
+(@Claude docs messages). Une requête se termine quand sa réponse revient. Si la
+réponse demande un outil, le logiciel l’exécute, et le résultat part vers le
+modèle dans la requête suivante. Si la réponse ne demande rien, l’exécution est
+terminée (@Claude Code agent loop).
 
-Each request, with its reply and the tool run that follows, is one turn
-of the loop, the same turn you
-labeled observe, think and act in the last lesson. Step 3 had no act,
-but it was still a request, because the model had to be asked before it
-could write its answer.
+Chaque requête, avec sa réponse et l’exécution d’outil qui suit, est un tour de
+boucle, le même tour que vous avez découpé en observer, réfléchir et agir dans
+la leçon précédente. L’étape 3 n’avait pas d’action, mais c’était quand même
+une requête, parce qu’il fallait interroger le modèle avant qu’il puisse écrire
+sa réponse.
 
-The software that sends the requests and runs the tools is called the
-**harness**. The last lesson called it the loop. The next lesson shows
-what else it holds, and in this lesson it does two jobs: it
-sends each request, and it carries out the tool requests that come back.
+Le logiciel qui envoie les requêtes et exécute les outils s’appelle le
+**harnais**. La leçon précédente l’appelait la boucle. La leçon suivante montre
+ce qu’il contient d’autre, et dans cette leçon il fait deux choses : il envoie
+chaque requête, et il exécute les demandes d’outil qui reviennent.
 
-## One reply, several tool calls
+## Une réponse, plusieurs appels d’outil
 
-A reply can ask for more than one tool at once (@Claude Code agent loop).
-A model that needs three files can ask for all three in one reply. The
-harness then runs all three and sends the three results back together, in
-one new request. So the number of tool calls and the number of requests
-are often different.
+Une réponse peut demander plusieurs outils à la fois (@Claude Code agent loop).
+Un modèle qui a besoin de trois fichiers peut demander les trois dans une même
+réponse. Le harnais exécute alors les trois et renvoie les trois résultats
+ensemble, dans une seule nouvelle requête. Le nombre d’appels d’outil et le
+nombre de requêtes sont donc souvent différents.
 
-In a log, the rule for counting is this: after the first request, a new
-request starts only when
-the harness has something new to send, which is the results of the tools
-it just ran. Model lines with no harness line between them came in the
-same reply. Count the replies, and you have counted the requests.
+Dans un journal, la règle de comptage est la suivante : après la première
+requête, une nouvelle requête ne commence que lorsque le harnais a quelque
+chose de nouveau à envoyer, c’est-à-dire les résultats des outils qu’il vient
+d’exécuter. Des lignes du modèle sans ligne du harnais entre elles sont venues
+dans la même réponse. Comptez les réponses, et vous aurez compté les requêtes.
 
 <Choice id="count-the-requests" objective="concepts/recognizes-agents/follows-one-prompt"
   concepts={['model-request', 'tool']}
-  context="An agent log shows one prompt. The model asks for a file search, the harness returns three file names, the model then writes three read_file calls in a row with no harness line between them, the harness returns three results, and the model writes a final answer."
-  title="How many requests?" hint="Where does the harness have new results to send, and how many replies did the model write?"
+  context="Le journal d’un agent montre un prompt. Le modèle demande une recherche de fichiers, le harnais renvoie trois noms de fichiers, le modèle écrit ensuite trois appels read_file à la suite sans ligne du harnais entre eux, le harnais renvoie trois résultats, et le modèle écrit une réponse finale."
+  title="Combien de requêtes ?" hint="Où le harnais a-t-il de nouveaux résultats à envoyer, et combien de réponses le modèle a-t-il écrites ?"
   options={[
-    { text: 'One request, because the person sent the agent one prompt.', why: 'The prompt starts the run, and the harness calls the model again each time it has tool results to send back.' },
-    { text: 'Five requests, one for each model line in the log.', why: 'The three read_file lines have no harness line between them, so they came in one reply. One reply belongs to one request.' },
-    { text: 'Three requests, one for each reply the model wrote.', correct: true },
-    { text: 'Four requests, one for each tool the harness ran.', why: 'The harness ran four tools, but three of them came from one reply and their results went back together in one request.' },
+    { text: 'Une requête, parce que la personne a envoyé un seul prompt à l’agent.', why: 'Le prompt lance l’exécution, et le harnais rappelle le modèle chaque fois qu’il a des résultats d’outil à lui renvoyer.' },
+    { text: 'Cinq requêtes, une par ligne du modèle dans le journal.', why: 'Les trois lignes read_file n’ont pas de ligne du harnais entre elles : elles sont donc venues dans une même réponse. Une réponse appartient à une requête.' },
+    { text: 'Trois requêtes, une pour chaque réponse écrite par le modèle.', correct: true },
+    { text: 'Quatre requêtes, une pour chaque outil exécuté par le harnais.', why: 'Le harnais a exécuté quatre outils, mais trois d’entre eux venaient d’une même réponse et leurs résultats sont repartis ensemble dans une seule requête.' },
   ]}>
-How many model requests did this prompt cause?
+Combien de requêtes au modèle ce prompt a-t-il déclenchées ?
 
 ```text
-prompt: What did we spend on travel in September?
-model: call search_files with query "travel invoice September"
-harness: ran search_files, result: inv-0912-train.txt, inv-0918-hotel.txt, inv-0925-taxi.txt
-model: call read_file with path "inv-0912-train.txt"
-model: call read_file with path "inv-0918-hotel.txt"
-model: call read_file with path "inv-0925-taxi.txt"
-harness: ran read_file three times, results: train EUR 84.00, hotel EUR 236.50, taxi EUR 31.20
-model: done. Travel in September came to EUR 351.70 over three invoices.
+prompt: Combien avons-nous dépensé en déplacements en septembre ?
+model: call search_files with query "facture déplacement septembre"
+harness: ran search_files, result: fact-0912-train.txt, fact-0918-hotel.txt, fact-0925-taxi.txt
+model: call read_file with path "fact-0912-train.txt"
+model: call read_file with path "fact-0918-hotel.txt"
+model: call read_file with path "fact-0925-taxi.txt"
+harness: ran read_file three times, results: train 84,00 EUR, hôtel 236,50 EUR, taxi 31,20 EUR
+model: done. Les déplacements de septembre se montent à 351,70 EUR sur trois factures.
 ```
 
 </Choice>
 
-## What is in each request
+## Ce que contient chaque requête
 
-A transcript shows what the model wrote and what the tools returned. It
-doesn't show what was in each request. Here is the same toy run again,
-written as the harness's own log of what it sent. This log was written
-for this lesson to show the contents, and a real harness records more
-detail, such as the exact text of every part.
+Une transcription montre ce que le modèle a écrit et ce que les outils ont
+renvoyé. Elle ne montre pas ce que contenait chaque requête. Voici la même
+exécution du jouet, écrite cette fois comme le journal du harnais lui-même, de
+ce qu’il a envoyé. Ce journal a été écrit pour cette leçon afin de montrer le
+contenu des requêtes, et un vrai harnais enregistre davantage de détails, comme
+le texte exact de chaque partie.
 
 ```text
-prompt: Which meeting note mentions the June delivery?
+prompt : Quelle note de réunion mentionne la livraison de juin ?
 
-request 1
-  harness sent: instructions, tool descriptions (list_dir, read_file),
-    history: the prompt
-  model replied: call list_dir with path "notes"
-  harness ran list_dir, and the folder returned 3 file names
+requête 1
+  le harnais envoie : instructions, descriptions d’outils (list_dir, read_file),
+    historique : le prompt
+  le modèle répond : call list_dir with path "notes"
+  le harnais exécute list_dir, et le dossier renvoie 3 noms de fichiers
 
-request 2
-  harness sent: instructions, tool descriptions (list_dir, read_file),
-    history: the prompt, reply 1, result 1
-  model replied: call read_file with path "notes/2026-03-14-lantern.txt"
-  harness ran read_file, and the folder returned the text of the note
+requête 2
+  le harnais envoie : instructions, descriptions d’outils (list_dir, read_file),
+    historique : le prompt, réponse 1, résultat 1
+  le modèle répond : call read_file with path "notes/2026-03-14-lantern.txt"
+  le harnais exécute read_file, et le dossier renvoie le texte de la note
 
-request 3
-  harness sent: instructions, tool descriptions (list_dir, read_file),
-    history: the prompt, reply 1, result 1, reply 2, result 2
-  model replied: done. The note of 14 March: the sensor boards moved from April to June.
-  no tool was asked for, so the harness stopped the run
+requête 3
+  le harnais envoie : instructions, descriptions d’outils (list_dir, read_file),
+    historique : le prompt, réponse 1, résultat 1, réponse 2, résultat 2
+  le modèle répond : done. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
+  aucun outil n’a été demandé, le harnais arrête donc l’exécution
 ```
 
-Each request holds the instructions, the tool descriptions and the
-history (@Claude Code agent loop):
+Chaque requête contient les instructions, les descriptions d’outils et
+l’historique (@Claude Code agent loop) :
 
-- **The instructions.** The standing text the model reads before the
-  task, the system prompt from earlier in this course. It is the same in
-  every request.
-- **The tool descriptions.** The name, purpose and parameters of each
-  tool, as in the last lesson. They are also the same every time.
-- **The history.** The prompt, followed by every reply the model wrote
-  and every result that came back, in order. This is the part that grows.
-  Request 1 has one item in its history, request 2 has three, and
-  request 3 has five.
+- **Les instructions.** Le texte permanent que le modèle lit avant la tâche, le
+  prompt système vu plus tôt dans ce parcours. Il est le même dans chaque
+  requête.
+- **Les descriptions d’outils.** Le nom, l’usage et les paramètres de chaque
+  outil, comme dans la leçon précédente. Elles aussi sont les mêmes à chaque
+  fois.
+- **L’historique.** Le prompt, suivi de chaque réponse écrite par le modèle et
+  de chaque résultat revenu, dans l’ordre. C’est la partie qui grandit. La
+  requête 1 a un élément dans son historique, la requête 2 en a trois, et la
+  requête 3 en a cinq.
 
-In the Messages documentation, the history is a list of messages that
-alternate between the person's side and the model's side, and a tool
-result goes back on the person's side, in the message after the reply
-that asked for it (@Claude docs messages). The harness writes that list.
-The person typed only the first item in it.
+Dans la documentation de l’API Messages, l’historique est une liste de
+messages qui alternent entre le côté de la personne et le côté du modèle, et un
+résultat d’outil revient du côté de la personne, dans le message qui suit la
+réponse qui l’a demandé (@Claude docs messages). C’est le harnais qui écrit
+cette liste. La personne n’en a tapé que le premier élément.
 
-## The model keeps nothing between requests
+## Le modèle ne garde rien d’une requête à l’autre
 
-Look at request 3 again. To write its answer, the model needs the text
-of the 14 March note. It read that note in request 2. So why does the
-harness send the note again?
+Regardez de nouveau la requête 3. Pour écrire sa réponse, le modèle a besoin
+du texte de la note du 14 mars. Il a lu cette note dans la requête 2. Pourquoi
+le harnais envoie-t-il donc la note une nouvelle fois ?
 
-Because the model keeps nothing from one request to the next. It is a
-**stateless model**: each request is answered from what is in that request
-and from what the model learned in training, and from nothing else. The
-Messages documentation calls a conversation of many messages stateless, and
-the caller passes the earlier messages in again with each new request
-(@Claude docs messages). In request 3 the model "remembers" the
-note only because the note is in the history the harness sent.
+Parce que le modèle ne garde rien d’une requête à l’autre. C’est un **modèle
+sans état** : chaque requête reçoit une réponse fondée sur ce que contient
+cette requête et sur ce que le modèle a appris à l’entraînement, et sur rien
+d’autre. La documentation de l’API Messages dit qu’une conversation de
+plusieurs messages est sans état, et que l’appelant renvoie les messages
+précédents avec chaque nouvelle requête (@Claude docs messages). Dans la
+requête 3, le modèle ne « se souvient » de la note que parce que la note figure
+dans l’historique envoyé par le harnais.
 
-The requests get bigger as the run goes on. The history in each request
-holds everything so far. A long session sends a long history on every
-call. The context keeps growing over
-the turns of a session, and nothing clears it between turns
-(@Claude Code agent loop).
-The token-cost lessons later in this course build on this point.
+Les requêtes grossissent au fil de l’exécution. L’historique de chaque requête
+contient tout ce qui s’est passé jusque-là. Une longue session envoie un long
+historique à chaque appel. Le contexte continue de grandir au fil des tours
+d’une session, et rien ne le vide entre les tours (@Claude Code agent loop).
+Les leçons sur le coût des jetons, plus loin dans ce parcours, s’appuient sur
+ce point.
 
-The harness decides what the model knows. If the harness leaves
-something out of the history, the model has never seen it, as far as
-that request goes. When a session gets too long, a harness may replace
-the oldest part of the history with a short summary, and a detail from
-early on can be lost in that summary (@Claude Code agent loop).
+C’est le harnais qui décide de ce que sait le modèle. Si le harnais omet
+quelque chose de l’historique, le modèle ne l’a jamais vu, du point de vue de
+cette requête. Quand une session devient trop longue, un harnais peut
+remplacer la partie la plus ancienne de l’historique par un court résumé, et
+un détail du début peut se perdre dans ce résumé (@Claude Code agent loop).
 
-What looks like the agent's memory is text that the harness keeps and
-sends again. Clear the conversation, and from the next request on the model knows
-nothing of it.
+Ce qui ressemble à la mémoire de l’agent est du texte que le harnais garde et
+renvoie. Effacez la conversation, et à partir de la requête suivante le modèle
+n’en sait plus rien.
 
 <Choice id="how-it-remembered" objective="concepts/recognizes-agents/follows-one-prompt"
   concepts={['stateless-model', 'model-request']}
-  context="An agent searched for three travel invoices, read all three in its second request, and in its third request wrote the total. The third request asked for no tools."
-  title="How did it know the hotel amount?" hint="What did the harness put in the third request, and what does the model keep between requests?"
+  context="Un agent a cherché trois factures de déplacement, les a lues toutes les trois dans sa deuxième requête, et a écrit le total dans sa troisième requête. La troisième requête ne demandait aucun outil."
+  title="Comment connaissait-il le montant de l’hôtel ?" hint="Qu’est-ce que le harnais a placé dans la troisième requête, et que garde le modèle d’une requête à l’autre ?"
   options={[
-    { text: 'The model kept the amounts in its memory after it read the invoices.', why: 'The model keeps nothing between requests. Whatever it uses in a request has to be in that request.' },
-    { text: 'The harness sent the read results again, in the history of the third request.', correct: true },
-    { text: 'The model read the hotel invoice again during the third request.', why: 'The model reads files only by asking for a tool, and the third request asked for none. The amount was already in front of it.' },
-    { text: 'The amount was in the training data the model learned from.', why: 'A company\'s own hotel invoice is not in the training data. The figure came from the read result.' },
+    { text: 'Le modèle a gardé les montants en mémoire après avoir lu les factures.', why: 'Le modèle ne garde rien d’une requête à l’autre. Tout ce qu’il utilise dans une requête doit se trouver dans cette requête.' },
+    { text: 'Le harnais a renvoyé les résultats de lecture, dans l’historique de la troisième requête.', correct: true },
+    { text: 'Le modèle a relu la facture d’hôtel pendant la troisième requête.', why: 'Le modèle ne lit des fichiers qu’en demandant un outil, et la troisième requête n’en demandait aucun. Le montant était déjà sous ses yeux.' },
+    { text: 'Le montant figurait dans les données d’entraînement du modèle.', why: 'La facture d’hôtel d’une entreprise ne figure pas dans les données d’entraînement. Le chiffre venait du résultat de lecture.' },
   ]}>
-In its third request the agent wrote "Travel in September came to EUR
-351.70", which includes the EUR 236.50 hotel invoice it read in the
-second request. How did the model have that amount when it wrote the
-total?
+Dans sa troisième requête, l’agent a écrit « Les déplacements de septembre se
+montent à 351,70 EUR », ce qui inclut la facture d’hôtel de 236,50 EUR qu’il a
+lue dans la deuxième requête. Comment le modèle disposait-il de ce montant quand
+il a écrit le total ?
 </Choice>
 
-## Model, harness, environment
+## Modèle, harnais, environnement
 
-Every step of a run is done by the model, the harness or the
-environment. The model chooses: it writes a reply, which is either a request for
-a tool or an answer. The harness carries out: it sends the requests, checks
-whether a tool call is allowed, and runs the tool. The **environment** is
-what the tools act on: the files, programs, services and data within
-the agent's reach. When a tool runs, the change happens in the
-environment, and what the environment returns is the tool's result.
+Chaque étape d’une exécution est faite par le modèle, le harnais ou
+l’environnement. Le modèle choisit : il écrit une réponse, qui est soit une
+demande d’outil, soit une réponse finale. Le harnais exécute : il envoie les
+requêtes, vérifie si un appel d’outil est autorisé, et exécute l’outil.
+L’**environnement** est ce sur quoi agissent les outils : les fichiers, les
+programmes, les services et les données à la portée de l’agent. Quand un outil
+s’exécute, le changement se produit dans l’environnement, et ce que renvoie
+l’environnement est le résultat de l’outil.
 
-In the toy run, the model chose to list the folder and then to read one
-note. The harness sent three requests and ran two tools. The environment
-was the folder of notes, which returned three file names and then the
-text of one note.
+Dans l’exécution du jouet, le modèle a choisi de lister le dossier, puis de
+lire une note. Le harnais a envoyé trois requêtes et exécuté deux outils.
+L’environnement était le dossier de notes, qui a renvoyé trois noms de fichiers
+puis le texte d’une note.
 
-The permission check is part of the harness. When the harness refuses a
-tool call, nothing reaches the environment, and the harness sends the
-refusal back to the model as that tool's result (@Claude Code agent loop).
-The model reads the refusal like any other result. It usually tries
-something else, or tells the person the step could not be done.
+La vérification des permissions fait partie du harnais. Quand le harnais
+refuse un appel d’outil, rien n’atteint l’environnement, et le harnais renvoie
+le refus au modèle comme résultat de cet outil (@Claude Code agent loop). Le
+modèle lit le refus comme n’importe quel autre résultat. Le plus souvent, il
+essaie autre chose, ou il indique à la personne que l’étape n’a pas pu être
+faite.
 
-The three parts go wrong in different ways, so naming the part tells you
-where to look. A poor choice of file is the model's. A tool call that
-should have been refused and wasn't is the harness's. A file that was
-missing or out of date is the environment's. The environment is also
-where a mistake does its damage, which is why a copy of a folder is a
-safer place for an agent than the folder itself.
+Les trois parties échouent de façons différentes : nommer la partie vous dit
+donc où chercher. Un mauvais choix de fichier relève du modèle. Un appel d’outil
+qui aurait dû être refusé et ne l’a pas été relève du harnais. Un fichier
+manquant ou périmé relève de l’environnement. L’environnement est aussi
+l’endroit où une erreur fait ses dégâts, et c’est pourquoi une copie d’un
+dossier est un endroit plus sûr pour un agent que le dossier lui-même.
 
 <Sort id="who-did-this-step" objective="concepts/recognizes-agents/follows-one-prompt"
   concepts={['environment', 'harness', 'model-request']}
-  context="An agent was asked to find last month's invoices and total them. Its run is split into steps, and each step was done by the model, by the harness around it, or by the files and services the tools act on."
-  title="Who did this step?" hint="Did this step choose something, carry something out, or hold the data that came back?"
-  buckets={['Model', 'Harness', 'Environment']}
+  context="Un agent devait trouver les factures du mois dernier et en faire le total. Son exécution est découpée en étapes, et chaque étape a été faite par le modèle, par le harnais qui l’entoure, ou par les fichiers et services sur lesquels agissent les outils."
+  title="Qui a fait cette étape ?" hint="Cette étape a-t-elle choisi quelque chose, exécuté quelque chose, ou détenu les données qui sont revenues ?"
+  buckets={['Modèle', 'Harnais', 'Environnement']}
   items={[
-    { text: 'Decided to search the shared drive for invoices', bucket: 0 },
-    { text: 'Sent the prompt, the instructions and the tool descriptions in the first request', bucket: 1 },
-    { text: 'Checked that the search tool was allowed and ran it', bucket: 1 },
-    { text: 'The shared drive returned the names of two invoice files', bucket: 2 },
-    { text: 'Asked to open both files in one reply', bucket: 0 },
-    { text: 'Put the text of both files into the history of the next request', bucket: 1 },
-    { text: 'Added the two amounts and wrote the total as the answer', bucket: 0 },
+    { text: 'A décidé de chercher les factures dans le lecteur partagé', bucket: 0 },
+    { text: 'A envoyé le prompt, les instructions et les descriptions d’outils dans la première requête', bucket: 1 },
+    { text: 'A vérifié que l’outil de recherche était autorisé et l’a exécuté', bucket: 1 },
+    { text: 'Le lecteur partagé a renvoyé le nom de deux fichiers de factures', bucket: 2 },
+    { text: 'A demandé à ouvrir les deux fichiers dans une même réponse', bucket: 0 },
+    { text: 'A placé le texte des deux fichiers dans l’historique de la requête suivante', bucket: 1 },
+    { text: 'A additionné les deux montants et écrit le total comme réponse', bucket: 0 },
   ]} />
 
 <Choice id="describe-the-run" phase="review" objective="concepts/recognizes-agents/follows-one-prompt"
   concepts={['model-request', 'stateless-model', 'environment']}
-  context="An agent has one tool, search_files, which searches a shared drive and returns the names of the files it finds. The question is about one prompt to that agent and the model requests it caused."
-  title="Which description is right?" hint="How many replies did the model write, and what did the harness have to send so that the second reply could use the file names?"
+  context="Un agent dispose d’un seul outil, search_files, qui fouille un lecteur partagé et renvoie le nom des fichiers trouvés. La question porte sur un prompt adressé à cet agent et sur les requêtes au modèle qu’il a déclenchées."
+  title="Quelle description est juste ?" hint="Combien de réponses le modèle a-t-il écrites, et qu’est-ce que le harnais devait envoyer pour que la seconde réponse puisse utiliser les noms de fichiers ?"
   options={[
-    { text: 'One request, because the model searched the drive and answered in a single reply.', why: 'The reply that asked for the search could not hold its result. The answer came in a second reply, to a second request.' },
-    { text: 'Three requests, one for the prompt, one for the search and one for the answer.', why: 'The harness ran the search between two requests, and running a tool is not a request. Count the replies the model wrote.' },
-    { text: 'Two requests, and the second held the prompt, the search reply and the file names.', correct: true },
-    { text: 'Two requests, and the second held only the file names, as the model kept the rest.', why: 'The model keeps nothing between requests. The harness had to send the prompt and the first reply again.' },
+    { text: 'Une requête, parce que le modèle a fouillé le lecteur et répondu dans une seule réponse.', why: 'La réponse qui demandait la recherche ne pouvait pas en contenir le résultat. La réponse finale est venue dans une seconde réponse, à une seconde requête.' },
+    { text: 'Trois requêtes, une pour le prompt, une pour la recherche et une pour la réponse.', why: 'Le harnais a exécuté la recherche entre deux requêtes, et exécuter un outil n’est pas une requête. Comptez les réponses écrites par le modèle.' },
+    { text: 'Deux requêtes, et la seconde contenait le prompt, la réponse qui demandait la recherche et les noms de fichiers.', correct: true },
+    { text: 'Deux requêtes, et la seconde ne contenait que les noms de fichiers, puisque le modèle avait gardé le reste.', why: 'Le modèle ne garde rien d’une requête à l’autre. Le harnais a dû renvoyer le prompt et la première réponse.' },
   ]}>
-An agent gets the prompt "How many invoices from September are on the
-shared drive?" The model asks for a search, the harness runs it, the
-drive returns three file names, and the model answers "three".
-Which description of this run is right?
+Un agent reçoit le prompt « Combien de factures de septembre se trouvent sur le
+lecteur partagé ? » Le modèle demande une recherche, le harnais l’exécute, le
+lecteur renvoie trois noms de fichiers, et le modèle répond « trois ». Quelle
+description de cette exécution est juste ?
 </Choice>
 
 <MultiChoice id="true-of-the-run" phase="review" objective="concepts/recognizes-agents/follows-one-prompt"
   concepts={['model-request', 'stateless-model', 'environment']}
-  context="An agent has one tool, search_files, which searches a shared drive and returns the names of the files it finds. The question is about one prompt to that agent and the model requests it caused."
-  title="What is true of this run?" hint="Count the replies, and ask what the second request had to hold for the model to give its answer."
+  context="Un agent dispose d’un seul outil, search_files, qui fouille un lecteur partagé et renvoie le nom des fichiers trouvés. La question porte sur un prompt adressé à cet agent et sur les requêtes au modèle qu’il a déclenchées."
+  title="Qu’est-ce qui est vrai de cette exécution ?" hint="Comptez les réponses, et demandez-vous ce que la seconde requête devait contenir pour que le modèle donne sa réponse."
   options={[
-    { text: 'The prompt led to two model requests, one before the search and one after it.', correct: true },
-    { text: 'The model looked through the shared drive itself to find the three files.', why: 'The model only wrote a request for a search. The harness ran it, and the drive returned the names.' },
-    { text: 'The second request held the three file names that the shared drive returned.', correct: true },
-    { text: 'The model kept the file names from the first request, so they were not sent again.', why: 'The model keeps nothing between requests. It could count the files only because the names were in the second request.' },
+    { text: 'Le prompt a déclenché deux requêtes au modèle, une avant la recherche et une après.', correct: true },
+    { text: 'Le modèle a parcouru lui-même le lecteur partagé pour trouver les trois fichiers.', why: 'Le modèle a seulement écrit une demande de recherche. Le harnais l’a exécutée, et le lecteur a renvoyé les noms.' },
+    { text: 'La seconde requête contenait les trois noms de fichiers renvoyés par le lecteur partagé.', correct: true },
+    { text: 'Le modèle a gardé les noms de fichiers de la première requête, si bien qu’ils n’ont pas été renvoyés.', why: 'Le modèle ne garde rien d’une requête à l’autre. Il n’a pu compter les fichiers que parce que les noms figuraient dans la seconde requête.' },
   ]}>
-An agent gets the prompt "How many invoices from September are on the
-shared drive?" The model asks for a search, the harness runs it, the
-drive returns three file names, and the model answers "three".
-Which two of these statements about the run are true?
+Un agent reçoit le prompt « Combien de factures de septembre se trouvent sur le
+lecteur partagé ? » Le modèle demande une recherche, le harnais l’exécute, le
+lecteur renvoie trois noms de fichiers, et le modèle répond « trois ».
+Lesquelles de ces deux affirmations sur l’exécution sont vraies ?
 </MultiChoice>
 
 <Order id="order-the-run" phase="review" objective="concepts/recognizes-agents/follows-one-prompt"
   concepts={['model-request', 'environment']}
-  context="An agent with a search_files tool gets one prompt: how many invoices from September are on the shared drive. The model asks for a search, the shared drive returns three file names, and the model answers. The question is the order of every event in that run."
-  title="Order the run" hint="What has to be in a request before the model can use it?"
+  context="Un agent doté d’un outil search_files reçoit un prompt : combien de factures de septembre se trouvent sur le lecteur partagé. Le modèle demande une recherche, le lecteur partagé renvoie trois noms de fichiers, et le modèle répond. La question porte sur l’ordre de chaque événement de cette exécution."
+  title="Remettez l’exécution dans l’ordre" hint="Que doit contenir une requête avant que le modèle puisse l’utiliser ?"
   steps={[
-    'The harness sends request 1, with only the prompt in the history',
-    'The model replies with a request to search the shared drive',
-    'The harness checks the search and runs it',
-    'The shared drive returns three file names',
-    'The harness sends request 2, with the prompt, the reply and the file names',
-    'The model answers that there are three invoices',
+    'Le harnais envoie la requête 1, avec seulement le prompt dans l’historique',
+    'Le modèle répond par une demande de recherche dans le lecteur partagé',
+    'Le harnais vérifie la recherche et l’exécute',
+    'Le lecteur partagé renvoie trois noms de fichiers',
+    'Le harnais envoie la requête 2, avec le prompt, la réponse et les noms de fichiers',
+    'Le modèle répond qu’il y a trois factures',
   ]} />
 
-<Pitfall title="The rule from the first hour">
-A person starts a long session with an agent by saying "never move
-anything into the archive folder". The agent follows the rule all
-morning. In the afternoon it moves two files into the archive. The
-person decides the model forgot the rule, or ignored it. Neither is what
-happened. The session had grown long, so the harness had replaced the
-oldest part of the history with a summary, and the summary had no line
-about the archive (@Claude Code agent loop). From that request on, the
-rule wasn't in front of the model at all. A rule that has to hold for a
-whole session belongs in the agent's instructions file, which the harness
-adds to every request, and not in a message early in the chat
+<Pitfall title="La règle de la première heure">
+Une personne commence une longue session avec un agent en disant « ne déplace
+jamais rien dans le dossier d’archives ». L’agent respecte la règle toute la
+matinée. L’après-midi, il déplace deux fichiers dans les archives. La personne
+conclut que le modèle a oublié la règle, ou l’a ignorée. Ni l’un ni l’autre ne
+s’est produit. La session s’était allongée, le harnais avait donc remplacé la
+partie la plus ancienne de l’historique par un résumé, et ce résumé ne
+contenait aucune ligne sur les archives (@Claude Code agent loop). À partir de
+cette requête, la règle n’était plus du tout sous les yeux du modèle. Une règle
+qui doit valoir pendant toute une session a sa place dans le fichier
+d’instructions de l’agent, que le harnais ajoute à chaque requête. Un message du
+début de la conversation peut, lui, finir dans un résumé qui l’omet
 (@Claude Code agent loop).
 </Pitfall>
 
-<Exercise stretch="Rewrite request 4 as it would be if the harness had sent only the prompt and the last reply and result as its history. What would the model know, and what could its answer say?">
+<Exercise stretch="Réécrivez la requête 4 telle qu’elle serait si le harnais n’avait envoyé comme historique que le prompt, la dernière réponse et le dernier résultat. Que saurait le modèle, et que pourrait dire sa réponse ?">
 
-Here is the log of one prompt to an agent with three tools: `list_dir`,
-`move_file` and `send_message`. The harness asks the person before it
-sends a message, and the person said no. On paper or in a note, write
-how many model requests the prompt caused. Then write one line per
-request: what the harness sent, what the model replied, and what came
-back from the environment, or "nothing" when nothing did. Ten minutes is
-enough.
+Voici le journal d’un prompt adressé à un agent doté de trois outils :
+`list_dir`, `move_file` et `send_message`. Le harnais demande l’accord de la
+personne avant d’envoyer un message, et la personne a refusé. Sur papier ou dans
+une note, écrivez combien de requêtes au modèle le prompt a déclenchées.
+Écrivez ensuite une ligne par requête : ce que le harnais a envoyé, ce que le
+modèle a répondu, et ce qui est revenu de l’environnement, ou « rien » quand
+rien n’est revenu. Dix minutes suffisent.
 
 ```text
-prompt: Put the October newsletter draft in the shared folder and tell Mia it is there.
+prompt : Mets le brouillon de la lettre d’information d’octobre dans le dossier partagé et dis à Mia qu’il y est.
 
-request 1
-  harness sent: instructions, tool descriptions (list_dir, move_file, send_message),
-    history: the prompt
-  model replied: call list_dir with path "drafts"
-  harness ran list_dir, result: newsletter-oct.txt, newsletter-sep.txt
+requête 1
+  le harnais envoie : instructions, descriptions d’outils (list_dir, move_file, send_message),
+    historique : le prompt
+  le modèle répond : call list_dir with path "drafts"
+  le harnais exécute list_dir, résultat : newsletter-oct.txt, newsletter-sep.txt
 
-request 2
-  harness sent: instructions, tool descriptions (list_dir, move_file, send_message),
-    history: the prompt, reply 1, result 1
-  model replied: call move_file from "drafts/newsletter-oct.txt" to "shared/newsletter-oct.txt"
-  harness ran move_file, result: moved
+requête 2
+  le harnais envoie : instructions, descriptions d’outils (list_dir, move_file, send_message),
+    historique : le prompt, réponse 1, résultat 1
+  le modèle répond : call move_file from "drafts/newsletter-oct.txt" to "shared/newsletter-oct.txt"
+  le harnais exécute move_file, résultat : déplacé
 
-request 3
-  harness sent: instructions, tool descriptions (list_dir, move_file, send_message),
-    history: the prompt, reply 1, result 1, reply 2, result 2
-  model replied: call send_message to "Mia" with text "The October newsletter draft is in the shared folder."
-  harness asked the person, the person said no, result: the person declined this message
+requête 3
+  le harnais envoie : instructions, descriptions d’outils (list_dir, move_file, send_message),
+    historique : le prompt, réponse 1, résultat 1, réponse 2, résultat 2
+  le modèle répond : call send_message to "Mia" with text "Le brouillon de la lettre d’information d’octobre est dans le dossier partagé."
+  le harnais demande à la personne, la personne refuse, résultat : la personne a refusé ce message
 
-request 4
-  harness sent: instructions, tool descriptions (list_dir, move_file, send_message),
-    history: the prompt, reply 1, result 1, reply 2, result 2, reply 3, result 3
-  model replied: done. The draft is now in shared/newsletter-oct.txt. I did not message Mia, because you declined it.
-  no tool was asked for, so the harness stopped the run
+requête 4
+  le harnais envoie : instructions, descriptions d’outils (list_dir, move_file, send_message),
+    historique : le prompt, réponse 1, résultat 1, réponse 2, résultat 2, réponse 3, résultat 3
+  le modèle répond : done. Le brouillon se trouve maintenant dans shared/newsletter-oct.txt. Je n’ai pas envoyé de message à Mia, parce que vous l’avez refusé.
+  aucun outil n’a été demandé, le harnais arrête donc l’exécution
 ```
 
-A good result says the prompt caused four requests. In request 1 the
-drafts folder returned two file names, and in request 2 the file moved
-and the folder reported it. In request 3 nothing came back from the
-environment: the harness refused the call, and the "declined" result is
-the harness's own text. In request 4 nothing came back either, because
-the model asked for no tool. Each line also notes that the instructions
-and the tool descriptions were the same every time, and that the history
-grew by one reply and one result per request. When you are done, ask
-yourself: the model wrote "because you declined it" in request 4, so
-where did it learn that, if it keeps nothing between requests?
+Un bon résultat indique que le prompt a déclenché quatre requêtes. Dans la
+requête 1, le dossier des brouillons a renvoyé deux noms de fichiers, et dans la
+requête 2, le fichier a été déplacé et le dossier l’a signalé. Dans la
+requête 3, rien n’est revenu de l’environnement : le harnais a refusé l’appel, et
+le résultat « refusé » est un texte du harnais lui-même. Dans la requête 4, rien
+n’est revenu non plus, parce que le modèle n’a demandé aucun outil. Chaque ligne
+note aussi que les instructions et les descriptions d’outils étaient les mêmes à
+chaque fois, et que l’historique s’est allongé d’une réponse et d’un résultat à
+chaque requête. Quand vous avez terminé, demandez-vous : le modèle a écrit
+« parce que vous l’avez refusé » dans la requête 4, alors où l’a-t-il appris,
+s’il ne garde rien d’une requête à l’autre ?
 
 </Exercise>
 
 <Recap>
 
-1. One prompt to an agent usually causes several model requests. Each
-   request is one call to the model and gets one reply, and a new
-   request follows each batch of tool results until a reply asks for no
-   tool (@Claude Code agent loop).
-2. A reply can ask for several tools at once, so count requests by the
-   replies, not by the tool calls.
-3. Every request carries the instructions, the tool descriptions and
-   the whole history so far, and only the history grows.
-4. The model is stateless. It keeps nothing between requests, so it
-   knows an earlier step only because the harness sent it again
+1. Un prompt adressé à un agent déclenche en général plusieurs requêtes au
+   modèle. Chaque requête est un appel au modèle et reçoit une réponse, et une
+   nouvelle requête suit chaque lot de résultats d’outil, jusqu’à ce qu’une
+   réponse ne demande aucun outil (@Claude Code agent loop).
+2. Une réponse peut demander plusieurs outils à la fois : comptez donc les
+   requêtes d’après les réponses du modèle.
+3. Chaque requête transporte les instructions, les descriptions d’outils et
+   tout l’historique jusque-là, et seul l’historique grandit.
+4. Le modèle est sans état. Il ne garde rien d’une requête à l’autre, et il ne
+   connaît une étape antérieure que parce que le harnais la lui a renvoyée
    (@Claude docs messages).
-5. The model chooses, the harness sends the requests and checks and
-   runs the tools, and the environment is what the tools act on. Name
-   the part to know where to look when a step goes wrong.
+5. Le modèle choisit, le harnais envoie les requêtes, vérifie et exécute les
+   outils, et l’environnement est ce sur quoi agissent les outils. Nommez la
+   partie pour savoir où chercher quand une étape tourne mal.
 
 </Recap>

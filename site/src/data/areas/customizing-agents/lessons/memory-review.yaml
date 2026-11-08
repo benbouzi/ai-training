@@ -10,7 +10,7 @@ introduces: [auto-memory, context-files]
 assumes:
   - objective: concepts/explains-models/explains-grounding
     lesson: concepts/memory
-    section: where-products-keep-the-notes
+    section: où-les-produits-gardent-les-notes
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 after: [customizing-agents/first-skill]

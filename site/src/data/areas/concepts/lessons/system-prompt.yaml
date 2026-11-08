@@ -10,13 +10,13 @@ introduces: [role-and-system-prompt]
 assumes:
   - objective: concepts/prompts-reliably/structures-a-prompt
     lesson: concepts/prompt-anatomy
-    section: the-instruction
+    section: linstruction
   - objective: concepts/prompts-reliably/structures-a-prompt
     lesson: concepts/prompt-anatomy
-    section: audience-and-purpose
+    section: public-et-objectif
   - objective: concepts/prompts-reliably/structures-a-prompt
     lesson: concepts/prompt-anatomy
-    section: format-and-length
+    section: format-et-longueur
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
     section: les-défaillances-nommées

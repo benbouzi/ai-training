@@ -1,397 +1,414 @@
 import { Choice, MultiChoice, Match, Sort, Scenario, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-A team uses an assistant all day to answer questions about one long
-contract. Two settings change what that day costs, and neither changes the
-questions they ask. The first sets how much work the model puts into each
-answer. The second lets the long start of every request, the instructions
-and the contract, be paid for at a small part of the normal price. In this
-lesson we choose an effort level for a kind of work and find out what makes
-the cache stop working. You install and run nothing: every count on the
-page is in a table.
+Une équipe utilise un assistant toute la journée pour répondre à des questions
+sur un long contrat. Deux réglages changent le coût de cette journée, et aucun
+ne change les questions posées. Le premier fixe la quantité de travail que le
+modèle consacre à chaque réponse. Le second permet de payer le long début de
+chaque requête, les instructions et le contrat, pour une petite part du prix
+normal. Dans cette leçon, nous choisissons un niveau d’effort pour un type de
+travail et nous cherchons ce qui empêche le cache de fonctionner. Vous
+n’installez et ne lancez rien : chaque nombre de la page figure dans un tableau.
 
-The [lesson on reading the token counts](/concepts/reading-token-counts/#a-short-chat-request-by-request)
-showed that each request in a conversation sends the whole history again.
-This lesson starts from there.
+La [leçon sur la lecture du nombre de jetons](/concepts/reading-token-counts/#une-courte-conversation-requête-par-requête)
+a montré que chaque requête d’une conversation renvoie tout l’historique. Cette
+leçon part de là.
 
-## What the effort level changes
+## Ce que change le niveau d’effort
 
-The **effort level** is a setting that tells the model how many tokens to
-spend on its response (@Claude docs effort). On one vendor's models the
-levels run from low through medium and high to max, and some models add
-one more level between high and max. If nobody sets it, most of those
-models run at high and one recent model at medium (@Claude docs effort).
+Le **niveau d’effort** est un réglage qui indique au modèle combien de jetons
+consacrer à sa réponse (@Claude docs effort). Sur les modèles d’un fournisseur,
+les niveaux vont de bas à max en passant par moyen et élevé, et certains
+modèles ajoutent un niveau entre élevé et max. Si personne ne le règle, la
+plupart de ces modèles fonctionnent au niveau élevé, et un modèle récent au
+niveau moyen (@Claude docs effort).
 
-The setting applies to everything the model writes, and not only to its
-thinking. The vendor's page lists the text of the answer, the requests for
-tools and the thinking, when the model thinks, as all affected by it
-(@Claude docs effort). The page expects fewer tool calls and shorter
-reports at a lower level. At a higher level it expects more tool calls, a
-plan explained before the model acts and a more detailed summary of what
-it did (@Claude docs effort).
+Le réglage s’applique à tout ce qu’écrit le modèle, au-delà de sa seule
+réflexion. La page du fournisseur indique que le texte de la réponse, les
+demandes d’outils et la réflexion, quand le modèle réfléchit, en dépendent tous
+(@Claude docs effort). La page prévoit moins d’appels d’outils et des comptes
+rendus plus courts à un niveau bas. À un niveau élevé, elle prévoit davantage
+d’appels d’outils, un plan expliqué avant que le modèle agisse, et un résumé
+plus détaillé de ce qu’il a fait (@Claude docs effort).
 
-All of that is output, and output is the expensive kind of token. For an
-agent there is a second cost. Every extra round of tool calls is one more
-request, and each request sends the whole history again. Higher effort adds
-input tokens that way. Higher effort costs more tokens and more time, and
-lower effort is faster and cheaper (@Claude docs effort).
+Tout cela est de la sortie, et la sortie est le type de jeton le plus cher. Pour
+un agent, il y a un second coût. Chaque tour supplémentaire d’appels d’outils
+est une requête de plus, et chaque requête renvoie tout l’historique. Un effort
+plus élevé ajoute ainsi des jetons d’entrée. Un effort plus élevé coûte plus de
+jetons et plus de temps, et un effort plus bas est plus rapide et moins cher
+(@Claude docs effort).
 
-The setting guides the model and does not set a hard limit. A hard problem still
-gets some thinking at a low level, but it gets less of it
-(@Claude docs effort). And on at least one model, the vendor says, a lower
-level changes how much it thinks but does not reliably make the visible
-answer shorter (@Claude docs effort). When you want a short answer, ask for
-one in the prompt.
+Le réglage oriente le modèle et ne fixe aucune limite stricte. Un problème
+difficile reçoit encore un peu de réflexion à un niveau bas, mais il en reçoit
+moins (@Claude docs effort). Et sur au moins un modèle, selon le fournisseur,
+un niveau plus bas change la quantité de réflexion sans raccourcir de façon
+fiable la réponse visible (@Claude docs effort). Quand vous voulez une réponse
+courte, demandez-la dans le prompt.
 
 <Choice id="what-lower-effort-changes" objective="concepts/reasons-about-cost/chooses-effort-level"
   concepts={['effort-level']}
-  context="An agent renames files in a folder to one naming pattern. Its effort level is lowered from high to low, and nothing else about the task changes."
-  title="What does a lower level change?"
-  hint="Which tokens does the effort setting govern: only the thinking, or everything the model writes?"
+  context="Un agent renomme les fichiers d’un dossier selon un modèle de nommage unique. Son niveau d’effort passe d’élevé à bas, et rien d’autre ne change dans la tâche."
+  title="Que change un niveau plus bas ?"
+  hint="Quels jetons le réglage d’effort gouverne-t-il : seulement la réflexion, ou tout ce qu’écrit le modèle ?"
   options={[
-    { text: 'Only the thinking gets shorter, and the tool calls and messages stay as they were.', why: 'The setting applies to all of the output, the tool calls and the messages included.' },
-    { text: 'The agent reads fewer input tokens, because it skips part of its instructions.', why: 'The instructions are sent in full at every level. Any input saved comes from fewer requests, so the reason given is wrong.' },
-    { text: 'The agent writes fewer tokens: less thinking, fewer tool calls and terser messages around them.', correct: true },
-    { text: 'The agent stops at a fixed number of tokens, even in the middle of a hard step.', why: 'The level guides the model and does not set a hard limit. A hard step still gets some thinking, only less of it.' },
+    { text: 'Seule la réflexion raccourcit, et les appels d’outils et les messages restent les mêmes.', why: 'Le réglage s’applique à toute la sortie, appels d’outils et messages compris.' },
+    { text: 'L’agent lit moins de jetons d’entrée, parce qu’il saute une partie de ses instructions.', why: 'Les instructions sont envoyées en entier à chaque niveau. Une éventuelle économie d’entrée vient d’un nombre réduit de requêtes : la raison donnée est donc fausse.' },
+    { text: 'L’agent écrit moins de jetons : moins de réflexion, moins d’appels d’outils et des messages plus brefs autour.', correct: true },
+    { text: 'L’agent s’arrête à un nombre fixe de jetons, même au milieu d’une étape difficile.', why: 'Le niveau oriente le modèle et ne fixe aucune limite stricte. Une étape difficile reçoit encore un peu de réflexion, simplement moins.' },
   ]}>
 
-An agent renames the files in a folder to one pattern. You lower its effort
-level from high to low. What changes in the agent's work?
+Un agent renomme les fichiers d’un dossier selon un même modèle. Vous faites
+passer son niveau d’effort d’élevé à bas. Qu’est-ce qui change dans le travail de
+l’agent ?
 
 </Choice>
 
-## Choosing a level
+## Choisir un niveau
 
-The vendor's advice follows the kind of work. A low level suits simple,
-clear tasks where speed and cost matter most, such as a helper agent that
-does one small job. High suits hard reasoning, difficult problems and agent
-work. Max is for the tasks that need the deepest thinking, when the number
-of tokens is no concern, and medium sits between high and low
-(@Claude docs effort).
+Le conseil du fournisseur suit le type de travail. Un niveau bas convient aux
+tâches simples et claires où la vitesse et le coût comptent le plus, comme un
+agent auxiliaire qui fait un petit travail. Élevé convient au raisonnement
+difficile, aux problèmes ardus et au travail d’agent. Max est réservé aux tâches
+qui demandent la réflexion la plus poussée, quand le nombre de jetons n’est pas
+un souci, et moyen se situe entre élevé et bas (@Claude docs effort).
 
-That is a starting point, and the same page says the right level depends on
-the task, so try it on your own work before you decide (@Claude docs effort).
-Run a few typical requests at two levels and compare the results. If the
-lower level gives the same quality, keep it. Choose the level for a kind of
-work, such as "drafting emails" or "reviewing contracts", and not for each
-question. The section on the cache below shows why the level should then stay
-the same for the rest of the session.
+C’est un point de départ, et la même page dit que le bon niveau dépend de la
+tâche : essayez-le donc sur votre propre travail avant de décider
+(@Claude docs effort). Lancez quelques requêtes typiques à deux niveaux et
+comparez les résultats. Si le niveau le plus bas donne la même qualité,
+gardez-le. Choisissez le niveau pour un type de travail, comme « rédiger des
+courriels » ou « relire des contrats ». La section
+sur le cache, plus bas, montre pourquoi le niveau doit ensuite rester le même
+pendant le reste de la session.
 
 <Match id="pick-a-level" objective="concepts/reasons-about-cost/chooses-effort-level"
   concepts={['effort-level']}
-  context="The vendor advises a low effort level for simple, clear work where speed and cost matter, and a high level for hard reasoning, difficult problems and open-ended agent work."
-  title="Which level would you start with?"
-  hint="Is the task simple and fully described, or does it need the model to work something out?"
-  options={['Low effort', 'High effort']}
+  context="Le fournisseur conseille un niveau d’effort bas pour un travail simple et clair où la vitesse et le coût comptent, et un niveau élevé pour le raisonnement difficile, les problèmes ardus et le travail d’agent ouvert."
+  title="Par quel niveau commenceriez-vous ?"
+  hint="La tâche est-elle simple et entièrement décrite, ou demande-t-elle au modèle de trouver quelque chose ?"
+  options={['Effort bas', 'Effort élevé']}
   rows={[
-    { statement: 'Turn a list of 200 addresses into one fixed format', option: 0, why: 'Is there anything to work out, or only a pattern to apply?' },
-    { statement: 'Compare two supplier contracts and list every place they conflict', option: 1, why: 'Does the model have to reason across two long texts?' },
-    { statement: 'Sort incoming emails into three named folders, as a helper agent', option: 0, why: 'How much thinking does a choice between three fixed folders need?' },
-    { statement: 'Find out why a monthly report total is wrong, across several spreadsheets', option: 1, why: 'Does the model know where to look before it starts?' },
+    { statement: 'Mettre une liste de 200 adresses dans un format fixe', option: 0, why: 'Y a-t-il quelque chose à trouver, ou seulement un motif à appliquer ?' },
+    { statement: 'Comparer deux contrats de fournisseurs et lister chaque point où ils se contredisent', option: 1, why: 'Le modèle doit-il raisonner sur deux longs textes ?' },
+    { statement: 'Classer, en tant qu’agent auxiliaire, les courriels entrants dans trois dossiers nommés', option: 0, why: 'Combien de réflexion demande un choix entre trois dossiers fixes ?' },
+    { statement: 'Trouver pourquoi le total d’un rapport mensuel est faux, à travers plusieurs tableurs', option: 1, why: 'Le modèle sait-il où chercher avant de commencer ?' },
   ]}
-  rationale="Simple, fully described work gains nothing from more thinking, so a low level saves tokens and time. Work that needs reasoning gets a higher level. Try both on a few real cases before you decide.">
+  rationale="Un travail simple et entièrement décrit ne gagne rien à plus de réflexion : un niveau bas économise des jetons et du temps. Un travail qui demande du raisonnement reçoit un niveau plus élevé. Essayez les deux sur quelques cas réels avant de décider.">
 
-Match each task to the effort level you would try first.
+Associez chaque tâche au niveau d’effort que vous essaieriez en premier.
 
 </Match>
 
-## What the cache saves
+## Ce qu’économise le cache
 
-Look again at the day with the contract. The requests start with the
-same instructions and the same contract, and the end of each is new. The
-vendor processes that same start again for every question, and charges for
-it each time. **Prompt caching** keeps the processed start of a request for
-a short time. When a later request begins with exactly the same tokens,
-the model reuses the stored work for that part instead of processing it
-again (@Claude docs prompt-caching).
+Revenez à la journée sur le contrat. Les requêtes commencent par les mêmes
+instructions et le même contrat, et la fin de chacune est nouvelle. Le
+fournisseur traite de nouveau ce même début pour chaque question, et le facture
+à chaque fois. La **mise en cache du prompt** conserve pendant un court moment le
+début traité d’une requête. Quand une requête ultérieure commence par exactement
+les mêmes jetons, le modèle réutilise le travail stocké pour cette partie au
+lieu de la traiter de nouveau (@Claude docs prompt-caching).
 
-The tool that sends the request decides whether to cache. Software that
-sends requests to one vendor's models turns caching on in the request
-(@Claude docs pricing), and one coding agent turns it on by itself
-(@Claude Code costs). The [lesson on reading the token
-counts](/concepts/reading-token-counts/#two-counts-on-every-request)
-mentioned the usage reports that then split the input count by what the
-cache did with each token.
+C’est l’outil qui envoie la requête qui décide de mettre en cache. Un logiciel
+qui envoie des requêtes aux modèles d’un fournisseur active la mise en cache
+dans la requête (@Claude docs pricing), et un agent de code l’active de lui-même
+(@Claude Code costs). La
+[leçon sur la lecture du nombre de jetons](/concepts/reading-token-counts/#deux-nombres-sur-chaque-requête)
+a mentionné les rapports d’utilisation qui découpent alors le nombre d’entrée
+selon ce que le cache a fait de chaque jeton.
 
-The two kinds of cached input have their own prices. On that vendor's price
-list, reading from the cache costs a tenth of the normal input price on most
-models and less on a few. Writing to the cache costs a quarter more than
-normal input, for a cache that lasts five minutes (@Claude docs pricing)
-(@Claude docs prompt-caching). So the first request pays a little extra to
-store the start, and each request after it that reads the start pays much
-less.
+Les deux types d’entrée en cache ont leurs propres prix. Sur la grille tarifaire
+de ce fournisseur, lire depuis le cache coûte un dixième du prix d’entrée normal
+sur la plupart des modèles, et moins sur quelques-uns. Écrire dans le cache coûte
+un quart de plus que l’entrée normale, pour un cache qui dure cinq minutes
+(@Claude docs pricing) (@Claude docs prompt-caching). La première requête paie
+donc un peu plus pour stocker le début, et chaque requête suivante qui lit ce
+début paie beaucoup moins.
 
-Here is the contract day, priced twice. The counts are round numbers
-written for this lesson. The input and output prices are the example prices
-for a large model from the [lesson on what every token
-costs](/concepts/what-tokens-cost/#what-a-token-costs), $6 per million input
-tokens and $30 per million output tokens. The cache prices follow the
-vendor's rule above, and the first line of the table lists all four. The
-table assumes that the tool caches everything up to the newest message.
-Each request then reads what the request before it sent and writes the
-rest. The instructions are 1,000 tokens.
+Voici la journée sur le contrat, calculée deux fois. Les nombres sont des
+chiffres ronds écrits pour cette leçon. Les prix d’entrée et de sortie sont les
+prix d’exemple d’un grand modèle tirés de la
+[leçon sur le coût de chaque jeton](/concepts/what-tokens-cost/#ce-que-coûte-un-jeton),
+6 $ par million de jetons d’entrée et 30 $ par million de jetons de sortie. Les
+prix du cache suivent la règle du fournisseur ci-dessus, et la première ligne
+du tableau donne les quatre. Le tableau suppose que l’outil met en cache tout
+ce qui précède le message le plus récent. Chaque requête lit alors ce
+qu’envoyait la requête précédente et écrit le reste. Les instructions font
+1 000 jetons. Les colonnes « écrits » et « lus » comptent les jetons écrits dans
+le cache et lus depuis le cache, et les deux dernières colonnes donnent le prix
+sans cache et avec cache.
 
 ```text
-one chat, priced without and with a prompt cache
-prices per million tokens: input $6.00, output $30.00, cache write $7.50, cache read $0.60
-request                                      input written    read output  no cache    cached
-1. pastes a contract, asks what it covers   21,000  21,000       0    500   $0.1410   $0.1725
-2. asks when the contract ends              21,515     515  21,000    120   $0.1327   $0.0201
-3. asks about the penalties                 21,655     140  21,515    300   $0.1389   $0.0230
-4. asks for a summary for the manager       21,980     325  21,655    400   $0.1439   $0.0274
-5. after lunch, asks who signed it          22,395  22,395       0     80   $0.1368   $0.1704
+une conversation, au prix sans et avec cache de prompt
+prix par million de jetons : entrée $6.00, sortie $30.00, écriture cache $7.50, lecture cache $0.60
+requête                                     entrée  écrits     lus sortie      sans      avec
+1. colle un contrat, demande son objet      21,000  21,000       0    500   $0.1410   $0.1725
+2. demande quand le contrat prend fin       21,515     515  21,000    120   $0.1327   $0.0201
+3. demande quelles sont les pénalités       21,655     140  21,515    300   $0.1389   $0.0230
+4. demande un résumé pour la direction      21,980     325  21,655    400   $0.1439   $0.0274
+5. après déjeuner, demande qui a signé      22,395  22,395       0     80   $0.1368   $0.1704
 total                                      108,545  44,375  64,170  1,400   $0.6933   $0.4133
 ```
 
-The totals are computed from the summed counts before rounding, so a
-column added up by hand can differ from them by $0.0001.
+Les totaux sont calculés à partir des nombres additionnés avant arrondi : une
+colonne additionnée à la main peut donc s’en écarter de 0,0001 $.
 
-Read the written and read columns first. Request 1 writes all 21,000
-tokens to the cache, so it costs more with the cache ($0.1725) than without
-it ($0.1410). Request 2 reads those 21,000 tokens back and writes only the
-first answer and the new question, and it costs $0.0201 instead of $0.1327.
-Requests 3 and 4 work the same way.
+Lisez d’abord les colonnes « écrits » et « lus ». La requête 1 écrit les
+21 000 jetons dans le cache : elle coûte donc plus cher avec le cache (0,1725 $)
+que sans (0,1410 $). La requête 2 relit ces 21 000 jetons et n’écrit que la
+première réponse et la nouvelle question, et elle coûte 0,0201 $ au lieu de
+0,1327 $. Les requêtes 3 et 4 fonctionnent de la même façon.
 
-Now read the output column. It is the same with and without the cache.
-Caching changes nothing about what the model writes. The answer comes
-out exactly as it would without the cache (@Claude docs prompt-caching),
-and every output token is billed at the normal output price. The new text
-at the end of each request is never read from the cache either, because no
-earlier request held it.
+Lisez maintenant la colonne de sortie. Elle est la même avec et sans cache. La
+mise en cache ne change rien à ce qu’écrit le modèle. La réponse sort exactement
+telle qu’elle sortirait sans cache (@Claude docs prompt-caching), et chaque
+jeton de sortie est facturé au prix de sortie normal. Le nouveau texte placé à
+la fin de chaque requête n’est jamais lu depuis le cache non plus, puisque
+aucune requête antérieure ne le contenait.
 
-## What breaks the cache
+## Ce qui casse le cache
 
-Request 5 came after a lunch break, and it read nothing. A cache entry
-lasts five minutes by default, and each read starts the five minutes again
-at no extra cost. A cache that lasts an hour is also available, at a higher
-write price (@Claude docs prompt-caching). One coding agent's cost guide
-gives the same five minutes by default when the agent is billed by the
-token. On a subscription it gives an hour, which drops to five minutes
-once the subscription draws on usage credits. It also says that the
-first message after a longer break processes the whole history again
-(@Claude Code costs). So request 5 wrote all 22,395 tokens again and cost
-more than it would have without a cache.
+La requête 5 est arrivée après une pause déjeuner, et elle n’a rien lu. Une
+entrée de cache dure cinq minutes par défaut, et chaque lecture relance ces cinq
+minutes sans surcoût. Un cache d’une heure existe aussi, à un prix d’écriture plus
+élevé (@Claude docs prompt-caching). Le guide des coûts d’un agent de code donne
+les mêmes cinq minutes par défaut quand l’agent est facturé au jeton. Avec un
+abonnement, il donne une heure, qui retombe à cinq minutes dès que l’abonnement
+puise dans des crédits d’utilisation. Il précise aussi que le premier message
+après une pause plus longue traite de nouveau tout l’historique
+(@Claude Code costs). La requête 5 a donc réécrit les 22 395 jetons et a coûté
+plus cher qu’elle ne l’aurait fait sans cache.
 
-A break is one way to lose the cache, and a change to the start of the
-request is the other. The start of a request is built in a fixed order: the
-tool descriptions first, then the instructions, then the messages. The
-cache matches only a start that is identical up to the point it stored
-(@Claude docs prompt-caching). A change at any point ends the match there,
-and everything after it is processed and paid for again.
+Une pause est une façon de perdre le cache, et une modification du début de la
+requête en est une autre. Le début d’une requête est construit dans un ordre
+fixe : d’abord les descriptions d’outils, puis les instructions, puis les
+messages. Le cache ne reconnaît qu’un début identique jusqu’au point qu’il a
+stocké (@Claude docs prompt-caching). Une modification à n’importe quel endroit
+y arrête la correspondance, et tout ce qui suit est traité et payé de nouveau.
 
-- **Changing the tools** that the assistant can use ends the match at the
-  very start, so nothing is read from the cache (@Claude docs prompt-caching).
-- **Editing the instructions** ends it after the tool descriptions, so the
-  whole conversation is processed again.
-- **Changing the effort level** between requests ends the match at least
-  before the messages (@Claude docs prompt-caching), because the level is
-  written into the prompt the model reads (@Claude docs effort). Some newer
-  models can change the level partway through a conversation and keep the
-  cache, with a setting that is still in beta. The new level then holds
-  until another change. On other models the vendor's advice is to choose a
-  level at the start of a session and keep it there (@Claude docs effort).
-- **Adding a text message at the end** keeps the match. Everything before
-  it is the same, so it is read from the cache. An image is an exception:
-  adding one anywhere ends the match before the messages
-  (@Claude docs prompt-caching).
+- **Changer les outils** dont dispose l’assistant arrête la correspondance dès
+  le tout début : rien n’est lu depuis le cache (@Claude docs prompt-caching).
+- **Modifier les instructions** l’arrête après les descriptions d’outils : toute
+  la conversation est traitée de nouveau.
+- **Changer le niveau d’effort** entre deux requêtes l’arrête au moins avant les
+  messages (@Claude docs prompt-caching), parce que le niveau est écrit dans le
+  prompt que lit le modèle (@Claude docs effort). Certains modèles récents
+  peuvent changer de niveau en cours de conversation et garder le cache, grâce à
+  un réglage encore en version bêta. Le nouveau niveau vaut alors jusqu’au
+  changement suivant. Sur les autres modèles, le fournisseur conseille de
+  choisir un niveau au début d’une session et de s’y tenir
+  (@Claude docs effort).
+- **Ajouter un message texte à la fin** préserve la correspondance. Tout ce qui
+  précède reste identique, et est donc lu depuis le cache. Une image fait
+  exception : en ajouter une, à n’importe quel endroit, arrête la correspondance
+  avant les messages (@Claude docs prompt-caching).
 
-Keep the effort level the same within a session for that reason. Choose the
-level for the kind of work when the session starts, and when you need
-another level for different work, start that work in its own session.
+Gardez donc le même niveau d’effort pendant toute une session. Choisissez le
+niveau pour le type de travail au début de la session, et quand vous avez
+besoin d’un autre niveau pour un autre travail, commencez ce travail dans sa
+propre session.
 
-A very short start isn't cached at all. Each model has a minimum length,
-from about five hundred to a few thousand tokens (@Claude docs prompt-caching).
-The cache saves the most in a long session that repeats a large start, and
-makes little difference to a short chat.
+Un début très court n’est pas mis en cache du tout. Chaque modèle a une longueur
+minimale, d’environ cinq cents à quelques milliers de jetons
+(@Claude docs prompt-caching). Le cache économise le plus dans une longue
+session qui répète un long début, et il change peu de chose pour une courte
+conversation.
 
 <MultiChoice id="what-the-cache-saved" objective="concepts/reasons-about-cost/explains-prompt-caching"
   concepts={['prompt-caching', 'input-and-output-tokens']}
-  context="A chat has five requests about one long contract, pasted in request 1, and each request is priced with and without a prompt cache. Request 5 came after a lunch break longer than the cache lifetime of five minutes. A cache read costs a tenth of the normal input price and a cache write a quarter more."
-  title="What did the cache do in this chat?"
-  hint="For each request, which tokens were read from the cache, which were written, and which were output?"
+  context="Une conversation compte cinq requêtes sur un long contrat, collé dans la requête 1, et chaque requête est calculée avec et sans cache de prompt. La requête 5 est arrivée après une pause déjeuner plus longue que la durée de vie du cache, cinq minutes. Une lecture en cache coûte un dixième du prix d’entrée normal, et une écriture un quart de plus."
+  title="Qu’a fait le cache dans cette conversation ?"
+  hint="Pour chaque requête, quels jetons ont été lus depuis le cache, lesquels y ont été écrits, et lesquels étaient de la sortie ?"
   options={[
-    { text: 'Request 1 cost less with the cache, because the contract was stored in it.', why: 'Storing the contract is a cache write, which costs more than normal input. The saving comes in the requests that read it.' },
-    { text: 'Request 2 cost less with the cache, because the contract was read from it.', correct: true },
-    { text: 'Request 5 cost less with the cache, because the contract had been stored that morning.', why: 'The lunch break was longer than the cache lifetime, so request 5 found nothing to read and wrote everything again.' },
-    { text: 'The output tokens of every request cost the same with and without the cache.', correct: true },
+    { text: 'La requête 1 a coûté moins cher avec le cache, parce que le contrat y a été stocké.', why: 'Stocker le contrat est une écriture en cache, qui coûte plus cher que l’entrée normale. L’économie vient des requêtes qui le relisent.' },
+    { text: 'La requête 2 a coûté moins cher avec le cache, parce que le contrat y a été lu.', correct: true },
+    { text: 'La requête 5 a coûté moins cher avec le cache, parce que le contrat avait été stocké le matin.', why: 'La pause déjeuner a dépassé la durée de vie du cache : la requête 5 n’a donc rien trouvé à lire et a tout réécrit.' },
+    { text: 'Les jetons de sortie de chaque requête ont coûté autant avec et sans cache.', correct: true },
   ]}>
 
-In the table above, which two statements are true?
+Dans le tableau ci-dessus, quelles sont les deux affirmations vraies ?
 
 </MultiChoice>
 
 <Sort id="keeps-or-breaks-the-cache" objective="concepts/reasons-about-cost/explains-prompt-caching"
   concepts={['prompt-caching', 'effort-level']}
-  context="A long chat holds a large pasted document, and the assistant uses a prompt cache with a lifetime of five minutes. The request is built in a fixed order: tool descriptions, then instructions, then messages. In this tool, a change of effort level applies to the whole request."
-  title="Will the next request read the cache?"
-  hint="Is the start of the next request still exactly the same, and is it within five minutes of the last one?"
-  buckets={['The next request reads the history from the cache', 'The next request processes the history again']}
+  context="Une longue conversation contient un gros document collé, et l’assistant utilise un cache de prompt d’une durée de vie de cinq minutes. La requête est construite dans un ordre fixe : descriptions d’outils, puis instructions, puis messages. Dans cet outil, un changement de niveau d’effort s’applique à toute la requête."
+  title="La requête suivante lira-t-elle le cache ?"
+  hint="Le début de la requête suivante est-il toujours exactement le même, et arrive-t-elle moins de cinq minutes après la précédente ?"
+  buckets={['La requête suivante lit l’historique depuis le cache', 'La requête suivante traite de nouveau l’historique']}
   items={[
-    { text: 'You ask a new question two minutes after the last answer', bucket: 0 },
-    { text: 'You paste one more paragraph of text at the end of the conversation', bucket: 0 },
-    { text: 'You edit a rule in the instructions at the top', bucket: 1 },
-    { text: 'You come back after a two-hour meeting', bucket: 1 },
-    { text: 'You switch the effort level from high to low for the next question', bucket: 1 },
-    { text: 'You turn on a tool the assistant did not have before', bucket: 1 },
+    { text: 'Vous posez une nouvelle question deux minutes après la dernière réponse', bucket: 0 },
+    { text: 'Vous collez un paragraphe de texte de plus à la fin de la conversation', bucket: 0 },
+    { text: 'Vous modifiez une règle dans les instructions, en haut', bucket: 1 },
+    { text: 'Vous revenez après une réunion de deux heures', bucket: 1 },
+    { text: 'Vous faites passer le niveau d’effort d’élevé à bas pour la question suivante', bucket: 1 },
+    { text: 'Vous activez un outil dont l’assistant ne disposait pas avant', bucket: 1 },
   ]} />
 
 <Scenario id="one-hard-question" objective="concepts/reasons-about-cost/explains-prompt-caching"
   concepts={['effort-level', 'prompt-caching']}
-  context="A drafting session at low effort has run all morning and holds a long, cached history. In this tool a change of effort level applies to the whole request and starts the cache over. The person now has an unrelated hard question that needs high effort."
-  title="A hard question in the middle of the session"
-  hint="What does a change of level do to the cached history, and does the hard question need that history?"
+  context="Une session de rédaction à effort bas dure depuis le matin et contient un long historique en cache. Dans cet outil, un changement de niveau d’effort s’applique à toute la requête et fait repartir le cache de zéro. La personne a maintenant une question difficile, sans rapport, qui demande un effort élevé."
+  title="Une question difficile au milieu de la session"
+  hint="Que fait un changement de niveau à l’historique en cache, et la question difficile a-t-elle besoin de cet historique ?"
   options={[
-    { text: 'Switch this session to high for the question, then back to low.', consequence: 'Each switch starts the cache over, so the next two requests process the whole morning again, and the hard question carries a history it does not need.' },
-    { text: 'Ask the hard question in this session at low effort.', consequence: 'The cache holds, but the hard question gets less thinking than it needs, and the answer may need a second round.' },
-    { text: 'Ask the hard question at high effort in a new session.', correct: true, consequence: 'The drafting session keeps its level and its cache, and the hard question is sent without the morning\'s history.' },
-    { text: 'Switch this session to max, so every later question is answered well.', consequence: 'The switch starts the cache over, and every later drafting request now spends more output tokens than the simple work needs.' },
+    { text: 'Passer cette session au niveau élevé pour la question, puis revenir au niveau bas.', consequence: 'Chaque changement fait repartir le cache de zéro : les deux requêtes suivantes traitent de nouveau toute la matinée, et la question difficile transporte un historique dont elle n’a pas besoin.' },
+    { text: 'Poser la question difficile dans cette session, à effort bas.', consequence: 'Le cache tient, mais la question difficile reçoit moins de réflexion qu’il ne lui en faut, et la réponse risque de demander un second tour.' },
+    { text: 'Poser la question difficile à effort élevé dans une nouvelle session.', correct: true, consequence: 'La session de rédaction garde son niveau et son cache, et la question difficile est envoyée sans l’historique de la matinée.' },
+    { text: 'Passer cette session au niveau max, pour que chaque question suivante reçoive une bonne réponse.', consequence: 'Le changement fait repartir le cache de zéro, et chaque requête de rédaction suivante dépense désormais plus de jetons de sortie que ce travail simple n’en demande.' },
   ]}>
 
-You have drafted emails at low effort all morning in one session. Now you
-have one hard question, unrelated to the emails, that needs high effort.
-What do you do?
+Vous avez rédigé des courriels à effort bas toute la matinée, dans une même
+session. Vous avez maintenant une question difficile, sans rapport avec les
+courriels, qui demande un effort élevé. Que faites-vous ?
 
 </Scenario>
 
-<Pitfall title="Polishing the instructions during the session">
-A person pastes a long report into an assistant and asks questions about it
-all afternoon. Every few questions she opens the assistant's instructions and
-improves one sentence. The usage report shows that each request after an
-edit wrote the whole report to the cache again. The instructions come
-before the conversation, so every edit ended the cached match there. The
-rule: finish the instructions and choose the effort level before a long
-session, and put a change in a new message at the end.
+<Pitfall title="Peaufiner les instructions en cours de session">
+Une personne colle un long rapport dans un assistant et pose des questions à son
+sujet tout l’après-midi. Toutes les quelques questions, elle ouvre les
+instructions de l’assistant et améliore une phrase. Le rapport d’utilisation
+montre que chaque requête qui a suivi une modification a réécrit tout le rapport
+dans le cache. Les instructions précèdent la conversation : chaque modification
+y a donc arrêté la correspondance en cache. La règle : terminez les instructions
+et choisissez le niveau d’effort avant une longue session, et placez un
+changement dans un nouveau message à la fin.
 </Pitfall>
 
 <Choice id="low-or-high-to-be-safe" phase="review" objective="concepts/reasons-about-cost/chooses-effort-level"
   concepts={['effort-level']}
-  context="The effort level tells the model how many tokens to spend on its whole response: thinking, tool calls and answer text. A reformatting job changes the date format in a list of 500 rows."
-  title="Max effort, to be safe?"
-  hint="Is there anything in this task that more thinking would improve?"
+  context="Le niveau d’effort indique au modèle combien de jetons consacrer à toute sa réponse : réflexion, appels d’outils et texte de la réponse. Une tâche de remise en forme change le format des dates dans une liste de 500 lignes."
+  title="Effort max, par précaution ?"
+  hint="Y a-t-il dans cette tâche quoi que ce soit qu’une réflexion plus poussée améliorerait ?"
   options={[
-    { text: 'It makes the job more correct, because the model checks every row more carefully.', why: 'The task is a fixed pattern. More thinking adds tokens and time and nothing the pattern needs.' },
-    { text: 'It spends more output tokens and time, for a job that gains nothing from them.', correct: true },
-    { text: 'It changes nothing, because the setting only matters for questions that need thinking.', why: 'The setting applies to all the output, the answer text and the tool calls included.' },
-    { text: 'It lowers the cost, because a thorough model gets the job done in fewer requests.', why: 'Higher effort tends to mean more tool calls, and each one is another request.' },
+    { text: 'Elle rend le travail plus juste, parce que le modèle vérifie chaque ligne plus attentivement.', why: 'La tâche est un motif fixe. Plus de réflexion ajoute des jetons et du temps, et rien dont le motif ait besoin.' },
+    { text: 'Elle dépense plus de jetons de sortie et de temps, pour une tâche qui n’en tire aucun gain.', correct: true },
+    { text: 'Elle ne change rien, parce que le réglage ne compte que pour les questions qui demandent de la réflexion.', why: 'Le réglage s’applique à toute la sortie, texte de la réponse et appels d’outils compris.' },
+    { text: 'Elle réduit le coût, parce qu’un modèle minutieux termine le travail en moins de requêtes.', why: 'Un effort plus élevé tend à multiplier les appels d’outils, et chacun est une requête de plus.' },
   ]}>
 
-A colleague runs a job that changes the date format in a list of 500 rows,
-and sets the effort level to max "to be safe". What does that choice do?
+Un collègue lance une tâche qui change le format des dates dans une liste de
+500 lignes, et règle le niveau d’effort sur max « par précaution ». Que produit
+ce choix ?
 
 </Choice>
 
 <Sort id="start-low-or-high" phase="review" objective="concepts/reasons-about-cost/chooses-effort-level"
   concepts={['effort-level']}
-  context="The vendor advises a low effort level for simple, clear work where speed and cost matter, and a high level for hard reasoning, difficult problems and open-ended agent work."
-  title="Low or high to start with?"
-  hint="Does the model have to work out what to do, or only apply a rule it was given?"
-  buckets={['Start at low effort', 'Start at high effort']}
+  context="Le fournisseur conseille un niveau d’effort bas pour un travail simple et clair où la vitesse et le coût comptent, et un niveau élevé pour le raisonnement difficile, les problèmes ardus et le travail d’agent ouvert."
+  title="Bas ou élevé pour commencer ?"
+  hint="Le modèle doit-il trouver quoi faire, ou seulement appliquer une règle qu’on lui a donnée ?"
+  buckets={['Commencer à effort bas', 'Commencer à effort élevé']}
   items={[
-    { text: 'Translate fifty short product labels, one word each', bucket: 0 },
-    { text: 'Pull the invoice number out of each of 300 emails', bucket: 0 },
-    { text: 'Plan the move of a team to a new office, with the risks', bucket: 1 },
-    { text: 'Find which of three draft policies breaks a new law, and where', bucket: 1 },
+    { text: 'Traduire cinquante courtes étiquettes de produits, d’un mot chacune', bucket: 0 },
+    { text: 'Extraire le numéro de facture de chacun de 300 courriels', bucket: 0 },
+    { text: 'Planifier le déménagement d’une équipe dans de nouveaux bureaux, avec les risques', bucket: 1 },
+    { text: 'Trouver laquelle de trois politiques en projet enfreint une nouvelle loi, et à quel endroit', bucket: 1 },
   ]} />
 
 <Choice id="same-document-new-first-line" phase="review" objective="concepts/reasons-about-cost/explains-prompt-caching"
   concepts={['prompt-caching']}
-  context="A prompt cache stores the processed start of a request. A later request reuses it only when it begins with exactly the same tokens. Two requests a minute apart each send one long document, but they begin with a different first instruction before the document."
-  title="Why did neither read the cache?"
-  hint="Where does the first difference between the two requests sit?"
+  context="Un cache de prompt stocke le début traité d’une requête. Une requête ultérieure ne le réutilise que si elle commence par exactement les mêmes jetons. Deux requêtes envoyées à une minute d’intervalle transmettent chacune un même long document, mais elles commencent par une première instruction différente placée avant le document."
+  title="Pourquoi aucune n’a-t-elle lu le cache ?"
+  hint="Où se trouve la première différence entre les deux requêtes ?"
   options={[
-    { text: 'The document is too long to fit in the cache.', why: 'A long document is what the cache is for. Look at what comes before it.' },
-    { text: 'The cache had expired in the minute between the two requests.', why: 'A minute is within the cache lifetime of five minutes.' },
-    { text: 'A cache only works for the questions at the end of a request.', why: 'The cache stores the start of a request, and the end is what is new.' },
-    { text: 'The first instruction differs, so the match ended before the document.', correct: true },
+    { text: 'Le document est trop long pour tenir dans le cache.', why: 'Un long document est justement ce pour quoi le cache existe. Regardez ce qui le précède.' },
+    { text: 'Le cache avait expiré pendant la minute qui séparait les deux requêtes.', why: 'Une minute est dans la durée de vie du cache, cinq minutes.' },
+    { text: 'Un cache ne fonctionne que pour les questions placées à la fin d’une requête.', why: 'Le cache stocke le début d’une requête, et la fin est ce qui est nouveau.' },
+    { text: 'La première instruction diffère : la correspondance s’est donc arrêtée avant le document.', correct: true },
   ]}>
 
-Two requests a minute apart send the same long document, each with its own
-first instruction in front of it. Neither reads anything from the cache.
-Why?
+Deux requêtes envoyées à une minute d’intervalle transmettent le même long
+document, chacune précédée de sa propre première instruction. Aucune ne lit quoi
+que ce soit depuis le cache. Pourquoi ?
 
 </Choice>
 
 <Choice id="where-the-question-goes" phase="review" objective="concepts/reasons-about-cost/explains-prompt-caching"
   concepts={['prompt-caching']}
-  context="A prompt cache reuses the processed start of a request when a later request begins with exactly the same tokens. A team sends many questions about one shared handbook, each as a separate request."
-  title="Where does the question go?"
-  hint="Which part is the same in every request, and which part changes?"
+  context="Un cache de prompt réutilise le début traité d’une requête quand une requête ultérieure commence par exactement les mêmes jetons. Une équipe envoie de nombreuses questions sur un même guide partagé, chacune dans une requête distincte."
+  title="Où va la question ?"
+  hint="Quelle partie est la même dans chaque requête, et quelle partie change ?"
   options={[
-    { text: 'The handbook first and the question after it, so every request starts the same.', correct: true },
-    { text: 'The question first and the handbook after it, so the model reads the question first.', why: 'The question changes each time, so the match ends at the very first line.' },
-    { text: 'The order makes no difference, because the cache finds the handbook anywhere.', why: 'The cache matches from the start of the request and stops at the first difference.' },
-    { text: 'The handbook in every other request, so half of the requests are cheaper.', why: 'A request without the handbook cannot answer from it, and the next one stores it again.' },
+    { text: 'Le guide d’abord et la question ensuite, pour que chaque requête commence de la même façon.', correct: true },
+    { text: 'La question d’abord et le guide ensuite, pour que le modèle lise d’abord la question.', why: 'La question change à chaque fois : la correspondance s’arrête donc dès la première ligne.' },
+    { text: 'L’ordre ne change rien, parce que le cache trouve le guide n’importe où.', why: 'Le cache compare à partir du début de la requête et s’arrête à la première différence.' },
+    { text: 'Le guide une requête sur deux, pour que la moitié des requêtes coûte moins cher.', why: 'Une requête sans le guide ne peut pas y puiser sa réponse, et la suivante le stocke de nouveau.' },
   ]}>
 
-A team asks many separate questions about one long handbook. To get the
-most from the prompt cache, how should each request be built?
+Une équipe pose de nombreuses questions séparées sur un long guide. Pour tirer
+le meilleur parti du cache de prompt, comment chaque requête doit-elle être
+construite ?
 
 </Choice>
 
 <Scenario id="back-from-the-meeting" phase="review" objective="concepts/reasons-about-cost/explains-prompt-caching"
   concepts={['prompt-caching', 'growing-session-cost']}
-  context="A chat holds a long, cached history. The cache lasts five minutes, and each read starts the five minutes again. The person leaves for a two-hour meeting and then wants to ask one more question about the same work."
-  title="After a two-hour meeting"
-  hint="Is the cache still there after two hours, and what does the next request have to do with the history?"
+  context="Une conversation contient un long historique en cache. Le cache dure cinq minutes, et chaque lecture relance ces cinq minutes. La personne part pour une réunion de deux heures, puis veut poser une question de plus sur le même travail."
+  title="Après une réunion de deux heures"
+  hint="Le cache existe-t-il encore après deux heures, et que doit faire la requête suivante de l’historique ?"
   options={[
-    { text: 'Expect the next question to cost about as much as the last one before the meeting.', consequence: 'The cache expired during the meeting. The next request processes and writes the whole history again and costs much more.' },
-    { text: 'Expect the next question to cost more, because the whole history is processed again.', correct: true, consequence: 'You see the jump in the usage report and know it is the expired cache, and the requests after it read from the cache again.' },
-    { text: 'Ask the question twice, so the second copy is read from the cache.', consequence: 'The first copy pays to store the history again, and the second only adds one more request to the bill.' },
-    { text: 'Expect a lower price, because the vendor charges less for a session that was idle.', consequence: 'Idle time is not billed at a lower rate. The cache simply expired, so the next request pays to store the history again.' },
+    { text: 'S’attendre à ce que la question suivante coûte à peu près autant que la dernière avant la réunion.', consequence: 'Le cache a expiré pendant la réunion. La requête suivante traite et réécrit tout l’historique, et elle coûte bien plus cher.' },
+    { text: 'S’attendre à ce que la question suivante coûte plus cher, parce que tout l’historique est traité de nouveau.', correct: true, consequence: 'Vous voyez le saut dans le rapport d’utilisation et savez qu’il vient du cache expiré, et les requêtes suivantes lisent de nouveau depuis le cache.' },
+    { text: 'Poser la question deux fois, pour que la seconde copie soit lue depuis le cache.', consequence: 'La première copie paie pour stocker de nouveau l’historique, et la seconde ne fait qu’ajouter une requête à la facture.' },
+    { text: 'S’attendre à un prix plus bas, parce que le fournisseur facture moins une session restée inactive.', consequence: 'Le temps d’inactivité n’est pas facturé à un tarif réduit. Le cache a simplement expiré, et la requête suivante paie pour stocker de nouveau l’historique.' },
   ]}>
 
-You come back from a two-hour meeting to a long chat and ask one more
-question. What should you expect, and why?
+Vous revenez d’une réunion de deux heures dans une longue conversation et posez
+une question de plus. À quoi devez-vous vous attendre, et pourquoi ?
 
 </Scenario>
 
 <Exercise>
 
-On paper or in a note, take these three tasks: turning a list of meeting
-dates into a table, planning the move of a twelve-person team to a new
-office over three months, and checking whether a 40-page tender meets each
-of 25 requirements. For each one, choose an effort level and say in one
-line what that level changes in the model's work. Then picture one
-afternoon in a single chat about the tender, which you pasted at the start.
-Write which part of each request prompt caching makes cheaper, which part
-it leaves at the normal price, and two things that would make the next
-request pay for the whole tender again. Ten minutes is enough.
+Sur papier ou dans une note, prenez ces trois tâches : transformer une liste de
+dates de réunion en tableau, planifier sur trois mois le déménagement d’une
+équipe de douze personnes dans de nouveaux bureaux, et vérifier si un appel
+d’offres de 40 pages satisfait chacune de 25 exigences. Pour chacune, choisissez
+un niveau d’effort et dites en une ligne ce que ce niveau change dans le travail
+du modèle. Imaginez ensuite un après-midi dans une même conversation sur l’appel
+d’offres, que vous avez collé au début. Écrivez quelle partie de chaque requête
+la mise en cache du prompt rend moins chère, quelle partie elle laisse au prix
+normal, et deux choses qui feraient payer de nouveau tout l’appel d’offres à la
+requête suivante. Dix minutes suffisent.
 
-A good result chooses low for the table and high for the plan and the
-tender, and says that a higher level means more thinking and more tool
-calls, at more tokens and time. It adds that you would try the level on a
-few real cases first. For the cache, it names the instructions, the tender
-and the earlier messages as the part read from the cache. The answers and
-the thinking stay at the normal output price. Each new question and the
-answer before it are never read from the cache in that request: they are
-written to it, at a little more than the normal input price. It names two
-of these as what breaks the cache: a break longer than the cache lifetime,
-an edit to the instructions, a change of tools, or a change of effort
-level. To close, ask yourself: in your own work, which long start do you
-send again most often?
+Un bon résultat choisit bas pour le tableau et élevé pour le plan et l’appel
+d’offres, et dit qu’un niveau plus élevé signifie plus de réflexion et plus
+d’appels d’outils, pour plus de jetons et de temps. Il ajoute que vous
+essaieriez d’abord le niveau sur quelques cas réels. Pour le cache, il désigne
+les instructions, l’appel d’offres et les messages précédents comme la partie
+lue depuis le cache. Les réponses et la réflexion restent au prix de sortie
+normal. Chaque nouvelle question et la réponse qui la précède ne sont jamais
+lues depuis le cache dans cette requête : elles y sont écrites, à un peu plus
+que le prix d’entrée normal. Il nomme deux de ces éléments comme ce qui casse le
+cache : une pause plus longue que la durée de vie du cache, une modification des
+instructions, un changement d’outils ou un changement de niveau d’effort. Pour
+finir, demandez-vous : dans votre propre travail, quel long début envoyez-vous
+le plus souvent ?
 
 </Exercise>
 
 <Recap>
 
-1. The effort level tells the model how many tokens to spend, and it
-   applies to all of its output: the thinking, the tool calls and the
-   answer (@Claude docs effort).
-2. Start low for simple, clear work and high for hard or open work, and
-   test the level on a few real cases before you decide (@Claude docs effort).
-3. Prompt caching makes the unchanged start of a request cheap to read
-   again. The output is billed as before, and the new text at the end is
-   never read from the cache. A five-minute cache stores that new text at a
-   quarter more than normal input
+1. Le niveau d’effort indique au modèle combien de jetons dépenser, et il
+   s’applique à toute sa sortie : la réflexion, les appels d’outils et la
+   réponse (@Claude docs effort).
+2. Commencez bas pour un travail simple et clair et élevé pour un travail
+   difficile ou ouvert, et testez le niveau sur quelques cas réels avant de
+   décider (@Claude docs effort).
+3. La mise en cache du prompt rend peu coûteuse la relecture du début inchangé
+   d’une requête. La sortie est facturée comme avant, et le nouveau texte placé
+   à la fin n’est jamais lu depuis le cache. Un cache de cinq minutes stocke ce
+   nouveau texte à un quart de plus que l’entrée normale
    (@Claude docs prompt-caching) (@Claude docs pricing).
-4. The cache matches from the start and ends at the first change. A changed
-   tool or instruction, an effort level changed for the whole request, or a
-   break longer than the cache lifetime makes the next request process the
-   history again (@Claude docs prompt-caching) (@Claude Code costs).
-5. Choose the effort level for a kind of work when a session starts, and
-   keep it until the session ends.
+4. Le cache compare à partir du début et s’arrête à la première modification.
+   Un outil ou une instruction modifiés, un niveau d’effort changé pour toute la
+   requête, ou une pause plus longue que la durée de vie du cache font traiter
+   de nouveau l’historique à la requête suivante
+   (@Claude docs prompt-caching) (@Claude Code costs).
+5. Choisissez le niveau d’effort pour un type de travail au début d’une
+   session, et gardez-le jusqu’à la fin de la session.
 
 </Recap>
 
 <Habit id="set-effort-at-the-start">
-The next time you start a long session with an assistant or an agent, choose its effort level for the kind of work first, and leave it there until the session ends.
+La prochaine fois que vous commencez une longue session avec un assistant ou un agent, choisissez d’abord son niveau d’effort pour le type de travail, et gardez-le jusqu’à la fin de la session.
 </Habit>

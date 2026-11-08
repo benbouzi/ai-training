@@ -10,7 +10,7 @@ introduces: [chat-vs-agent-vs-automation]
 assumes:
   - objective: concepts/recognizes-agents/tells-agent-from-assistant
     lesson: concepts/assistant-or-agent
-    section: one-test-what-can-it-do-without-another-prompt
+    section: un-seul-test--que-peut-il-faire-sans-nouveau-prompt-
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/agent-risk
     section: human-in-the-loop

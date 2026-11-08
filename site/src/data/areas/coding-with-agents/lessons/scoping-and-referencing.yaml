@@ -11,7 +11,7 @@ introduces: [scoping-a-task, referencing-files]
 assumes:
   - objective: concepts/explains-models/explains-grounding
     lesson: concepts/retrieval
-    section: grounding-and-what-it-doesnt-fix
+    section: lancrage-et-ce-quil-ne-corrige-pas
 sources-checked: 2026-09-24
 review-by: 2027-03-24
 after: [coding-with-agents/plan-then-test]

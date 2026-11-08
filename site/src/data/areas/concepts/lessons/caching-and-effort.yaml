@@ -11,7 +11,7 @@ introduces: [prompt-caching, effort-level]
 assumes:
   - objective: concepts/reasons-about-cost/explains-growing-cost
     lesson: concepts/reading-token-counts
-    section: a-short-chat-request-by-request
+    section: une-courte-conversation-requête-par-requête
 extends-to:
   - label: "Optimize AI Application Performance: OpenAI's caching rules and effort levels, worked through with prices (OpenAI Academy, free account)"
     href: https://academy.openai.com/public/courses/optimize-ai-application-performance-1k50h

@@ -1,333 +1,346 @@
 import { Choice, MultiChoice, Pitfall, Exercise, Recap } from '@components/lesson';
 
-Your team wants a chat assistant to write a summary of every meeting's notes
-for the finance team, about a thousand times a month. Before anyone approves it, someone
-asks what it costs, and someone else asks why last week's trial ignored
-the rule about bullet length that was in the instructions. Both answers
-come from counting tokens. In this lesson we price a short prompt
-and a long one on a small model and a large one. Then we find the rule
-that a long instruction file buried.
+Votre équipe veut qu’un assistant conversationnel rédige, pour l’équipe
+financière, un résumé du compte rendu de chaque réunion, environ mille fois
+par mois. Avant que quiconque donne son accord, quelqu’un demande combien cela
+coûte, et quelqu’un d’autre demande pourquoi l’essai de la semaine dernière a
+ignoré la règle sur la longueur des puces qui figurait dans les instructions.
+Les deux réponses passent par le comptage des jetons. Dans cette leçon, nous
+calculons le prix d’un prompt court et d’un prompt long, sur un petit modèle et
+sur un grand. Puis nous retrouvons la règle qu’un long fichier d’instructions
+a enfouie.
 
-The lesson on [what the model can see](/concepts/context-window/) counted a
-page of text in tokens. This lesson puts a price on each one.
+La leçon sur [ce que le modèle peut voir](/concepts/context-window/) a compté
+une page de texte en jetons. Cette leçon met un prix sur chacun d’eux.
 
-## The same task, asked twice
+## La même tâche, demandée deux fois
 
-The short prompt states the task, the format and the audience, then gives
-the notes.
+Le prompt court énonce la tâche, le format et le public, puis donne le compte
+rendu.
 
 ```text
-Summarize these meeting notes in five bullet points for the finance team.
-Keep each bullet under 20 words.
+Résume ce compte rendu de réunion en cinq puces pour l’équipe financière.
+Chaque puce doit faire moins de 20 mots.
 
-Meeting notes, project Lantern, 14 March.
-Present: Ana, Bram, Chidi. The supplier moved the delivery of the sensor
-boards from April to June. Ana will confirm the June date in writing by
-Friday. The installation guide needs a shorter version with one photo per
-step. The pilot in the Utrecht warehouse moves to July. Next meeting on
-28 March.
+Compte rendu, projet Lantern, 14 mars.
+Présents : Ana, Bram, Chidi. Le fournisseur a déplacé la livraison des
+cartes capteurs d’avril à juin. Ana confirmera la date de juin par écrit
+d’ici vendredi. Le guide d’installation doit être raccourci, avec une photo
+par étape. Le pilote de l’entrepôt d’Utrecht passe en juillet. Prochaine
+réunion le 28 mars.
 ```
 
-The long prompt asks for the same summary of the same meeting. It opens
-with a greeting, explains what project Lantern is, says why the finance
-team is busy, apologizes for the trouble, gives the notes in full
-sentences and closes with thanks. It is the kind of prompt people write
-when they treat the assistant as a colleague. Counted with the same
-rule of thumb as
-[the context window lesson](/concepts/context-window/#count-the-tokens-of-a-page),
-about four characters per token, the two
-come out like this, with the answer the model writes added for the price
-table below. Both counts are estimates, and the vendor's own tokenizer
-gives the exact number.
+Le prompt long demande le même résumé de la même réunion. Il commence par une
+salutation, explique ce qu’est le projet Lantern, dit pourquoi l’équipe
+financière est débordée, s’excuse du dérangement, donne le compte rendu en
+phrases complètes et se termine par des remerciements. C’est le genre de prompt
+qu’on écrit quand on traite l’assistant comme un collègue. Comptés avec la même
+règle empirique que dans
+[la leçon sur la fenêtre de contexte](/concepts/context-window/#compter-les-jetons-dune-page),
+environ quatre caractères par jeton, les deux prompts donnent ce qui suit, avec
+la réponse écrite par le modèle ajoutée pour le tableau des prix plus bas. Les
+deux nombres sont des estimations, et le tokeniseur du fournisseur donne le
+nombre exact.
 
 ```text
-short prompt: 111 tokens (estimate)
-long prompt: 343 tokens (estimate)
-difference: 232 tokens
+short prompt: 127 tokens (estimate)
+long prompt: 410 tokens (estimate)
+difference: 283 tokens
 answer: 120 tokens (assumed)
 ```
 
-The long prompt is three times the short one, and every extra token is a
-token the model reads before it writes a word. Most of the extra text is
-about you and your feelings about the task. The summary comes out the same without it.
+Le prompt long fait plus de trois fois le prompt court, et chaque jeton
+supplémentaire est un jeton que le modèle lit avant d’écrire le moindre mot.
+L’essentiel du texte en plus parle de vous et de ce que vous ressentez à propos
+de la tâche. Le résumé sort identique sans lui.
 
-## What a token costs
+## Ce que coûte un jeton
 
-A vendor charges by the million tokens, with one price for the tokens the
-model reads (input) and a higher price for the tokens it writes (output).
-The model reads the whole prompt in one pass, and then each token of the
-answer takes a pass of its own through the model. A written token costs
-the vendor more than a read one for that reason. The table below uses round example
-numbers for "a small model" and "a large model", chosen for this lesson.
-They follow the pattern on the market in 2026, where a vendor's large model
-costs several times its small one and output costs about five times
-input. The current prices are on the vendor pricing pages
-(@Claude docs pricing), and they change more often than this page does.
+Un fournisseur facture au million de jetons, avec un prix pour les jetons que
+le modèle lit (l’entrée) et un prix plus élevé pour les jetons qu’il écrit (la
+sortie). Le modèle lit tout le prompt en un seul passage, puis chaque jeton de
+la réponse demande son propre passage dans le modèle. C’est pour cette raison
+qu’un jeton écrit coûte plus cher au fournisseur qu’un jeton lu. Le tableau
+ci-dessous utilise des chiffres ronds d’exemple pour « un petit modèle » et
+« un grand modèle », choisis pour cette leçon. Ils suivent la structure du
+marché en 2026, où le grand modèle d’un fournisseur coûte plusieurs fois son
+petit modèle, et où la sortie coûte environ cinq fois l’entrée. Les prix
+actuels figurent sur les pages tarifaires des fournisseurs
+(@Claude docs pricing), et ils changent plus souvent que cette page.
 
-| Example prices, per million tokens | Input | Output |
-| ---------------------------------- | ----- | ------ |
-| A small model                      | $0.60 | $3     |
-| A large model                      | $6    | $30    |
+| Prix d’exemple, par million de jetons | Entrée | Sortie |
+| ------------------------------------- | ------ | ------ |
+| Un petit modèle                       | 0,60 $ | 3 $    |
+| Un grand modèle                       | 6 $    | 30 $   |
 
-A call is the prompt going in and the answer coming out. Suppose every
-summary is the same five bullets, about 120 tokens of output. Priced at
-the example numbers, once and for the thousand summaries a month the team
-at the top of the page wants, the two prompts come to this.
+Un appel, c’est le prompt qui entre et la réponse qui sort. Supposons que
+chaque résumé soit composé des mêmes cinq puces, soit environ 120 jetons de
+sortie. Aux prix d’exemple, pour un appel et pour les mille résumés mensuels
+que veut l’équipe du début de la page, les deux prompts reviennent à ceci.
 
 ```text
                             one call     1,000 calls
-small model, short prompt    $0.0004           $0.43
-small model, long prompt     $0.0006           $0.57
-large model, short prompt    $0.0043           $4.27
-large model, long prompt     $0.0057           $5.66
+small model, short prompt    $0.0004           $0.44
+small model, long prompt     $0.0006           $0.61
+large model, short prompt    $0.0044           $4.36
+large model, long prompt     $0.0061           $6.06
 ```
 
-Read the table down and then across. Down, the choice of model moves the
-price by ten times. Across, the extra 232 tokens of politeness move it by
-about a third. One call costs a fraction of a cent on either model, which
-is why nobody notices the price of one chat. At a thousand calls a month
-the summaries cost the team under a dollar on the small model and about
-five on the large one, which answers the first question from the top of
-the page. The same table for a support team that makes a hundred times as
-many calls has two more zeros in every row, and there the choice of model
-is a line in the budget.
+Lisez le tableau de haut en bas, puis de gauche à droite. De haut en bas, le
+choix du modèle multiplie le prix par dix. De gauche à droite, les 283 jetons
+de politesse supplémentaires l’augmentent de plus d’un tiers. Un appel coûte
+une fraction de centime sur l’un ou l’autre modèle, et c’est pourquoi personne
+ne remarque le prix d’une conversation. À mille appels par mois, les résumés
+coûtent à l’équipe moins d’un dollar sur le petit modèle et quatre à six
+dollars sur le grand, ce qui répond à la première question du début de la
+page. Le même tableau, pour une équipe de support qui fait cent fois plus
+d’appels, a deux zéros de plus sur chaque ligne, et là, le choix du modèle
+devient une ligne du budget.
 
-The answer is often the expensive part of a call, because output costs
-more per token, so asking for five bullets instead of a page saves more
-than trimming a greeting. A document you paste is input, so a 3,000-token
-report attached to every call costs more than any prompt you would write
-by hand. A long chat sends the whole conversation again with every
-message, so the tenth turn of a chat costs the tokens of the ten turns
-before it, on top of the new ones (@AEC-02).
+La réponse est souvent la partie chère d’un appel, parce que la sortie coûte
+plus cher par jeton : demander cinq puces au lieu d’une page économise donc
+davantage que supprimer une salutation. Un document que vous collez est de
+l’entrée, et un rapport de 3 000 jetons joint à chaque appel coûte donc plus
+que n’importe quel prompt écrit à la main. Une longue conversation renvoie
+toute la conversation à chaque message : le dixième tour d’une conversation
+coûte donc les jetons des dix tours précédents, en plus des nouveaux
+(@AEC-02).
 
 <Choice id="where-the-money-goes" objective="concepts/explains-models/explains-generation"
   concepts={['cost-and-latency', 'token']}
-  context="The lesson prices a call as input tokens (the prompt) at one price and output tokens (the answer) at a higher price, and shows a table where the same task costs a third more with a verbose prompt and ten times more on a large model."
-  title="Which change saves the most?"
-  hint="Which tokens carry the higher price, and how many of them does each change remove?"
+  context="La leçon calcule le prix d’un appel en comptant les jetons d’entrée (le prompt) à un prix et les jetons de sortie (la réponse) à un prix plus élevé, et montre un tableau où la même tâche coûte un tiers de plus avec un prompt verbeux et dix fois plus sur un grand modèle."
+  title="Quel changement économise le plus ?"
+  hint="Quels jetons portent le prix le plus élevé, et combien chaque changement en supprime-t-il ?"
   options={[
-    { text: 'Cut the greeting and the thanks from the summary prompt.', why: 'That removes input tokens, the cheaper kind, and the table shows it moving the price by about a third.' },
-    { text: 'Ask for five bullets instead of the one-page summary the team asked for last week.', correct: true },
-    { text: 'Send the meeting notes as an attachment instead of pasting them.', why: 'An attachment becomes tokens like pasted text. The model reads the same words either way.' },
-    { text: 'Ask the model to answer faster.', why: 'Speed is a property of the model and the answer length. A request in the prompt adds tokens and changes nothing else.' },
+    { text: 'Supprimer la salutation et les remerciements du prompt de résumé.', why: 'Cela supprime des jetons d’entrée, les moins chers, et le tableau montre que le prix ne bouge que d’environ un tiers.' },
+    { text: 'Demander cinq puces au lieu du résumé d’une page que l’équipe a demandé la semaine dernière.', correct: true },
+    { text: 'Envoyer le compte rendu en pièce jointe au lieu de le coller.', why: 'Une pièce jointe devient des jetons comme le texte collé. Le modèle lit les mêmes mots dans les deux cas.' },
+    { text: 'Demander au modèle de répondre plus vite.', why: 'La vitesse dépend du modèle et de la longueur de la réponse. Une demande dans le prompt ajoute des jetons et ne change rien d’autre.' },
   ]}>
 
-A colleague runs a summary call many thousands of times a month and wants
-to lower the bill. Which one change saves the most money?
+Un collègue lance un appel de résumé plusieurs milliers de fois par mois et
+veut réduire la facture. Quel changement unique économise le plus d’argent ?
 
 </Choice>
 
-## Small model or large
+## Petit ou grand modèle
 
-Vendors publish models in a family with several sizes, and the sizes
-share a name and a release date but differ in price and in what they can
-do. The larger model follows a complex instruction more reliably and reasons
-through more steps, and it costs more per token and produces each token
-more slowly (@Claude docs models-overview). The smaller one is cheaper and faster,
-and for a narrow task with a clear instruction, such as a five-bullet
-summary in a fixed format, it is often good enough
+Les fournisseurs publient leurs modèles par familles de plusieurs tailles, et
+ces tailles partagent un nom et une date de sortie mais diffèrent par leur prix
+et par ce qu’elles savent faire. Le plus grand modèle suit plus fidèlement une
+instruction complexe et enchaîne plus d’étapes de raisonnement, et il coûte
+plus cher par jeton et produit chaque jeton plus lentement
+(@Claude docs models-overview). Le plus petit est moins cher et plus rapide,
+et pour une tâche étroite avec une instruction claire, comme un résumé en cinq
+puces dans un format fixe, il suffit souvent
 (@Academy ai-capabilities-and-limitations).
 
-The time you wait has the same structure as the price. A model produces
-its answer one token at a time, as the [lesson on how models
-work](/concepts/how-models-work/#un-jeton-à-la-fois) showed. So a
-long answer takes longer than a short one on any model, and a large model
-takes longer per token than a small one. A long prompt adds a smaller
-delay up front, while the model reads it. Cost and latency both grow with
-every token, and both grow faster on a larger model.
+Le temps d’attente a la même structure que le prix. Un modèle produit sa
+réponse un jeton à la fois, comme l’a montré la
+[leçon sur le fonctionnement des modèles](/concepts/how-models-work/#un-jeton-à-la-fois).
+Une longue réponse prend donc plus de temps qu’une courte sur n’importe quel
+modèle, et un grand modèle met plus de temps par jeton qu’un petit. Un long
+prompt ajoute un délai plus faible au départ, pendant que le modèle le lit.
+Coût et latence augmentent tous deux avec chaque jeton, et tous deux
+augmentent plus vite sur un modèle plus grand.
 
-Which model fits which task is a decision of its own, and the course on
-using agents has a lesson that puts a small and a large model side by
-side on the same inputs. Here the point is only what changes when you
-switch: the price moves by a factor of several, and the wait changes too.
+Choisir quel modèle convient à quelle tâche est une décision à part entière, et
+le parcours sur l’usage des agents contient une leçon qui compare un petit et
+un grand modèle sur les mêmes entrées. Ici, il s’agit seulement de ce qui
+change quand vous passez de l’un à l’autre : le prix varie d’un facteur de
+plusieurs, et l’attente change aussi.
 
 <Choice id="what-the-switch-changes" objective="concepts/explains-models/explains-generation"
   concepts={['cost-and-latency', 'model-family-and-size']}
-  context="The lesson follows a team that sends a short prompt asking for a five-bullet summary of meeting notes, and prices it on a small and a large model from the same vendor family."
-  title="What does the switch change?"
-  hint="The token counts stay the same. Does the price or the speed of a token depend on the model?"
+  context="La leçon suit une équipe qui envoie un prompt court demandant un résumé en cinq puces d’un compte rendu de réunion, et en calcule le prix sur un petit et un grand modèle de la même famille d’un fournisseur."
+  title="Que change le passage d’un modèle à l’autre ?"
+  hint="Le nombre de jetons reste le même. Le prix ou la vitesse d’un jeton dépendent-ils du modèle ?"
   options={[
-    { text: 'The price and the wait both drop, because each token costs less and comes faster.', correct: true },
-    { text: 'The price drops, and the wait stays the same, because the answer has the same number of tokens.', why: 'The small model also writes each token faster, so the same answer arrives sooner.' },
-    { text: 'The wait drops, and the price stays the same, because the model reads and writes the same tokens.', why: 'The price is per token, and the small model charges less for each one.' },
-    { text: 'Neither changes, because the prompt and the answer are the same.', why: 'The token counts are the same, but the price and the speed of each token depend on the model as well.' },
+    { text: 'Le prix et l’attente baissent tous les deux, parce que chaque jeton coûte moins cher et arrive plus vite.', correct: true },
+    { text: 'Le prix baisse, et l’attente reste la même, parce que la réponse a le même nombre de jetons.', why: 'Le petit modèle écrit aussi chaque jeton plus vite, et la même réponse arrive donc plus tôt.' },
+    { text: 'L’attente baisse, et le prix reste le même, parce que le modèle lit et écrit les mêmes jetons.', why: 'Le prix est fixé par jeton, et le petit modèle facture chacun moins cher.' },
+    { text: 'Rien ne change, parce que le prompt et la réponse sont les mêmes.', why: 'Le nombre de jetons est le même, mais le prix et la vitesse de chaque jeton dépendent aussi du modèle.' },
   ]}>
 
-The team moves the meeting summaries from the large model to the small
-one. The prompt and the five bullets stay the same. What happens to the
-price and the wait of each call?
+L’équipe fait passer les résumés de réunion du grand modèle au petit. Le prompt
+et les cinq puces restent les mêmes. Qu’arrive-t-il au prix et à l’attente de
+chaque appel ?
 
 </Choice>
 
-## The rule that got buried
+## La règle enfouie
 
-Now the second question from the top of the page. Last week's trial used
-an instruction file, a page of rules the team wrote once and pasted at the
-start of every chat. Rule seven said "keep each bullet under 20 words".
-The summary that came back had bullets of 40 words. The file below is
-illustrative, written for this lesson, and shortened to twelve rules from
-the twenty-two the team had.
+Passons à la seconde question du début de la page. L’essai de la semaine
+dernière utilisait un fichier d’instructions, une page de règles que l’équipe a
+écrite une fois et collée au début de chaque conversation. La règle sept
+disait « chaque puce doit faire moins de 20 mots ». Le résumé obtenu avait des
+puces de 40 mots. Le fichier ci-dessous est une illustration, écrite pour cette
+leçon et réduite à douze règles sur les vingt-deux que comptait l’équipe.
 
 ```text
-You summarize meeting notes for the finance team of project Lantern.
-1. Write in plain English for readers outside the project.
-2. Use the past tense for what happened and the future tense for what is planned.
-3. Start with the decision that affects the budget most.
-4. Name the person who owns each action, as in the notes.
-5. Give every date as day and month, as in "14 March".
-6. Do not mention people who were absent.
-7. Keep each bullet under 20 words.
-8. Use "supplier" rather than a company name.
-9. Put open questions in a final bullet that starts with "Open:".
-10. Do not add facts that are not in the notes.
-11. If a meeting had no decision, say so in the first bullet.
-12. Write "sensor boards", never "sensors" or "boards".
+Tu résumes des comptes rendus de réunion pour l’équipe financière du projet Lantern.
+1. Écris en français simple pour des lecteurs extérieurs au projet.
+2. Utilise le passé pour ce qui s’est passé et le futur pour ce qui est prévu.
+3. Commence par la décision qui pèse le plus sur le budget.
+4. Nomme la personne responsable de chaque action, comme dans le compte rendu.
+5. Donne chaque date sous la forme jour et mois, comme « 14 mars ».
+6. Ne mentionne pas les personnes absentes.
+7. Chaque puce doit faire moins de 20 mots.
+8. Écris « fournisseur » plutôt qu’un nom d’entreprise.
+9. Mets les questions ouvertes dans une dernière puce qui commence par « Ouvert : ».
+10. N’ajoute aucun fait qui ne figure pas dans le compte rendu.
+11. Si une réunion n’a pris aucune décision, dis-le dans la première puce.
+12. Écris « cartes capteurs », jamais « capteurs » ni « cartes ».
 ```
 
-Every line of the file is a token in the context window like every other,
-and a rule stated once competes with everything that comes after it: the
-other eleven rules, the notes, and the answer the model is writing. The
-model has no list of rules it checks off. It predicts the next token from
-the whole window, and a rule in the middle of a long file weighs less in
-that prediction than the same rule at the top or at the bottom. Liu and
-colleagues measured the effect on facts: models found a fact in the middle
-of a long context less reliably than the same fact at either end
-(@Liu 2024). The [lesson on how models
-work](/concepts/how-models-work/#les-défaillances-nommées) named this
-**instruction dilution**, and the [lesson on the system
-prompt](/concepts/system-prompt/) showed that a system prompt is subject to
-it too.
+Chaque ligne du fichier est faite de jetons, dans la fenêtre de contexte comme
+tous les autres, et une règle énoncée une fois est en concurrence avec tout ce
+qui vient après elle : les onze autres règles, le compte rendu, et la réponse
+que le modèle est en train d’écrire. Le modèle n’a pas de liste de règles qu’il
+coche. Il prédit le jeton suivant à partir de toute la fenêtre, et une règle
+placée au milieu d’un long fichier pèse moins dans cette prédiction que la même
+règle placée en haut ou en bas. Liu et ses collègues ont mesuré cet effet sur
+des faits : les modèles retrouvaient un fait placé au milieu d’un long contexte
+moins sûrement que le même fait placé à l’une des extrémités (@Liu 2024). La
+[leçon sur le fonctionnement des modèles](/concepts/how-models-work/#les-défaillances-nommées)
+a appelé cela la **dilution des instructions**, et la
+[leçon sur le prompt système](/concepts/system-prompt/) a montré qu’un prompt
+système y est soumis lui aussi.
 
-Dilution here is about one prompt or one file, where an instruction
-competes with the text after it. A long chat has a second, separate effect:
-the window fills, early turns fall out or get summarized, and the model
-loses the facts rather than weighing them less. The context window
-lesson covered that under [when the early facts fall
-out](/concepts/context-window/#when-the-early-facts-fall-out), and a later
-lesson on memory returns to it.
+La dilution, ici, concerne un seul prompt ou un seul fichier, où une
+instruction est en concurrence avec le texte qui la suit. Une longue
+conversation produit un second effet, distinct : la fenêtre se remplit, les
+premiers tours en sortent ou sont résumés, et le modèle perd les faits au lieu
+de leur donner moins de poids. La leçon sur la fenêtre de contexte en a traité
+à propos des [premiers faits qui sortent de la fenêtre](/concepts/context-window/#quand-les-premiers-faits-sortent-de-la-fenêtre),
+et une leçon ultérieure sur la mémoire y revient.
 
-Shorten the file first. A rule the model keeps anyway ("write in plain
-English") doesn't help and dilutes the rules that matter. Then look
-at the rules that are left and ask, for each one, what happens when the
-model drops it. A rule you can live without once in a while stays in the
-file, near the top. A rule that must hold every time belongs in a check
-that a person or a program runs on the answer, such as counting the words
-in each bullet, because prose in an instruction file is a strong default
-and never a guarantee (@Academy ai-capabilities-and-limitations).
+Raccourcissez d’abord le fichier. Une règle que le modèle respecte de toute
+façon (« écris en français simple ») n’aide pas et dilue les règles qui
+comptent. Regardez ensuite les règles qui restent et demandez-vous, pour
+chacune, ce qui se passe quand le modèle l’abandonne. Une règle dont vous
+pouvez vous passer de temps en temps reste dans le fichier, près du haut. Une
+règle qui doit valoir à chaque fois a sa place dans un contrôle qu’une personne
+ou un programme exécute sur la réponse, comme compter les mots de chaque puce,
+parce que la prose d’un fichier d’instructions fixe un comportement par défaut
+fort, sans aucune garantie (@Academy ai-capabilities-and-limitations).
 
 <Choice id="the-buried-rule" objective="concepts/explains-models/explains-generation"
   concepts={['instruction-dilution', 'context-window']}
-  context="A team's instruction file has twelve rules. Rule seven, about bullet length, was ignored in the last summary. The lesson explains that every rule is tokens in the context window and that a rule competes with everything after it."
-  title="Why did rule seven fail?"
-  hint="How does the model treat a rule, and what does it treat the rest of the window as?"
+  context="Le fichier d’instructions d’une équipe contient douze règles. La règle sept, sur la longueur des puces, a été ignorée dans le dernier résumé. La leçon explique que chaque règle est faite de jetons dans la fenêtre de contexte et qu’une règle est en concurrence avec tout ce qui la suit."
+  title="Pourquoi la règle sept a-t-elle échoué ?"
+  hint="Comment le modèle traite-t-il une règle, et comment traite-t-il le reste de la fenêtre ?"
   options={[
-    { text: 'The model keeps a checklist of the rules it was given and ran out of room at the seventh.', why: 'There is no checklist. The model predicts tokens from the whole window, and a rule is tokens like everything else.' },
-    { text: 'Twenty words is too few for a summary of these notes, so the model overrode the rule.', why: 'A model has no opinion about your rules. It produced likely text, and the likely text for a summary of these notes was longer.' },
-    { text: 'The rule sat in the middle of a long file and weighed less than the rules at either end.', correct: true },
-    { text: 'The model forgot the rule because the chat was two hours old.', why: 'This was the first message of a fresh chat, so the whole file was in the window when the model answered.' },
+    { text: 'Le modèle tient une liste des règles qu’on lui a données et a manqué de place à la septième.', why: 'Il n’y a pas de liste. Le modèle prédit des jetons à partir de toute la fenêtre, et une règle est faite de jetons comme tout le reste.' },
+    { text: 'Vingt mots, c’est trop peu pour résumer ce compte rendu, et le modèle a passé outre la règle.', why: 'Un modèle n’a pas d’avis sur vos règles. Il a produit un texte probable, et le texte probable pour résumer ce compte rendu était plus long.' },
+    { text: 'La règle se trouvait au milieu d’un long fichier et pesait moins que les règles placées aux extrémités.', correct: true },
+    { text: 'Le modèle a oublié la règle parce que la conversation durait depuis deux heures.', why: 'C’était le premier message d’une nouvelle conversation : tout le fichier se trouvait donc dans la fenêtre quand le modèle a répondu.' },
   ]}>
 
-The instruction file above was pasted as the first message of a new chat,
-followed by the notes. The summary ignored rule seven. Which explanation
-fits?
+Le fichier d’instructions ci-dessus a été collé comme premier message d’une
+nouvelle conversation, suivi du compte rendu. Le résumé a ignoré la règle sept.
+Quelle explication convient ?
 
 </Choice>
 
-<Pitfall title="Adding a rule for every mistake">
-The summary breaks rule seven. The team adds rule thirteen: "Remember
-rule 7." The next summary breaks rule five instead, and rule fourteen goes
-in. After a month the file is two pages, every summary breaks one rule or
-another, and each call costs more because the file is read on every one.
-The rules were never the problem. Each one added made the others count for
-less. The rule: when a model drops an instruction, shorten the file before
-you lengthen it, and move a rule that must always hold into a check on the
-answer.
+<Pitfall title="Ajouter une règle pour chaque erreur">
+Le résumé enfreint la règle sept. L’équipe ajoute une règle treize :
+« Respecte la règle 7. » Le résumé suivant enfreint la règle cinq à la place,
+et une règle quatorze s’ajoute. Au bout d’un mois, le fichier fait deux pages,
+chaque résumé enfreint l’une ou l’autre règle, et chaque appel coûte plus cher
+parce que le fichier est lu à chaque fois. Les règles n’étaient pas le
+problème. Chaque règle ajoutée a fait perdre du poids aux autres. La règle :
+quand un modèle laisse tomber une instruction, raccourcissez le fichier avant
+de l’allonger, et faites passer une règle qui doit toujours valoir dans un
+contrôle de la réponse.
 </Pitfall>
 
 <MultiChoice id="what-dilutes" phase="review" objective="concepts/explains-models/explains-generation"
   concepts={['instruction-dilution', 'cost-and-latency']}
-  context="Instruction dilution is the weakening of an instruction as more text piles up after it in one prompt or file. A separate effect, in a long chat, is that early messages fall out of the context window."
-  title="Which two are dilution at work?"
-  hint="In each case, is the rule still in the window and competing with more text, or has it left the window?"
+  context="La dilution des instructions est l’affaiblissement d’une instruction à mesure que du texte s’accumule après elle dans un même prompt ou un même fichier. Un effet distinct, dans une longue conversation, fait sortir les premiers messages de la fenêtre de contexte."
+  title="Quels sont les deux cas de dilution ?"
+  hint="Dans chaque cas, la règle est-elle encore dans la fenêtre, en concurrence avec davantage de texte, ou a-t-elle quitté la fenêtre ?"
   options={[
-    { text: 'A twenty-rule instruction file is pasted at the start of a fresh chat, and the answer follows most rules and skips two in the middle.', correct: true },
-    { text: 'Two hours into a chat, the model writes for the wrong team because the first instruction no longer fits in the window.', why: 'The instruction is gone from the window, and so the model never read it for this answer. That is the window filling up, from the context window lesson.' },
-    { text: 'A prompt that gives one rule and then pastes a fifty-page contract gets an answer that follows the rule loosely.', correct: true },
-    { text: 'A call with a long prompt costs a third more than the same call with a short one.', why: 'Price grows with every token read. That is the cost of the tokens, and it says nothing about which rule the model followed.' },
+    { text: 'Un fichier d’instructions de vingt règles est collé au début d’une nouvelle conversation, et la réponse respecte la plupart des règles mais en saute deux au milieu.', correct: true },
+    { text: 'Après deux heures de conversation, le modèle écrit pour la mauvaise équipe parce que la première instruction ne tient plus dans la fenêtre.', why: 'L’instruction a quitté la fenêtre, et le modèle ne l’a donc jamais lue pour cette réponse. C’est la fenêtre qui se remplit, comme dans la leçon sur la fenêtre de contexte.' },
+    { text: 'Un prompt qui donne une règle puis colle un contrat de cinquante pages obtient une réponse qui suit la règle de façon approximative.', correct: true },
+    { text: 'Un appel avec un long prompt coûte un tiers de plus que le même appel avec un prompt court.', why: 'Le prix augmente avec chaque jeton lu. C’est le coût des jetons, et cela ne dit rien de la règle que le modèle a suivie.' },
   ]}>
 
-Which two of these are instruction dilution?
+Lesquels de ces cas sont deux cas de dilution des instructions ?
 
 </MultiChoice>
 
 <Choice id="cheaper-token" phase="review" objective="concepts/explains-models/explains-generation"
   concepts={['cost-and-latency', 'token']}
-  context="Vendors charge per million tokens, with one price for input tokens (what the model reads) and a higher price for output tokens (what the model writes), and a larger model in a family costs several times a smaller one."
-  title="Which token is the cheapest?"
-  hint="Which price is lower, input or output, and which model in a family is cheaper per token?"
+  context="Les fournisseurs facturent au million de jetons, avec un prix pour les jetons d’entrée (ce que lit le modèle) et un prix plus élevé pour les jetons de sortie (ce qu’il écrit), et le grand modèle d’une famille coûte plusieurs fois le petit."
+  title="Quel jeton est le moins cher ?"
+  hint="Quel prix est le plus bas, celui de l’entrée ou celui de la sortie, et quel modèle d’une famille est le moins cher par jeton ?"
   options={[
-    { text: 'A token in the answer, on the small model.', why: 'The answer is output, and output is the higher price on any model.' },
-    { text: 'A token in the answer, on the large model.', why: 'That is the higher price on the dearer model, so it is the most expensive of the four.' },
-    { text: 'A token in the prompt, on the small model.', correct: true },
-    { text: 'A token in the prompt, on the large model.', why: 'Input is the lower price, but the large model charges several times what the small one does for it.' },
+    { text: 'Un jeton de la réponse, sur le petit modèle.', why: 'La réponse est de la sortie, et la sortie a le prix le plus élevé sur n’importe quel modèle.' },
+    { text: 'Un jeton de la réponse, sur le grand modèle.', why: 'C’est le prix le plus élevé sur le modèle le plus cher : c’est donc le plus coûteux des quatre.' },
+    { text: 'Un jeton du prompt, sur le petit modèle.', correct: true },
+    { text: 'Un jeton du prompt, sur le grand modèle.', why: 'L’entrée a le prix le plus bas, mais le grand modèle la facture plusieurs fois ce que facture le petit.' },
   ]}>
 
-At the example prices in this lesson, which of these tokens costs the
-least?
+Aux prix d’exemple de cette leçon, lequel de ces jetons coûte le moins cher ?
 
 </Choice>
 
 <Choice id="what-the-wait-tracks" phase="review" objective="concepts/explains-models/explains-generation"
   concepts={['cost-and-latency', 'model-family-and-size']}
-  context="A model writes its answer one token at a time. The lesson says that the wait for an answer grows with the answer length and with the size of the model, and that a long prompt adds a smaller delay up front."
-  title="Why is this answer slow?"
-  hint="Count what the model writes, and ask how long each token takes on this model."
+  context="Un modèle écrit sa réponse un jeton à la fois. La leçon dit que l’attente d’une réponse augmente avec sa longueur et avec la taille du modèle, et qu’un long prompt ajoute un délai plus faible au départ."
+  title="Pourquoi cette réponse est-elle lente ?"
+  hint="Comptez ce que le modèle écrit, et demandez-vous combien de temps prend chaque jeton sur ce modèle."
   options={[
-    { text: 'The prompt was polite, and the model spent time on the greeting.', why: 'The greeting is input tokens, read up front. It adds a little to the wait and much less than the answer does.' },
-    { text: 'The answer runs to two pages on the large model, and each token of it takes longer there.', correct: true },
-    { text: 'The vendor slows down long answers to save money.', why: 'A long answer takes longer because the model produces it one token at a time. A slower model is a cost to the vendor too, and there is no saving in it.' },
-    { text: 'The instruction file has too many rules.', why: 'The rules are input, read up front. A long file dilutes the rules and adds a little delay, and it does not set the pace of the answer.' },
+    { text: 'Le prompt était poli, et le modèle a passé du temps sur la salutation.', why: 'La salutation est faite de jetons d’entrée, lus au départ. Elle ajoute un peu à l’attente, et bien moins que la réponse.' },
+    { text: 'La réponse fait deux pages sur le grand modèle, et chacun de ses jetons prend plus de temps sur ce modèle.', correct: true },
+    { text: 'Le fournisseur ralentit les longues réponses pour faire des économies.', why: 'Une longue réponse prend plus de temps parce que le modèle la produit un jeton à la fois. Un modèle plus lent coûte aussi au fournisseur, et il n’y a là aucune économie.' },
+    { text: 'Le fichier d’instructions contient trop de règles.', why: 'Les règles sont de l’entrée, lue au départ. Un long fichier dilue les règles et ajoute un peu de délai, mais il ne fixe pas le rythme de la réponse.' },
   ]}>
 
-A colleague asks the large model for a two-page report and waits a long
-time for it. Which explanation fits?
+Une collègue demande un rapport de deux pages au grand modèle et l’attend
+longtemps. Quelle explication convient ?
 
 </Choice>
 
-<Exercise stretch="Take an instruction file or a long list of rules you use with a chat assistant, count its rules, and mark each one as a default you can live without now and then or a rule that must always hold. Move one of the second kind into a check you run on the answer, and cut two of the first kind.">
+<Exercise stretch="Prenez un fichier d’instructions ou une longue liste de règles que vous utilisez avec un assistant conversationnel, comptez ses règles, et marquez chacune comme une valeur par défaut dont vous pouvez vous passer de temps en temps ou comme une règle qui doit toujours valoir. Faites passer une règle du second type dans un contrôle que vous exécutez sur la réponse, et supprimez deux règles du premier type.">
 
-Open a chat assistant and find the longest prompt you sent this week.
-Paste it into a new chat and ask the assistant for an approximate token
-count, or use the token counting page your vendor publishes. Then count
-the tokens of the answer you got the same way. Price the call at the
-example numbers from this lesson, for the small model and the large one,
-once and for a thousand calls a month. Rewrite the prompt with only the
-task, the format, the audience and the material, count it again and price
-it again.
+Ouvrez un assistant conversationnel et retrouvez le plus long prompt que vous
+avez envoyé cette semaine. Collez-le dans une nouvelle conversation et
+demandez à l’assistant une estimation de son nombre de jetons, ou utilisez la
+page de comptage de jetons que publie votre fournisseur. Comptez ensuite de la
+même façon les jetons de la réponse obtenue. Calculez le prix de l’appel aux
+prix d’exemple de cette leçon, pour le petit modèle et pour le grand, pour un
+appel et pour mille appels par mois. Réécrivez le prompt avec seulement la
+tâche, le format, le public et le matériau, comptez-le de nouveau et calculez
+de nouveau son prix.
 
-A good result is two lines: the token counts of your prompt and the
-answer with the two monthly prices, and the token count of the rewrite
-with its two prices. The counts are
-approximate, because the assistant estimates them the way the rule of
-thumb does. Then answer this: of the money in your line, how much is the
-answer, and what would change if you asked for half as much of it?
+Un bon résultat tient en deux lignes : le nombre de jetons de votre prompt et
+de la réponse avec les deux prix mensuels, et le nombre de jetons de la
+réécriture avec ses deux prix. Les nombres sont approximatifs, parce que
+l’assistant les estime comme le fait la règle empirique. Répondez ensuite à
+cette question : sur l’argent de votre ligne, quelle part revient à la
+réponse, et que changerait le fait d’en demander moitié moins ?
 
 </Exercise>
 
 <Recap>
 
-1. A vendor charges per million tokens, with a lower price for the tokens
-   the model reads and a higher one for the tokens it writes, and a large
-   model in a family costs several times a small one (@Claude docs pricing).
-2. One call costs a fraction of a cent, and the bill comes from the number
-   of calls. The choice of model moves the price by a factor, the length of the
-   prompt and the answer by a share, and a long chat pays for every earlier
-   turn again (@AEC-02).
-3. The wait grows the same way, because a model writes one token at a
-   time. A long answer on a large model is the slow case.
-4. A rule in an instruction file is tokens like everything else and
-   competes with all the text after it, so a rule in the middle of a long
-   file weighs less than one at either end (@Liu 2024). Shorten the file,
-   and move a rule that must always hold into a check on the answer.
+1. Un fournisseur facture au million de jetons, avec un prix plus bas pour les
+   jetons que le modèle lit et un prix plus élevé pour ceux qu’il écrit, et le
+   grand modèle d’une famille coûte plusieurs fois le petit
+   (@Claude docs pricing).
+2. Un appel coûte une fraction de centime, et la facture vient du nombre
+   d’appels. Le choix du modèle multiplie le prix par un facteur, la longueur
+   du prompt et de la réponse le fait varier d’une part, et une longue
+   conversation paie de nouveau chaque tour précédent (@AEC-02).
+3. L’attente augmente de la même façon, parce qu’un modèle écrit un jeton à la
+   fois. Une longue réponse sur un grand modèle est le cas lent.
+4. Une règle d’un fichier d’instructions est faite de jetons comme tout le
+   reste et elle est en concurrence avec tout le texte qui la suit : une règle
+   au milieu d’un long fichier pèse donc moins qu’une règle placée à l’une des
+   extrémités (@Liu 2024). Raccourcissez le fichier, et faites passer une règle
+   qui doit toujours valoir dans un contrôle de la réponse.
 
 </Recap>

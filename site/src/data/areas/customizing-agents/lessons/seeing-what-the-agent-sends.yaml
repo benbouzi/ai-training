@@ -10,7 +10,7 @@ introduces: [context-meter, session-record, request-logging]
 assumes:
   - objective: concepts/recognizes-agents/follows-one-prompt
     lesson: concepts/one-prompt-many-requests
-    section: what-is-in-each-request
+    section: ce-que-contient-chaque-requête
   - objective: customizing-agents/connects-tools-safely/weighs-tool-cost
     lesson: customizing-agents/mcp-tool-cost
     section: what-the-tool-list-costs

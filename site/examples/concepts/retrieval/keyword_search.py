@@ -15,40 +15,56 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 POLICIES = HERE / "policies"
 
-# Words too common to tell one document from another.
+# Words too common to tell one document from another (French), and the
+# single letters an apostrophe leaves behind, as in "l’avance".
 STOPWORDS = {
     "a",
-    "an",
-    "and",
-    "are",
-    "can",
-    "do",
-    "for",
-    "from",
-    "get",
-    "how",
-    "i",
-    "is",
-    "many",
-    "much",
-    "my",
-    "of",
-    "the",
-    "to",
-    "what",
-    "when",
-    "who",
+    "à",
+    "ai",
+    "au",
+    "aux",
+    "combien",
+    "comment",
+    "d",
+    "de",
+    "des",
+    "du",
+    "en",
+    "est",
+    "et",
+    "j",
+    "je",
+    "l",
+    "la",
+    "le",
+    "les",
+    "ma",
+    "mes",
+    "mon",
+    "pour",
+    "puis",
+    "qu",
+    "quand",
+    "que",
+    "quel",
+    "quelle",
+    "qui",
+    "sont",
+    "sur",
+    "un",
+    "une",
 }
 
 QUESTIONS = [
-    "How many days of annual leave do I get?",
-    "How much holiday can I take?",
-    "What is the daily rate for working away from the office?",
+    "Combien de jours de congés annuels ai-je ?",
+    "Combien de vacances puis-je prendre ?",
+    "Quel est le forfait quotidien pour un travail hors du bureau ?",
 ]
 
 
 def words(text: str) -> list[str]:
-    return re.findall(r"[a-z0-9]+", text.lower())
+    # Letters and digits, accented letters included, without the underscore.
+    return re.findall(r"[^\W_]+", text.lower())
 
 
 def keywords(question: str) -> list[str]:

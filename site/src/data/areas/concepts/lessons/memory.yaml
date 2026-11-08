@@ -12,13 +12,13 @@ introduces: [short-and-long-term-memory, context-rot]
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/context-window
-    section: what-the-window-holds
+    section: ce-que-contient-la-fenêtre
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/what-tokens-cost
-    section: the-rule-that-got-buried
+    section: la-règle-enfouie
   - objective: concepts/explains-models/explains-grounding
     lesson: concepts/retrieval
-    section: search-first-then-answer
+    section: dabord-chercher-ensuite-répondre
 after: [concepts/retrieval, concepts/what-tokens-cost]
 shorts: []
 exercise:

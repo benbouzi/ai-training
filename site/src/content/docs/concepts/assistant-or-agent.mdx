@@ -1,265 +1,274 @@
 import { Choice, MultiChoice, Sort, Pitfall, Exercise, Recap, Scenario } from '@components/lesson';
 
-In the lesson before last you read the transcript of a toy agent and named each
-turn of its loop, and in the last lesson you followed one prompt through
-its model requests. This lesson steps back and asks a question people get
-wrong every day: is the product in front of you an assistant or an
-agent? Vendors sell both with the same words, and both often show a chat
-box. By the end you have one test that answers the question whatever
-the interface looks like, and you know which part of an agent to look at
-when it does something you didn't expect.
+Dans l’avant-dernière leçon, vous avez lu la transcription d’un agent jouet et
+nommé chaque tour de sa boucle, et dans la leçon précédente, vous avez suivi un
+prompt à travers ses requêtes au modèle. Cette leçon prend du recul et pose une
+question sur laquelle on se trompe tous les jours : le produit que vous avez
+devant vous est-il un assistant ou un agent ? Les fournisseurs vendent les deux
+avec les mêmes mots, et les deux affichent souvent une fenêtre de
+conversation. À la fin, vous disposerez d’un test qui répond à la question
+quelle que soit l’interface, et vous saurez quelle partie d’un agent regarder
+quand il fait quelque chose d’inattendu.
 
-## The model and the software around it
+## Le modèle et le logiciel qui l’entoure
 
-A **model** takes text in and gives text out, once. It has no hands. It
-can't open your inbox, read a file, or send anything. When you type into a
-plain chat assistant with no tools and get a reply, the product made one
-call to the model and showed you the reply, and now it waits for you
+Un **modèle** reçoit du texte et produit du texte, une fois. Il n’a pas de
+mains. Il ne peut ni ouvrir votre boîte de réception, ni lire un fichier, ni
+envoyer quoi que ce soit. Quand vous tapez dans un simple assistant
+conversationnel sans outils et recevez une réponse, le produit a fait un appel
+au modèle, vous a montré la réponse, et attend maintenant que vous agissiez
 (@AEC-01).
 
-An **agent** is software that calls the same kind of model again and
-again. Before the first call it tells the model which tools it has. When
-a reply asks for a tool, the software runs it, puts the result back into
-the conversation, and calls the model again. It keeps going until the
-model writes an answer instead of a request, or until a stop rule ends
-the run (@AEC-01). You saw that loop turn by turn in the lesson on the toy agent,
-and **model vs agent** is the name for the difference it makes: the model
-supplies the judgment, and the software supplies the tools, the memory
-and the loop.
+Un **agent** est un logiciel qui appelle le même type de modèle encore et
+encore. Avant le premier appel, il indique au modèle de quels outils il
+dispose. Quand une réponse demande un outil, le logiciel l’exécute, replace le
+résultat dans la conversation et rappelle le modèle. Il continue jusqu’à ce que
+le modèle écrive une réponse au lieu d’une demande, ou jusqu’à ce qu’une règle
+d’arrêt mette fin à l’exécution (@AEC-01). Vous avez vu cette boucle tour par
+tour dans la leçon sur l’agent jouet, et l’expression **modèle ou agent**
+désigne la différence qu’elle introduit : le modèle apporte le jugement, et le
+logiciel apporte les outils, la mémoire et la boucle.
 
-An assistant and an agent look alike from the outside because both
-start from a prompt and end with text. The difference is what happens
-between the prompt and the text. An
-assistant produces text for a person to act on. An agent acts, through
-its tools, and decides on its own what to do next (@DLAI-11).
+Un assistant et un agent se ressemblent de l’extérieur parce que les deux
+partent d’un prompt et aboutissent à du texte. La différence tient à ce qui se
+passe entre le prompt et le texte. Un assistant produit du texte sur lequel une
+personne agira. Un agent agit, au moyen de ses outils, et décide de lui-même de
+ce qu’il fait ensuite (@DLAI-11).
 
-## One test: what can it do without another prompt?
+## Un seul test : que peut-il faire sans nouveau prompt ?
 
-The interface tells you nothing. A chat window can front an agent, and a
-big button labeled "Automate" can trigger one plain model call. Many
-chat products now have tools such as web search, so the window you type
-into says nothing about which kind you have. So ask
-the question that the interface can't hide: after you give it a task,
-what can this system do before it needs you again?
+L’interface ne vous apprend rien. Une fenêtre de conversation peut servir de
+façade à un agent, et un gros bouton « Automatiser » peut déclencher un simple
+appel au modèle. Beaucoup de produits conversationnels ont désormais des
+outils comme la recherche web, et la fenêtre dans laquelle vous tapez ne dit
+donc rien du type de produit que vous avez. Posez la question que l’interface
+ne peut pas cacher : une fois que vous lui avez confié une tâche, que peut faire
+ce système avant d’avoir de nouveau besoin de vous ?
 
-- If the answer is "write text, and then wait for me", it is an
-  assistant. Everything that happens to the world afterwards happens
-  because a person did it.
-- If the answer includes "look something up", "change a file", "send
-  a message" or "run the next step because the first one worked", it is
-  an agent. Some of what happens to the world happens because the
-  software did it.
+- Si la réponse est « écrire du texte, puis m’attendre », c’est un assistant.
+  Tout ce qui arrive ensuite dans le monde arrive parce qu’une personne l’a
+  fait.
+- Si la réponse comprend « chercher quelque chose », « modifier un fichier »,
+  « envoyer un message » ou « lancer l’étape suivante parce que la première a
+  réussi », c’est un agent. Une partie de ce qui arrive dans le monde arrive
+  parce que le logiciel l’a fait.
 
-Picture two products that both show a chat box. You paste a question about last
-quarter's sales into each. The first gives you a database query to run.
-The second runs the query, reads the numbers that come back, notices one
-region is missing and runs a second query for it. Same box, same kind of
-model, different answers to the test. The first is an assistant and the
-second is an agent, and the second one had a tool that reached your
-database (@Academy claude-platform-101).
+Imaginez deux produits qui affichent tous deux une fenêtre de conversation.
+Vous collez dans chacun une question sur les ventes du dernier trimestre. Le
+premier vous donne une requête de base de données à exécuter. Le second exécute
+la requête, lit les chiffres qui reviennent, remarque qu’une région manque et
+lance une seconde requête pour elle. Même fenêtre, même type de modèle, réponses
+différentes au test. Le premier est un assistant et le second un agent, et le
+second disposait d’un outil qui atteignait votre base de données
+(@Academy claude-platform-101).
 
-The test is also a habit for reading a product page. Ignore the words
-"assistant", "copilot" and "agent" in the name, because vendors use all
-three for both kinds. Look for the verbs that describe what the product
-does after your prompt. "Drafts", "suggests" and "summarizes" describe
-text. "Books", "sends", "updates", "runs" and "keeps going until"
-describe actions.
+Le test est aussi une habitude de lecture des pages de présentation d’un
+produit. Ignorez les mots « assistant », « copilote » et « agent » dans le nom,
+parce que les fournisseurs utilisent les trois pour les deux types. Cherchez les
+verbes qui décrivent ce que fait le produit après votre prompt. « Rédige »,
+« suggère » et « résume » décrivent du texte. « Réserve », « envoie », « met à
+jour », « exécute » et « continue jusqu’à » décrivent des actions.
 
 <Sort id="sort-five-products" objective="concepts/recognizes-agents/tells-agent-from-assistant"
   concepts={['model-vs-agent', 'tool']}
-  context="The lesson gives one test for telling an assistant from an agent: after one prompt, can the system only write text for a person to act on, or can it act through tools and decide the next step on its own? The learner sorts five short product descriptions with that test."
-  title="Assistant or agent?" hint="After your one prompt, does the product only write text for you, or does it do something with a tool and decide what comes next?"
+  context="La leçon donne un test pour distinguer un assistant d’un agent : après un prompt, le système peut-il seulement écrire un texte sur lequel une personne agira, ou peut-il agir au moyen d’outils et décider seul de l’étape suivante ? L’apprenant classe cinq courtes descriptions de produits avec ce test."
+  title="Assistant ou agent ?" hint="Après votre unique prompt, le produit ne fait-il qu’écrire du texte pour vous, ou fait-il quelque chose avec un outil et décide-t-il de la suite ?"
   buckets={['Assistant', 'Agent']}
   items={[
-    { text: 'A chat window that drafts an email reply for you to copy and send', bucket: 0 },
-    { text: 'A tool that reads your inbox, drafts replies and sends them without another prompt', bucket: 1 },
-    { text: 'A button in a spreadsheet that explains the selected formula in plain words', bucket: 0 },
-    { text: 'A chat window that runs your database query, reads the result and runs a follow-up query on its own', bucket: 1 },
-    { text: 'A support product that searches your help center, tries a fix on the customer account, checks whether it worked, and closes the ticket', bucket: 1 },
+    { text: 'Une fenêtre de conversation qui rédige une réponse à un courriel, que vous copiez et envoyez vous-même', bucket: 0 },
+    { text: 'Un outil qui lit votre boîte de réception, rédige des réponses et les envoie sans nouveau prompt', bucket: 1 },
+    { text: 'Un bouton de tableur qui explique en mots simples la formule sélectionnée', bucket: 0 },
+    { text: 'Une fenêtre de conversation qui exécute votre requête de base de données, lit le résultat et lance d’elle-même une requête complémentaire', bucket: 1 },
+    { text: 'Un produit de support qui fouille votre centre d’aide, tente une correction sur le compte du client, vérifie si elle a marché, et clôt le ticket', bucket: 1 },
   ]} />
 
 <Choice id="same-box-different-kind" phase="review" objective="concepts/recognizes-agents/tells-agent-from-assistant"
   concepts={['model-vs-agent']}
-  context="An assistant writes text for a person to act on. An agent acts through tools and decides the next step without another prompt. The interface, such as a chat box or a button, doesn't tell the two apart."
-  title="Which question tells them apart?" hint="Which question can't be answered by looking at the screen?"
+  context="Un assistant écrit un texte sur lequel une personne agira. Un agent agit au moyen d’outils et décide de l’étape suivante sans nouveau prompt. L’interface, fenêtre de conversation ou bouton, ne permet pas de les distinguer."
+  title="Quelle question les distingue ?" hint="À quelle question ne peut-on pas répondre en regardant l’écran ?"
   options={[
-    { text: 'Does it show a chat box or a button?', why: 'A chat box can front an agent and a button can trigger one plain model call. The interface is the thing the test has to see past.' },
-    { text: 'Does the vendor call it an agent, a copilot or an assistant?', why: 'Vendors use all three names for both kinds of product. The name tells you about the marketing and nothing about what the software does after your prompt.' },
-    { text: 'After one prompt, can it act through a tool and pick its next step by itself?', correct: true },
-    { text: 'Does it use a newer or a bigger model than the other one?', why: 'The same model sits behind assistants and agents. The difference is in the software around it, and the model\'s size says nothing about that.' },
+    { text: 'Affiche-t-il une fenêtre de conversation ou un bouton ?', why: 'Une fenêtre de conversation peut servir de façade à un agent, et un bouton peut déclencher un simple appel au modèle. Le test doit justement voir au-delà de l’interface.' },
+    { text: 'Le fournisseur l’appelle-t-il agent, copilote ou assistant ?', why: 'Les fournisseurs utilisent les trois noms pour les deux types de produits. Le nom renseigne sur le marketing, et rien sur ce que fait le logiciel après votre prompt.' },
+    { text: 'Après un prompt, peut-il agir au moyen d’un outil et choisir lui-même l’étape suivante ?', correct: true },
+    { text: 'Utilise-t-il un modèle plus récent ou plus grand que l’autre ?', why: 'Le même modèle se trouve derrière des assistants et des agents. La différence tient au logiciel qui l’entoure, et la taille du modèle n’en dit rien.' },
   ]}>
-Two products look the same on screen. Which one question tells you
-whether each is an assistant or an agent?
+Deux produits se ressemblent à l’écran. Quelle question unique vous dit si
+chacun est un assistant ou un agent ?
 </Choice>
 
-## The harness
+## Le harnais
 
-The software around the model has a name, which the last lesson used
-already: the **harness**. It is the
-part that makes a model into an agent, and it has more in it than the
-loop you watched. The Agent Engineer Course calls it the orchestration
-layer, and lists the loop, the state, error handling, stop conditions and
-guardrails as its jobs (@AEC-01). A harness holds:
+Le logiciel qui entoure le modèle a un nom, que la leçon précédente a déjà
+utilisé : le **harnais**. C’est la partie qui fait d’un modèle un agent, et il
+contient plus que la boucle que vous avez observée. L’Agent Engineer Course
+l’appelle la couche d’orchestration, et lui attribue la boucle, l’état, la
+gestion des erreurs, les conditions d’arrêt et les garde-fous (@AEC-01). Un
+harnais contient :
 
-- **The loop.** Call the model, read the reply, run the tool it asked
-  for, feed the result back, repeat.
-- **The tool definitions.** The text that tells the model which tools
-  exist, what each does and what parameters it takes. In the toy agent
-  this was the two-line description of `list_dir` and `read_file`.
-- **The permission checks.** The step between a tool request and the
-  tool, where the harness can ask a person, refuse, or run.
-- **The system prompt.** The standing instructions the model reads
-  before every task.
-- **Context management.** What the harness keeps in the conversation,
-  what it drops when the conversation grows, and what it saves for the
-  next run.
-- **The stop rules.** The step limit, the "model said done" check, and
-  the stop button.
+- **La boucle.** Appeler le modèle, lire la réponse, exécuter l’outil demandé,
+  renvoyer le résultat, recommencer.
+- **Les définitions d’outils.** Le texte qui indique au modèle quels outils
+  existent, ce que fait chacun et quels paramètres il prend. Dans l’agent
+  jouet, c’était la description en deux lignes de `list_dir` et `read_file`.
+- **Les vérifications de permissions.** L’étape entre une demande d’outil et
+  l’outil, où le harnais peut demander à une personne, refuser, ou exécuter.
+- **Le prompt système.** Les instructions permanentes que le modèle lit avant
+  chaque tâche.
+- **La gestion du contexte.** Ce que le harnais garde dans la conversation, ce
+  qu’il en retire quand elle s’allonge, et ce qu’il enregistre pour l’exécution
+  suivante.
+- **Les règles d’arrêt.** La limite d’étapes, la vérification « le modèle a dit
+  qu’il avait terminé », et le bouton d’arrêt.
 
-Two agents built on the same model can behave very differently, because
-their harnesses differ. One has a file-write tool and the other doesn't.
-The first asks before every change, where the second asks only before a
-deletion. To save space, the first drops old tool results from the
-conversation, and the second keeps everything. None of this is the model's doing, and a person
-who compares "which model does it use" is comparing the one part the two
-products share.
+Deux agents construits sur le même modèle peuvent se comporter très
+différemment, parce que leurs harnais diffèrent. L’un a un outil d’écriture de
+fichiers et l’autre non. Le premier demande avant chaque modification, quand le
+second ne demande qu’avant une suppression. Pour gagner de la place, le premier
+retire de la conversation les anciens résultats d’outils, et le second garde
+tout. Rien de cela ne relève du modèle, et une personne qui compare « quel
+modèle il utilise » compare la seule partie que les deux produits ont en
+commun.
 
-The same fact points at where to look when an agent misbehaves. An
-agent that sent an email it shouldn't have had an email tool and a
-permission check that let it through. An agent that forgot the
-instruction you gave it twenty steps ago hit its context management. An
-agent that ran for an hour and produced nothing had no limit low enough
-to stop it. In each case the fix is in the harness: take a tool away, or
-add a check or a stop rule. The
-model's judgment matters too, and a better model helps with a wrong
-decision, but the reach and the guardrails are the harness's.
+Ce même fait indique où regarder quand un agent se comporte mal. Un agent qui a
+envoyé un courriel qu’il n’aurait pas dû envoyer avait un outil de courriel et
+une vérification de permissions qui l’a laissé passer. Un agent qui a oublié
+l’instruction donnée vingt étapes plus tôt s’est heurté à sa gestion du
+contexte. Un agent qui a tourné une heure sans rien produire n’avait pas de
+limite assez basse pour l’arrêter. Dans chaque cas, la correction se trouve
+dans le harnais : retirer un outil, ou ajouter une vérification ou une règle
+d’arrêt. Le jugement du modèle compte aussi, et un meilleur modèle aide face à
+une mauvaise décision, mais la portée et les garde-fous relèvent du harnais.
 
 <MultiChoice id="harness-or-model" objective="concepts/recognizes-agents/tells-agent-from-assistant"
   concepts={['harness', 'model-vs-agent']}
-  context="The harness is the software around the model that makes it an agent: the loop, the tool definitions, the permission checks, the system prompt, context management and the stop rules. The model supplies the judgment."
-  title="Which of these are decided in the harness?" hint="For each item, ask whether changing it means changing the software around the model or swapping the model itself."
+  context="Le harnais est le logiciel qui entoure le modèle et en fait un agent : la boucle, les définitions d’outils, les vérifications de permissions, le prompt système, la gestion du contexte et les règles d’arrêt. Le modèle apporte le jugement."
+  title="Lesquels de ces éléments se décident dans le harnais ?" hint="Pour chaque élément, demandez-vous si le changer revient à modifier le logiciel qui entoure le modèle, ou à remplacer le modèle lui-même."
   options={[
-    { text: 'Whether the agent can send an email at all.', correct: true },
-    { text: 'Whether the agent asks a person before it deletes a file.', correct: true },
-    { text: 'Whether the agent reads a clear paragraph and understands it.', why: 'Reading and understanding text is the model\'s work. The harness decides what text the model sees, and the model decides what to make of it.' },
-    { text: 'The number of steps the agent gets before the run ends.', correct: true },
-    { text: 'Whether the agent gives a confident answer that turns out to be wrong.', why: 'A confident wrong answer is the model\'s judgment. The harness can check the answer with a tool, but the confidence came from the model.' },
+    { text: 'Le fait que l’agent puisse ou non envoyer un courriel.', correct: true },
+    { text: 'Le fait que l’agent demande ou non l’accord d’une personne avant de supprimer un fichier.', correct: true },
+    { text: 'Le fait que l’agent lise un paragraphe clair et le comprenne.', why: 'Lire et comprendre un texte est le travail du modèle. Le harnais décide du texte que voit le modèle, et le modèle décide de ce qu’il en fait.' },
+    { text: 'Le nombre d’étapes dont dispose l’agent avant la fin de l’exécution.', correct: true },
+    { text: 'Le fait que l’agent donne une réponse assurée qui se révèle fausse.', why: 'Une réponse assurée et fausse relève du jugement du modèle. Le harnais peut vérifier la réponse avec un outil, mais l’assurance venait du modèle.' },
   ]}>
-Two agents run on the same model. Which of these differences between
-them are set in the harness?
+Deux agents fonctionnent sur le même modèle. Lesquelles de ces différences entre
+eux sont fixées dans le harnais ?
 </MultiChoice>
 
 <Choice id="where-is-the-fix" phase="review" objective="concepts/recognizes-agents/tells-agent-from-assistant"
   concepts={['harness', 'tool']}
-  context="The harness is the software around a model: its loop, tool definitions, permission checks, system prompt, context management and stop rules. When an agent does something it shouldn't, the fix is most often in the harness."
-  title="Where does the fix go?" hint="Which part of the system decided that the action was allowed to happen?"
+  context="Le harnais est le logiciel qui entoure un modèle : sa boucle, ses définitions d’outils, ses vérifications de permissions, son prompt système, sa gestion du contexte et ses règles d’arrêt. Quand un agent fait ce qu’il ne devrait pas, la correction se trouve le plus souvent dans le harnais."
+  title="Où va la correction ?" hint="Quelle partie du système a décidé que l’action pouvait avoir lieu ?"
   options={[
-    { text: 'Swap in a newer model so it makes better decisions.', why: 'A newer model may decide differently on a given day. The tool and the check that let the message go out are still there, and another day brings the same result.' },
-    { text: 'Remove the send tool or add a check that asks a person before a send.', correct: true },
-    { text: 'Tell the customer that agents make mistakes sometimes.', why: 'That explains the event and changes nothing about the software. The next run has the same tool and the same missing check.' },
+    { text: 'Passer à un modèle plus récent pour qu’il prenne de meilleures décisions.', why: 'Un modèle plus récent décidera peut-être autrement un jour donné. L’outil et la vérification qui ont laissé partir le message sont toujours là, et un autre jour produit le même résultat.' },
+    { text: 'Retirer l’outil d’envoi, ou ajouter une vérification qui demande l’accord d’une personne avant un envoi.', correct: true },
+    { text: 'Expliquer au client que les agents se trompent parfois.', why: 'Cela explique l’événement et ne change rien au logiciel. L’exécution suivante a le même outil et la même vérification manquante.' },
   ]}>
-An agent that drafts customer replies sent a half-finished message to a
-customer. The team wants this never to happen again. Where does the fix
-go first?
+Un agent qui rédige des réponses aux clients a envoyé un message inachevé à un
+client. L’équipe veut que cela ne se reproduise jamais. Où va d’abord la
+correction ?
 </Choice>
 
-## List the tools before you judge the reach
+## Lister les outils avant de juger la portée
 
-Once you know something is an agent, the next question is what it can
-reach, and the answer is its tool list. A research agent with a web
-search tool can read the web. Give it an email tool as well and it can
-write to other people. The two are sold under the same name and have
-very different consequences when something goes wrong.
+Une fois que vous savez qu’il s’agit d’un agent, la question suivante est ce
+qu’il peut atteindre, et la réponse est sa liste d’outils. Un agent de
+recherche doté d’un outil de recherche web peut lire le web. Donnez-lui en plus
+un outil de courriel, et il peut écrire à d’autres personnes. Les deux sont
+vendus sous le même nom et ont des conséquences très différentes quand quelque
+chose tourne mal.
 
-So read the product page, or the settings screen, and write down the
-tools before you form an opinion. A list like "web search, file read,
-calendar write" tells you which one acts on others: calendar write is
-the one that puts something on a colleague's screen. A list like "read
-the inbox, draft, send" tells you that a wrong draft can reach a
-customer. Judging an agent without its tool list is judging a car
-without knowing whether it has brakes.
+Lisez donc la page de présentation du produit, ou l’écran des réglages, et
+notez les outils avant de vous faire une opinion. Une liste comme « recherche
+web, lecture de fichiers, écriture dans l’agenda » vous dit lequel agit sur les
+autres : l’écriture dans l’agenda est celle qui fait apparaître quelque chose
+sur l’écran d’un collègue. Une liste comme « lire la boîte de réception,
+rédiger, envoyer » vous dit qu’un brouillon erroné peut atteindre un client.
+Juger un agent sans sa liste d’outils, c’est juger une voiture sans savoir si
+elle a des freins.
 
 <Choice id="which-tool-acts-on-others" objective="concepts/recognizes-agents/tells-agent-from-assistant"
   concepts={['tool', 'harness']}
-  context="The lesson says to list an agent's tools before judging what it can do, and to look for the tool that acts on other people rather than only on the learner's own data."
-  title="Which tool changes what others see?" hint="Which of these tools puts something in front of a person other than you?"
+  context="La leçon conseille de lister les outils d’un agent avant de juger ce qu’il peut faire, et de chercher l’outil qui agit sur d’autres personnes, au-delà des données de l’apprenant lui-même."
+  title="Quel outil change ce que voient les autres ?" hint="Lequel de ces outils fait apparaître quelque chose devant une autre personne que vous ?"
   options={[
-    { text: 'Web search, because it reaches outside the company.', why: 'The query does leave the company, and that is a reason to watch what goes into it and what comes back. Nothing a colleague sees changes because of a search.' },
-    { text: 'File read, because your files hold confidential material.', why: 'Reading files is a reason to think about what the agent may see. The read itself changes nothing that a colleague sees.' },
-    { text: 'Calendar write, because it puts an entry on a colleague\'s calendar.', correct: true },
+    { text: 'La recherche web, parce qu’elle sort de l’entreprise.', why: 'La requête quitte bien l’entreprise, et c’est une raison de surveiller ce qu’on y met et ce qui revient. Mais rien de ce que voit un collègue ne change à cause d’une recherche.' },
+    { text: 'La lecture de fichiers, parce que vos fichiers contiennent des documents confidentiels.', why: 'La lecture de fichiers est une raison de réfléchir à ce que l’agent peut voir. La lecture elle-même ne change rien de ce que voit un collègue.' },
+    { text: 'L’écriture dans l’agenda, parce qu’elle place une entrée dans l’agenda d’un collègue.', correct: true },
   ]}>
-A product page for a meeting assistant lists its tools as "web search,
-file read, calendar write". Which tool deserves the closest look before
-you turn the product on, and why?
+La page de présentation d’un assistant de réunion énumère ses outils :
+« recherche web, lecture de fichiers, écriture dans l’agenda ». Quel outil mérite
+l’examen le plus attentif avant d’activer le produit, et pourquoi ?
 </Choice>
 
 <Scenario id="before-you-turn-it-on" phase="review" objective="concepts/recognizes-agents/tells-agent-from-assistant"
   concepts={['model-vs-agent', 'tool']}
-  context="The lesson tells an assistant from an agent with one test: after one prompt, can the system only write text for a person to act on, or can it act through tools and choose its next step itself? It says to list an agent's tools before turning it on."
-  title="The helper in the ticket system" hint="After one prompt, what can this helper do without a person acting on its text?"
+  context="La leçon distingue un assistant d’un agent par un seul test : après un prompt, le système peut-il seulement écrire un texte sur lequel une personne agira, ou peut-il agir au moyen d’outils et choisir lui-même l’étape suivante ? Elle conseille de lister les outils d’un agent avant de l’activer."
+  title="L’aide du système de tickets" hint="Après un prompt, que peut faire cette aide sans qu’une personne agisse sur son texte ?"
   options={[
-    { text: 'Treat it as an assistant, because it runs inside a product the team already uses.', consequence: 'The helper refunds and closes tickets with nobody reading them first. The first wrong refund turns up at the end of the month.' },
-    { text: 'Check which model it runs on, because a newer model makes it safe to switch on.', consequence: 'The model version says nothing about its tools. The refund tool is still on after your check.' },
-    { text: 'Treat it as an agent, and ask who approves a refund before it goes live.', correct: true, consequence: 'You find the tool that acts on customer accounts, and the team adds an approval step for refunds before the helper goes live.' },
-    { text: 'Try it on one ticket and turn it on if the reply reads well.', consequence: 'The reply reads well, and that shows only its text. The refund and the closed ticket happened before you looked.' },
+    { text: 'La traiter comme un assistant, puisqu’elle fonctionne dans un produit que l’équipe utilise déjà.', consequence: 'L’aide rembourse et clôt des tickets sans que personne ne les lise d’abord. Le premier remboursement erroné apparaît à la fin du mois.' },
+    { text: 'Vérifier sur quel modèle elle fonctionne, puisqu’un modèle plus récent permet de l’activer sans risque.', consequence: 'La version du modèle ne dit rien de ses outils. L’outil de remboursement est toujours actif après votre vérification.' },
+    { text: 'La traiter comme un agent, et demander qui approuve un remboursement avant sa mise en service.', correct: true, consequence: 'Vous trouvez l’outil qui agit sur les comptes des clients, et l’équipe ajoute une étape d’approbation des remboursements avant la mise en service de l’aide.' },
+    { text: 'L’essayer sur un ticket et l’activer si la réponse se lit bien.', consequence: 'La réponse se lit bien, et cela ne montre que son texte. Le remboursement et la clôture du ticket ont eu lieu avant que vous regardiez.' },
   ]}>
 
-Your team wants to turn on a new helper in the ticket system. Its product
-page says it handles each new ticket on its own. It can refund up to 20
-euros, and then it closes the ticket. What do you do before you turn it on?
+Votre équipe veut activer une nouvelle aide dans le système de tickets. Sa page
+de présentation dit qu’elle traite seule chaque nouveau ticket. Elle peut
+rembourser jusqu’à 20 euros, puis elle clôt le ticket. Que faites-vous avant de
+l’activer ?
 
 </Scenario>
 
-<Pitfall title="A chat window with an email tool">
-A manager tries a new "AI assistant" that comes with the company's mail
-program. It opens as a chat window that looks like the drafting
-assistant she already uses, and she treats it the same way. She types "reply to the
-supplier and tell them the delivery date is fine", expecting a draft to
-read and correct. The reply appears in the chat, and under it a line she
-doesn't read: "Sent to supplier". The product had a send tool, and its
-harness had no check before a send. The window looked like the old
-assistant, and the test would have caught it in a minute: after one
-prompt, what can this do without me? The first time you meet a chat
-box, find its tool list before you type anything you don't want acted
-on.
+<Pitfall title="Une fenêtre de conversation avec un outil de courriel">
+Une responsable essaie un nouvel « assistant IA » fourni avec la messagerie de
+l’entreprise. Il s’ouvre dans une fenêtre de conversation qui ressemble à
+l’assistant de rédaction qu’elle utilise déjà, et elle le traite de la même
+façon. Elle tape « réponds au fournisseur et dis-lui que la date de livraison
+convient », en s’attendant à un brouillon à relire et corriger. La réponse
+apparaît dans la conversation, et en dessous une ligne qu’elle ne lit pas :
+« Envoyé au fournisseur ». Le produit avait un outil d’envoi, et son harnais
+n’avait aucune vérification avant un envoi. La fenêtre ressemblait à l’ancien
+assistant, et le test l’aurait révélé en une minute : après un prompt, que peut
+faire ce produit sans moi ? La première fois que vous rencontrez une fenêtre de
+conversation, trouvez sa liste d’outils avant de taper quoi que ce soit sur
+quoi vous ne voulez pas qu’il agisse.
 </Pitfall>
 
-<Exercise stretch="For each product you marked as an agent, name the one tool you would remove, or put a permission check in front of, before letting a colleague use it on real data.">
+<Exercise stretch="Pour chaque produit que vous avez classé comme agent, nommez l’outil que vous retireriez, ou devant lequel vous placeriez une vérification de permissions, avant de laisser un collègue l’utiliser sur des données réelles.">
 
-Find five products or features that you or your team use or have been
-offered, each described with AI in some way. A mail program's assistant,
-a coding tool, a meeting notetaker, a search feature, and a customer
-support bot are common finds. For each one, write two lines in a note.
-The first line answers the test: after one prompt, what can it do
-without another prompt from you? The second line either says "assistant"
-or says "agent" followed by the tools you can find on the product page
-or the settings screen. Twenty minutes is enough.
+Trouvez cinq produits ou fonctions que vous ou votre équipe utilisez, ou que
+l’on vous a proposés, et qui sont présentés d’une façon ou d’une autre comme de
+l’IA. L’assistant d’une messagerie, un outil de code, un outil de prise de notes
+en réunion, une fonction de recherche et un robot de support client sont des
+trouvailles courantes. Pour chacun, écrivez deux lignes dans une note. La
+première répond au test : après un prompt, que peut-il faire sans nouveau prompt
+de votre part ? La seconde dit soit « assistant », soit « agent » suivi des
+outils que vous trouvez sur la page de présentation ou dans l’écran des
+réglages. Vingt minutes suffisent.
 
-In a good result, the classification of each product comes from what the
-product does, never from its name. Every "agent" line has a tool list,
-even a short one. If
-you couldn't find the tool list for a product you marked as an agent,
-write that down too, because it is the most useful thing you learned
-about that product. Which of the five surprised you, and was the
-surprise about the interface or about the tools?
+Dans un bon résultat, le classement de chaque produit vient de ce que fait le
+produit, jamais de son nom. Chaque ligne « agent » comporte une liste d’outils,
+même courte. Si vous n’avez pas trouvé la liste d’outils d’un produit que vous
+avez classé comme agent, notez-le aussi, parce que c’est ce que vous avez appris
+de plus utile sur ce produit. Lequel des cinq vous a surpris, et la surprise
+portait-elle sur l’interface ou sur les outils ?
 
 </Exercise>
 
 <Recap>
 
-1. A model takes text in and gives text out, once. An agent is software
-   that calls the model in a loop, gives it tools, feeds the results back
-   and stops when the goal is met (@AEC-01).
-2. Tell the two apart by what the system can do without another
-   prompt, whatever its interface looks like. A chat window can front an
-   agent, and a button can trigger one plain model call.
-3. The harness is the software around the model: the loop, the tool
-   definitions, the permission checks, the system prompt, context
-   management and the stop rules. Agents on the same model differ
-   because their harnesses differ, and the fix for a misbehaving agent
-   is most often in the harness.
-4. List an agent's tools before you judge what it can do. What it can
-   touch is what its tools can touch, and the tool that acts on other
-   people is the one to look at first.
+1. Un modèle reçoit du texte et produit du texte, une fois. Un agent est un
+   logiciel qui appelle le modèle dans une boucle, lui donne des outils, lui
+   renvoie les résultats et s’arrête quand l’objectif est atteint (@AEC-01).
+2. Distinguez les deux par ce que le système peut faire sans nouveau prompt,
+   quelle que soit son interface. Une fenêtre de conversation peut servir de
+   façade à un agent, et un bouton peut déclencher un simple appel au modèle.
+3. Le harnais est le logiciel qui entoure le modèle : la boucle, les
+   définitions d’outils, les vérifications de permissions, le prompt système,
+   la gestion du contexte et les règles d’arrêt. Des agents fondés sur le même
+   modèle diffèrent parce que leurs harnais diffèrent, et la correction d’un
+   agent qui se comporte mal se trouve le plus souvent dans le harnais.
+4. Listez les outils d’un agent avant de juger ce qu’il peut faire. Ce qu’il
+   peut toucher, c’est ce que ses outils peuvent toucher, et l’outil qui agit
+   sur d’autres personnes est le premier à examiner.
 
 </Recap>

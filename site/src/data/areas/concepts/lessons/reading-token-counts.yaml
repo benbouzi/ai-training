@@ -11,10 +11,10 @@ introduces: [input-and-output-tokens, growing-session-cost]
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/what-tokens-cost
-    section: what-a-token-costs
+    section: ce-que-coûte-un-jeton
   - objective: concepts/recognizes-agents/follows-one-prompt
     lesson: concepts/one-prompt-many-requests
-    section: what-is-in-each-request
+    section: ce-que-contient-chaque-requête
 extends-to: []
 after: [concepts/what-tokens-cost, concepts/one-prompt-many-requests]
 shorts: []

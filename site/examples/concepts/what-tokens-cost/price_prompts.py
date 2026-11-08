@@ -38,43 +38,44 @@ ANSWER_TOKENS = 120
 CALLS_PER_MONTH = 1_000
 
 SHORT_PROMPT = """\
-Summarize these meeting notes in five bullet points for the finance team.
-Keep each bullet under 20 words.
+Résume ce compte rendu de réunion en cinq puces pour l’équipe financière.
+Chaque puce doit faire moins de 20 mots.
 
-Meeting notes, project Lantern, 14 March.
-Present: Ana, Bram, Chidi. The supplier moved the delivery of the sensor
-boards from April to June. Ana will confirm the June date in writing by
-Friday. The installation guide needs a shorter version with one photo per
-step. The pilot in the Utrecht warehouse moves to July. Next meeting on
-28 March.
+Compte rendu, projet Lantern, 14 mars.
+Présents : Ana, Bram, Chidi. Le fournisseur a déplacé la livraison des
+cartes capteurs d’avril à juin. Ana confirmera la date de juin par écrit
+d’ici vendredi. Le guide d’installation doit être raccourci, avec une photo
+par étape. Le pilote de l’entrepôt d’Utrecht passe en juillet. Prochaine
+réunion le 28 mars.
 """
 
 LONG_PROMPT = """\
-Hello! I hope you are doing well today. I have a task for you and I would
-really appreciate your help with it. I work in a company that runs a
-project called Lantern, which is about installing sensor boards in
-warehouses, and we have regular meetings about it. I have the notes from
-our latest meeting below and I need a summary of them. The summary is for
-the finance team, so please keep that in mind. I think five bullet points
-would be a good length, and it would be great if each bullet point was not
-too long, maybe under 20 words or so, because the finance team does not
-have a lot of time to read long documents. Please make sure to include the
-most important points. Thank you so much in advance for your help, I really
-appreciate it!
+Bonjour ! J’espère que vous allez bien aujourd’hui. J’ai une tâche à vous
+confier et j’apprécierais vraiment votre aide. Je travaille dans une
+entreprise qui mène un projet appelé Lantern, qui consiste à installer des
+cartes capteurs dans des entrepôts, et nous avons régulièrement des réunions
+à ce sujet. J’ai ci-dessous le compte rendu de notre dernière réunion et j’en
+ai besoin d’un résumé. Le résumé est destiné à l’équipe financière, merci de
+le garder en tête. Je pense que cinq puces seraient une bonne longueur, et ce
+serait formidable que chaque puce ne soit pas trop longue, peut-être moins de
+20 mots environ, parce que l’équipe financière n’a pas beaucoup de temps pour
+lire de longs documents. Merci de bien inclure les points les plus
+importants. Merci beaucoup d’avance pour votre aide, je l’apprécie vraiment !
 
-Here are the notes:
+Voici le compte rendu :
 
-Meeting notes, project Lantern, 14 March.
-Present: Ana, Bram, Chidi. Ana opened the meeting and reported that the
-supplier has moved the delivery of the sensor boards from April to June.
-Bram asked whether the June date is firm. Ana will confirm the June date in
-writing by Friday. Chidi showed the first draft of the installation guide
-and the team asked for a shorter version with one photo per step. After
-some discussion, the team decided that the pilot in the Utrecht warehouse
-moves to July. The next meeting is on 28 March, in the same room as
-before.
+Compte rendu, projet Lantern, 14 mars.
+Présents : Ana, Bram, Chidi. Ana a ouvert la réunion et indiqué que le
+fournisseur a déplacé la livraison des cartes capteurs d’avril à juin. Bram a
+demandé si la date de juin était ferme. Ana confirmera la date de juin par
+écrit d’ici vendredi. Chidi a présenté le premier jet du guide d’installation,
+et l’équipe a demandé une version plus courte avec une photo par étape. Après
+discussion, l’équipe a décidé que le pilote de l’entrepôt d’Utrecht passe en
+juillet. La prochaine réunion aura lieu le 28 mars, dans la même salle que la
+dernière fois.
 
-Please let me know if you need any more information. Thanks again!
+N’hésitez pas à me dire si vous avez besoin d’autres informations. Merci
+encore !
 """
 
 

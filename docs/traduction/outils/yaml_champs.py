@@ -4,8 +4,8 @@
 Les YAML sous `site/src/data/` mêlent des identifiants (à garder) et des
 textes affichés (à traduire). Ce script ne touche qu’aux textes affichés.
 
-  scripts/traduction_yaml.py extraire <fichier.yaml>... > a-traduire.json
-  scripts/traduction_yaml.py injecter traductions.json
+  docs/traduction/outils/yaml_champs.py extraire <fichier.yaml>... > a-traduire.json
+  docs/traduction/outils/yaml_champs.py injecter traductions.json
 
 Le JSON a la forme {"chemin/du/fichier.yaml": [[["concepts", 0, "name"], "texte"], ...]}.
 À l’injection, chaque texte remplace la valeur au chemin donné. La mise en
@@ -22,7 +22,7 @@ from pathlib import Path
 from ruamel.yaml import YAML
 from ruamel.yaml.scalarstring import FoldedScalarString
 
-RACINE = Path(__file__).resolve().parent.parent
+RACINE = Path(__file__).resolve().parents[3]
 
 # Clés dont la valeur est un texte affiché, quel que soit leur niveau.
 TEXTES = {

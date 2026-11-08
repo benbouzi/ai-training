@@ -10,7 +10,7 @@ introduces: [finding-information]
 assumes:
   - objective: concepts/prompts-reliably/structures-a-prompt
     lesson: concepts/prompt-anatomy
-    section: mark-the-boundary
+    section: marquer-la-frontière
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
     section: les-défaillances-nommées

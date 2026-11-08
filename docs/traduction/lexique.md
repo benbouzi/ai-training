@@ -41,7 +41,7 @@ changement de terme se fait ici d’abord, puis dans toutes les pages.
 - Guillemets français « » pour les citations et les mots cités.
 - Un sigle est développé à sa première occurrence dans une leçon.
 - Les titres de section changent l’ancre de la page. Après traduction, le
-  script `scripts/traduction_ancres.py` met à jour les ancres et les champs
+  script `docs/traduction/outils/ancres.py` met à jour les ancres et les champs
   `section:` des YAML.
 - Le nom d’un concept dans le YAML du thème doit apparaître tel quel (au
   singulier) dans la leçon qui le couvre : le site transforme sa première

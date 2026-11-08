@@ -1,83 +1,89 @@
 import { Choice, MultiChoice, Scenario, Pitfall, Exercise, Recap, Match } from '@components/lesson';
 
-A product assistant on a web shop is asked what the yearly plan costs,
-and it answers with last year's price. The price went up in January,
-and the model was trained before that. The obvious fix seems to be to retrain
-the model on the new price list, which is slow, expensive, and out of
-date again at the next price change. In this lesson we look at what
-assistants do instead. A search step finds the passages that fit the
-question and puts them in the prompt, and the model answers from what
-it can see. You read the output of a small keyword search over four
-policy texts. The same question is asked in the document's own words
-and then in a colleague's words, and you judge what the search missed.
-You install and run nothing.
-By the end you can say what retrieval adds, what grounding promises, and
-which two questions to ask of any assistant that answers from documents.
+On demande à l’assistant produit d’une boutique en ligne combien coûte
+l’abonnement annuel, et il répond par le prix de l’an dernier. Le prix a
+augmenté en janvier, et le modèle a été entraîné avant. La correction évidente
+semble être de réentraîner le modèle sur la nouvelle grille tarifaire, ce qui
+est lent, coûteux, et de nouveau périmé au prochain changement de prix. Dans
+cette leçon, nous regardons ce que font les assistants à la place. Une étape de
+recherche trouve les passages qui correspondent à la question et les place dans
+le prompt, et le modèle répond à partir de ce qu’il voit. Vous lisez la sortie
+d’une petite recherche par mots-clés sur quatre textes de politique interne. La
+même question est posée dans les mots du document, puis dans ceux d’un
+collègue, et vous jugez ce que la recherche a manqué. Vous n’installez et ne
+lancez rien. À la fin, vous saurez dire ce qu’apporte la récupération, ce que
+promet l’ancrage, et quelles deux questions poser à tout assistant qui répond à
+partir de documents.
 
-## Search first, then answer
+## D’abord chercher, ensuite répondre
 
-A model knows what was in its training data and what's in its context
-window right now. The [lesson on the agent
-loop](/concepts/agent-loop/#a-model-in-a-loop-with-two-tools) showed a tool that
-reads a file into the conversation. Retrieval is a search that runs
-before the model answers, so that the right text is already in the
-prompt when the model reads the question (@AEC-08). The whole approach
-is called **retrieval (RAG)**, short for retrieval-augmented generation, and it
-is how an assistant answers about your files or a company wiki without
-anyone retraining anything.
+Un modèle connaît ce qui figurait dans ses données d’entraînement et ce qui se
+trouve en ce moment dans sa fenêtre de contexte. La
+[leçon sur la boucle d’agent](/concepts/agent-loop/#un-modèle-dans-une-boucle-avec-deux-outils)
+a montré un outil qui lit un fichier dans la conversation. La récupération est
+une recherche qui s’exécute avant que le modèle réponde, pour que le bon texte
+soit déjà dans le prompt quand le modèle lit la question (@AEC-08). L’approche
+dans son ensemble s’appelle la **récupération (RAG)**, pour retrieval-augmented
+generation, ou génération augmentée par récupération, et c’est ainsi qu’un
+assistant répond sur vos fichiers ou sur le wiki d’une entreprise sans que
+personne ne réentraîne quoi que ce soit.
 
-In its basic form, retrieval has a fixed set of steps. The documents are
-split into passages. When a question comes in, a search scores each
-passage against the question and picks the best few. Those passages are
-pasted into the prompt above the question, with an instruction such as
-"answer from the passages below". The model then writes an answer from
-text it can see. Update the document, and the next answer uses the new
-text. The model never changed. Agentic retrieval, where the model itself
-decides when to search and searches again after a poor result, builds on
-these same steps (@AEC-08).
+Dans sa forme de base, la récupération suit des étapes fixes. Les documents
+sont découpés en passages. Quand une question arrive, une recherche attribue un
+score à chaque passage par rapport à la question et choisit les meilleurs. Ces
+passages sont collés dans le prompt au-dessus de la question, avec une
+instruction comme « réponds à partir des passages ci-dessous ». Le modèle écrit
+alors une réponse à partir d’un texte qu’il voit. Mettez à jour le document, et
+la réponse suivante utilise le nouveau texte. Le modèle n’a jamais changé. La
+récupération agentique, où le modèle décide lui-même quand chercher et cherche
+de nouveau après un mauvais résultat, repose sur ces mêmes étapes (@AEC-08).
 
-The search is the weak point. A model can only ground its answer in the
-passages the search gave it. When the search returns the wrong passage, the model answers from the
-wrong passage, and the answer is wrong (@AEC-08). It reads as sure of
-itself as a right answer does. So the first thing to know about any retrieval assistant is
-how it searches.
+La recherche est le point faible. Un modèle ne peut ancrer sa réponse que dans
+les passages que la recherche lui a donnés. Quand la recherche renvoie le
+mauvais passage, le modèle répond à partir du mauvais passage, et la réponse
+est fausse (@AEC-08). Elle se lit avec autant d’assurance qu’une réponse juste.
+La première chose à savoir sur un assistant à récupération est donc sa façon de
+chercher.
 
-## What a keyword search finds
+## Ce que trouve une recherche par mots-clés
 
-The simplest search matches words. The question is split into words,
-common words such as "how" and "the" are dropped, and each document is
-scored by how many of the remaining words it contains. The best-scoring document
-becomes the passage in the prompt. Products also use
-similarity search, which scores meaning instead of exact words, on its
-own or combined with keywords. The keyword version is the one you can
-check by eye, so it is the one this lesson uses.
+La recherche la plus simple compare des mots. La question est découpée en mots,
+les mots courants comme « combien » et « le » sont écartés, et chaque document
+reçoit un score selon le nombre de mots restants qu’il contient. Le document au
+meilleur score devient le passage placé dans le prompt. Les produits utilisent
+aussi la recherche par similarité, qui évalue le sens plutôt que les mots
+exacts, seule ou combinée aux mots-clés. La version par mots-clés est celle que
+l’on peut vérifier à l’œil, et c’est donc celle qu’utilise cette leçon.
 
-The policy texts are one paragraph each, on annual leave, expenses,
-remote work, and laptops. Here is the search on a question that uses
-the leave policy's own words. The output below is what the search
-printed, line for line.
+Les textes de politique interne font un paragraphe chacun, sur les congés
+annuels, les notes de frais, le télétravail et les ordinateurs portables. Voici
+la recherche pour une question qui reprend les mots de la politique sur les
+congés. La sortie ci-dessous est ce que la recherche a affiché, ligne pour
+ligne. Les étiquettes sont celles du programme, en anglais : `keywords`
+(mots-clés), `match` (correspondance), `retrieved` (document récupéré),
+`passage`.
 
 ```text
-question: How many days of annual leave do I get?
-keywords: annual, days, leave
+question: Combien de jours de congés annuels ai-je ?
+keywords: annuels, congés, jours
   expenses.txt: 1 match
   laptops.txt: 0 matches
   leave.txt: 3 matches
   remote-work.txt: 1 match
 retrieved: leave.txt
-passage: Annual leave. Every employee accrues 25 days of annual leave per year. Unused days carry over until 31 March. Requests go to your manager at least two weeks ahead.
+passage: Congés annuels. Chaque salarié acquiert 25 jours de congés annuels par an. Les jours non pris sont reportés jusqu’au 31 mars. Les demandes vont au responsable au moins deux semaines à l’avance.
 ```
 
-Three keywords, and the leave policy contains all three. The expenses
-and remote work policies each contain "days" and score one. The search
-retrieves the leave policy, and a model that reads that passage answers
-"25 days" and is right.
+Trois mots-clés, et la politique sur les congés les contient tous les trois.
+Les politiques sur les notes de frais et sur le télétravail contiennent chacune
+« jours » et obtiennent un point. La recherche récupère la politique sur les
+congés, et un modèle qui lit ce passage répond « 25 jours » et a raison.
 
-Now the same question in a colleague's words.
+Voici maintenant la même question dans les mots d’un collègue.
 
 ```text
-question: How much holiday can I take?
-keywords: holiday, take
+question: Combien de vacances puis-je prendre ?
+keywords: prendre, vacances
   expenses.txt: 0 matches
   laptops.txt: 0 matches
   leave.txt: 0 matches
@@ -85,166 +91,172 @@ keywords: holiday, take
 retrieved: nothing, no document contains any of the keywords
 ```
 
-The answer is in the leave policy, the same as before. The policy says
-"annual leave" and the colleague said "holiday". The keyword search
-scores every document at zero and retrieves nothing. What happens next
-depends on the product. A careful assistant says the documents don't
-cover the question. Without that care, the model has an empty prompt
-and a question about holidays, and answers from training data, which
-for a company policy means it makes something up.
+La réponse se trouve dans la politique sur les congés, comme avant. La
+politique dit « congés annuels », et le collègue a dit « vacances ». La
+recherche par mots-clés attribue zéro à chaque document et ne récupère rien.
+La suite dépend du produit. Un assistant prudent dit que les documents ne
+couvrent pas la question. Sans cette précaution, le modèle se retrouve avec un
+prompt vide et une question sur les vacances, et il répond à partir de ses
+données d’entraînement, ce qui, pour une politique d’entreprise, revient à
+inventer.
 
 <Choice id="why-the-miss" objective="concepts/explains-models/explains-grounding"
   concepts={['retrieval-rag']}
-  context="A keyword search over four one-paragraph policy texts retrieved the leave policy for the question 'How many days of annual leave do I get?' and retrieved nothing for 'How much holiday can I take?'. The leave policy says 'annual leave' and never says 'holiday'."
-  title="Why did the second search find nothing?" hint="Compare the keywords line of each search with the words in the passage that was retrieved the first time."
+  context="Une recherche par mots-clés sur quatre textes de politique interne d’un paragraphe chacun a récupéré la politique sur les congés pour la question « Combien de jours de congés annuels ai-je ? » et n’a rien récupéré pour « Combien de vacances puis-je prendre ? ». La politique sur les congés dit « congés annuels » et ne dit jamais « vacances »."
+  title="Pourquoi la seconde recherche n’a-t-elle rien trouvé ?" hint="Comparez la ligne des mots-clés de chaque recherche avec les mots du passage récupéré la première fois."
   options={[
-    { text: 'The model forgot the leave policy between the two questions.', why: 'The model was not involved yet. The search runs before the model, and it scores words in documents. Nothing was remembered or forgotten.' },
-    { text: 'The question used words that appear in no document.', correct: true },
-    { text: 'The leave policy is about leave, and holidays are a different policy.', why: 'The leave policy is the document that answers the question. The search did not fail because the answer is missing. It failed because the words differ.' },
-    { text: 'Two keywords are too few for a search to work.', why: 'A single keyword that appears in one document is enough for this search. The count of keywords was not the problem, and the third search on the page finds a document with one match.' },
+    { text: 'Le modèle a oublié la politique sur les congés entre les deux questions.', why: 'Le modèle n’intervenait pas encore. La recherche s’exécute avant le modèle, et elle compte des mots dans des documents. Rien n’a été retenu ni oublié.' },
+    { text: 'La question utilisait des mots qui ne figurent dans aucun document.', correct: true },
+    { text: 'La politique sur les congés porte sur les congés, et les vacances relèvent d’une autre politique.', why: 'La politique sur les congés est le document qui répond à la question. La recherche n’a pas échoué parce que la réponse manquait. Elle a échoué parce que les mots diffèrent.' },
+    { text: 'Deux mots-clés, c’est trop peu pour qu’une recherche fonctionne.', why: 'Un seul mot-clé présent dans un document suffit à cette recherche. Le nombre de mots-clés n’était pas le problème, et la troisième recherche de la page trouve un document avec une seule correspondance.' },
   ]}>
-The first search retrieved the leave policy and the second retrieved
-nothing, although both questions ask the same thing. Why?
+La première recherche a récupéré la politique sur les congés et la seconde n’a
+rien récupéré, alors que les deux questions demandent la même chose.
+Pourquoi ?
 </Choice>
 
-## Grounding, and what it doesn't fix
+## L’ancrage, et ce qu’il ne corrige pas
 
-**Grounding** is tying an answer to the sources the model was given,
-rather than to its training data. A grounded answer does two
-things. It points at the passage it relied on, so you can read the
-passage yourself. And it says so when the passages don't cover the
-question (@Academy ai-capabilities-and-limitations).
-The instruction "answer from the passages below, and say if they don't
-answer the question" is what asks the model for both.
+L’**ancrage** consiste à rattacher une réponse aux sources données au modèle,
+plutôt qu’à ses données d’entraînement. Une réponse ancrée fait deux choses.
+Elle désigne le passage sur lequel elle s’est appuyée, pour que vous puissiez le
+lire vous-même. Et elle le dit quand les passages ne couvrent pas la question
+(@Academy ai-capabilities-and-limitations). C’est l’instruction « réponds à
+partir des passages ci-dessous, et dis-le s’ils ne répondent pas à la
+question » qui demande les deux au modèle.
 
-Grounding narrows what the model can get wrong. It doesn't remove it.
-A grounded answer rests on the passage, and the passage can be the
-wrong one, as the third search below shows. The model can also misread
-a passage it was given, or answer a question the passage only half
-covers by adding a detail from training. And a passage that
-is itself out of date grounds an out-of-date answer. Grounding makes an
-answer checkable, and checking is still yours to do.
+L’ancrage réduit ce sur quoi le modèle peut se tromper. Il ne le supprime pas.
+Une réponse ancrée repose sur le passage, et le passage peut être le mauvais,
+comme le montre la troisième recherche ci-dessous. Le modèle peut aussi mal lire
+un passage qu’on lui a donné, ou répondre à une question que le passage ne
+couvre qu’à moitié en ajoutant un détail tiré de son entraînement. Et un passage
+lui-même périmé ancre une réponse périmée. L’ancrage rend une réponse
+vérifiable, et la vérification reste votre travail.
 
-Here is the third search. The question is about the daily allowance
-for a meal on a work trip, which the expenses policy sets at 40 euros
-per day.
+Voici la troisième recherche. La question porte sur l’indemnité journalière de
+repas lors d’un déplacement professionnel, que la politique sur les notes de
+frais fixe à 40 euros par jour.
 
 ```text
-question: What is the daily rate for working away from the office?
-keywords: away, daily, office, rate, working
+question: Quel est le forfait quotidien pour un travail hors du bureau ?
+keywords: bureau, forfait, hors, quotidien, travail
   expenses.txt: 0 matches
   laptops.txt: 0 matches
   leave.txt: 0 matches
   remote-work.txt: 1 match
 retrieved: remote-work.txt
-passage: Remote work. Staff may work from home up to three days per week. A home office allowance of 30 euros per month is paid with salary. Equipment stays company property.
+passage: Télétravail. Le personnel peut travailler à domicile jusqu’à trois jours par semaine. Une indemnité de bureau à domicile de 30 euros par mois est versée avec le salaire. Le matériel reste la propriété de l’entreprise.
 ```
 
-The expenses policy says "per day", and the question said "daily". With no shared word,
-the expenses policy scores zero. The remote work policy contains
-"office" and wins with one match. A model that grounds its answer in
-this passage might say the daily rate is 30 euros, and cite the remote
-work policy for it. The citation is real, the passage is real, and the
-answer is wrong twice: the 30 euros is a monthly allowance, and it
-covers a home office while the question asked about a work trip. A grounded wrong answer
-looks the same as a grounded right one until you read the passage.
+La politique sur les notes de frais dit « par jour », et la question disait
+« quotidien ». Faute de mot commun, la politique sur les notes de frais obtient
+zéro. La politique sur le télétravail contient « bureau » et l’emporte avec une
+correspondance. Un modèle qui ancre sa réponse dans ce passage pourrait dire que
+le forfait quotidien est de 30 euros, en citant la politique sur le télétravail.
+La citation est réelle, le passage est réel, et la réponse est fausse deux
+fois : les 30 euros sont une indemnité mensuelle, et elle couvre un bureau à
+domicile alors que la question portait sur un déplacement professionnel. Une
+réponse ancrée et fausse ressemble à une réponse ancrée et juste tant que l’on
+n’a pas lu le passage.
 
 <Scenario id="outdated-price" objective="concepts/explains-models/explains-grounding"
   concepts={['retrieval-rag', 'grounding']}
-  context="A product assistant answers customer questions from a folder of product documents through retrieval: a search picks passages from the documents and pastes them into the prompt before the model answers."
-  title="The assistant quotes last year's price" hint="Where does an assistant that answers from documents get its facts from, and which part of that is quick to change?"
+  context="L’assistant produit d’une boutique répond aux questions des clients à partir d’un dossier de documents produits, par récupération : une recherche choisit des passages dans les documents et les colle dans le prompt avant que le modèle réponde."
+  title="L’assistant cite le prix de l’an dernier" hint="D’où un assistant qui répond à partir de documents tire-t-il ses faits, et quelle partie de cela se modifie rapidement ?"
   options={[
-    { text: 'Ask the vendor to retrain the model on the new price list.', consequence: 'Weeks pass and money is spent. The retrained model repeats the new price until the next change, and then it is wrong again.' },
-    { text: 'Check the passage the answer was grounded in, and update that document.', correct: true, consequence: 'The passage shows the old price list. You replace the document, and the next question retrieves the new one.' },
-    { text: 'Add "always give the current price" to the assistant\'s instructions.', consequence: 'The model cannot tell current from old. It has only the passage in its prompt, and the passage still holds last year\'s price.' },
-    { text: 'Turn off retrieval so the model answers from what it knows.', consequence: 'The model answers from training data alone, which predates even the old document. You lose the passage, and with it the way to see where any price came from.' },
+    { text: 'Demander au fournisseur de réentraîner le modèle sur la nouvelle grille tarifaire.', consequence: 'Des semaines passent et de l’argent est dépensé. Le modèle réentraîné répète le nouveau prix jusqu’au prochain changement, puis il se trompe de nouveau.' },
+    { text: 'Vérifier le passage dans lequel la réponse était ancrée, et mettre à jour ce document.', correct: true, consequence: 'Le passage montre l’ancienne grille tarifaire. Vous remplacez le document, et la question suivante récupère le nouveau.' },
+    { text: 'Ajouter « donne toujours le prix actuel » aux instructions de l’assistant.', consequence: 'Le modèle ne peut pas distinguer l’actuel de l’ancien. Il n’a que le passage de son prompt, et ce passage contient toujours le prix de l’an dernier.' },
+    { text: 'Désactiver la récupération pour que le modèle réponde à partir de ce qu’il sait.', consequence: 'Le modèle répond à partir de ses seules données d’entraînement, antérieures même à l’ancien document. Vous perdez le passage, et avec lui le moyen de voir d’où vient un prix.' },
   ]}>
-The web shop's assistant answers from a folder of product documents.
-A customer asks what the yearly plan costs and gets last year's price.
-What do you do first?
+L’assistant de la boutique en ligne répond à partir d’un dossier de documents
+produits. Un client demande combien coûte l’abonnement annuel et obtient le prix
+de l’an dernier. Que faites-vous d’abord ?
 </Scenario>
 
 <MultiChoice id="what-grounding-fixes" phase="review" objective="concepts/explains-models/explains-grounding"
   concepts={['grounding', 'retrieval-rag']}
-  context="A retrieval assistant searches a set of documents, pastes the best passages into the prompt, and is told to answer from them and to say when they don't cover the question."
-  title="Which of these does grounding take care of?" hint="Grounding ties the answer to the passage. What can still be wrong about the passage, and about the model's reading of it?"
+  context="Un assistant à récupération fouille un ensemble de documents, colle les meilleurs passages dans le prompt, et a pour instruction de répondre à partir d’eux et de dire quand ils ne couvrent pas la question."
+  title="De quoi l’ancrage se charge-t-il ?" hint="L’ancrage rattache la réponse au passage. Qu’est-ce qui peut encore être faux dans le passage, et dans la lecture qu’en fait le modèle ?"
   options={[
-    { text: 'The answer points at a passage you can read yourself.', correct: true },
-    { text: 'The search picked the right passage from the documents.', why: 'The search picks the passage before the model sees anything. Grounding ties the answer to that passage, right or wrong.' },
-    { text: 'The model says when the passages leave the question open.', correct: true },
-    { text: 'The passages the model was given are up to date.', why: 'The model answers from the text it was given. An old document grounds an old answer, and only a person updating the document fixes that.' },
+    { text: 'La réponse désigne un passage que vous pouvez lire vous-même.', correct: true },
+    { text: 'La recherche a choisi le bon passage parmi les documents.', why: 'La recherche choisit le passage avant que le modèle voie quoi que ce soit. L’ancrage rattache la réponse à ce passage, qu’il soit bon ou mauvais.' },
+    { text: 'Le modèle dit quand les passages laissent la question ouverte.', correct: true },
+    { text: 'Les passages donnés au modèle sont à jour.', why: 'Le modèle répond à partir du texte qu’on lui a donné. Un document ancien ancre une réponse ancienne, et seule une personne qui met à jour le document corrige cela.' },
   ]}>
-An assistant answers from documents through retrieval, with the
-instruction to answer from the passages and say when they don't cover
-the question. Which of these does grounding take care of?
+Un assistant répond à partir de documents par récupération, avec pour
+instruction de répondre à partir des passages et de dire quand ils ne couvrent
+pas la question. De quoi l’ancrage se charge-t-il ?
 </MultiChoice>
 
 <Match id="where-to-look" phase="review" objective="concepts/explains-models/explains-grounding"
   concepts={['retrieval-rag', 'grounding']}
-  context="An assistant answers staff questions from a folder of policy documents through retrieval: a search picks passages, pastes them into the prompt, and the model answers from them and points at the passage it used."
-  title="Where did it go wrong?" hint="Compare the answer with the passage it points at. Is the passage missing, wrong, or right and misread?"
-  options={['The search found no matching passage', 'The passage itself is wrong or old', 'The model misread a passage it had']}
+  context="Un assistant répond aux questions du personnel à partir d’un dossier de politiques internes, par récupération : une recherche choisit des passages, les colle dans le prompt, et le modèle répond à partir d’eux en désignant le passage utilisé."
+  title="Où l’erreur s’est-elle produite ?" hint="Comparez la réponse avec le passage qu’elle désigne. Le passage manque-t-il, est-il faux, ou est-il juste mais mal lu ?"
+  options={['La recherche n’a trouvé aucun passage correspondant', 'Le passage lui-même est faux ou ancien', 'Le modèle a mal lu un passage qu’il avait']}
   rows={[
-    { statement: 'The answer gives last year\'s opening hours, and the passage it points at shows last year\'s hours.', option: 1, why: 'Does the answer match the passage it points at?' },
-    { statement: 'The assistant says the documents don\'t cover parking, and the travel policy has a paragraph about car parks.', option: 0, why: 'Did the question use the words that the document uses?' },
-    { statement: 'The answer says refunds are possible for 60 days, and the passage it points at says 30 days.', option: 2, why: 'Is the passage right, and does the answer say what the passage says?' },
+    { statement: 'La réponse donne les horaires d’ouverture de l’an dernier, et le passage qu’elle désigne montre les horaires de l’an dernier.', option: 1, why: 'La réponse correspond-elle au passage qu’elle désigne ?' },
+    { statement: 'L’assistant dit que les documents ne couvrent pas le stationnement, alors que la politique de déplacement a un paragraphe sur les parkings.', option: 0, why: 'La question utilisait-elle les mots qu’utilise le document ?' },
+    { statement: 'La réponse dit que les remboursements sont possibles pendant 60 jours, et le passage qu’elle désigne dit 30 jours.', option: 2, why: 'Le passage est-il juste, et la réponse dit-elle ce que dit le passage ?' },
   ]}
-  rationale="A grounded answer can be checked against its passage, and the check tells you whether to fix the search, the document or nothing but the answer.">
-Match each wrong answer to where it went wrong.
+  rationale="Une réponse ancrée peut être vérifiée au regard de son passage, et cette vérification vous dit s’il faut corriger la recherche, le document, ou seulement la réponse.">
+Associez chaque réponse fausse à l’endroit où l’erreur s’est produite.
 </Match>
 
-<Pitfall title="Two clauses, one sentence">
-An assistant is asked what the company pays for working from home. The
-search returns two passages, because the remote work policy and the
-expenses policy both mention euros and both mention days. The answer
-reads: "Staff may work from home up to three days per week, and are
-reimbursed up to 40 euros per day with a receipt." Each half is a real
-clause from a real policy. Together they say the company pays 40 euros
-for every home working day, which no document says. The 40 euros is for
-meals on a work trip. The answer cited both passages, and a reader who
-trusted the citations without opening them would have filed a claim.
-When an answer draws on more than one passage, read the sentence that
-joins them, because the join is the model's and the sources don't check
-it.
+<Pitfall title="Deux clauses, une phrase">
+On demande à un assistant ce que l’entreprise verse pour le télétravail. La
+recherche renvoie deux passages, parce que la politique sur le télétravail et
+celle sur les notes de frais mentionnent toutes deux des euros et des jours. La
+réponse dit : « Le personnel peut travailler à domicile jusqu’à trois jours par
+semaine, et il est remboursé jusqu’à 40 euros par jour sur justificatif. »
+Chaque moitié est une vraie clause d’une vraie politique. Ensemble, elles disent
+que l’entreprise verse 40 euros pour chaque jour de télétravail, ce qu’aucun
+document ne dit. Les 40 euros concernent les repas lors d’un déplacement
+professionnel. La réponse citait les deux passages, et un lecteur qui se serait
+fié aux citations sans les ouvrir aurait déposé une demande. Quand une réponse
+s’appuie sur plusieurs passages, lisez la phrase qui les relie, parce que cette
+liaison vient du modèle et que les sources ne la vérifient pas.
 </Pitfall>
 
-<Exercise stretch="Rewrite the third question so that the keyword search would retrieve the expenses policy. Which words did you have to borrow from the document, and would the colleague who asked have known them?">
+<Exercise stretch="Réécrivez la troisième question pour que la recherche par mots-clés récupère la politique sur les notes de frais. Quels mots avez-vous dû emprunter au document, et le collègue qui posait la question les aurait-il connus ?">
 
-Read the third search on this page again, the one on the daily rate,
-together with the four sentences of the expenses policy it should have
-found: "Expenses. Travel by train is booked through the travel desk.
-Meals on a work trip are reimbursed up to 40 euros per day with a
-receipt. Claims are filed within 30 days." Then, on paper or in a note,
-write three lines. First, which document holds the answer, and which
-document the search retrieved. Second, which word in the question
-would have needed to match, and what the document says instead. Third,
-the answer a model would give from the retrieved passage, and what a
-reader would have to open to notice it is wrong. Ten minutes is enough.
+Relisez la troisième recherche de cette page, celle sur le forfait quotidien,
+avec les quatre phrases de la politique sur les notes de frais qu’elle aurait dû
+trouver : « Notes de frais. Les trajets en train sont réservés auprès du service
+voyages. Les repas lors d’un déplacement professionnel sont remboursés jusqu’à
+40 euros par jour sur justificatif. Les demandes sont déposées sous 30 jours. »
+Puis, sur papier ou dans une note, écrivez trois lignes. D’abord, quel document
+contient la réponse, et quel document la recherche a récupéré. Ensuite, quel mot
+de la question aurait dû correspondre, et ce que dit le document à la place.
+Enfin, la réponse qu’un modèle donnerait à partir du passage récupéré, et ce
+qu’un lecteur devrait ouvrir pour s’apercevoir qu’elle est fausse. Dix minutes
+suffisent.
 
-A good result names the expenses policy as the answer and the remote
-work policy as what was retrieved, names "daily" against "per day" (or
-"working away" against "work trip") as the miss, and says the model's
-answer would be a 30 euro figure that a reader can only catch by
-reading the passage and seeing "per month" and "home office". If your
-own assistant answers from documents, what would you have to open to do
-this same check on one of its answers?
+Un bon résultat désigne la politique sur les notes de frais comme celle qui
+contient la réponse et la politique sur le télétravail comme celle qui a été
+récupérée, nomme « quotidien » face à « par jour » (ou « travail hors du
+bureau » face à « déplacement professionnel ») comme l’écart, et dit que la
+réponse du modèle serait un montant de 30 euros qu’un lecteur ne peut repérer
+qu’en lisant le passage et en y voyant « par mois » et « bureau à domicile ». Si
+votre propre assistant répond à partir de documents, que devriez-vous ouvrir
+pour faire cette même vérification sur l’une de ses réponses ?
 
 </Exercise>
 
 <Recap>
 
-1. Retrieval is a search that runs before the model answers and pastes
-   the best passages into the prompt. The model answers from text it
-   can see, and the documents can change without the model changing
-   (@AEC-08).
-2. The search bounds the answer. A keyword search finds a document only
-   when the question uses the document's words, and a wrong passage
-   produces a wrong answer (@AEC-08).
-3. A grounded answer points at its passage and says when the passages
-   don't cover the question. Grounding makes an answer checkable and
-   doesn't make it right: the passage can be wrong, old, or misread
+1. La récupération est une recherche qui s’exécute avant que le modèle réponde
+   et colle les meilleurs passages dans le prompt. Le modèle répond à partir
+   d’un texte qu’il voit, et les documents peuvent changer sans que le modèle
+   change (@AEC-08).
+2. La recherche borne la réponse. Une recherche par mots-clés ne trouve un
+   document que lorsque la question utilise les mots du document, et un mauvais
+   passage produit une mauvaise réponse (@AEC-08).
+3. Une réponse ancrée désigne son passage et dit quand les passages ne couvrent
+   pas la question. L’ancrage rend une réponse vérifiable sans la rendre juste :
+   le passage peut être faux, ancien ou mal lu
    (@Academy ai-capabilities-and-limitations).
-4. Ask two questions of any assistant that answers from documents. What
-   did it retrieve, and does the answer match the passage.
+4. Posez deux questions à tout assistant qui répond à partir de documents.
+   Qu’a-t-il récupéré, et la réponse correspond-elle au passage ?
 
 </Recap>
