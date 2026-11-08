@@ -21,7 +21,7 @@ test('choice: a wrong pick shows its why, the right one passes', async ({ page }
 	await cp.locator('label').nth(2).click();
 	await cp.locator('.cp-check').click();
 	await expect(cp.locator('.cp-feedback')).toHaveText(
-		'Search is a separate tool some products add on top. The model itself only predicts tokens; it has no built-in search.',
+		'La recherche est un outil distinct que certains produits ajoutent par-dessus. Le modèle lui-même ne fait que prédire des jetons et n’a pas de recherche intégrée.',
 	);
 	await expect(cp).toHaveAttribute('data-state', 'attempted');
 	await cp.locator('label[data-correct]').click();
@@ -43,7 +43,7 @@ test('hint toggles and skip records a skip', async ({ page }) => {
 	await expect(cp.locator('.cp-hint')).toBeVisible();
 	await cp.locator('.cp-skip').click();
 	await expect(cp).toHaveAttribute('data-state', 'skipped');
-	await expect(cp.locator('.cp-feedback')).toContainText('Skipped');
+	await expect(cp.locator('.cp-feedback')).toContainText('Passée');
 });
 
 test('predict: normalized comparison, the answer is revealed on a pass', async ({ page }) => {
@@ -188,7 +188,7 @@ test('scenario: a wrong decision shows its consequence, the right one passes', a
 	await expect(injection.locator('.cp-feedback')).toHaveText(/^One of the pages has a line in white text/);
 	await injection.locator('label[data-correct]').click();
 	await injection.locator('.cp-check').click();
-	await expect(injection.locator('.cp-feedback')).toHaveText(/^Correct\. The agent summarizes the pages/);
+	await expect(injection.locator('.cp-feedback')).toHaveText(/^Juste\. The agent summarizes the pages/);
 	await expect(injection).toHaveAttribute('data-state', 'passed');
 });
 
@@ -223,7 +223,7 @@ test('multi-choice: exactly the correct boxes, a wrong pick shows its why', asyn
 	const cp = page.locator('#which-criteria-tick');
 	await expect(cp).toHaveAttribute('data-reviewable', 'true');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('Pick 3 answers first.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Choisissez d’abord 3 réponses.');
 	await cp.locator('label[data-correct]').first().click();
 	await cp.locator('.cp-check').click();
 	await expect(cp.locator('.cp-feedback')).toHaveText('1 of 3 so far, and nothing wrong. 2 more to find.');
@@ -256,7 +256,7 @@ test('match: one select per row, per-row feedback, rationale on a full pass', as
 		if (option) await row.locator('select').selectOption(option);
 	}
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText(/^Correct\. In each case the task is done just as well/);
+	await expect(cp.locator('.cp-feedback')).toHaveText(/^Juste\. In each case the task is done just as well/);
 	await expect(cp).toHaveAttribute('data-state', 'passed');
 });
 
@@ -276,12 +276,12 @@ test('More practice: graded and recorded apart, never needed to finish, never re
 	await expect(page.locator('section[data-alternate][data-phase="review"]')).toHaveCount(alternates.length);
 	for (const alternate of await page.locator('section[data-alternate]').all()) await expect(alternate).toBeHidden();
 	await expect(page.locator('#exercise ~ #more-practice ~ #recap')).toHaveCount(1);
-	await expect(page.locator('#more-practice > h2')).toHaveText('More practice');
+	await expect(page.locator('#more-practice > h2')).toHaveText('Pour s’entraîner davantage');
 
 	const note = page.locator('[data-finish-note]');
 	// The lesson has more than one, so the note uses the plural.
 	expect(first.length).toBeGreaterThan(1);
-	const needed = `Pass or skip ${first.length} more checkpoints to finish this lesson.`;
+	const needed = `Réussissez ou passez encore ${first.length} questions de contrôle pour terminer cette leçon.`;
 	await expect(note).toHaveText(needed);
 	const cp = page.locator(`#more-practice [data-checkpoint][id="${practice[0]?.id}"]`);
 	await expect(cp.locator('.cp-skip')).toHaveCount(0);

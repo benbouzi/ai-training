@@ -50,16 +50,16 @@ describe('lessonTocGroups', () => {
 			{ label: 'Questions de contrôle', slug: 'checkpoints', entries: [{ id: 'cp', title: 'A choice' }] },
 			{ label: 'Exemples', slug: 'examples', entries: [{ id: 'ex', title: 'Run it' }] },
 		]);
-		expect(lessonTocGroups(body(example)).map((g) => g.label)).toEqual(['Examples']);
-		expect(lessonTocGroups(body(checkpoint)).map((g) => g.label)).toEqual(['Checkpoints']);
+		expect(lessonTocGroups(body(example)).map((g) => g.label)).toEqual(['Exemples']);
+		expect(lessonTocGroups(body(checkpoint)).map((g) => g.label)).toEqual(['Questions de contrôle']);
 		expect(lessonTocGroups(body('## Just prose'))).toEqual([]);
 	});
 	it('reads the fixture lesson the export reads', () => {
 		const lesson = asLesson(docs.find((d) => d.id === 'concepts/how-models-work') as DocFixture);
 		const groups = lessonTocGroups(lesson);
 		expect(groups.map((g) => [g.label, g.entries.map((e) => e.id)])).toEqual([
-			['Checkpoints', ['what-the-model-does', 'honor', 'graded', 'fix', 'opt-out']],
-			['Examples', ['shown']],
+			['Questions de contrôle', ['what-the-model-does', 'honor', 'graded', 'fix', 'opt-out']],
+			['Exemples', ['shown']],
 		]);
 	});
 	it('rejects an id used by a checkpoint and an example, through the checkpoint reader', () => {
@@ -75,7 +75,11 @@ describe('isLessonEntry and showToc', () => {
 		expect(isLessonEntry(entry())).toBe(false);
 	});
 	it('hides the menu without toc data or when the page title would be its only entry, unless a group has entries', () => {
-		const group = { label: 'Questions de contrôle' as const, slug: 'checkpoints' as const, entries: [{ id: 'a', title: 'A' }] };
+		const group = {
+			label: 'Questions de contrôle' as const,
+			slug: 'checkpoints' as const,
+			entries: [{ id: 'a', title: 'A' }],
+		};
 		expect(showToc(undefined, [group])).toBe(false);
 		expect(showToc({ items: [{ children: [] }] }, [])).toBe(false);
 		expect(showToc({ items: [{ children: [] }] }, [group])).toBe(true);

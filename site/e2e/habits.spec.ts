@@ -28,7 +28,7 @@ test('finishing the lesson enters its habits, and Done on a due habit moves it o
 
 	// Finish through the recap button: the lesson script collects the habit ids from the cards.
 	await page.locator('[data-finish]').click();
-	await expect(page.locator('[data-finish]')).toHaveText(/^Finished ✓/);
+	await expect(page.locator('[data-finish]')).toHaveText(/^Terminée ✓/);
 	await expect(cards.first()).toHaveAttribute('data-state', 'waiting');
 	let record = await storedRecord(page);
 	expect(Object.keys(record.habits ?? {}).sort()).toEqual([...HABITS].sort());
@@ -66,7 +66,7 @@ test('finishing the lesson enters its habits, and Done on a due habit moves it o
 	await expect(second).toHaveAttribute('data-state', 'due');
 	await second.locator('[data-habit-done]').click();
 	await expect(second).toHaveAttribute('data-state', 'waiting');
-	await expect(second.locator('[data-habit-status]')).toHaveText(/^Next on \d{4}-\d{2}-\d{2}\.$/);
+	await expect(second.locator('[data-habit-status]')).toHaveText(/^Prochaine fois : \d{4}-\d{2}-\d{2}\.$/);
 	record = await storedRecord(page);
 	expect(record.habits?.[HABITS[0] ?? '']).toMatchObject({ history: [{ at: TODAY, result: 'skipped' }] });
 	expect(record.habits?.[HABITS[1] ?? '']).toMatchObject({ history: [{ at: TODAY, result: 'done' }] });
