@@ -1,8 +1,9 @@
 id: using-agents/finding-information
-title: Finding information with an assistant
+title: Trouver de l’information avec un assistant
 description: >-
-  Ask an assistant what a newcomer must know from a text you supply, with a quote behind each claim,
-  and see why the same question from memory gives a confident wrong answer.
+  Demander à un assistant ce qu’un nouveau venu doit savoir d’un texte que vous fournissez, avec
+  une citation derrière chaque affirmation, et voir pourquoi la même question posée de mémoire
+  donne une réponse fausse et assurée.
 mode: tutorial
 covers: using-agents/assistant-work
 serves: [using-agents/delegates-and-checks/writes-a-brief]
@@ -15,17 +16,20 @@ assumes:
     lesson: concepts/how-models-work
     section: les-défaillances-nommées
 extends-to:
-  - label: Delegating a task to an agent
+  - label: Déléguer une tâche à un agent
     href: /using-agents/delegating/
-  - label: "Applied AI Foundations, module 3: search compared with deep research in ChatGPT (OpenAI Academy, free account)"
+  - label: >-
+      Applied AI Foundations, module 3 : la recherche comparée à la recherche approfondie dans ChatGPT
+      (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/applied-ai-foundations-szsmv
 after: []
-shorts: [Asking for sources]
+shorts: [Demander des sources]
 exercise:
   kind: do
   brief: >-
-    Paste the supplied guideline, ask for the three things a newcomer must know with a quote for each,
-    then check every quote against the text and note which one is not there word for word.
+    Coller le guide fourni, demander les trois choses qu’un nouveau venu doit savoir avec une
+    citation pour chacune, puis vérifier chaque citation dans le texte et noter celle qui n’y figure
+    pas mot pour mot.
 sources:
   - Academy ai-capabilities-and-limitations
   - Claude support enabling-and-using-web-search

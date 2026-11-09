@@ -1,333 +1,350 @@
 import { Choice, Sort, Scenario, Pitfall, Exercise, Recap, Prompt, Response, MultiChoice, Match } from '@components/lesson';
 
-In this lesson we hand an assistant a screenshot of a table and get the
-rows back for a spreadsheet. First we try to describe the table in words
-and see where that goes wrong. Then we upload the picture with a brief
-that says what to keep exact. The check is a count of the cells that came
-back wrong. A second run compares two versions of a short contract, where the
-brief says which differences matter. By the end you have a rule for
-working with files and images: when to upload and when to type.
+Dans cette leçon, nous remettons à un assistant une capture d’écran d’un
+tableau et récupérons les lignes pour un tableur. Nous essayons d’abord de
+décrire le tableau avec des mots et voyons où cela déraille. Puis nous
+envoyons l’image avec une consigne qui dit ce qu’il faut garder à
+l’identique. La vérification consiste à compter les cellules revenues
+fausses. Un second essai compare deux versions d’un court contrat, avec une
+consigne qui dit quelles différences comptent. À la fin, vous avez une règle
+pour travailler avec des fichiers et des images : quand envoyer le fichier,
+et quand taper.
 
-You need a chat assistant that accepts images. Most do, and the one this
-lesson checks its limits against takes pictures in the common formats up
-to 8000 by 8000 pixels each, about twenty of them in one message, and a
-file size limit that changes between products and over time, so check the
-one your product states (@Claude docs vision). Every response shown here is illustrative. The
-author wrote it to show the pattern, and your model gives a different
-text.
+Il vous faut un assistant conversationnel qui accepte les images. C’est le
+cas de la plupart, et celui dont cette leçon vérifie les limites accepte des
+images dans les formats courants jusqu’à 8000 sur 8000 pixels chacune,
+environ vingt dans un même message, avec une taille de fichier maximale qui
+varie selon les produits et dans le temps, donc vérifiez celle qu’indique
+votre produit (@Claude docs vision). Chaque réponse montrée ici est
+illustrative. L’auteur l’a écrite pour montrer le schéma, et votre modèle
+donnera un autre texte.
 
-## The table
+## Le tableau
 
-Here is the material. It is a stock count from Brindlewick Instruments,
-the fictional company from the previous lesson, and it exists only as a
-picture: someone photographed the count sheet, or took a screenshot of a
-system you have no export from. The task is to get these six rows into a
-spreadsheet.
+Voici le contenu. C’est un inventaire de stock de Brindlewick Instruments,
+l’entreprise fictive de la leçon précédente, et il n’existe que sous forme
+d’image : quelqu’un a photographié la feuille d’inventaire, ou fait une
+capture d’écran d’un système dont vous ne pouvez rien exporter. La tâche
+consiste à faire entrer ces six lignes dans un tableur.
 
-![A screenshot of a table titled "Storeroom B, stock count, 18 September" with six rows and the columns Item code, Description, Shelf, Counted, Expected and Difference.](/using-agents/working-from-files/stock-count.png)
+![Capture d’écran d’un tableau intitulé « Réserve B, inventaire du stock, 18 septembre », avec six lignes et les colonnes Code article, Description, Étagère, Compté, Attendu et Écart.](/using-agents/working-from-files/stock-count.png)
 
-Look at it once now. Thirty-six cells, some of them one digit, some
-of them a minus sign in front of a digit. You could type them, and typing
-is where a `-1` becomes a `1`. The point of this lesson is to make the
-assistant do the typing and to make the check quick.
+Regardez-le une fois maintenant. Trente-six cellules, certaines d’un seul
+chiffre, d’autres avec un signe moins devant un chiffre. Vous pourriez les
+taper, et c’est en tapant qu’un `-1` devient un `1`. L’objet de cette leçon
+est de faire taper l’assistant et de rendre la vérification rapide.
 
-## Describe the table in words
+## Décrire le tableau avec des mots
 
-The first instinct is to describe what you see. Before you read on,
-predict what comes back when you do that. Where does the assistant get the
-values you leave out?
+Le premier réflexe est de décrire ce que vous voyez. Avant de poursuivre,
+prédisez ce qui revient quand vous faites cela. Où l’assistant trouve-t-il
+les valeurs que vous ne donnez pas ?
 
 <Prompt model="illustrative" recorded="illustrative">
-I have a stock count table with six rows. The columns are item code,
-description, shelf, counted, expected and difference. The items are a
-torque wrench, a calibration weight, two digital calipers, a thermocouple
-probe and a spirit level. The item codes start with BI and a dash and a
-four-digit number. Can you give me the rows to paste into a spreadsheet?
+J’ai un tableau d’inventaire de stock avec six lignes. Les colonnes sont code
+article, description, étagère, compté, attendu et écart. Les articles sont
+une clé dynamométrique, une masse étalon, deux pieds à coulisse numériques,
+une sonde thermocouple et un niveau à bulle. Les codes articles commencent
+par BI, un tiret et un nombre à quatre chiffres. Peux-tu me donner les
+lignes à coller dans un tableur ?
 </Prompt>
 <Response>
-Here is the table as tab-separated rows. I have filled in the codes and
-numbers as placeholders where you did not give them, so replace those with
-the real values.
+Voici le tableau en lignes séparées par des tabulations. J’ai mis des
+valeurs provisoires pour les codes et les nombres que vous n’avez pas
+donnés, remplacez-les donc par les vraies valeurs.
 
 ```text
-Item code	Description	Shelf	Counted	Expected	Difference
-BI-0001	Torque wrench	B1	10	10	0
-BI-0002	Calibration weight	B1	5	5	0
-BI-0003	Digital caliper	B2	12	12	0
-BI-0004	Digital caliper	B2	12	12	0
-BI-0005	Thermocouple probe	B3	8	8	0
-BI-0006	Spirit level	B3	4	4	0
+Code article	Description	Étagère	Compté	Attendu	Écart
+BI-0001	Clé dynamométrique	B1	10	10	0
+BI-0002	Masse étalon	B1	5	5	0
+BI-0003	Pied à coulisse numérique	B2	12	12	0
+BI-0004	Pied à coulisse numérique	B2	12	12	0
+BI-0005	Sonde thermocouple	B3	8	8	0
+BI-0006	Niveau à bulle	B3	4	4	0
 ```
 
 </Response>
 
-The response says so itself, and it is still no use. The numbers are
-made up, because the prompt gave none, and the two calipers are
-indistinguishable because the prompt did not say how they differ. You
-would now type thirty numbers into the assistant's placeholders, which is
-the work you wanted to hand over. A description is a lossy copy of the
-picture, and the loss is in the exact values, which is the one part of
-the task that matters.
+La réponse le dit elle-même, et elle ne sert toujours à rien. Les nombres
+sont inventés, parce que le prompt n’en donnait aucun, et les deux pieds à
+coulisse sont impossibles à distinguer parce que le prompt ne disait pas ce
+qui les différencie. Vous devriez maintenant taper trente nombres à la place
+des valeurs provisoires de l’assistant, c’est-à-dire le travail que vous
+vouliez confier. Une description est une copie dégradée de l’image, et la
+perte porte sur les valeurs exactes, la seule partie de la tâche qui compte.
 
-## Upload the screenshot
+## Envoyer la capture d’écran
 
-Now attach the picture. Save the screenshot from this page to your
-computer, open a fresh chat, add the file to the message, and write the
-ask under it. The brief has the parts you used for the expense guideline
-in the previous lesson. The goal is rows for a spreadsheet. The context is
-the attached file, named as the only source. The limits say what to keep
-exact and what to leave out. The done-criterion is one you can check
-against the picture.
+Joignez maintenant l’image. Enregistrez la capture d’écran de cette page sur
+votre ordinateur, ouvrez une nouvelle conversation, ajoutez le fichier au
+message, et écrivez la demande en dessous. La consigne a les parties que
+vous avez utilisées pour le guide des frais dans la leçon précédente.
+L’objectif est d’obtenir des lignes pour un tableur. Le contexte est le
+fichier joint, désigné comme seule source. Les limites disent ce qu’il faut
+garder à l’identique et ce qu’il faut laisser de côté. Le critère
+d’achèvement est vérifiable à partir de l’image.
 
 <Prompt model="illustrative" recorded="illustrative">
-[stock-count.png attached]
+[stock-count.png joint]
 
-Attached is a screenshot of a stock count. Give me every row as
-tab-separated values that I can paste into a spreadsheet, with the header
-row first and the rows in the same order as the picture. Keep the item
-codes and the numbers exactly as shown, including the sign. Do not add a
-total or any row that is not in the picture. Where a cell is unreadable,
-write a question mark instead of guessing.
+Ci-joint une capture d’écran d’un inventaire de stock. Donne-moi chaque
+ligne en valeurs séparées par des tabulations que je peux coller dans un
+tableur, avec la ligne d’en-tête en premier et les lignes dans le même ordre
+que sur l’image. Garde les codes articles et les nombres exactement comme
+ils apparaissent, signe compris. N’ajoute pas de total ni aucune ligne
+absente de l’image. Là où une cellule est illisible, écris un point
+d’interrogation au lieu de deviner.
 </Prompt>
 <Response>
 
 ```text
-Item code	Description	Shelf	Counted	Expected	Difference
-BI-1042	Torque wrench 20-100 Nm	B3	14	15	-1
-BI-1108	Calibration weight 1 kg	B1	8	8	0
-BI-2260	Digital caliper 150 mm	B4	21	19	+2
-BI-2271	Digital caliper 300 mm	B4	6	6	0
-BI-3015	Thermocouple probe, type K	B2	37	40	-3
-BI-3390	Spirit level 600 mm	B5	11	11	0
+Code article	Description	Étagère	Compté	Attendu	Écart
+BI-1042	Clé dynamométrique 20-100 Nm	B3	14	15	-1
+BI-1108	Masse étalon 1 kg	B1	8	8	0
+BI-2260	Pied à coulisse numérique 150 mm	B4	21	19	+2
+BI-2271	Pied à coulisse numérique 300 mm	B4	6	6	0
+BI-3015	Sonde thermocouple, type K	B2	37	40	-3
+BI-3390	Niveau à bulle 600 mm	B5	11	11	0
 ```
 
 </Response>
 
-Paste the rows into a spreadsheet and put the picture next to it. Go
-through the cells one at a time and count the ones that differ from the
-picture. On a clear screenshot like this one the count is zero or one,
-and the cells that go wrong are the ones a person mistypes too: a sign
-dropped from a negative number, or a `1` read as a `7`. The vendor's own
-documentation says that the model reads small, blurry or rotated text
-badly and that its counts of objects are approximate. It recommends text
-that is legible in the picture. A crop that makes the text larger should
-still show the context around it, such as the header row (@Claude docs
-vision). The check is what tells you which kind of picture you have.
+Collez les lignes dans un tableur et placez l’image à côté. Parcourez les
+cellules une par une et comptez celles qui diffèrent de l’image. Sur une
+capture nette comme celle-ci, le compte est de zéro ou un, et les cellules
+qui tournent mal sont celles qu’une personne tape mal aussi : un signe perdu
+devant un nombre négatif, ou un `1` lu comme un `7`. La documentation du
+fournisseur elle-même dit que le modèle lit mal le texte petit, flou ou
+pivoté, et que ses comptages d’objets sont approximatifs. Elle recommande un
+texte lisible dans l’image. Un recadrage qui agrandit le texte doit encore
+montrer le contexte autour, comme la ligne d’en-tête (@Claude docs vision).
+C’est la vérification qui vous dit quel genre d’image vous avez.
 
-The upload changed the task. You wrote one sentence about the file and
-three about what to keep exact, and the assistant did the thirty-six
-cells. The same brief works for a photo of a whiteboard, a PDF price
-list, a spreadsheet export, or a scanned form. Name the attachment as the
-source and say what must be copied exactly. Give the model a way to say
-"I can't read this", so that it doesn't fill the gap.
+L’envoi du fichier a changé la tâche. Vous avez écrit une phrase sur le
+fichier et trois sur ce qu’il faut garder à l’identique, et l’assistant a
+rempli les trente-six cellules. La même consigne fonctionne pour la photo
+d’un tableau blanc, une liste de prix en PDF, un export de tableur ou un
+formulaire scanné. Désignez la pièce jointe comme source et dites ce qui
+doit être copié exactement. Donnez au modèle un moyen de dire « je ne peux
+pas lire ceci », pour qu’il ne comble pas le vide.
 
 <Choice id="which-ask-uses-the-file" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['working-with-files-and-images']}
-  context="The lesson turns a screenshot of a six-row stock count table into rows for a spreadsheet, and the learner can attach the screenshot to the chat."
-  title="Which ask gets the table?" hint="Which ask gives the model the values, and which asks give it room to invent them?"
+  context="La leçon transforme la capture d’écran d’un tableau d’inventaire de six lignes en lignes pour un tableur, et l’apprenant peut joindre la capture à la conversation."
+  title="Quelle demande obtient le tableau ?" hint="Quelle demande donne les valeurs au modèle, et lesquelles lui laissent la place de les inventer ?"
   options={[
-    { text: 'I have a stock count with six rows and six columns, items like a torque wrench and two calipers. Give me the rows for a spreadsheet, codes included.', why: 'The model has the shape of the table and none of its values, so every number it returns is a placeholder or a guess.' },
-    { text: 'What is in this image?', why: 'The file is there, but the ask has no format, no limits and nothing you can check. You get a paragraph about a table, and the rows are still to do.' },
-    { text: 'Attached is a screenshot of a stock count. Give me every row as tab-separated values, header first, codes and numbers exactly as shown. Write a question mark for any cell you cannot read.', correct: true },
-    { text: 'Type up the attached table for me and make sure it is accurate.', why: 'Asking for accuracy changes nothing you can check, and "type up" leaves the format to the model. Say what exact means: the codes, the numbers, the sign.' },
+    { text: 'J’ai un inventaire de six lignes et six colonnes, avec des articles comme une clé dynamométrique et deux pieds à coulisse. Donne-moi les lignes pour un tableur, codes compris.', why: 'Le modèle a la forme du tableau et aucune de ses valeurs, donc chaque nombre qu’il renvoie est une valeur provisoire ou une supposition.' },
+    { text: 'Qu’y a-t-il sur cette image ?', why: 'Le fichier est là, mais la demande n’a ni format, ni limites, ni rien de vérifiable. Vous obtenez un paragraphe sur un tableau, et les lignes restent à faire.' },
+    { text: 'Ci-joint la capture d’un inventaire. Donne chaque ligne en valeurs séparées par des tabulations, en-tête d’abord, codes et nombres à l’identique. Mets un point d’interrogation pour toute cellule illisible.', correct: true },
+    { text: 'Tape le tableau joint pour moi et assure-toi qu’il est exact.', why: 'Demander de l’exactitude ne change rien que vous puissiez vérifier, et « tape » laisse le format au modèle. Dites ce que veut dire exact : les codes, les nombres, le signe.' },
   ]}>
-You have the screenshot of the stock count and a chat open. Which ask gets
-you rows you can paste and check in a minute?
+Vous avez la capture d’écran de l’inventaire et une conversation ouverte.
+Quelle demande vous donne des lignes que vous pouvez coller et vérifier en
+une minute ?
 </Choice>
 
-## Compare two versions of a contract
+## Comparer deux versions d’un contrat
 
-Here is a second use of the same move. A short service agreement has
-come back from the other side with changes, and you want to know what
-changed. The
-versions are below, and each is short on purpose so that you can check
-the answer. In your own work they would be two files, and you attach both.
+Voici un second usage du même geste. Un court contrat de service est revenu
+de l’autre partie avec des modifications, et vous voulez savoir ce qui a
+changé. Les versions sont ci-dessous, et chacune est volontairement courte
+pour que vous puissiez vérifier la réponse. Dans votre propre travail, ce
+seraient deux fichiers, et vous joindriez les deux.
 
-> **Service agreement, calibration services (version 1)**
+> **Contrat de service, prestations d’étalonnage (version 1)**
 >
-> 1. Brindlewick Instruments calibrates the Client's measuring equipment
->    listed in Schedule A once every twelve months.
-> 2. The fee is 1,200 euros per visit, invoiced after each visit and
->    payable within 30 days.
-> 3. Either party may end this agreement with 60 days' written notice.
-> 4. Brindlewick repeats a faulty calibration free of charge when the
->    Client reports it within 14 days of the visit.
-> 5. Brindlewick keeps the calibration records for five years and provides
->    copies on request.
-> 6. Brindlewick may not subcontract the work without the Client's written
->    consent.
+> 1. Brindlewick Instruments étalonne les instruments de mesure du Client
+>    listés à l’annexe A une fois tous les douze mois.
+> 2. Le tarif est de 1 200 euros par intervention, facturé après chaque
+>    intervention et payable sous 30 jours.
+> 3. Chaque partie peut mettre fin au présent contrat avec un préavis écrit
+>    de 60 jours.
+> 4. Brindlewick refait gratuitement un étalonnage défectueux quand le Client
+>    le signale dans les 14 jours suivant l’intervention.
+> 5. Brindlewick conserve les relevés d’étalonnage pendant cinq ans et en
+>    fournit des copies sur demande.
+> 6. Brindlewick ne peut pas sous-traiter le travail sans l’accord écrit du
+>    Client.
 
-> **Service agreement, calibration services (version 2)**
+> **Contrat de service, prestations d’étalonnage (version 2)**
 >
-> 1. Brindlewick Instruments calibrates the Client's measuring equipment
->    listed in Schedule A once a year.
-> 2. The fee is 1,350 euros per visit, invoiced after each visit and
->    payable within 30 days.
-> 3. Either party may end this agreement with 30 days' written notice.
-> 4. Brindlewick repeats a faulty calibration without charge when the Client
->    reports it within 14 days of the visit.
-> 5. Brindlewick keeps the calibration records for five years and provides
->    copies on request.
-> 6. Brindlewick may subcontract the work to a certified laboratory and
->    remains responsible for it.
+> 1. Brindlewick Instruments étalonne les instruments de mesure du Client
+>    listés à l’annexe A une fois par an.
+> 2. Le tarif est de 1 350 euros par intervention, facturé après chaque
+>    intervention et payable sous 30 jours.
+> 3. Chaque partie peut mettre fin au présent contrat avec un préavis écrit
+>    de 30 jours.
+> 4. Brindlewick refait sans frais un étalonnage défectueux quand le Client
+>    le signale dans les 14 jours suivant l’intervention.
+> 5. Brindlewick conserve les relevés d’étalonnage pendant cinq ans et en
+>    fournit des copies sur demande.
+> 6. Brindlewick peut sous-traiter le travail à un laboratoire certifié et
+>    en reste responsable.
 
-"Compare these two" gives you a list in which a fee increase and a changed
-turn of phrase sit side by side with the same weight. The brief says which
-differences matter and what to do with the rest.
+« Compare ces deux versions » vous donne une liste où une hausse de tarif et
+une tournure modifiée se côtoient avec le même poids. La consigne dit quelles
+différences comptent et quoi faire du reste.
 
 <Prompt model="illustrative" recorded="illustrative">
-[contract-v1.txt and contract-v2.txt attached]
+[contrat-v1.txt et contrat-v2.txt joints]
 
-Attached are two versions of a service agreement. List every difference
-that changes an amount, a period, a deadline or an obligation. For each
-one, quote the sentence from both versions. Rewording that keeps the
-meaning goes in one line at the end, and if a clause is unchanged, do not
-mention it.
+Ci-joint deux versions d’un contrat de service. Liste chaque différence qui
+change un montant, une durée, un délai ou une obligation. Pour chacune, cite
+la phrase des deux versions. Les reformulations qui gardent le sens vont sur
+une ligne à la fin, et si une clause n’a pas changé, ne la mentionne pas.
 </Prompt>
 <Response>
 
-1. **Fee.** Version 1: "The fee is 1,200 euros per visit". Version 2:
-   "The fee is 1,350 euros per visit".
-2. **Notice period.** Version 1: "with 60 days' written notice". Version
-   2: "with 30 days' written notice".
-3. **Subcontracting.** Version 1: "Brindlewick may not subcontract the
-   work without the Client's written consent." Version 2: "Brindlewick may
-   subcontract the work to a certified laboratory and remains responsible
-   for it." The Client's consent is no longer needed.
+1. **Tarif.** Version 1 : « Le tarif est de 1 200 euros par intervention ».
+   Version 2 : « Le tarif est de 1 350 euros par intervention ».
+2. **Préavis.** Version 1 : « avec un préavis écrit de 60 jours ».
+   Version 2 : « avec un préavis écrit de 30 jours ».
+3. **Sous-traitance.** Version 1 : « Brindlewick ne peut pas sous-traiter le
+   travail sans l’accord écrit du Client. » Version 2 : « Brindlewick peut
+   sous-traiter le travail à un laboratoire certifié et en reste
+   responsable. » L’accord du Client n’est plus nécessaire.
 
-Rewording only: clause 1 says "once a year" instead of "once every twelve
-months", and clause 4 says "without charge" instead of "free of charge".
+Reformulations seulement : la clause 1 dit « une fois par an » au lieu de
+« une fois tous les douze mois », et la clause 4 dit « sans frais » au lieu
+de « gratuitement ».
 
 </Response>
 
-Check it against the two texts. Each of the three items quotes both
-versions, so the check is finding two sentences, and the reworded clauses
-are named and set aside rather than mixed in. The brief did that. It named
-the kinds of change that matter (amount, period, deadline, obligation),
-asked for the quote behind each, and gave the rewording a place to go.
+Vérifiez-la à partir des deux textes. Chacun des trois éléments cite les
+deux versions, donc la vérification consiste à trouver deux phrases, et les
+clauses reformulées sont nommées et mises de côté au lieu d’être mélangées
+aux autres. C’est la consigne qui a fait cela. Elle a nommé les types de
+changement qui comptent (montant, durée, délai, obligation), demandé la
+citation derrière chacun, et donné aux reformulations un endroit où aller.
 
 <Sort id="which-differences-matter" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['working-with-files-and-images']}
-  context="The lesson compares two versions of a short fictional service agreement with a brief that asks for every change to an amount, a period, a deadline or an obligation, and asks for rewording to be listed separately."
-  title="Which differences does the brief ask for?" hint="For each change, ask: does one party owe, pay, wait or get something different, or is it the same rule in other words?"
-  buckets={['A change the brief asks for', 'Rewording the brief sets aside']}
+  context="La leçon compare deux versions d’un court contrat de service fictif avec une consigne qui demande chaque changement de montant, de durée, de délai ou d’obligation, et demande de lister à part les reformulations."
+  title="Quelles différences la consigne demande-t-elle ?" hint="Pour chaque changement, demandez-vous : une partie doit-elle, paie-t-elle, attend-elle ou obtient-elle quelque chose de différent, ou est-ce la même règle en d’autres mots ?"
+  buckets={['Un changement que la consigne demande', 'Une reformulation que la consigne met de côté']}
   items={[
-    { text: 'The fee goes from 1,200 to 1,350 euros per visit', bucket: 0 },
-    { text: '"Once every twelve months" becomes "once a year"', bucket: 1 },
-    { text: 'The notice period goes from 60 to 30 days', bucket: 0 },
-    { text: '"Free of charge" becomes "without charge"', bucket: 1 },
-    { text: 'Subcontracting no longer needs the Client\'s written consent', bucket: 0 },
+    { text: 'Le tarif passe de 1 200 à 1 350 euros par intervention', bucket: 0 },
+    { text: '« Une fois tous les douze mois » devient « une fois par an »', bucket: 1 },
+    { text: 'Le préavis passe de 60 à 30 jours', bucket: 0 },
+    { text: '« Gratuitement » devient « sans frais »', bucket: 1 },
+    { text: 'La sous-traitance n’exige plus l’accord écrit du Client', bucket: 0 },
   ]} />
 
-## What an upload discloses
+## Ce qu’un envoi de fichier divulgue
 
-An attachment goes to the same place as pasted text, under the same
-terms, and the model reads all of it. The difference is that you read
-pasted text as you paste it, and you rarely read a file before you attach
-it. In the lesson on redacting before you paste you read a document with
-the task in mind and split it into what the task uses and what says who is
-involved. Do the same with a file, and where a file holds both, make a
-copy that holds only the first part: crop the screenshot, or export the
-one sheet.
+Une pièce jointe va au même endroit qu’un texte collé, aux mêmes conditions,
+et le modèle la lit en entier. La différence est que vous lisez un texte
+collé en le collant, alors que vous lisez rarement un fichier avant de le
+joindre. Dans la leçon sur le masquage (redaction) avant de coller, vous avez lu un
+document en pensant à la tâche, et vous l’avez séparé entre ce que la tâche
+utilise et ce qui dit qui est concerné. Faites de même avec un fichier, et
+quand un fichier contient les deux, faites une copie qui ne contient que la
+première partie : recadrez la capture, ou exportez la seule feuille utile.
 
-<Pitfall title="A screenshot of the whole window">
-A colleague wants help with the formula in one column of a spreadsheet and
-takes a screenshot of the whole window. The picture shows the column, and
-also the browser tabs behind it, a customer's name in a chat notification
-in the corner, and the salary column next to the one they asked about. The
-assistant answers the formula question well, and the whole picture went
-with it. An attachment discloses its whole content, the same as pasted
-text. Crop to the range the task needs before you attach.
+<Pitfall title="Une capture de toute la fenêtre">
+Un collègue veut de l’aide sur la formule d’une colonne d’un tableur et fait
+une capture d’écran de toute la fenêtre. L’image montre la colonne, et aussi
+les onglets du navigateur derrière, le nom d’un client dans une
+notification de messagerie dans un coin, et la colonne des salaires à côté
+de celle qui l’intéresse. L’assistant répond bien à la question sur la
+formule, et toute l’image est partie avec elle. Une pièce jointe divulgue
+tout son contenu, exactement comme un texte collé. Recadrez sur la zone dont
+la tâche a besoin avant de joindre.
 </Pitfall>
 
 <Scenario id="which-file-to-attach" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['working-with-files-and-images', 'giving-context']}
-  context="A learner wants an assistant to turn one column of two hundred numbers from a team spreadsheet into a chart. The spreadsheet also holds columns with the team members' names and salaries."
-  title="Which file goes in the brief?" hint="What does the chart need from the sheet, and what else is in the sheet?"
+  context="Un apprenant veut qu’un assistant transforme en graphique une colonne de deux cents nombres tirée d’un tableur d’équipe. Le tableur contient aussi des colonnes avec les noms et les salaires des membres de l’équipe."
+  title="Quel fichier va dans la consigne ?" hint="De quoi le graphique a-t-il besoin dans la feuille, et que contient-elle d’autre ?"
   options={[
-    { text: 'Attach the whole spreadsheet and ask for a chart of the one column.', consequence: 'The chart is fine. The names and salaries of the team went to the tool along with the column, and the terms of the tool now apply to them.' },
-    { text: 'Copy the one column into a new file, attach that, and name it as the source in the brief.', correct: true, consequence: 'The chart is the same. The tool saw two hundred numbers and a heading, and there is nothing in the file that the task did not need.' },
-    { text: 'Type the two hundred numbers into the chat instead of attaching anything.', consequence: 'Nothing leaks, and you spend half an hour typing, with every number a place to make an error the chart then shows. Copying the column into a new file takes a minute.' },
+    { text: 'Joindre tout le tableur et demander un graphique de la seule colonne.', consequence: 'Le graphique est correct. Les noms et les salaires de l’équipe sont partis vers l’outil avec la colonne, et les conditions de l’outil s’appliquent maintenant à eux.' },
+    { text: 'Copier la colonne dans un nouveau fichier, joindre celui-ci, et le désigner comme source dans la consigne.', correct: true, consequence: 'Le graphique est le même. L’outil a vu deux cents nombres et un titre de colonne, et le fichier ne contient rien dont la tâche n’avait pas besoin.' },
+    { text: 'Taper les deux cents nombres dans la conversation au lieu de joindre quoi que ce soit.', consequence: 'Rien ne fuit, et vous passez une demi-heure à taper, chaque nombre étant une occasion d’erreur que le graphique affichera. Copier la colonne dans un nouveau fichier prend une minute.' },
   ]}>
-You want a chart of the daily totals column from the team's spreadsheet,
-two hundred rows of it. The sheet also has a column of names and a column
-of salaries. What do you attach?
+Vous voulez un graphique de la colonne des totaux journaliers du tableur de
+l’équipe, soit deux cents lignes. La feuille contient aussi une colonne de
+noms et une colonne de salaires. Que joignez-vous ?
 </Scenario>
 
 <MultiChoice id="lines-for-an-upload" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['working-with-files-and-images']}
-  context="A learner attaches a screenshot of a table of stock counts to a chat and writes the brief that asks for the rows."
-  title="The brief for an upload" hint="Which lines say where the values come from and what happens with a cell the model can't read?"
+  context="Un apprenant joint à une conversation la capture d’écran d’un tableau d’inventaire et écrit la consigne qui demande les lignes."
+  title="La consigne pour un envoi de fichier" hint="Quelles lignes disent d’où viennent les valeurs et ce qui se passe pour une cellule que le modèle ne peut pas lire ?"
   options={[
-    { text: 'Be careful with the numbers in the table.', why: 'Care is not something you can check. The brief needs to say which values must be copied exactly.' },
-    { text: 'Use only the attached screenshot.', correct: true },
-    { text: 'Make the table look tidy.', why: 'Tidy is a matter of taste. It leaves the model to decide what to change.' },
-    { text: 'Write a question mark for any cell you can\'t read.', correct: true },
+    { text: 'Fais bien attention à chacun des nombres du tableau.', why: 'L’attention n’est pas quelque chose que vous pouvez vérifier. La consigne doit dire quelles valeurs doivent être copiées exactement.' },
+    { text: 'Appuie-toi uniquement sur la capture jointe.', correct: true },
+    { text: 'Rends le tableau propre et agréable à lire.', why: '« Propre » est une affaire de goût. Cela laisse le modèle décider de ce qu’il change.' },
+    { text: 'Mets un point d’interrogation pour toute cellule illisible.', correct: true },
   ]}>
 
-Which two lines belong in the brief?
+Quelles sont les deux lignes qui ont leur place dans la consigne ?
 
 </MultiChoice>
 
 <Match id="attach-type-or-copy" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['working-with-files-and-images', 'giving-context']}
-  context="The lesson attaches a file when the exact values matter, and says that an attachment discloses its whole content, so the part the task needs is copied out first when the rest must not go in."
-  title="Attach, type or copy out?" hint="Do exact values matter, and is there anything in the file that the task doesn't need?"
-  options={['Attach the file as it is', 'Type it in the chat', 'Copy out the part the task needs first']}
+  context="La leçon joint un fichier quand les valeurs exactes comptent, et dit qu’une pièce jointe divulgue tout son contenu, donc la partie dont la tâche a besoin est d’abord copiée à part quand le reste ne doit pas partir."
+  title="Joindre, taper ou copier à part ?" hint="Les valeurs exactes comptent-elles, et le fichier contient-il quelque chose dont la tâche n’a pas besoin ?"
+  options={['Joindre le fichier tel quel', 'Le taper dans la conversation', 'Copier d’abord à part la partie dont la tâche a besoin']}
   rows={[
-    { statement: 'A screenshot of a price table with forty cells', option: 0, why: 'Would typing it out lose exact values?' },
-    { statement: 'One date that you want in another format', option: 1, why: 'Is there anything to lose by typing one value?' },
-    { statement: 'A spreadsheet with a sales column and a column of home addresses, for a chart of sales', option: 2, why: 'Does the chart need every column in the file?' },
+    { statement: 'La capture d’un tableau de prix de quarante cellules', option: 0, why: 'Le taper ferait-il perdre des valeurs exactes ?' },
+    { statement: 'Une date que vous voulez dans un autre format', option: 1, why: 'Y a-t-il quelque chose à perdre en tapant une seule valeur ?' },
+    { statement: 'Un tableur avec une colonne de ventes et une colonne d’adresses personnelles, pour un graphique des ventes', option: 2, why: 'Le graphique a-t-il besoin de chaque colonne du fichier ?' },
   ]}
-  rationale="Attach when exact values matter, type what is short, and copy out the part the task needs when the file holds more than that.">
-Match each task to how you give the assistant the material.
+  rationale="Joignez quand les valeurs exactes comptent, tapez ce qui est court, et copiez à part la partie dont la tâche a besoin quand le fichier contient davantage.">
+Associez chaque tâche à la façon dont vous donnez le contenu à l’assistant.
 </Match>
 
 <Scenario id="after-the-rows-come-back" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['working-with-files-and-images']}
-  context="An assistant turned an attached screenshot of a six-row stock count into rows for a spreadsheet. The rows are pasted, and there is no question mark in them."
-  title="The rows are in the sheet" hint="Where do the errors in a transcription show up, if they are there?"
+  context="Un assistant a transformé la capture d’écran jointe d’un inventaire de six lignes en lignes pour un tableur. Les lignes sont collées, et elles ne contiennent aucun point d’interrogation."
+  title="Les lignes sont dans la feuille" hint="Où apparaissent les erreurs d’une transcription, s’il y en a ?"
   options={[
-    { text: 'Trust the rows, because the assistant wrote no question marks.', consequence: 'One code has a 5 where the screenshot shows an S. The count for that item goes to the wrong part.' },
-    { text: 'Check each cell against the screenshot before you use the rows.', correct: true, consequence: 'You find the one code with a 5 in place of an S, and fix it in a minute.' },
-    { text: 'Ask the assistant to check its own rows against the screenshot.', consequence: 'It reads the image the same way again and confirms its rows, the wrong code included.' },
-    { text: 'Check only the totals, because an error in a row changes the total.', consequence: 'The totals match. The wrong code isn\'t a number, and no total shows it.' },
+    { text: 'Se fier aux lignes, puisque l’assistant n’a écrit aucun point d’interrogation.', consequence: 'Un code contient un 5 là où la capture montre un S. Le compte de cet article est attribué à la mauvaise pièce.' },
+    { text: 'Vérifier chaque cellule à partir de la capture avant d’utiliser les lignes.', correct: true, consequence: 'Vous trouvez le code avec un 5 à la place d’un S, et vous le corrigez en une minute.' },
+    { text: 'Demander à l’assistant de vérifier ses propres lignes à partir de la capture.', consequence: 'Il relit l’image de la même façon et confirme ses lignes, code faux compris.' },
+    { text: 'Vérifier seulement les totaux, puisqu’une erreur dans une ligne change le total.', consequence: 'Les totaux concordent. Le code faux n’est pas un nombre, et aucun total ne le montre.' },
   ]}>
 
-The six rows are in the spreadsheet. What do you do before you use them?
+Les six lignes sont dans le tableur. Que faites-vous avant de les utiliser ?
 
 </Scenario>
 
-## When to upload and when to type
+## Quand envoyer le fichier et quand taper
 
-Upload when the material is long, structured or visual: a table, a
-diagram, a photo of a whiteboard, a document with numbering you want kept.
-Describing it loses the exact values, and the exact values are the task.
-Type when the material is one or two sentences, or when the file holds
-things the task doesn't need and you can't cut them out in a minute.
+Envoyez le fichier quand le contenu est long, structuré ou visuel : un
+tableau, un schéma, la photo d’un tableau blanc, un document dont vous
+voulez garder la numérotation. Le décrire fait perdre les valeurs exactes,
+et les valeurs exactes sont la tâche. Tapez quand le contenu tient en une ou
+deux phrases, ou quand le fichier contient des choses dont la tâche n’a pas
+besoin et que vous ne pouvez pas les retirer en une minute.
 
-Either way the brief is the one you wrote for the expense guideline in
-the previous lesson, with the attachment in place of the pasted text. Name the file as the source, say which values must be copied exactly, give the model a way to say it can't read something, and
-check the result against the file. A read of a picture is a transcription,
-and a transcription error is silent until you look.
+Dans les deux cas, la consigne est celle que vous avez écrite pour le guide
+des frais dans la leçon précédente, avec la pièce jointe à la place du texte
+collé. Désignez le fichier comme source, dites quelles valeurs doivent être
+copiées exactement, donnez au modèle un moyen de dire qu’il ne peut pas lire
+quelque chose, et vérifiez le résultat à partir du fichier. La lecture d’une
+image est une transcription, et une erreur de transcription reste muette
+tant que vous ne regardez pas.
 
-<Exercise stretch="Shrink the screenshot to half its width in any image editor, run the same brief on the smaller copy, and see whether the count of wrong cells changes.">
-Save the stock count screenshot from this page, open a fresh chat, attach
-it, and send the brief from the "Upload the screenshot" section. Paste the
-rows into a spreadsheet and compare them with the picture, cell by cell,
-and write down the number of cells that differ and what each one says. It
-takes about five minutes and produces one number and at most a few lines.
-Doing it once by hand shows you what kind of error a picture read makes,
-so you know what to check for next time. A good result is a count you can
-name, with a line for each wrong cell, and zero is a fine count. Which of
-the wrong cells, if any, would you have got wrong yourself if you had
-typed the table?
+<Exercise stretch="Réduisez la capture à la moitié de sa largeur dans n’importe quel éditeur d’images, lancez la même consigne sur la copie réduite, et voyez si le nombre de cellules fausses change.">
+Enregistrez la capture de l’inventaire de cette page, ouvrez une nouvelle
+conversation, joignez-la, et envoyez la consigne de la section « Envoyer la
+capture d’écran ». Collez les lignes dans un tableur et comparez-les avec
+l’image, cellule par cellule, et notez le nombre de cellules qui diffèrent et
+ce que dit chacune. Cela prend environ cinq minutes et produit un nombre et
+au plus quelques lignes. Le faire une fois à la main vous montre le genre
+d’erreur que produit la lecture d’une image, pour savoir quoi vérifier la
+prochaine fois. Un bon résultat est un compte que vous pouvez donner, avec
+une ligne par cellule fausse, et zéro est un très bon compte. Laquelle des
+cellules fausses, s’il y en a, auriez-vous vous-même mal tapée en saisissant
+le tableau ?
 </Exercise>
 
 <Recap>
-1. A description of a table is a lossy copy of it, and the loss is in the exact values. Attach the picture or the file, and let the model do the typing.
-2. The brief for an upload has the same four parts as any other. Name the attachment as the only source, say which values must be copied exactly, and give the model a way to say it can't read a cell.
-3. Check the result against the file, cell by cell. A model reads small, blurry or rotated text badly, and a transcription error is silent until you look (@Claude docs vision).
-4. When comparing two files, say which kinds of difference matter and where the rest should go, and ask for the quote from both versions behind each one.
-5. An attachment discloses its whole content, the same as pasted text. Crop or copy out the part the task needs before you attach.
+1. Une description d’un tableau en est une copie dégradée, et la perte porte sur les valeurs exactes. Joignez l’image ou le fichier, et laissez le modèle taper.
+2. La consigne pour un envoi de fichier a les mêmes quatre parties que toute autre. Désignez la pièce jointe comme seule source, dites quelles valeurs doivent être copiées exactement, et donnez au modèle un moyen de dire qu’il ne peut pas lire une cellule.
+3. Vérifiez le résultat à partir du fichier, cellule par cellule. Un modèle lit mal le texte petit, flou ou pivoté, et une erreur de transcription reste muette tant que vous ne regardez pas (@Claude docs vision).
+4. Pour comparer deux fichiers, dites quels types de différence comptent et où doit aller le reste, et demandez la citation des deux versions derrière chacune.
+5. Une pièce jointe divulgue tout son contenu, exactement comme un texte collé. Recadrez ou copiez à part la partie dont la tâche a besoin avant de joindre.
 </Recap>

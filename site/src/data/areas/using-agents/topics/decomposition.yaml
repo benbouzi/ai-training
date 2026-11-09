@@ -1,38 +1,39 @@
 id: using-agents/decomposition
 area: using-agents
-name: Decomposing work
+name: Découper le travail
 definition: >-
-  Large tasks fail as single prompts. This topic teaches breaking work into
-  pieces an agent can complete and you can check, iterating on the pieces as
-  the results reveal what you actually needed, and recognizing the point where
-  another round of delegation costs more than doing the step yourself.
+  Les grandes tâches échouent quand elles tiennent en un seul prompt. Ce thème apprend à découper
+  le travail en morceaux qu’un agent peut terminer et que vous pouvez vérifier, à itérer sur ces
+  morceaux à mesure que les résultats révèlent ce dont vous aviez vraiment besoin, et à
+  reconnaître le moment où un nouveau tour de délégation coûte plus cher que de faire l’étape
+  vous-même.
 concepts:
   - id: task-decomposition
-    name: Task decomposition
+    name: Décomposition des tâches
     definition: >-
-      Splitting a large piece of work into steps small enough that each has a
-      clear input, a clear output and a way to check it. Good pieces can be
-      handed to an agent one at a time, verified independently and redone
-      without losing the others. Decomposition also surfaces the decisions
-      that are yours to make before the agent starts filling gaps.
+      Découper un gros travail en étapes assez petites pour que chacune ait une entrée claire, une
+      sortie claire et un moyen de la vérifier. De bons morceaux peuvent être confiés à un agent un
+      par un, vérifiés séparément et refaits sans perdre les autres. La décomposition (task
+      decomposition) fait aussi apparaître les décisions qui vous reviennent avant que l’agent
+      commence à combler les trous.
   - id: task-iteration
-    name: Iteration
+    name: Itération
     definition: >-
-      Working in rounds: delegate a piece, check it, adjust the brief with
-      what you learned, delegate the next. The first result usually reveals a
-      missing constraint or a wrong assumption about the goal. Treat each
-      round as feedback on the brief rather than as the agent failing, and
-      keep rounds short so mistakes stay cheap.
+      Travailler par tours : déléguer un morceau, le vérifier, ajuster la consigne avec ce que vous
+      avez appris, déléguer le suivant. Le premier résultat révèle en général une contrainte manquante
+      ou une fausse hypothèse sur l’objectif. Traitez chaque tour comme un retour sur la consigne
+      plutôt que comme un échec de l’agent, et gardez des tours courts pour que les erreurs restent
+      peu coûteuses.
   - id: when-to-stop-and-do-it-yourself
-    name: When to stop and do it yourself
+    name: Quand arrêter et faire soi-même
     definition: >-
-      Recognizing the point where explaining, correcting and re-checking an
-      agent costs more than doing the step directly. Signs include a third
-      round on the same piece, a task that depends on knowledge only you
-      hold, or a check that takes longer than the work. Taking the step back
-      is a judgment call, not a failure of the tool or of you.
+      Reconnaître le moment où expliquer, corriger et revérifier le travail d’un agent coûte plus que
+      faire l’étape directement. Les signes : un troisième tour sur le même morceau, une tâche qui
+      dépend d’un savoir que vous seul détenez, ou une vérification qui prend plus de temps que le
+      travail. Reprendre l’étape relève du jugement, et ne signale un échec ni de l’outil ni de vous.
 links:
   prerequisites: [using-agents/delegating]
   related: []
   specializations: []
-sources: [DLAI-11, Academy ai-fluency-framework-foundations, OpenAI Academy applied-ai-foundations-szsmv]
+sources: [DLAI-11, Academy ai-fluency-framework-foundations, OpenAI Academy
+      applied-ai-foundations-szsmv]

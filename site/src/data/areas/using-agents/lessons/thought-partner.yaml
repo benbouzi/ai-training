@@ -1,8 +1,9 @@
 id: using-agents/thought-partner
-title: Thinking a problem through with an assistant
+title: Réfléchir à un problème avec un assistant
 description: >-
-  Ask an assistant which of two job offers to take and get your own framing back as advice, then
-  brief it to argue against your lean and list what you left out, so the thinking is yours.
+  Demander à un assistant laquelle de deux offres d’emploi accepter et recevoir son propre cadrage
+  sous forme de conseil, puis lui donner une consigne pour argumenter contre votre préférence et
+  lister ce que vous avez omis, pour que la réflexion reste la vôtre.
 mode: tutorial
 covers: using-agents/assistant-work
 serves: [using-agents/delegates-and-checks/writes-a-brief]
@@ -15,16 +16,16 @@ assumes:
     lesson: safety/asking-a-model-to-disagree
     section: des-habitudes-du-côté-du-prompt
 extends-to:
-  - label: Delegating a task to an agent
+  - label: Déléguer une tâche à un agent
     href: /using-agents/delegating/
 after: []
-shorts: [Why a model agrees with your framing]
+shorts: [Pourquoi un modèle approuve votre cadrage]
 exercise:
   kind: do
   brief: >-
-    Describe a decision you face in five lines, ask the assistant to argue against your preferred
-    option and to list what you have not mentioned, then write down the one point that changed your
-    view.
+    Décrire en cinq lignes une décision que vous avez à prendre, demander à l’assistant d’argumenter
+    contre l’option que vous préférez et de lister ce que vous n’avez pas mentionné, puis noter le
+    point qui a changé votre avis.
 sources: [Sharma 2023]
 issue: 139
 minutes: 10

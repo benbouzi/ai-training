@@ -1,88 +1,134 @@
 id: using-agents/chooses-tool-and-autonomy
 area: using-agents
-statement: Chooses the right tool and autonomy level for a job
+statement: Choisit l’outil et le degré d’autonomie adaptés à une tâche
 topics: [using-agents/choosing-tools, using-agents/delegating]
 objectives:
   - id: using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation
-    statement: Picks chat, agent or automation for a task and says why
+    statement: Choisit entre conversation, agent et automatisation pour une tâche, et dit pourquoi
     level: base
     behaviors:
-      - claim: The learner picks chat when the task needs judgment at every step, an agent when the steps
-          are known but the path varies, and automation when the steps and path are fixed.
-        why: Each level trades control for effort, and the wrong pick either wastes attention or removes it
-          where it was needed.
-        example: Drafting a difficult email is chat. Cleaning up a folder of misnamed files is an agent.
-          Renaming every new invoice on arrival is automation.
-      - claim: The learner says what would make them move a task to the next level, and what would move it
-          back.
-        why: Tasks change, and a rule for moving makes the choice reviewable.
-        example: '"Once the agent has filed ten reports without a correction, schedule it; if it needs a
-          correction twice in a month, go back to reviewing each."'
-      - claim: The learner picks the level for the task's worst case.
-        why: A task that is routine nine times and consequential the tenth needs the level that handles the
-          tenth.
-        example: Replying to support tickets stays at agent-with-approval because one in fifty tickets is a
-          legal complaint.
+      - claim: >-
+          L’apprenant choisit la conversation quand la tâche demande du jugement à chaque étape, un agent
+          quand les étapes sont connues mais le chemin varie, et l’automatisation quand les étapes et
+          le
+          chemin sont fixes.
+        why: >-
+          Chaque niveau échange du contrôle contre de l’effort, et un mauvais choix gaspille l’attention
+          ou la retire là où elle était nécessaire.
+        example: >-
+          Rédiger un e-mail délicat relève de la conversation. Ranger un dossier de fichiers mal nommés
+          relève d’un agent. Renommer chaque nouvelle facture à son arrivée relève de l’automatisation.
+      - claim: >-
+          L’apprenant dit ce qui lui ferait passer une tâche au niveau suivant, et ce qui la ferait
+          revenir en arrière.
+        why: Les tâches changent, et une règle de passage rend le choix réexaminable.
+        example: >-
+          « Une fois que l’agent a classé dix rapports sans correction, on le planifie ; s’il faut le
+          corriger deux fois dans le mois, on revient à la relecture de chaque rapport. »
+      - claim: L’apprenant choisit le niveau d’après le pire cas de la tâche.
+        why: >-
+          Une tâche routinière neuf fois sur dix et lourde de conséquences la dixième demande le niveau
+          qui gère la dixième.
+        example: >-
+          La réponse aux tickets d’assistance reste au niveau agent avec approbation, parce qu’un ticket
+          sur cinquante est une réclamation juridique.
   - id: using-agents/chooses-tool-and-autonomy/picks-a-model-by-fit
-    statement: Picks a model for a task by testing fit, cost and speed
+    statement: Choisit un modèle pour une tâche en testant l’adéquation, le coût et la rapidité
     level: base
     behaviors:
-      - claim: The learner runs a few representative inputs on each candidate model and compares, rather
-          than defaulting to the most capable one.
-        why: The most capable model is usually also the slowest and the most expensive, and on many tasks
-          a smaller one gives the same answer.
-        example: Before picking a model for tagging support tickets, the learner runs the same ten tickets
-          through a small and a large model and finds that the tags match on nine.
-      - claim: The learner states what the task needs (reformatting, classification, multi-step reasoning,
-          fresh facts) before naming a model.
-        why: The kind of work decides which model can do it, and a model named first gets the task bent to
-          fit it.
-        example: '"This is reformatting, so any model will do. This one asks for today''s prices, so it
-          needs a model with search, whatever its size."'
-      - claim: The learner weighs the price and delay per call at the volume they expect, and measures
-          before scaling repeated work.
-        why: A cost that is small for one call is the whole budget at ten thousand calls a day, and a delay
-          that is fine in chat blocks a loop.
-        example: The learner times one call at four seconds, multiplies by the twenty thousand documents
-          in the nightly batch, gets more than twenty-two hours, and moves the job to the faster model
-          before scheduling it.
+      - claim: >-
+          L’apprenant fait passer quelques entrées représentatives sur chaque modèle candidat et compare,
+          au lieu de choisir par défaut le plus capable.
+        why: >-
+          Le modèle le plus capable est en général aussi le plus lent et le plus cher, et sur beaucoup
+          de
+          tâches un plus petit donne la même réponse.
+        example: >-
+          Avant de choisir un modèle pour étiqueter des tickets d’assistance, l’apprenant fait passer
+          les
+          dix mêmes tickets sur un petit et un grand modèle, et constate que les étiquettes concordent
+          sur
+          neuf.
+      - claim: >-
+          L’apprenant énonce ce dont la tâche a besoin (reformater, classer, raisonner en plusieurs
+          étapes, des faits récents) avant de nommer un modèle.
+        why: >-
+          C’est la nature du travail qui décide quel modèle peut le faire, et un modèle nommé en premier
+          fait plier la tâche à sa mesure.
+        example: >-
+          « Ceci est du reformatage, donc n’importe quel modèle fera l’affaire. Ceci demande les prix
+          du
+          jour, donc il faut un modèle avec recherche, quelle que soit sa taille. »
+      - claim: >-
+          L’apprenant pèse le prix et le délai par appel au volume prévu, et mesure avant de passer à
+          l’échelle un travail répété.
+        why: >-
+          Un coût faible pour un appel devient tout le budget à dix mille appels par jour, et un délai
+          acceptable en conversation bloque une boucle.
+        example: >-
+          L’apprenant chronomètre un appel à quatre secondes, multiplie par les vingt mille documents
+          du
+          traitement de nuit, obtient plus de vingt-deux heures, et passe la tâche sur le modèle plus
+          rapide avant de la planifier.
   - id: using-agents/chooses-tool-and-autonomy/keeps-the-human-steps
-    statement: Names the steps that stay human and why
+    statement: Nomme les étapes qui restent humaines, et pourquoi
     level: base
     behaviors:
-      - claim: The learner names the steps that stay with a person because someone has to answer for them,
-          even when the agent could do them.
-        why: Some steps are kept because a person has to be accountable for them, and that reason should be
-          said out loud.
-        example: The agent can draft the performance review, but the manager writes the rating, because the
-          manager is the one who has to defend it.
-      - claim: The learner keeps the step where the information is not in any system the agent can reach.
-        why: An agent works from what it can read, and much of what matters in a decision is in
-          conversations and context it never saw.
-        example: The agent proposes the meeting time from calendars, and the person keeps the choice because
-          they know a colleague is having a hard week.
-      - claim: The learner keeps the steps that teach them what they need to keep judging the agent's work.
-        why: If every step is handed over, the person loses the knowledge that lets them check the result.
-        example: The engineer keeps reading the tests the agent writes, even though the agent could review
-          them, so that they still know the system.
+      - claim: >-
+          L’apprenant nomme les étapes qui restent à une personne parce que quelqu’un doit en répondre,
+          même quand l’agent pourrait les faire.
+        why: >-
+          Certaines étapes sont gardées parce qu’une personne doit en être responsable, et cette raison
+          doit être dite à voix haute.
+        example: >-
+          L’agent peut rédiger l’entretien d’évaluation, mais c’est le manager qui écrit la note, parce
+          que c’est lui qui doit la défendre.
+      - claim: >-
+          L’apprenant garde l’étape dont l’information ne se trouve dans aucun système que l’agent peut
+          atteindre.
+        why: >-
+          Un agent travaille à partir de ce qu’il peut lire, et une grande partie de ce qui compte dans
+          une décision se trouve dans des conversations et un contexte qu’il n’a jamais vus.
+        example: >-
+          L’agent propose l’horaire de la réunion d’après les agendas, et la personne garde le choix parce
+          qu’elle sait qu’un collègue traverse une semaine difficile.
+      - claim: >-
+          L’apprenant garde les étapes qui lui apprennent ce dont il a besoin pour continuer à juger le
+          travail de l’agent.
+        why: >-
+          Si chaque étape est confiée, la personne perd le savoir qui lui permet de vérifier le résultat.
+        example: >-
+          L’ingénieure continue de lire les tests qu’écrit l’agent, même si l’agent pourrait les relire,
+          pour continuer à connaître le système.
   - id: using-agents/chooses-tool-and-autonomy/reasons-across-levels
-    statement: Re-applies judgment when the tool level rises
+    statement: Réapplique son jugement quand le niveau de l’outil monte
     level: expert
     behaviors:
-      - claim: When a tool takes over a level of work, the learner moves their attention to the level above
-          it and asks the same questions there.
-        why: The questions about correctness, cost and risk do not go away. They move to the specification
-          and the review.
-        example: When the agent writes the code, the learner stops reviewing syntax and starts reviewing
-          whether the acceptance test proves the requirement.
-      - claim: The learner can still go down to the lower level when the higher-level signal does not add
-          up.
-        why: Higher-level signals depend on the lower level being sound, and the ability to check it is what
-          makes the trust deserved.
-        example: The dashboard says the migration succeeded, and the learner still opens the database to
-          count rows when the number looks round.
-      - claim: The learner notices when a tool's rise changes what counts as a mistake, and changes the
-          checks to match.
-        why: The old checks catch the old mistakes, and a more capable tool makes different ones.
-        example: With an agent that writes tests too, "are there tests?" stops working as a check and "do
-          the tests fail when the feature is broken?" replaces it.
+      - claim: >-
+          Quand un outil prend en charge un niveau de travail, l’apprenant déplace son attention au niveau
+          supérieur et y pose les mêmes questions.
+        why: >-
+          Les questions d’exactitude, de coût et de risque ne disparaissent pas. Elles se déplacent vers
+          la spécification et la relecture.
+        example: >-
+          Quand l’agent écrit le code, l’apprenant cesse de relire la syntaxe et commence à vérifier si
+          le
+          test d’acceptation prouve l’exigence.
+      - claim: >-
+          L’apprenant peut encore redescendre au niveau inférieur quand le signal de haut niveau ne tient
+          pas.
+        why: >-
+          Les signaux de haut niveau dépendent de la solidité du niveau inférieur, et la capacité à le
+          vérifier est ce qui rend la confiance méritée.
+        example: >-
+          Le tableau de bord dit que la migration a réussi, et l’apprenant ouvre quand même la base de
+          données pour compter les lignes quand le nombre paraît trop rond.
+      - claim: >-
+          L’apprenant remarque quand la montée d’un outil change ce qui compte comme une erreur, et adapte
+          ses vérifications.
+        why: >-
+          Les anciennes vérifications attrapent les anciennes erreurs, et un outil plus capable en fait
+          d’autres.
+        example: >-
+          Avec un agent qui écrit aussi les tests, « y a-t-il des tests ? » ne suffit plus comme
+          vérification, et « les tests échouent-ils quand la fonctionnalité est cassée ? » prend sa place.

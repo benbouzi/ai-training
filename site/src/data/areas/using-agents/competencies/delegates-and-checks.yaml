@@ -1,82 +1,130 @@
 id: using-agents/delegates-and-checks
 area: using-agents
-statement: Delegates a task to an agent and checks the result
+statement: Délègue une tâche à un agent et vérifie le résultat
 topics: [using-agents/delegating, using-agents/decomposition, using-agents/assistant-work]
 objectives:
   - id: using-agents/delegates-and-checks/writes-a-brief
-    statement: Writes a brief with goal, context, limits and done-criteria
+    statement: Rédige une consigne avec objectif, contexte, limites et critères d’achèvement
     level: base
     behaviors:
-      - claim: A brief states the goal, the context the work needs and the limits it must stay within.
-        why: An agent fills in whatever is left unsaid with plausible defaults, so what it must not touch
-          matters as much as what it must do.
-        example: '"Update the pricing table in `docs/pricing.md` from this spreadsheet; do not change any
-          other file" stays on task, where "update the pricing" may rewrite the page.'
-      - claim: Done-criteria are written before the work starts.
-        why: Without them the result is judged by feel, and a plausible result is accepted as a correct one.
-        example: '"Done when every row in the spreadsheet appears once in the table and the totals match"
-          turns review into a check rather than a read.'
-      - claim: The brief names the information the agent should use and where it is.
-        why: An agent that has to guess sources picks the most available one, which is rarely the right one.
-        example: Pointing at the approved spreadsheet, not "the latest numbers", prevents the agent from
-          pulling last quarter's figures from an old email.
+      - claim: >-
+          Une consigne énonce l’objectif, le contexte dont le travail a besoin et les limites qu’il doit
+          respecter.
+        why: >-
+          Un agent remplit tout ce qui n’est pas dit avec des valeurs par défaut plausibles, donc ce qu’il
+          ne doit pas toucher compte autant que ce qu’il doit faire.
+        example: >-
+          « Mets à jour le tableau des prix dans `docs/pricing.md` à partir de ce tableur ; ne modifie
+          aucun autre fichier » reste dans la tâche, alors que « mets à jour les prix » peut réécrire
+          toute la page.
+      - claim: Les critères d’achèvement sont écrits avant que le travail commence.
+        why: >-
+          Sans eux, le résultat est jugé au ressenti, et un résultat plausible est accepté comme un
+          résultat juste.
+        example: >-
+          « Terminé quand chaque ligne du tableur apparaît une fois dans le tableau et que les totaux
+          concordent » transforme la relecture en vérification.
+      - claim: La consigne nomme les informations que l’agent doit utiliser, et où elles se
+          trouvent.
+        why: Un agent qui doit deviner ses sources prend la plus accessible, qui est rarement la
+          bonne.
+        example: >-
+          Désigner le tableur approuvé, et non « les derniers chiffres », empêche l’agent de reprendre
+          les
+          chiffres du trimestre précédent dans un vieil e-mail.
   - id: using-agents/delegates-and-checks/chooses-autonomy
-    statement: Chooses how much the agent may do before checking in
+    statement: Choisit ce que l’agent peut faire avant de faire le point
     level: base
     behaviors:
-      - claim: The learner sets the check-in point from the cost of a wrong step, however much they trust
-          the tool.
-        why: Trust built on a few good runs does not lower the cost of the one bad run.
-        example: For a summary of meeting notes the agent may finish unattended. For replies to customers it
-          stops before each send, even though it has drafted well before.
-      - claim: A first run of a new kind of task is done with more check-ins than later runs of the same
-          task.
-        why: The first run shows where the agent's defaults differ from the learner's, and that is when the
-          brief gets fixed.
-        example: The first time the agent files expense reports the learner reviews each one. After the
-          brief has been corrected twice, they review a sample.
-      - claim: The learner can state in one sentence what the agent may do without asking and what it must
-          ask about.
-        why: If the boundary cannot be said plainly, it has not been chosen and the agent will choose it.
-        example: '"Edit anything under `drafts/`, ask before touching anything else, never send" is a
-          boundary, and "be careful" is not.'
+      - claim: >-
+          L’apprenant fixe le point d’étape d’après le coût d’une mauvaise étape, quelle que soit sa
+          confiance dans l’outil.
+        why: >-
+          Une confiance construite sur quelques bonnes exécutions ne réduit pas le coût de la mauvaise.
+        example: >-
+          Pour un résumé de notes de réunion, l’agent peut terminer sans surveillance. Pour des réponses
+          à
+          des clients, il s’arrête avant chaque envoi, même s’il a bien rédigé jusque-là.
+      - claim: >-
+          La première exécution d’un nouveau type de tâche se fait avec plus de points d’étape que les
+          suivantes.
+        why: >-
+          La première exécution montre où les valeurs par défaut de l’agent diffèrent de celles de
+          l’apprenant, et c’est le moment de corriger la consigne.
+        example: >-
+          La première fois que l’agent classe des notes de frais, l’apprenant relit chacune. Après deux
+          corrections de la consigne, il en relit un échantillon.
+      - claim: >-
+          L’apprenant sait dire en une phrase ce que l’agent peut faire sans demander et ce pour quoi
+          il
+          doit demander.
+        why: >-
+          Si la limite ne peut pas être dite simplement, c’est qu’elle n’a pas été choisie, et l’agent
+          la
+          choisira.
+        example: >-
+          « Modifie tout ce qui est sous `brouillons/`, demande avant de toucher à autre chose, n’envoie
+          jamais rien » est une limite, et « fais attention » n’en est pas une.
   - id: using-agents/delegates-and-checks/reviews-against-brief
-    statement: Reviews the result against the brief, not against a feeling
+    statement: Vérifie le résultat au regard de la consigne, et non d’une impression
     level: base
     behaviors:
-      - claim: The review walks the done-criteria one by one and records pass or fail for each.
-        why: A result that reads well is accepted by feel, and a checklist catches the criterion the agent
-          skipped.
-        example: The brief said "every row appears once and totals match", so the learner counts rows and
-          adds the totals instead of skimming the table.
-      - claim: The review checks the limits as well as the goal, looking for what the agent did that it was
-          not asked to do.
-        why: An agent that finishes the task and also "improves" three other things has broken the brief
-          even if the task is done.
-        example: The learner opens the list of changed files and questions the two files that the brief did
-          not mention.
-      - claim: A result that fails review sends the learner back to the brief before it sends them back to
-          the agent.
-        why: Most misses are something the brief left unsaid, and re-running the same brief reproduces the
-          miss.
-        example: The agent used last year's template, so the learner adds "use the template in
-          `templates/2026/`" to the brief and runs again instead of typing "no, the new one".
+      - claim: >-
+          La relecture parcourt les critères d’achèvement un par un et note pour chacun réussi ou échoué.
+        why: >-
+          Un résultat qui se lit bien est accepté au ressenti, et une liste de contrôle attrape le critère
+          que l’agent a sauté.
+        example: >-
+          La consigne disait « chaque ligne apparaît une fois et les totaux concordent », donc l’apprenant
+          compte les lignes et additionne les totaux au lieu de parcourir le tableau.
+      - claim: >-
+          La relecture vérifie les limites autant que l’objectif, en cherchant ce que l’agent a fait sans
+          qu’on le lui demande.
+        why: >-
+          Un agent qui termine la tâche et « améliore » au passage trois autres choses a enfreint la
+          consigne, même si la tâche est faite.
+        example: >-
+          L’apprenant ouvre la liste des fichiers modifiés et interroge les deux fichiers que la consigne
+          ne mentionnait pas.
+      - claim: >-
+          Un résultat qui échoue à la relecture renvoie l’apprenant à la consigne avant de le renvoyer
+          à
+          l’agent.
+        why: >-
+          La plupart des ratés viennent de ce que la consigne n’a pas dit, et relancer la même consigne
+          reproduit le raté.
+        example: >-
+          L’agent a utilisé le gabarit de l’an dernier, donc l’apprenant ajoute « utilise le gabarit de
+          `templates/2026/` » à la consigne et relance, au lieu de taper « non, le nouveau ».
   - id: using-agents/delegates-and-checks/adjusts-mid-task
-    statement: Adjusts the brief when the work reveals new information
+    statement: Ajuste la consigne quand le travail révèle une information nouvelle
     level: base
     behaviors:
-      - claim: When the agent reports something the brief did not anticipate, the learner updates the brief
-          rather than answering the question in the chat.
-        why: An answer in the chat is lost to the next run, but a brief that holds the new information keeps
-          the fix.
-        example: The agent asks which of two templates to use, so the learner adds "use `templates/2026/`"
-          to the brief and restarts from it.
-      - claim: The learner stops the agent when the work shows the goal itself was wrong, instead of letting
-          it finish the wrong thing well.
-        why: Finished wrong work costs the run and the review, and a stopped run costs only the run.
-        example: The agent's first draft shows the data is quarterly instead of monthly, so the learner
-          stops and rewrites the done-criteria.
-      - claim: A change to the brief is stated as a change, so the agent drops the old constraint.
-        why: An agent holds the earlier instruction in context and tries to satisfy both.
-        example: '"Replace the earlier limit of five bullets with: no limit, one bullet per decision" rather
-          than only stating the new rule.'
+      - claim: >-
+          Quand l’agent signale quelque chose que la consigne n’avait pas prévu, l’apprenant met à jour
+          la
+          consigne au lieu de répondre à la question dans la conversation.
+        why: >-
+          Une réponse dans la conversation est perdue pour l’exécution suivante, alors qu’une consigne
+          qui
+          contient l’information nouvelle garde la correction.
+        example: >-
+          L’agent demande lequel de deux gabarits utiliser, donc l’apprenant ajoute « utilise
+          `templates/2026/` » à la consigne et repart d’elle.
+      - claim: >-
+          L’apprenant arrête l’agent quand le travail montre que l’objectif lui-même était faux, au lieu
+          de le laisser bien terminer la mauvaise chose.
+        why: >-
+          Un mauvais travail terminé coûte l’exécution et la relecture, et une exécution arrêtée ne coûte
+          que l’exécution.
+        example: >-
+          Le premier brouillon de l’agent montre que les données sont trimestrielles et non mensuelles,
+          donc l’apprenant arrête tout et réécrit les critères d’achèvement.
+      - claim: >-
+          Un changement de consigne est présenté comme un changement, pour que l’agent abandonne
+          l’ancienne contrainte.
+        why: >-
+          Un agent garde l’instruction précédente dans son contexte et essaie de satisfaire les deux.
+        example: >-
+          « Remplace la limite précédente de cinq puces par : aucune limite, une puce par décision »
+          plutôt que d’énoncer seulement la nouvelle règle.

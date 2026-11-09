@@ -1,48 +1,48 @@
 id: using-agents/delegating
 area: using-agents
-name: Delegating to an agent
+name: Déléguer à un agent
 definition: >-
-  Delegating to an agent is like delegating to a capable new colleague who
-  will fill every gap with a guess. This topic covers writing a brief with a
-  goal, limits and done-criteria, supplying the context the task needs,
-  choosing how far the agent may go before checking in, and reviewing the
-  result against the brief.
+  Déléguer à un agent ressemble à déléguer à un nouveau collègue compétent qui comblera chaque
+  lacune par une supposition. Ce thème couvre la rédaction d’une consigne avec un objectif, des
+  limites et des critères d’achèvement, la fourniture du contexte dont la tâche a besoin, le choix
+  de la distance que l’agent peut parcourir avant de faire le point, et la vérification du
+  résultat au regard de la consigne.
 concepts:
   - id: task-brief
-    name: Task brief
+    name: Consigne de la tâche
     definition: >-
-      The short written statement you hand an agent: the goal, the context
-      it needs, the limits it must stay inside and the criteria that make
-      the work done. Whatever a brief leaves out, the agent fills in with a
-      plausible default, so what it must not touch matters as much as what it
-      must do. Writing done-criteria first turns review into a check.
+      Le court texte écrit que vous remettez à un agent : l’objectif, le contexte dont il a besoin,
+      les limites qu’il doit respecter et les critères qui rendent le travail terminé. Tout ce qu’une
+      consigne (brief) omet, l’agent le remplit avec une valeur par défaut plausible, donc ce qu’il ne
+      doit pas toucher compte autant que ce qu’il doit faire. Écrire d’abord les critères d’achèvement
+      (done-criteria) transforme la relecture en vérification.
   - id: giving-context
-    name: Giving context
+    name: Donner du contexte
     definition: >-
-      Supplying the agent with the information and materials the task depends
-      on: the relevant files, the approved source of numbers, the constraint
-      you know and it cannot, the example of what good looks like. An agent
-      that has to guess sources takes the most available one, not the right
-      one. Point at things by name and location rather than by description.
+      Fournir à l’agent les informations et les éléments dont dépend la tâche : les fichiers
+      pertinents, la source approuvée des chiffres, la contrainte que vous connaissez et qu’il ignore,
+      l’exemple de ce à quoi ressemble un bon résultat. Un agent qui doit deviner ses sources prend la
+      plus accessible, rarement la bonne. Désignez les choses par leur nom et leur emplacement plutôt
+      que par une description.
   - id: choosing-a-degree-of-autonomy
-    name: Choosing a degree of autonomy
+    name: Choisir un degré d’autonomie
     definition: >-
-      Deciding, per task, how much the agent may do before you look: draft
-      only, act but ask before anything irreversible, or run to completion.
-      The choice follows from how costly a mistake is and how easily it is
-      undone, not from how capable the agent seems. Start with less autonomy
-      on a new kind of task and widen it as the results earn trust.
+      Décider, tâche par tâche, ce que l’agent peut faire avant que vous regardiez : seulement
+      rédiger, agir mais demander avant tout ce qui est irréversible, ou aller jusqu’au bout. Le choix
+      découle du coût d’une erreur et de la facilité à la réparer, quelle que soit la compétence
+      apparente de l’agent. Commencez avec moins d’autonomie sur un nouveau type de tâche et
+      élargissez-la à mesure que les résultats gagnent votre confiance.
   - id: checking-results
-    name: Checking results
+    name: Vérifier les résultats
     definition: >-
-      Reviewing what the agent delivered against the brief's done-criteria
-      rather than against a general impression. Read the changes, not the
-      agent's summary of them; run what can be run; look for work outside
-      the limits you set. A plausible result is easy to accept and often
-      subtly wrong, so the brief is the yardstick, and any gap goes back into
-      the next brief.
+      Relire ce que l’agent a livré au regard des critères d’achèvement de la consigne, plutôt que
+      d’une impression générale. Lisez les modifications elles-mêmes, et pas le résumé qu’en fait
+      l’agent ; exécutez ce qui peut l’être ; cherchez le travail fait hors des limites que vous avez
+      fixées. Un résultat plausible s’accepte facilement et se révèle souvent subtilement faux, donc
+      la consigne sert d’étalon, et tout écart va dans la consigne suivante.
 links:
   prerequisites: [concepts/what-is-an-agent, safety/verification]
   related: []
   specializations: []
-sources: [DLAI-11, Ng, Academy ai-fluency-framework-foundations, Academy introduction-to-claude-cowork, OpenAI Academy agents-and-workflows-y0qoc]
+sources: [DLAI-11, Ng, Academy ai-fluency-framework-foundations, Academy
+      introduction-to-claude-cowork, OpenAI Academy agents-and-workflows-y0qoc]

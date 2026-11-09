@@ -1,364 +1,383 @@
 import { Choice, MultiChoice, Sort, Scenario, Repair, Pitfall, Exercise, Recap, Habit, Prompt, Response } from '@components/lesson';
 
-In this lesson we ask a chat assistant for a short email twice, first with
-one line and then with a brief. Then we hand the result back and ask what
-it thinks, and we get praise. The second time we give it criteria we
-wrote before the draft existed, and the assistant finds the weak point.
-By the end you have one brief for a draft and one for a critique.
+Dans cette leçon, nous demandons deux fois un court e-mail à un assistant
+conversationnel, d’abord en une ligne, puis avec une consigne. Nous lui
+rendons ensuite le résultat en demandant ce qu’il en pense, et nous obtenons
+des compliments. La seconde fois, nous lui donnons des critères écrits avant
+que le brouillon existe, et l’assistant trouve le point faible. À la fin,
+vous avez une consigne pour un brouillon et une autre pour une critique.
 
-You need any chat assistant you already have access to. Every exchange on
-this page is illustrative. The author wrote it to show the pattern, and
-your assistant gives different words.
+Il vous faut n’importe quel assistant conversationnel auquel vous avez déjà
+accès. Chaque échange de cette page est illustratif. L’auteur l’a écrit pour
+montrer le schéma, et votre assistant emploiera d’autres mots.
 
-## A one-line request
+## Une demande d’une ligne
 
-Suppose your team of twelve changes how it claims travel expenses. From
-1 November everyone uses a new online form. You want to tell them in a
-short email, and you ask for one.
+Imaginons que votre équipe de douze personnes change sa façon de déclarer
+les frais de déplacement. À partir du 1er novembre, tout le monde utilise un
+nouveau formulaire en ligne. Vous voulez le leur annoncer dans un court
+e-mail, et vous en demandez un.
 
 <Prompt model="illustrative" recorded="illustrative">
-Write an email to my team about the new expense process.
+Écris un e-mail à mon équipe sur la nouvelle procédure de notes de frais.
 </Prompt>
 <Response>
 
 ```text
-Subject: Important update to our expense process
+Objet : Évolution importante de notre procédure de notes de frais
 
-Dear team,
+Chère équipe,
 
-I am writing to let you know about some upcoming changes to the way we
-submit expenses. Starting next month, we will move to a new system that
-makes submitting claims faster and easier for everyone.
+Je vous écris pour vous informer de changements à venir dans la façon dont
+nous soumettons nos notes de frais. Dès le mois prochain, nous passerons à
+un nouveau système qui rendra les demandes plus rapides et plus simples pour
+tout le monde.
 
-The new process will simplify approvals and reduce paperwork. Please
-review the attached guidelines before you submit your next claim, and
-contact [Name] in Finance if you have any questions.
+La nouvelle procédure simplifiera les validations et réduira la paperasse.
+Merci de consulter les consignes jointes avant votre prochaine demande, et
+de contacter [Nom] au service financier pour toute question.
 
-Thank you for your cooperation.
+Merci de votre coopération.
 
-Best regards,
-[Your name]
+Bien cordialement,
+[Votre nom]
 ```
 
 </Response>
 
-The email reads well, and you can't send it. It doesn't give a date or a
-link. The one step it asks for is to read the attached guidelines, and
-there are none, because you never wrote any. It also says the new system
-is faster, which you never said. The model knew only that there is a team
-and an expense process. It filled everything else with the text that fits
-most emails of this kind.
+L’e-mail se lit bien, et vous ne pouvez pas l’envoyer. Il ne donne ni date
+ni lien. La seule action qu’il demande est de lire les consignes jointes, et
+il n’y en a aucune, parce que vous n’en avez jamais écrit. Il dit aussi que
+le nouveau système est plus rapide, ce que vous n’avez jamais dit. Le modèle
+savait seulement qu’il existe une équipe et une procédure de frais. Il a
+rempli tout le reste avec le texte qui convient à la plupart des e-mails de
+ce genre.
 
-In the [prompt-anatomy lesson](/concepts/prompt-anatomy/#public-et-objectif),
-a summary asked for in one line was written for nobody in particular,
-until the prompt named the reader and the purpose. A draft has the same
-problem, and it also adds facts to fill the gaps.
+Dans la [leçon sur l’anatomie d’un prompt](/concepts/prompt-anatomy/#public-et-objectif),
+un résumé demandé en une ligne était écrit pour personne en particulier,
+jusqu’à ce que le prompt nomme le lecteur et l’objectif. Un brouillon a le
+même problème, et il ajoute en plus des faits pour combler les vides.
 
 <Choice id="what-the-draft-needs" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['drafting']}
-  context="A learner asked a chat assistant in one line for an email to their team about a new expense process. The draft was polite, gave no date or steps, and mentioned guidelines that do not exist."
-  title="What do you add first?" hint="What did the model have to guess, and which guesses ended up in the email as facts?"
+  context="Un apprenant a demandé en une ligne à un assistant conversationnel un e-mail à son équipe sur une nouvelle procédure de notes de frais. Le brouillon était poli, ne donnait ni date ni étapes, et mentionnait des consignes qui n’existent pas."
+  title="Qu’ajoutez-vous en premier ?" hint="Qu’est-ce que le modèle a dû deviner, et lesquelles de ces suppositions sont arrivées dans l’e-mail comme des faits ?"
   options={[
-    { text: 'A line asking for a shorter and friendlier email that sounds more like you usually write.', why: 'Tone and length change the words. The date and the steps are still missing, and the model still has to invent them.' },
-    { text: 'A line saying the email is important, so the model takes more care with the wording this time.', why: 'Saying it is important gives the model no new facts, so the gaps are still filled with guesses.' },
-    { text: 'An example email from another team, so the model can copy its layout and its tone.', why: 'An example shows a layout. It does not tell the model your date, your form or what your team has to do.' },
-    { text: 'Who reads it, what they must do after reading, and the facts that must appear in it.', correct: true },
+    { text: 'Une ligne qui demande un e-mail plus court et plus amical, qui ressemble davantage à ce que vous écrivez d’habitude.', why: 'Le ton et la longueur changent les mots. La date et les étapes manquent toujours, et le modèle doit toujours les inventer.' },
+    { text: 'Une ligne qui dit que l’e-mail est important, pour que le modèle soigne davantage la formulation cette fois.', why: 'Dire que c’est important ne donne au modèle aucun fait nouveau, donc les vides sont toujours comblés par des suppositions.' },
+    { text: 'Un e-mail d’exemple venant d’une autre équipe, pour que le modèle en copie la mise en page et le ton.', why: 'Un exemple montre une mise en page. Il ne dit pas au modèle votre date, votre formulaire ni ce que votre équipe doit faire.' },
+    { text: 'Qui le lit, ce que les lecteurs doivent faire après lecture, et les faits qui doivent y figurer.', correct: true },
   ]}>
-The one-line request got a polite email with no date and an invented
-attachment. What is the most useful thing to add before you ask again?
+La demande d’une ligne a produit un e-mail poli, sans date et avec une pièce
+jointe inventée. Quelle est la chose la plus utile à ajouter avant de
+redemander ?
 </Choice>
 
-## A brief for the draft
+## Une consigne pour le brouillon
 
-Write the request as a brief. It names the audience and the purpose. It
-lists the two points that must appear, in your words, because they are
-facts only you know. It sets the tone and the length. Last, it says when
-the draft is done, in criteria you can tick. You write those criteria now,
-before you see any draft, so that you judge the draft by them later.
+Écrivez la demande sous forme de consigne. Elle nomme le public et
+l’objectif. Elle liste les deux points qui doivent figurer, avec vos mots,
+parce que ce sont des faits que vous seul connaissez. Elle fixe le ton et la
+longueur. Enfin, elle dit quand le brouillon est terminé, avec des critères
+que vous pouvez cocher. Vous écrivez ces critères maintenant, avant de voir
+le moindre brouillon, pour juger le brouillon à leur aune ensuite.
 
 <Prompt model="illustrative" recorded="illustrative">
-Write a short email to the twelve people in my team, who all claim travel
-expenses a few times a year. The purpose is that each of them uses the new
-online expense form from 1 November and knows what to do with receipts.
+Écris un court e-mail aux douze personnes de mon équipe, qui déclarent toutes
+des frais de déplacement quelques fois par an. L’objectif est que chacune
+utilise le nouveau formulaire en ligne à partir du 1er novembre et sache quoi
+faire de ses justificatifs.
 
-These two points must appear:
-1. The old paper form is accepted until 31 October, and not after.
-2. Receipts are photos attached to the new form. We no longer accept
-   paper receipts.
+Ces deux points doivent figurer :
+1. L’ancien formulaire papier est accepté jusqu’au 31 octobre, et plus après.
+2. Les justificatifs sont des photos jointes au nouveau formulaire. Nous
+   n’acceptons plus les justificatifs papier.
 
-Tone: friendly and plain, in everyday words. Length: under 120 words,
-with no sentence longer than 20 words. Put a placeholder where the link
-to the form goes.
+Ton : amical et simple, avec des mots de tous les jours. Longueur : moins de
+120 mots, sans phrase de plus de 20 mots. Mets un marqueur à l’endroit où va
+le lien vers le formulaire.
 
-The email is done when:
-- someone who reads only the first sentence knows what changes and from
-  when,
-- both points appear, with the dates as I gave them,
-- it contains no fact that is not in this message.
+L’e-mail est terminé quand :
+- quelqu’un qui ne lit que la première phrase sait ce qui change et à partir
+  de quand,
+- les deux points figurent, avec les dates telles que je les ai données,
+- il ne contient aucun fait absent de ce message.
 </Prompt>
 <Response>
 
 ```text
-Subject: New expense form from 1 November
+Objet : Nouveau formulaire de frais à partir du 1er novembre
 
-Hi all,
+Bonjour à tous,
 
-Finance has moved to a new online system to make expense claims quicker
-to process. From 1 November, please claim your travel expenses with the
-new online form: [link to the form].
+Le service financier est passé à un nouveau système en ligne pour traiter
+plus vite les notes de frais. À partir du 1er novembre, déclarez vos frais de
+déplacement avec le nouveau formulaire en ligne : [lien du formulaire].
 
-The old paper form is accepted until 31 October, and not after.
+L’ancien formulaire papier est accepté jusqu’au 31 octobre, et plus après.
 
-Receipts now go in as photos attached to the form. We no longer accept
-paper receipts, so take a photo before you throw one away.
+Les justificatifs sont désormais des photos jointes au formulaire. Nous
+n’acceptons plus les justificatifs papier, alors prenez une photo avant d’en
+jeter un.
 
-Finance aims to pay approved claims within five working days.
+Le service financier vise à payer les demandes approuvées sous cinq jours
+ouvrés.
 
-Thanks, and let me know if anything is unclear.
+Merci, et dites-moi si quelque chose n’est pas clair.
 ```
 
 </Response>
 
-This is a usable draft. It is raw material for your email. Before it goes
-anywhere, sort its text by where it came from.
+C’est un brouillon utilisable. C’est la matière première de votre e-mail.
+Avant qu’il parte où que ce soit, triez son texte selon sa provenance.
 
-- The two points and the dates came from your brief. Check that they are
-  copied correctly, which they are.
-- The placeholder is yours to fill. The model can't know the link.
-- The line about five working days came from the model. You never said it,
-  and your Finance team may promise nothing of the kind. Check it or
-  delete it.
-- The advice to take a photo before throwing a receipt away came from the
-  model too. It may be good advice, and it is still your choice whether
-  it goes out under your name.
+- Les deux points et les dates viennent de votre consigne. Vérifiez qu’ils
+  sont recopiés correctement, ce qui est le cas.
+- Le marqueur du lien (placeholder) est à vous de le remplir. Le modèle ne peut pas
+  connaître le lien.
+- La ligne sur les cinq jours ouvrés vient du modèle. Vous ne l’avez jamais
+  dite, et votre service financier ne promet peut-être rien de tel.
+  Vérifiez-la ou supprimez-la.
+- Le conseil de prendre une photo avant de jeter un justificatif vient lui
+  aussi du modèle. C’est peut-être un bon conseil, et c’est toujours à vous
+  de choisir s’il part sous votre nom.
 
-The first sentence came from the model. You never said why the form
-changed or that claims get quicker. Your brief said the email may contain
-no fact that is not in your message, and the draft broke that criterion
-three times. A draft reads as finished whether its facts are right or
-not, so read it against the list you wrote.
+La première phrase vient du modèle. Vous n’avez jamais dit pourquoi le
+formulaire changeait, ni que les demandes seraient traitées plus vite. Votre
+consigne disait que l’e-mail ne devait contenir aucun fait absent de votre
+message, et le brouillon a enfreint ce critère trois fois. Un brouillon a
+l’air fini que ses faits soient justes ou non, donc lisez-le en regard de la
+liste que vous avez écrite.
 
 <Sort id="yours-or-added" objective="using-agents/delegates-and-checks/reviews-against-brief"
   concepts={['drafting']}
-  context="A learner briefed a chat assistant for an email announcing a new expense form from 1 November, with two points that must appear: the old paper form is accepted until 31 October, and receipts are photos attached to the new form. The brief said the email may contain no fact that is not in the brief."
-  title="From the brief, or added?" hint="For each line, can you point to the words in your brief that it came from?"
-  buckets={['Came from the brief', 'Added by the model: check it or delete it']}
+  context="Un apprenant a donné à un assistant conversationnel une consigne pour un e-mail annonçant un nouveau formulaire de frais à partir du 1er novembre, avec deux points qui devaient figurer : l’ancien formulaire papier est accepté jusqu’au 31 octobre, et les justificatifs sont des photos jointes au nouveau formulaire. La consigne disait que l’e-mail ne devait contenir aucun fait absent de la consigne."
+  title="Venu de la consigne, ou ajouté ?" hint="Pour chaque ligne, pouvez-vous montrer les mots de votre consigne dont elle vient ?"
+  buckets={['Venu de la consigne', 'Ajouté par le modèle : à vérifier ou à supprimer']}
   items={[
-    { text: 'The old paper form is accepted until 31 October, and not after.', bucket: 0 },
-    { text: 'We no longer accept paper receipts.', bucket: 0 },
-    { text: 'Finance aims to pay approved claims within five working days.', bucket: 1 },
-    { text: 'Finance has moved to a new system to make claims quicker to process.', bucket: 1 },
-    { text: 'From 1 November, please claim your travel expenses with the new online form.', bucket: 0 },
+    { text: 'L’ancien formulaire papier est accepté jusqu’au 31 octobre, et plus après.', bucket: 0 },
+    { text: 'Nous n’acceptons plus les justificatifs papier.', bucket: 0 },
+    { text: 'Le service financier vise à payer les demandes approuvées sous cinq jours ouvrés.', bucket: 1 },
+    { text: 'Le service financier est passé à un nouveau système pour traiter plus vite les notes de frais.', bucket: 1 },
+    { text: 'À partir du 1er novembre, déclarez vos frais de déplacement avec le nouveau formulaire en ligne.', bucket: 0 },
   ]}>
-Sort these lines from the draft.
+Triez ces lignes du brouillon.
 </Sort>
 
-## Ask what it thinks
+## Demander ce qu’il en pense
 
-You delete the line about five working days. Finance confirms that it
-moved to a new online system, but not that claims get quicker. You cut
-that part, and the first sentence now reads "Finance has moved to a new
-online system." You keep the photo tip, because it is advice you would
-give yourself. The draft still starts with the reason for the change.
-Before you send it, you want a second opinion. The easy question is the
-one most people ask.
+Vous supprimez la ligne sur les cinq jours ouvrés. Le service financier
+confirme être passé à un nouveau système en ligne, sans confirmer que les
+demandes seront traitées plus vite. Vous coupez cette partie, et la première
+phrase devient « Le service financier est passé à un nouveau système en
+ligne. » Vous gardez le conseil sur la photo, parce que c’est un conseil que
+vous vous donneriez à vous-même. Le brouillon commence toujours par la
+raison du changement. Avant de l’envoyer, vous voulez un deuxième avis. La
+question facile est celle que la plupart des gens posent.
 
 <Prompt model="illustrative" recorded="illustrative">
-Here is my email to the team about the new expense form. What do you
-think?
+Voici mon e-mail à l’équipe sur le nouveau formulaire de frais. Qu’en
+penses-tu ?
 
-[the draft]
+[le brouillon]
 </Prompt>
 <Response>
-This is a clear, friendly email that covers everything your team needs to
-know. The subject line is specific, the dates stand out, and the tip about
-taking a photo before throwing a receipt away is a nice practical touch.
-You might add a short thank-you for their patience during the change, but
-overall it is ready to send.
+C’est un e-mail clair et amical qui couvre tout ce que votre équipe doit
+savoir. L’objet est précis, les dates ressortent bien, et le conseil de
+prendre une photo avant de jeter un justificatif est une jolie touche
+pratique. Vous pourriez ajouter un court remerciement pour leur patience
+pendant le changement, mais dans l’ensemble il est prêt à partir.
 </Response>
 
-The answer is praise with one small suggestion, and the one detail it
-singles out, the photo tip, is a line the model wrote itself. It says the
-email covers everything. You can't check that claim, because nobody
-defined "everything". The question gave the model no criteria to test
-the email against, and it said the text was yours. Assistants give more
-positive feedback on a text when the user says they wrote it or like it,
-and more negative feedback when the user says they didn't write it
+La réponse est un compliment assorti d’une petite suggestion, et le seul
+détail qu’elle met en avant, le conseil sur la photo, est une ligne que le
+modèle a écrite lui-même. Elle dit que l’e-mail couvre tout. Vous ne pouvez
+pas vérifier cette affirmation, parce que personne n’a défini « tout ». La
+question ne donnait au modèle aucun critère pour tester l’e-mail, et elle
+disait que le texte était le vôtre. Les assistants donnent un avis plus
+positif sur un texte quand l’utilisateur dit l’avoir écrit ou l’apprécier, et
+un avis plus négatif quand l’utilisateur dit ne pas l’avoir écrit
 (@Sharma 2023).
 
-## Ask for problems against criteria
+## Demander les problèmes au regard de critères
 
-Ask again, and change what the request says. Say the text is a
-colleague's, so that nothing in the request tells the model you wrote it.
-Give the criteria, and take them from your brief: the first done-criterion,
-the two points and the length limit. You wrote them before the draft
-existed, for this check. Ask for problems only, one criterion at a time.
-Open a fresh chat for it, so the earlier praise and the draft request
-aren't part of what the model reads.
+Redemandez, en changeant ce que dit la demande. Dites que le texte est d’un
+collègue, pour que rien dans la demande ne signale au modèle que vous l’avez
+écrit. Donnez les critères, et prenez-les dans votre consigne : le premier
+critère d’achèvement, les deux points et la limite de longueur. Vous les avez
+écrits avant que le brouillon existe, pour cette vérification. Demandez
+uniquement les problèmes, critère par critère. Ouvrez une nouvelle
+conversation pour cela, pour que les compliments précédents et la demande de
+brouillon ne fassent pas partie de ce que lit le modèle.
 
 <Prompt model="illustrative" recorded="illustrative">
-A colleague wrote the email below for their team. Check it against these
-three criteria, one at a time. For each, say pass or fail and quote the
-sentence that decides it. List problems only. Don't rewrite the email and
-don't tell me what is good about it.
+Un collègue a écrit l’e-mail ci-dessous pour son équipe. Vérifie-le au
+regard de ces trois critères, un par un. Pour chacun, dis réussi ou échoué
+et cite la phrase qui en décide. Liste uniquement les problèmes. Ne réécris
+pas l’e-mail et ne me dis pas ce qu’il a de bon.
 
-1. Someone who reads only the first sentence knows what changes and from
-   when.
-2. It says the old paper form is accepted until 31 October, and that
-   receipts are photos attached to the new form.
-3. It has under 120 words, and no sentence has more than 20 words.
+1. Quelqu’un qui ne lit que la première phrase sait ce qui change et à
+   partir de quand.
+2. Il dit que l’ancien formulaire papier est accepté jusqu’au 31 octobre, et
+   que les justificatifs sont des photos jointes au nouveau formulaire.
+3. Il compte moins de 120 mots, et aucune phrase n’a plus de 20 mots.
 
-[the draft]
+[le brouillon]
 </Prompt>
 <Response>
 
 ```text
-1. Fail. The first sentence gives the reason for the change: "Finance
-   has moved to a new online system." The date and the action come only
-   in the second sentence. A reader who stops after one sentence knows
-   that something changed, but not what to do or from when.
-2. Pass, with one note. "The old paper form is accepted until
-   31 October, and not after." and "Receipts now go in as photos attached
-   to the form." A reader may ask what happens to a paper receipt they
-   already have.
-3. Pass. The email body has 73 words. The longest sentence, "From
-   1 November, please claim ... [link to the form].", has 17.
+1. Échoué. La première phrase donne la raison du changement : « Le service
+   financier est passé à un nouveau système en ligne. » La date et l’action
+   n’arrivent que dans la deuxième phrase. Un lecteur qui s’arrête après une
+   phrase sait que quelque chose a changé, mais pas quoi faire ni à partir
+   de quand.
+2. Réussi, avec une remarque. « L’ancien formulaire papier est accepté
+   jusqu’au 31 octobre, et plus après. » et « Les justificatifs sont
+   désormais des photos jointes au formulaire. » Un lecteur peut se demander
+   ce que devient un justificatif papier qu’il a déjà.
+3. Réussi. L’e-mail compte 76 mots. La phrase la plus longue, « À partir du
+   1er novembre, déclarez … [lien du formulaire]. », en compte 19.
 ```
 
 </Response>
 
-This answer has one fail and one question you hadn't thought about. The
-fail is the weak point the praise missed: the email gives the reason
-first, and the action comes second.
+Cette réponse contient un échec et une question à laquelle vous n’aviez pas
+pensé. L’échec est le point faible que les compliments ont manqué : l’e-mail
+donne d’abord la raison, et l’action vient en second.
 
-Now you are the judge, and the framing is the reason you have to be.
-Saying the text is a colleague's removes the signal that pushes the model
-toward praise, but it adds one that pushes the other way. In the same
-study, saying you didn't write a text made the feedback more negative
-(@Sharma 2023). So expect the critique to lean harsh. Walk the criteria
-yourself, one by one, and decide for each finding whether it holds. You
-may agree with the first finding and move the action to the top. You may
-also decide the note on old receipts doesn't need a sentence. When the
-model is wrong about a finding, you reject that finding and nothing else
-changes.
+C’est maintenant vous qui jugez, et le cadrage est la raison pour laquelle
+vous devez le faire. Dire que le texte est d’un collègue retire le signal
+qui pousse le modèle vers le compliment, mais en ajoute un qui pousse dans
+l’autre sens. Dans la même étude, dire qu’on n’a pas écrit un texte rendait
+l’avis plus négatif (@Sharma 2023). Attendez-vous donc à une critique un peu
+sévère. Parcourez vous-même les critères, un par un, et décidez pour chaque
+constat s’il tient. Vous pouvez être d’accord avec le premier constat et
+placer l’action en tête. Vous pouvez aussi décider que la remarque sur les
+anciens justificatifs ne mérite pas de phrase. Quand le modèle se trompe sur
+un constat, vous rejetez ce constat et rien d’autre ne change.
 
 <Choice id="praise-or-problems" objective="using-agents/delegates-and-checks/reviews-against-brief"
   concepts={['critique', 'sycophancy']}
-  context="The lesson shows a chat assistant praising a draft email when asked what it thinks, and finding a weak point when asked a different way."
-  title="Which request finds the problems?" hint="Which request tells the model what to test, and which one tells it whose text it is?"
+  context="La leçon montre un assistant conversationnel qui fait l’éloge d’un brouillon d’e-mail quand on lui demande ce qu’il en pense, et qui trouve un point faible quand on le lui demande autrement."
+  title="Quelle demande trouve les problèmes ?" hint="Quelle demande dit au modèle quoi tester, et laquelle lui dit à qui est le texte ?"
   options={[
-    { text: 'I wrote this report and I am quite proud of it. Please be completely honest with me: what do you think?', why: 'Saying you wrote it and like it is the signal that makes feedback more positive, and a request for honesty leaves that signal in the prompt.' },
-    { text: 'A colleague wrote this report. Check it against the three criteria below, say pass or fail for each, and list problems only.', correct: true },
-    { text: 'Act as a strict senior editor with high standards. Here is my report, and I would like your overall opinion of it.', why: 'A role changes the style. The request still asks for an opinion on your own text, with nothing to test it against.' },
-    { text: 'Here is my report. Rate it from 1 to 10 and tell me what you would improve to make it even better than it is.', why: 'A score without criteria gives you nothing to check, and "even better" tells the model you expect it to be good already.' },
+    { text: 'J’ai écrit ce rapport et j’en suis assez fier. Sois tout à fait honnête avec moi : qu’en penses-tu ?', why: 'Dire que vous l’avez écrit et que vous l’aimez est le signal qui rend l’avis plus positif, et une demande d’honnêteté laisse ce signal dans le prompt.' },
+    { text: 'Un collègue a écrit ce rapport. Vérifie-le au regard des trois critères ci-dessous, dis réussi ou échoué pour chacun, et liste uniquement les problèmes.', correct: true },
+    { text: 'Joue le rôle d’un rédacteur en chef strict et exigeant. Voici mon rapport, et j’aimerais ton avis général à son sujet.', why: 'Un rôle change le style. La demande porte toujours sur un avis à propos de votre propre texte, sans rien pour le tester.' },
+    { text: 'Voici mon rapport. Note-le de 1 à 10 et dis-moi ce que tu améliorerais pour le rendre encore meilleur.', why: 'Une note sans critères ne vous donne rien à vérifier, et « encore meilleur » dit au modèle que vous le pensez déjà bon.' },
   ]}>
-You want an assistant's critique of a report before you send it. Which
-request is most likely to get you the problems in it?
+Vous voulez la critique d’un assistant sur un rapport avant de l’envoyer.
+Quelle demande a le plus de chances de vous en donner les problèmes ?
 </Choice>
 
-<Pitfall title="Sending it because the assistant liked it">
-A project lead asks an assistant what it thinks of a status report for
-the steering group. The assistant calls it clear and well structured, and
-the lead sends it. In the meeting, the first question is when the delay
-in the report will end, and the report doesn't say. The praise answered a
-question with no criteria in it, about a text the model was told was the
-lead's own. Before you ask for feedback, write down what the text must
-do. Then ask the assistant whether it does each of those things.
+<Pitfall title="L’envoyer parce que l’assistant l’a aimé">
+Une cheffe de projet demande à un assistant ce qu’il pense d’un point
+d’avancement destiné au comité de pilotage. L’assistant le trouve clair et
+bien structuré, et elle l’envoie. En réunion, la première question porte sur
+la fin du retard mentionné dans le rapport, et le rapport ne le dit pas. Le
+compliment répondait à une question sans critères, à propos d’un texte dont
+on avait dit au modèle qu’il était le sien. Avant de demander un avis, notez
+ce que le texte doit faire. Puis demandez à l’assistant s’il fait chacune de
+ces choses.
 </Pitfall>
 
-## Rules for drafts and critique
+## Règles pour les brouillons et la critique
 
-The draft is raw material, and the final voice is yours. The model gives
-you a structure and sentences to start from, and it fills every gap in the
-brief with something plausible. The facts in it are yours to supply and
-to check, and the words that go out under your name should sound like
-you.
+Le brouillon est une matière première, et la voix finale est la vôtre. Le
+modèle vous donne une structure et des phrases de départ, et il comble
+chaque vide de la consigne avec quelque chose de plausible. Les faits qu’il
+contient sont à vous de les fournir et de les vérifier, et les mots qui
+partent sous votre nom doivent vous ressembler.
 
-Critique against stated criteria is one of the safest everyday uses,
-because you stay the author and the judge. You wrote the criteria before
-the draft existed, and you decide about every finding. The model can only
-point at a sentence, and you read that sentence yourself. The
-[safety course](/safety/asking-a-model-to-disagree/#des-habitudes-du-côté-du-prompt)
-taught you to take your own opinion out of a question when you want an
-assessment. Calling the text a colleague's removes the push toward
-praise and adds a push toward criticism, which is one more reason to
-judge each finding yourself.
+La critique au regard de critères énoncés est l’un des usages quotidiens les
+plus sûrs, parce que vous restez l’auteur et le juge. Vous avez écrit les
+critères avant que le brouillon existe, et vous décidez de chaque constat.
+Le modèle ne peut que pointer une phrase, et vous lisez cette phrase
+vous-même. Le [cours sur la sécurité](/safety/asking-a-model-to-disagree/#des-habitudes-du-côté-du-prompt)
+vous a appris à retirer votre propre opinion d’une question quand vous
+voulez une évaluation. Présenter le texte comme celui d’un collègue retire
+la poussée vers le compliment et ajoute une poussée vers la critique, ce qui
+est une raison de plus pour juger chaque constat vous-même.
 
 <Repair id="fix-the-drafting-brief" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['drafting']}
-  title="Fix the brief" hint="Who reads the email, what must they do after reading it, which facts must be in it, and how will you know the draft is done?"
-  broken={`Write a nice email to the office about the kitchen.`}
-  model={`Write a short email to the 30 people on our office floor. The purpose is that everyone empties their food from the kitchen fridge by Friday 12:00, because the cleaners empty it that afternoon. These points must appear: anything left after 12:00 is thrown away, and the empty containers wait on the counter until Monday. Tone: friendly, no blame. Under 80 words. The email is done when the first sentence gives the deadline, both points appear, and it adds no fact that is not in this message.`}>
-A colleague sends this to an assistant and gets a cheerful email about
-keeping the kitchen tidy, with no date in it. Rewrite the request as a
-brief.
+  title="Corrigez la consigne" hint="Qui lit l’e-mail, que doivent faire les lecteurs après l’avoir lu, quels faits doivent y figurer, et comment saurez-vous que le brouillon est terminé ?"
+  broken={`Écris un gentil e-mail au bureau à propos de la cuisine.`}
+  model={`Écris un court e-mail aux 30 personnes de notre étage. L’objectif est que chacun vide ses aliments du réfrigérateur de la cuisine d’ici vendredi 12 h, parce que l’équipe de ménage le vide cet après-midi-là. Ces points doivent figurer : tout ce qui reste après 12 h est jeté, et les récipients vides attendent sur le plan de travail jusqu’à lundi. Ton : amical, sans reproche. Moins de 80 mots. L’e-mail est terminé quand la première phrase donne l’échéance, que les deux points figurent, et qu’il n’ajoute aucun fait absent de ce message.`}>
+Une collègue envoie ceci à un assistant et obtient un e-mail enjoué sur le
+rangement de la cuisine, sans aucune date. Réécrivez la demande sous forme
+de consigne.
 </Repair>
 
 <MultiChoice id="lines-a-brief-needs" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['drafting']}
-  context="The lesson shows a one-line request for a team email that got a polite draft with no date and an invented attachment, and a brief that got a usable draft."
-  title="Which lines belong in a drafting brief?" hint="Which lines give the model a fact it cannot guess, or give you a way to judge the draft later?"
+  context="La leçon montre une demande d’une ligne pour un e-mail d’équipe qui a produit un brouillon poli sans date et avec une pièce jointe inventée, et une consigne qui a produit un brouillon utilisable."
+  title="Quelles lignes ont leur place dans une consigne de rédaction ?" hint="Quelles lignes donnent au modèle un fait qu’il ne peut pas deviner, ou vous donnent un moyen de juger le brouillon ensuite ?"
   options={[
-    { text: 'The email goes to the twelve people who claim travel expenses.', correct: true },
-    { text: 'These two points must appear, with the dates as I give them.', correct: true },
-    { text: 'The email is done when the first sentence says what changes.', correct: true },
-    { text: 'Please write the email as well as you can, because it matters.', why: 'A request for effort gives the model no fact and gives you nothing to check the draft against.' },
-    { text: 'Use your own knowledge to add useful details about the form.', why: 'This asks the model to add facts, and every fact it adds is one you have to check or delete.' },
+    { text: 'L’e-mail va aux douze personnes qui déclarent des frais de déplacement.', correct: true },
+    { text: 'Ces deux points doivent figurer, avec les dates telles que je les donne.', correct: true },
+    { text: 'L’e-mail est terminé quand la première phrase dit ce qui change.', correct: true },
+    { text: 'Écris l’e-mail du mieux que tu peux, s’il te plaît, parce qu’il compte.', why: 'Une demande d’effort ne donne aucun fait au modèle et ne vous donne rien pour vérifier le brouillon.' },
+    { text: 'Utilise tes propres connaissances pour ajouter des détails utiles sur le formulaire.', why: 'Cela demande au modèle d’ajouter des faits, et chaque fait qu’il ajoute est un fait que vous devez vérifier ou supprimer.' },
   ]}>
-Which of these lines from a brief for a team email help you get a draft
-you can use?
+Lesquelles de ces lignes tirées d’une consigne pour un e-mail d’équipe vous
+aident à obtenir un brouillon utilisable ?
 </MultiChoice>
 
 <Scenario id="after-the-praise" phase="review" objective="using-agents/delegates-and-checks/reviews-against-brief"
   concepts={['critique']}
-  context="A learner wrote a short email with an assistant's help and then asked the assistant what it thought of the email. The assistant said the email was clear, covered everything and was ready to send."
-  title="The assistant says it is ready" hint="What would you need to know to agree that the email covers everything?"
+  context="Un apprenant a écrit un court e-mail avec l’aide d’un assistant, puis lui a demandé ce qu’il en pensait. L’assistant a dit que l’e-mail était clair, couvrait tout et était prêt à partir."
+  title="L’assistant dit qu’il est prêt" hint="Que vous faudrait-il savoir pour convenir que l’e-mail couvre tout ?"
   options={[
-    { text: 'Ask again in a fresh chat, calling it a colleague\'s email, with your criteria, and ask for pass or fail on each.', correct: true, consequence: 'The answer fails one criterion: the action is in the second sentence and the reason is in the first. You move the action up and send it.' },
-    { text: 'Send it, because the assistant read the whole email and found nothing wrong with it.', consequence: 'The first reader stops after one sentence and asks you what they have to do. The praise had no criteria behind it.' },
-    { text: 'Ask the same chat whether it is sure the email is ready to send as it is.', consequence: 'The model may keep its yes, or back down and find problems because you pushed. Either way the question gives it nothing to test, and its earlier praise is still in the chat.' },
+    { text: 'Redemander dans une nouvelle conversation, l’e-mail présenté comme celui d’un collègue, avec réussi ou échoué par critère.', correct: true, consequence: 'La réponse indique un critère échoué : l’action est dans la deuxième phrase et la raison dans la première. Vous remontez l’action et vous envoyez.' },
+    { text: 'L’envoyer tel quel, puisque l’assistant a lu tout l’e-mail sans rien y trouver à redire.', consequence: 'Le premier lecteur s’arrête après une phrase et vous demande ce qu’il doit faire. Le compliment n’avait aucun critère derrière lui.' },
+    { text: 'Demander dans la même conversation s’il est vraiment sûr que l’e-mail est prêt à partir tel quel.', consequence: 'Le modèle peut maintenir son oui, ou reculer et trouver des problèmes parce que vous avez insisté. Dans les deux cas, la question ne lui donne rien à tester, et ses compliments précédents sont toujours dans la conversation.' },
   ]}>
-You asked an assistant what it thought of your email, and it said the
-email is ready. What do you do next?
+Vous avez demandé à un assistant ce qu’il pensait de votre e-mail, et il a
+dit que l’e-mail était prêt. Que faites-vous ensuite ?
 </Scenario>
 
 <MultiChoice id="criteria-you-can-check" phase="review" objective="using-agents/delegates-and-checks/reviews-against-brief"
   concepts={['critique']}
-  context="The lesson shows a critique request that gives an assistant three criteria and asks for pass or fail on each, with the sentence that decides it."
-  title="Which criteria can get a pass or fail?" hint="For each line, could two readers agree whether a given email passes it?"
+  context="La leçon montre une demande de critique qui donne trois critères à un assistant et demande réussi ou échoué pour chacun, avec la phrase qui en décide."
+  title="Quels critères peuvent recevoir réussi ou échoué ?" hint="Pour chaque ligne, deux lecteurs pourraient-ils s’accorder sur le fait qu’un e-mail donné la respecte ?"
   options={[
-    { text: 'The first sentence says what changes and from when.', correct: true },
-    { text: 'The deadline of 31 October appears exactly as written.', correct: true },
-    { text: 'The email is good enough to send to the whole team.', why: 'Good enough by whose measure? This asks for a feeling, and a feeling is where the praise came from.' },
-    { text: 'The email feels professional and makes a strong impression.', why: 'Two readers can disagree about a strong impression, so a pass or fail on it tells you little.' },
+    { text: 'La première phrase dit ce qui change et à partir de quand.', correct: true },
+    { text: 'L’échéance du 31 octobre figure exactement telle qu’écrite.', correct: true },
+    { text: 'L’e-mail est assez bon pour être envoyé à toute l’équipe.', why: 'Assez bon selon quelle mesure ? Cela demande un ressenti, et c’est d’un ressenti que venaient les compliments.' },
+    { text: 'L’e-mail fait professionnel et produit une forte impression.', why: 'Deux lecteurs peuvent être en désaccord sur une forte impression, donc un réussi ou un échoué à ce sujet vous apprend peu.' },
   ]}>
-You are writing criteria for an assistant to check a colleague's email
-against. Which lines can get a clear pass or fail?
+Vous écrivez des critères pour qu’un assistant vérifie l’e-mail d’un
+collègue. Quelles lignes peuvent recevoir un réussi ou un échoué net ?
 </MultiChoice>
 
-<Exercise stretch="Paste the same draft into a fresh chat, say you wrote it and are proud of it, and ask what the assistant thinks. Compare that answer with the one you got against criteria.">
-Pick a short email you have to write this week, at work or outside it.
-Leave out names and numbers you couldn't share outside your team. Write a
-brief with the audience, the purpose, the two points that must appear, the
-tone and the length, and write two or three done-criteria at the end
-before you send it. Mark every fact in the draft you get: from your brief,
-a placeholder, or added by the model. Then open a fresh chat, paste the
-draft as a colleague's text with your criteria, and ask for problems only,
-pass or fail per criterion. Doing this on an email of your own shows how
-many facts the model adds, and how much criteria change the feedback you
-get. This takes about fifteen minutes. A good result is a draft where you
-checked or deleted every added fact, and at least one finding you agreed
-with and acted on. Which of the findings did you reject, and why?
+<Exercise stretch="Collez le même brouillon dans une nouvelle conversation, dites que vous l’avez écrit et que vous en êtes fier, et demandez ce qu’en pense l’assistant. Comparez cette réponse à celle obtenue au regard des critères.">
+Choisissez un court e-mail que vous devez écrire cette semaine, au travail ou
+ailleurs. Laissez de côté les noms et les nombres que vous ne pourriez pas
+partager hors de votre équipe. Écrivez une consigne avec le public,
+l’objectif, les deux points qui doivent figurer, le ton et la longueur, et
+écrivez deux ou trois critères d’achèvement (done-criteria) à la fin avant de l’envoyer.
+Marquez chaque fait du brouillon obtenu : venu de votre consigne, marqueur à
+remplir, ou ajouté par le modèle. Puis ouvrez une nouvelle conversation,
+collez le brouillon comme le texte d’un collègue avec vos critères, et
+demandez uniquement les problèmes, réussi ou échoué par critère. Le faire sur
+un e-mail à vous montre combien de faits le modèle ajoute, et à quel point
+des critères changent l’avis que vous obtenez. Cela prend environ quinze
+minutes. Un bon résultat est un brouillon où vous avez vérifié ou supprimé
+chaque fait ajouté, et au moins un constat avec lequel vous étiez d’accord
+et sur lequel vous avez agi. Lesquels des constats avez-vous rejetés, et
+pourquoi ?
 </Exercise>
 
 <Recap>
-1. A one-line request gets a draft for nobody in particular, and the model fills the gaps with invented facts.
-2. A drafting brief names the audience and purpose, the points that must appear, the tone and the length, and it ends with done-criteria written before the draft exists.
-3. The draft is raw material. Every fact in it is yours to supply or check, and the final voice is yours.
-4. Asked what it thinks of your text, an assistant tends to praise it. Feedback is more positive when the user says they wrote the text (@Sharma 2023).
-5. Ask for problems only, against stated criteria, and call the text a colleague's. That framing leans the critique harsh, so you stay the judge of every finding.
+1. Une demande d’une ligne produit un brouillon pour personne en particulier, et le modèle comble les vides avec des faits inventés.
+2. Une consigne de rédaction nomme le public et l’objectif, les points qui doivent figurer, le ton et la longueur, et se termine par des critères d’achèvement écrits avant que le brouillon existe.
+3. Le brouillon est une matière première. Chaque fait qu’il contient est à vous de le fournir ou de le vérifier, et la voix finale est la vôtre.
+4. Quand on lui demande ce qu’il pense de votre texte, un assistant tend à en faire l’éloge. L’avis est plus positif quand l’utilisateur dit avoir écrit le texte (@Sharma 2023).
+5. Demandez uniquement les problèmes, au regard de critères énoncés, et présentez le texte comme celui d’un collègue. Ce cadrage rend la critique un peu sévère, donc vous restez juge de chaque constat.
 </Recap>
 
 <Habit id="criteria-before-feedback">
-The next time you ask an assistant for feedback on something you wrote, write down two or three things the text must do first, and ask for pass or fail on each.
+La prochaine fois que vous demandez à un assistant un avis sur un texte que vous avez écrit, notez d’abord deux ou trois choses que le texte doit faire, et demandez réussi ou échoué pour chacune.
 </Habit>

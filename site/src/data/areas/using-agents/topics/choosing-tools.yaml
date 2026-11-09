@@ -1,58 +1,60 @@
 id: using-agents/choosing-tools
 area: using-agents
-name: Choosing models and tools
+name: Choisir les modèles et les outils
 definition: >-
-  Not every task wants the biggest model or an agent. This topic covers
-  matching a model to a task, weighing cost and speed against quality,
-  choosing between a chat, an agent and an unattended automation, deciding
-  which steps stay human, and re-applying that judgment as tools grow more
-  capable.
+  Toutes les tâches ne demandent pas le plus gros modèle ou un agent. Ce thème couvre l’adéquation
+  d’un modèle à une tâche, l’arbitrage entre coût, rapidité et qualité, le choix entre une
+  conversation, un agent et une automatisation sans surveillance, la décision des étapes qui
+  restent humaines, et la manière de réappliquer ce jugement à mesure que les outils gagnent en
+  capacités.
 concepts:
   - id: model-fit
-    name: Model fit
+    name: Adéquation du modèle
     definition: >-
-      Matching a model to a task by what the task needs: a small fast model
-      for classification or reformatting, a larger one for multi-step
-      reasoning or ambiguous instructions, a model with tools where fresh
-      facts matter. Fit is tested, not assumed: run a few representative
-      inputs on each candidate and compare, rather than defaulting to the
-      most capable and expensive option.
+      Choisir un modèle selon ce dont la tâche a besoin : un petit modèle rapide pour classer ou
+      reformater, un plus grand pour un raisonnement en plusieurs étapes ou des instructions ambiguës,
+      un modèle avec des outils quand des faits récents comptent. L’adéquation se teste : faites
+      passer quelques entrées représentatives sur chaque candidat et comparez, au lieu de choisir par
+      défaut l’option la plus capable et la plus chère.
   - id: cost-and-speed
-    name: Cost and speed
+    name: Coût et rapidité
     definition: >-
-      The price and delay of a choice, per task and at the volume you expect.
-      A model that costs ten times more and answers slower must be enough
-      better to justify it; an agent that takes twenty tool calls costs
-      twenty times a single answer. For repeated work, small differences per
-      call become the whole budget, so measure before scaling.
+      Le prix et le délai d’un choix, par tâche et au volume que vous prévoyez. Un modèle qui coûte
+      dix fois plus et répond plus lentement doit être assez meilleur pour le justifier, et un agent
+      qui fait vingt appels d’outils coûte vingt fois une réponse unique. Pour un travail répété, de
+      petites différences par appel deviennent tout le budget, donc mesurez avant de passer à
+      l’échelle.
   - id: chat-vs-agent-vs-automation
-    name: Chat vs agent vs automation
+    name: Conversation, agent ou automatisation
     definition: >-
-      Three ways to apply a model. Chat: you steer every turn, best for
-      thinking and one-off drafts. Agent: you brief it and it works through
-      steps with tools, checking in as agreed, best for bounded tasks with
-      clear done-criteria. Automation: it runs unattended on a trigger, best
-      for repetitive, low-stakes, well-tested tasks. Autonomy rises across the
-      three, so the checks must rise too.
+      Trois façons d’utiliser un modèle. La conversation : vous pilotez chaque tour, ce qui convient à
+      la réflexion et aux brouillons ponctuels. L’agent : vous lui donnez une consigne et il avance
+      par étapes avec des outils, en faisant le point comme convenu, ce qui convient aux tâches
+      délimitées avec des critères d’achèvement clairs. L’automatisation : elle tourne sans
+      surveillance sur un déclencheur, ce qui convient aux tâches répétitives, à faible enjeu et bien
+      testées. L’autonomie augmente d’un cas à l’autre, donc les vérifications doivent augmenter
+      aussi.
   - id: what-to-keep-human
-    name: What to keep human
+    name: Ce qui reste humain
     definition: >-
-      The steps that stay with a person on purpose: decisions with legal or
-      ethical weight, judgments about people, anything irreversible or
-      costly, and the final accountability for a result. Keeping a step human
-      is a design choice, and naming those steps early prevents them from
-      being automated by default as tools improve. Keeping a human path also
-      means the process keeps working when the tool is unavailable.
+      Les étapes qui restent volontairement à une personne : les décisions qui ont un poids juridique
+      ou éthique, les jugements sur des personnes, tout ce qui est irréversible ou coûteux, et la
+      responsabilité finale d’un résultat. Garder une étape humaine est un choix de conception, et
+      nommer ces étapes tôt évite qu’elles soient automatisées par défaut à mesure que les outils
+      progressent. Garder un chemin humain permet aussi au processus de continuer à fonctionner quand
+      l’outil n’est pas disponible.
   - id: reasoning-across-tool-levels
-    name: Reasoning across tool levels
+    name: Raisonner d’un niveau d’outil à l’autre
     definition: >-
-      Tools rise in abstraction, from autocomplete to chat to agents to
-      systems of agents, and each level hides more of what happens below.
-      The judgment about fit, cost, risk and what to keep human has to be
-      re-applied at each new level rather than carried over. What was safe to
-      trust at one level may not be at the next, and vice versa.
+      Les outils montent en abstraction, de l’autocomplétion à la conversation, puis aux agents et aux
+      systèmes d’agents, et chaque niveau cache davantage de ce qui se passe en dessous. Le jugement
+      sur l’adéquation, le coût, le risque et ce qui reste humain doit être réappliqué à chaque
+      nouveau niveau au lieu d’être reporté tel quel. Ce qui était sûr à un niveau peut ne plus l’être
+      au suivant, et inversement.
 links:
   prerequisites: [using-agents/delegating, concepts/limits]
   related: []
   specializations: []
-sources: [AEC-12, Brilliant ABS, Academy ai-fluency-for-builders, Academy building-effective-human-agent-teams, OpenAI Academy agents-and-workflows-y0qoc, OpenAI Academy applied-ai-foundations-szsmv]
+sources: [AEC-12, Brilliant ABS, Academy ai-fluency-for-builders, Academy
+      building-effective-human-agent-teams, OpenAI Academy agents-and-workflows-y0qoc, OpenAI
+      Academy applied-ai-foundations-szsmv]
