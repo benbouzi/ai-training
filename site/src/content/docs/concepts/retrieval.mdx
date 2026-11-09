@@ -18,7 +18,7 @@ partir de documents.
 ## D’abord chercher, ensuite répondre
 
 Un modèle connaît ce qui figurait dans ses données d’entraînement et ce qui se
-trouve en ce moment dans sa fenêtre de contexte. La
+trouve en ce moment dans sa fenêtre de contexte (context window). La
 [leçon sur la boucle d’agent](/concepts/agent-loop/#un-modèle-dans-une-boucle-avec-deux-outils)
 a montré un outil qui lit un fichier dans la conversation. La récupération est
 une recherche qui s’exécute avant que le modèle réponde, pour que le bon texte
@@ -115,7 +115,7 @@ Pourquoi ?
 
 ## L’ancrage, et ce qu’il ne corrige pas
 
-L’**ancrage** consiste à rattacher une réponse aux sources données au modèle,
+L’**ancrage** (grounding) consiste à rattacher une réponse aux sources données au modèle,
 plutôt qu’à ses données d’entraînement. Une réponse ancrée fait deux choses.
 Elle désigne le passage sur lequel elle s’est appuyée, pour que vous puissiez le
 lire vous-même. Et elle le dit quand les passages ne couvrent pas la question

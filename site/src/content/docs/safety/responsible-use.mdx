@@ -111,8 +111,8 @@ range ses documents.
 Les réponses à « Est-ce que je peux… ? » viennent de deux questions qu’on
 pose à toute information : à qui appartient-elle, et quel rôle tenons-nous à
 son égard ? Le droit de la protection des données nomme deux rôles. Le
-**responsable du traitement** décide de ce qu’il advient des données et
-pourquoi. Le **sous-traitant** les traite pour le compte du responsable et
+**responsable du traitement** (controller) décide de ce qu’il advient des données et
+pourquoi. Le **sous-traitant** (processor) les traite pour le compte du responsable et
 ne peut faire que ce que celui-ci autorise. La plupart du temps, vous n’avez
 pas besoin de ces mots, et une phrase simple suffit : l’information que vous
 détenez pour quelqu’un d’autre lui appartient, et c’est à lui d’en décider.
@@ -138,9 +138,9 @@ Laissez-les de côté, sauf si l’outil est approuvé pour ce type de données.
 test utile : mettriez-vous le même texte dans un e-mail à un collègue qui n’a
 aucune raison de le voir ?
 
-**Secrets.** Mots de passe, clés d’API, jetons d’accès, certificats. Les
+**Secrets.** Mots de passe, clés d’API, jetons d’accès (access tokens), certificats. Les
 secrets n’y entrent jamais, quel que soit l’outil et quel que soit le niveau.
-Remplacez-les par des marqueurs comme `<API_KEY>`. Un secret collé
+Remplacez-les par des marqueurs (placeholders) comme `<API_KEY>`. Un secret collé
 dans une conversation doit être considéré comme divulgué, et remplacé (les
 équipes de sécurité parlent de « rotation »), qui que soit la personne qui
 l’a collé et quelle que soit la confiance accordée à l’outil.
@@ -307,13 +307,13 @@ quels au fournisseur, et cherchez ceux que vous ne connaissez pas dans le
 5. Quelles certifications couvrent précisément les fonctions d’IA, et dans
    quel rôle agissez-vous, sous-traitant ou responsable du traitement ?
 6. Comment la propriété intellectuelle est-elle protégée : garantie
-   juridique (vous couvrez mes frais si la sortie enfreint un droit),
-   citations, certificats de contenu (une étiquette signée qui dit qui a
+   juridique (indemnity : vous couvrez mes frais si la sortie enfreint un droit),
+   citations, certificats de contenu (content credentials : une étiquette signée qui dit qui a
    produit une image ou une vidéo, et comment) sur les médias générés ?
-7. Comment réduisez-vous la dépendance excessive aux mauvaises réponses :
-   ancrage (des réponses construites à partir de mes propres documents),
+7. Comment réduisez-vous la dépendance excessive (overreliance) aux mauvaises réponses :
+   ancrage (grounding : des réponses construites à partir de mes propres documents),
    citations, signaux de confiance ?
-8. Comment détectez-vous et traitez-vous l’injection de prompt, aussi bien
+8. Comment détectez-vous et traitez-vous l’injection de prompt (prompt injection), aussi bien
    dans ce que je tape que dans les documents que lit l’IA ?
 
 Si un fournisseur ne peut pas répondre à la question 4 par une phrase que
@@ -322,7 +322,7 @@ vous trouvez dans ses conditions, considérez que la réponse est « oui ».
 ## Dire que l’IA a aidé
 
 Jusqu’ici, la leçon a porté sur ce qui entre. Deux habitudes s’appliquent à
-ce qui sort, et la première est la mention de l’usage de l’IA.
+ce qui sort, et la première est la mention de l’usage de l’IA (disclosure).
 
 La mention de l’usage de l’IA consiste à dire que l’IA a servi, dans la
 mesure où le public s’attend à le savoir. Le lecteur d’un rapport veut savoir

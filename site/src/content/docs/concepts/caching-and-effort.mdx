@@ -5,7 +5,7 @@ sur un long contrat. Deux réglages changent le coût de cette journée, et aucu
 ne change les questions posées. Le premier fixe la quantité de travail que le
 modèle consacre à chaque réponse. Le second permet de payer le long début de
 chaque requête, les instructions et le contrat, pour une petite part du prix
-normal. Dans cette leçon, nous choisissons un niveau d’effort pour un type de
+normal. Dans cette leçon, nous choisissons un niveau d’effort (effort level) pour un type de
 travail et nous cherchons ce qui empêche le cache de fonctionner. Vous
 n’installez et ne lancez rien : chaque nombre de la page figure dans un tableau.
 
@@ -15,7 +15,7 @@ leçon part de là.
 
 ## Ce que change le niveau d’effort
 
-Le **niveau d’effort** est un réglage qui indique au modèle combien de jetons
+Le **niveau d’effort** est un réglage qui indique au modèle combien de jetons (tokens)
 consacrer à sa réponse (@Claude docs effort). Sur les modèles d’un fournisseur,
 les niveaux vont de bas à max en passant par moyen et élevé, et certains
 modèles ajoutent un niveau entre élevé et max. Si personne ne le règle, la
@@ -103,7 +103,7 @@ Associez chaque tâche au niveau d’effort que vous essaieriez en premier.
 Revenez à la journée sur le contrat. Les requêtes commencent par les mêmes
 instructions et le même contrat, et la fin de chacune est nouvelle. Le
 fournisseur traite de nouveau ce même début pour chaque question, et le facture
-à chaque fois. La **mise en cache du prompt** conserve pendant un court moment le
+à chaque fois. La **mise en cache du prompt** (prompt caching) conserve pendant un court moment le
 début traité d’une requête. Quand une requête ultérieure commence par exactement
 les mêmes jetons, le modèle réutilise le travail stocké pour cette partie au
 lieu de la traiter de nouveau (@Claude docs prompt-caching).

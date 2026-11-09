@@ -5,7 +5,7 @@ financière, un résumé du compte rendu de chaque réunion, environ mille fois
 par mois. Avant que quiconque donne son accord, quelqu’un demande combien cela
 coûte, et quelqu’un d’autre demande pourquoi l’essai de la semaine dernière a
 ignoré la règle sur la longueur des puces qui figurait dans les instructions.
-Les deux réponses passent par le comptage des jetons. Dans cette leçon, nous
+Les deux réponses passent par le comptage des jetons (tokens). Dans cette leçon, nous
 calculons le prix d’un prompt court et d’un prompt long, sur un petit modèle et
 sur un grand. Puis nous retrouvons la règle qu’un long fichier d’instructions
 a enfouie.
@@ -193,7 +193,7 @@ Tu résumes des comptes rendus de réunion pour l’équipe financière du proje
 12. Écris « cartes capteurs », jamais « capteurs » ni « cartes ».
 ```
 
-Chaque ligne du fichier est faite de jetons, dans la fenêtre de contexte comme
+Chaque ligne du fichier est faite de jetons, dans la fenêtre de contexte (context window) comme
 tous les autres, et une règle énoncée une fois est en concurrence avec tout ce
 qui vient après elle : les onze autres règles, le compte rendu, et la réponse
 que le modèle est en train d’écrire. Le modèle n’a pas de liste de règles qu’il
@@ -203,7 +203,7 @@ règle placée en haut ou en bas. Liu et ses collègues ont mesuré cet effet su
 des faits : les modèles retrouvaient un fait placé au milieu d’un long contexte
 moins sûrement que le même fait placé à l’une des extrémités (@Liu 2024). La
 [leçon sur le fonctionnement des modèles](/concepts/how-models-work/#les-défaillances-nommées)
-a appelé cela la **dilution des instructions**, et la
+a appelé cela la **dilution des instructions** (instruction dilution), et la
 [leçon sur le prompt système](/concepts/system-prompt/) a montré qu’un prompt
 système y est soumis lui aussi.
 

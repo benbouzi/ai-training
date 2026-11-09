@@ -40,6 +40,11 @@ changement de terme se fait ici d’abord, puis dans toutes les pages.
   chaîne entre apostrophes.
 - Guillemets français « » pour les citations et les mots cités.
 - Un sigle est développé à sa première occurrence dans une leçon.
+- Un terme technique ou peu courant en français garde le terme anglais entre
+  parenthèses à sa première mention dans le texte courant d’une leçon :
+  « flagornerie (sycophancy) », « marqueur (placeholder) ». Le script
+  `docs/traduction/outils/termes_anglais.py` l’ajoute pour les termes de sa
+  table.
 - Les titres de section changent l’ancre de la page. Après traduction, le
   script `docs/traduction/outils/ancres.py` met à jour les ancres et les champs
   `section:` des YAML.
@@ -76,6 +81,8 @@ ensemble :
   YAML en JSON, puis réinjecte la traduction sans toucher au reste du fichier.
 - `docs/traduction/outils/interface.py` : table des libellés de l’interface
   des leçons, appliquée aux composants et aux tests qui les citent.
+- `docs/traduction/outils/termes_anglais.py` : ajoute le terme anglais entre
+  parenthèses à la première mention des termes techniques d’une leçon.
 - `site/src/lib/labels-fr.ts` : libellés français des valeurs que les données
   gardent en anglais (mode d’une leçon, état d’une question, type d’une
   source, etc.). Les valeurs restent celles que lisent les contrôles et
@@ -222,3 +229,21 @@ ensemble :
 | Builds on / Leads to    | S’appuie sur / Mène à         |
 | Served by (objective)   | Leçons qui le servent         |
 | alignment (frameworks)  | correspondance (référentiels) |
+
+## Sécurité : données et confidentialité
+
+| Anglais                   | Français                                  |
+| ------------------------- | ----------------------------------------- |
+| shadow AI                 | IA fantôme                                |
+| data privacy              | protection des données                    |
+| confidentiality           | confidentialité                           |
+| licensing and attribution | licences et attribution                   |
+| disclosure                | mention de l’usage de l’IA                |
+| controller / processor    | responsable du traitement / sous-traitant |
+| subprocessors             | sous-traitants                            |
+| retention                 | conservation                              |
+| redaction / redact        | masquage / masquer                        |
+| placeholder               | marqueur                                  |
+| redaction map             | table de correspondance                   |
+| pseudonymized / anonymous | pseudonymisé / anonyme                    |
+| access token              | jeton d’accès                             |
