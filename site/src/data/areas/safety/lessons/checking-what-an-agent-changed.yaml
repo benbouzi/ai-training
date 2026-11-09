@@ -1,8 +1,8 @@
 id: safety/checking-what-an-agent-changed
-title: Checking what an agent changed
+title: Vérifier ce qu’un agent a changé
 description: >-
-  Compare what an agent did with what you asked for, find the deleted file and the sent message its
-  summary left out, and put the one pause before the step that cannot be undone.
+  Comparer ce qu’un agent a fait avec ce que vous avez demandé, trouver le fichier supprimé et le
+  message envoyé que son résumé a omis, et placer la seule pause avant l’étape irréversible.
 mode: tutorial
 covers: safety/verification
 serves: [safety/verifies-output/calibrates-trust]
@@ -19,8 +19,8 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    For one agent task you have seen or read about, list the effects to inspect afterwards (what
-    changed and what was sent) and the one step that needs a pause first.
+    Pour une tâche d’agent que vous avez vue ou lue, lister les effets à inspecter après coup (ce
+    qui a changé et ce qui a été envoyé) et la seule étape qui demande d’abord une pause.
 sources: [CS50x, Liu 2024b, Academy ai-fluency-framework-foundations]
 issue: 128
 minutes: 15

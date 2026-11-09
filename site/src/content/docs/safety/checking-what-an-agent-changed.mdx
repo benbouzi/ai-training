@@ -1,235 +1,249 @@
 import { Choice, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-When a chat assistant answers, you read its text against what you asked
-for before you use it. An
+Quand un assistant conversationnel répond, vous relisez son texte en regard
+de votre demande avant de l’utiliser. Un
 [agent](/concepts/assistant-or-agent/#un-seul-test--que-peut-il-faire-sans-nouveau-prompt-)
-goes further than text, because it moves files, deletes them and sends messages, and
-by the time you read its reply those things have already happened. In this
-lesson we check an agent by looking at its effects. A recorded session is
-replayed as changes to a folder, and we compare those changes with the
-request. The last section is about the one step of a session that should
-wait for you before it runs.
+va plus loin que le texte, parce qu’il déplace des fichiers, en supprime et
+envoie des messages, et quand vous lisez sa réponse, tout cela a déjà eu
+lieu. Dans cette leçon, nous vérifions un agent en regardant ses effets. Une
+session enregistrée est rejouée sous forme de modifications d’un dossier, et
+nous comparons ces modifications avec la demande. La dernière section porte
+sur la seule étape d’une session qui devrait vous attendre avant de
+s’exécuter.
 
-## Read the effects against the request
+## Lire les effets en regard de la demande
 
-Someone asks an agent to tidy a shared team folder. This is the request,
-word for word:
+Quelqu’un demande à un agent de ranger un dossier partagé d’équipe. Voici la
+demande, mot pour mot :
 
 ```text
-Move this week's meeting notes into 2026-meetings, with the date at the
-start of each file name.
+Déplace les notes de réunion de cette semaine dans 2026-reunions, avec la
+date au début de chaque nom de fichier.
 ```
 
-The agent works for a minute and replies:
+L’agent travaille une minute et répond :
 
 ```text
-Done. I moved the three meeting notes into 2026-meetings and put the date first.
+Terminé. J’ai déplacé les trois notes de réunion dans 2026-reunions et mis la date en tête.
 ```
 
-The folder, the files and the session are invented for this lesson, and
-the agent's steps were written to show the kind of extra step agents
-take. A short program replays the recorded steps on a copy of the folder
-and prints the folder before and after the session.
+Le dossier, les fichiers et la session sont inventés pour cette leçon, et
+les étapes de l’agent ont été écrites pour montrer le genre d’étape en plus
+que prennent les agents. Un petit programme rejoue les étapes enregistrées
+sur une copie du dossier, et affiche le dossier avant et après la session.
 
 ```text
-before:
-  2026-meetings/
+avant :
+  2026-reunions/
   budget-2027.txt
-  notes-monday.txt
-  notes-thursday-copy.txt
-  notes-thursday.txt
-  notes-tuesday.txt
+  notes-jeudi-copie.txt
+  notes-jeudi.txt
+  notes-lundi.txt
+  notes-mardi.txt
 
-after:
-  2026-meetings/2026-09-21-notes-monday.txt
-  2026-meetings/2026-09-22-notes-tuesday.txt
-  2026-meetings/2026-09-24-notes-thursday.txt
+après :
+  2026-reunions/2026-09-21-notes-lundi.txt
+  2026-reunions/2026-09-22-notes-mardi.txt
+  2026-reunions/2026-09-24-notes-jeudi.txt
   budget-2027.txt
 ```
 
-Before you read on, look for each name of the before list in the after
-list. A file may have a new name there, or a folder in front of it.
+Avant de poursuivre, cherchez chaque nom de la liste « avant » dans la liste
+« après ». Un fichier peut y avoir un nouveau nom, ou un dossier devant lui.
 
 <Predict id="which-file-is-gone" objective="safety/verifies-output/calibrates-trust"
   concepts={['trust-but-verify-for-agents']}
-  context="An agent was asked to move this week's meeting notes into the folder 2026-meetings with the date at the start of each name. Before the session the folder held 2026-meetings (empty), budget-2027.txt, notes-monday.txt, notes-thursday-copy.txt, notes-thursday.txt and notes-tuesday.txt. After it, the folder held 2026-meetings/2026-09-21-notes-monday.txt, 2026-meetings/2026-09-22-notes-tuesday.txt, 2026-meetings/2026-09-24-notes-thursday.txt and budget-2027.txt."
-  title="Which file is gone?"
-  hint="Take the before list one line at a time. For each name, is there a line in the after list with the same name, with or without a date in front and a folder name before it?"
-  answer="notes-thursday-copy.txt">
-One file from the before list isn't in the after list under any name or
-in any folder. Type its name as the before list shows it.
+  context="On a demandé à un agent de déplacer les notes de réunion de la semaine dans le dossier 2026-reunions, avec la date au début de chaque nom. Avant la session, le dossier contenait 2026-reunions (vide), budget-2027.txt, notes-jeudi-copie.txt, notes-jeudi.txt, notes-lundi.txt et notes-mardi.txt. Après, il contenait 2026-reunions/2026-09-21-notes-lundi.txt, 2026-reunions/2026-09-22-notes-mardi.txt, 2026-reunions/2026-09-24-notes-jeudi.txt et budget-2027.txt."
+  title="Quel fichier a disparu ?"
+  hint="Prenez la liste « avant » ligne par ligne. Pour chaque nom, y a-t-il dans la liste « après » une ligne avec le même nom, avec ou sans date devant et avec ou sans nom de dossier avant ?"
+  answer="notes-jeudi-copie.txt">
+Un fichier de la liste « avant » ne figure dans la liste « après » sous aucun
+nom ni dans aucun dossier. Tapez son nom tel que la liste « avant »
+l’affiche.
 </Predict>
 
-The program goes on to list every effect of the session and to mark each
-one as asked for or not. It skips the steps where the agent only read a
-file or listed the folder, because those leave the folder as it was.
+Le programme liste ensuite chaque effet de la session et indique pour chacun
+s’il a été demandé ou non. Il saute les étapes où l’agent s’est contenté de
+lire un fichier ou de lister le dossier, parce qu’elles laissent le dossier
+tel qu’il était.
 
 ```text
-effects, checked against the request:
-  asked      moved notes-monday.txt -> 2026-meetings/2026-09-21-notes-monday.txt
-  asked      moved notes-tuesday.txt -> 2026-meetings/2026-09-22-notes-tuesday.txt
-  asked      moved notes-thursday.txt -> 2026-meetings/2026-09-24-notes-thursday.txt
-  NOT ASKED  deleted notes-thursday-copy.txt (2 lines in it were in no other file)
-  NOT ASKED  sent a message to all-staff: "The meeting notes for this week are now in 2026-meetings."
+effets, comparés à la demande :
+  demandé      déplacé notes-lundi.txt -> 2026-reunions/2026-09-21-notes-lundi.txt
+  demandé      déplacé notes-mardi.txt -> 2026-reunions/2026-09-22-notes-mardi.txt
+  demandé      déplacé notes-jeudi.txt -> 2026-reunions/2026-09-24-notes-jeudi.txt
+  NON DEMANDÉ  supprimé notes-jeudi-copie.txt (2 de ses lignes ne figuraient dans aucun autre fichier)
+  NON DEMANDÉ  envoyé un message à tout-le-personnel : « Les notes de réunion de la semaine sont maintenant dans 2026-reunions. »
 
-agent's summary: "Done. I moved the three meeting notes into 2026-meetings and put the date first."
-effects: 5, asked for: 3, not asked for: 2
-effects the summary mentions: 3 of 5
-effects a before-and-after comparison cannot show: 1 (the message)
+résumé de l’agent : « Terminé. J’ai déplacé les trois notes de réunion dans 2026-reunions et mis la date en tête. »
+effets : 5, demandés : 3, non demandés : 2
+effets mentionnés dans le résumé : 3 sur 5
+effets qu’une comparaison avant-après ne peut pas montrer : 1 (le message)
 ```
 
-The moves of the Monday, Tuesday and Thursday notes are what the request
-asked for, and they're right. The
-agent also deleted the Thursday copy, probably because the name looked like
-a duplicate. The copy wasn't a duplicate: it held the two action items
-someone added after the meeting, and they were in no other file. Then the
-agent told the whole company where the notes are, and the request mentioned
-no message at all.
+Les déplacements des notes du lundi, du mardi et du jeudi sont ce que la
+demande voulait, et ils sont corrects. L’agent a aussi supprimé la copie du
+jeudi, sans doute parce que son nom ressemblait à celui d’un doublon. La
+copie n’était pas un doublon : elle contenait les deux actions que quelqu’un
+avait ajoutées après la réunion, et elles ne figuraient dans aucun autre
+fichier. Ensuite, l’agent a dit à toute l’entreprise où se trouvent les
+notes, alors que la demande ne parlait d’aucun message.
 
-Earlier in this course, the first checking habit was to read the output
-against the request ([Checking habits](/safety/checking-habits/#la-routine)).
-Here we apply it to an agent. With a chat
-answer, the output is the text. With an agent, the output is the set of
-things that are different in the world after the session, and the request
-is the list you check each one against.
+Plus tôt dans ce cours, la première habitude de vérification consistait à
+relire la sortie en regard de la demande
+([Habitudes de vérification](/safety/checking-habits/#la-routine)). Ici, nous
+l’appliquons à un agent. Avec une réponse de conversation, la sortie est le
+texte. Avec un agent, la sortie est l’ensemble de ce qui a changé dans le
+monde après la session, et la demande est la liste à laquelle vous comparez
+chaque changement.
 
-## What to inspect
+## Ce qu’il faut inspecter
 
-An agent's effects on your work come in the kinds below, and each kind
-needs a different place to look.
+Les effets d’un agent sur votre travail sont des types ci-dessous, et
+chaque type demande de regarder à un endroit différent.
 
-**What changed.** A file that was edited, renamed or moved. Compare the
-folder before and after, as the program did, and open one changed file to
-see that its contents are what you expect. You can put a changed file back
-if you have the old version.
+**Ce qui a changé.** Un fichier modifié, renommé ou déplacé. Comparez le
+dossier avant et après, comme l’a fait le programme, et ouvrez un fichier
+modifié pour voir que son contenu est celui que vous attendez. Vous pouvez
+remettre en place un fichier modifié si vous avez l’ancienne version.
 
-**What was deleted.** A file that's gone. The after list doesn't show it,
-so you find it only by going through the before list, as you did above.
-Ask whether the deleted file held anything that exists nowhere else, and
-whether it went to a bin you can restore from.
+**Ce qui a été supprimé.** Un fichier qui a disparu. La liste « après » ne
+le montre pas, donc vous ne le trouvez qu’en parcourant la liste « avant »,
+comme vous l’avez fait plus haut. Demandez-vous si le fichier supprimé
+contenait quelque chose qui n’existe nulle part ailleurs, et s’il est parti
+dans une corbeille d’où vous pouvez le restaurer.
 
-**What was sent.** A message, an email, a shared link, a posted comment. A
-send doesn't change your folder at all, and the program's last line
-counts the message as the one effect that comparing the before and after
-lists can't show. You find
-sends in the sent folder, in the channel or in the activity record of the
-agent, if it keeps one. Once someone has read a message, you can't make them
-unread it.
+**Ce qui a été envoyé.** Un message, un e-mail, un lien partagé, un
+commentaire publié. Un envoi ne change rien à votre dossier, et la dernière
+ligne du programme compte le message comme le seul effet que la comparaison
+des listes avant et après ne peut pas montrer. Vous trouvez les envois dans
+le dossier des éléments envoyés, dans le canal, ou dans le journal
+d’activité de l’agent, s’il en tient un. Une fois que quelqu’un a lu un
+message, vous ne pouvez pas faire qu’il ne l’ait pas lu.
 
-Anthropic's AI Fluency course treats judging an AI's work as a skill of its
-own, which it calls discernment, and it applies that skill to how the AI
-went about the task and to what it produced
-(@Academy ai-fluency-framework-foundations). For an agent, the effects are
-where you see how it went about the task.
+Le cours AI Fluency d’Anthropic traite le jugement du travail d’une IA comme
+une compétence à part, qu’il appelle discernement (discernment), et
+l’applique à la façon dont l’IA a mené la tâche comme à ce qu’elle a produit
+(@Academy ai-fluency-framework-foundations). Pour un agent, les effets sont
+l’endroit où vous voyez comment il a mené la tâche.
 
-<Pitfall title="Reading the summary as the record">
-The agent's summary said it moved three files and dated them. Both claims
-were true, and it left out two of the five effects. A summary is text the
-model writes at the end of the session, produced the same way as any other
-answer, so it can be fluent, accurate in every sentence and still
-incomplete. Harvard's CS50 course gives its students an AI helper (@CS50x)
-(@Liu 2024b). The helper also answers questions on the course forum. A
-staff member can endorse, amend or delete each of those answers, and the
-forum shows which ones staff endorsed, so students can tell a checked
-answer from a raw one (@Liu 2024b). The summary is a raw answer about the
-agent's own work, and nobody has checked it. Read the effects first, and
-read the summary afterwards to see what it left out.
+<Pitfall title="Prendre le résumé pour le compte rendu">
+Le résumé de l’agent disait qu’il avait déplacé trois fichiers et les avait
+datés. Les deux affirmations étaient vraies, et il omettait deux des cinq
+effets. Un résumé est un texte que le modèle écrit à la fin de la session,
+produit de la même façon que toute autre réponse, donc il peut être fluide,
+exact dans chaque phrase et pourtant incomplet. Le cours CS50 de Harvard
+donne à ses étudiants un assistant d’IA (@CS50x) (@Liu 2024b). L’assistant
+répond aussi aux questions sur le forum du cours. Un membre de l’équipe
+pédagogique peut valider, modifier ou supprimer chacune de ces réponses, et
+le forum indique celles que l’équipe a validées, pour que les étudiants
+distinguent une réponse vérifiée d’une réponse brute (@Liu 2024b). Le résumé
+est une réponse brute sur le propre travail de l’agent, et personne ne l’a
+vérifiée. Lisez d’abord les effets, puis lisez le résumé pour voir ce qu’il
+a omis.
 </Pitfall>
 
-## Pause before the step you can't undo
+## Faire une pause avant l’étape irréversible
 
-Checking after the session works for effects you can undo. Moves and
-renames are like that, and so is a new file in your own folder. Let the
-agent do those steps on its own, and check the result against the request
-when it's done. Stopping it before every one of them costs you time, and
-after the tenth approval you stop reading what you approve.
+Vérifier après la session fonctionne pour les effets que vous pouvez
+annuler. Les déplacements et les renommages en font partie, tout comme un
+nouveau fichier dans votre propre dossier. Laissez l’agent faire ces étapes
+seul, et comparez le résultat à la demande quand il a fini. L’arrêter avant
+chacune d’elles vous coûte du temps, et à la dixième approbation, vous ne
+lisez plus ce que vous approuvez.
 
-Some steps can't be undone by any check afterwards. A message that someone
-has read, a file deleted with no bin to restore it from, a payment, a page
-published to the public: for these, checking after the session only tells
-you what went wrong. They're the steps where the agent should stop and
-show you what it is about to do, and wait for a yes. In the session above,
-the message was a step of that kind, and so was the deletion if the
-folder has no bin. The agent took both without asking.
+Certaines étapes ne peuvent être réparées par aucune vérification après
+coup. Un message que quelqu’un a lu, un fichier supprimé sans corbeille pour
+le restaurer, un paiement, une page publiée : pour ces étapes, vérifier
+après la session vous dit seulement ce qui a mal tourné. Ce sont les étapes
+où l’agent devrait s’arrêter, vous montrer ce qu’il s’apprête à faire, et
+attendre un oui. Dans la session ci-dessus, le message était une étape de ce
+type, et la suppression aussi si le dossier n’a pas de corbeille. L’agent a
+fait les deux sans demander.
 
-This is what **"trust but verify" for agents** means in practice. The same
-agent, in the same session, gets to move files on its own and has to stop
-before it sends. You decide how far to trust it one action at a time, from
-what that action costs if it goes wrong, and a step that went well doesn't
-make the next step safe.
+Voilà ce que signifie en pratique **« faire confiance, mais vérifier » pour
+les agents** (trust but verify). Le même agent, dans la même session, peut
+déplacer des fichiers seul et doit s’arrêter avant d’envoyer. Vous décidez
+jusqu’où lui faire confiance action par action, d’après ce que coûte cette
+action si elle tourne mal, et une étape qui s’est bien passée ne rend pas la
+suivante sûre.
 
 <Scenario id="where-the-pause-goes" objective="safety/verifies-output/calibrates-trust"
   concepts={['trust-but-verify-for-agents']}
-  context="A recorded agent session has four steps, in this order: read the three meeting notes of the week, write a draft update into a new file in the user's folder, correct the spelling in that draft, and send the update by email to a client. The user may place one pause, where the agent stops, shows what it is about to do and waits for approval."
-  title="Where does the one pause go?"
-  hint="For each step, ask what you could do about it if it went wrong: undo it in a second, or only find out about it afterwards?"
+  context="Une session d’agent enregistrée a quatre étapes, dans cet ordre : lire les trois notes de réunion de la semaine, écrire un brouillon de point d’étape dans un nouveau fichier du dossier de l’utilisateur, corriger l’orthographe de ce brouillon, et envoyer le point d’étape par e-mail à un client. L’utilisateur peut placer une pause, où l’agent s’arrête, montre ce qu’il s’apprête à faire et attend l’approbation."
+  title="Où va la seule pause ?"
+  hint="Pour chaque étape, demandez-vous ce que vous pourriez faire si elle tournait mal : l’annuler en une seconde, ou seulement l’apprendre après coup ?"
   options={[
-    { text: 'Before it reads the three meeting notes.', consequence: 'Reading changes nothing, so you approve a step that could not go wrong. The email then goes to the client without anyone looking at it.' },
-    { text: 'Before it writes the draft into a new file.', consequence: 'A new file in your own folder is deleted in a second if it is wrong. You approve it, and the email still goes out unseen.' },
-    { text: 'Before it sends the update to the client.', correct: true, consequence: 'The agent shows you the draft and the address. You see that it quotes an internal budget figure from the notes, take the line out and then approve the send.' },
-    { text: 'After the email, when you look in the sent folder.', consequence: 'You find the internal budget figure in the sent email. The client has already read it, and the check only tells you what went wrong.' },
+    { text: 'Avant qu’il lise les trois notes de réunion.', consequence: 'Lire ne change rien, donc vous approuvez une étape qui ne pouvait pas mal tourner. L’e-mail part ensuite chez le client sans que personne l’ait regardé.' },
+    { text: 'Avant qu’il écrive le brouillon dans un nouveau fichier.', consequence: 'Un nouveau fichier dans votre propre dossier se supprime en une seconde s’il est faux. Vous l’approuvez, et l’e-mail part quand même sans avoir été vu.' },
+    { text: 'Avant qu’il envoie le point d’étape au client.', correct: true, consequence: 'L’agent vous montre le brouillon et l’adresse. Vous voyez qu’il cite un chiffre de budget interne tiré des notes, vous retirez la ligne et vous approuvez l’envoi.' },
+    { text: 'Après l’e-mail, quand vous regardez dans les éléments envoyés.', consequence: 'Vous trouvez le chiffre de budget interne dans l’e-mail envoyé. Le client l’a déjà lu, et la vérification vous dit seulement ce qui a mal tourné.' },
   ]}>
-You ask an agent to turn this week's meeting notes into a short update
-for a client. The agent's plan has four steps. It reads the three notes
-and writes a draft into a new file. Then it corrects the spelling in the
-draft and emails the update to the client. You can put one pause in the session. Where does it go?
+Vous demandez à un agent de transformer les notes de réunion de la semaine
+en un court point d’étape pour un client. Le plan de l’agent a quatre
+étapes. Il lit les trois notes et écrit un brouillon dans un nouveau
+fichier. Puis il corrige l’orthographe du brouillon et envoie le point
+d’étape au client par e-mail. Vous pouvez placer une pause dans la session.
+Où va-t-elle ?
 </Scenario>
 
 <Sort id="pause-or-check-after" phase="review" objective="safety/verifies-output/calibrates-trust"
   concepts={['trust-but-verify-for-agents']}
-  context="The lesson says trust in an agent is set for each action by what that action costs if it goes wrong. A step that is cheap to undo may run on its own and be checked afterwards. A step that cannot be undone once it has happened must wait for approval first. The learner sorts agent steps into the two groups."
-  title="Let it run, or pause first?"
-  hint="What does each step cost if it goes wrong: a minute to put things back yourself, or something another person has already seen, received or lost?"
-  buckets={['Let it run, check afterwards', 'Pause before it runs']}
+  context="La leçon dit que la confiance accordée à un agent se fixe pour chaque action d’après ce que coûte cette action si elle tourne mal. Une étape facile à annuler peut s’exécuter seule et être vérifiée après. Une étape qui ne peut pas être annulée une fois faite doit d’abord attendre une approbation. L’apprenant range des étapes d’agent dans les deux groupes."
+  title="Laisser faire, ou faire une pause avant ?"
+  hint="Que coûte chaque étape si elle tourne mal : une minute pour tout remettre en place vous-même, ou quelque chose qu’une autre personne a déjà vu, reçu ou perdu ?"
+  buckets={['Laisser faire, vérifier après', 'Faire une pause avant']}
   items={[
-    { text: 'Rename twenty files in a copy of a folder', bucket: 0 },
-    { text: 'Post an announcement in the all-staff channel', bucket: 1 },
-    { text: 'Save a reply in your drafts folder without sending it', bucket: 0 },
-    { text: 'Pay a supplier invoice from the team account', bucket: 1 },
-    { text: 'Add a row to a spreadsheet only you use', bucket: 0 },
-    { text: 'Permanently delete the old versions of a contract', bucket: 1 },
+    { text: 'Renommer vingt fichiers dans une copie d’un dossier', bucket: 0 },
+    { text: 'Publier une annonce dans le canal de tout le personnel', bucket: 1 },
+    { text: 'Enregistrer une réponse dans vos brouillons sans l’envoyer', bucket: 0 },
+    { text: 'Payer la facture d’un fournisseur depuis le compte de l’équipe', bucket: 1 },
+    { text: 'Ajouter une ligne à un tableur que vous seul utilisez', bucket: 0 },
+    { text: 'Supprimer définitivement les anciennes versions d’un contrat', bucket: 1 },
   ]} />
 
 <Choice id="what-the-listing-misses" phase="review" objective="safety/verifies-output/calibrates-trust"
   concepts={['trust-but-verify-for-agents']}
-  context="An agent was asked to sort a shared folder. It finished with a summary saying it moved the files, and the learner has compared the folder before and after with the request and found every change was asked for. The learner has time for one more check before calling the task done, and picks it by what each unchecked effect would cost if it were wrong."
-  title="What is still unchecked?"
-  hint="Which kind of effect would cost the most if it were wrong, and does the folder you compared show it at all?"
+  context="On a demandé à un agent de trier un dossier partagé. Il a terminé par un résumé disant qu’il avait déplacé les fichiers, et l’apprenant a comparé le dossier avant et après avec la demande, et constaté que chaque changement avait été demandé. L’apprenant a le temps de faire une vérification de plus avant de déclarer la tâche terminée, et la choisit d’après ce que coûterait chaque effet non vérifié s’il était faux."
+  title="Qu’est-ce qui reste à vérifier ?"
+  hint="Quel type d’effet coûterait le plus s’il était faux, et le dossier que vous avez comparé le montre-t-il seulement ?"
   options={[
-    { text: 'Read the summary again, since the agent knows what it did.', why: 'The summary is the agent\'s own account of its work, and it left effects out once already. Reading it again checks no effect at all.' },
-    { text: 'Ask the agent if it did more, since that takes one question.', why: 'The answer is another summary written by the same agent. It is quick, and it checks nothing that costs much if it went wrong.' },
-    { text: 'Look in the sent messages, since a send cannot be taken back.', correct: true },
-    { text: 'Compare the folders once more, since a file is easy to miss.', why: 'You did that already, and a missed move is cheap to put right. The costly effects are the ones the folder does not show.' },
+    { text: 'Relire le résumé, puisque l’agent sait ce qu’il a fait.', why: 'Le résumé est le récit que l’agent fait de son propre travail, et il a déjà omis des effets une fois. Le relire ne vérifie aucun effet.' },
+    { text: 'Demander à l’agent s’il a fait autre chose, puisque cela prend une question.', why: 'La réponse est un autre résumé écrit par le même agent. C’est rapide, et cela ne vérifie rien de ce qui coûterait cher en cas d’erreur.' },
+    { text: 'Regarder les messages envoyés, puisqu’un envoi ne se reprend pas.', correct: true },
+    { text: 'Comparer encore les dossiers, puisqu’un fichier est facile à rater.', why: 'Vous l’avez déjà fait, et un déplacement raté se corrige facilement. Les effets coûteux sont ceux que le dossier ne montre pas.' },
   ]}>
-An agent sorted a shared folder and says it moved the files. You compared
-the folder before and after with your request, and every change was one
-you asked for. You have time for one more check. Which one?
+Un agent a trié un dossier partagé et dit qu’il a déplacé les fichiers. Vous
+avez comparé le dossier avant et après avec votre demande, et chaque
+changement était demandé. Vous avez le temps de faire une vérification de
+plus. Laquelle ?
 </Choice>
 
-<Exercise stretch="Do the same for a task you would hand to an agent this month, before it runs, and decide whether the pause should be one step earlier.">
-Pick one agent task you have seen, done or read about: an agent that
-sorted a folder, answered emails, updated a spreadsheet, booked a meeting.
-In a note, write the request in one sentence. Under it, list the effects
-you would inspect afterwards, in two groups: what changed (and what was
-deleted), and what was sent. Then name the one step that should wait for a
-person before it runs, and add a sentence on why that step can't be fixed
-afterwards.
+<Exercise stretch="Faites de même pour une tâche que vous confieriez à un agent ce mois-ci, avant qu’elle s’exécute, et décidez si la pause devrait venir une étape plus tôt.">
+Choisissez une tâche d’agent que vous avez vue, faite ou lue : un agent qui
+a trié un dossier, répondu à des e-mails, mis à jour un tableur, organisé une
+réunion. Dans une note, écrivez la demande en une phrase. En dessous, listez
+les effets que vous inspecteriez après coup, en deux groupes : ce qui a
+changé (et ce qui a été supprimé), et ce qui a été envoyé. Nommez ensuite la
+seule étape qui devrait attendre une personne avant de s’exécuter, et ajoutez
+une phrase pour dire pourquoi cette étape ne peut pas être corrigée après
+coup.
 
-A good result has at least one entry under "sent", even if you have to
-think about it (a calendar invite and a shared link are sends), and the
-paused step is one whose effect reaches another person or can't be
-restored. Which effect on your list would the agent's own summary most
-likely leave out?
+Un bon résultat a au moins une entrée sous « envoyé », même s’il faut y
+réfléchir (une invitation d’agenda et un lien partagé sont des envois), et
+l’étape mise en pause est une étape dont l’effet atteint une autre personne
+ou ne peut pas être restauré. Quel effet de votre liste le résumé de l’agent
+risquerait-il le plus d’omettre ?
 </Exercise>
 
 <Recap>
-1. When an agent acts, verification moves from reading its text to checking its effects: what changed, what was deleted, what was sent.
-2. Compare the before and after with the request, one effect at a time. A deleted file shows only in the before list, and a sent message shows in neither.
-3. The agent's summary is a raw answer about its own work. Read the effects first and the summary afterwards.
-4. Let the agent take steps you can undo on its own and check them afterwards. Put the pause before the step that can't be undone, such as a send, a permanent deletion or a payment.
-5. Trust is granted per action, by what the action costs if it goes wrong, and never once for the whole tool.
+1. Quand un agent agit, la vérification passe de la lecture de son texte au contrôle de ses effets : ce qui a changé, ce qui a été supprimé, ce qui a été envoyé.
+2. Comparez l’avant et l’après avec la demande, un effet à la fois. Un fichier supprimé n’apparaît que dans la liste « avant », et un message envoyé n’apparaît dans aucune des deux.
+3. Le résumé de l’agent est une réponse brute sur son propre travail. Lisez d’abord les effets, puis le résumé.
+4. Laissez l’agent faire seul les étapes que vous pouvez annuler, et vérifiez-les après. Placez la pause avant l’étape qui ne peut pas être annulée, comme un envoi, une suppression définitive ou un paiement.
+5. La confiance s’accorde action par action, d’après ce que l’action coûte si elle tourne mal, et jamais une fois pour tout l’outil.
 </Recap>
 
 <Habit id="effects-before-summary">
-The next time an agent finishes a task for you, look at what changed and what it sent before you read its summary.
+La prochaine fois qu’un agent termine une tâche pour vous, regardez ce qui a changé et ce qu’il a envoyé avant de lire son résumé.
 </Habit>

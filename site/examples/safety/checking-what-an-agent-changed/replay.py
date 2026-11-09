@@ -15,25 +15,25 @@ the kind of helpful extra step an agent takes and then leaves out of its
 summary.
 """
 
-# The request, word for word, as the page shows it: "Move this week's
-# meeting notes into 2026-meetings, with the date at the start of each file
-# name." `asked_for` encodes it. The program doesn't print it, because the
+# The request, word for word, as the page shows it: "Déplace les notes de
+# réunion de cette semaine dans 2026-reunions, avec la date au début de
+# chaque nom de fichier." `asked_for` encodes it. The program doesn't print it, because the
 # page quotes it before the output and `mise run examples` checks every
 # printed line against the page's text fences.
 
 # The folder before the session: file name to its lines. A name that ends
 # in "/" is an empty folder.
 BEFORE = {
-    "2026-meetings/": [],
-    "budget-2027.txt": ["Draft budget, figures still open."],
-    "notes-monday.txt": ["Monday 21 September", "Agenda: supplier review"],
-    "notes-tuesday.txt": ["Tuesday 22 September", "Agenda: hiring plan"],
-    "notes-thursday.txt": ["Thursday 24 September", "Agenda: office move"],
-    "notes-thursday-copy.txt": [
-        "Thursday 24 September",
-        "Agenda: office move",
-        "Action: book the movers by 2 October",
-        "Action: tell the landlord which keys we return",
+    "2026-reunions/": [],
+    "budget-2027.txt": ["Projet de budget, chiffres encore ouverts."],
+    "notes-lundi.txt": ["Lundi 21 septembre", "Ordre du jour : revue des fournisseurs"],
+    "notes-mardi.txt": ["Mardi 22 septembre", "Ordre du jour : plan de recrutement"],
+    "notes-jeudi.txt": ["Jeudi 24 septembre", "Ordre du jour : déménagement des bureaux"],
+    "notes-jeudi-copie.txt": [
+        "Jeudi 24 septembre",
+        "Ordre du jour : déménagement des bureaux",
+        "Action : réserver les déménageurs avant le 2 octobre",
+        "Action : dire au propriétaire quelles clés nous rendons",
     ],
 }
 
@@ -42,19 +42,25 @@ BEFORE = {
 # replay skips them.
 SESSION = [
     ("list", "."),
-    ("read", "notes-monday.txt"),
-    ("read", "notes-tuesday.txt"),
-    ("read", "notes-thursday.txt"),
-    ("read", "notes-thursday-copy.txt"),
-    ("move", "notes-monday.txt", "2026-meetings/2026-09-21-notes-monday.txt"),
-    ("move", "notes-tuesday.txt", "2026-meetings/2026-09-22-notes-tuesday.txt"),
-    ("move", "notes-thursday.txt", "2026-meetings/2026-09-24-notes-thursday.txt"),
-    ("delete", "notes-thursday-copy.txt"),
-    ("send", "all-staff", "The meeting notes for this week are now in 2026-meetings."),
+    ("read", "notes-lundi.txt"),
+    ("read", "notes-mardi.txt"),
+    ("read", "notes-jeudi.txt"),
+    ("read", "notes-jeudi-copie.txt"),
+    ("move", "notes-lundi.txt", "2026-reunions/2026-09-21-notes-lundi.txt"),
+    ("move", "notes-mardi.txt", "2026-reunions/2026-09-22-notes-mardi.txt"),
+    ("move", "notes-jeudi.txt", "2026-reunions/2026-09-24-notes-jeudi.txt"),
+    ("delete", "notes-jeudi-copie.txt"),
+    (
+        "send",
+        "tout-le-personnel",
+        "Les notes de réunion de la semaine sont maintenant dans 2026-reunions.",
+    ),
 ]
 
 # What the agent wrote when it finished.
-SUMMARY = "Done. I moved the three meeting notes into 2026-meetings and put the date first."
+SUMMARY = (
+    "Terminé. J’ai déplacé les trois notes de réunion dans 2026-reunions et mis la date en tête."
+)
 
 # The effects the summary mentions, by the step kind it describes.
 SUMMARY_MENTIONS = {"move"}
@@ -64,14 +70,14 @@ def asked_for(step: tuple) -> bool:
     """Return whether a step is one the request asked for.
 
     The request asks for one kind of effect: a notes file moved into
-    2026-meetings. Anything else that changes the folder or the world is
+    2026-reunions. Anything else that changes the folder or the world is
     outside it.
     """
     kind = step[0]
     if kind != "move":
         return False
     source, target = step[1], step[2]
-    return source.startswith("notes-") and target.startswith("2026-meetings/")
+    return source.startswith("notes-") and target.startswith("2026-reunions/")
 
 
 def lines_nowhere_else(name: str, folder: "dict[str, list[str]]") -> int:
@@ -87,12 +93,12 @@ def describe(step: tuple, folder: "dict[str, list[str]]") -> str:
     """Return one line that says what a step changed."""
     kind = step[0]
     if kind == "move":
-        return f"moved {step[1]} -> {step[2]}"
+        return f"déplacé {step[1]} -> {step[2]}"
     if kind == "delete":
         unique = lines_nowhere_else(step[1], folder)
-        return f"deleted {step[1]} ({unique} lines in it were in no other file)"
+        return f"supprimé {step[1]} ({unique} de ses lignes ne figuraient dans aucun autre fichier)"
     if kind == "send":
-        return f'sent a message to {step[1]}: "{step[2]}"'
+        return f"envoyé un message à {step[1]} : « {step[2]} »"
     return f"{kind} {step[1]}"
 
 
@@ -110,7 +116,7 @@ def listing(folder: "dict[str, list[str]]") -> "list[str]":
 def replay() -> str:
     """Replay the session and return the report the lesson shows."""
     folder = {name: list(lines) for name, lines in BEFORE.items()}
-    out = ["before:", *listing(folder)]
+    out = ["avant :", *listing(folder)]
     effects = []
     for step in SESSION:
         kind = step[0]
@@ -121,20 +127,20 @@ def replay() -> str:
             folder[step[2]] = folder.pop(step[1])
         elif kind == "delete":
             del folder[step[1]]
-    out += ["", "after:", *listing(folder), "", "effects, checked against the request:"]
+    out += ["", "après :", *listing(folder), "", "effets, comparés à la demande :"]
     for step, text in effects:
-        verdict = "asked    " if asked_for(step) else "NOT ASKED"
+        verdict = "demandé    " if asked_for(step) else "NON DEMANDÉ"
         out.append(f"  {verdict}  {text}")
     asked = [step for step, _ in effects if asked_for(step)]
     mentioned = [step for step, _ in effects if step[0] in SUMMARY_MENTIONS]
     unseen = [step for step, _ in effects if step[0] == "send"]
     out += [
         "",
-        f'agent\'s summary: "{SUMMARY}"',
-        f"effects: {len(effects)}, asked for: {len(asked)}, "
-        f"not asked for: {len(effects) - len(asked)}",
-        f"effects the summary mentions: {len(mentioned)} of {len(effects)}",
-        f"effects a before-and-after comparison cannot show: {len(unseen)} (the message)",
+        f"résumé de l’agent : « {SUMMARY} »",
+        f"effets : {len(effects)}, demandés : {len(asked)}, "
+        f"non demandés : {len(effects) - len(asked)}",
+        f"effets mentionnés dans le résumé : {len(mentioned)} sur {len(effects)}",
+        f"effets qu’une comparaison avant-après ne peut pas montrer : {len(unseen)} (le message)",
     ]
     return "\n".join(out)
 
