@@ -1,331 +1,360 @@
 import { Choice, MultiChoice, Match, Scenario, Pitfall, Exercise, Recap } from '@components/lesson';
 
-In this lesson we read three logs of delegated work and find, in each, the
-round where handing the piece back to the agent started to cost more than
-doing the step yourself. Then we name the signs that show that point, and
-we look at why taking a step back is a judgment about cost and says nothing
-about the tool or about you. You don't run anything in this lesson. The
-logs are supplied, and the work is reading them.
+Dans cette leçon, nous lisons trois journaux de travail délégué et nous
+trouvons, dans chacun, le tour à partir duquel renvoyer le morceau à l’agent
+a commencé à coûter plus cher que de faire l’étape soi-même. Puis nous
+nommons les signes qui montrent ce moment, et nous voyons pourquoi reprendre
+une étape est un jugement sur le coût, qui ne dit rien de l’outil ni de
+vous. Vous ne lancez rien dans cette leçon. Les journaux sont fournis, et le
+travail consiste à les lire.
 
-A round, in this lesson, is one pass of delegated work. You hand the agent
-a piece with a brief and get a result back. After checking the result
-against the done-criteria, you change the brief with what the check showed
-and hand the piece over again. Working in rounds is how a split task gets
-done, and most pieces take one or two. This lesson is about the piece that
-doesn't.
+Un tour, dans cette leçon, est un passage de travail délégué. Vous confiez à
+l’agent un morceau avec une consigne et un résultat revient. Après avoir
+vérifié le résultat au regard des critères d’achèvement (done-criteria), vous modifiez la
+consigne avec ce que la vérification a montré et vous confiez de nouveau le
+morceau. Travailler par tours est la façon dont une tâche découpée se fait,
+et la plupart des morceaux prennent un ou deux tours. Cette leçon porte sur
+le morceau qui en prend davantage.
 
-## The round logs
+## Les journaux des tours
 
-The logs below come from the calibration team at Brindlewick Instruments,
-the fictional company from the earlier lessons. Each log is a few lines per
-round: what was handed over, what came back, what the check found. Read them
-once before the next section names what they show, and keep in mind that
-each one stops for its own reason.
+Les journaux ci-dessous viennent de l’équipe d’étalonnage de Brindlewick
+Instruments, l’entreprise fictive des leçons précédentes. Chaque journal
+compte quelques lignes par tour : ce qui a été confié, ce qui est revenu, ce
+qu’a trouvé la vérification. Lisez-les une fois avant que la section
+suivante nomme ce qu’ils montrent, et gardez en tête que chacun s’arrête pour
+sa propre raison.
 
-The first log is the "Blocked" section of the weekly status update. The
-brief for this piece said: list every item from the notes that's waiting on
-someone outside the team, one bullet each, with who it is waiting on and
-the date.
-
-```text
-Log A: the Blocked section
-
-Round 1
-  Handed over: the brief and notes.md.
-  Came back: two bullets. The reference weight, waiting on the supplier.
-    The thermocouple batch, waiting on the food lab.
-  Check: the thermocouple batch is in progress, and the team is doing it.
-    The notes say "12 of 40 done", and nothing is waiting on the lab.
-  Brief change: added "an item counts as blocked only when the team
-    cannot continue until someone outside the team acts".
-
-Round 2
-  Handed over: the changed brief.
-  Came back: one bullet, the reference weight. A second bullet: the
-    spirit levels, waiting on the survey team to confirm the start date.
-  Check: the notes say "start the spirit levels" under next week. There
-    is no confirmation in the notes. The agent read a plan as a wait.
-  Brief change: added "use only what the notes say is waiting".
-
-Round 3
-  Handed over: the changed brief.
-  Came back: one bullet, the reference weight, "due 26 Sep, supplier".
-    A note under it: "the storeroom probe shortage may also block
-    calibration work".
-  Check: the bullet is right. The note is a guess, and the brief asked
-    for bullets only.
-```
-
-The section is one bullet long. The person running this log has now read
-three results, found a wrong line in each, and written two additions to the
-brief. Writing the bullet by hand takes less time than reading round three.
-
-The second log is a piece of the same update that the director asked for
-after the meeting: mark which of the finished items she has already signed
-off, so the update doesn't ask her to look at them again.
+Le premier journal porte sur la section « Bloqué » du point d’étape
+hebdomadaire. La consigne de ce morceau disait : liste chaque élément des
+notes qui attend quelqu’un d’extérieur à l’équipe, une puce par élément, avec
+la personne attendue et la date.
 
 ```text
-Log B: the signed-off marks
+Journal A : la section « Bloqué »
 
-Round 1
-  Handed over: the brief, notes.md and the finished update.
-  Came back: the update with "(signed off)" on none of the items, and a
-    question: "The notes and the update do not say which items the
-    director has signed off. Where can I find that?"
-  Check: the question is right. The sign-offs happened in a meeting,
-    and nothing in the folder records them.
-  Brief change: added "the torque wrenches were signed off in the
-    meeting of 18 Sep".
+Tour 1
+  Confié : la consigne et notes.md.
+  Revenu : deux puces. Le poids de référence, qui attend le fournisseur.
+    Le lot de thermocouples, qui attend le laboratoire alimentaire.
+  Vérification : le lot de thermocouples est en cours, et c’est l’équipe
+    qui le fait. Les notes disent « 12 sur 40 faits », et rien n’attend
+    le laboratoire.
+  Modification de la consigne : ajouté « un élément n’est bloqué que si
+    l’équipe ne peut pas continuer tant que quelqu’un d’extérieur n’a pas
+    agi ».
 
-Round 2
-  Handed over: the changed brief.
-  Came back: "(signed off)" on the torque wrenches. A question: "Was the
-    storeroom count also signed off? It is listed as done."
-  Check: it was, and again the answer is in your memory of the meeting.
+Tour 2
+  Confié : la consigne modifiée.
+  Revenu : une puce, le poids de référence. Une deuxième puce : les
+    niveaux à bulle, qui attendent que l’équipe de topographie confirme la
+    date de début.
+  Vérification : les notes disent « commencer les niveaux à bulle » sous
+    la semaine prochaine. Aucune confirmation dans les notes. L’agent a
+    lu un projet comme une attente.
+  Modification de la consigne : ajouté « n’utilise que ce que les notes
+    présentent comme en attente ».
+
+Tour 3
+  Confié : la consigne modifiée.
+  Revenu : une puce, le poids de référence, « prévu le 26 sept.,
+    fournisseur ». Une note en dessous : « le manque de sondes en réserve
+    pourrait aussi bloquer des travaux d’étalonnage ».
+  Vérification : la puce est juste. La note est une supposition, et la
+    consigne ne demandait que des puces.
 ```
 
-Every round of this log ends with the agent asking you for a fact and you
-typing it. The agent adds nothing to the fact. The only place the answer
-exists is your head, so the step is yours whether you delegate it or not.
+La section fait une puce. La personne qui tient ce journal a maintenant lu
+trois résultats, trouvé une ligne fausse dans chacun, et écrit deux ajouts à
+la consigne. Écrire la puce à la main prend moins de temps que de lire le
+troisième tour.
 
-The third log is the pressure gauge batch the team calibrated last month.
-The team's own calibration sheet lists 40 serial numbers with a pass or
-fail for each, and the piece is a two-line count for the update: how many
-passed, how many failed.
+Le deuxième journal porte sur un morceau du même point d’étape, que la
+directrice a demandé après la réunion : marquer ceux des éléments terminés
+qu’elle a déjà validés, pour que le point d’étape ne lui demande pas de les
+regarder de nouveau.
 
 ```text
-Log C: the pass and fail count
+Journal B : les marques de validation
 
-Round 1
-  Handed over: the brief and the calibration sheet, pasted in.
-  Came back: "37 passed, 3 failed."
-  Check: the sheet has 40 rows. Counting the fails by hand gives 4,
-    and one of the rows says "fail (recheck)" in a different column.
-  Brief change: added "a row with fail anywhere in it counts as a fail".
+Tour 1
+  Confié : la consigne, notes.md et le point d’étape terminé.
+  Revenu : le point d’étape sans « (validé) » sur aucun élément, et une
+    question : « Les notes et le point d’étape ne disent pas quels
+    éléments la directrice a validés. Où puis-je le trouver ? »
+  Vérification : la question est juste. Les validations ont eu lieu en
+    réunion, et rien dans le dossier ne les enregistre.
+  Modification de la consigne : ajouté « les clés dynamométriques ont été
+    validées à la réunion du 18 sept. ».
 
-Round 2
-  Handed over: the changed brief and the sheet.
-  Came back: "36 passed, 4 failed."
-  Check: read all 40 rows again, one by one, against the two numbers.
+Tour 2
+  Confié : la consigne modifiée.
+  Revenu : « (validé) » sur les clés dynamométriques. Une question :
+    « L’inventaire de la réserve a-t-il aussi été validé ? Il figure comme
+    fait. »
+  Vérification : il l’a été, et de nouveau, la réponse est dans votre
+    souvenir de la réunion.
 ```
 
-The result is right in round two. Getting to "right" took reading 40 rows
-twice, and reading them once with a tally is the whole task. When the check
-is the work, delegating it doesn't remove the work from your desk. It
-doubles it.
+Chaque tour de ce journal se termine par l’agent qui vous demande un fait et
+vous qui le tapez. L’agent n’ajoute rien au fait. La réponse n’existe que
+dans votre tête, donc l’étape vous revient, que vous la déléguiez ou non.
 
-## The signs
+Le troisième journal porte sur le lot de manomètres que l’équipe a étalonné
+le mois dernier. La feuille d’étalonnage de l’équipe liste 40 numéros de
+série avec un résultat conforme ou non conforme pour chacun, et le morceau
+est un comptage en deux lignes pour le point d’étape : combien sont
+conformes, combien ne le sont pas.
 
-Each log ends in a different round, and each shows one sign that it was
-time to take the piece back.
+```text
+Journal C : le comptage des conformes et des non-conformes
 
-**A third round on one piece.** The first result often shows a gap in
-the brief, and filling the gap for a second round is the normal
-course of working in rounds. By the third round the second fix hasn't held
-either, and the piece has become a series of small corrections on
-something you could see the answer to from round one. In Log A that's the
-third result on a one-bullet section.
+Tour 1
+  Confié : la consigne et la feuille d’étalonnage, collée.
+  Revenu : « 37 conformes, 3 non conformes. »
+  Vérification : la feuille a 40 lignes. Le comptage à la main des non
+    conformes donne 4, et l’une des lignes indique « non conforme (à
+    revérifier) » dans une autre colonne.
+  Modification de la consigne : ajouté « une ligne qui contient non
+    conforme n’importe où compte comme non conforme ».
 
-**A step that depends on knowledge only you hold.** The agent works from
-what it can read. When the fact the piece needs is in your memory, in a
-conversation you had, or in a judgment only you are in a position to make,
-every round is the agent asking and you answering. In Log B the sign-offs
-happened in a meeting and are written down nowhere the agent can reach.
+Tour 2
+  Confié : la consigne modifiée et la feuille.
+  Revenu : « 36 conformes, 4 non conformes. »
+  Vérification : relu les 40 lignes, une par une, en regard des deux
+    nombres.
+```
 
-**A check that takes longer than the work.** A result you can only trust
-after redoing the task is a result you have done yourself, with a
-delegation on top. In Log C the check is reading every row, and reading
-every row once is the piece.
+Le résultat est juste au deuxième tour. Pour y arriver, il a fallu lire
+40 lignes deux fois, et les lire une fois en comptant constitue toute la
+tâche. Quand la vérification est le travail, déléguer ne retire pas ce
+travail de votre bureau. Cela le double.
 
-The signs are silent about how well the agent did. The agent in Log A wrote a
-correct bullet in every round and a wrong extra each time. The agent in Log
-B asked the right question twice. The agent in Log C got the count right
-once the brief said what a fail looks like. The signs measure the cost of
-the next round against the cost of the step. That cost is a fact about the
-piece and the situation, and it can be read from the log.
+## Les signes
+
+Chaque journal se termine à un tour différent, et chacun montre un signe
+qu’il était temps de reprendre le morceau.
+
+**Un troisième tour sur un même morceau.** Le premier résultat montre
+souvent un manque dans la consigne, et combler ce manque pour un deuxième
+tour fait partie du cours normal du travail par tours. Au troisième tour, la
+deuxième correction n’a pas tenu non plus, et le morceau est devenu une suite
+de petites corrections sur quelque chose dont vous voyiez la réponse dès le
+premier tour. Dans le journal A, c’est le troisième résultat pour une section
+d’une puce.
+
+**Une étape qui dépend d’un savoir que vous seul détenez.** L’agent travaille
+à partir de ce qu’il peut lire. Quand le fait dont le morceau a besoin est
+dans votre mémoire, dans une conversation que vous avez eue, ou dans un
+jugement que vous seul êtes en position de porter, chaque tour se résume à
+l’agent qui demande et à vous qui répondez. Dans le journal B, les
+validations ont eu lieu en réunion et ne sont écrites nulle part où l’agent
+peut les atteindre.
+
+**Une vérification qui prend plus de temps que le travail.** Un résultat
+auquel vous ne pouvez vous fier qu’après avoir refait la tâche est un
+résultat que vous avez fait vous-même, avec une délégation par-dessus. Dans
+le journal C, la vérification consiste à lire chaque ligne, et lire chaque
+ligne une fois, c’est le morceau lui-même.
+
+Les signes ne disent rien de la qualité du travail de l’agent. L’agent du
+journal A a écrit une puce juste à chaque tour, avec un ajout faux à chaque
+fois. L’agent du journal B a posé deux fois la bonne question. L’agent du
+journal C a obtenu le bon comptage dès que la consigne a dit à quoi
+ressemble un non-conforme. Les signes comparent le coût du tour suivant au
+coût de l’étape. Ce coût est un fait qui tient au morceau et à la situation,
+et il se lit dans le journal.
 
 <Match id="log-to-sign" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['when-to-stop-and-do-it-yourself']}
-  context="The lesson shows three logs of delegated work from a fictional calibration team. Log A reaches a third round on a one-bullet section, Log B has the agent asking for facts from a meeting in every round, and Log C is a count of 40 rows that the learner reads in full to check."
-  title="Which sign does each log show?" hint="For each log, what is the thing that made the last round expensive?"
-  options={['A third round on one piece', 'A step that depends on knowledge only you hold', 'A check that takes longer than the work']}
+  context="La leçon montre trois journaux de travail délégué d’une équipe d’étalonnage fictive. Le journal A atteint un troisième tour pour une section d’une puce, dans le journal B l’agent demande à chaque tour des faits venus d’une réunion, et le journal C est un comptage de 40 lignes que l’apprenant lit en entier pour le vérifier."
+  title="Quel signe montre chaque journal ?" hint="Pour chaque journal, qu’est-ce qui a rendu le dernier tour coûteux ?"
+  options={['Un troisième tour sur un même morceau', 'Une étape qui dépend d’un savoir que vous seul détenez', 'Une vérification qui prend plus de temps que le travail']}
   rows={[
-    { statement: 'Log A, the Blocked section', option: 0, why: 'Count the rounds, and compare the length of the section to the number of results read.' },
-    { statement: 'Log B, the signed-off marks', option: 1, why: 'Where does the answer to the agent\'s question exist, and can the agent get there?' },
-    { statement: 'Log C, the pass and fail count', option: 2, why: 'What did checking the result involve, and how does it compare to doing the piece?' },
+    { statement: 'Journal A, la section « Bloqué »', option: 0, why: 'Comptez les tours, et comparez la longueur de la section au nombre de résultats lus.' },
+    { statement: 'Journal B, les marques de validation', option: 1, why: 'Où existe la réponse à la question de l’agent, et l’agent peut-il y accéder ?' },
+    { statement: 'Journal C, le comptage des conformes et des non-conformes', option: 2, why: 'Qu’a demandé la vérification du résultat, et comment cela se compare-t-il au morceau lui-même ?' },
   ]}
-  rationale="Each log stopped for a different reason, and each reason can be read from the log without knowing how the agent was feeling or how good it is.">
-Match each log to the sign it shows.
+  rationale="Chaque journal s’est arrêté pour une raison différente, et chaque raison se lit dans le journal sans rien savoir de l’état de l’agent ni de sa qualité.">
+Associez chaque journal au signe qu’il montre.
 </Match>
 
 <Choice id="read-the-sign" phase="review" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['when-to-stop-and-do-it-yourself']}
-  context="A learner delegates a two-line summary of a colleague's feedback that was given in a hallway conversation nobody wrote down. The agent returns a summary and asks what the colleague said."
-  title="Which sign is this?" hint="What does every round of this log have in common, and where does the fact the agent needs exist?"
+  context="Un apprenant délègue un résumé en deux lignes des remarques d’un collègue, faites lors d’une conversation de couloir que personne n’a notée. L’agent rend un résumé et demande ce qu’a dit le collègue."
+  title="Quel signe est-ce ?" hint="Qu’ont en commun tous les tours de ce journal, et où existe le fait dont l’agent a besoin ?"
   options={[
-    { text: 'A check that takes longer than the work, because the learner reads the summary each round.', why: 'The summary is two lines and reading it is quick. Look at what the agent asks for each time instead.' },
-    { text: 'A step that needs knowledge only the learner holds, because the conversation exists only in their memory.', correct: true },
-    { text: 'A third round on one piece, because the learner has now answered more than twice.', why: 'Count the rounds in the description. The sign here shows up in the first round already, before any count is reached.' },
+    { text: 'Une vérification qui prend plus de temps que le travail, puisque l’apprenant lit le résumé à chaque tour.', why: 'Le résumé fait deux lignes, et le lire est rapide. Regardez plutôt ce que l’agent demande à chaque fois.' },
+    { text: 'Une étape qui dépend d’un savoir que seul l’apprenant détient, puisque la conversation n’existe que dans sa mémoire.', correct: true },
+    { text: 'Un troisième tour sur un même morceau, puisque l’apprenant a maintenant répondu plus de deux fois.', why: 'Comptez les tours dans la description. Le signe apparaît ici dès le premier tour, avant tout décompte.' },
   ]}>
-You ask an agent for a two-line summary of what a colleague told you in the
-hallway. Nobody wrote the conversation down. The agent returns a summary,
-and it asks you what the colleague said. Which sign is this?
+Vous demandez à un agent un résumé en deux lignes de ce qu’un collègue vous
+a dit dans le couloir. Personne n’a noté la conversation. L’agent rend un
+résumé, et il vous demande ce qu’a dit le collègue. Quel signe est-ce ?
 </Choice>
 
-## Taking the step back is a cost judgment
+## Reprendre l’étape est un jugement sur le coût
 
-When a sign shows, take the piece back and do the step. The reason is
-cost. A round has a price: writing the brief change, waiting for the
-result, and reading it against the done-criteria. A step done by
-hand has a price too. When the next round costs more than the step, the
-step is cheaper by hand, and that is the whole argument. Which tool you
-used, and how good it is, doesn't enter into it. Neither does how good you
-are at briefing. A brief can be written well and still be handed to a
-piece where the fact needed is in your memory, and no rewrite of the brief
-changes where that fact is.
+Quand un signe apparaît, reprenez le morceau et faites l’étape. La raison
+est le coût. Un tour a un prix : écrire la modification de la consigne,
+attendre le résultat, et le lire au regard des critères d’achèvement. Une
+étape faite à la main a un prix aussi. Quand le tour suivant coûte plus que
+l’étape, l’étape revient moins cher à la main, et c’est tout l’argument.
+L’outil utilisé et sa qualité n’y entrent pas. Votre habileté à écrire des
+consignes non plus. Une consigne peut être bien écrite et confiée quand même
+à un morceau dont le fait nécessaire est dans votre mémoire, et aucune
+réécriture de la consigne ne change l’endroit où se trouve ce fait.
 
-Taking one piece back also loses nothing else. The piece is still the piece
-your split produced, with its own input, its own output and its own check.
-The pieces around it stay delegated, and the check you wrote for this piece
-still applies to the result you make by hand. In Log A the bullet still has
-to name who it waits on and the date. In Log C the two numbers still have to
-add up to 40. The split shaped the work, and the split holds whether an
-agent or you fills a given slot in it.
+Reprendre un morceau ne fait rien perdre d’autre. Le morceau reste celui
+qu’a produit votre découpage, avec sa propre entrée, sa propre sortie et sa
+propre vérification. Les morceaux voisins restent délégués, et la
+vérification écrite pour ce morceau s’applique toujours au résultat que vous
+faites à la main. Dans le journal A, la puce doit toujours nommer la personne
+attendue et la date. Dans le journal C, les deux nombres doivent toujours
+faire 40 au total. Le découpage a donné sa forme au travail, et il tient,
+que ce soit un agent ou vous qui remplissiez une case donnée.
 
-The judgment runs the other way as well. A piece that shows none of the
-signs stays with the agent even when doing it yourself would be quicker
-today, because the brief you write is one you can run again next week, and
-a step you did by hand is gone when it's done. Delegating is a judgment
-about what the situation makes cheap, and the same person delegates one
-piece and takes back the next (@Academy ai-fluency-framework-foundations).
+Le jugement vaut aussi dans l’autre sens. Un morceau qui ne montre aucun des
+signes reste à l’agent, même quand le faire vous-même serait plus rapide
+aujourd’hui, parce que la consigne que vous écrivez peut être relancée la
+semaine prochaine, et qu’une étape faite à la main disparaît une fois faite.
+Déléguer est un jugement sur ce que la situation rend bon marché, et la même
+personne délègue un morceau et reprend le suivant
+(@Academy ai-fluency-framework-foundations).
 
-<Pitfall title="Finishing the wrong thing well">
-A learner reaches a third round on a one-bullet section and feels that
-stopping now would waste the earlier rounds, so they change the brief once
-more and run a fourth. The fourth result is clean, and four results and
-three brief changes went into one bullet. The earlier rounds cost what they
-cost, and a fourth round adds to that cost without taking any of it back.
-The feeling that stopping is giving up is about you, and the log is about
-the piece, so read the log and take the step yourself when it shows a
-sign.
+<Pitfall title="Bien terminer la mauvaise chose">
+Un apprenant arrive au troisième tour sur une section d’une puce et a le
+sentiment qu’arrêter maintenant gâcherait les tours précédents, alors il
+modifie la consigne une fois de plus et lance un quatrième tour. Le
+quatrième résultat est propre, et quatre résultats et trois modifications
+de consigne ont servi une seule puce. Les tours précédents ont coûté ce
+qu’ils ont coûté, et un quatrième tour s’ajoute à ce coût sans en reprendre
+la moindre part. Le sentiment qu’arrêter revient à abandonner vous concerne
+vous, et le journal concerne le morceau. Lisez donc le journal, et faites
+l’étape vous-même quand il montre un signe.
 </Pitfall>
 
 <Scenario id="the-third-round" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['when-to-stop-and-do-it-yourself', 'checking-results']}
-  context="A learner is delegating a short list for a weekly update in rounds, with a written brief whose done-criteria say every line must come from the notes. Round three has just returned, and like the two before it, the list has one right line and one wrong extra line."
-  title="The third result is back" hint="Compare the cost of a fourth round with the cost of writing the list, and think about what the earlier rounds cost regardless of what you do now."
+  context="Un apprenant délègue par tours une courte liste pour un point d’étape hebdomadaire, avec une consigne écrite dont les critères d’achèvement demandent que chaque ligne vienne des notes. Le troisième tour vient de revenir, et comme les deux précédents, la liste a une ligne juste et une ligne fausse en plus."
+  title="Le troisième résultat est là" hint="Comparez le coût d’un quatrième tour au coût d’écrire la liste, et pensez à ce qu’ont coûté les tours précédents, quoi que vous fassiez maintenant."
   options={[
-    { text: 'Write the list yourself, check it against the done-criteria in the brief, and move on to the next piece.', correct: true, consequence: 'The list is done in the time it took to read one result. The done-criteria still applied, and the next piece goes to the agent as planned.' },
-    { text: 'Add one more line to the brief that rules out this extra, and run a fourth round, since three rounds of work would be wasted otherwise.', consequence: 'The fourth result may be clean. The three rounds cost the same whether you stop or not, and the fourth round costs on top of them, for a list you could see the answer to.' },
-    { text: 'Switch to a different agent and hand it the same brief, since this one keeps adding a line.', consequence: 'A new agent reads the same brief for the same one-line list, and you read a fourth result. The cost of the round did not depend on which agent ran it.' },
-    { text: 'Accept the result with the extra line and mark the piece done, since it has a right line in it.', consequence: 'The done-criteria say every line must come from the notes, and one does not. The piece is not done, and the next reader of the update has a wrong line to find.' },
+    { text: 'Écrire la liste vous-même, la vérifier au regard des critères d’achèvement de la consigne, et passer au morceau suivant.', correct: true, consequence: 'La liste est faite dans le temps qu’il fallait pour lire un résultat. Les critères d’achèvement s’appliquaient toujours, et le morceau suivant part à l’agent comme prévu.' },
+    { text: 'Ajouter une ligne à la consigne pour exclure cet ajout et lancer un quatrième tour, sinon trois tours seraient perdus.', consequence: 'Le quatrième résultat sera peut-être propre. Les trois tours coûtent autant que vous arrêtiez ou non, et le quatrième s’y ajoute, pour une liste dont vous voyiez la réponse.' },
+    { text: 'Passer à un autre agent et lui confier la même consigne, puisque celui-ci ajoute sans cesse une ligne.', consequence: 'Un nouvel agent lit la même consigne pour la même liste, et vous lisez un quatrième résultat. Le coût du tour ne dépendait pas de l’agent qui l’exécutait.' },
+    { text: 'Accepter le résultat avec la ligne en trop et marquer le morceau comme fait, puisqu’il contient une ligne juste.', consequence: 'Les critères d’achèvement demandent que chaque ligne vienne des notes, et l’une n’en vient pas. Le morceau n’est pas fait, et le prochain lecteur du point d’étape a une ligne fausse à trouver.' },
   ]}>
-The third round on a short list comes back with one right line and one
-wrong extra line, as the two before it did. The list is four lines long.
-What do you do?
+Le troisième tour sur une courte liste revient avec une ligne juste et une
+ligne fausse en plus, comme les deux précédents. La liste fait quatre lignes.
+Que faites-vous ?
 </Scenario>
 
 <MultiChoice id="signs-or-not" phase="review" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['when-to-stop-and-do-it-yourself']}
-  context="A learner is delegating pieces of a report in rounds and is deciding, per piece, whether the next round is worth running or the step is cheaper done by hand."
-  title="Which of these are signs to take the piece back?" hint="For each line, ask whether it changes the cost of the next round compared to the step done by hand."
+  context="Un apprenant délègue par tours les morceaux d’un rapport et décide, morceau par morceau, si le tour suivant vaut la peine d’être lancé ou si l’étape revient moins cher à la main."
+  title="Lesquels sont des signes de reprendre le morceau ?" hint="Pour chaque ligne, demandez-vous si elle change le coût du tour suivant par rapport à l’étape faite à la main."
   options={[
-    { text: 'The result of the second round on a short piece shows a new wrong line after the first one was fixed.', correct: true },
-    { text: 'The first result has a gap that one added line in the brief fills.', why: 'One gap after a first result is the normal shape of a round. The fix goes in the brief and the second round is cheap.' },
-    { text: 'Trusting the result means reading every source row again, and reading the rows is the task.', correct: true },
-    { text: 'The agent finished the piece faster than you expected and the result passed every done-criterion.', why: 'A quick pass is delegation working. Nothing in it raises the cost of the next round.' },
-    { text: 'The agent asks in every round for a decision that only you can make and that nothing in the folder records.', correct: true },
+    { text: 'Le résultat du deuxième tour sur un court morceau montre une nouvelle ligne fausse après la correction de la première.', correct: true },
+    { text: 'Le premier résultat a un manque qu’une ligne ajoutée à la consigne suffit à combler.', why: 'Un manque après un premier résultat est la forme normale d’un tour. La correction va dans la consigne et le deuxième tour coûte peu.' },
+    { text: 'Se fier au résultat demande de relire chaque ligne de la source, et lire ces lignes est la tâche.', correct: true },
+    { text: 'L’agent a terminé le morceau plus vite que prévu et le résultat a passé tous les critères d’achèvement.', why: 'Une réussite rapide, c’est la délégation qui fonctionne. Rien là-dedans n’augmente le coût du tour suivant.' },
+    { text: 'L’agent demande à chaque tour une décision que vous seul pouvez prendre et que rien dans le dossier n’enregistre.', correct: true },
   ]}>
-Which of these lines from a round log are signs that the piece is cheaper
-done by hand?
+Lesquelles de ces lignes d’un journal de tours sont des signes que le
+morceau revient moins cher à la main ?
 </MultiChoice>
 
-<Exercise stretch="Take a piece from your own recent work that you delegated and re-ran more than once. Write its round log in the format above, and mark the round where you would stop now.">
-Below are three short round logs from the same fictional team. For each
-one, write down the round where taking the step back would have been
-cheaper, and the sign that shows it. Then write one line on what the person
-would have done by hand at that point. Ten minutes is enough.
+<Exercise stretch="Prenez un morceau de votre propre travail récent que vous avez délégué et relancé plus d’une fois. Écrivez son journal de tours au format ci-dessus, et marquez le tour où vous vous arrêteriez maintenant.">
+Voici trois courts journaux de tours de la même équipe fictive. Pour chacun,
+notez le tour où reprendre l’étape aurait coûté moins cher, et le signe qui
+le montre. Écrivez ensuite une ligne sur ce que la personne aurait fait à la
+main à ce moment-là. Dix minutes suffisent.
 
 ```text
-Log 1: the meeting date line
+Journal 1 : la ligne sur la date de réunion
 
-Round 1
-  Handed over: write one line naming the next review meeting, from
-    calendar.md.
-  Came back: "Next review: Thursday 2 Oct, 10:00."
-  Check: calendar.md has the meeting on 2 Oct. The time moved to 14:00
-    in a message to you this morning, and the file still says 10:00.
-  Brief change: added "the meeting is at 14:00".
+Tour 1
+  Confié : écris une ligne qui annonce la prochaine réunion de revue, à
+    partir de agenda.md.
+  Revenu : « Prochaine revue : jeudi 2 oct., 10 h. »
+  Vérification : agenda.md place la réunion le 2 oct. L’heure est passée
+    à 14 h dans un message que vous avez reçu ce matin, et le fichier dit
+    toujours 10 h.
+  Modification de la consigne : ajouté « la réunion est à 14 h ».
 
-Round 2
-  Handed over: the changed brief and calendar.md.
-  Came back: "Next review: Thursday 2 Oct, 14:00."
-  Check: correct. A question: "Should I also note that the room
-    changed? calendar.md lists room 3 and the message you mention
-    may say otherwise."
+Tour 2
+  Confié : la consigne modifiée et agenda.md.
+  Revenu : « Prochaine revue : jeudi 2 oct., 14 h. »
+  Vérification : juste. Une question : « Dois-je aussi signaler que la
+    salle a changé ? agenda.md indique la salle 3, et le message dont
+    vous parlez dit peut-être autre chose. »
 ```
 
 ```text
-Log 2: the supplier list
+Journal 2 : la liste des fournisseurs
 
-Round 1
-  Handed over: from the six order emails pasted in, list each supplier
-    once with the item ordered.
-  Came back: six suppliers, six items.
-  Check: two of the emails are from the same supplier. The list has it
-    twice, under two spellings of its name.
-  Brief change: added "the same supplier under two spellings is one
-    supplier".
+Tour 1
+  Confié : à partir des six e-mails de commande collés, liste chaque
+    fournisseur une fois avec l’article commandé.
+  Revenu : six fournisseurs, six articles.
+  Vérification : deux des e-mails viennent du même fournisseur. La liste
+    le compte deux fois, sous deux orthographes de son nom.
+  Modification de la consigne : ajouté « un même fournisseur écrit de
+    deux façons est un seul fournisseur ».
 
-Round 2
-  Handed over: the changed brief and the six emails.
-  Came back: five suppliers, six items.
-  Check: correct. A seventh line lists an item with "supplier not
-    named". The email for it names the supplier in the signature.
-  Brief change: added "the supplier may be named in the signature".
+Tour 2
+  Confié : la consigne modifiée et les six e-mails.
+  Revenu : cinq fournisseurs, six articles.
+  Vérification : juste. Une septième ligne liste un article avec
+    « fournisseur non nommé ». L’e-mail correspondant nomme le
+    fournisseur dans la signature.
+  Modification de la consigne : ajouté « le fournisseur peut être nommé
+    dans la signature ».
 
-Round 3
-  Handed over: the changed brief and the six emails.
-  Came back: five suppliers, six items, and a note that one email may
-    be a duplicate of another.
-  Check: the emails are not duplicates. The list is right apart from
-    the note.
+Tour 3
+  Confié : la consigne modifiée et les six e-mails.
+  Revenu : cinq fournisseurs, six articles, et une note disant qu’un
+    e-mail est peut-être le doublon d’un autre.
+  Vérification : les e-mails ne sont pas des doublons. La liste est
+    juste, à part la note.
 ```
 
 ```text
-Log 3: the serial number check
+Journal 3 : la vérification des numéros de série
 
-Round 1
-  Handed over: the sheet of 40 serial numbers from the calibration
-    bench and the sheet of 40 from the storeroom. Report any number on
-    one sheet and not the other.
-  Came back: "All 40 numbers appear on both sheets."
-  Check: read both sheets side by side, 40 rows each, and found one
-    number on the bench sheet with two digits swapped.
-  Brief change: added "compare digit by digit".
+Tour 1
+  Confié : la feuille des 40 numéros de série du banc d’étalonnage et
+    la feuille des 40 de la réserve. Signale tout numéro présent sur une
+    feuille et absent de l’autre.
+  Revenu : « Les 40 numéros figurent sur les deux feuilles. »
+  Vérification : lu les deux feuilles côte à côte, 40 lignes chacune, et
+    trouvé sur la feuille du banc un numéro avec deux chiffres inversés.
+  Modification de la consigne : ajouté « compare chiffre par chiffre ».
 
-Round 2
-  Handed over: the changed brief and both sheets.
-  Came back: "One mismatch: row 23, digits 5 and 6 swapped."
-  Check: read both sheets side by side again to confirm there is no
-    second one.
+Tour 2
+  Confié : la consigne modifiée et les deux feuilles.
+  Revenu : « Une différence : ligne 23, chiffres 5 et 6 inversés. »
+  Vérification : relu les deux feuilles côte à côte pour confirmer qu’il
+    n’y en a pas une deuxième.
 ```
 
-A good answer names Log 1 round 1, because the check shows that the fact
-the piece needs arrived in a message to you and is in no file the agent
-can read, and the question in round 2 shows the same thing again. It names
-Log 2 round 3, because the piece is a five-line list and the third
-result again holds one thing the brief never asked for. It names Log 3
-round 1, because trusting either result means reading both sheets side
-by side, and that reading is the task. Where your answer differs, write
-down which cost you weighed differently. Which piece in your own work
-this week reached one of these three points?
+Une bonne réponse désigne le journal 1, tour 1, parce que la vérification
+montre que le fait dont le morceau a besoin est arrivé dans un message qui
+vous était adressé et ne figure dans aucun fichier que l’agent peut lire, et
+la question du tour 2 montre de nouveau la même chose. Elle désigne le
+journal 2, tour 3, parce que le morceau est une liste de cinq lignes et que
+le troisième résultat contient encore une chose que la consigne n’a jamais
+demandée. Elle désigne le journal 3, tour 1, parce que se fier à l’un ou
+l’autre résultat demande de lire les deux feuilles côte à côte, et que cette
+lecture est la tâche. Là où votre réponse diffère, notez quel coût vous avez
+pesé autrement. Quel morceau de votre propre travail a atteint l’un de ces
+trois points cette semaine ?
 </Exercise>
 
 <Recap>
-1. A round is a brief handed over, a result checked against the done-criteria, and a brief changed with what the check showed. Most pieces take one or two, and a first result with a gap is the normal shape of a round.
-2. A third round on one piece, a step that depends on knowledge only you hold, and a check that takes longer than the work are the signs that the next round costs more than the step done by hand.
-3. Taking the piece back is a judgment about cost (@Academy ai-fluency-framework-foundations). It says nothing about the tool, its quality, or your briefing, because none of those move where a fact is or how long a check takes.
-4. The piece you take back keeps the input, output and check the split gave it, and the other pieces stay delegated, so the split loses nothing.
-5. Stopping after spent rounds can feel like giving up. The spent rounds cost the same either way, and the log says whether the next step is yours, however stopping feels.
+1. Un tour, c’est une consigne confiée, un résultat vérifié au regard des critères d’achèvement, et une consigne modifiée avec ce que la vérification a montré. La plupart des morceaux prennent un ou deux tours, et un premier résultat avec un manque est la forme normale d’un tour.
+2. Un troisième tour sur un même morceau, une étape qui dépend d’un savoir que vous seul détenez, et une vérification qui prend plus de temps que le travail sont les signes que le tour suivant coûte plus que l’étape faite à la main.
+3. Reprendre le morceau est un jugement sur le coût (@Academy ai-fluency-framework-foundations). Il ne dit rien de l’outil, de sa qualité ni de vos consignes, parce qu’aucun de ces éléments ne change l’endroit où se trouve un fait ni la durée d’une vérification.
+4. Le morceau que vous reprenez garde l’entrée, la sortie et la vérification que lui a données le découpage, et les autres morceaux restent délégués, donc le découpage ne perd rien.
+5. S’arrêter après des tours déjà dépensés peut donner l’impression d’abandonner. Les tours dépensés coûtent autant dans les deux cas, et le journal dit si l’étape suivante vous revient, quelle que soit l’impression que donne l’arrêt.
 </Recap>
