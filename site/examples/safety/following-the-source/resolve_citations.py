@@ -19,20 +19,22 @@ invented.
 # the paragraph says the report says.
 PARAGRAPH = [
     (
-        "78% of organizations that used AI in 2024 reported a measurable productivity gain",
+        "78 % des organisations qui utilisaient l’IA en 2024 ont constaté"
+        " un gain de productivité mesurable",
         "Stanford HAI, The 2025 AI Index Report",
     ),
     (
-        "desk workers who use AI daily save an average of 5.4 hours a week",
-        "Nordholm Institute, Desk Work and AI Survey 2024",
+        "les employés de bureau qui utilisent l’IA chaque jour gagnent en moyenne"
+        " 5,4 heures par semaine",
+        "Institut Nordholm, Enquête 2024 sur le travail de bureau et l’IA",
     ),
 ]
 
 # The offline bibliography: the report's name as the paragraph cites it, and
-# the finding the report itself states on its public page.
+# the finding the report itself states on its public page, in French.
 BIBLIOGRAPHY = {
     "Stanford HAI, The 2025 AI Index Report": (
-        "78% of organizations reported using AI in 2024, up from 55% the year before"
+        "78 % des organisations déclarent utiliser l’IA en 2024, contre 55 % l’année précédente"
     ),
 }
 
@@ -40,11 +42,11 @@ BIBLIOGRAPHY = {
 def resolve(claim: str, citation: str, bibliography: "dict[str, str]") -> "list[str]":
     """Return the report lines for one claim and its citation."""
     if citation not in bibliography:
-        return [f"NOT FOUND   {citation}", f"            text says:   {claim}"]
+        return [f"INTROUVABLE  {citation}", f"             le texte dit :   {claim}"]
     return [
-        f"FOUND       {citation}",
-        f"            text says:   {claim}",
-        f"            report says: {bibliography[citation]}",
+        f"TROUVÉ       {citation}",
+        f"             le texte dit :   {claim}",
+        f"             le rapport dit : {bibliography[citation]}",
     ]
 
 
@@ -53,8 +55,8 @@ def summary(paragraph: "list[tuple[str, str]]", bibliography: "dict[str, str]") 
     exists = sum(1 for _, citation in paragraph if citation in bibliography)
     # The compare is exact: a claim matches only when it repeats the recorded finding word for word.
     matches = sum(1 for claim, citation in paragraph if bibliography.get(citation) == claim)
-    counts = f"citations: {len(paragraph)}  reports found: {exists}"
-    return f"{counts}  claims that match the report: {matches}"
+    counts = f"citations : {len(paragraph)}  rapports trouvés : {exists}"
+    return f"{counts}  affirmations conformes au rapport : {matches}"
 
 
 def main() -> None:

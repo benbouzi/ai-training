@@ -98,13 +98,13 @@ objectives:
     level: expert
     behaviors:
       - claim: >-
-          L’apprenant place la vérification dans le processus (un champ de modèle de document, une étape
+          L’apprenant place la vérification dans le processus (un champ de gabarit, une étape
           de relecture, un point d’une liste de contrôle) pour qu’elle ait lieu que quelqu’un y pense
           ou
           non.
         why: Une habitude portée par une seule personne part avec elle et cède un jour de rush.
         example: >-
-          Le modèle de rapport de l’équipe reçoit une ligne « sources vérifiées par » que remplit le
+          Le gabarit de rapport de l’équipe reçoit une ligne « sources vérifiées par » que remplit le
           relecteur.
       - claim: >-
           La vérification est assez légère pour que l’équipe la fasse, et l’apprenant mesure si elle est

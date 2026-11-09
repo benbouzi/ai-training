@@ -13,7 +13,7 @@ assumes:
     section: public-et-objectif
   - objective: safety/verifies-output/spots-sycophancy
     lesson: safety/asking-a-model-to-disagree
-    section: habits-on-the-prompt-side
+    section: des-habitudes-du-côté-du-prompt
 extends-to:
   - label: Delegating a task to an agent
     href: /using-agents/delegating/

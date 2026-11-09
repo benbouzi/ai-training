@@ -12,7 +12,7 @@ introduces: [task-iteration]
 assumes:
   - objective: safety/verifies-output/keeps-a-check-habit
     lesson: safety/marking-what-a-person-checked
-    section: put-the-mark-in-the-process
+    section: inscrire-la-marque-dans-le-processus
   - objective: using-agents/delegates-and-checks/writes-a-brief
     lesson: using-agents/breaking-work-into-pieces
     section: briefing-and-running-the-first-piece

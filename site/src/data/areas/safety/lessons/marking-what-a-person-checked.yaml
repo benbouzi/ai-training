@@ -1,9 +1,10 @@
 id: safety/marking-what-a-person-checked
-title: Marking what a person has checked
+title: Marquer ce qu’une personne a vérifié
 description: >-
-  Why an answer a person has checked and one nobody has checked look the same unless someone marks
-  the difference, how CS50 marks the answers of its AI tutor, and how to put a light "checked by"
-  line into a team's process and sample whether it gets filled in.
+  Pourquoi une réponse qu’une personne a vérifiée et une réponse que personne n’a vérifiée se
+  ressemblent tant que personne ne marque la différence, comment CS50 marque les réponses de son
+  tuteur d’IA, et comment inscrire une ligne « vérifié par » légère dans le processus d’une équipe
+  et vérifier par échantillon qu’elle est remplie.
 mode: explanation
 covers: safety/verification
 serves: [safety/verifies-output/checks-claims, safety/verifies-output/keeps-a-check-habit]
@@ -11,17 +12,18 @@ introduces: [endorsed-answers]
 assumes:
   - objective: safety/verifies-output/checks-claims
     lesson: safety/following-the-source
-    section: when-the-walk-cannot-finish
+    section: quand-le-parcours-ne-peut-pas-aller-au-bout
   - objective: safety/verifies-output/calibrates-trust
     lesson: safety/when-the-tool-is-usually-right
     section: intégrer-la-vérification
 after: [safety/following-the-source]
-shorts: [Endorsed answers in the CS50 tutor]
+shorts: [Les réponses validées du tuteur de CS50]
 exercise:
   kind: judge
   brief: >-
-    Take a template your team uses for AI-assisted work and decide where a "checked by" field goes,
-    how light it must be to get filled in, and how you would sample whether it is.
+    Prendre un gabarit que votre équipe utilise pour un travail assisté par l’IA et décider où va un
+    champ « vérifié par », à quel point il doit être léger pour être rempli, et comment vous
+    vérifieriez par échantillon qu’il l’est.
 sources: [CS50x, Liu 2024b, Academy ai-fluency-framework-foundations]
 issue: 126
 minutes: 15

@@ -1,267 +1,287 @@
 import { Choice, MultiChoice, Scenario, Sort, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-In this lesson we look at two answers to the same question and ask which
-one you would act on. The words are the same, and one line is different.
-This lesson is about that line, a visible mark that says a person checked
-the answer, and what it names. The first half is about why the mark
-matters to the next reader. The second half is about putting the mark into
-a team's process so that it is still there when the careful colleague is
-on holiday.
+Dans cette leçon, nous regardons deux réponses à la même question et nous
+nous demandons sur laquelle nous agirions. Les mots sont les mêmes, et une
+ligne diffère. Cette leçon porte sur cette ligne, une marque visible qui dit
+qu’une personne a vérifié la réponse, et sur ce qu’elle nomme. La première
+moitié explique pourquoi la marque compte pour le lecteur suivant. La
+seconde moitié montre comment inscrire la marque dans le processus d’une
+équipe, pour qu’elle soit encore là quand le collègue attentif est en
+vacances.
 
-## Two answers to one question
+## Deux réponses à une même question
 
-Suppose your organization has an internal help page where staff ask
-questions about policies, and a chat assistant drafts the answers. Two
-colleagues ask the same question in the same week: "How many days of leave
-can I carry over into next year?" The page and both answers are invented
-for this lesson.
+Imaginons que votre organisation ait une page d’aide interne où le
+personnel pose des questions sur les règles internes, et qu’un assistant
+conversationnel rédige les réponses. Deux collègues posent la même question
+la même semaine : « Combien de jours de congé puis-je reporter sur l’année
+prochaine ? » La page et les deux réponses sont inventées pour cette leçon.
 
 ```text
-Answer 1
-You can carry over up to five days of unused leave. Days you carry
-over must be taken before 31 March, or they are lost.
+Réponse 1
+Vous pouvez reporter jusqu’à cinq jours de congé non pris. Les jours
+reportés doivent être pris avant le 31 mars, faute de quoi ils sont perdus.
 ```
 
 ```text
-Answer 2
-You can carry over up to five days of unused leave. Days you carry
-over must be taken before 31 March, or they are lost.
+Réponse 2
+Vous pouvez reporter jusqu’à cinq jours de congé non pris. Les jours
+reportés doivent être pris avant le 31 mars, faute de quoi ils sont perdus.
 
-Checked by the policy team on 12 January, against the leave
-policy, section 4.2.
+Vérifié par l’équipe des règles internes le 12 janvier, d’après la
+politique de congés, section 4.2.
 ```
 
-Most people would book their holiday on the second answer and ask again
-about the first, even though the text of the two is identical. The
-reason is the last line. It names the team that read the answer and the
-document they compared it with, and it gives the date. If the policy
-changed in February, you know where to look.
+La plupart des gens réserveraient leurs vacances sur la foi de la seconde
+réponse et reposeraient la question pour la première, alors que le texte
+des deux est identique. La raison est la dernière ligne. Elle nomme
+l’équipe qui a lu la réponse et le document auquel elle l’a comparée, et
+elle donne la date. Si la politique a changé en février, vous savez où
+regarder.
 
-The first answer isn't wrong. It may be exactly right. It tells you
-only that nobody has said so. And here is the problem in most documents
-that an assistant helped write: they look like the first answer, and the
-reader treats them like the second. A report, a briefing or an email
-usually has no mark at all. The reader then assumes the author checked
-everything in it.
+La première réponse n’est pas fausse. Elle est peut-être tout à fait juste.
+Elle vous dit seulement que personne ne l’a confirmé. Et voici le problème
+de la plupart des documents rédigés avec l’aide d’un assistant : ils
+ressemblent à la première réponse, et le lecteur les traite comme la
+seconde. Un rapport, une note d’information ou un e-mail ne portent en
+général aucune marque. Le lecteur suppose alors que l’auteur a tout vérifié.
 
-An earlier lesson, [Following a claim back to its
-source](/safety/following-the-source/#when-the-walk-cannot-finish), said
-that a claim you can't check in time is marked unverified or taken out.
-That gives a document three states for each claim: checked, marked as not
-checked, and unmarked. The first two tell the reader the truth. The third
-looks like the first.
+Une leçon précédente,
+[Remonter une affirmation jusqu’à sa source](/safety/following-the-source/#quand-le-parcours-ne-peut-pas-aller-au-bout),
+disait qu’une affirmation que vous ne pouvez pas vérifier à temps est
+marquée comme non vérifiée ou retirée. Cela donne à chaque affirmation d’un
+document trois états possibles : vérifiée, marquée comme non vérifiée, et
+sans marque. Les deux premiers disent la vérité au lecteur. Le troisième
+ressemble au premier.
 
 <Choice id="unmarked-to-the-next-reader" objective="safety/verifies-output/checks-claims"
   concepts={['endorsed-answers']}
-  context="A colleague used a chat assistant to draft a shared report. One figure in it came from the assistant, the colleague could not check it before the deadline, and it stayed in the report with no note of any kind."
-  title="What the next reader sees"
-  hint="Put yourself in the place of someone who opens the report next week. What is different about this figure, from where they sit?"
+  context="Une collègue a utilisé un assistant conversationnel pour rédiger un rapport partagé. Un chiffre du rapport vient de l’assistant, la collègue n’a pas pu le vérifier avant l’échéance, et il est resté dans le rapport sans aucune note."
+  title="Ce que voit le lecteur suivant"
+  hint="Mettez-vous à la place de la personne qui ouvrira le rapport la semaine prochaine. Qu’est-ce qui distingue ce chiffre, de son point de vue ?"
   options={[
-    { text: 'A figure they can spot as the assistant\'s, because model output reads differently.', why: 'The assistant writes in the same fluent style as the rest of the report, and the colleague may have edited around it. Nothing in the wording gives it away.' },
-    { text: 'A figure they will check themselves, because checking is part of reading a report.', why: 'A reader acts on a report and seldom opens its sources. Most readers assume the author did that part.' },
-    { text: 'A figure that is probably wrong, because nobody has checked it yet.', why: 'Unchecked is a different state from wrong. The figure may be right, and the reader still has no way to know which it is.' },
-    { text: 'A figure that looks the same as every checked figure in the report.', correct: true },
+    { text: 'Un chiffre qu’il repère comme venant de l’assistant, parce qu’une sortie de modèle se lit autrement.', why: 'L’assistant écrit avec la même aisance que le reste du rapport, et la collègue a peut-être retouché le texte autour. Rien dans la formulation ne le trahit.' },
+    { text: 'Un chiffre qu’il vérifiera lui-même, parce que vérifier fait partie de la lecture d’un rapport.', why: 'Un lecteur agit sur un rapport et ouvre rarement ses sources. La plupart des lecteurs supposent que l’auteur s’en est chargé.' },
+    { text: 'Un chiffre probablement faux, puisque personne ne l’a encore vérifié.', why: 'Non vérifié et faux sont deux états différents. Le chiffre est peut-être juste, et le lecteur n’a toujours aucun moyen de le savoir.' },
+    { text: 'Un chiffre qui ressemble à chaque chiffre vérifié du rapport.', correct: true },
   ]}>
-A colleague leaves a figure from an assistant in a shared report without
-checking it and without a note. What does the next reader of the report
-see?
+Une collègue laisse dans un rapport partagé un chiffre venant d’un
+assistant, sans le vérifier et sans note. Que voit le lecteur suivant du
+rapport ?
 </Choice>
 
-## Endorsed answers
+## Les réponses validées
 
-Harvard's CS50 course, an introduction to computer science, gives its
-students an AI tutor (@CS50x) (@Liu 2024b). The course team describes in
-a paper how the tutor also answers questions on the course's discussion
-forum, and how staff handle those answers (@Liu 2024b). A staff member
-can endorse any answer the tutor posts, correct it, or delete it, and the
-paper shows a forum answer with a staff endorsement on it. A student
-reading the forum can tell an answer a person has checked from one that
-came straight from the model. The course team says the endorsement step
-is how they keep people in charge of what the tutor tells students.
+Le cours CS50 de Harvard, une introduction à l’informatique, donne à ses
+étudiants un tuteur d’IA (@CS50x) (@Liu 2024b). Dans un article, l’équipe
+du cours décrit comment le tuteur répond aussi aux questions sur le forum du
+cours, et comment l’équipe pédagogique traite ces réponses (@Liu 2024b). Un
+membre de l’équipe peut valider toute réponse publiée par le tuteur, la
+corriger ou la supprimer, et l’article montre une réponse du forum portant
+une validation de l’équipe. Un étudiant qui lit le forum distingue une
+réponse qu’une personne a vérifiée d’une réponse venue directement du
+modèle. L’équipe du cours explique que l’étape de validation est ce qui
+garde des personnes aux commandes de ce que le tuteur dit aux étudiants.
 
-That is what this course calls an **endorsed answer**: an answer a
-qualified person has reviewed and marked as correct, shown differently
-from raw model output. The mark doesn't make the answer better. It tells
-the reader which answers a person stands behind, and so which ones they
-can act on without checking.
+C’est ce que ce cours appelle une **réponse validée** (endorsed answer) :
+une réponse qu’une personne qualifiée a relue et marquée comme correcte,
+affichée autrement que la sortie brute du modèle. La marque ne rend pas la
+réponse meilleure. Elle dit au lecteur quelles réponses une personne
+assume, et donc sur lesquelles il peut agir sans vérifier.
 
-The same paper has a second finding that is just as useful. In one
-semester, staff endorsed 70 of the tutor's 180 forum answers. Read
-quickly, that says the tutor was right less than half the time. The
-authors suspect the real accuracy was higher.
-They point to changes in how students used the forum that semester, and
-they call their explanations guesses until they have reviewed the answers
-(@Liu 2024b). An answer without the mark is an answer
-nobody marked, and it can be right or wrong. So the count of marks
-measures how much reviewing happened. It says little about how good the
-answers were. Keep that in mind for the last section of this lesson,
-because it applies to your own team's marks too.
+Le même article contient un second constat tout aussi utile. Sur un
+semestre, l’équipe a validé 70 des 180 réponses du tuteur sur le forum. Lu
+vite, cela dit que le tuteur avait raison moins d’une fois sur deux. Les
+auteurs pensent que la précision réelle était plus élevée. Ils citent des
+changements dans la façon dont les étudiants ont utilisé le forum ce
+semestre-là, et qualifient leurs explications d’hypothèses tant qu’ils
+n’ont pas relu les réponses (@Liu 2024b). Une réponse sans marque est une
+réponse que personne n’a marquée, et elle peut être juste ou fausse. Le
+nombre de marques mesure donc la quantité de relecture effectuée. Il dit
+peu de chose de la qualité des réponses. Gardez cela en tête pour la
+dernière section de cette leçon, parce que cela vaut aussi pour les marques
+de votre équipe.
 
-The idea transfers from a course forum to a team. Separate what the model
-said from what a person has checked, and make the difference visible in
-the document itself, where the next reader sees it. A useful mark says
-who checked, when, and against what.
+L’idée passe d’un forum de cours à une équipe. Séparez ce qu’a dit le
+modèle de ce qu’une personne a vérifié, et rendez la différence visible dans
+le document lui-même, là où le lecteur suivant la voit. Une marque utile dit
+qui a vérifié, quand, et par rapport à quoi.
 
-- **Who checked it.** A name or a role, so the reader knows who to ask.
-- **When.** A date, because facts such as prices and policies change.
-- **Against what.** The source the checker compared it with, so the next
-  reader can open it too.
+- **Qui a vérifié.** Un nom ou un rôle, pour que le lecteur sache à qui
+  s’adresser.
+- **Quand.** Une date, parce que des faits comme les prix et les règles
+  changent.
+- **Par rapport à quoi.** La source à laquelle la personne a comparé, pour
+  que le lecteur suivant puisse l’ouvrir aussi.
 
-"Checked" on its own answers none of these. "Checked by the finance lead
-on 3 March against the first-quarter ledger" answers all of them, and it
-still fits on one line. A mark can also cover part of a document: "the
-figures in section 2 were checked against the ledger, and the market
-estimate in section 3 was not checked". That is the unverified note from
-the earlier lesson, and it sits next to the endorsement it limits.
+« Vérifié » tout seul ne répond à aucune de ces questions. « Vérifié par le
+responsable financier le 3 mars d’après le grand livre du premier
+trimestre » répond aux trois, et tient encore sur une ligne. Une marque peut
+aussi couvrir une partie d’un document : « les chiffres de la section 2 ont
+été vérifiés d’après le grand livre, et l’estimation du marché de la
+section 3 n’a pas été vérifiée ». C’est la note « non vérifié » de la leçon
+précédente, placée à côté de la validation qu’elle limite.
 
-Anthropic's AI Fluency course calls the skill of judging what a model
-produced discernment, and treats it as part of all work with a model
-(@Academy ai-fluency-framework-foundations). An endorsement is where that
-judgment becomes visible to someone else. Without the mark, your
-discernment helps you and stops at your desk.
+Le cours AI Fluency d’Anthropic appelle discernement (discernment) la
+compétence qui consiste à juger ce qu’un modèle a produit, et la considère
+comme une partie de tout travail avec un modèle
+(@Academy ai-fluency-framework-foundations). Une validation est l’endroit où
+ce jugement devient visible pour quelqu’un d’autre. Sans la marque, votre
+discernement vous sert à vous et s’arrête à votre bureau.
 
 <MultiChoice id="marks-that-tell-the-reader" phase="review" objective="safety/verifies-output/checks-claims"
   concepts={['endorsed-answers']}
-  context="The lesson says that a claim in a document a model helped write is checked, marked as not checked, or unmarked, and that only the first two tell the next reader the truth. A useful mark says who checked, when, and against what."
-  title="Which lines tell the reader what was checked?"
-  hint="For each line, ask what a reader who opens the document next month learns from it about who checked what."
+  context="La leçon dit qu’une affirmation d’un document rédigé avec l’aide d’un modèle est vérifiée, marquée comme non vérifiée, ou sans marque, et que seuls les deux premiers états disent la vérité au lecteur suivant. Une marque utile dit qui a vérifié, quand, et par rapport à quoi."
+  title="Quelles lignes disent au lecteur ce qui a été vérifié ?"
+  hint="Pour chaque ligne, demandez-vous ce qu’un lecteur qui ouvre le document le mois prochain y apprend sur qui a vérifié quoi."
   options={[
-    { text: 'Figures checked by the finance lead on 3 March against the first-quarter ledger.', correct: true },
-    { text: 'Checked and approved by the team before it was sent to the client.', why: 'Checked by whom on the team, when, and against what? The reader can\'t tell which claims were compared with a source, and a quick skim would get the same line.' },
-    { text: 'Market size from the assistant, not yet checked against a source.', correct: true },
-    { text: 'No line at all, since the author of every report checks the drafts.', why: 'The next reader may not know the author. Without a line, the careful author\'s report looks the same as a careless one.' },
+    { text: 'Chiffres vérifiés par le responsable financier le 3 mars d’après le grand livre du premier trimestre.', correct: true },
+    { text: 'Vérifié et approuvé par l’équipe avant l’envoi au client.', why: 'Vérifié par qui dans l’équipe, quand, et par rapport à quoi ? Le lecteur ne sait pas quelles affirmations ont été comparées à une source, et une lecture rapide aurait donné la même ligne.' },
+    { text: 'Taille du marché donnée par l’assistant, pas encore vérifiée dans une source.', correct: true },
+    { text: 'Aucune ligne, puisque l’auteur de chaque rapport vérifie les brouillons.', why: 'Le lecteur suivant ne connaît peut-être pas l’auteur. Sans ligne, le rapport de l’auteur soigneux ressemble à celui d’un auteur négligent.' },
   ]}>
-A team adds one of these lines to the reports it writes with an assistant.
-Which lines tell the next reader, in a way they can act on, what a
-person has and hasn't checked?
+Une équipe ajoute l’une de ces lignes aux rapports qu’elle rédige avec un
+assistant. Quelles lignes disent au lecteur suivant, d’une façon sur
+laquelle il peut agir, ce qu’une personne a vérifié et ce qu’elle n’a pas
+vérifié ?
 </MultiChoice>
 
-## Put the mark in the process
+## Inscrire la marque dans le processus
 
-On a team, a mark that depends on one careful person has the weakness of
-every personal habit: it leaves with that person, and it fails on the day
-they are busy. The lesson [When the tool is usually
-right](/safety/when-the-tool-is-usually-right/#intégrer-la-vérification) said to
-build the check into the process. For marking, there are a few places the
-check can go, and a team usually needs one or two of them.
+Dans une équipe, une marque qui dépend d’une seule personne attentive a la
+faiblesse de toute habitude personnelle : elle part avec cette personne, et
+elle cède le jour où cette personne est débordée. La leçon
+[Quand l’outil a en général raison](/safety/when-the-tool-is-usually-right/#intégrer-la-vérification)
+demandait d’intégrer la vérification au processus. Pour la marque, il existe
+quelques endroits où placer la vérification, et une équipe en a en général
+besoin d’un ou deux.
 
-- **A template field.** The team's report or briefing template gets one
-  line near the top: checked by, date, against. An empty field is visible
-  to everyone who opens the document.
-- **A review step.** Before a document leaves the team, the reviewer
-  fills in that line, and the author doesn't. The person who wrote a text
-  is the worst placed to see what is missing from it.
-- **A checklist item.** Where the team already has a checklist for
-  sending work out, one item says "the checked-by line names a source".
-  Add it to a list people already use, and skip a new list.
+- **Un champ du gabarit.** Le gabarit (template) de rapport ou de note de
+  l’équipe reçoit une ligne en haut : vérifié par, date, d’après. Un champ
+  vide est visible pour tous ceux qui ouvrent le document.
+- **Une étape de relecture.** Avant qu’un document quitte l’équipe, c’est le
+  relecteur qui remplit cette ligne, et pas l’auteur. La personne qui a
+  écrit un texte est la plus mal placée pour voir ce qui y manque.
+- **Un point de liste de contrôle.** Là où l’équipe a déjà une liste de
+  contrôle pour l’envoi du travail, un point dit « la ligne vérifié par
+  nomme une source ». Ajoutez-le à une liste que les gens utilisent déjà,
+  sans créer de nouvelle liste.
 
-The check has to be light enough that people fill it in on a busy
-afternoon. One line with three blanks gets filled in. A form with twelve
-questions gets ticked. If a team finds the line is often empty, the fix
-is to make it lighter or to move it to the step where the work already
-stops, such as the reviewer's read before sending.
+La vérification doit être assez légère pour que les gens la remplissent un
+après-midi chargé. Une ligne avec trois blancs est remplie. Un formulaire de
+douze questions est coché. Si une équipe constate que la ligne est souvent
+vide, la correction consiste à l’alléger ou à la déplacer vers l’étape où le
+travail s’arrête déjà, comme la relecture avant l’envoi.
 
-<Pitfall title="The heavy check that nobody does">
-A team that had a wrong number go to a client added a sign-off form to
-its template: twelve questions about sources, figures, names and dates,
-each with a box to tick. For two weeks people answered them. By the
-second month everyone ticked all twelve boxes in a few seconds, and the
-team lead read "all twelve ticked" as twelve checks done. That is worse
-than having no form, because before it everyone knew that nobody checked
-systematically, and now everyone believes somebody did. A check that is
-too heavy to do gets skipped, and a skipped check that still shows as
-done makes people stop looking. Make it light enough to do every time,
-and then find out whether it is done.
+<Pitfall title="La vérification lourde que personne ne fait">
+Une équipe qui avait envoyé un nombre faux à un client a ajouté un
+formulaire de validation à son gabarit : douze questions sur les sources, les
+chiffres, les noms et les dates, chacune avec une case à cocher. Pendant
+deux semaines, les gens y ont répondu. Au deuxième mois, tout le monde
+cochait les douze cases en quelques secondes, et le chef d’équipe lisait
+« douze cases cochées » comme douze vérifications faites. C’est pire que
+l’absence de formulaire, parce qu’avant, tout le monde savait que personne
+ne vérifiait de façon systématique, et maintenant tout le monde croit que
+quelqu’un l’a fait. Une vérification trop lourde est sautée, et une
+vérification sautée qui apparaît comme faite fait cesser la vigilance.
+Rendez-la assez légère pour être faite à chaque fois, puis assurez-vous
+qu’elle l’est.
 </Pitfall>
 
 <Scenario id="where-the-check-goes" objective="safety/verifies-output/keeps-a-check-habit"
   concepts={['endorsed-answers']}
-  context="A team of eight writes client briefings from a shared template, and most drafts now start with a chat assistant. Two people on the team check every figure carefully, and the others rely on them. The team lead wants the checking to keep working when those two are away."
-  title="Checking that survives a holiday"
-  hint="Which option still works in the week the two careful colleagues are both on leave?"
+  context="Une équipe de huit personnes rédige des notes d’information pour ses clients à partir d’un gabarit commun, et la plupart des brouillons partent maintenant d’un assistant conversationnel. Deux personnes de l’équipe vérifient chaque chiffre avec soin, et les autres comptent sur elles. Le chef d’équipe veut que la vérification continue de fonctionner quand ces deux personnes sont absentes."
+  title="Une vérification qui survit aux vacances"
+  hint="Quelle option fonctionne encore la semaine où les deux collègues attentifs sont tous deux en congé ?"
   options={[
-    { text: 'The two careful colleagues run a training session on checking, and everyone agrees to check more carefully from now on.', consequence: 'The session is useful for a month. The checking still depends on what people remember, and in the busy week before a holiday it slips again. Nobody can tell from a briefing whether it was checked.' },
-    { text: 'A form of fifteen questions about sources and figures goes at the end of the template, and the author fills it in for every briefing.', consequence: 'After a few weeks the boxes are ticked by habit. The author checks their own text, and the team lead reads the ticks as checks that did not happen.' },
-    { text: 'The template gets one line, "checked by, date, against", that the reviewer fills in, and the lead samples three briefings a month.', correct: true, consequence: 'The line is on every briefing, and an empty one is visible. The monthly sample shows whether the named sources say what the briefings say, whoever is on leave.' },
-    { text: 'The assistant is told to end every briefing with a line saying which of its claims it has verified.', consequence: 'The model marks its own output in the same fluent voice as the rest. The line looks like an endorsement, and no person has looked at anything.' },
+    { text: 'Les deux collègues attentifs animent une formation sur la vérification, et tout le monde s’engage à vérifier plus soigneusement désormais.', consequence: 'La formation sert un mois. La vérification dépend toujours de ce dont les gens se souviennent, et elle se relâche de nouveau dans la semaine chargée qui précède les vacances. Rien dans une note ne dit si elle a été vérifiée.' },
+    { text: 'Un formulaire de quinze questions sur les sources et les chiffres est placé à la fin du gabarit, et l’auteur le remplit pour chaque note.', consequence: 'Au bout de quelques semaines, les cases sont cochées par habitude. L’auteur vérifie son propre texte, et le chef d’équipe prend les cases cochées pour des vérifications qui n’ont pas eu lieu.' },
+    { text: 'Le gabarit reçoit une ligne « vérifié par, date, d’après » que remplit le relecteur, et le chef relit trois notes par mois.', correct: true, consequence: 'La ligne figure sur chaque note, et une ligne vide se voit. L’échantillon mensuel montre si les sources nommées disent ce que disent les notes, quelle que soit la personne en congé.' },
+    { text: 'On demande à l’assistant de terminer chaque note par une ligne indiquant lesquelles de ses affirmations il a vérifiées.', consequence: 'Le modèle marque sa propre sortie avec la même aisance que le reste. La ligne ressemble à une validation, et aucune personne n’a rien regardé.' },
   ]}>
-A team of eight writes client briefings from a shared template, and most
-drafts start with an assistant. Two colleagues check every figure, and
-the rest rely on them. What change keeps the checking working when those
-two are away?
+Une équipe de huit personnes rédige des notes d’information pour ses clients
+à partir d’un gabarit commun, et la plupart des brouillons partent d’un
+assistant. Deux collègues vérifient chaque chiffre, et les autres comptent
+sur eux. Quel changement garde la vérification active quand ces deux
+collègues sont absents ?
 </Scenario>
 
-## Find out whether it happens
+## Vérifier que la vérification a lieu
 
-A field in a template tells you that people were asked to check. It
-doesn't tell you that they did. The CS50 count is a reminder of the
-other side of this: a count of marks tells you how much marking
-happened. To learn whether the check is real, look at a few documents.
+Un champ dans un gabarit vous dit qu’on a demandé aux gens de
+vérifier. Il ne vous dit pas qu’ils l’ont fait. Le compte de CS50 rappelle
+l’autre face de la question : un nombre de marques vous dit combien de
+marquage a eu lieu. Pour savoir si la vérification est réelle, regardez
+quelques documents.
 
-**Sample a few documents a month.** Pick three documents that an assistant
-helped write, at random or from a fixed day, and read them with the
-checked-by line in mind. Is the line filled in? Does it name a source you
-can open? Open that source, pick one claim, and see whether it says what
-the document says. A filled line whose source doesn't support the claim
-tells you the line has become a ritual, which is the pitfall above. An
-empty line tells you the check is too heavy or is at the wrong step.
+**Échantillonnez quelques documents par mois.** Prenez trois documents
+rédigés avec l’aide d’un assistant, au hasard ou à jour fixe, et lisez-les
+en pensant à la ligne vérifié par. La ligne est-elle remplie ? Nomme-t-elle
+une source que vous pouvez ouvrir ? Ouvrez cette source, choisissez une
+affirmation, et voyez si la source dit ce que dit le document. Une ligne
+remplie dont la source n’appuie pas l’affirmation vous dit que la ligne est
+devenue un rituel, ce qui est le piège décrit plus haut. Une ligne vide vous
+dit que la vérification est trop lourde ou placée à la mauvaise étape.
 
-Keep the sample small and fixed in advance, so it runs in the busy months
-too. A sample of three a month won't catch every mistake, and that isn't
-its job. It tells you whether the process you designed is the process
-people follow.
+Gardez un échantillon petit et fixé à l’avance, pour qu’il tienne aussi
+pendant les mois chargés. Un échantillon de trois documents par mois ne
+repérera pas toutes les erreurs, et ce n’est pas son rôle. Il vous dit si le
+processus que vous avez conçu est celui que les gens suivent.
 
-**Make it normal to report a caught mistake.** When a check catches
-something, say so, without naming who missed it. A short note in the
-team channel works: "caught this month: an invented policy number, a
-price from last year's list". A team that shares its catches learns which
-checks find mistakes and which kinds of claim the assistant gets wrong.
-A team that hides them, because a caught mistake feels like an
-embarrassment, doesn't learn either of those. Its members also stop
-mentioning what they catch, so the same kind of mistake is caught again
-and again, one person at a time.
+**Rendez normal le signalement d’une erreur repérée.** Quand une
+vérification repère quelque chose, dites-le, sans nommer qui l’a laissé
+passer. Une courte note dans le canal de l’équipe suffit : « repéré ce
+mois-ci : un numéro de règlement inventé, un prix tiré de l’ancienne
+grille ». Une équipe qui partage ses trouvailles apprend quelles
+vérifications trouvent des erreurs et sur quels types d’affirmation
+l’assistant se trompe. Une équipe qui les cache, parce qu’une erreur
+repérée semble embarrassante, n’apprend ni l’un ni l’autre. Ses membres
+cessent aussi de mentionner ce qu’ils repèrent, si bien que le même type
+d’erreur est repéré encore et encore, une personne à la fois.
 
 <Sort id="stays-or-leaves" phase="review" objective="safety/verifies-output/keeps-a-check-habit"
   concepts={['endorsed-answers']}
-  context="The lesson says that a check held by one person leaves with that person and fails on a busy day, and that a check built into the team's process, light enough to do and sampled to see whether it is done, keeps running."
-  title="Which checks keep running?"
-  hint="For each check, imagine the person who started it has moved to another team. Is the check still there next month?"
-  buckets={['Keeps running when its owner is away', 'Leaves with the person who holds it']}
+  context="La leçon dit qu’une vérification portée par une seule personne part avec elle et cède un jour de rush, et qu’une vérification intégrée au processus de l’équipe, assez légère pour être faite et échantillonnée pour voir si elle l’est, continue de fonctionner."
+  title="Quelles vérifications continuent de fonctionner ?"
+  hint="Pour chaque vérification, imaginez que la personne qui l’a lancée est partie dans une autre équipe. La vérification existe-t-elle encore le mois suivant ?"
+  buckets={['Continue quand son responsable est absent', 'Part avec la personne qui la porte']}
   items={[
-    { text: 'A "checked by, date, against" line in the report template that the reviewer fills in', bucket: 0 },
-    { text: 'A sample of three documents each month, on the team calendar with a rotating owner', bucket: 0 },
-    { text: 'An item on the existing send-out checklist that says the checked-by line names a source', bucket: 0 },
-    { text: 'One senior colleague who always re-reads the numbers before a report goes out', bucket: 1 },
-    { text: 'A colleague who reminds the team at each meeting to check what the assistant wrote', bucket: 1 },
+    { text: 'Une ligne « vérifié par, date, d’après » dans le gabarit de rapport, que remplit le relecteur', bucket: 0 },
+    { text: 'Un échantillon de trois documents chaque mois, inscrit au calendrier de l’équipe avec un responsable qui change', bucket: 0 },
+    { text: 'Un point de la liste de contrôle d’envoi existante qui dit que la ligne vérifié par nomme une source', bucket: 0 },
+    { text: 'Un collègue expérimenté qui relit toujours les nombres avant l’envoi d’un rapport', bucket: 1 },
+    { text: 'Un collègue qui rappelle à chaque réunion de vérifier ce qu’a écrit l’assistant', bucket: 1 },
   ]} />
 
-<Exercise stretch="Show your line and your sampling plan to one colleague who uses the template, and ask them how long filling it in would take on their busiest day. Change the line if the answer is more than a minute.">
-Take a template your team uses for work an assistant often helps with: a
-report, a briefing, a reply to a client, a meeting summary. If you have
-none, use the last document of that kind you sent. In a short note,
-decide where a "checked by" line goes in the template and who fills it
-in. Write the line itself in the fewest words that still name the
-checker, the date and the source. Then plan a sample to see whether the
-line gets filled in, with the number of documents per month and the
-person who reads them. Twenty minutes is enough.
+<Exercise stretch="Montrez votre ligne et votre plan d’échantillonnage à un collègue qui utilise le gabarit, et demandez-lui combien de temps il lui faudrait pour la remplir lors de sa journée la plus chargée. Modifiez la ligne si la réponse dépasse une minute.">
+Prenez un gabarit que votre équipe utilise pour un travail où un
+assistant aide souvent : un rapport, une note d’information, une réponse à
+un client, un compte rendu de réunion. Si vous n’en avez pas, utilisez le
+dernier document de ce type que vous avez envoyé. Dans une courte note,
+décidez où va une ligne « vérifié par » dans le gabarit, et qui la remplit.
+Rédigez la ligne elle-même avec le moins de mots possible, en nommant
+toujours la personne, la date et la source. Prévoyez ensuite un échantillon
+pour voir si la ligne est remplie, avec le nombre de documents par mois et la
+personne qui les lit. Vingt minutes suffisent.
 
-A good result is the line as it would appear in the template, with two
-sentences on who fills it in and when and one on the sample. A line that
-takes more than a minute to fill in is too heavy for a busy day. What
-would the sample need to find for you to decide the line had become a
-ritual?
+Un bon résultat donne la ligne telle qu’elle apparaîtrait dans le gabarit,
+avec deux phrases sur qui la remplit et quand, et une phrase sur
+l’échantillon. Une ligne qui prend plus d’une minute à remplir est trop
+lourde pour une journée chargée. Que devrait trouver l’échantillon pour que
+vous décidiez que la ligne est devenue un rituel ?
 </Exercise>
 
 <Recap>
-1. To the next reader, an answer a person has checked and one nobody has checked look the same until someone marks the difference, and an unmarked claim reads as a checked one.
-2. An endorsed answer is one a qualified person has reviewed and marked, shown apart from raw model output. On CS50's course forum, staff endorse the AI tutor's answers they have checked, so students can see which ones a person stands behind (@Liu 2024b).
-3. A useful mark says who checked, when, and against what. "Checked" on its own says none of these.
-4. A missing mark means nobody marked the answer, which is a different thing from wrong. At CS50, the authors suspect a count of endorsements alone understated the tutor's accuracy (@Liu 2024b). A count of marks in your team measures how much reviewing happened.
-5. Put the mark in the process, as a template line, a review step or a checklist item, and keep it light enough to fill in on a busy day. A heavy check gets ticked without being done, and then everyone assumes it happened.
-6. Sample a few documents a month to see whether the check is done, and make it normal to report a caught mistake. A habit held by one person leaves with that person.
+1. Pour le lecteur suivant, une réponse qu’une personne a vérifiée et une réponse que personne n’a vérifiée se ressemblent jusqu’à ce que quelqu’un marque la différence, et une affirmation sans marque se lit comme une affirmation vérifiée.
+2. Une réponse validée est une réponse qu’une personne qualifiée a relue et marquée, affichée à part de la sortie brute du modèle. Sur le forum du cours CS50, l’équipe pédagogique valide les réponses du tuteur d’IA qu’elle a vérifiées, pour que les étudiants voient quelles réponses une personne assume (@Liu 2024b).
+3. Une marque utile dit qui a vérifié, quand, et par rapport à quoi. « Vérifié » tout seul ne dit rien de tout cela.
+4. Une marque absente signifie que personne n’a marqué la réponse, ce qui est autre chose qu’une réponse fausse. À CS50, les auteurs pensent qu’un simple compte des validations sous-estimait la précision du tuteur (@Liu 2024b). Le nombre de marques dans votre équipe mesure la quantité de relecture effectuée.
+5. Inscrivez la marque dans le processus, sous forme de ligne dans un gabarit, d’étape de relecture ou de point de liste de contrôle, et gardez-la assez légère pour être remplie un jour chargé. Une vérification lourde est cochée sans être faite, et ensuite tout le monde suppose qu’elle a eu lieu.
+6. Échantillonnez quelques documents par mois pour voir si la vérification est faite, et rendez normal le signalement d’une erreur repérée. Une habitude portée par une seule personne part avec elle.
 </Recap>
 
 <Habit id="say-what-you-checked">
-The next time you send a document an assistant helped write, add one line
-that names what you checked and the source you checked it against.
+La prochaine fois que vous envoyez un document rédigé avec l’aide d’un
+assistant, ajoutez une ligne qui nomme ce que vous avez vérifié et la source
+d’après laquelle vous l’avez vérifié.
 </Habit>
