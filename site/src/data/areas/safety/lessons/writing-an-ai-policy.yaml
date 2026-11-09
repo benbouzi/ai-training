@@ -1,8 +1,9 @@
 id: safety/writing-an-ai-policy
-title: Writing an AI policy a team can apply
+title: Écrire une politique d’IA qu’une équipe peut appliquer
 description: >-
-  Turn "use AI responsibly" into a one-page policy with allowed tasks, data, approvals, logging and an
-  escalation route with names, using read and write access as two levels of sign-off.
+  Transformer « utilisez l’IA de façon responsable » en une politique d’une page avec les tâches
+  permises, les données, les approbations, la journalisation et une voie de remontée avec des
+  noms, en traitant la lecture et l’écriture comme deux niveaux d’autorisation.
 mode: tutorial
 covers: safety/governance
 serves: [safety/judges-agent-risk/sets-oversight]
@@ -15,15 +16,18 @@ assumes:
     lesson: safety/agent-risk
     section: lhumain-dans-la-boucle
 extends-to:
-  - label: "AI Leadership, module 5: roles, decision rights and escalation turned into an operating agreement (OpenAI Academy, free account)"
+  - label: >-
+      AI Leadership, module 5 : rôles, droits de décision et remontée transformés en accord de
+      fonctionnement (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/ai-leadership-kaf7k
 after: [safety/agent-risk]
-shorts: [Enterprise tiers sell governance, The eight questions for a vendor]
+shorts: [Les offres entreprise vendent de la gouvernance, Les huit questions à poser à un
+      fournisseur]
 exercise:
   kind: do
   brief: >-
-    Fill in the one-page policy template for your own team: allowed tasks, data, approvals, and the
-    escalation route with names.
+    Remplir le gabarit de politique d’une page pour votre propre équipe : tâches permises, données,
+    approbations, et voie de remontée avec des noms.
 sources: [Academy deploying-claude-enterprise-with-confidence, AEC-11]
 sources-checked: 2026-09-24
 review-by: 2027-03-24
