@@ -13,7 +13,7 @@ introduces: [turning-repeated-work-into-reusable-knowledge]
 assumes:
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/agent-risk
-    section: human-in-the-loop
+    section: lhumain-dans-la-boucle
 after: [customizing-agents/session-handoff, customizing-agents/first-hook]
 shorts:
   - Hooks as approval gates in a team's delivery pipeline (Academy ai-native-sdlc-playbook)

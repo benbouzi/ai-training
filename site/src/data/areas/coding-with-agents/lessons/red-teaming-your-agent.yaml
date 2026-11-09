@@ -12,10 +12,10 @@ introduces: [red-teaming-your-own-agent]
 assumes:
   - objective: safety/judges-agent-risk/recognizes-injection
     lesson: safety/agent-risk
-    section: prompt-injection-when-the-data-gives-orders
+    section: linjection-de-prompt--quand-les-données-donnent-des-ordres
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: blast-radius
+    section: le-rayon-dimpact
 after: [coding-with-agents/sandboxing, coding-with-agents/self-checking-loops]
 shorts: []
 exercise:

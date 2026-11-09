@@ -11,7 +11,7 @@ introduces: [regulation]
 assumes:
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/agent-risk
-    section: human-in-the-loop
+    section: lhumain-dans-la-boucle
 extends-to:
   - label: Governance and oversight
     href: /topics/safety/governance/
