@@ -156,17 +156,17 @@ la vérification.
 
 <Choice id="which-question-assesses" objective="safety/verifies-output/spots-sycophancy"
   concepts={['checking-habits']}
-  context="L’apprenant veut qu’un assistant conversationnel évalue l’un de ses projets, remplacer les cinq modèles de rapport d’une équipe par un modèle commun, au lieu de simplement l’approuver."
+  context="L’apprenant veut qu’un assistant conversationnel évalue l’un de ses projets, remplacer les cinq gabarits de rapport d’une équipe par un gabarit commun, au lieu de simplement l’approuver."
   title="Quelle question obtient une évaluation ?"
   hint="Laquelle des quatre questions ne dit rien au modèle sur la réponse que vous espérez entendre ?"
   options={[
-    { text: '« Une équipe de douze personnes rédige des rapports pour quatre clients, chacun avec son modèle, plus un modèle interne. Compare le maintien des cinq modèles et le passage à un modèle commun. »', correct: true },
-    { text: '« Je veux remplacer nos cinq modèles de rapport par un seul modèle commun. Ça devrait faire gagner du temps, non ? »', why: 'La question indique deux fois votre préférence, dans « je veux » et dans « non ? ». La réponse probable sera d’accord.' },
-    { text: '« Je pense remplacer nos cinq modèles de rapport par un seul modèle commun. Tu vois un problème, ou c’est bon ? »', why: '« Ou c’est bon ? » offre au modèle la réponse facile, et « je pense » dit laquelle vous espérez.' },
-    { text: '« Nous gardons cinq modèles de rapport et plus personne ne sait lequel est lequel. Un modèle commun ne serait-il pas mieux pour tout le monde ? »', why: 'La question énonce le défaut d’une option et demande au modèle de confirmer l’autre. C’est la question orientée, avec une raison en plus.' },
+    { text: '« Une équipe de douze personnes rédige des rapports pour quatre clients, chacun avec son gabarit, plus un gabarit interne. Compare le maintien des cinq gabarits et le passage à un gabarit commun. »', correct: true },
+    { text: '« Je veux remplacer nos cinq gabarits de rapport par un seul gabarit commun. Ça devrait faire gagner du temps, non ? »', why: 'La question indique deux fois votre préférence, dans « je veux » et dans « non ? ». La réponse probable sera d’accord.' },
+    { text: '« Je pense remplacer nos cinq gabarits de rapport par un seul gabarit commun. Tu vois un problème, ou c’est bon ? »', why: '« Ou c’est bon ? » offre au modèle la réponse facile, et « je pense » dit laquelle vous espérez.' },
+    { text: '« Nous gardons cinq gabarits de rapport et plus personne ne sait lequel est lequel. Un gabarit commun ne serait-il pas mieux pour tout le monde ? »', why: 'La question énonce le défaut d’une option et demande au modèle de confirmer l’autre. C’est la question orientée, avec une raison en plus.' },
   ]}>
-Vous voulez savoir si remplacer les cinq modèles de rapport de l’équipe par
-un modèle commun est une bonne idée. Quelle question vous donne une
+Vous voulez savoir si remplacer les cinq gabarits (templates) de rapport de
+l’équipe par un gabarit commun est une bonne idée. Quelle question vous donne une
 évaluation ?
 </Choice>
 
