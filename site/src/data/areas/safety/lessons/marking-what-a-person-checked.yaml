@@ -11,7 +11,7 @@ introduces: [endorsed-answers]
 assumes:
   - objective: safety/verifies-output/checks-claims
     lesson: safety/following-the-source
-    section: when-the-walk-cannot-finish
+    section: quand-le-parcours-ne-peut-pas-aller-au-bout
   - objective: safety/verifies-output/calibrates-trust
     lesson: safety/when-the-tool-is-usually-right
     section: intégrer-la-vérification
