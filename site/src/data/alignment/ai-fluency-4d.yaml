@@ -2,7 +2,7 @@ id: ai-fluency-4d
 framework: AI Fluency 4D (Dakan and Feller)
 rows:
   - code: Discernment
-    asks: Judge the output, the process and the behavior of the AI critically
+    asks: Juger avec un esprit critique la sortie, la démarche et le comportement de l’IA
     objectives:
       - concepts/explains-models/names-failure-modes
       - safety/verifies-output/checks-claims
@@ -11,7 +11,7 @@ rows:
       - using-agents/delegates-and-checks/reviews-against-brief
       - coding-with-agents/verifies-agent-work/reviews-others-code
   - code: Description
-    asks: State the goal, context and wanted output clearly, and refine it
+    asks: Énoncer clairement l’objectif, le contexte et la sortie voulue, puis les affiner
     objectives:
       - concepts/prompts-reliably/structures-a-prompt
       - concepts/prompts-reliably/iterates-on-output
@@ -20,7 +20,7 @@ rows:
       - using-agents/delegates-and-checks/adjusts-mid-task
       - coding-with-agents/ships-with-agent/gives-the-right-context
   - code: Delegation
-    asks: Decide what to hand to AI, which tool fits, and how much autonomy to give
+    asks: Décider quoi confier à l’IA, quel outil convient et quel degré d’autonomie accorder
     objectives:
       - concepts/recognizes-agents/places-on-autonomy-scale
       - using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation
@@ -29,7 +29,7 @@ rows:
       - using-agents/delegates-and-checks/chooses-autonomy
       - coding-with-agents/specifies-work/judges-worth-building
   - code: Diligence
-    asks: Use AI responsibly, transparently and with accountability for the result
+    asks: Utiliser l’IA de façon responsable et transparente, en répondant du résultat
     objectives:
       - safety/handles-data-safely/decides-what-to-share
       - safety/handles-data-safely/discloses-ai-use
