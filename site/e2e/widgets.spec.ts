@@ -15,8 +15,8 @@ test('the token counter prints the two reports the page shows for the sample', a
 	const counter = page.locator('[data-token-counter]');
 	await expect(counter).toHaveCount(1);
 	await counter.getByRole('button', { name: 'Compter' }).click();
-	const countsFence = page.locator('pre').filter({ hasText: 'tokens (estimate):' });
-	const pagesFence = page.locator('pre').filter({ hasText: 'one page:' });
+	const countsFence = page.locator('pre').filter({ hasText: 'jetons (estimation) :' });
+	const pagesFence = page.locator('pre').filter({ hasText: 'une page :' });
 	await expect(countsFence).toHaveCount(1);
 	await expect(pagesFence).toHaveCount(1);
 	const counts = (await countsFence.innerText()).trim();
@@ -26,7 +26,7 @@ test('the token counter prints the two reports the page shows for the sample', a
 	await counter.locator('textarea').fill('Hello, world!');
 	await expect(counter.locator('.tc-counts li')).toHaveCount(0);
 	await counter.getByRole('button', { name: 'Compter' }).click();
-	await expect(counter.locator('.tc-counts li').last()).toHaveText('tokens (estimate): 4');
+	await expect(counter.locator('.tc-counts li').last()).toHaveText('jetons (estimation) : 4');
 });
 
 test('the repeated runs widget prints the summary the page shows at temperature 0', async ({ page }) => {
@@ -37,7 +37,7 @@ test('the repeated runs widget prints the summary the page shows at temperature 
 	await expect(widget.locator('output')).toHaveText('0.0');
 	await widget.getByRole('button', { name: 'Lancer 10 fois' }).click();
 	await expect(widget.locator('.rr-lines li')).toHaveCount(10);
-	const fenceLocator = page.locator('pre').filter({ hasText: '10 of 10 runs give the same answer' });
+	const fenceLocator = page.locator('pre').filter({ hasText: '10 essais sur 10 donnent la même réponse' });
 	await expect(fenceLocator).toHaveCount(1);
 	const fence = (await fenceLocator.innerText()).trim();
 	await expect(widget.locator('.rr-summary li')).toHaveText([fence]);
@@ -45,8 +45,8 @@ test('the repeated runs widget prints the summary the page shows at temperature 
 	await expect(widget.locator('.rr-lines li')).toHaveCount(0);
 	await widget.getByRole('button', { name: 'Lancer 10 fois' }).click();
 	await expect(widget.locator('.rr-summary li')).toHaveText([
-		'10 of 10 runs give the same answer as run 1',
-		'10 of 10 runs pass the check: the answer names Canberra',
+		'10 essais sur 10 donnent la même réponse que l’essai 1',
+		'10 essais sur 10 passent le contrôle : la réponse nomme Canberra',
 	]);
 });
 
@@ -83,11 +83,11 @@ test('the format checker checks a pasted answer', async ({ page }) => {
 		);
 	await checker.getByRole('button', { name: 'Vérifier' }).click();
 	await expect(checker.locator('.fc-lines li')).toHaveText([
-		'ok 1: Jonas, fix the reset email, 2026-10-03, high',
-		'FAIL 2: due "17 October" is not a date written as YYYY-MM-DD',
+		'ok 1 : Jonas, fix the reset email, 2026-10-03, high',
+		'ÉCHEC 2 : due "17 October" n’est pas une date écrite YYYY-MM-DD',
 	]);
 	await expect(checker.locator('.fc-lines li').last()).toHaveClass('fc-fail');
-	await expect(checker.locator('.fc-summary')).toHaveText('1 of 2 items pass');
+	await expect(checker.locator('.fc-summary')).toHaveText('éléments acceptés : 1 sur 2');
 });
 
 test('the redactor prints what the page shows for the email, the colleague version and the reply', async ({ page }) => {

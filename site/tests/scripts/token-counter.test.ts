@@ -45,13 +45,13 @@ describe('mountTokenCounter', () => {
 		expect(mountTokenCounters(document)).toBe(1);
 		expect(items(root, '.tc-counts')).toEqual([]);
 		press(root);
-		expect(items(root, '.tc-counts')).toEqual(['characters: 460', 'words: 80', 'tokens (estimate): 115']);
+		expect(items(root, '.tc-counts')).toEqual(['caractères : 505', 'mots : 86', 'jetons (estimation) : 141']);
 		expect(items(root, '.tc-pages')).toEqual([
-			'one page: 115 tokens',
-			'8,000-token window: 69 pages',
-			'32,000-token window: 278 pages',
-			'200,000-token window: 1,739 pages',
-			'1,000,000-token window: 8,695 pages',
+			'une page : 141 jetons',
+			'fenêtre de 8 000 jetons : 56 pages',
+			'fenêtre de 32 000 jetons : 226 pages',
+			'fenêtre de 200 000 jetons : 1 418 pages',
+			'fenêtre de 1 000 000 jetons : 7 092 pages',
 		]);
 	});
 	it('counts pasted text and clears the report on an edit', async () => {
@@ -60,8 +60,8 @@ describe('mountTokenCounter', () => {
 		const input = part<HTMLTextAreaElement>(root, '.tc-input');
 		input.value = 'Hello, world!';
 		press(root);
-		expect(items(root, '.tc-counts')).toEqual(['characters: 13', 'words: 2', 'tokens (estimate): 4']);
-		expect(items(root, '.tc-pages')[0]).toBe('one page: 4 tokens');
+		expect(items(root, '.tc-counts')).toEqual(['caractères : 13', 'mots : 2', 'jetons (estimation) : 4']);
+		expect(items(root, '.tc-pages')[0]).toBe('une page : 4 jetons');
 		input.value = 'Hello';
 		input.dispatchEvent(new window.Event('input') as unknown as Event);
 		expect(items(root, '.tc-counts')).toEqual([]);

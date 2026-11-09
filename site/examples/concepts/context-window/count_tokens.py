@@ -43,9 +43,9 @@ def report(text: str) -> str:
     """Return the three-line report the lesson shows."""
     return "\n".join(
         [
-            f"characters: {len(text)}",
-            f"words: {len(text.split())}",
-            f"tokens (estimate): {estimate_tokens(text)}",
+            f"caractères : {len(text)}",
+            f"mots : {len(text.split())}",
+            f"jetons (estimation) : {estimate_tokens(text)}",
         ]
     )
 

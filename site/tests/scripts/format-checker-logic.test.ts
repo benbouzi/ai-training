@@ -29,11 +29,11 @@ function printed(text: string, config?: CheckerConfig): string[] {
 }
 
 const PASSING = [
-	'ok 1: Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high',
-	'ok 2: Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low',
-	'ok 3: Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low',
-	'ok 4: Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium',
-	'4 of 4 items pass',
+	'ok 1 : Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high',
+	'ok 2 : Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low',
+	'ok 3 : Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low',
+	'ok 4 : Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium',
+	'éléments acceptés : 4 sur 4',
 ];
 
 describe('the lesson samples', () => {
@@ -46,14 +46,14 @@ describe('the lesson samples', () => {
 	it('fails every item of the bare JSON sample, inside its code fence', () => {
 		const report = check(readFileSync(join(SAMPLES, 'bare.json'), 'utf8'));
 		expect(printed(readFileSync(join(SAMPLES, 'bare.json'), 'utf8'))).toEqual([
-			'FAIL 1: missing owner, task, due (found assignee, action, deadline)',
-			'FAIL 1: priority "urgente" is not one of high, low, medium',
-			'FAIL 2: missing owner, task, due (found assignee, action, deadline)',
-			'FAIL 2: priority "normale" is not one of high, low, medium',
-			'FAIL 3: missing owner, task, due (found assignee, action, deadline)',
-			'FAIL 3: priority "normale" is not one of high, low, medium',
-			'FAIL 4: missing owner, task, due (found assignee, action, deadline)',
-			'0 of 4 items pass',
+			'ÉCHEC 1 : manque owner, task, due (trouvé assignee, action, deadline)',
+			'ÉCHEC 1 : priority "urgente" n’est pas l’une des valeurs high, low, medium',
+			'ÉCHEC 2 : manque owner, task, due (trouvé assignee, action, deadline)',
+			'ÉCHEC 2 : priority "normale" n’est pas l’une des valeurs high, low, medium',
+			'ÉCHEC 3 : manque owner, task, due (trouvé assignee, action, deadline)',
+			'ÉCHEC 3 : priority "normale" n’est pas l’une des valeurs high, low, medium',
+			'ÉCHEC 4 : manque owner, task, due (trouvé assignee, action, deadline)',
+			'éléments acceptés : 0 sur 4',
 		]);
 		expect(report.lines.every((l) => !l.ok)).toBe(true);
 		expect([report.passed, report.total]).toEqual([0, 4]);
@@ -65,19 +65,19 @@ describe('the line format', () => {
 		const text =
 			'owner: A | task: B | due: 2026-10-03 | priority: high\n\nowner: C | task | due: 2026-02-30 | priority: urgent';
 		expect(printed(text)).toEqual([
-			'ok 1: A, B, 2026-10-03, high',
-			'FAIL 2: unnamed part "task" (every part needs a name: before its value)',
-			'FAIL 2: missing task',
-			'FAIL 2: due "2026-02-30" is not a date written as YYYY-MM-DD',
-			'FAIL 2: priority "urgent" is not one of high, low, medium',
-			'1 of 2 items pass',
+			'ok 1 : A, B, 2026-10-03, high',
+			'ÉCHEC 2 : partie sans nom "task" (chaque partie a besoin d’un nom suivi de : avant sa valeur)',
+			'ÉCHEC 2 : manque task',
+			'ÉCHEC 2 : due "2026-02-30" n’est pas une date écrite YYYY-MM-DD',
+			'ÉCHEC 2 : priority "urgent" n’est pas l’une des valeurs high, low, medium',
+			'éléments acceptés : 1 sur 2',
 		]);
 	});
 	it('reports an extra field and an empty one', () => {
 		expect(printed('owner: A | task:  | due: 2026-10- 1 | priority: low | extra: x')).toEqual([
-			'FAIL 1: unexpected extra',
-			'FAIL 1: task is empty',
-			'0 of 1 items pass',
+			'ÉCHEC 1 : inattendu extra',
+			'ÉCHEC 1 : task est vide',
+			'éléments acceptés : 0 sur 1',
 		]);
 	});
 	it('splits a field at its first colon and takes a priority only in lower case', () => {
@@ -86,34 +86,34 @@ describe('the line format', () => {
 				'owner: A | task: t | due: 2026-1-012 | priority: low\nowner: A | task: t | due: 2026-10-1  | priority: Low\nowner: A:B | task: t | due: 20261003 | priority: low',
 			),
 		).toEqual([
-			'FAIL 1: due "2026-1-012" is not a date written as YYYY-MM-DD',
-			'FAIL 2: due "2026-10-1" is not a date written as YYYY-MM-DD',
-			'FAIL 2: priority "Low" is not one of high, low, medium',
-			'FAIL 3: due "20261003" is not a date written as YYYY-MM-DD',
-			'0 of 3 items pass',
+			'ÉCHEC 1 : due "2026-1-012" n’est pas une date écrite YYYY-MM-DD',
+			'ÉCHEC 2 : due "2026-10-1" n’est pas une date écrite YYYY-MM-DD',
+			'ÉCHEC 2 : priority "Low" n’est pas l’une des valeurs high, low, medium',
+			'ÉCHEC 3 : due "20261003" n’est pas une date écrite YYYY-MM-DD',
+			'éléments acceptés : 0 sur 3',
 		]);
 	});
 	it('names the text in front of the first field', () => {
 		expect(printed('- owner: A | task: t | due: 2026-10-03 | priority: high')).toEqual([
-			'FAIL 1: missing owner (found - owner)',
-			'0 of 1 items pass',
+			'ÉCHEC 1 : manque owner (trouvé - owner)',
+			'éléments acceptés : 0 sur 1',
 		]);
 	});
 	it("splits lines where Python's splitlines does", () => {
 		expect(printed('owner: A\r\ntask: B\x1cdue: x\u2028priority: y')).toEqual([
-			'FAIL 1: missing task, due, priority',
-			'FAIL 2: missing owner, due, priority',
-			'FAIL 3: missing owner, task, priority',
-			'FAIL 3: due "x" is not a date written as YYYY-MM-DD',
-			'FAIL 4: missing owner, task, due',
-			'FAIL 4: priority "y" is not one of high, low, medium',
-			'0 of 4 items pass',
+			'ÉCHEC 1 : manque task, due, priority',
+			'ÉCHEC 2 : manque owner, due, priority',
+			'ÉCHEC 3 : manque owner, task, priority',
+			'ÉCHEC 3 : due "x" n’est pas une date écrite YYYY-MM-DD',
+			'ÉCHEC 4 : manque owner, task, due',
+			'ÉCHEC 4 : priority "y" n’est pas l’une des valeurs high, low, medium',
+			'éléments acceptés : 0 sur 4',
 		]);
 	});
 	it('strips the whitespace Python strips, such as an ideographic space', () => {
 		expect(printed('\u3000owner: A | task: t | due: 2026-12-31 | priority: medium\u3000')).toEqual([
-			'ok 1: A, t, 2026-12-31, medium',
-			'1 of 1 items pass',
+			'ok 1 : A, t, 2026-12-31, medium',
+			'éléments acceptés : 1 sur 1',
 		]);
 	});
 });
@@ -121,51 +121,51 @@ describe('the line format', () => {
 describe('the JSON format', () => {
 	it('reads a fenced array', () => {
 		expect(printed('```json\n[{"owner": "A", "task": "t", "due": "2026-10-03", "priority": "high"}]\n```')).toEqual([
-			'ok 1: A, t, 2026-10-03, high',
-			'1 of 1 items pass',
+			'ok 1 : A, t, 2026-10-03, high',
+			'éléments acceptés : 1 sur 1',
 		]);
 	});
 	it('prints non-string values the way Python str() does', () => {
 		const text =
 			'[{"owner": ["x"], "task": {"a": "b\'"}, "due": 20261003, "priority": null}, {"owner": true, "task": "", "due": "2026-10-03", "priority": "high"}]';
 		expect(printed(text)).toEqual([
-			'FAIL 1: due "20261003" is not a date written as YYYY-MM-DD',
-			'FAIL 1: priority "None" is not one of high, low, medium',
-			'FAIL 2: task is empty',
-			'0 of 2 items pass',
+			'ÉCHEC 1 : due "20261003" n’est pas une date écrite YYYY-MM-DD',
+			'ÉCHEC 1 : priority "None" n’est pas l’une des valeurs high, low, medium',
+			'ÉCHEC 2 : task est vide',
+			'éléments acceptés : 0 sur 2',
 		]);
 	});
 	it('keeps the last of two equal keys', () => {
 		expect(printed('[{"owner": "A", "task": "t", "due": "2026-10-03", "priority": "high", "owner": "B"}]')).toEqual([
-			'ok 1: B, t, 2026-10-03, high',
-			'1 of 1 items pass',
+			'ok 1 : B, t, 2026-10-03, high',
+			'éléments acceptés : 1 sur 1',
 		]);
 	});
 	it('fails a date with a trailing space', () => {
 		expect(printed('[{"owner":"it\'s","task":"say \\"hi\\"\\n","due":"2026-12-31 ","priority":"high"}]')).toEqual([
-			'FAIL 1: due "2026-12-31 " is not a date written as YYYY-MM-DD',
-			'0 of 1 items pass',
+			'ÉCHEC 1 : due "2026-12-31 " n’est pas une date écrite YYYY-MM-DD',
+			'éléments acceptés : 0 sur 1',
 		]);
 	});
 });
 
 describe('file-level errors', () => {
 	it.each([
-		['', 'the answer is empty'],
-		['   \n\n', 'the answer is empty'],
-		['```\n```\n', 'the answer is empty'],
-		['[]', 'no items found'],
-		['{}', 'expected a JSON array of objects, got a JSON object with keys: '],
-		['{"a": 1, "b": 2}', 'expected a JSON array of objects, got a JSON object with keys: a, b'],
-		['[1, 2]', 'expected a JSON array of objects, one per item'],
-		['Here you go:\n[{}]', 'the answer does not start with [ (is there text before the JSON?)'],
+		['', 'la réponse est vide'],
+		['   \n\n', 'la réponse est vide'],
+		['```\n```\n', 'la réponse est vide'],
+		['[]', 'aucun élément trouvé'],
+		['{}', 'tableau JSON d’objets attendu, objet JSON reçu avec les clés : '],
+		['{"a": 1, "b": 2}', 'tableau JSON d’objets attendu, objet JSON reçu avec les clés : a, b'],
+		['[1, 2]', 'tableau JSON d’objets attendu, un par élément'],
+		['Here you go:\n[{}]', 'la réponse ne commence pas par [ (y a-t-il du texte avant le JSON ?)'],
 	])('reports %j as one FAIL line and no summary', (text, error) => {
-		expect(printed(text)).toEqual([`FAIL: ${error}`]);
+		expect(printed(text)).toEqual([`ÉCHEC : ${error}`]);
 	});
 	it('reports JSON that does not parse, with the browser message', () => {
 		const report = check('[{]');
 		expect(report.lines).toHaveLength(1);
-		expect(report.lines[0]?.text).toMatch(/^FAIL: not valid JSON: ./);
+		expect(report.lines[0]?.text).toMatch(/^ÉCHEC : JSON invalide : ./);
 		expect(report.summary).toBeNull();
 	});
 });
@@ -210,11 +210,11 @@ describe('the Python helpers', () => {
 describe('another configuration', () => {
 	const config: CheckerConfig = { fields: ['owner', 'status'], priorities: ['p1'] };
 	it('checks the fields and priorities it is given', () => {
-		expect(printed('owner: A | status: open', config)).toEqual(['ok 1: A, open', '1 of 1 items pass']);
+		expect(printed('owner: A | status: open', config)).toEqual(['ok 1 : A, open', 'éléments acceptés : 1 sur 1']);
 		expect(printed('owner: A | priority: p2', config)).toEqual([
-			'FAIL 1: missing status (found priority)',
-			'FAIL 1: priority "p2" is not one of p1',
-			'0 of 1 items pass',
+			'ÉCHEC 1 : manque status (trouvé priority)',
+			'ÉCHEC 1 : priority "p2" n’est pas l’une des valeurs p1',
+			'éléments acceptés : 0 sur 1',
 		]);
 	});
 	it('parse and problems take the default configuration', () => {

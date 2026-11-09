@@ -50,9 +50,9 @@ describe('mountFormatChecker', () => {
 		part<HTMLButtonElement>(root, '.fc-check').click();
 		expect(results(root).map((r) => r.cls)).toEqual(['fc-ok', 'fc-ok', 'fc-ok', 'fc-ok']);
 		expect(results(root)[0]?.text).toBe(
-			'ok 1: Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high',
+			'ok 1 : Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high',
 		);
-		expect(part(root, '.fc-summary').textContent).toBe('4 of 4 items pass');
+		expect(part(root, '.fc-summary').textContent).toBe('éléments acceptés : 4 sur 4');
 	});
 	it('fails the bare JSON sample', async () => {
 		const root = await show({ sample: 'concepts/structured-output/sample/bare.json' });
@@ -60,18 +60,18 @@ describe('mountFormatChecker', () => {
 		part<HTMLButtonElement>(root, '.fc-check').click();
 		expect(results(root).every((r) => r.cls === 'fc-fail')).toBe(true);
 		expect(results(root)).toHaveLength(7);
-		expect(part(root, '.fc-summary').textContent).toBe('0 of 4 items pass');
+		expect(part(root, '.fc-summary').textContent).toBe('éléments acceptés : 0 sur 4');
 	});
 	it('clears the report when the text changes, and shows no summary for a file-level error', async () => {
 		const root = await show();
 		mountFormatChecker(root);
 		part<HTMLButtonElement>(root, '.fc-check').click();
-		expect(results(root)).toEqual([{ cls: 'fc-fail', text: 'FAIL: the answer is empty' }]);
+		expect(results(root)).toEqual([{ cls: 'fc-fail', text: 'ÉCHEC : la réponse est vide' }]);
 		expect(part(root, '.fc-summary').textContent).toBe('');
 		type(root, 'owner: A | task: t | due: 2026-10-03 | priority: high');
 		expect(results(root)).toEqual([]);
 		part<HTMLButtonElement>(root, '.fc-check').click();
-		expect(part(root, '.fc-summary').textContent).toBe('1 of 1 items pass');
+		expect(part(root, '.fc-summary').textContent).toBe('éléments acceptés : 1 sur 1');
 		type(root, 'x');
 		expect(part(root, '.fc-summary').textContent).toBe('');
 	});
@@ -80,7 +80,7 @@ describe('mountFormatChecker', () => {
 		mountFormatChecker(root);
 		type(root, 'owner: A | status: open | priority: p1');
 		part<HTMLButtonElement>(root, '.fc-check').click();
-		expect(results(root)).toEqual([{ cls: 'fc-fail', text: 'FAIL 1: unexpected priority' }]);
+		expect(results(root)).toEqual([{ cls: 'fc-fail', text: 'ÉCHEC 1 : inattendu priority' }]);
 	});
 	it('writes nothing to local storage', async () => {
 		const root = await show({ sample: 'concepts/structured-output/sample/items.json' });
@@ -112,7 +112,7 @@ describe('mountFormatCheckers', () => {
 		const [first, second] = [...document.querySelectorAll<HTMLElement>(ROOT_SELECTOR)] as [HTMLElement, HTMLElement];
 		part<HTMLButtonElement>(second, '.fc-check').click();
 		expect(results(first)).toEqual([]);
-		expect(part(second, '.fc-summary').textContent).toBe('0 of 4 items pass');
+		expect(part(second, '.fc-summary').textContent).toBe('éléments acceptés : 0 sur 4');
 		document.body.innerHTML = '<p>no checker</p>';
 		expect(mountFormatCheckers(document)).toBe(0);
 	});

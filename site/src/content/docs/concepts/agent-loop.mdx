@@ -48,23 +48,21 @@ réunion, du 14, du 21 et du 28 mars.
 
 La première tâche est une question sur les notes. La transcription ci-dessous
 est la sortie du jouet, ligne pour ligne. Les lignes qui commencent par
-`model:` sont ce que le modèle a produit, et celles qui commencent par `loop:`
-sont ce que le logiciel qui l’entoure a fait en réponse. Les étiquettes de la
-transcription sont celles du programme, en anglais : `call` (appeler), `ran`
-(a exécuté), `result` (résultat), `done` (terminé), `stopped` (arrêté).
+`modèle :` sont ce que le modèle a produit, et celles qui commencent par
+`boucle :` sont ce que le logiciel qui l’entoure a fait en réponse.
 
 ```text
-task: Quelle note de réunion mentionne la livraison de juin ?
-1. model: call list_dir with path "notes"
-   loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
-2. model: call read_file with path "notes/2026-03-14-lantern.txt"
-   loop: ran read_file, result: Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
-3. model: done. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
-loop: stopped, the model said it is done after 3 steps
+tâche : Quelle note de réunion mentionne la livraison de juin ?
+1. modèle : appelle list_dir avec le chemin "notes"
+   boucle : a exécuté list_dir, résultat : 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
+2. modèle : appelle read_file avec le chemin "notes/2026-03-14-lantern.txt"
+   boucle : a exécuté read_file, résultat : Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
+3. modèle : terminé. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
+boucle : arrêt, le modèle a dit avoir terminé après 3 étapes
 ```
 
 Lisez lentement l’étape 1, parce qu’elle contient toute l’idée. Le modèle n’a
-pas listé le dossier. Il a écrit les mots `call list_dir with path "notes"`,
+pas listé le dossier. Il a écrit les mots `appelle list_dir avec le chemin "notes"`,
 qui sont du texte comme n’importe quelle autre réponse. La boucle a reconnu ce
 texte comme une demande, a exécuté le vrai outil `list_dir` sur le vrai
 dossier, et a placé les trois noms de fichiers dans la conversation, comme la
@@ -88,15 +86,16 @@ d’outil qui suit, s’il y en a une (@AEC-01). Un tour a trois phases :
   puis le résultat du dernier outil.
 - **Réfléchir.** Le modèle décide de ce qu’il fait ensuite et l’écrit, sous
   forme de demande d’outil ou de réponse. Dans la transcription, ce sont toutes
-  les lignes `model:`.
+  les lignes `modèle :`.
 - **Agir.** La boucle exécute l’outil demandé par le modèle et renvoie le
-  résultat. Dans la transcription, ce sont toutes les lignes `loop: ran`.
+  résultat. Dans la transcription, ce sont toutes les lignes
+  `boucle : a exécuté`.
 
 Le modèle observe ensuite le résultat, et le tour recommence. L’étape 1 de la
-transcription, c’est observer (la tâche), réfléchir (`call list_dir`), agir (la
+transcription, c’est observer (la tâche), réfléchir (`appelle list_dir`), agir (la
 liste revient). L’étape 2, c’est observer (les noms de fichiers), réfléchir
-(`call read_file`), agir (la note revient). L’étape 3, c’est observer (la note)
-et réfléchir (`done`), sans agir, parce que le modèle a produit une réponse et
+(`appelle read_file`), agir (la note revient). L’étape 3, c’est observer (la note)
+et réfléchir (`terminé`), sans agir, parce que le modèle a produit une réponse et
 qu’il ne restait rien à exécuter.
 
 Cette distinction compte quand quelque chose tourne mal. Une réponse fausse
@@ -110,7 +109,7 @@ chercher.
 
 <Sort id="label-the-turns" objective="concepts/recognizes-agents/names-the-loop"
   concepts={['agent-loop', 'tool']}
-  context="La leçon montre la transcription d’un agent jouet doté de deux outils, list_dir et read_file. Les lignes qui commencent par model: sont ce que le modèle a écrit, et les lignes qui commencent par loop: sont ce que le logiciel qui l’entoure a fait."
+  context="La leçon montre la transcription d’un agent jouet doté de deux outils, list_dir et read_file. Les lignes qui commencent par « modèle : » sont ce que le modèle a écrit, et les lignes qui commencent par « boucle : » sont ce que le logiciel qui l’entoure a fait."
   title="Nommez les phases" hint="Quelque chose est-il lu, décidé, ou exécuté ?"
   buckets={['Observer', 'Réfléchir', 'Agir']}
   items={[
@@ -166,14 +165,14 @@ les modifier. Voici le jouet sur une tâche avec une limite de 3 étapes, avec u
 script qui liste deux fois le dossier puis lit le mauvais fichier.
 
 ```text
-task: Qui confirme la date de livraison ?
-1. model: call list_dir with path "notes"
-   loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
-2. model: call list_dir with path "notes"
-   loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
-3. model: call read_file with path "notes/2026-03-21-budget.txt"
-   loop: ran read_file, result: Revue budgétaire, 21 mars. Les frais de déplacement sont sous le prévisionnel. Le budget de formation est approuvé.
-loop: stopped, the step limit of 3 was reached, no answer
+tâche : Qui confirme la date de livraison ?
+1. modèle : appelle list_dir avec le chemin "notes"
+   boucle : a exécuté list_dir, résultat : 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
+2. modèle : appelle list_dir avec le chemin "notes"
+   boucle : a exécuté list_dir, résultat : 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
+3. modèle : appelle read_file avec le chemin "notes/2026-03-21-budget.txt"
+   boucle : a exécuté read_file, résultat : Revue budgétaire, 21 mars. Les frais de déplacement sont sous le prévisionnel. Le budget de formation est approuvé.
+boucle : arrêt, la limite de 3 étapes est atteinte, pas de réponse
 ```
 
 La réponse se trouvait dans la note du 14 mars, et le script du modèle l’aurait
@@ -193,7 +192,7 @@ aucune réponse ne suit.
   context="Un agent jouet a tourné avec une limite de 3 étapes. Sa transcription montre trois demandes d’outil, chacune avec un résultat, puis une ligne de la boucle qui indique que la limite d’étapes a été atteinte et qu’il n’y a pas de réponse."
   title="Pourquoi la seconde exécution s’est-elle arrêtée ?" hint="Lisez la dernière ligne de la transcription. Qui l’a écrite, et que dit-elle ?"
   options={[
-    { text: 'Le modèle a trouvé la réponse dans la note budgétaire et s’est arrêté.', why: 'Une exécution terminée a une ligne du modèle qui commence par « done ». Cette transcription n’en a aucune, et la note budgétaire ne dit rien d’une date de livraison.' },
+    { text: 'Le modèle a trouvé la réponse dans la note budgétaire et s’est arrêté.', why: 'Une exécution terminée a une ligne du modèle qui commence par « terminé ». Cette transcription n’en a aucune, et la note budgétaire ne dit rien d’une date de livraison.' },
     { text: 'L’outil a échoué lors de la seconde liste, et la boucle a abandonné.', why: 'Les deux listes ont renvoyé les trois mêmes noms de fichiers. L’outil a fait son travail chaque fois qu’on le lui a demandé.' },
     { text: 'La boucle a atteint sa limite d’étapes avant que le modèle écrive une réponse.', correct: true },
     { text: 'Le script n’avait plus de réponses, et le modèle n’avait donc plus rien à dire.', why: 'Le script avait encore deux réponses, une lecture de la note du 14 mars et une réponse. La boucle s’est arrêtée avant de les atteindre.' },
@@ -211,8 +210,8 @@ Dans la seconde transcription, l’exécution se termine sans réponse. Pourquoi
     { text: 'Une personne l’a arrêtée.', why: 'Une personne arrête une exécution depuis l’extérieur de la boucle, et rien dans cette transcription n’enregistre de personne. C’est le compteur de la boucle elle-même qui y a mis fin.' },
   ]}>
 La transcription d’un agent montre douze demandes d’outil, chacune avec son
-résultat, puis une ligne de la boucle : « stopped after 12 steps, no answer »
-(arrêtée après 12 étapes, pas de réponse). Personne ne surveillait
+résultat, puis une ligne de la boucle : « arrêt après 12 étapes, pas de
+réponse ». Personne ne surveillait
 l’exécution. De quelle fin s’agit-il ?
 </Choice>
 
@@ -245,23 +244,23 @@ s’écrirait « 1, list_dir, observer (tâche), réfléchir (demande), agir
 terminée et comment vous le savez. Dix minutes suffisent.
 
 ```text
-task: Combien de notes de réunion portent sur le projet Lantern ?
-1. model: call list_dir with path "notes"
-   loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
-2. model: call read_file with path "notes/2026-03-14-lantern.txt"
-   loop: ran read_file, result: Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
-3. model: call read_file with path "notes/2026-03-21-budget.txt"
-   loop: ran read_file, result: Revue budgétaire, 21 mars. Les frais de déplacement sont sous le prévisionnel. Le budget de formation est approuvé.
-4. model: call read_file with path "notes/2026-03-28-lantern.txt"
-   loop: ran read_file, result: Projet Lantern, 28 mars. Le pilote d’Utrecht passe en juillet. Bram rédige le guide d’installation court.
-5. model: done. Deux des trois notes portent sur le projet Lantern : le 14 et le 28 mars.
-loop: stopped, the model said it is done after 5 steps
+tâche : Combien de notes de réunion portent sur le projet Lantern ?
+1. modèle : appelle list_dir avec le chemin "notes"
+   boucle : a exécuté list_dir, résultat : 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
+2. modèle : appelle read_file avec le chemin "notes/2026-03-14-lantern.txt"
+   boucle : a exécuté read_file, résultat : Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
+3. modèle : appelle read_file avec le chemin "notes/2026-03-21-budget.txt"
+   boucle : a exécuté read_file, résultat : Revue budgétaire, 21 mars. Les frais de déplacement sont sous le prévisionnel. Le budget de formation est approuvé.
+4. modèle : appelle read_file avec le chemin "notes/2026-03-28-lantern.txt"
+   boucle : a exécuté read_file, résultat : Projet Lantern, 28 mars. Le pilote d’Utrecht passe en juillet. Bram rédige le guide d’installation court.
+5. modèle : terminé. Deux des trois notes portent sur le projet Lantern : le 14 et le 28 mars.
+boucle : arrêt, le modèle a dit avoir terminé après 5 étapes
 ```
 
 Un bon résultat a cinq lignes, dont quatre nomment un outil et la cinquième
 aucun, parce que l’étape 5 comporte une réflexion et aucune action. La ligne
 de fin dit que le modèle a écrit une réponse, et désigne comme preuve la ligne
-`done` et la dernière ligne de la boucle. En écrivant, remarquez que le modèle a
+`terminé` et la dernière ligne de la boucle. En écrivant, remarquez que le modèle a
 lu la note budgétaire alors que son nom donnait déjà la réponse. Un modèle dans
 une boucle fait ce que lui dicte son jugement, une étape à la fois, et une
 étape qu’il aurait pu sauter coûte autant qu’une étape nécessaire. À quel

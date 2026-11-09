@@ -11,7 +11,7 @@ high end. Check the vendor's documentation for the size of the model you use.
 
 import sys
 
-SAMPLE_TOKENS = 115
+SAMPLE_TOKENS = 141
 WINDOWS = [8_000, 32_000, 200_000, 1_000_000]
 
 
@@ -20,11 +20,22 @@ def pages_per_window(tokens_per_page: int) -> "list[tuple[int, int]]":
     return [(window, window // tokens_per_page) for window in WINDOWS]
 
 
+def thousands(n: int) -> str:
+    """`n` with a space between each group of three digits, as French writes it."""
+    return f"{n:,}".replace(",", " ")
+
+
+def pages_word(n: int) -> str:
+    """`page` for 0 and 1, `pages` from 2 on."""
+    return "pages" if n > 1 else "page"
+
+
 def report(tokens_per_page: int) -> str:
     """Return one line per window size."""
-    lines = [f"one page: {tokens_per_page} tokens"]
+    lines = [f"une page : {tokens_per_page} jetons"]
     for window, pages in pages_per_window(tokens_per_page):
-        lines.append(f"{window:,}-token window: {pages:,} pages")
+        fit = f"{thousands(pages)} {pages_word(pages)}"
+        lines.append(f"fenêtre de {thousands(window)} jetons : {fit}")
     return "\n".join(lines)
 
 

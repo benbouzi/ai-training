@@ -14,17 +14,17 @@ et compter les appels qu’un prompt a coûtés.
 Voici de nouveau la première transcription de la leçon précédente.
 
 ```text
-task: Quelle note de réunion mentionne la livraison de juin ?
-1. model: call list_dir with path "notes"
-   loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
-2. model: call read_file with path "notes/2026-03-14-lantern.txt"
-   loop: ran read_file, result: Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
-3. model: done. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
-loop: stopped, the model said it is done after 3 steps
+tâche : Quelle note de réunion mentionne la livraison de juin ?
+1. modèle : appelle list_dir avec le chemin "notes"
+   boucle : a exécuté list_dir, résultat : 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
+2. modèle : appelle read_file avec le chemin "notes/2026-03-14-lantern.txt"
+   boucle : a exécuté read_file, résultat : Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
+3. modèle : terminé. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
+boucle : arrêt, le modèle a dit avoir terminé après 3 étapes
 ```
 
 Une personne a posé une question. Derrière elle, le logiciel qui entoure le
-modèle a appelé le modèle trois fois, une fois pour chaque ligne `model:`.
+modèle a appelé le modèle trois fois, une fois pour chaque ligne `modèle :`.
 Chacun de ces appels est une **requête au modèle** : le logiciel envoie au
 modèle un paquet de texte, et le modèle renvoie une réponse
 (@Claude docs messages). Une requête se termine quand sa réponse revient. Si la
@@ -71,13 +71,13 @@ Combien de requêtes au modèle ce prompt a-t-il déclenchées ?
 
 ```text
 prompt: Combien avons-nous dépensé en déplacements en septembre ?
-model: call search_files with query "facture déplacement septembre"
-harness: ran search_files, result: fact-0912-train.txt, fact-0918-hotel.txt, fact-0925-taxi.txt
-model: call read_file with path "fact-0912-train.txt"
-model: call read_file with path "fact-0918-hotel.txt"
-model: call read_file with path "fact-0925-taxi.txt"
-harness: ran read_file three times, results: train 84,00 EUR, hôtel 236,50 EUR, taxi 31,20 EUR
-model: done. Les déplacements de septembre se montent à 351,70 EUR sur trois factures.
+modèle : appelle search_files avec la requête "facture déplacement septembre"
+harnais : a exécuté search_files, résultat : fact-0912-train.txt, fact-0918-hotel.txt, fact-0925-taxi.txt
+modèle : appelle read_file avec le chemin "fact-0912-train.txt"
+modèle : appelle read_file avec le chemin "fact-0918-hotel.txt"
+modèle : appelle read_file avec le chemin "fact-0925-taxi.txt"
+harnais : a exécuté read_file trois fois, résultats : train 84,00 EUR, hôtel 236,50 EUR, taxi 31,20 EUR
+modèle : terminé. Les déplacements de septembre se montent à 351,70 EUR sur trois factures.
 ```
 
 </Choice>
@@ -97,19 +97,19 @@ prompt : Quelle note de réunion mentionne la livraison de juin ?
 requête 1
   le harnais envoie : instructions, descriptions d’outils (list_dir, read_file),
     historique : le prompt
-  le modèle répond : call list_dir with path "notes"
+  le modèle répond : appelle list_dir avec le chemin "notes"
   le harnais exécute list_dir, et le dossier renvoie 3 noms de fichiers
 
 requête 2
   le harnais envoie : instructions, descriptions d’outils (list_dir, read_file),
     historique : le prompt, réponse 1, résultat 1
-  le modèle répond : call read_file with path "notes/2026-03-14-lantern.txt"
+  le modèle répond : appelle read_file avec le chemin "notes/2026-03-14-lantern.txt"
   le harnais exécute read_file, et le dossier renvoie le texte de la note
 
 requête 3
   le harnais envoie : instructions, descriptions d’outils (list_dir, read_file),
     historique : le prompt, réponse 1, résultat 1, réponse 2, résultat 2
-  le modèle répond : done. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
+  le modèle répond : terminé. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
   aucun outil n’a été demandé, le harnais arrête donc l’exécution
 ```
 
@@ -302,7 +302,7 @@ prompt : Mets le brouillon de la lettre d’information d’octobre dans le doss
 requête 1
   le harnais envoie : instructions, descriptions d’outils (list_dir, move_file, send_message),
     historique : le prompt
-  le modèle répond : call list_dir with path "drafts"
+  le modèle répond : appelle list_dir avec le chemin "drafts"
   le harnais exécute list_dir, résultat : newsletter-oct.txt, newsletter-sep.txt
 
 requête 2
@@ -320,7 +320,7 @@ requête 3
 requête 4
   le harnais envoie : instructions, descriptions d’outils (list_dir, move_file, send_message),
     historique : le prompt, réponse 1, résultat 1, réponse 2, résultat 2, réponse 3, résultat 3
-  le modèle répond : done. Le brouillon se trouve maintenant dans shared/newsletter-oct.txt. Je n’ai pas envoyé de message à Mia, parce que vous l’avez refusé.
+  le modèle répond : terminé. Le brouillon se trouve maintenant dans shared/newsletter-oct.txt. Je n’ai pas envoyé de message à Mia, parce que vous l’avez refusé.
   aucun outil n’a été demandé, le harnais arrête donc l’exécution
 ```
 

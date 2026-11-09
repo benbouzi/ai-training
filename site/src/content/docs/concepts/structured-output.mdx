@@ -109,7 +109,7 @@ owner: Dana | task: réserver le contrôle d’accessibilité auprès de l’age
 
 Vérifiez maintenant la réponse. Le vérificateur ci-dessous accepte les mêmes
 éléments que l’import de l’outil de suivi. Il lit le texte de sa zone de
-saisie et affiche une ligne par élément, `ok` ou `FAIL` (échec), puis une
+saisie et affiche une ligne par élément, `ok` ou `ÉCHEC`, puis une
 ligne de synthèse. Il lit le format d’une ligne par élément de cet essai.
 L’essai suivant demande les mêmes champs en JSON (JavaScript Object Notation,
 un format texte courant pour les données que s’échangent des programmes), et
@@ -122,11 +122,11 @@ coller la vôtre.
 Appuyez sur Vérifier. Le rapport doit indiquer :
 
 ```text
-ok 1: Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high
-ok 2: Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low
-ok 3: Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low
-ok 4: Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium
-4 of 4 items pass
+ok 1 : Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high
+ok 2 : Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low
+ok 3 : Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low
+ok 4 : Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium
+éléments acceptés : 4 sur 4
 ```
 
 Vérifiez maintenant votre propre réponse. Remplacez le texte de la zone par
@@ -187,11 +187,11 @@ zone ci-dessous contient la même réponse, présentée avec une clé par ligne.
 Appuyez sur Vérifier, et comparez le rapport avec celui-ci :
 
 ```text
-ok 1: Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high
-ok 2: Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low
-ok 3: Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low
-ok 4: Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium
-4 of 4 items pass
+ok 1 : Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high
+ok 2 : Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low
+ok 3 : Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low
+ok 4 : Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium
+éléments acceptés : 4 sur 4
 ```
 
 Collez aussi votre propre réponse JSON dans la zone et vérifiez-la. Les deux
@@ -239,14 +239,14 @@ pas.
 Appuyez sur Vérifier. Le rapport doit indiquer :
 
 ```text
-FAIL 1: missing owner, task, due (found assignee, action, deadline)
-FAIL 1: priority "urgente" is not one of high, low, medium
-FAIL 2: missing owner, task, due (found assignee, action, deadline)
-FAIL 2: priority "normale" is not one of high, low, medium
-FAIL 3: missing owner, task, due (found assignee, action, deadline)
-FAIL 3: priority "normale" is not one of high, low, medium
-FAIL 4: missing owner, task, due (found assignee, action, deadline)
-0 of 4 items pass
+ÉCHEC 1 : manque owner, task, due (trouvé assignee, action, deadline)
+ÉCHEC 1 : priority "urgente" n’est pas l’une des valeurs high, low, medium
+ÉCHEC 2 : manque owner, task, due (trouvé assignee, action, deadline)
+ÉCHEC 2 : priority "normale" n’est pas l’une des valeurs high, low, medium
+ÉCHEC 3 : manque owner, task, due (trouvé assignee, action, deadline)
+ÉCHEC 3 : priority "normale" n’est pas l’une des valeurs high, low, medium
+ÉCHEC 4 : manque owner, task, due (trouvé assignee, action, deadline)
+éléments acceptés : 0 sur 4
 ```
 
 La dernière partie de la règle porte sur l’ordre du travail. Vérifiez le
@@ -331,7 +331,7 @@ JSON. Lancez le prompt dans votre outil conversationnel, collez la réponse
 dans le vérificateur ci-dessous et appuyez sur Vérifier. Si un élément
 échoue, changez une seule chose dans le prompt, relancez-le dans une nouvelle
 conversation, et vérifiez de nouveau. Arrêtez-vous quand le rapport indique
-`4 of 4 items pass`. Quinze minutes suffisent. Le faire une fois face à un
+`éléments acceptés : 4 sur 4`. Quinze minutes suffisent. Le faire une fois face à un
 vérificateur avec lequel on ne peut pas discuter vous amène, la fois
 suivante, à nommer les champs avant le premier essai.
 

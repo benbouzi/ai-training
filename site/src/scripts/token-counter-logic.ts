@@ -62,17 +62,17 @@ export function countWords(text: string): number {
 	return trimmed === '' ? 0 : trimmed.split(/\s+/).length;
 }
 
-/** A whole number with a comma between each group of three digits, as Python's `f"{n:,}"` writes it. */
+/** `thousands` in `pages_per_window.py`: a whole number with a space between each group of three digits. */
 export function grouped(n: number): string {
-	return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
 /** `report` in `count_tokens.py`: the three lines about `text`. */
 export function countReport(text: string): string[] {
 	return [
-		`characters: ${codePoints(text)}`,
-		`words: ${countWords(text)}`,
-		`tokens (estimate): ${estimateTokens(text)}`,
+		`caractères : ${codePoints(text)}`,
+		`mots : ${countWords(text)}`,
+		`jetons (estimation) : ${estimateTokens(text)}`,
 	];
 }
 
@@ -83,9 +83,11 @@ export function countReport(text: string): string[] {
  * line alone.
  */
 export function pagesReport(tokensPerPage: number): string[] {
-	const lines = [`one page: ${tokensPerPage} tokens`];
+	const lines = [`une page : ${tokensPerPage} jetons`];
 	if (tokensPerPage <= 0) return lines;
-	for (const window of WINDOWS)
-		lines.push(`${grouped(window)}-token window: ${grouped(Math.floor(window / tokensPerPage))} pages`);
+	for (const window of WINDOWS) {
+		const pages = Math.floor(window / tokensPerPage);
+		lines.push(`fenêtre de ${grouped(window)} jetons : ${grouped(pages)} ${pages > 1 ? 'pages' : 'page'}`);
+	}
 	return lines;
 }

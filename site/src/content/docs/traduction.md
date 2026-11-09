@@ -27,11 +27,11 @@ détail, y compris l’origine des contenus tiers.
 ## Ce qui a changé
 
 Les textes des leçons, les définitions du glossaire, les fiches de
-compétences et les libellés de l’interface sont traduits en français. Les
-adresses des pages, les identifiants internes, les exemples de code et les
-sorties de programme restent en anglais, pour que les liens et les exercices
-fonctionnent comme dans la version d’origine. Les références bibliographiques
-gardent leur titre original.
+compétences, les libellés de l’interface et ce qu’affichent les petits
+programmes d’exemple sont traduits en français. Les adresses des pages, les
+identifiants internes et le code restent en anglais, pour que les liens et
+les exercices fonctionnent comme dans la version d’origine. Les références
+bibliographiques gardent leur titre original.
 
 La traduction a été faite avec l’aide d’un assistant d’IA, puis relue. Un
 lexique fixe la traduction des termes techniques pour qu’ils restent les mêmes

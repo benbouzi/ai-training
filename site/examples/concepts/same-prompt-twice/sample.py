@@ -22,15 +22,15 @@ import math
 import random
 import sys
 
-QUESTION = "What is the capital of Australia?"
+QUESTION = "Quelle est la capitale de l’Australie ?"
 
 # Candidate answers and their scores. The numbers are invented, like the
 # widget's, and only their order and distance matter.
 CANDIDATES = [
     ("Canberra", 3.0),
     ("Canberra.", 2.4),
-    ("The capital of Australia is Canberra.", 2.0),
-    ("It's Canberra.", 1.2),
+    ("La capitale de l’Australie est Canberra.", 2.0),
+    ("C’est Canberra.", 1.2),
     ("Sydney", 0.4),
 ]
 
@@ -65,6 +65,11 @@ def pick(rng, temperature, jitter):
     return CANDIDATES[-1][0]
 
 
+def essais(n):
+    """`n essai` or `n essais`: the French plural from 2 on."""
+    return f"{n} essai{'s' if n > 1 else ''}"
+
+
 def passes(answer):
     """The check a workflow can apply: the answer names Canberra, in any wording."""
     return "canberra" in answer.lower()
@@ -86,18 +91,20 @@ def main(argv):
     answers = [pick(rng, args.temperature, args.jitter) for _ in range(args.runs)]
 
     if not args.quiet:
-        print(f"{QUESTION} (temperature {args.temperature:.1f}, {args.runs} runs)")
+        print(f"{QUESTION} (température {args.temperature:.1f}, {essais(args.runs)})")
         for i, answer in enumerate(answers, start=1):
             if args.check:
-                mark = "pass" if passes(answer) else "FAIL"
-                print(f"{i:>2}  {mark}  {answer}")
+                mark = "ok" if passes(answer) else "ÉCHEC"
+                print(f"{i:>2}  {mark:<5}  {answer}")
             else:
                 print(f"{i:>2}  {answer}")
     same = sum(1 for a in answers if a == answers[0])
-    print(f"{same} of {len(answers)} runs give the same answer as run 1")
+    verb = "donnent" if same > 1 else "donne"
+    print(f"{essais(same)} sur {len(answers)} {verb} la même réponse que l’essai 1")
     if args.check:
         ok = sum(1 for a in answers if passes(a))
-        print(f"{ok} of {len(answers)} runs pass the check: the answer names Canberra")
+        verb = "passent" if ok > 1 else "passe"
+        print(f"{essais(ok)} sur {len(answers)} {verb} le contrôle : la réponse nomme Canberra")
     return 0
 
 

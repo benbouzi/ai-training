@@ -15,26 +15,26 @@ const SAMPLE = join(import.meta.dirname, '../../examples/concepts/context-window
 describe('countReport', () => {
 	it('prints the three lines count_tokens.py prints for the lesson sample', () => {
 		expect(countReport(readFileSync(SAMPLE, 'utf8'))).toEqual([
-			'characters: 460',
-			'words: 80',
-			'tokens (estimate): 115',
+			'caractères : 505',
+			'mots : 86',
+			'jetons (estimation) : 141',
 		]);
 	});
 	it('counts an empty text as zero of each', () => {
-		expect(countReport('')).toEqual(['characters: 0', 'words: 0', 'tokens (estimate): 0']);
+		expect(countReport('')).toEqual(['caractères : 0', 'mots : 0', 'jetons (estimation) : 0']);
 	});
 	it('counts each punctuation mark as a token of its own', () => {
-		expect(countReport('Hello, world!')).toEqual(['characters: 13', 'words: 2', 'tokens (estimate): 4']);
+		expect(countReport('Hello, world!')).toEqual(['caractères : 13', 'mots : 2', 'jetons (estimation) : 4']);
 	});
 	it('counts characters as code points, and long words, underscores and non-ASCII letters as Python does', () => {
 		expect(countReport('internationalization _underscored_name ünïcödéwörd 12345678 😀 x')).toEqual([
-			'characters: 63',
-			'words: 6',
-			'tokens (estimate): 13',
+			'caractères : 63',
+			'mots : 6',
+			'jetons (estimation) : 13',
 		]);
 	});
 	it('splits words on any run of whitespace, as str.split() does', () => {
-		expect(countReport('  two\twords\n')).toEqual(['characters: 12', 'words: 2', 'tokens (estimate): 2']);
+		expect(countReport('  two\twords\n')).toEqual(['caractères : 12', 'mots : 2', 'jetons (estimation) : 2']);
 	});
 });
 
@@ -60,40 +60,40 @@ describe('grouped', () => {
 	it('writes the thousands the way Python f"{n:,}" does', () => {
 		expect(grouped(0)).toBe('0');
 		expect(grouped(999)).toBe('999');
-		expect(grouped(1739)).toBe('1,739');
-		expect(grouped(1_000_000)).toBe('1,000,000');
+		expect(grouped(1739)).toBe('1 739');
+		expect(grouped(1_000_000)).toBe('1 000 000');
 	});
 });
 
 describe('pagesReport', () => {
 	it('prints the lines pages_per_window.py prints for the sample count', () => {
-		expect(pagesReport(115)).toEqual([
-			'one page: 115 tokens',
-			'8,000-token window: 69 pages',
-			'32,000-token window: 278 pages',
-			'200,000-token window: 1,739 pages',
-			'1,000,000-token window: 8,695 pages',
+		expect(pagesReport(141)).toEqual([
+			'une page : 141 jetons',
+			'fenêtre de 8 000 jetons : 56 pages',
+			'fenêtre de 32 000 jetons : 226 pages',
+			'fenêtre de 200 000 jetons : 1 418 pages',
+			'fenêtre de 1 000 000 jetons : 7 092 pages',
 		]);
 	});
 	it('prints the numbers of the exercise example, a page of 750 tokens', () => {
 		expect(pagesReport(750)).toEqual([
-			'one page: 750 tokens',
-			'8,000-token window: 10 pages',
-			'32,000-token window: 42 pages',
-			'200,000-token window: 266 pages',
-			'1,000,000-token window: 1,333 pages',
+			'une page : 750 jetons',
+			'fenêtre de 8 000 jetons : 10 pages',
+			'fenêtre de 32 000 jetons : 42 pages',
+			'fenêtre de 200 000 jetons : 266 pages',
+			'fenêtre de 1 000 000 jetons : 1 333 pages',
 		]);
 	});
 	it('writes the page count without grouping and a window too small as zero pages', () => {
 		expect(pagesReport(1_000_001)).toEqual([
-			'one page: 1000001 tokens',
-			'8,000-token window: 0 pages',
-			'32,000-token window: 0 pages',
-			'200,000-token window: 0 pages',
-			'1,000,000-token window: 0 pages',
+			'une page : 1000001 jetons',
+			'fenêtre de 8 000 jetons : 0 page',
+			'fenêtre de 32 000 jetons : 0 page',
+			'fenêtre de 200 000 jetons : 0 page',
+			'fenêtre de 1 000 000 jetons : 0 page',
 		]);
 	});
 	it('prints the page line alone for an empty page, where the Python script divides by zero', () => {
-		expect(pagesReport(0)).toEqual(['one page: 0 tokens']);
+		expect(pagesReport(0)).toEqual(['une page : 0 jetons']);
 	});
 });
