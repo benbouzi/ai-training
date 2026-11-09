@@ -14,7 +14,7 @@ assumes:
     section: la-précision-est-lindice
   - objective: safety/verifies-output/calibrates-trust
     lesson: safety/when-the-tool-is-usually-right
-    section: build-the-check-in
+    section: intégrer-la-vérification
 after: [safety/spotting-hallucination, safety/when-the-tool-is-usually-right]
 shorts: []
 exercise:

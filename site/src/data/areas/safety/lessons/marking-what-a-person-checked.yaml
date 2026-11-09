@@ -14,7 +14,7 @@ assumes:
     section: when-the-walk-cannot-finish
   - objective: safety/verifies-output/calibrates-trust
     lesson: safety/when-the-tool-is-usually-right
-    section: build-the-check-in
+    section: intégrer-la-vérification
 after: [safety/following-the-source]
 shorts: [Endorsed answers in the CS50 tutor]
 exercise:
