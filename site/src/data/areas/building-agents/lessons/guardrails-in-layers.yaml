@@ -16,7 +16,7 @@ assumes:
     section: one-page-three-permission-sets
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/sizing-the-blast-radius
-    section: place-the-approval-on-the-row-that-cant-be-undone
+    section: placer-lapprobation-sur-la-ligne-irréversible
   - objective: safety/judges-agent-risk/sets-oversight
     lesson: safety/reading-agent-logs
     section: what-the-log-must-hold-and-who-reads-it

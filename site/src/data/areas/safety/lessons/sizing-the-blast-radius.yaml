@@ -1,8 +1,8 @@
 id: safety/sizing-the-blast-radius
-title: Sizing an agent's blast radius
+title: Mesurer le rayon d’impact d’un agent
 description: >-
-  Read an agent's permission list as read, write and send rows, cut it down to the task, and put the
-  one approval on the row that can't be undone.
+  Lire la liste de permissions d’un agent en lignes de lecture, d’écriture et d’envoi, la réduire
+  à la tâche, et placer la seule approbation sur la ligne irréversible.
 mode: tutorial
 covers: safety/agent-risk
 serves:
@@ -14,15 +14,16 @@ assumes:
     lesson: concepts/agent-loop
     section: un-modèle-dans-une-boucle-avec-deux-outils
 extends-to:
-  - label: Tracing a planted instruction to the tool that leaks
+  - label: Suivre une instruction placée jusqu’à l’outil qui fuit
     href: /safety/tracing-a-planted-instruction/
 after: [safety/agent-risk, safety/checking-what-an-agent-changed]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Pick a task you would like an agent to do. Write its permission list as read, write and send
-    rows, cross out what the task does not need, and mark the row where a person approves.
+    Choisir une tâche que vous aimeriez confier à un agent. Écrire sa liste de permissions en lignes
+    de lecture, d’écriture et d’envoi, barrer ce dont la tâche n’a pas besoin, et marquer la ligne
+    où une personne approuve.
 sources: [AEC-10]
 issue: 130
 minutes: 15
