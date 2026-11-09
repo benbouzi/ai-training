@@ -1,8 +1,8 @@
 id: using-agents/delegating
-title: Delegating a task to an agent
+title: Déléguer une tâche à un agent
 description: >-
-  Write a brief, choose how much the agent may do on its own, and review the result against what you
-  asked for.
+  Rédiger une consigne, choisir ce que l’agent peut faire seul, et vérifier le résultat au regard
+  de ce que vous avez demandé.
 mode: tutorial
 covers: using-agents/delegating
 serves:
@@ -15,16 +15,19 @@ assumes:
     lesson: concepts/how-models-work
     section: un-jeton-à-la-fois
 extends-to:
-  - label: Decomposing work
+  - label: Découper le travail
     href: /using-agents/decomposition/
-  - label: "Agents and Workflows: a lab where an agent works on a folder of sample files and you review the document it writes (OpenAI Academy, free account)"
+  - label: >-
+      Agents and Workflows : un atelier où un agent travaille sur un dossier de fichiers d’exemple et
+      où vous relisez le document qu’il rédige (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/agents-and-workflows-y0qoc
 after: []
-shorts: [Done-criteria before the work]
+shorts: [Les critères d’achèvement avant le travail]
 exercise:
   kind: do
   brief: >-
-    Delegate the memo summary from the lesson with a brief, then walk the done-criteria one by one.
+    Déléguer le résumé de la note de la leçon avec une consigne, puis cocher les critères
+    d’achèvement un par un.
 sources:
   - Academy introduction-to-claude-cowork
   - Academy ai-fluency-framework-foundations

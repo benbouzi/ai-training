@@ -16,7 +16,7 @@ assumes:
     section: le-rayon-dimpact
   - objective: using-agents/delegates-and-checks/writes-a-brief
     lesson: using-agents/delegating
-    section: writing-the-brief
+    section: écrire-la-consigne
 extends-to:
   - label: Sizing the blast radius
     href: /safety/sizing-the-blast-radius/
