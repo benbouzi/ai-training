@@ -25,42 +25,42 @@ import { describe, expect, it } from 'vitest';
 
 /** Run 1 as `both_runs.py` prints it. */
 const RUN_1 = [
-	'Run 1',
-	'   1. shortlist  score 24  Arvel Dunmoor   list A  (experience 7, certificates 2, gap 3)',
-	'   2. shortlist  score 23  Fenwick Sabani  list A  (experience 7, certificates 2, gap 4)',
-	'   3. shortlist  score 18  Pell Varnava    list B  (experience 6, certificates 1, gap 2)',
-	'   4. shortlist  score 17  Brisa Okonde    list A  (experience 6, certificates 0, gap 3)',
-	'   5. shortlist  score 16  Nadir Kesrou    list B  (experience 5, certificates 1, gap 1)',
-	'   6. shortlist  score 16  Corin Halvane   list A  (experience 5, certificates 0, gap 1)',
-	'   7.            score 15  Rashon Belka    list B  (experience 4, certificates 2, gap 1)',
-	'   8.            score 14  Quilla Tallent  list B  (experience 4, certificates 1, gap 0)',
-	'   9.            score 13  Dessa Tesfay    list A  (experience 4, certificates 1, gap 3)',
-	'  10.            score 11  Oriel Morrow    list B  (experience 3, certificates 2, gap 2)',
-	'  11.            score 10  Marisel Adair   list B  (experience 4, certificates 1, gap 4)',
-	'  12.            score  9  Elior Vance     list A  (experience 2, certificates 2, gap 3)',
-	'  shortlisted: list A 4, list B 2',
+	'Passage 1',
+	'   1. retenu  score 24  Arvel Dunmoor   liste A  (expérience 7, certificats 2, interruption 3)',
+	'   2. retenu  score 23  Fenwick Sabani  liste A  (expérience 7, certificats 2, interruption 4)',
+	'   3. retenu  score 18  Pell Varnava    liste B  (expérience 6, certificats 1, interruption 2)',
+	'   4. retenu  score 17  Brisa Okonde    liste A  (expérience 6, certificats 0, interruption 3)',
+	'   5. retenu  score 16  Nadir Kesrou    liste B  (expérience 5, certificats 1, interruption 1)',
+	'   6. retenu  score 16  Corin Halvane   liste A  (expérience 5, certificats 0, interruption 1)',
+	'   7.         score 15  Rashon Belka    liste B  (expérience 4, certificats 2, interruption 1)',
+	'   8.         score 14  Quilla Tallent  liste B  (expérience 4, certificats 1, interruption 0)',
+	'   9.         score 13  Dessa Tesfay    liste A  (expérience 4, certificats 1, interruption 3)',
+	'  10.         score 11  Oriel Morrow    liste B  (expérience 3, certificats 2, interruption 2)',
+	'  11.         score 10  Marisel Adair   liste B  (expérience 4, certificats 1, interruption 4)',
+	'  12.         score  9  Elior Vance     liste A  (expérience 2, certificats 2, interruption 3)',
+	'  retenus : liste A 4, liste B 2',
 ];
 
 /** Run 2 as `both_runs.py` prints it. */
 const RUN_2 = [
-	'Run 2: the same records, names swapped',
-	'   1. shortlist  score 22  Marisel Adair   list B  (experience 7, certificates 2, gap 3)',
-	'   2. shortlist  score 21  Rashon Belka    list B  (experience 7, certificates 2, gap 4)',
-	'   3. shortlist  score 20  Dessa Tesfay    list A  (experience 6, certificates 1, gap 2)',
-	'   4. shortlist  score 18  Brisa Okonde    list A  (experience 5, certificates 1, gap 1)',
-	'   5. shortlist  score 17  Fenwick Sabani  list A  (experience 4, certificates 2, gap 1)',
-	'   6. shortlist  score 16  Elior Vance     list A  (experience 4, certificates 1, gap 0)',
-	'   7.            score 15  Nadir Kesrou    list B  (experience 6, certificates 0, gap 3)',
-	'   8.            score 14  Oriel Morrow    list B  (experience 5, certificates 0, gap 1)',
-	'   9.            score 13  Corin Halvane   list A  (experience 3, certificates 2, gap 2)',
-	'  10.            score 12  Arvel Dunmoor   list A  (experience 4, certificates 1, gap 4)',
-	'  11.            score 11  Pell Varnava    list B  (experience 4, certificates 1, gap 3)',
-	'  12.            score  7  Quilla Tallent  list B  (experience 2, certificates 2, gap 3)',
-	'  shortlisted: list A 4, list B 2',
+	'Passage 2 : les mêmes dossiers, noms échangés',
+	'   1. retenu  score 22  Marisel Adair   liste B  (expérience 7, certificats 2, interruption 3)',
+	'   2. retenu  score 21  Rashon Belka    liste B  (expérience 7, certificats 2, interruption 4)',
+	'   3. retenu  score 20  Dessa Tesfay    liste A  (expérience 6, certificats 1, interruption 2)',
+	'   4. retenu  score 18  Brisa Okonde    liste A  (expérience 5, certificats 1, interruption 1)',
+	'   5. retenu  score 17  Fenwick Sabani  liste A  (expérience 4, certificats 2, interruption 1)',
+	'   6. retenu  score 16  Elior Vance     liste A  (expérience 4, certificats 1, interruption 0)',
+	'   7.         score 15  Nadir Kesrou    liste B  (expérience 6, certificats 0, interruption 3)',
+	'   8.         score 14  Oriel Morrow    liste B  (expérience 5, certificats 0, interruption 1)',
+	'   9.         score 13  Corin Halvane   liste A  (expérience 3, certificats 2, interruption 2)',
+	'  10.         score 12  Arvel Dunmoor   liste A  (expérience 4, certificats 1, interruption 4)',
+	'  11.         score 11  Pell Varnava    liste B  (expérience 4, certificats 1, interruption 3)',
+	'  12.         score  7  Quilla Tallent  liste B  (expérience 2, certificats 2, interruption 3)',
+	'  retenus : liste A 4, liste B 2',
 ];
 
 /** The last line `both_runs.py` and `totals.py` print. */
-const TOTALS = 'shortlisted over both runs: list A 8, list B 4';
+const TOTALS = 'retenus sur les deux passages : liste A 8, liste B 4';
 
 describe('the ranker at the bonus rank.py fixes', () => {
 	it('starts at 2 points, the LIST_A_BONUS of rank.py, and offers up to 6', () => {
@@ -76,9 +76,9 @@ describe('the ranker at the bonus rank.py fixes', () => {
 describe('the ranker at other bonuses', () => {
 	it('gives equal totals with no bonus, because both runs shortlist the same records', () => {
 		const report = rankBoth(0);
-		expect(report.totals).toBe('shortlisted over both runs: list A 6, list B 6');
+		expect(report.totals).toBe('retenus sur les deux passages : liste A 6, liste B 6');
 		const shortlisted = (lines: string[]) =>
-			lines.filter((line) => line.includes('shortlist  score')).map((line) => line.slice(line.indexOf('(')));
+			lines.filter((line) => line.includes('retenu  score')).map((line) => line.slice(line.indexOf('(')));
 		expect(shortlisted(report.runs[0] ?? []).sort()).toEqual(shortlisted(report.runs[1] ?? []).sort());
 	});
 	it('has a tie at the shortlist line at 1 point in both runs and at 5 points in run 1 only', () => {
@@ -96,9 +96,9 @@ describe('the ranker at other bonuses', () => {
 		]);
 	});
 	it('shows one point in the totals, and a larger slant at 6 points', () => {
-		expect(rankBoth(1).totals).toBe('shortlisted over both runs: list A 7, list B 5');
+		expect(rankBoth(1).totals).toBe('retenus sur les deux passages : liste A 7, liste B 5');
 		for (const bonus of [3, 4, 5]) expect(rankBoth(bonus).totals).toBe(TOTALS);
-		expect(rankBoth(6).totals).toBe('shortlisted over both runs: list A 9, list B 3');
+		expect(rankBoth(6).totals).toBe('retenus sur les deux passages : liste A 9, liste B 3');
 	});
 });
 
@@ -135,8 +135,8 @@ describe('the parts of the ranker', () => {
 		const lines = rankingLines('T', [{ score: 7, index: 8, name: 'Quilla Tallent' }]);
 		expect(lines).toEqual([
 			'T',
-			'   1. shortlist  score  7  Quilla Tallent  list B  (experience 2, certificates 2, gap 3)',
+			'   1. retenu  score  7  Quilla Tallent  liste B  (expérience 2, certificats 2, interruption 3)',
 		]);
-		expect(totalsLine({ A: 1, B: 2 }, { A: 3, B: 4 })).toBe('shortlisted over both runs: list A 4, list B 6');
+		expect(totalsLine({ A: 1, B: 2 }, { A: 3, B: 4 })).toBe('retenus sur les deux passages : liste A 4, liste B 6');
 	});
 });

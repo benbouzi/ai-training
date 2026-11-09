@@ -15,7 +15,7 @@
 /** `SHORTLIST` in `rank.py`: how many records make the shortlist. */
 export const SHORTLIST = 6;
 
-/** One candidate record: years of experience, certificates, and months since the last role (printed as `gap`). */
+/** One candidate record: years of experience, certificates, and months since the last role (printed as `interruption`). */
 export type CandidateRecord = readonly [years: number, certificates: number, gapMonths: number];
 
 /** `RECORDS` in `rank.py`. */
@@ -115,10 +115,10 @@ export function rankingLines(title: string, ranking: readonly Ranked[]): string[
 	ranking.forEach(({ score, index, name }, i) => {
 		const position = i + 1;
 		const [years, certificates, gapMonths] = RECORDS[index] ?? [0, 0, 0];
-		const marker = position <= SHORTLIST ? 'shortlist' : ' '.repeat(9);
+		const marker = position <= SHORTLIST ? 'retenu' : ' '.repeat(6);
 		lines.push(
-			`  ${pad2(position)}. ${marker}  score ${pad2(score)}  ${name.padEnd(15)} list ${groupOf(name)}` +
-				`  (experience ${years}, certificates ${certificates}, gap ${gapMonths})`,
+			`  ${pad2(position)}. ${marker}  score ${pad2(score)}  ${name.padEnd(15)} liste ${groupOf(name)}` +
+				`  (expérience ${years}, certificats ${certificates}, interruption ${gapMonths})`,
 		);
 	});
 	return lines;
@@ -126,7 +126,7 @@ export function rankingLines(title: string, ranking: readonly Ranked[]): string[
 
 /** `totals_line` in `rank.py`: the shortlist places per list over both runs. */
 export function totalsLine(run1: { A: number; B: number }, run2: { A: number; B: number }): string {
-	return `shortlisted over both runs: list A ${run1.A + run2.A}, list B ${run1.B + run2.B}`;
+	return `retenus sur les deux passages : liste A ${run1.A + run2.A}, liste B ${run1.B + run2.B}`;
 }
 
 /** What one press shows: the lines of each run, and the totals line. */
@@ -143,10 +143,10 @@ export function rankBoth(bonus: number = DEFAULT_BONUS): RankerReport {
 	const run2 = tally(ranking2);
 	return {
 		runs: [
-			[...rankingLines('Run 1', ranking1), `  shortlisted: list A ${run1.A}, list B ${run1.B}`],
+			[...rankingLines('Passage 1', ranking1), `  retenus : liste A ${run1.A}, liste B ${run1.B}`],
 			[
-				...rankingLines('Run 2: the same records, names swapped', ranking2),
-				`  shortlisted: list A ${run2.A}, list B ${run2.B}`,
+				...rankingLines('Passage 2 : les mêmes dossiers, noms échangés', ranking2),
+				`  retenus : liste A ${run2.A}, liste B ${run2.B}`,
 			],
 		],
 		totals: totalsLine(run1, run2),

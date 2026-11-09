@@ -96,7 +96,11 @@ def annotate(text: str) -> tuple[str, list[str]]:
     added = []
     for fr, en in TERMES:
         after = r"(?! d’accès)" if fr == "jeton" else ""
-        word = r"(?<![\w’-])(" + re.escape(fr) + r")(s|x)?(?![\w’-])"
+        # A multi-word term takes its plural mark on the first word
+        # (« grilles d’évaluation »).
+        head, _, tail = fr.partition(" ")
+        body = re.escape(head) + r"(?:s|x)?" + re.escape(" " + tail) if tail else re.escape(fr)
+        word = r"(?<![\w’-])(" + body + r")(s|x)?(?![\w’-])"
         pat = re.compile(word + after, re.IGNORECASE)
         done = False
         for i in prose:
@@ -113,7 +117,8 @@ def annotate(text: str) -> tuple[str, list[str]]:
                 if re.match(r"\s*»?\s*\(", rest):
                     done = True
                     break
-                word = en + "s" if m.group(2) and not en.endswith("s") else en
+                plural = m.group(2) or len(m.group(1)) > len(fr)
+                word = en + "s" if plural and not en.endswith("s") else en
                 lines[i] = lines[i][:end] + f" ({word})" + lines[i][end:]
                 added.append(f"{fr} ({word})")
                 done = True

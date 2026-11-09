@@ -162,10 +162,10 @@ test('the bias-in-patterns ranker prints the rankings the page shows, and equal 
 	const widget = page.locator('[data-bias-in-patterns-ranker]');
 	await expect(widget).toHaveCount(1);
 	await expect(widget.locator('output')).toHaveText('2');
-	await widget.getByRole('button', { name: 'Rank both runs' }).click();
+	await widget.getByRole('button', { name: 'Classer les deux passages' }).click();
 	// A code block's innerText renders a blank line differently from a plain pre, so both sides drop blank lines.
 	const lines = (text: string) => text.split('\n').filter((line) => line.trim() !== '');
-	const fence = page.locator('pre[data-language=text]').filter({ hasText: 'shortlisted over both runs:' });
+	const fence = page.locator('pre[data-language=text]').filter({ hasText: 'retenus sur les deux passages :' });
 	await expect(fence).toHaveCount(1);
 	const shown = [
 		...lines(await widget.locator('.bp-runs').innerText()),
@@ -174,6 +174,6 @@ test('the bias-in-patterns ranker prints the rankings the page shows, and equal 
 	expect(shown).toEqual(lines(await fence.innerText()));
 	await widget.locator('input[type=range]').fill('0');
 	await expect(widget.locator('.bp-totals')).toBeEmpty();
-	await widget.getByRole('button', { name: 'Rank both runs' }).click();
-	await expect(widget.locator('.bp-totals')).toHaveText('shortlisted over both runs: list A 6, list B 6');
+	await widget.getByRole('button', { name: 'Classer les deux passages' }).click();
+	await expect(widget.locator('.bp-totals')).toHaveText('retenus sur les deux passages : liste A 6, liste B 6');
 });

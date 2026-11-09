@@ -62,8 +62,8 @@ describe('mountBiasInPatternsRanker', () => {
 		const report = rankBoth(2);
 		const runs = part(root, '.bp-runs').textContent ?? '';
 		expect(runs).toBe(`${report.runs[0]?.join('\n')}\n\n${report.runs[1]?.join('\n')}`);
-		expect(runs.split('\n')[0]).toBe('Run 1');
-		expect(part(root, '.bp-totals').textContent).toBe('shortlisted over both runs: list A 8, list B 4');
+		expect(runs.split('\n')[0]).toBe('Passage 1');
+		expect(part(root, '.bp-totals').textContent).toBe('retenus sur les deux passages : liste A 8, liste B 4');
 	});
 	it('clears the report when the slider moves, and ranks at the new bonus on the next press', async () => {
 		const root = await show();
@@ -74,7 +74,7 @@ describe('mountBiasInPatternsRanker', () => {
 		expect(part(root, '.bp-runs').textContent).toBe('');
 		expect(part(root, '.bp-totals').textContent).toBe('');
 		press(root);
-		expect(part(root, '.bp-totals').textContent).toBe('shortlisted over both runs: list A 6, list B 6');
+		expect(part(root, '.bp-totals').textContent).toBe('retenus sur les deux passages : liste A 6, liste B 6');
 	});
 	it('mounts none on a page without the widget, and throws when the markup lacks a part', () => {
 		document.body.innerHTML = '<p>no widget</p>';
