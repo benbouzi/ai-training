@@ -1,259 +1,281 @@
 import { Choice, Sort, Scenario, Repair, Pitfall, Exercise, Recap, Habit, Prompt, Response } from '@components/lesson';
 
-In this lesson we bring a chat assistant a decision and ask it what to do.
-Then we ask again, this time for help with our own thinking. We ask for
-the case against the option we lean toward and for the questions we
-haven't answered. By the end you have a short brief you can use
-whenever you want an assistant as a thought partner rather than as a
-source of answers.
+Dans cette leçon, nous soumettons une décision à un assistant
+conversationnel et lui demandons quoi faire. Puis nous recommençons, cette
+fois pour obtenir de l’aide dans notre propre réflexion. Nous demandons les
+arguments contre l’option vers laquelle nous penchons et les questions
+auxquelles nous n’avons pas répondu. À la fin, vous avez une courte consigne
+à utiliser chaque fois que vous voulez faire d’un assistant un partenaire de
+réflexion plutôt qu’une source de réponses.
 
-The safety course showed that a model often agrees with a plan you have
-shown you prefer, and it taught you to [ask for the case against first](/safety/asking-a-model-to-disagree/#des-habitudes-du-côté-du-prompt).
-This lesson uses that habit for a different job. The goal is to think a
-choice through, before you have made it.
+Le cours sur la sécurité a montré qu’un modèle approuve souvent un projet
+dont vous avez montré que vous le préférez, et vous a appris à
+[demander d’abord les arguments contre](/safety/asking-a-model-to-disagree/#des-habitudes-du-côté-du-prompt).
+Cette leçon met cette habitude au service d’un autre travail. L’objectif est
+de réfléchir à fond à un choix, avant de l’avoir fait.
 
-You need any chat assistant you already have access to. Every exchange on
-this page is illustrative. The author wrote it to show the pattern, and
-your assistant gives different words.
+Il vous faut n’importe quel assistant conversationnel auquel vous avez déjà
+accès. Chaque échange de cette page est illustratif. L’auteur l’a écrit pour
+montrer le schéma, et votre assistant emploiera d’autres mots.
 
-## The decision
+## La décision
 
-Suppose you have two job offers and must answer both by Friday. You write
-the situation down the way most people would, in a few lines, as it feels
-to you today.
+Imaginons que vous ayez deux offres d’emploi et deviez répondre aux deux
+d’ici vendredi. Vous écrivez la situation comme le feraient la plupart des
+gens, en quelques lignes, telle que vous la ressentez aujourd’hui.
 
-> Offer A is a product analyst job at a software startup with about 40
-> people. The product is exciting, I got along well with the team in the
-> interview, and the salary is 10 percent above my current salary. The work
-> is mostly remote.
+> L’offre A est un poste d’analyste produit dans une jeune entreprise de
+> logiciels d’environ 40 personnes. Le produit est enthousiasmant, je me suis
+> bien entendu avec l’équipe pendant l’entretien, et le salaire est 10 %
+> au-dessus de mon salaire actuel. Le travail se fait surtout à distance.
 >
-> Offer B is a data analyst job at a large insurance company. It is
-> stable, but the interviews felt slow and formal, and the office is 50
-> minutes away by train, three days a week. The salary is the same as now.
+> L’offre B est un poste d’analyste de données dans une grande compagnie
+> d’assurance. C’est stable, mais les entretiens m’ont paru lents et
+> formels, et le bureau est à 50 minutes en train, trois jours par semaine.
+> Le salaire est le même qu’aujourd’hui.
 
-Before you read on, predict what an assistant says when you paste those
-lines and ask which offer to take. Which offer does it pick, and where do
-its reasons come from?
+Avant de poursuivre, prédisez ce que dit un assistant quand vous collez ces
+lignes et demandez quelle offre accepter. Quelle offre choisit-il, et d’où
+viennent ses raisons ?
 
-## Ask what to do
+## Demander quoi faire
 
 <Prompt model="illustrative" recorded="illustrative">
-I have two job offers and need to answer by Friday. Which one should I
-take?
+J’ai deux offres d’emploi et je dois répondre d’ici vendredi. Laquelle
+devrais-je accepter ?
 
-[the two offers, as written above]
+[les deux offres, telles qu’écrites ci-dessus]
 </Prompt>
 <Response>
-Based on what you describe, Offer A sounds like the better fit. You
-got along well with the team, the product excites you, and a 10 percent raise
-with mostly remote work is a real improvement. Offer B is stable, but a
-long commute three days a week and a slow, formal culture can tire you
-over time. Go with Offer A, and ask the startup a few questions
-about its plans before you sign.
+D’après ce que vous décrivez, l’offre A semble mieux vous convenir. Vous vous
+êtes bien entendu avec l’équipe, le produit vous enthousiasme, et une hausse
+de 10 % avec un travail surtout à distance est une vraie amélioration.
+L’offre B est stable, mais un long trajet trois jours par semaine et une
+culture lente et formelle peuvent vous user avec le temps. Choisissez
+l’offre A, et posez à la jeune entreprise quelques questions sur ses projets
+avant de signer.
 </Response>
 
-Read the reasons in the answer and look for them in the description.
-Every one is there, most of them in your own words: "got along well", "exciting",
-"slow and formal". The question didn't say "I've decided" or "right?",
-and the description still led the model. The description gave Offer A
-the warm words and Offer B the costs, and the answer handed that
-selection back to you as advice. The model knows about your situation
-only what you wrote, and assistants often give
-feedback that matches the view the user has shown (@Sharma 2023).
+Lisez les raisons de la réponse et cherchez-les dans la description. Toutes
+y sont, la plupart dans vos propres mots : « bien entendu »,
+« enthousiasmant », « lents et formels ». La question ne disait pas « j’ai
+décidé » ni « n’est-ce pas ? », et la description a quand même orienté le
+modèle. Elle donnait les mots chaleureux à l’offre A et les coûts à
+l’offre B, et la réponse vous a rendu cette sélection sous forme de conseil.
+Le modèle ne sait de votre situation que ce que vous avez écrit, et les
+assistants donnent souvent un avis conforme au point de vue que
+l’utilisateur a montré (@Sharma 2023).
 
-The answer also told you nothing new. You already knew you liked the
-startup. You needed the part of the decision you hadn't looked at yet,
-and a question that asks for a verdict doesn't ask for that.
+La réponse ne vous a non plus rien appris. Vous saviez déjà que la jeune
+entreprise vous plaisait. Il vous fallait la partie de la décision que vous
+n’aviez pas encore regardée, et une question qui demande un verdict ne
+demande pas cela.
 
 <Choice id="where-the-verdict-came-from" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['thought-partner', 'sycophancy']}
-  context="A learner described two job offers, Offer A at a startup and Offer B at an insurance company, to a chat assistant in a few lines, the way they felt about them that day, and asked which to take. The assistant recommended the startup."
-  title="What would you change before asking again?" hint="Which words in the description tell the model which offer you prefer?"
+  context="Un apprenant a décrit à un assistant conversationnel deux offres d’emploi, l’offre A dans une jeune entreprise et l’offre B dans une compagnie d’assurance, en quelques lignes, telles qu’il les ressentait ce jour-là, et a demandé laquelle accepter. L’assistant a recommandé la jeune entreprise."
+  title="Que changeriez-vous avant de reposer la question ?" hint="Quels mots de la description disent au modèle quelle offre vous préférez ?"
   options={[
-    { text: 'Add a few lines on why Offer A appeals to you, so the model understands your reasons better.', why: 'More reasons for Offer A give the model more of your own view to hand back as advice.' },
-    { text: 'Keep the description, and add a line asking the model to be honest and objective about both.', why: 'A request for objectivity leaves the facts as they were, and the model can only work from those facts.' },
-    { text: 'Give both offers the same kinds of facts, and drop words such as "exciting" or "slow and formal".', correct: true },
-    { text: 'Put Offer B first, so that the model gives the startup less weight than it did this time.', why: 'The reasons in the answer match the words used for each offer, which the order of the offers does not explain.' },
+    { text: 'Ajouter quelques lignes sur ce qui vous attire dans l’offre A, pour que le modèle comprenne mieux vos raisons.', why: 'Plus de raisons en faveur de l’offre A donnent au modèle davantage de votre propre point de vue à vous rendre sous forme de conseil.' },
+    { text: 'Garder la description, et ajouter une ligne demandant au modèle d’être honnête et objectif sur les deux.', why: 'Une demande d’objectivité laisse les faits tels qu’ils étaient, et le modèle ne peut travailler qu’à partir de ces faits.' },
+    { text: 'Donner aux deux offres le même type de faits, et retirer des mots comme « enthousiasmant » ou « lents et formels ».', correct: true },
+    { text: 'Placer l’offre B en premier, pour que le modèle accorde moins de poids à la jeune entreprise que cette fois.', why: 'Les raisons de la réponse suivent les mots employés pour chaque offre, ce que l’ordre des offres n’explique pas.' },
   ]}>
-You got your own framing back as advice. Before you ask the assistant
-again, what is the best change to the description?
+Votre propre cadrage vous est revenu sous forme de conseil. Avant de reposer
+la question à l’assistant, quel est le meilleur changement à apporter à la
+description ?
 </Choice>
 
-## Ask for help thinking
+## Demander de l’aide pour réfléchir
 
-Now write the request as a brief for a thinking session. It says what
-you want from the conversation, which is help with your own thinking and
-no decision. The facts come without the adjectives, and your lean is
-named as a lean. Then the brief asks for the case against that option
-and for the questions your facts leave open. It also asks what each
-option costs. In the safety course you took your opinion out of the
-question to get an assessment. Here you state your lean openly, because
-the model needs to know which option to argue against. The brief still
-asks for no verdict.
+Écrivez maintenant la demande sous forme de consigne pour une séance de
+réflexion. Elle dit ce que vous attendez de la conversation, c’est-à-dire de
+l’aide dans votre propre réflexion et aucune décision. Les faits viennent
+sans les adjectifs, et votre préférence est nommée comme une préférence. Puis
+la consigne demande les arguments contre cette option et les questions que
+vos faits laissent ouvertes. Elle demande aussi ce que coûte chaque option.
+Dans le cours sur la sécurité, vous retiriez votre opinion de la question
+pour obtenir une évaluation. Ici, vous énoncez ouvertement votre préférence,
+parce que le modèle a besoin de savoir contre quelle option argumenter. La
+consigne ne demande toujours aucun verdict.
 
-State the lean without your reasons for it, and ask for the case against
-it first. In the safety course, a request that included the user's
-reasons got an argument and then a rebuttal of that argument. The lean
-is still a view that the model can drift toward, so read the case
-against for places where it softens its own points.
+Énoncez votre préférence sans les raisons qui la fondent, et demandez
+d’abord les arguments contre. Dans le cours sur la sécurité, une demande qui
+incluait les raisons de l’utilisateur obtenait un argument suivi de sa
+réfutation. Votre préférence reste un point de vue vers lequel le modèle peut
+dériver, donc lisez les arguments contre en cherchant les endroits où il
+atténue ses propres points.
 
 <Prompt model="illustrative" recorded="illustrative">
-I have two job offers and need to answer by Friday. I want help thinking
-this through, and I don't want you to decide for me.
+J’ai deux offres d’emploi et je dois répondre d’ici vendredi. Je veux de
+l’aide pour réfléchir, et je ne veux pas que tu décides à ma place.
 
-Offer A: product analyst at a software startup with about 40 people.
-Salary 10 percent above my current one. Mostly remote.
+Offre A : analyste produit dans une jeune entreprise de logiciels d’environ
+40 personnes. Salaire 10 % au-dessus de mon salaire actuel. Surtout à
+distance.
 
-Offer B: data analyst at a large insurance company. Salary the same as
-now. Office three days a week, 50 minutes each way by train.
+Offre B : analyste de données dans une grande compagnie d’assurance. Salaire
+identique à aujourd’hui. Bureau trois jours par semaine, à 50 minutes en
+train dans chaque sens.
 
-I lean toward Offer A. First, give me the strongest case against Offer A.
-Then list the questions my description doesn't answer that would matter
-for this choice. Then lay out what each offer costs me. Don't tell me
-which one to pick.
+Je penche pour l’offre A. Donne-moi d’abord les arguments les plus forts
+contre l’offre A. Puis liste les questions auxquelles ma description ne
+répond pas et qui compteraient pour ce choix. Puis expose ce que me coûte
+chaque offre. Ne me dis pas laquelle choisir.
 </Prompt>
 <Response>
 
 ```text
-The case against Offer A
-A company of 40 people can run short of money, and a 10 percent raise
-is worth little if the job ends within a year. Liking the team after one
-interview is weak evidence, because the people you met were selling the
-job. Remote work in a small team can mean less structure and fewer
-people to learn from.
+Les arguments contre l’offre A
+Une entreprise de 40 personnes peut manquer d’argent, et une hausse de 10 %
+vaut peu si le poste disparaît dans l’année. S’être bien entendu avec
+l’équipe après un entretien est un indice faible, parce que les personnes
+rencontrées vendaient le poste. Le travail à distance dans une petite équipe
+peut vouloir dire moins de cadre et moins de personnes dont apprendre.
 
-Questions your description doesn't answer
-- How long can the startup pay its staff with the money it has now?
-- How do pension, paid leave and sick pay compare between the two?
-- Is there a probation period, and what happens if either job ends early?
-- Where does each role lead in two or three years?
-- Can you work on the train, so that part of the commute counts as work?
-- Why do you want to leave your current job, and which offer fixes that?
+Questions auxquelles votre description ne répond pas
+- Combien de temps la jeune entreprise peut-elle payer ses salariés avec
+  l’argent dont elle dispose ?
+- Comment se comparent la retraite, les congés payés et les arrêts maladie
+  entre les deux ?
+- Y a-t-il une période d’essai, et que se passe-t-il si l’un des postes
+  s’arrête tôt ?
+- Où mène chaque poste dans deux ou trois ans ?
+- Pouvez-vous travailler dans le train, pour qu’une partie du trajet compte
+  comme du travail ?
+- Pourquoi voulez-vous quitter votre poste actuel, et quelle offre règle ce
+  problème ?
 
-What each offer costs
-Offer A: job security, and possibly pension and other benefits.
-Offer B: about five hours of travel a week, and no raise now.
+Ce que coûte chaque offre
+Offre A : la sécurité de l’emploi, et peut-être la retraite et d’autres
+avantages.
+Offre B : environ cinq heures de trajet par semaine, et aucune hausse pour
+l’instant.
 ```
 
 </Response>
 
-The second answer ends without a verdict, because the brief said not to
-give one. Its useful part is the list of questions, and you answer them
-yourself. Some you can answer at once. Some you can't, such as how long
-the startup can pay its staff, and those tell you what to ask before
-Friday. The last question may matter most. If you want to leave
-your current job because you have nothing more to learn there, the
-question of who you learn from matters more than the salary.
+La seconde réponse se termine sans verdict, parce que la consigne disait de
+ne pas en donner. Sa partie utile est la liste de questions, et c’est vous
+qui y répondez. À certaines, vous pouvez répondre tout de suite. À d’autres
+non, comme la durée pendant laquelle la jeune entreprise peut payer ses
+salariés, et celles-là vous disent quoi demander avant vendredi. La dernière
+question compte peut-être le plus. Si vous voulez quitter votre poste actuel
+parce que vous n’avez plus rien à y apprendre, la question de savoir auprès
+de qui vous apprendrez compte plus que le salaire.
 
-The value of the session is in your own clearer thinking, and the model's
-text is the material for it. The first prompt got no challenge, and the
-second got one because the brief asked for it.
+La valeur de la séance est dans la clarté de votre propre réflexion, et le
+texte du modèle en est la matière. Le premier prompt n’a obtenu aucune
+contradiction, et le second en a obtenu parce que la consigne la demandait.
 
 <Choice id="open-a-thinking-session" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['thought-partner']}
-  context="The learner wants a chat assistant to help them think through a choice between two venues for a team event, and is about to write the first message."
-  title="Which opening sets up a thinking session?" hint="Which request says what you want from the conversation and asks for something you can't already see yourself?"
+  context="L’apprenant veut qu’un assistant conversationnel l’aide à réfléchir au choix entre deux lieux pour un événement d’équipe, et s’apprête à écrire le premier message."
+  title="Quelle ouverture installe une séance de réflexion ?" hint="Quelle demande dit ce que vous attendez de la conversation et demande quelque chose que vous ne voyez pas déjà vous-même ?"
   options={[
-    { text: 'Here are the two venues. I want help thinking, not a verdict. I lean toward the new one. Give me the case against it and what I have not told you.', correct: true },
-    { text: 'Here are the two venues with their prices. Please be honest and objective, and tell me which one you would book for us.', why: 'Asking for honesty still asks for a verdict, and the verdict follows whatever the description stressed.' },
-    { text: 'Here are the two venues. I lean toward the new one, and I would like you to confirm that it is the better choice for us.', why: 'Naming the lean is fine. Asking the model to confirm it gets you back your own view, with reasons attached.' },
-    { text: 'Act as an event planner with twenty years of experience. Here are the two venues, so tell me which one to choose.', why: 'A role changes the style of the answer, and the request is still for a decision based on your own description.' },
+    { text: 'Voici les deux lieux. Je veux de l’aide pour réfléchir, et aucun verdict. Je penche pour le nouveau. Donne-moi les arguments contre et ce que je ne t’ai pas dit.', correct: true },
+    { text: 'Voici les deux lieux avec leurs prix. Sois honnête et objectif, s’il te plaît, et dis-moi lequel tu réserverais pour nous.', why: 'Demander de l’honnêteté demande toujours un verdict, et ce verdict suit ce que la description a mis en avant.' },
+    { text: 'Voici les deux lieux. Je penche pour le nouveau, et j’aimerais que tu me confirmes que c’est le meilleur choix pour nous.', why: 'Nommer votre préférence ne pose pas de problème. Demander au modèle de la confirmer vous rend votre propre point de vue, avec des raisons en plus.' },
+    { text: 'Joue le rôle d’un organisateur d’événements avec vingt ans d’expérience. Voici les deux lieux, alors dis-moi lequel choisir.', why: 'Un rôle change le style de la réponse, et la demande reste une demande de décision fondée sur votre propre description.' },
   ]}>
-You are choosing between two venues for a team event. Which first
-message makes the assistant a thought partner?
+Vous choisissez entre deux lieux pour un événement d’équipe. Quel premier
+message fait de l’assistant un partenaire de réflexion (thought partner) ?
 </Choice>
 
-<Pitfall title="Your own description, returned as advice">
-A team lead describes two suppliers to an assistant. One gets a
-paragraph of praise, taken from its sales call, and the other gets a
-line about its price. The assistant recommends the first, and the team
-lead forwards the reply to their manager as "I also checked with the AI".
-The recommendation was the team lead's own framing with reasons attached,
-and nobody had looked at what the description left out. Before you send
-a decision to an assistant, read your description as if you favored the
-other option. Take out the adjectives, and ask for the questions it
-doesn't answer.
+<Pitfall title="Votre propre description, rendue sous forme de conseil">
+Un chef d’équipe décrit deux fournisseurs à un assistant. L’un reçoit un
+paragraphe d’éloges, repris de son appel commercial, et l’autre une ligne
+sur son prix. L’assistant recommande le premier, et le chef d’équipe
+transfère la réponse à son responsable avec « j’ai aussi vérifié avec
+l’IA ». La recommandation était son propre cadrage, avec des raisons en plus,
+et personne n’avait regardé ce que la description laissait de côté. Avant
+d’envoyer une décision à un assistant, relisez votre description comme si
+vous préfériez l’autre option. Retirez les adjectifs, et demandez les
+questions auxquelles elle ne répond pas.
 </Pitfall>
 
-## A brief for thinking out loud
+## Une consigne pour réfléchir à voix haute
 
-The brief from the second exchange works for any decision you face, at
-work or outside it. State the problem, with the deadline and the facts as
-plainly as you can write them. State your lean, and call it a lean. Ask
-for the opposite case and for the questions you haven't answered, and
-say that you don't want a verdict. It fits in five lines.
+La consigne du second échange fonctionne pour toute décision que vous avez à
+prendre, au travail ou ailleurs. Énoncez le problème, avec l’échéance et les
+faits aussi sobrement que vous pouvez les écrire. Énoncez votre préférence,
+et appelez-la une préférence. Demandez les arguments contraires et les
+questions auxquelles vous n’avez pas répondu, et dites que vous ne voulez
+pas de verdict. Cela tient en cinq lignes.
 
-The prompt-anatomy lesson in the concepts course showed that naming the
-[audience and purpose](/concepts/prompt-anatomy/#public-et-objectif)
-changes what the model keeps. The first line of this brief does the same
-job. "Help me think, don't decide" is the purpose, and the rest of the
-answer follows from it.
+La leçon sur l’anatomie d’un prompt, dans le cours sur les concepts, a montré
+que nommer le [public et l’objectif](/concepts/prompt-anatomy/#public-et-objectif)
+change ce que le modèle retient. La première ligne de cette consigne fait le
+même travail. « Aide-moi à réfléchir, ne décide pas » est l’objectif, et le
+reste de la réponse en découle.
 
-After the session, write down the one point that changed your view, or
-the one question you now have to go and answer. If there is none, the
-session has still told you something: the best case the model could make
-against your lean didn't change it.
+Après la séance, notez le point qui a changé votre avis, ou la question à
+laquelle vous devez maintenant aller répondre. S’il n’y en a aucun, la
+séance vous a quand même appris quelque chose : les meilleurs arguments que
+le modèle a pu opposer à votre préférence ne l’ont pas changée.
 
 <Repair id="fix-the-thinking-brief" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['thought-partner']}
-  title="Fix the brief" hint="Which words tell the model which answer you hope for, and what does the brief ask for that you can't already see?"
-  broken={`Should we move our team event from the hotel we always use to the new conference center downtown? The new place looks great and the hotel has gotten tired.`}
-  model={`I have to choose a venue for our team event and want help thinking it through, not a decision. The options are the hotel we have used for three years and a new conference center downtown. I lean toward the conference center. Give me the strongest case against it, then list what I haven't told you that would matter for this choice. Don't tell me which one to pick.`}>
-A colleague sends this to an assistant and gets back "Yes, the new venue
-sounds like a great choice". Rewrite it so that the assistant helps them
-think the choice through.
+  title="Corrigez la consigne" hint="Quels mots disent au modèle quelle réponse vous espérez, et que demande la consigne que vous ne voyez pas déjà ?"
+  broken={`Faut-il déplacer notre événement d’équipe de l’hôtel habituel vers le nouveau centre de conférences du centre-ville ? Le nouveau lieu a l’air génial et l’hôtel a pris un coup de vieux.`}
+  model={`Je dois choisir un lieu pour notre événement d’équipe et je veux de l’aide pour y réfléchir, pas une décision. Les options sont l’hôtel que nous utilisons depuis trois ans et un nouveau centre de conférences en centre-ville. Je penche pour le centre de conférences. Donne-moi les arguments les plus forts contre lui, puis liste ce que je ne t’ai pas dit et qui compterait pour ce choix. Ne me dis pas lequel choisir.`}>
+Une collègue envoie ceci à un assistant et obtient « Oui, le nouveau lieu
+semble être un excellent choix ». Réécrivez la demande pour que l’assistant
+l’aide à réfléchir au choix.
 </Repair>
 
 <Sort id="challenge-or-agreement" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['thought-partner']}
-  context="The lesson shows a brief that asks a chat assistant to help think a decision through, and a plain request for a verdict that the assistant answered by repeating the description."
-  title="Thinking session or verdict?" hint="Does the line help you think the choice through, or does it tell the model which answer you want or ask it to decide?"
-  buckets={['Sets up a thinking session', 'Invites agreement or a verdict']}
+  context="La leçon montre une consigne qui demande à un assistant conversationnel d’aider à réfléchir à une décision, et une simple demande de verdict à laquelle l’assistant a répondu en répétant la description."
+  title="Séance de réflexion ou verdict ?" hint="La ligne vous aide-t-elle à réfléchir au choix, ou dit-elle au modèle quelle réponse vous voulez, ou lui demande-t-elle de décider ?"
+  buckets={['Installe une séance de réflexion', 'Appelle l’accord ou un verdict']}
   items={[
-    { text: 'Give me the strongest case against the option I lean toward.', bucket: 0 },
-    { text: 'List what I have not told you that would matter for this choice.', bucket: 0 },
-    { text: 'Do not tell me which one to pick.', bucket: 0 },
-    { text: 'The new place looks great, and the hotel has gotten tired.', bucket: 1 },
-    { text: 'Which one would you book if you were me?', bucket: 1 },
+    { text: 'Donne-moi les arguments les plus forts contre l’option vers laquelle je penche.', bucket: 0 },
+    { text: 'Liste ce que je ne t’ai pas dit et qui compterait pour ce choix.', bucket: 0 },
+    { text: 'Ne me dis pas lequel choisir.', bucket: 0 },
+    { text: 'Le nouveau lieu a l’air génial, et l’hôtel a pris un coup de vieux.', bucket: 1 },
+    { text: 'Lequel réserverais-tu à ma place ?', bucket: 1 },
   ]}>
-Sort these lines from briefs a colleague wrote about choosing a venue.
+Triez ces lignes tirées de consignes qu’une collègue a écrites pour choisir
+un lieu.
 </Sort>
 
 <Scenario id="after-the-echo" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['thought-partner']}
-  context="A learner described two options for a decision to a chat assistant and asked which to choose. The answer recommended the option the learner already preferred, with reasons in the learner's own words."
-  title="The answer sounds like you" hint="What did the first question ask for, and what would you need from the model to learn something new?"
+  context="Un apprenant a décrit à un assistant conversationnel deux options pour une décision et lui a demandé laquelle choisir. La réponse a recommandé l’option que l’apprenant préférait déjà, avec des raisons dans ses propres mots."
+  title="La réponse vous ressemble" hint="Que demandait la première question, et de quoi auriez-vous besoin de la part du modèle pour apprendre quelque chose de nouveau ?"
   options={[
-    { text: 'Take the recommendation, since the model came to the same view as you did on its own.', consequence: 'The model came to your view because your description held it. You decide with nothing you didn\'t already know.' },
-    { text: 'Ask again, saying you want help thinking, naming your lean, and asking for the case against it and what you have not said.', correct: true, consequence: 'The answer lists three questions your description skipped. One of them you can\'t answer yet, and it tells you what to find out before you decide.' },
-    { text: 'Ask the same question in a fresh chat, and take the answer if the second chat agrees with the first.', consequence: 'The second chat reads the same description and gives the same recommendation. Two echoes of your framing are still your framing.' },
+    { text: 'Suivre la recommandation, puisque le modèle est arrivé seul au même avis que vous.', consequence: 'Le modèle est arrivé à votre avis parce que votre description le contenait. Vous décidez sans rien savoir de plus qu’avant.' },
+    { text: 'Reposer la question en disant que vous voulez de l’aide pour réfléchir, en nommant votre préférence, et en demandant les arguments contre et ce que vous n’avez pas dit.', correct: true, consequence: 'La réponse liste trois questions que votre description avait sautées. À l’une d’elles, vous ne pouvez pas encore répondre, et elle vous dit quoi découvrir avant de décider.' },
+    { text: 'Poser la même question dans une nouvelle conversation, et suivre la réponse si la seconde conversation est d’accord avec la première.', consequence: 'La seconde conversation lit la même description et fait la même recommandation. Deux échos de votre cadrage restent votre cadrage.' },
   ]}>
-You asked an assistant which of two options to choose. The answer picked
-the one you liked, in words that sound like yours. What do you do
-next?
+Vous avez demandé à un assistant laquelle de deux options choisir. La réponse
+a choisi celle qui vous plaisait, avec des mots qui ressemblent aux vôtres.
+Que faites-vous ensuite ?
 </Scenario>
 
-<Exercise stretch="Rewrite your five lines so they favor the other option, and send them in a fresh chat with a plain 'which should I pick?'. See whether the verdict follows the description.">
-Pick an open decision you face now, at work or outside it.
-Describe it in five lines without names or numbers you couldn't share
-outside your team. Open a fresh chat and send the brief from this lesson.
-Say that you want help thinking and no verdict, and state your lean. Ask
-for the strongest case against it and for what you haven't mentioned. Then
-write down the one point in the answer that changed your view, or the
-one question you now have to answer before you decide. This takes about
-ten minutes. A good result is one written sentence that you didn't have
-before the session. If no point changed your view, what does that tell
-you about your lean?
+<Exercise stretch="Réécrivez vos cinq lignes pour qu’elles favorisent l’autre option, et envoyez-les dans une nouvelle conversation avec un simple « laquelle devrais-je choisir ? ». Voyez si le verdict suit la description.">
+Choisissez une décision en suspens que vous avez à prendre en ce moment, au
+travail ou ailleurs. Décrivez-la en cinq lignes, sans noms ni nombres que
+vous ne pourriez pas partager hors de votre équipe. Ouvrez une nouvelle
+conversation et envoyez la consigne de cette leçon. Dites que vous voulez de
+l’aide pour réfléchir et aucun verdict, et énoncez votre préférence.
+Demandez les arguments les plus forts contre elle et ce que vous n’avez pas
+mentionné. Notez ensuite le point de la réponse qui a changé votre avis, ou
+la question à laquelle vous devez maintenant répondre avant de décider. Cela
+prend environ dix minutes. Un bon résultat est une phrase écrite que vous
+n’aviez pas avant la séance. Si aucun point n’a changé votre avis, que
+cela vous dit-il de votre préférence ?
 </Exercise>
 
 <Recap>
-1. A thought partner helps you think a choice through, and the value of the session is in your own clearer thinking.
-2. A request for a verdict gets your own framing back. The description decides which reasons the model can give, and assistants often match the view you have shown (@Sharma 2023).
-3. A brief for thinking out loud states the problem and the facts without adjectives, names your lean as a lean, and asks for the case against it and for the questions you haven't answered.
-4. Ask for no verdict. The challenge comes only when the brief asks for it.
-5. Close the session by writing down the one point that changed your view, or the one question you still have to answer.
+1. Un partenaire de réflexion vous aide à réfléchir à fond à un choix, et la valeur de la séance est dans la clarté de votre propre réflexion.
+2. Une demande de verdict vous rend votre propre cadrage. La description décide des raisons que le modèle peut donner, et les assistants s’alignent souvent sur le point de vue que vous avez montré (@Sharma 2023).
+3. Une consigne pour réfléchir à voix haute énonce le problème et les faits sans adjectifs, nomme votre préférence comme une préférence, et demande les arguments contre elle et les questions auxquelles vous n’avez pas répondu.
+4. Ne demandez aucun verdict. La contradiction ne vient que si la consigne la demande.
+5. Terminez la séance en notant le point qui a changé votre avis, ou la question à laquelle il vous reste à répondre.
 </Recap>
 
 <Habit id="ask-against-your-lean">
-The next time you ask an assistant about a choice you face, say which way you lean and ask for the case against it before you ask for anything else.
+La prochaine fois que vous interrogez un assistant sur un choix à faire, dites de quel côté vous penchez et demandez les arguments contre avant de demander quoi que ce soit d’autre.
 </Habit>
