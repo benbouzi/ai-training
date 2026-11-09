@@ -56,9 +56,13 @@ exemple se traduit (notes, politiques, prompts), le script et la page changent
 ensemble :
 
 - Les données lues par le programme sont traduites (textes de notes, tâches,
-  questions). Les étiquettes que le programme affiche (`task:`, `loop: ran`,
-  `ok`, `FAIL`, `match`) restent en anglais, comme dans un vrai outil, et la
-  leçon en donne le sens à leur première apparition.
+  questions), ainsi que les étiquettes que les petits programmes du cours
+  affichent (`tâche :`, `boucle : a exécuté`, `ÉCHEC`, `correspondance`). Les
+  nombres d’une phrase s’écrivent avec une espace entre les milliers
+  (`8 000 jetons`). Les tableaux de prix gardent l’écriture en dollars des
+  sorties d’origine (`$0.0044`, `21,000`).
+- Les noms d’outils (`list_dir`, `read_file`) et la sortie des vrais outils
+  (git, Claude Code, opencode) restent tels quels.
 - Les noms de champs d’un format d’import (`owner`, `task`, `due`,
   `priority`) et leurs valeurs (`high`, `medium`, `low`) restent en anglais.
 - Après une modification, on relance le script et on recopie sa sortie telle

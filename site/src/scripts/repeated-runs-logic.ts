@@ -14,14 +14,14 @@
  */
 
 /** `QUESTION` in `sample.py`. */
-export const QUESTION = 'What is the capital of Australia?';
+export const QUESTION = 'Quelle est la capitale de l’Australie ?';
 
 /** `CANDIDATES` in `sample.py`: each answer and its made-up score. Only the order and the distances matter. */
 export const CANDIDATES: readonly (readonly [string, number])[] = [
 	['Canberra', 3.0],
 	['Canberra.', 2.4],
-	['The capital of Australia is Canberra.', 2.0],
-	["It's Canberra.", 1.2],
+	['La capitale de l’Australie est Canberra.', 2.0],
+	['C’est Canberra.', 1.2],
 	['Sydney', 0.4],
 ];
 
@@ -69,6 +69,11 @@ export function passes(answer: string): boolean {
 	return answer.toLowerCase().includes('canberra');
 }
 
+/** `essais` in `sample.py`: `n essai` or `n essais`, the French plural from 2 on. */
+export function essais(n: number): string {
+	return `${n} essai${n > 1 ? 's' : ''}`;
+}
+
 /** The settings of one press: the temperature, and the `--jitter` and `--check` switches. */
 export interface RunSettings {
 	temperature: number;
@@ -85,18 +90,22 @@ export interface RunReport {
 
 /** The report for `answers`, in the lines `main` in `sample.py` prints without `--quiet`. */
 export function report(answers: readonly string[], settings: RunSettings): RunReport {
-	const heading = `${QUESTION} (temperature ${settings.temperature.toFixed(1)}, ${answers.length} runs)`;
+	const heading = `${QUESTION} (température ${settings.temperature.toFixed(1)}, ${essais(answers.length)})`;
 	const lines = answers.map((answer, i) => {
 		const number = String(i + 1).padStart(2);
 		const ok = passes(answer);
 		if (!settings.check) return { text: `${number}  ${answer}`, ok: true };
-		return { text: `${number}  ${ok ? 'pass' : 'FAIL'}  ${answer}`, ok };
+		return { text: `${number}  ${(ok ? 'ok' : 'ÉCHEC').padEnd(5)}  ${answer}`, ok };
 	});
 	const same = answers.filter((a) => a === answers[0]).length;
-	const summary = [`${same} of ${answers.length} runs give the same answer as run 1`];
+	const summary = [
+		`${essais(same)} sur ${answers.length} ${same > 1 ? 'donnent' : 'donne'} la même réponse que l’essai 1`,
+	];
 	if (settings.check) {
 		const ok = answers.filter(passes).length;
-		summary.push(`${ok} of ${answers.length} runs pass the check: the answer names Canberra`);
+		summary.push(
+			`${essais(ok)} sur ${answers.length} ${ok > 1 ? 'passent' : 'passe'} le contrôle : la réponse nomme Canberra`,
+		);
 	}
 	return { heading, lines, summary };
 }

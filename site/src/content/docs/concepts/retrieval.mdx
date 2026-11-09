@@ -59,19 +59,17 @@ Les textes de politique interne font un paragraphe chacun, sur les congés
 annuels, les notes de frais, le télétravail et les ordinateurs portables. Voici
 la recherche pour une question qui reprend les mots de la politique sur les
 congés. La sortie ci-dessous est ce que la recherche a affiché, ligne pour
-ligne. Les étiquettes sont celles du programme, en anglais : `keywords`
-(mots-clés), `match` (correspondance), `retrieved` (document récupéré),
-`passage`.
+ligne.
 
 ```text
-question: Combien de jours de congés annuels ai-je ?
-keywords: annuels, congés, jours
-  expenses.txt: 1 match
-  laptops.txt: 0 matches
-  leave.txt: 3 matches
-  remote-work.txt: 1 match
-retrieved: leave.txt
-passage: Congés annuels. Chaque salarié acquiert 25 jours de congés annuels par an. Les jours non pris sont reportés jusqu’au 31 mars. Les demandes vont au responsable au moins deux semaines à l’avance.
+question : Combien de jours de congés annuels ai-je ?
+mots-clés : annuels, congés, jours
+  expenses.txt : 1 correspondance
+  laptops.txt : 0 correspondance
+  leave.txt : 3 correspondances
+  remote-work.txt : 1 correspondance
+récupéré : leave.txt
+passage : Congés annuels. Chaque salarié acquiert 25 jours de congés annuels par an. Les jours non pris sont reportés jusqu’au 31 mars. Les demandes vont au responsable au moins deux semaines à l’avance.
 ```
 
 Trois mots-clés, et la politique sur les congés les contient tous les trois.
@@ -82,13 +80,13 @@ congés, et un modèle qui lit ce passage répond « 25 jours » et a raison.
 Voici maintenant la même question dans les mots d’un collègue.
 
 ```text
-question: Combien de vacances puis-je prendre ?
-keywords: prendre, vacances
-  expenses.txt: 0 matches
-  laptops.txt: 0 matches
-  leave.txt: 0 matches
-  remote-work.txt: 0 matches
-retrieved: nothing, no document contains any of the keywords
+question : Combien de vacances puis-je prendre ?
+mots-clés : prendre, vacances
+  expenses.txt : 0 correspondance
+  laptops.txt : 0 correspondance
+  leave.txt : 0 correspondance
+  remote-work.txt : 0 correspondance
+récupéré : rien, aucun document ne contient l’un des mots-clés
 ```
 
 La réponse se trouve dans la politique sur les congés, comme avant. La
@@ -138,14 +136,14 @@ repas lors d’un déplacement professionnel, que la politique sur les notes de
 frais fixe à 40 euros par jour.
 
 ```text
-question: Quel est le forfait quotidien pour un travail hors du bureau ?
-keywords: bureau, forfait, hors, quotidien, travail
-  expenses.txt: 0 matches
-  laptops.txt: 0 matches
-  leave.txt: 0 matches
-  remote-work.txt: 1 match
-retrieved: remote-work.txt
-passage: Télétravail. Le personnel peut travailler à domicile jusqu’à trois jours par semaine. Une indemnité de bureau à domicile de 30 euros par mois est versée avec le salaire. Le matériel reste la propriété de l’entreprise.
+question : Quel est le forfait quotidien pour un travail hors du bureau ?
+mots-clés : bureau, forfait, hors, quotidien, travail
+  expenses.txt : 0 correspondance
+  laptops.txt : 0 correspondance
+  leave.txt : 0 correspondance
+  remote-work.txt : 1 correspondance
+récupéré : remote-work.txt
+passage : Télétravail. Le personnel peut travailler à domicile jusqu’à trois jours par semaine. Une indemnité de bureau à domicile de 30 euros par mois est versée avec le salaire. Le matériel reste la propriété de l’entreprise.
 ```
 
 La politique sur les notes de frais dit « par jour », et la question disait

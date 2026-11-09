@@ -62,21 +62,21 @@ def parse(text):
     """Return the items as a list of dicts, or an error message."""
     text = strip_fences(text).strip()
     if not text:
-        return [], "the answer is empty"
+        return [], "la réponse est vide"
     if not text.startswith(("[", "{")):
         starts_json = any(line.lstrip().startswith(("[", "{")) for line in text.splitlines())
         if starts_json:
-            return [], "the answer does not start with [ (is there text before the JSON?)"
+            return [], "la réponse ne commence pas par [ (y a-t-il du texte avant le JSON ?)"
         return parse_lines(text), None
     try:
         data = json.loads(text)
     except ValueError as exc:
-        return [], f"not valid JSON: {exc}"
+        return [], f"JSON invalide : {exc}"
     if isinstance(data, dict):
         keys = ", ".join(str(k) for k in data)
-        return [], f"expected a JSON array of objects, got a JSON object with keys: {keys}"
+        return [], f"tableau JSON d’objets attendu, objet JSON reçu avec les clés : {keys}"
     if not all(isinstance(item, dict) for item in data):
-        return [], "expected a JSON array of objects, one per item"
+        return [], "tableau JSON d’objets attendu, un par élément"
     return data, None
 
 
@@ -95,24 +95,25 @@ def problems(item):
     """Every reason this one item would be rejected by the import."""
     found = []
     for part in item.get(None, []):
-        found.append(f'unnamed part "{part}" (every part needs a name: before its value)')
+        hint = "chaque partie a besoin d’un nom suivi de : avant sa valeur"
+        found.append(f'partie sans nom "{part}" ({hint})')
     missing = [f for f in FIELDS if f not in item]
     extra = [str(k) for k in item if k not in FIELDS and k is not None]
     if missing:
-        text = "missing " + ", ".join(missing)
+        text = "manque " + ", ".join(missing)
         if extra:
-            text += " (found " + ", ".join(extra) + ")"
+            text += " (trouvé " + ", ".join(extra) + ")"
         found.append(text)
     elif extra:
-        found.append("unexpected " + ", ".join(extra))
+        found.append("inattendu " + ", ".join(extra))
     for name in ("owner", "task"):
         if name in item and not str(item[name]).strip():
-            found.append(f"{name} is empty")
+            found.append(f"{name} est vide")
     if "due" in item and not is_date(str(item["due"])):
-        found.append(f'due "{item["due"]}" is not a date written as YYYY-MM-DD')
+        found.append(f'due "{item["due"]}" n’est pas une date écrite YYYY-MM-DD')
     if "priority" in item and str(item["priority"]) not in PRIORITIES:
         allowed = ", ".join(sorted(PRIORITIES))
-        found.append(f'priority "{item["priority"]}" is not one of {allowed}')
+        found.append(f'priority "{item["priority"]}" n’est pas l’une des valeurs {allowed}')
     return found
 
 
@@ -123,29 +124,29 @@ def report(items):
         found = problems(item)
         if found:
             for text in found:
-                print(f"FAIL {number}: {text}")
+                print(f"ÉCHEC {number} : {text}")
         else:
             passed += 1
-            print(f"ok {number}: " + ", ".join(str(item[f]) for f in FIELDS))
-    print(f"{passed} of {len(items)} items pass")
+            print(f"ok {number} : " + ", ".join(str(item[f]) for f in FIELDS))
+    print(f"éléments acceptés : {passed} sur {len(items)}")
     return passed
 
 
 def main(argv):
     if len(argv) != 2:
-        print("usage: python3 check_items.py FILE")
+        print("usage : python3 check_items.py FICHIER")
         return 2
     try:
         with open(argv[1], encoding="utf-8") as f:
             text = f.read()
     except OSError as exc:
-        print(f"FAIL: cannot read {argv[1]}: {exc.strerror}")
+        print(f"ÉCHEC : impossible de lire {argv[1]} : {exc.strerror}")
         return 1
     items, error = parse(text)
     if error is None and not items:
-        error = "no items found"
+        error = "aucun élément trouvé"
     if error:
-        print(f"FAIL: {error}")
+        print(f"ÉCHEC : {error}")
         return 1
     passed = report(items)
     return 0 if passed == len(items) else 1

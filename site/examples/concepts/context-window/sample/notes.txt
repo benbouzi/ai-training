@@ -1,8 +1,8 @@
-Meeting notes, project Lantern, 14 March.
+Compte rendu de réunion, projet Lantern, 14 mars.
 
-Present: Ana, Bram, Chidi. Ana reported that the supplier moved the delivery
-of the sensor boards from April to June. Bram asked whether the June date is
-firm. Ana will confirm it in writing by Friday. Chidi showed the first draft
-of the installation guide; the team asked for a shorter version with one
-photo per step. Decision: the pilot in the Utrecht warehouse moves to July.
-Next meeting on 28 March, same room.
+Présents : Ana, Bram, Chidi. Ana a signalé que le fournisseur a repoussé la
+livraison des cartes de capteurs d’avril à juin. Bram a demandé si la date de
+juin est ferme. Ana la confirmera par écrit d’ici vendredi. Chidi a présenté
+la première version du guide d’installation, et l’équipe a demandé une version
+plus courte, avec une photo par étape. Décision : le pilote de l’entrepôt
+d’Utrecht passe en juillet. Prochaine réunion le 28 mars, même salle.

@@ -82,17 +82,17 @@ def score(document: str, terms: list[str]) -> int:
 
 def search(question: str, documents: dict[str, str]) -> list[str]:
     terms = keywords(question)
-    lines = [f"question: {question}", f"keywords: {', '.join(terms)}"]
+    lines = [f"question : {question}", f"mots-clés : {', '.join(terms)}"]
     scores = {name: score(text, terms) for name, text in documents.items()}
     for name, hits in scores.items():
-        noun = "match" if hits == 1 else "matches"
-        lines.append(f"  {name}: {hits} {noun}")
+        noun = "correspondances" if hits > 1 else "correspondance"
+        lines.append(f"  {name} : {hits} {noun}")
     best = max(scores, key=lambda name: scores[name])  # the first document wins a tie
     if scores[best] == 0:
-        lines.append("retrieved: nothing, no document contains any of the keywords")
+        lines.append("récupéré : rien, aucun document ne contient l’un des mots-clés")
     else:
-        lines.append(f"retrieved: {best}")
-        lines.append(f"passage: {documents[best]}")
+        lines.append(f"récupéré : {best}")
+        lines.append(f"passage : {documents[best]}")
     return lines
 
 

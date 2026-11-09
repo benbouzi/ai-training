@@ -23,13 +23,13 @@ const RECORDED = [
 	'Canberra',
 	'Canberra.',
 	'Canberra',
-	'The capital of Australia is Canberra.',
+	'La capitale de l’Australie est Canberra.',
 	'Canberra',
 	'Canberra.',
-	"It's Canberra.",
+	'C’est Canberra.',
 	'Canberra',
 	'Sydney',
-	'The capital of Australia is Canberra.',
+	'La capitale de l’Australie est Canberra.',
 ];
 
 /** A random source that returns `values` in turn and then repeats the last one. */
@@ -88,7 +88,7 @@ describe('pick', () => {
 
 describe('passes', () => {
 	it('accepts any wording that names Canberra, in any case, and rejects the rest', () => {
-		expect(passes("It's Canberra.")).toBe(true);
+		expect(passes('C’est Canberra.')).toBe(true);
 		expect(passes('CANBERRA')).toBe(true);
 		expect(passes('Sydney')).toBe(false);
 	});
@@ -98,34 +98,34 @@ describe('report', () => {
 	it('prints the lines sampled.py prints for the recorded runs', () => {
 		const r = report(RECORDED, { temperature: 1, jitter: false, check: false });
 		expect([r.heading, ...r.lines.map((l) => l.text), ...r.summary]).toEqual([
-			'What is the capital of Australia? (temperature 1.0, 10 runs)',
+			'Quelle est la capitale de l’Australie ? (température 1.0, 10 essais)',
 			' 1  Canberra',
 			' 2  Canberra.',
 			' 3  Canberra',
-			' 4  The capital of Australia is Canberra.',
+			' 4  La capitale de l’Australie est Canberra.',
 			' 5  Canberra',
 			' 6  Canberra.',
-			" 7  It's Canberra.",
+			' 7  C’est Canberra.',
 			' 8  Canberra',
 			' 9  Sydney',
-			'10  The capital of Australia is Canberra.',
-			'4 of 10 runs give the same answer as run 1',
+			'10  La capitale de l’Australie est Canberra.',
+			'4 essais sur 10 donnent la même réponse que l’essai 1',
 		]);
 		expect(r.lines.every((l) => l.ok)).toBe(true);
 	});
 	it('prints the lines checked.py prints for the recorded runs, and marks the failed one', () => {
 		const r = report(RECORDED, { temperature: 1, jitter: false, check: true });
-		expect(r.lines[0]?.text).toBe(' 1  pass  Canberra');
-		expect(r.lines[8]).toEqual({ text: ' 9  FAIL  Sydney', ok: false });
-		expect(r.lines[9]?.text).toBe('10  pass  The capital of Australia is Canberra.');
+		expect(r.lines[0]?.text).toBe(' 1  ok     Canberra');
+		expect(r.lines[8]).toEqual({ text: ' 9  ÉCHEC  Sydney', ok: false });
+		expect(r.lines[9]?.text).toBe('10  ok     La capitale de l’Australie est Canberra.');
 		expect(r.summary).toEqual([
-			'4 of 10 runs give the same answer as run 1',
-			'9 of 10 runs pass the check: the answer names Canberra',
+			'4 essais sur 10 donnent la même réponse que l’essai 1',
+			'9 essais sur 10 passent le contrôle : la réponse nomme Canberra',
 		]);
 	});
 	it('writes temperature 0 with one decimal, as jitter.py does', () => {
 		expect(report(['Canberra'], { temperature: 0, jitter: true, check: false }).heading).toBe(
-			'What is the capital of Australia? (temperature 0.0, 1 runs)',
+			'Quelle est la capitale de l’Australie ? (température 0.0, 1 essai)',
 		);
 	});
 });
@@ -134,12 +134,12 @@ describe('runMany', () => {
 	it('makes ten runs, all the same at temperature 0 without jitter', () => {
 		const r = runMany(Math.random, { temperature: 0, jitter: false, check: false });
 		expect(r.lines).toHaveLength(RUNS);
-		expect(r.summary).toEqual(['10 of 10 runs give the same answer as run 1']);
+		expect(r.summary).toEqual(['10 essais sur 10 donnent la même réponse que l’essai 1']);
 	});
 	it('takes the number of runs', () => {
 		expect(runMany(sequence(0), { temperature: 1, jitter: false, check: true }, 3).summary).toEqual([
-			'3 of 3 runs give the same answer as run 1',
-			'3 of 3 runs pass the check: the answer names Canberra',
+			'3 essais sur 3 donnent la même réponse que l’essai 1',
+			'3 essais sur 3 passent le contrôle : la réponse nomme Canberra',
 		]);
 	});
 });

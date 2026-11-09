@@ -33,7 +33,7 @@ describe('TokenCounter', () => {
 		const name = 'concepts/context-window/sample/notes.txt';
 		const html = await container.renderToString(TokenCounter, { props: { sample: name } });
 		const text = readFileSync(join(EXAMPLES, name), 'utf8');
-		expect(text).toContain('project Lantern');
+		expect(text).toContain('projet Lantern');
 		expect(html).toContain(`>${escaped(text)}</textarea>`);
 	});
 	it('fails the build on a sample that is not there', async () => {

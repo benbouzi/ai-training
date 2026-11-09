@@ -65,12 +65,16 @@ describe('mountRepeatedRun', () => {
 		slide(root, '0');
 		expect(part<HTMLOutputElement>(root, '.rr-temp output').value).toBe('0.0');
 		press(root);
-		expect(part(root, '.rr-heading').textContent).toBe('What is the capital of Australia? (temperature 0.0, 10 runs)');
+		expect(part(root, '.rr-heading').textContent).toBe(
+			'Quelle est la capitale de l’Australie ? (température 0.0, 10 essais)',
+		);
 		const lines = items(root, '.rr-lines');
 		expect(lines).toHaveLength(10);
 		expect(lines[0]).toEqual({ cls: '', text: ' 1  Canberra' });
 		expect(lines[9]).toEqual({ cls: '', text: '10  Canberra' });
-		expect(items(root, '.rr-summary').map((l) => l.text)).toEqual(['10 of 10 runs give the same answer as run 1']);
+		expect(items(root, '.rr-summary').map((l) => l.text)).toEqual([
+			'10 essais sur 10 donnent la même réponse que l’essai 1',
+		]);
 	});
 	it('marks a failed answer and adds the check line when the check is on', async () => {
 		const root = await show();
@@ -79,10 +83,10 @@ describe('mountRepeatedRun', () => {
 		toggle(root, '.rr-check');
 		press(root);
 		const lines = items(root, '.rr-lines');
-		expect(lines[0]).toEqual({ cls: 'rr-fail', text: ' 1  FAIL  Sydney' });
+		expect(lines[0]).toEqual({ cls: 'rr-fail', text: ' 1  ÉCHEC  Sydney' });
 		expect(items(root, '.rr-summary').map((l) => l.text)).toEqual([
-			'10 of 10 runs give the same answer as run 1',
-			'0 of 10 runs pass the check: the answer names Canberra',
+			'10 essais sur 10 donnent la même réponse que l’essai 1',
+			'0 essai sur 10 passe le contrôle : la réponse nomme Canberra',
 		]);
 	});
 	it('clears the report when a setting changes', async () => {

@@ -153,27 +153,27 @@ function isObject(value: unknown): value is Record<string, unknown> {
 /** `parse`: the items, or the message that says why the text holds none the checker can read. */
 export function parse(input: string): { items: Item[]; error: string | null } {
 	const text = pyStrip(stripFences(input));
-	if (!text) return { items: [], error: 'the answer is empty' };
+	if (!text) return { items: [], error: 'la réponse est vide' };
 	if (!text.startsWith('[') && !text.startsWith('{')) {
 		const startsJson = pySplitLines(text).some((line) => {
 			const start = pyLstrip(line);
 			return start.startsWith('[') || start.startsWith('{');
 		});
-		if (startsJson) return { items: [], error: 'the answer does not start with [ (is there text before the JSON?)' };
+		if (startsJson) return { items: [], error: 'la réponse ne commence pas par [ (y a-t-il du texte avant le JSON ?)' };
 		return { items: parseLines(text), error: null };
 	}
 	let data: unknown;
 	try {
 		data = JSON.parse(text);
 	} catch (e) {
-		return { items: [], error: `not valid JSON: ${e instanceof Error ? e.message : String(e)}` };
+		return { items: [], error: `JSON invalide : ${e instanceof Error ? e.message : String(e)}` };
 	}
 	if (isObject(data)) {
 		const keys = Object.keys(data).join(', ');
-		return { items: [], error: `expected a JSON array of objects, got a JSON object with keys: ${keys}` };
+		return { items: [], error: `tableau JSON d’objets attendu, objet JSON reçu avec les clés : ${keys}` };
 	}
 	const list = data as unknown[];
-	if (!list.every(isObject)) return { items: [], error: 'expected a JSON array of objects, one per item' };
+	if (!list.every(isObject)) return { items: [], error: 'tableau JSON d’objets attendu, un par élément' };
 	return { items: list.map((obj) => ({ fields: new Map(Object.entries(obj)), unnamed: [] })), error: null };
 }
 
@@ -210,29 +210,29 @@ export function isDate(value: string): boolean {
 export function problems(item: Item, config: CheckerConfig = DEFAULT_CONFIG): string[] {
 	const found: string[] = [];
 	for (const part of item.unnamed) {
-		found.push(`unnamed part "${part}" (every part needs a name: before its value)`);
+		found.push(`partie sans nom "${part}" (chaque partie a besoin d’un nom suivi de : avant sa valeur)`);
 	}
 	const missing = config.fields.filter((f) => !item.fields.has(f));
 	const extra = [...item.fields.keys()].filter((k) => !config.fields.includes(k));
 	if (missing.length) {
-		let text = `missing ${missing.join(', ')}`;
-		if (extra.length) text += ` (found ${extra.join(', ')})`;
+		let text = `manque ${missing.join(', ')}`;
+		if (extra.length) text += ` (trouvé ${extra.join(', ')})`;
 		found.push(text);
 	} else if (extra.length) {
-		found.push(`unexpected ${extra.join(', ')}`);
+		found.push(`inattendu ${extra.join(', ')}`);
 	}
 	for (const name of ['owner', 'task']) {
-		if (item.fields.has(name) && !pyStrip(pyStr(item.fields.get(name)))) found.push(`${name} is empty`);
+		if (item.fields.has(name) && !pyStrip(pyStr(item.fields.get(name)))) found.push(`${name} est vide`);
 	}
 	if (item.fields.has('due')) {
 		const due = pyStr(item.fields.get('due'));
-		if (!isDate(due)) found.push(`due "${due}" is not a date written as YYYY-MM-DD`);
+		if (!isDate(due)) found.push(`due "${due}" n’est pas une date écrite YYYY-MM-DD`);
 	}
 	if (item.fields.has('priority')) {
 		const priority = pyStr(item.fields.get('priority'));
 		if (!config.priorities.includes(priority)) {
 			const allowed = [...config.priorities].sort().join(', ');
-			found.push(`priority "${priority}" is not one of ${allowed}`);
+			found.push(`priority "${priority}" n’est pas l’une des valeurs ${allowed}`);
 		}
 	}
 	return found;
@@ -242,21 +242,21 @@ export function problems(item: Item, config: CheckerConfig = DEFAULT_CONFIG): st
 export function check(text: string, config: CheckerConfig = DEFAULT_CONFIG): Report {
 	const parsed = parse(text);
 	let error = parsed.error;
-	if (error === null && parsed.items.length === 0) error = 'no items found';
-	if (error !== null) return { lines: [{ ok: false, text: `FAIL: ${error}` }], summary: null, passed: 0, total: 0 };
+	if (error === null && parsed.items.length === 0) error = 'aucun élément trouvé';
+	if (error !== null) return { lines: [{ ok: false, text: `ÉCHEC : ${error}` }], summary: null, passed: 0, total: 0 };
 	const lines: ReportLine[] = [];
 	let passed = 0;
 	parsed.items.forEach((item, index) => {
 		const number = index + 1;
 		const found = problems(item, config);
 		if (found.length) {
-			for (const reason of found) lines.push({ ok: false, text: `FAIL ${number}: ${reason}` });
+			for (const reason of found) lines.push({ ok: false, text: `ÉCHEC ${number} : ${reason}` });
 		} else {
 			passed += 1;
 			const values = config.fields.map((f) => pyStr(item.fields.get(f)));
-			lines.push({ ok: true, text: `ok ${number}: ${values.join(', ')}` });
+			lines.push({ ok: true, text: `ok ${number} : ${values.join(', ')}` });
 		}
 	});
 	const total = parsed.items.length;
-	return { lines, summary: `${passed} of ${total} items pass`, passed, total };
+	return { lines, summary: `éléments acceptés : ${passed} sur ${total}`, passed, total };
 }

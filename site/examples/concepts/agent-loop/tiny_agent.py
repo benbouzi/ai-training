@@ -25,14 +25,14 @@ TOOL_DESCRIPTIONS = {
 def list_dir(path: str) -> str:
     target = HERE / path
     if not target.is_dir():
-        return f"error: {path} is not a directory"
+        return f"erreur : {path} n’est pas un dossier"
     return ", ".join(sorted(p.name for p in target.iterdir() if p.is_file()))
 
 
 def read_file(path: str) -> str:
     target = HERE / path
     if not target.is_file():
-        return f"error: {path} is not a file"
+        return f"erreur : {path} n’est pas un fichier"
     return target.read_text(encoding="utf-8").strip()
 
 
@@ -86,20 +86,21 @@ RUNS: dict[str, Run] = {
 
 def run(task: str, script: list[Reply], max_steps: int) -> list[str]:
     """Run the loop for one task and return the transcript, one line per entry."""
-    lines = [f"task: {task}"]
+    lines = [f"tâche : {task}"]
     for step, (tool_name, text) in enumerate(script, start=1):
         if step > max_steps:
-            lines.append(f"loop: stopped, the step limit of {max_steps} was reached, no answer")
+            limit = f"la limite de {max_steps} étapes est atteinte"
+            lines.append(f"boucle : arrêt, {limit}, pas de réponse")
             return lines
         if tool_name is None:
-            lines.append(f"{step}. model: done. {text}")
-            lines.append(f"loop: stopped, the model said it is done after {step} steps")
+            lines.append(f"{step}. modèle : terminé. {text}")
+            lines.append(f"boucle : arrêt, le modèle a dit avoir terminé après {step} étapes")
             return lines
-        lines.append(f'{step}. model: call {tool_name} with path "{text}"')
+        lines.append(f'{step}. modèle : appelle {tool_name} avec le chemin "{text}"')
         tool = TOOLS[tool_name]
         result = tool(text)
-        lines.append(f"   loop: ran {tool_name}, result: {result}")
-    lines.append("loop: stopped, the script ran out")
+        lines.append(f"   boucle : a exécuté {tool_name}, résultat : {result}")
+    lines.append("boucle : arrêt, le script est épuisé")
     return lines
 
 

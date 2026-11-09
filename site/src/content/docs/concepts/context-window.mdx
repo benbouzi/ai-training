@@ -30,21 +30,21 @@ regarder une conversation grandir jusqu’à la dépasser.
 
 Une fenêtre de contexte se mesure en jetons. La première étape consiste donc
 à se faire une idée du nombre de jetons d’une page de texte. Le compteur
-ci-dessous contient un exemple de compte rendu de réunion en anglais,
-d’environ une demi-page. Appuyez sur Compter.
+ci-dessous contient un exemple de compte rendu de réunion, d’environ une
+demi-page. Appuyez sur Compter.
 
 <TokenCounter sample="concepts/context-window/sample/notes.txt" />
 
 La première partie du rapport doit indiquer :
 
 ```text
-characters: 460
-words: 80
-tokens (estimate): 115
+caractères : 505
+mots : 86
+jetons (estimation) : 141
 ```
 
-Le compteur dit « estimate » (estimation) pour une raison. Il applique la
-règle empirique courante pour l’anglais, environ quatre caractères par jeton.
+Le compteur parle d’estimation pour une raison. Il applique la règle
+empirique courante pour l’anglais, environ quatre caractères par jeton.
 Un mot de six lettres au plus compte pour un jeton, un mot plus long pour un
 jeton toutes les quatre lettres, et chaque signe de ponctuation compte pour un
 jeton à lui seul. Les vrais tokeniseurs sont plus détaillés, et chaque
@@ -57,12 +57,13 @@ de texte anglais fait quelques centaines de jetons.
 
 ## Comment un tokeniseur découpe le texte
 
-Le compteur coupe « delivery » en deux jetons selon sa règle des quatre
+Le compteur coupe « installation » en trois jetons selon sa règle des quatre
 lettres. Cette règle remplace ce que fait un vrai tokeniseur. Un vrai
 tokeniseur dispose d’un vocabulaire fixe de dizaines de milliers de morceaux
 appris sur le texte d’entraînement, et il coupe là où ce vocabulaire contient
-un morceau. Un mot courant comme « delivery » figure tel quel dans le
-vocabulaire et coûte un seul jeton, quelle que soit sa longueur. Un mot rare
+un morceau. Un mot courant comme « installation », qui existe aussi en
+anglais, figure tel quel dans le vocabulaire et coûte un seul jeton, quelle
+que soit sa longueur. Un mot rare
 ou un nom propre est découpé en morceaux, souvent à des endroits sans rapport
 avec les syllabes ou l’orthographe. « Chidi », tiré de l’exemple, fait deux
 jetons avec les tokeniseurs actuels, et un mot dans une autre langue peut
@@ -84,11 +85,11 @@ type tiennent dans des fenêtres de tailles différentes. Pour l’exemple, elle
 indique :
 
 ```text
-one page: 115 tokens
-8,000-token window: 69 pages
-32,000-token window: 278 pages
-200,000-token window: 1,739 pages
-1,000,000-token window: 8,695 pages
+une page : 141 jetons
+fenêtre de 8 000 jetons : 56 pages
+fenêtre de 32 000 jetons : 226 pages
+fenêtre de 200 000 jetons : 1 418 pages
+fenêtre de 1 000 000 jetons : 7 092 pages
 ```
 
 Les tailles de fenêtre sont des chiffres ronds qui représentent les tailles

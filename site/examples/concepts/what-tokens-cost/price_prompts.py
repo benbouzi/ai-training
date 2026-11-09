@@ -26,8 +26,8 @@ PIECE = re.compile(r"\w+|[^\w\s]")
 # Example prices in dollars per million tokens: (input, output). Vendors
 # charge more for a token the model writes than for one it reads.
 PRICES = {
-    "small model": (0.6, 3.0),
-    "large model": (6.0, 30.0),
+    "petit modèle": (0.6, 3.0),
+    "grand modèle": (6.0, 30.0),
 }
 
 # The model's answer is priced at the output rate. The lesson assumes the
@@ -100,27 +100,28 @@ def price(prompt_tokens: int, answer_tokens: int, model: str, calls: int = 1) ->
 def report(prompts: "dict[str, str]") -> str:
     """Return the report the lesson shows: token counts, then a price per prompt and model."""
     counts = {name: estimate_tokens(text) for name, text in prompts.items()}
-    lines = [f"{name}: {tokens} tokens (estimate)" for name, tokens in counts.items()]
+    lines = [f"{name} : {tokens} jetons (estimation)" for name, tokens in counts.items()]
     if len(counts) == 2:
         low, high = sorted(counts.values())
-        lines.append(f"difference: {high - low} tokens")
-    lines.append(f"answer: {ANSWER_TOKENS} tokens (assumed)")
+        lines.append(f"différence : {high - low} jetons")
+    lines.append(f"réponse : {ANSWER_TOKENS} jetons (supposé)")
     lines.append("")
-    lines.append(f"{'':26}{'one call':>10}{f'{CALLS_PER_MONTH:,} calls':>16}")
+    calls = f"{CALLS_PER_MONTH:,}".replace(",", " ")
+    lines.append(f"{'':28}{'un appel':>10}{f'{calls} appels':>16}")
     for model in PRICES:
         for name, tokens in counts.items():
             one = price(tokens, ANSWER_TOKENS, model)
             month = price(tokens, ANSWER_TOKENS, model, CALLS_PER_MONTH)
-            lines.append(f"{model + ', ' + name:26}{f'${one:.4f}':>10}{f'${month:,.2f}':>16}")
+            lines.append(f"{model + ', ' + name:28}{f'${one:.4f}':>10}{f'${month:,.2f}':>16}")
     return "\n".join(lines)
 
 
 def main(argv: "list[str]") -> None:
     if len(argv) > 1:
         with open(argv[1], encoding="utf-8") as handle:
-            prompts = {"your prompt": handle.read()}
+            prompts = {"votre prompt": handle.read()}
     else:
-        prompts = {"short prompt": SHORT_PROMPT, "long prompt": LONG_PROMPT}
+        prompts = {"prompt court": SHORT_PROMPT, "prompt long": LONG_PROMPT}
     print(report(prompts))
 
 
