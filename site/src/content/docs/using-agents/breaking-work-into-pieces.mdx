@@ -1,325 +1,347 @@
 import { MultiChoice, Sort, Scenario, Pitfall, Exercise, Recap, Prompt, Response, Choice, Match } from '@components/lesson';
 
-In this lesson we hand an agent a task that's too big to check and read
-what comes back. Then we split the task into pieces, each with an input, an
-output, and a check. We write the brief for the first piece and
-run it, so that what we look at is one piece done and ticked off. The
-task is fictional and small enough to redo as often as you like.
+Dans cette leçon, nous confions à un agent une tâche trop grande pour être
+vérifiée, et nous lisons ce qui revient. Puis nous découpons la tâche en
+morceaux qui ont chacun une entrée, une sortie et une vérification. Nous
+écrivons la consigne du premier morceau et nous la lançons, pour que ce que
+nous examinons soit un morceau fait et coché. La tâche est fictive, et assez
+petite pour être refaite aussi souvent que vous voulez.
 
-You need any chat-capable agent you already have access to. Keep the
-brief from the previous lesson in mind: goal, context, limits and
-done-criteria. The pieces we make here are what those briefs get written
-for.
+Il vous faut n’importe quel agent conversationnel auquel vous avez déjà
+accès. Gardez en tête la consigne de la leçon précédente : objectif,
+contexte, limites et critères d’achèvement (done-criteria). Les morceaux que nous créons ici
+sont ce pour quoi ces consignes sont écrites.
 
-## The task
+## La tâche
 
-You coordinate a shared-bike pilot at a company campus. The pilot ran for
-eight weeks and the facilities manager wants a one-page report with three
-parts: how much the bikes were used, what the riders said, and what it
-costs to continue. You have one source per part. Read them once now, so
-that you can judge the agent's work later.
+Vous coordonnez un essai de vélos partagés sur le site d’une entreprise.
+L’essai a duré huit semaines, et le responsable des services généraux veut
+un rapport d’une page en trois parties : l’usage des vélos, ce qu’ont dit
+les utilisateurs, et ce que coûte la suite. Vous avez une source par partie.
+Lisez-les une fois maintenant, pour pouvoir juger plus tard le travail de
+l’agent.
 
-The first source is the weekly usage export from the bike system.
+La première source est l’export hebdomadaire d’utilisation du système de
+vélos.
 
-> **Rides per week, pilot weeks 1 to 8**
+> **Trajets par semaine, semaines 1 à 8 de l’essai**
 >
-> - Week 1: 112
-> - Week 2: 148
-> - Week 3: 171
-> - Week 4: 165
-> - Week 5: 96 (docking station offline Wednesday and Thursday, count incomplete)
-> - Week 6: 183
-> - Week 7: 190
-> - Week 8: 176
+> - Semaine 1 : 112
+> - Semaine 2 : 148
+> - Semaine 3 : 171
+> - Semaine 4 : 165
+> - Semaine 5 : 96 (station d’accueil hors service mercredi et jeudi, comptage incomplet)
+> - Semaine 6 : 183
+> - Semaine 7 : 190
+> - Semaine 8 : 176
 
-The second source is a note from the colleague who ran the rider survey.
+La deuxième source est une note de la collègue qui a mené l’enquête auprès
+des utilisateurs.
 
-> **Survey note**
+> **Note sur l’enquête**
 >
-> All 120 pilot participants got the survey and 41 replied. 33 said they
-> would keep using the bikes if the scheme continues. 29 named "no bike
-> available in the morning" as the biggest problem. 12 asked for helmets
-> at the docking station. 6 wrote in the free-text box that the docking
-> station is too far from the east entrance. I haven't turned any of this
-> into percentages.
+> Les 120 participants à l’essai ont reçu l’enquête, et 41 ont répondu. 33
+> ont dit qu’ils continueraient à utiliser les vélos si le dispositif était
+> maintenu. 29 ont cité « pas de vélo disponible le matin » comme principal
+> problème. 12 ont demandé des casques à la station d’accueil. 6 ont écrit
+> dans le champ libre que la station est trop loin de l’entrée est. Je n’ai
+> rien converti en pourcentages.
 
-The third source is the email from the bike vendor.
+La troisième source est l’e-mail du fournisseur de vélos.
 
-> **Email: continuing after the pilot**
+> **E-mail : la suite après l’essai**
 >
-> Thank you for running the pilot with us. The pilot period was free of
-> charge. To continue we offer two options, both with a minimum term of
-> twelve months. Option A is 1,800 per month for the bikes and the docking
-> station, with your facilities team doing the maintenance. Option B is
-> 2,400 per month and includes maintenance and replacement of damaged
-> bikes. Both prices exclude tax.
+> Merci d’avoir mené cet essai avec nous. La période d’essai était
+> gratuite. Pour continuer, nous proposons deux options, toutes deux avec
+> une durée minimale de douze mois. L’option A coûte 1 800 par mois pour
+> les vélos et la station d’accueil, l’entretien étant assuré par vos
+> services généraux. L’option B coûte 2 400 par mois et comprend l’entretien
+> et le remplacement des vélos endommagés. Les deux prix sont hors taxes.
 
-Before you send anything, predict: if you paste all three sources under
-"write the one-page report for the facilities manager", what comes back?
-Something well written, probably. Now ask a harder question. Which line
-of it could you check, and against what?
+Avant d’envoyer quoi que ce soit, prédisez : si vous collez les trois
+sources sous « rédige le rapport d’une page pour le responsable des services
+généraux », que revient-il ? Probablement quelque chose de bien écrit.
+Posez maintenant une question plus difficile. Quelle ligne de ce texte
+pourriez-vous vérifier, et par rapport à quoi ?
 
-## The blended result
+## Le résultat mélangé
 
-Try it. Paste the three sources into your agent with that one-line
-request, then read the result with the sources next to it. Here is the
-kind of thing that comes back. The transcript is illustrative, written to
-show the pattern rather than recorded from one model.
+Essayez. Collez les trois sources dans votre agent avec cette demande d’une
+ligne, puis lisez le résultat avec les sources à côté. Voici le genre de
+chose qui revient. La transcription est un exemple illustratif, écrit pour
+montrer le schéma, sans enregistrement d’un modèle précis.
 
 <Prompt model="illustrative" recorded="illustrative">
-Write the one-page report on the bike pilot for the facilities manager.
+Rédige le rapport d’une page sur l’essai de vélos pour le responsable des
+services généraux.
 
-[the three sources follow]
+[les trois sources suivent]
 </Prompt>
 <Response>
 
 ```text
-**Shared-bike pilot: report**
+**Essai de vélos partagés : rapport**
 
-The pilot was a clear success. Usage grew steadily over the eight weeks,
-from 112 rides in the first week to around 190 a week by the end, and 80%
-of riders want to keep the scheme. The main complaint was that bikes were
-sometimes unavailable in the morning, which suggests adding capacity.
+L’essai est un net succès. L’usage a progressé régulièrement sur les huit
+semaines, de 112 trajets la première semaine à environ 190 par semaine à la
+fin, et 80 % des utilisateurs veulent garder le dispositif. La principale
+plainte portait sur des vélos parfois indisponibles le matin, ce qui
+suggère d’augmenter la capacité.
 
-The price to continue is 1,800 per month on a twelve-month contract.
-Given the strong uptake and positive feedback, we recommend continuing
-and adding a second docking station near the east entrance.
+Le prix pour continuer est de 1 800 par mois sur un contrat de douze mois.
+Vu la forte adoption et les retours positifs, nous recommandons de
+continuer et d’ajouter une seconde station d’accueil près de l’entrée est.
 ```
 
 </Response>
 
-Read it against the sources. The 80% is 33 out of 41 replies. The
-report never says 41, and the manager reads it as 80% of 120
-participants. Week 5 and its offline days are gone. Option B, the maintenance quote,
-is gone too, and the contract now looks cheaper than it is. "Around 190
-a week by the end" smooths weeks 6 to 8, which were 183, 190 and 176, into
-one rounded number. The docking
-station recommendation came from six free-text comments and is presented
-as a finding. And the survey has been folded into the usage paragraph, so
-there is no line you can point at and say "this one is wrong".
+Lisez-le en regard des sources. Les 80 % sont 33 réponses sur 41. Le
+rapport ne dit jamais 41, et le responsable le lit comme 80 % de
+120 participants. La semaine 5 et ses jours d’indisponibilité ont disparu.
+L’option B, celle qui comprend l’entretien, a disparu aussi, et le contrat
+semble maintenant moins cher qu’il ne l’est. « Environ 190 par semaine à la
+fin » lisse les semaines 6 à 8, qui étaient à 183, 190 et 176, en un seul
+nombre arrondi. La recommandation d’une station d’accueil vient de six
+commentaires libres et est présentée comme un constat. Et l’enquête a été
+fondue dans le paragraphe sur l’usage, si bien qu’aucune ligne ne vous
+permet de dire « celle-ci est fausse ».
 
-None of this is the agent being careless. You gave it one task with three
-sources and no way to be right or wrong, and it filled every gap with a
-plausible choice. The report reads well, and reading well is the only
-thing you can check.
+Rien de tout cela ne vient d’une négligence de l’agent. Vous lui avez donné
+une tâche avec trois sources et aucun moyen d’avoir juste ou faux, et il a
+comblé chaque manque par un choix plausible. Le rapport se lit bien, et la
+qualité de lecture est la seule chose que vous pouvez vérifier.
 
-## Splitting the task
+## Découper la tâche
 
-Task decomposition is splitting a large task into pieces small enough
-that each has a clear input, a clear output, and a way to check it. The
-report has a natural split, one piece per part, and each piece gets the
-three columns.
+La décomposition des tâches (task decomposition) consiste à découper une
+grande tâche en morceaux assez petits pour que chacun ait une entrée claire,
+une sortie claire et un moyen de le vérifier. Le rapport se découpe
+naturellement, un morceau par partie, et chaque morceau reçoit les trois
+colonnes.
 
-| Piece  | Input            | Output                                                                      | Check                                                                          |
-| ------ | ---------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Usage  | The usage export | A heading, one line per week, a total line, one line on week 5              | Eight weeks each appear once, the total equals the sum of the export, week 5 is marked incomplete, no count appears that isn't in the export |
-| Riders | The survey note  | A heading and four bullets, each written as "n of 41 replies"               | Every count is in the note, 41 is named as the base, no percentages            |
-| Cost   | The vendor email | A heading, both options with the monthly price and what it includes, the twelve-month term | Both prices appear once and match the email, the twelve-month term is stated |
+| Morceau      | Entrée                    | Sortie                                                                               | Vérification                                                                                                                                       |
+| ------------ | ------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Usage        | L’export d’utilisation    | Un titre, une ligne par semaine, une ligne de total, une ligne sur la semaine 5      | Chacune des huit semaines apparaît une fois, le total est égal à la somme de l’export, la semaine 5 est marquée incomplète, aucun comptage absent de l’export |
+| Utilisateurs | La note sur l’enquête     | Un titre et quatre puces, chacune écrite « n réponses sur 41 »                        | Chaque comptage figure dans la note, 41 est nommé comme base, aucun pourcentage                                                                    |
+| Coût         | L’e-mail du fournisseur   | Un titre, les deux options avec le prix mensuel et ce qu’il comprend, la durée de douze mois | Les deux prix apparaissent une fois et correspondent à l’e-mail, la durée de douze mois est indiquée                                         |
 
-Fill in the table and something else happens. Choices you never noticed
-in the one-line request become visible, and every one of them is yours.
-Does week 5 go in the report as it is, with a note, or get left out? Are
-survey numbers reported per reply or per participant? And does the report
-show one price or both? In the blended result the agent made each of them
-for you, silently, and the report looked finished. In the split they show
-up as blanks in the Output and Check columns, before any brief is
-written (@Academy ai-fluency-framework-foundations).
+Remplissez le tableau, et autre chose se produit. Des choix que vous n’aviez
+pas remarqués dans la demande d’une ligne deviennent visibles, et chacun
+d’eux vous revient. La semaine 5 entre-t-elle dans le rapport telle quelle,
+avec une note, ou est-elle laissée de côté ? Les chiffres de l’enquête
+sont-ils donnés par réponse ou par participant ? Et le rapport montre-t-il un
+prix ou les deux ? Dans le résultat mélangé, l’agent a fait chacun de ces
+choix pour vous, en silence, et le rapport avait l’air fini. Dans le
+découpage, ils apparaissent comme des cases vides dans les colonnes Sortie et
+Vérification, avant qu’une seule consigne soit écrite
+(@Academy ai-fluency-framework-foundations).
 
-Make them now, in a line each. Week 5 goes in, marked incomplete, because
-leaving it out would hide the outage. Survey numbers are "n of 41
-replies", because the note counts replies and never participants.
-Both prices go in, because the manager is choosing between them. Those lines become limits
-in the briefs.
+Faites ces choix maintenant, en une ligne chacun. La semaine 5 entre dans le
+rapport, marquée incomplète, parce que l’écarter cacherait la panne. Les
+chiffres de l’enquête s’écrivent « n réponses sur 41 », parce que la note
+compte des réponses et jamais des participants. Les deux prix entrent dans
+le rapport, parce que le responsable doit choisir entre eux. Ces lignes
+deviennent des limites dans les consignes.
 
 <Sort id="input-output-check" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-decomposition']}
-  context="The lesson splits a three-part report on a shared-bike pilot into pieces. Each piece has an input (a source), an output (what the agent produces) and a check (what you tick afterwards)."
-  title="Input, output or check?" hint="Is this something you hand over, something that comes back, or something you tick after it comes back?"
-  buckets={['Input', 'Output', 'Check']}
+  context="La leçon découpe en morceaux un rapport en trois parties sur un essai de vélos partagés. Chaque morceau a une entrée (une source), une sortie (ce que produit l’agent) et une vérification (ce que vous cochez après)."
+  title="Entrée, sortie ou vérification ?" hint="Est-ce quelque chose que vous remettez, quelque chose qui revient, ou quelque chose que vous cochez après le retour ?"
+  buckets={['Entrée', 'Sortie', 'Vérification']}
   items={[
-    { text: 'The weekly usage export from the bike system', bucket: 0 },
-    { text: 'A heading and four bullets, each written as "n of 41 replies"', bucket: 1 },
-    { text: 'A match between the total line and the sum of the export', bucket: 2 },
-    { text: 'The vendor emailed two options for continuing after the pilot', bucket: 0 },
-    { text: 'Both prices appear once and match the email', bucket: 2 },
-    { text: 'The agent writes one line per week and one total line under a heading', bucket: 1 },
-    { text: 'No percentage appears in the riders section', bucket: 2 },
-    { text: 'The note from the colleague who ran the survey', bucket: 0 },
+    { text: 'L’export hebdomadaire d’utilisation du système de vélos', bucket: 0 },
+    { text: 'Un titre et quatre puces, chacune écrite « n réponses sur 41 »', bucket: 1 },
+    { text: 'La concordance entre la ligne de total et la somme de l’export', bucket: 2 },
+    { text: 'L’e-mail du fournisseur avec deux options pour continuer après l’essai', bucket: 0 },
+    { text: 'Les deux prix apparaissent une fois et correspondent à l’e-mail', bucket: 2 },
+    { text: 'L’agent écrit une ligne par semaine et une ligne de total sous un titre', bucket: 1 },
+    { text: 'Aucun pourcentage n’apparaît dans la partie sur les utilisateurs', bucket: 2 },
+    { text: 'La note de la collègue qui a mené l’enquête', bucket: 0 },
   ]} />
 
 <Scenario id="week-five" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-decomposition', 'task-brief']}
-  context="A weekly usage export for an eight-week bike pilot has one week flagged as an incomplete count because the docking station was offline for two days. You are about to write the brief for the piece that turns the export into the usage section of a report."
-  title="The week that is flagged" hint="Who ends up making this decision if you do not, and will you be able to tell?"
+  context="L’export d’utilisation hebdomadaire d’un essai de vélos de huit semaines signale une semaine au comptage incomplet, parce que la station d’accueil était hors service deux jours. Vous allez écrire la consigne du morceau qui transforme l’export en partie « Usage » d’un rapport."
+  title="La semaine signalée" hint="Qui finit par prendre cette décision si vous ne la prenez pas, et pourrez-vous le savoir ?"
   options={[
-    { text: 'Write the brief without mentioning week 5 and see what the agent does with it when it reaches that row.', consequence: 'The agent picks one reading, drops the week or reports 96 as a normal count, and the section reads fine either way. You find out only if you compare it with the export line by line.' },
-    { text: 'Decide now that week 5 goes in with a note that the count is incomplete, and put that in the brief and in the check.', correct: true, consequence: 'The decision is made once, in writing. The agent has no gap to fill, and the check tells you whether it did what you decided.' },
-    { text: 'Leave week 5 out of the source you paste, so the agent never sees the problem.', consequence: 'The section shows seven weeks and a total that does not match the export. The outage is hidden from the manager, and the check "eight weeks each appear once" fails.' },
-    { text: 'Tell the agent to handle week 5 in whatever way it thinks is best.', consequence: 'You have delegated the decision and kept the accountability. The agent chooses, and the choice is not written anywhere you can review.' },
+    { text: 'Écrire la consigne sans parler de la semaine 5, et voir ce que fait l’agent quand il arrive à cette ligne.', consequence: 'L’agent choisit une lecture, écarte la semaine ou présente 96 comme un comptage normal, et la partie se lit bien dans les deux cas. Vous ne le découvrez qu’en la comparant ligne par ligne avec l’export.' },
+    { text: 'Décider maintenant que la semaine 5 entre avec une note sur le comptage incomplet, et le mettre dans la consigne et dans la vérification.', correct: true, consequence: 'La décision est prise une fois, par écrit. L’agent n’a aucun manque à combler, et la vérification vous dit s’il a fait ce que vous avez décidé.' },
+    { text: 'Retirer la semaine 5 de la source que vous collez, pour que l’agent ne voie jamais le problème.', consequence: 'La partie montre sept semaines et un total qui ne correspond pas à l’export. La panne est cachée au responsable, et la vérification « chacune des huit semaines apparaît une fois » échoue.' },
+    { text: 'Dire à l’agent de traiter la semaine 5 de la façon qu’il juge la meilleure.', consequence: 'Vous avez délégué la décision et gardé la responsabilité. L’agent choisit, et ce choix n’est écrit nulle part où vous pourriez le vérifier.' },
   ]}>
-You are about to brief the usage piece and you notice the flag on week 5
-in the export. What do you do?
+Vous allez écrire la consigne du morceau « Usage » et vous remarquez le
+signalement de la semaine 5 dans l’export. Que faites-vous ?
 </Scenario>
 
-## Briefing and running the first piece
+## Écrire la consigne et lancer le premier morceau
 
-The usage piece is ready. Its input is one source and its output is
-fixed, and its check is a list you can tick. Its brief is the four parts from the
-previous lesson, with the check as the done-criteria. Send it now, with
-only the usage export pasted underneath. The other two sources stay out
-of this piece.
+Le morceau « Usage » est prêt. Son entrée est une seule source, sa sortie
+est fixée, et sa vérification est une liste que vous pouvez cocher. Sa
+consigne a les quatre parties de la leçon précédente, avec la vérification
+comme critères d’achèvement. Envoyez-la maintenant, avec seulement l’export
+d’utilisation collé en dessous. Les deux autres sources restent en dehors de
+ce morceau.
 
 <Prompt model="illustrative" recorded="illustrative">
-Write the "Usage" section of a report from the export below. Format: the
-heading "Usage", then one line per week in the form "Week N: R rides",
-then one line "Total: T rides", then one line saying that the week 5 count
-is incomplete because the docking station was offline for two days.
+Rédige la partie « Usage » d’un rapport à partir de l’export ci-dessous.
+Format : le titre « Usage », puis une ligne par semaine sous la forme
+« Semaine N : R trajets », puis une ligne « Total : T trajets », puis une
+ligne qui dit que le comptage de la semaine 5 est incomplet parce que la
+station d’accueil était hors service deux jours.
 
-Use only the export as your source. Include all eight weeks, week 5 with
-its count as given. Don't add commentary, trends, or recommendations.
+N’utilise que l’export comme source. Inclus les huit semaines, la semaine 5
+avec son comptage tel quel. N’ajoute ni commentaire, ni tendance, ni
+recommandation.
 
-Done when: each of the eight weeks appears exactly once with the count
-from the export, the total equals the sum of the eight counts, the week 5
-note is present, and no count appears that isn't in the export.
+Terminé quand : chacune des huit semaines apparaît une seule fois avec le
+comptage de l’export, le total est égal à la somme des huit comptages, la
+note sur la semaine 5 est présente, et aucun comptage absent de l’export
+n’apparaît.
 
-[export follows]
+[l’export suit]
 </Prompt>
 <Response>
 
 ```text
 **Usage**
 
-- Week 1: 112 rides
-- Week 2: 148 rides
-- Week 3: 171 rides
-- Week 4: 165 rides
-- Week 5: 96 rides
-- Week 6: 183 rides
-- Week 7: 190 rides
-- Week 8: 176 rides
-- Total: 1,241 rides
+- Semaine 1 : 112 trajets
+- Semaine 2 : 148 trajets
+- Semaine 3 : 171 trajets
+- Semaine 4 : 165 trajets
+- Semaine 5 : 96 trajets
+- Semaine 6 : 183 trajets
+- Semaine 7 : 190 trajets
+- Semaine 8 : 176 trajets
+- Total : 1 241 trajets
 
-The week 5 count is incomplete because the docking station was offline on
-two days that week.
+Le comptage de la semaine 5 est incomplet parce que la station d’accueil
+était hors service deux jours cette semaine-là.
 ```
 
 </Response>
 
-Now tick the check, line by line. Eight weeks, each once? Count them.
-Each count as in the export? Compare them. The total? Add the eight
-numbers yourself. The export gives 1,241, so a total of 1,241 passes and
-anything else fails. Week 5 note present? Any count that isn't in the export? Your own result
-differs in wording, and the check doesn't care about wording. It is a
-list of yes or no, and every item takes seconds.
+Cochez maintenant la vérification, ligne par ligne. Huit semaines, une fois
+chacune ? Comptez-les. Chaque comptage conforme à l’export ? Comparez-les. Le
+total ? Additionnez vous-même les huit nombres. L’export donne 1 241, donc un
+total de 1 241 passe et tout autre nombre échoue. La note sur la semaine 5
+est-elle présente ? Un comptage absent de l’export apparaît-il ? Votre propre
+résultat sera formulé autrement, et la vérification ne s’occupe pas de la
+formulation. C’est une liste de oui ou non, et chaque point prend quelques
+secondes.
 
-Compare this with the blended report. There you had one page and a
-feeling. Here you have one section and five ticks. A section that fails a tick
-goes back to the agent with the failing item, the way the previous lesson
-taught. The riders and cost pieces are unchanged while you do that.
+Comparez avec le rapport mélangé. Vous aviez une page et une impression. Ici,
+vous avez une partie et cinq cases cochées. Une partie qui échoue à une case
+retourne à l’agent avec le point qui a échoué, comme l’a appris la leçon
+précédente. Les morceaux « Utilisateurs » et « Coût » restent inchangés
+pendant ce temps.
 
 <MultiChoice id="ready-to-brief" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-decomposition', 'task-brief']}
-  context="A report is being split into pieces. A piece is ready to brief when it names its input, its output and a check you can tick. The pieces below come from a report on a shared-bike pilot with three sources: a usage export, a survey note and a vendor email."
-  title="Which pieces are ready to brief?" hint="For each piece, find its input, its output and its check. Is one of the three missing, or written as a feeling?"
+  context="Un rapport est découpé en morceaux. Un morceau est prêt pour sa consigne quand il nomme son entrée, sa sortie et une vérification que l’on peut cocher. Les morceaux ci-dessous viennent d’un rapport sur un essai de vélos partagés avec trois sources : un export d’utilisation, une note sur l’enquête et un e-mail du fournisseur."
+  title="Quels morceaux sont prêts pour leur consigne ?" hint="Pour chaque morceau, trouvez son entrée, sa sortie et sa vérification. L’une des trois manque-t-elle, ou est-elle écrite comme une impression ?"
   options={[
-    { text: 'Input: the survey note. Output: four bullets, each as "n of 41 replies". Check: every count is in the note and no percentage appears.', correct: true },
-    { text: 'Input: the survey note. Output: a short section on what riders think, in the tone of the rest of the report, about half a page long.', why: 'There is an output but no check. What would you tick when it comes back?' },
-    { text: 'Output: a cost paragraph with both amounts and the minimum term. Check: the amounts match the quote we were sent and the term is stated.', why: 'Which source? Without an input the agent picks its own, and "the quote" could be either of the two options in the email.' },
-    { text: 'Input: the vendor email. Output: both options with price and what each includes, plus the minimum term. Check: both prices appear once and match the email, and the twelve-month term is stated.', correct: true },
-    { text: 'Input: the usage export. Output: the usage section, with the weekly counts. Check: it reads well, looks complete and matches the tone of the report.', why: 'The check is a feeling. Two readers can disagree about "reads well", so nothing here can be ticked.' },
+    { text: 'Entrée : la note sur l’enquête. Sortie : quatre puces, chacune écrite « n réponses sur 41 ». Vérification : chaque comptage figure dans la note et aucun pourcentage n’apparaît.', correct: true },
+    { text: 'Entrée : la note sur l’enquête. Sortie : une courte partie sur ce que pensent les utilisateurs, dans le ton du reste du rapport, d’une demi-page environ.', why: 'Il y a une sortie mais pas de vérification. Que cocheriez-vous au retour ?' },
+    { text: 'Sortie : un paragraphe sur le coût avec les deux montants et la durée minimale. Vérification : les montants correspondent au devis reçu et la durée est indiquée.', why: 'Quelle source ? Sans entrée, l’agent choisit la sienne, et « le devis » peut désigner l’une ou l’autre des deux options de l’e-mail.' },
+    { text: 'Entrée : l’e-mail du fournisseur. Sortie : les deux options avec le prix de chacune et ce qu’elle comprend, et la durée minimale. Vérification : les deux prix apparaissent une fois et correspondent à l’e-mail, la durée de douze mois est indiquée.', correct: true },
+    { text: 'Entrée : l’export d’utilisation. Sortie : la partie sur l’usage, avec les comptages hebdomadaires. Vérification : elle se lit bien, semble complète et suit le ton du rapport.', why: 'La vérification est une impression. Deux lecteurs peuvent être en désaccord sur « se lit bien », donc rien ici ne peut être coché.' },
   ]}>
-Which of these pieces are ready to have a brief written for them?
+Lesquels de ces morceaux sont prêts pour qu’on écrive leur consigne ?
 </MultiChoice>
 
 <Choice id="a-piece-without-a-check" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-decomposition', 'task-brief']}
-  context="The lesson splits a large task into pieces, each with an input, an output and a check you can tick, and briefs one piece at a time."
-  title="A piece without a check" hint="What does the brief use as its done-criteria?"
+  context="La leçon découpe une grande tâche en morceaux qui ont chacun une entrée, une sortie et une vérification que l’on peut cocher, et écrit la consigne d’un morceau à la fois."
+  title="Un morceau sans vérification" hint="Qu’est-ce que la consigne utilise comme critères d’achèvement ?"
   options={[
-    { text: 'Brief it now, and write the check when the result comes back.', why: 'Once the result is there, the check tends to describe the result. The agent has no done-criteria to aim at.' },
-    { text: 'Write the check first, and use it as the done-criteria of the brief.', correct: true },
-    { text: 'Ask the agent to decide how its result should be checked.', why: 'The check is how you judge the agent. It can\'t come from the agent\'s own choice.' },
-    { text: 'Merge it into the next piece, so that one check covers both of them.', why: 'A merged piece blends again, and a failure no longer tells you which part to redo.' },
+    { text: 'Écrire la consigne maintenant, et écrire la vérification au retour du résultat.', why: 'Une fois le résultat là, la vérification tend à décrire le résultat. L’agent n’a aucun critère d’achèvement à viser.' },
+    { text: 'Écrire d’abord la vérification, et s’en servir comme critères d’achèvement.', correct: true },
+    { text: 'Demander à l’agent de décider comment son résultat sera vérifié.', why: 'La vérification est la façon dont vous jugez l’agent. Elle ne peut pas venir de son propre choix.' },
+    { text: 'Le fusionner avec le morceau suivant, pour qu’une seule vérification couvre les deux.', why: 'Un morceau fusionné se mélange de nouveau, et un échec ne vous dit plus quelle partie refaire.' },
   ]}>
 
-A piece of the report has an input and an output and no check. What do
-you do before you brief it?
+Un morceau du rapport a une entrée et une sortie, et aucune vérification.
+Que faites-vous avant d’écrire sa consigne ?
 
 </Choice>
 
 <Match id="name-the-part-of-the-piece" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-decomposition']}
-  context="A learner splits a report on a canteen survey into pieces. Each piece has an input (a source), an output (what the agent produces) and a check (what you tick afterwards)."
-  title="Input, output or check?" hint="Is it what the agent reads, what it produces, or what you tick afterwards?"
-  options={['Input', 'Output', 'Check']}
+  context="Un apprenant découpe en morceaux un rapport sur une enquête au sujet de la cantine. Chaque morceau a une entrée (une source), une sortie (ce que produit l’agent) et une vérification (ce que vous cochez après)."
+  title="Entrée, sortie ou vérification ?" hint="Est-ce ce que l’agent lit, ce qu’il produit, ou ce que vous cochez après ?"
+  options={['Entrée', 'Sortie', 'Vérification']}
   rows={[
-    { statement: 'The export of the 120 survey answers', option: 0, why: 'Does the agent read this, or write it?' },
-    { statement: 'A table with one row per question and the count for each answer', option: 1, why: 'Is this what the piece hands back?' },
-    { statement: 'The counts in each row add up to 120', option: 2, why: 'Is this something you can tick once the result is back?' },
+    { statement: 'L’export des 120 réponses à l’enquête', option: 0, why: 'L’agent lit-il ceci, ou l’écrit-il ?' },
+    { statement: 'Un tableau avec une ligne par question et le nombre de chaque réponse', option: 1, why: 'Est-ce ce que le morceau rend ?' },
+    { statement: 'Les nombres de chaque ligne font 120 au total', option: 2, why: 'Est-ce quelque chose que vous pouvez cocher au retour du résultat ?' },
   ]}
-  rationale="A piece names all three, so you can hand it over on its own and check it on its own.">
-Match each line to the part of the piece it describes.
+  rationale="Un morceau nomme les trois, pour que vous puissiez le confier seul et le vérifier seul.">
+Associez chaque ligne à la partie du morceau qu’elle décrit.
 </Match>
 
 <Scenario id="it-reads-well" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-decomposition', 'task-brief']}
-  context="A learner gave an agent a three-part report as one prompt, with three sources pasted in. The report came back, and it reads well."
-  title="The report reads well" hint="What can you tick in a report that was asked for in one prompt?"
+  context="Un apprenant a donné à un agent un rapport en trois parties en un seul prompt, avec trois sources collées. Le rapport est revenu, et il se lit bien."
+  title="Le rapport se lit bien" hint="Que pouvez-vous cocher dans un rapport demandé en un seul prompt ?"
   options={[
-    { text: 'Send it, because a report that reads this well is ready.', consequence: 'One section mixes numbers from two sources, and the reader quotes the wrong one.' },
-    { text: 'Ask the agent to check its own report for mistakes before you send it.', consequence: 'The agent finds nothing, because it made the choices that it is now checking.' },
-    { text: 'Split the report into pieces with an input, an output and a check, and brief them one at a time.', correct: true, consequence: 'The usage piece fails its check on the total. You redo that piece, and the other two are unchanged.' },
-    { text: 'Read it once more, slowly, and fix what you notice.', consequence: 'You fix the tone and miss the gap the agent filled with its own choice.' },
+    { text: 'L’envoyer, puisqu’un rapport qui se lit aussi bien est prêt.', consequence: 'Une partie mélange les chiffres de deux sources, et le lecteur cite le mauvais.' },
+    { text: 'Demander à l’agent de vérifier son propre rapport avant de l’envoyer.', consequence: 'L’agent ne trouve rien, parce que c’est lui qui a fait les choix qu’il vérifie maintenant.' },
+    { text: 'Découper le rapport en morceaux avec entrée, sortie et vérification, un morceau à la fois.', correct: true, consequence: 'Le morceau « Usage » échoue à sa vérification sur le total. Vous refaites ce morceau, et les deux autres restent inchangés.' },
+    { text: 'Le relire encore une fois, lentement, et corriger tout ce que vous remarquez.', consequence: 'Vous corrigez le ton et ratez le manque que l’agent a comblé par son propre choix.' },
   ]}>
 
-What do you do with the report?
+Que faites-vous du rapport ?
 
 </Scenario>
 
-<Pitfall title="A piece with an output but no check">
-A learner splits the report, writes "Riders: from the survey note, a short
-section on satisfaction" as the second piece, and briefs it. The agent
-returns "80% of riders are satisfied and want the scheme to continue".
-The line is true of the 41 replies and reads as true of all 120
-participants, and there is nothing in the piece that would have caught
-it, because the piece said what to produce and never said what to check.
-The rule: a piece isn't ready to brief until its check is written, and a
-check is something you can tick.
+<Pitfall title="Un morceau avec une sortie et sans vérification">
+Un apprenant découpe le rapport, écrit « Utilisateurs : à partir de la note
+sur l’enquête, une courte partie sur la satisfaction » comme deuxième
+morceau, et écrit sa consigne. L’agent rend « 80 % des utilisateurs sont
+satisfaits et veulent que le dispositif continue ». La phrase est vraie des
+41 réponses et se lit comme vraie des 120 participants, et rien dans le
+morceau ne l’aurait repérée, parce que le morceau disait quoi produire et
+jamais quoi vérifier. La règle : un morceau n’est pas prêt pour sa consigne
+tant que sa vérification n’est pas écrite, et une vérification est quelque
+chose que l’on peut cocher.
 </Pitfall>
 
-## What a good piece looks like
+## À quoi ressemble un bon morceau
 
-Look at the usage piece once more. You could hand it over on its own
-with one source and no other context. You could check it on its own, with a
-list that took under a minute. If the total had been wrong, you would have
-redone that one piece and the riders and cost sections would have been
-untouched. Those are the marks of a good piece, and a piece missing one
-of them is a sign the split isn't finished.
+Regardez encore une fois le morceau « Usage ». Vous pouviez le confier seul,
+avec une source et aucun autre contexte. Vous pouviez le vérifier seul, avec
+une liste qui a pris moins d’une minute. Si le total avait été faux, vous
+auriez refait ce seul morceau, et les parties « Utilisateurs » et « Coût »
+seraient restées intactes. Ce sont les marques d’un bon morceau, et un
+morceau auquel l’une d’elles manque montre que le découpage n’est pas fini.
 
-Splitting also moved the decisions to the right moment. In the one-prompt
-version you discovered the week 5 and percentage choices, if at all, by
-reading a finished report. In the split version they appeared as blanks
-in a table before anything ran, and you filled them in as limits in the
-brief. An agent that works through a task in steps is only as good as
-the check at the end of each step (@DLAI-11). The steps and the checks
-are the part you supply.
+Le découpage a aussi déplacé les décisions au bon moment. Dans la version en
+un seul prompt, vous découvriez les choix sur la semaine 5 et sur les
+pourcentages en lisant un rapport fini, quand vous les découvriez. Dans la
+version découpée, ils sont apparus comme des cases vides d’un tableau avant
+toute exécution, et vous les avez remplis sous forme de limites dans la
+consigne. Un agent qui avance dans une tâche par étapes ne vaut que par la
+vérification au bout de chaque étape (@DLAI-11). Les étapes et les
+vérifications sont la partie que vous fournissez.
 
-<Exercise stretch="Ask the agent to assemble your three checked sections into the one-page report, with one check: no number changed. Then compare the result with the blended report from the start of the lesson.">
-Write the briefs for the riders piece and the cost piece from the table,
-using the decisions you made about the survey base and the two prices as
-limits. Run the riders piece with only the survey note pasted underneath,
-then tick its check item by item. Keep it to the four bullets the table
-asks for. A good result is one where every count in the bullets is a
-number from the note, 41 is named as the base, and no percentage appears,
-so that a reader can't mistake 33 replies for 80% of the campus. Which of
-the decisions in your brief would the agent have made for you, and could
-you have told?
+<Exercise stretch="Demandez à l’agent d’assembler vos trois parties vérifiées en un rapport d’une page, avec une seule vérification : aucun nombre n’a changé. Comparez ensuite le résultat avec le rapport mélangé du début de la leçon.">
+Écrivez les consignes des morceaux « Utilisateurs » et « Coût » à partir du
+tableau, en utilisant comme limites les décisions prises sur la base de
+l’enquête et sur les deux prix. Lancez le morceau « Utilisateurs » avec
+seulement la note sur l’enquête collée en dessous, puis cochez sa
+vérification point par point. Tenez-vous aux quatre puces que demande le
+tableau. Un bon résultat est un résultat où chaque comptage des puces est un
+nombre de la note, où 41 est nommé comme base et où aucun pourcentage
+n’apparaît, pour qu’un lecteur ne puisse pas prendre 33 réponses pour 80 %
+du site. Lesquelles des décisions de votre consigne l’agent aurait-il prises
+pour vous, et l’auriez-vous su ?
 </Exercise>
 
 <Recap>
-1. A task given as one prompt comes back blended, with the gaps filled by the agent's own choices, and reading well is the only thing you can check.
-2. Split a large task into pieces that each have an input, an output, and a check. One source per piece, a fixed output, and a check you can tick.
-3. The split shows the decisions that are yours: which data goes in, what base a number uses, which of two options to show. Make them before the first brief, and write them into it as limits.
-4. A piece with an output but no check isn't ready to brief. Write the check first, and use it as the done-criteria.
-5. A good piece can be handed over on its own and checked on its own. When it fails, you redo that piece and the other two are unchanged.
+1. Une tâche donnée en un seul prompt revient mélangée, avec des manques comblés par les choix de l’agent, et la qualité de lecture est la seule chose que vous pouvez vérifier.
+2. Découpez une grande tâche en morceaux qui ont chacun une entrée, une sortie et une vérification. Une source par morceau, une sortie fixée, et une vérification que vous pouvez cocher.
+3. Le découpage montre les décisions qui vous reviennent : quelles données entrent, sur quelle base se calcule un nombre, laquelle de deux options montrer. Prenez-les avant la première consigne, et écrivez-les dedans comme limites.
+4. Un morceau qui a une sortie et pas de vérification n’est pas prêt pour sa consigne. Écrivez d’abord la vérification, et utilisez-la comme critères d’achèvement.
+5. Un bon morceau peut être confié seul et vérifié seul. Quand il échoue, vous refaites ce morceau, et les deux autres restent inchangés.
 </Recap>

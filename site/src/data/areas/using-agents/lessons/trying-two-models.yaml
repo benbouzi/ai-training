@@ -1,9 +1,9 @@
 id: using-agents/trying-two-models
-title: Trying two models on the same task
+title: Essayer deux modèles sur la même tâche
 description: >-
-  Run one reformatting task, one classification task and one ambiguous request on a small and a
-  large model, time each answer, and read a six-cell table to see where the large model earns its
-  price.
+  Lancer une tâche de mise en forme, une tâche de classement et une demande ambiguë sur un petit
+  et un grand modèle, chronométrer chaque réponse, et lire un tableau de six cases pour voir où le
+  grand modèle justifie son prix.
 mode: tutorial
 covers: using-agents/choosing-tools
 serves: [using-agents/chooses-tool-and-autonomy/picks-a-model-by-fit]
@@ -16,16 +16,18 @@ assumes:
     lesson: concepts/how-models-work
     section: un-jeton-à-la-fois
 extends-to:
-  - label: "Applied AI Foundations, module 2: when to switch ChatGPT to a reasoning model (OpenAI Academy, free account)"
+  - label: >-
+      Applied AI Foundations, module 2 : quand passer ChatGPT sur un modèle de raisonnement (OpenAI
+      Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/applied-ai-foundations-szsmv
 after: [using-agents/chat-agent-or-automation]
-shorts: [When a small model is the right one]
+shorts: [Quand un petit modèle est le bon]
 exercise:
   kind: do
   brief: >-
-    Run the same three supplied inputs (one reformatting, one classification, one ambiguous request)
-    on a small and a large model from the picker in your chat tool, time each answer, and fill a
-    six-cell table with good enough or not.
+    Lancer les trois mêmes entrées données (une mise en forme, un classement, une demande ambiguë)
+    sur un petit et un grand modèle du sélecteur de votre outil de conversation, chronométrer chaque
+    réponse, et remplir un tableau de six cases avec « suffisant » ou « insuffisant ».
 sources: [AEC-02]
 sources-checked: 2026-09-26
 review-by: 2027-03-26

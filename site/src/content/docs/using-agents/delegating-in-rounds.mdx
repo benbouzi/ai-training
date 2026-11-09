@@ -1,328 +1,346 @@
 import { Choice, MultiChoice, Match, Scenario, Pitfall, Exercise, Recap, Habit, Prompt, Response } from '@components/lesson';
 
-In this lesson we delegate one piece of a split task and check the
-result line by line. Then we change the brief with what the check showed,
-send the piece again, and delegate the next piece with the change in its
-brief. We keep a short log of every round. The task is the bike pilot
-report from the previous lesson, so the sources are already familiar.
+Dans cette leçon, nous déléguons un morceau d’une tâche découpée et nous
+vérifions le résultat ligne par ligne. Puis nous modifions la consigne avec
+ce que la vérification a montré, nous renvoyons le morceau, et nous
+déléguons le morceau suivant avec la modification dans sa consigne. Nous
+tenons un court journal de chaque tour. La tâche est le rapport sur l’essai
+de vélos de la leçon précédente, donc les sources vous sont déjà familières.
 
-You need any chat-capable agent you already have access to. Start each
-piece in a fresh conversation. The next piece then sees only what you
-write into its brief, and the lesson is about what goes into it. Every
-exchange on this page is illustrative. The author wrote it to show the
-pattern, and your agent's text will differ.
+Il vous faut n’importe quel agent conversationnel auquel vous avez déjà
+accès. Commencez chaque morceau dans une nouvelle conversation. Le morceau
+suivant ne voit alors que ce que vous écrivez dans sa consigne, et la leçon
+porte justement sur ce qui y entre. Chaque échange de cette page est un
+exemple illustratif. L’auteur l’a écrit pour montrer le schéma, et votre
+agent donnera un autre texte.
 
-## The first piece and its criteria
+## Le premier morceau et ses critères
 
-The previous lesson split the report into three pieces, ran the usage
-piece, and left the riders piece and the cost piece as the exercise. The
-brief below is a model answer to that exercise for the riders piece. If
-you wrote your own brief for it, use yours with the criteria below next
-to it.
+La leçon précédente a découpé le rapport en trois morceaux, lancé le morceau
+« Usage », et laissé les morceaux « Utilisateurs » et « Coût » en exercice.
+La consigne ci-dessous est une réponse modèle à cet exercice pour le morceau
+« Utilisateurs ». Si vous avez écrit votre propre consigne, utilisez-la avec
+les critères ci-dessous à côté.
 
 <Prompt model="illustrative" recorded="illustrative">
-Write the "Riders" section of a report from the survey note below.
-Format: the heading "Riders", then four bullets, one per finding, each
-count written as "n of 41 replies".
+Rédige la partie « Utilisateurs » d’un rapport à partir de la note sur
+l’enquête ci-dessous. Format : le titre « Utilisateurs », puis quatre puces,
+une par constat, chaque comptage écrit « n réponses sur 41 ».
 
-Use only the survey note as your source. Use the 41 replies as the base
-for every count, and don't turn counts into percentages. Don't add
-commentary or recommendations.
+N’utilise que la note sur l’enquête comme source. Prends les 41 réponses
+comme base de chaque comptage, et ne convertis pas les comptages en
+pourcentages. N’ajoute ni commentaire ni recommandation.
 
-Done when: there are four bullets, each count is written as "n of 41
-replies", every count is in the note, no percentage appears, and there is
-no commentary or recommendation.
+Terminé quand : il y a quatre puces, chaque comptage est écrit « n réponses
+sur 41 », chaque comptage figure dans la note, aucun pourcentage n’apparaît,
+et il n’y a ni commentaire ni recommandation.
 
-[survey note follows]
+[la note sur l’enquête suit]
 </Prompt>
 
-The criteria for this piece are the done-criteria of the brief, written as
-four lines you can tick:
+Les critères de ce morceau sont les critères d’achèvement (done-criteria) de la consigne,
+écrits en quatre lignes que l’on peut cocher :
 
-1. A heading and four bullets, each count written as "n of 41 replies".
-2. Every count is in the note.
-3. The section has no percentages.
-4. No commentary or recommendation.
+1. Un titre et quatre puces, chaque comptage écrit « n réponses sur 41 ».
+2. Chaque comptage figure dans la note.
+3. La partie ne contient aucun pourcentage.
+4. Aucun commentaire ni recommandation.
 
-For reference, here is the survey note again.
+Pour mémoire, voici de nouveau la note sur l’enquête.
 
-> All 120 pilot participants got the survey and 41 replied. 33 said they
-> would keep using the bikes if the scheme continues. 29 named "no bike
-> available in the morning" as the biggest problem. 12 asked for helmets
-> at the docking station. 6 wrote in the free-text box that the docking
-> station is too far from the east entrance. I haven't turned any of this
-> into percentages.
+> Les 120 participants à l’essai ont reçu l’enquête, et 41 ont répondu. 33
+> ont dit qu’ils continueraient à utiliser les vélos si le dispositif était
+> maintenu. 29 ont cité « pas de vélo disponible le matin » comme principal
+> problème. 12 ont demandé des casques à la station d’accueil. 6 ont écrit
+> dans le champ libre que la station est trop loin de l’entrée est. Je n’ai
+> rien converti en pourcentages.
 
-## Round one: delegate and check
+## Premier tour : déléguer et vérifier
 
-Send the brief with only the survey note pasted underneath. Here is the
-kind of result that comes back.
+Envoyez la consigne avec seulement la note sur l’enquête collée en dessous.
+Voici le genre de résultat qui revient.
 
 <Response>
 
 ```text
-Riders
+Utilisateurs
 
-- 33 of 41 replies would keep using the bikes if the scheme continues,
-  and 8 of 41 replies would not.
-- 29 of 41 replies named "no bike available in the morning" as the
-  biggest problem.
-- 12 of 41 replies asked for helmets at the docking station.
-- 6 of 41 replies said in the free-text box that the docking station is
-  too far from the east entrance.
+- 33 réponses sur 41 continueraient à utiliser les vélos si le dispositif
+  était maintenu, et 8 réponses sur 41 ne le feraient pas.
+- 29 réponses sur 41 ont cité « pas de vélo disponible le matin » comme
+  principal problème.
+- 12 réponses sur 41 ont demandé des casques à la station d’accueil.
+- 6 réponses sur 41 ont dit dans le champ libre que la station d’accueil
+  est trop loin de l’entrée est.
 ```
 
 </Response>
 
-It reads well, and it looks like what you asked for. Check it before you
-read on. Take the four lines one at a time, with the note next to the
-result, and mark each one pass or fail.
+Il se lit bien, et il ressemble à ce que vous avez demandé. Vérifiez-le
+avant de poursuivre. Prenez les quatre lignes une par une, avec la note à
+côté du résultat, et marquez chacune réussie ou échouée.
 
 <Match id="tick-round-one" objective="using-agents/delegates-and-checks/reviews-against-brief"
   concepts={['task-iteration', 'checking-results']}
-  context="The lesson delegates the riders section of a report on a shared-bike pilot. The survey note says 41 of 120 participants replied, 33 would keep using the bikes, 29 named no bike in the morning as the biggest problem, 12 asked for helmets and 6 said the docking station is too far from the east entrance. The result has four bullets, each written as n of 41 replies, and the first bullet ends with: and 8 of 41 replies would not."
-  title="Pass or fail, line by line" hint="For each line, find the thing it names in the result, then look for it in the note."
-  options={['Pass', 'Fail']}
+  context="La leçon délègue la partie « Utilisateurs » d’un rapport sur un essai de vélos partagés. La note sur l’enquête dit que 41 participants sur 120 ont répondu, que 33 continueraient à utiliser les vélos, que 29 ont cité l’absence de vélo le matin comme principal problème, que 12 ont demandé des casques et que 6 trouvent la station d’accueil trop loin de l’entrée est. Le résultat a quatre puces, chacune écrite n réponses sur 41, et la première puce se termine par : et 8 réponses sur 41 ne le feraient pas."
+  title="Réussi ou échoué, ligne par ligne" hint="Pour chaque ligne, trouvez dans le résultat ce qu’elle nomme, puis cherchez-le dans la note."
+  options={['Réussi', 'Échoué']}
   rows={[
-    { statement: 'A heading and four bullets, each count written as "n of 41 replies"', option: 0, why: 'Count the bullets and read how each count is written.' },
-    { statement: 'Every count is in the note', option: 1, why: 'Take each number in the result and find it in the note. Is there one you cannot find?' },
-    { statement: 'The section has no percentages', option: 0, why: 'Look for a percent sign or the word percent anywhere in the section.' },
-    { statement: 'No commentary or recommendation', option: 0, why: 'Does any bullet say what should be done, or what the numbers mean?' },
+    { statement: 'Un titre et quatre puces, chaque comptage écrit « n réponses sur 41 »', option: 0, why: 'Comptez les puces et lisez comment chaque comptage est écrit.' },
+    { statement: 'Chaque comptage figure dans la note', option: 1, why: 'Prenez chaque nombre du résultat et cherchez-le dans la note. Y en a-t-il un que vous ne trouvez pas ?' },
+    { statement: 'La partie ne contient aucun pourcentage', option: 0, why: 'Cherchez un signe pour cent ou le mot pourcentage n’importe où dans la partie.' },
+    { statement: 'Aucun commentaire ni recommandation', option: 0, why: 'Une puce dit-elle ce qu’il faudrait faire, ou ce que signifient les nombres ?' },
   ]}
-  rationale="Three lines pass and one fails. The note has no count of 8 anywhere, and it never says that anyone would stop using the bikes.">
-Check the round one result against the four criteria. Which lines pass and which fail?
+  rationale="Trois lignes réussissent et une échoue. La note ne contient nulle part le nombre 8, et elle ne dit jamais que quelqu’un cesserait d’utiliser les vélos.">
+Vérifiez le résultat du premier tour au regard des quatre critères. Quelles
+lignes réussissent et lesquelles échouent ?
 </Match>
 
-The failing line is the second one. The note has no 8 in it. The agent
-took 41 replies, subtracted the 33 who said they would keep using the
-bikes, and wrote the difference as a finding. It is also a claim the note
-doesn't make. The other 8 replies didn't say they would keep using the
-bikes, and that isn't the same as saying they would stop. Some of them
-may not have answered that question at all.
+La ligne qui échoue est la deuxième. La note ne contient pas de 8. L’agent a
+pris les 41 réponses, retiré les 33 qui disaient continuer à utiliser les
+vélos, et présenté la différence comme un constat. C’est aussi une
+affirmation que la note ne fait pas. Les 8 autres réponses n’ont pas dit
+qu’elles continueraient à utiliser les vélos, ce qui est autre chose que dire
+qu’elles arrêteraient. Certaines n’ont peut-être pas répondu du tout à cette
+question.
 
-Notice how the check found it. A read of the whole section gives a
-feeling that it is fine. A walk down the four lines gives three passes
-and one fail, and the fail names the exact bullet to look at.
+Remarquez comment la vérification l’a trouvé. Une lecture de toute la partie
+donne l’impression que tout va bien. Un passage sur les quatre lignes donne
+trois réussites et un échec, et l’échec désigne la puce exacte à regarder.
 
-## Reading the miss as feedback on the brief
+## Lire l’erreur comme un retour sur la consigne
 
-The easy reading of the miss is that the agent made a mistake. The more
-useful reading is that the limit in the brief was looser than its check.
-The check says every count is in the note, and the brief states that rule
-only at the end, as something to tick. Its limit, "Use only the survey
-note as your source", allows more, because a number computed from the
-note still uses only the note. When two lines of a brief can be read two
-ways, the agent may take either reading.
+La lecture facile de l’erreur est que l’agent s’est trompé. La lecture la
+plus utile est que la limite de la consigne était plus lâche que sa
+vérification. La vérification dit que chaque comptage figure dans la note,
+et la consigne n’énonce cette règle qu’à la fin, comme un point à cocher. Sa
+limite, « N’utilise que la note sur l’enquête comme source », permet
+davantage, parce qu’un nombre calculé à partir de la note n’utilise encore
+que la note. Quand deux lignes d’une consigne peuvent se lire de deux
+façons, l’agent peut prendre l’une ou l’autre lecture.
 
-So the fix goes in the brief, as a limit that says what the check tests.
-Add this line to the limits of the riders brief:
+La correction va donc dans la consigne, sous forme d’une limite qui dit ce
+que teste la vérification. Ajoutez cette ligne aux limites de la consigne
+« Utilisateurs » :
 
 ```text
-Copy each count as the note gives it. Don't add, subtract or combine
-counts.
+Recopie chaque comptage tel que la note le donne. N’additionne, ne
+soustrais et ne combine aucun comptage.
 ```
 
-Then re-send the riders brief with the new line, in a fresh conversation,
-and tick the four lines again. This is round two. The first bullet now
-ends after "if the scheme continues". All four lines pass. The riders
-section is done.
+Renvoyez ensuite la consigne « Utilisateurs » avec la nouvelle ligne, dans
+une nouvelle conversation, et cochez de nouveau les quatre lignes. C’est le
+deuxième tour. La première puce se termine maintenant après « si le
+dispositif était maintenu ». Les quatre lignes réussissent. La partie
+« Utilisateurs » est terminée.
 
-Working this way, one piece at a time with the brief changed after each
-check, is iteration. Each result is feedback on the brief, and the next
-brief includes what the result showed. The AI Fluency course from Claude
-Academy describes the same back and forth between describing a task and
-judging what comes back, and it treats the judging as the source of the
-next description (@Academy ai-fluency-framework-foundations).
+Travailler ainsi, un morceau à la fois, en modifiant la consigne après
+chaque vérification, c’est l’itération. Chaque résultat est un retour sur la
+consigne, et la consigne suivante intègre ce que le résultat a montré. Le
+cours AI Fluency de Claude Academy décrit le même va-et-vient entre la
+description d’une tâche et le jugement de ce qui revient, et il traite le
+jugement comme la source de la description suivante
+(@Academy ai-fluency-framework-foundations).
 
-The cost piece needs the change too, because it has the same gap. The
-vendor email has two monthly prices and a twelve-month term, and an agent
-with no limit on computed numbers may add a yearly total or the
-difference between the two options. Neither number is in the email, and
-the manager reads it as if the vendor had quoted it. Put the change into
-the cost brief before you send it.
+Le morceau « Coût » a besoin de la modification aussi, parce qu’il a le même
+manque. L’e-mail du fournisseur donne deux prix mensuels et une durée de
+douze mois, et un agent sans limite sur les nombres calculés peut ajouter un
+total annuel ou la différence entre les deux options. Aucun de ces nombres ne
+figure dans l’e-mail, et le responsable le lit comme si le fournisseur
+l’avait proposé. Mettez la modification dans la consigne « Coût » avant de
+l’envoyer.
 
 <Choice id="where-the-fix-goes" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['task-iteration']}
-  context="A learner delegates a report on a shared-bike pilot one piece at a time, each piece in a fresh conversation. The first piece, the riders section, came back with a count that the source note never gives, because the agent worked it out from two other counts. The cost piece, from a vendor email with two prices, is next."
-  title="Where does the fix go?" hint="Which of these will the cost piece, in its own fresh conversation, still see?"
+  context="Un apprenant délègue un rapport sur un essai de vélos partagés un morceau à la fois, chaque morceau dans une nouvelle conversation. Le premier morceau, la partie « Utilisateurs », est revenu avec un comptage que la note source ne donne jamais, parce que l’agent l’a calculé à partir de deux autres comptages. Le morceau « Coût », tiré d’un e-mail de fournisseur avec deux prix, est le suivant."
+  title="Où va la correction ?" hint="Lequel de ces choix le morceau « Coût », dans sa propre nouvelle conversation, verra-t-il encore ?"
   options={[
-    { text: 'Reply in this conversation that counts are copied, never worked out, and ask for the riders section again.', why: 'This section gets fixed. The cost piece starts in a fresh conversation that never sees the reply, so it has the same gap.' },
-    { text: 'Send the riders brief again, unchanged, in a fresh conversation, since the next result may be different.', why: 'The brief still has the loose limit that allowed a computed count, so the same kind of miss can come back.' },
-    { text: 'Delete the computed count from the bullet by hand, and send the cost brief as you had written it.', why: 'The riders section is right now. The cost brief has the same gap, and a yearly total or a price difference can appear there.' },
-    { text: 'Add a limit on computed numbers to the riders brief, and put the same limit in the cost brief before sending it.', correct: true },
+    { text: 'Répondre dans cette conversation que les comptages se recopient sans calcul, et redemander la partie « Utilisateurs ».', why: 'Cette partie est corrigée. Le morceau « Coût » démarre dans une nouvelle conversation qui ne voit jamais cette réponse, donc il a le même manque.' },
+    { text: 'Renvoyer la consigne « Utilisateurs » telle quelle dans une nouvelle conversation, puisque le résultat suivant peut différer.', why: 'La consigne a toujours la limite lâche qui a permis un comptage calculé, donc le même type d’erreur peut revenir.' },
+    { text: 'Supprimer à la main le comptage calculé de la puce, et envoyer la consigne « Coût » telle que vous l’aviez écrite.', why: 'La partie « Utilisateurs » est maintenant juste. La consigne « Coût » a le même manque, et un total annuel ou une différence de prix peut y apparaître.' },
+    { text: 'Ajouter une limite sur les nombres calculés à la consigne « Utilisateurs », et la même limite à la consigne « Coût » avant de l’envoyer.', correct: true },
   ]}>
-The riders section came back with a count the note never gives. The
-agent worked it out by subtracting two numbers in the note. You are about
-to delegate the cost piece. Where does the fix go?
+La partie « Utilisateurs » est revenue avec un comptage que la note ne donne
+jamais. L’agent l’a calculé en soustrayant deux nombres de la note. Vous
+allez déléguer le morceau « Coût ». Où va la correction ?
 </Choice>
 
-## The cost piece with the change
+## Le morceau « Coût » avec la modification
 
-Here is the cost brief, a model answer to the other half of the previous
-exercise, with the new limit. Open a fresh conversation, send it with
-only the vendor email pasted underneath, and check what comes back.
+Voici la consigne « Coût », une réponse modèle à l’autre moitié de l’exercice
+précédent, avec la nouvelle limite. Ouvrez une nouvelle conversation,
+envoyez-la avec seulement l’e-mail du fournisseur collé en dessous, et
+vérifiez ce qui revient.
 
 <Prompt model="illustrative" recorded="illustrative">
-Write the "Cost" section of a report from the vendor email below. Format:
-the heading "Cost", then one bullet per option with its monthly price and
-what it includes, then one line with the minimum term.
+Rédige la partie « Coût » d’un rapport à partir de l’e-mail du fournisseur
+ci-dessous. Format : le titre « Coût », puis une puce par option avec son
+prix mensuel et ce qu’elle comprend, puis une ligne avec la durée minimale.
 
-Use only the email as your source. Include both options. Copy each amount
-as the email gives it. Don't add, subtract or multiply amounts. Don't add
-commentary or recommendations.
+N’utilise que l’e-mail comme source. Inclus les deux options. Recopie chaque
+montant tel que l’e-mail le donne. N’additionne, ne soustrais et ne
+multiplie aucun montant. N’ajoute ni commentaire ni recommandation.
 
-Done when: both prices appear once and match the email, each option says
-what it includes, the twelve-month term is stated, and every amount is in
-the email.
+Terminé quand : les deux prix apparaissent une fois et correspondent à
+l’e-mail, chaque option dit ce qu’elle comprend, la durée de douze mois est
+indiquée, et chaque montant figure dans l’e-mail.
 
-[vendor email follows]
+[l’e-mail du fournisseur suit]
 </Prompt>
 <Response>
 
 ```text
-Cost
+Coût
 
-- Option A: 1,800 per month for the bikes and the docking station. Your
-  facilities team does the maintenance.
-- Option B: 2,400 per month, including maintenance and replacement of
-  damaged bikes.
+- Option A : 1 800 par mois pour les vélos et la station d’accueil. Vos
+  services généraux assurent l’entretien.
+- Option B : 2 400 par mois, entretien et remplacement des vélos
+  endommagés compris.
 
-Both options have a minimum term of twelve months. Both prices exclude
-tax.
+Les deux options ont une durée minimale de douze mois. Les deux prix sont
+hors taxes.
 ```
 
 </Response>
 
-Walk the four lines again. Both prices appear once, and they match the
-email. Each option says what it includes. The term is stated. Every amount
-in the section is in the email, and there is no yearly total and no
-difference between the two prices. All four pass. The section has no computed
-numbers, and the log records the change that went in before it ran.
+Reprenez les quatre lignes. Les deux prix apparaissent une fois, et ils
+correspondent à l’e-mail. Chaque option dit ce qu’elle comprend. La durée est
+indiquée. Chaque montant de la partie figure dans l’e-mail, et il n’y a ni
+total annuel ni différence entre les deux prix. Les quatre lignes
+réussissent. La partie ne contient aucun nombre calculé, et le journal
+enregistre la modification faite avant l’exécution.
 
-## A two-line log per round
+## Un journal de deux lignes par tour
 
-Keep a log while you work, two lines per round: what changed in the brief,
-and what the result showed. After the three rounds above it reads like
-this.
+Tenez un journal pendant que vous travaillez, deux lignes par tour : ce qui
+a changé dans la consigne, et ce que le résultat a montré. Après les trois
+tours ci-dessus, il se lit ainsi.
 
 ```text
-Round 1, riders piece
-  Changed: nothing, this is the first brief from the split.
-  Showed: "8 of 41 replies would not" is a count the note never
-    gives. The limit was looser than the check, and allowed a
-    worked-out count.
+Tour 1, morceau « Utilisateurs »
+  Modifié : rien, c’est la première consigne issue du découpage.
+  Montré : « 8 réponses sur 41 ne le feraient pas » est un comptage que la
+    note ne donne jamais. La limite était plus lâche que la vérification,
+    et elle a permis un comptage calculé.
 
-Round 2, riders piece again
-  Changed: added "Copy each count as the note gives it. Don't add,
-    subtract or combine counts."
-  Showed: all four lines pass. The first bullet ends after "continues".
+Tour 2, morceau « Utilisateurs » de nouveau
+  Modifié : ajouté « Recopie chaque comptage tel que la note le donne.
+    N’additionne, ne soustrais et ne combine aucun comptage. »
+  Montré : les quatre lignes réussissent. La première puce se termine
+    après « maintenu ».
 
-Round 3, cost piece
-  Changed: added "Copy each amount as the email gives it. Don't add,
-    subtract or multiply amounts."
-  Showed: all four lines pass. No yearly total or price difference.
+Tour 3, morceau « Coût »
+  Modifié : ajouté « Recopie chaque montant tel que l’e-mail le donne.
+    N’additionne, ne soustrais et ne multiplie aucun montant. »
+  Montré : les quatre lignes réussissent. Ni total annuel ni différence
+    de prix.
 ```
 
-Read the log and look at what the miss cost. It cost one section of four
-bullets, a minute of checking and one re-send. The fix was in the next
-brief before the next piece ran. Now picture the same gap in the one-prompt
-report from the previous lesson. The computed 8 would sit in a paragraph
-next to a yearly total, and both would read as findings. You would find
-them after the manager had asked about them, if at all. A short round
-keeps each mistake small because it is found in one piece, while the
-piece is still the only thing that depends on it.
+Lisez le journal et regardez ce que l’erreur a coûté. Elle a coûté une partie
+de quatre puces, une minute de vérification et un nouvel envoi. La
+correction était dans la consigne suivante avant que le morceau suivant
+s’exécute. Imaginez maintenant le même manque dans le rapport en un seul
+prompt de la leçon précédente. Le 8 calculé serait dans un paragraphe à côté
+d’un total annuel, et les deux se liraient comme des constats. Vous les
+trouveriez après que le responsable vous a interrogé à leur sujet, si vous
+les trouviez. Un tour court garde chaque erreur petite, parce qu’elle est
+trouvée dans un seul morceau, tant que ce morceau est encore la seule chose
+qui en dépend.
 
-The log is also the lightest record of what you checked. It has one line
-for what changed, and one for what the check found. A record that is light
-enough gets kept on a busy day, and the log is light enough for that. The
-safety course makes the same point about a checked-by line in a team
-template ([Marking what a person
-checked](/safety/marking-what-a-person-checked/#inscrire-la-marque-dans-le-processus)).
+Le journal est aussi le compte rendu le plus léger de ce que vous avez
+vérifié. Il a une ligne pour ce qui a changé, et une pour ce que la
+vérification a trouvé. Un compte rendu assez léger est tenu même un jour
+chargé, et le journal est assez léger pour cela. Le cours sur la sécurité
+fait la même remarque sur une ligne « vérifié par » dans le gabarit d’une
+équipe ([Marquer ce qu’une personne a
+vérifié](/safety/marking-what-a-person-checked/#inscrire-la-marque-dans-le-processus)).
 
-<Pitfall title="Sending the same brief again">
-A learner sees the computed count in the riders section, opens a fresh
-conversation and sends the same brief again, expecting a better result.
-The new result has "and 8 of 41 replies did not say so" in the first
-bullet, which is the same computed count with new wording. The brief is
-the same, so the loose limit that allowed the miss is still there, and
-the agent reads it the same way. A second run of an unchanged brief only
-asks for another guess.
-When a round misses, change the brief first, and write the change in the
-log.
+<Pitfall title="Renvoyer la même consigne">
+Un apprenant voit le comptage calculé dans la partie « Utilisateurs », ouvre
+une nouvelle conversation et renvoie la même consigne, en espérant un
+meilleur résultat. Le nouveau résultat contient « et 8 réponses sur 41 ne
+l’ont pas dit » dans la première puce, c’est-à-dire le même comptage calculé
+avec une autre formulation. La consigne est la même, donc la limite lâche qui
+a permis l’erreur est toujours là, et l’agent la lit de la même façon. Une
+deuxième exécution d’une consigne inchangée ne fait que demander une autre
+supposition. Quand un tour échoue, modifiez d’abord la consigne, et notez la
+modification dans le journal.
 </Pitfall>
 
 <Scenario id="newsletter-round-two" phase="review" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['task-iteration']}
-  context="A learner delegates a three-section team newsletter one section at a time, each in a fresh conversation, from a notes file. The first section came back with the event on the 14th written as next Tuesday, which will be wrong by the time anyone reads it."
-  title="Before the second section" hint="What does the second section's conversation have to go on, apart from its brief?"
+  context="Un apprenant délègue une lettre d’équipe en trois parties, une partie à la fois, chacune dans une nouvelle conversation, à partir d’un fichier de notes. La première partie est revenue avec l’événement du 14 écrit « mardi prochain », ce qui sera faux au moment où quelqu’un le lira."
+  title="Avant la deuxième partie" hint="De quoi dispose la conversation de la deuxième partie, en dehors de sa consigne ?"
   options={[
-    { text: 'Tell the agent in the first conversation to use the dates from the notes, then open a fresh conversation for the second section with its brief as written.', consequence: 'The first section is fixed. The second conversation never saw the reply, and its dates come back as next Friday and in two weeks.' },
-    { text: 'Add "write every date as it appears in the notes" to the limits of both briefs, re-send the first, and send the second.', correct: true, consequence: 'The first section comes back with the 14th, and the second with its dates as the notes give them. The log shows the change and a pass on the date line in both rounds.' },
-    { text: 'Send the first brief again in a fresh conversation, since a second run often reads the notes more carefully.', consequence: 'The brief has the same gap, and the date comes back as this Tuesday. The second section has not started yet.' },
-    { text: 'Correct the date by hand and move on to the second section with its brief as written, to keep the rounds short.', consequence: 'The first section is right. The second section has two relative dates, and you correct those by hand too.' },
+    { text: 'Dire à l’agent, dans la première conversation, d’utiliser les dates des notes, puis ouvrir une nouvelle conversation pour la deuxième partie avec sa consigne telle quelle.', consequence: 'La première partie est corrigée. La deuxième conversation n’a jamais vu cette réponse, et ses dates reviennent sous la forme « vendredi prochain » et « dans deux semaines ».' },
+    { text: 'Ajouter « écris chaque date telle qu’elle figure dans les notes » aux limites des deux consignes, renvoyer la première, et envoyer la deuxième.', correct: true, consequence: 'La première partie revient avec le 14, et la deuxième avec ses dates telles que les donnent les notes. Le journal montre la modification et une réussite sur la ligne des dates aux deux tours.' },
+    { text: 'Renvoyer la première consigne dans une nouvelle conversation, puisqu’une deuxième exécution lit souvent les notes plus attentivement.', consequence: 'La consigne a le même manque, et la date revient sous la forme « ce mardi ». La deuxième partie n’a pas encore commencé.' },
+    { text: 'Corriger la date à la main et passer à la deuxième partie avec sa consigne telle quelle, pour garder des tours courts.', consequence: 'La première partie est juste. La deuxième partie a deux dates relatives, et vous les corrigez aussi à la main.' },
   ]}>
-The first section of the newsletter came back with "next Tuesday" where
-the notes say the 14th. You are about to delegate the second section.
-What do you do?
+La première partie de la lettre d’équipe est revenue avec « mardi
+prochain » là où les notes disent le 14. Vous allez déléguer la deuxième
+partie. Que faites-vous ?
 </Scenario>
 
 <MultiChoice id="cost-lines-that-fail" phase="review" objective="using-agents/delegates-and-checks/reviews-against-brief"
   concepts={['task-iteration', 'checking-results']}
-  context="A vendor email offers two options with a twelve-month minimum term: Option A at 1,800 per month with maintenance done by the customer, and Option B at 2,400 per month with maintenance and replacement included. The criteria for the cost section are: both prices appear once and match the email, each option says what it includes, the twelve-month term is stated, and every amount is in the email."
-  title="Which criteria fail?" hint="Take the criteria one at a time and look for the thing each one names, in the section and in the email."
+  context="L’e-mail d’un fournisseur propose deux options avec une durée minimale de douze mois : l’option A à 1 800 par mois, avec l’entretien assuré par le client, et l’option B à 2 400 par mois, entretien et remplacement compris. Les critères de la partie « Coût » sont : les deux prix apparaissent une fois et correspondent à l’e-mail, chaque option dit ce qu’elle comprend, la durée de douze mois est indiquée, et chaque montant figure dans l’e-mail."
+  title="Quels critères échouent ?" hint="Prenez les critères un par un, et cherchez ce que chacun nomme, dans la partie et dans l’e-mail."
   options={[
-    { text: 'The twelve-month term is stated.', correct: true },
-    { text: 'Both prices appear once and match the email.', why: 'Compare 1,800 and 2,400 with the email. Each appears once and matches.' },
-    { text: 'Every amount is in the email.', correct: true },
-    { text: 'Each option says what it includes.', why: 'Read each bullet for what the option covers. Both say it.' },
+    { text: 'La durée de douze mois est indiquée.', correct: true },
+    { text: 'Les deux prix apparaissent une fois et correspondent à l’e-mail.', why: 'Comparez 1 800 et 2 400 avec l’e-mail. Chacun apparaît une fois et correspond.' },
+    { text: 'Chaque montant figure dans l’e-mail.', correct: true },
+    { text: 'Chaque option dit ce qu’elle comprend.', why: 'Lisez dans chaque puce ce que couvre l’option. Les deux le disent.' },
   ]}>
-The cost section comes back as two bullets: "Option A: 1,800 per month
-for the bikes and the docking station, your team does the maintenance"
-and "Option B: 2,400 per month, with maintenance and replacement of
-damaged bikes, 600 more than Option A". The section has nothing else in
-it. Which of the criteria does it
-fail?
+La partie « Coût » revient sous forme de deux puces : « Option A : 1 800 par
+mois pour les vélos et la station d’accueil, votre équipe assure
+l’entretien » et « Option B : 2 400 par mois, avec entretien et remplacement
+des vélos endommagés, soit 600 de plus que l’option A ». La partie ne
+contient rien d’autre. À quels critères échoue-t-elle ?
 </MultiChoice>
 
-## The round as the unit of work
+## Le tour comme unité de travail
 
-A round is one brief, one result, one check, and one change to the brief.
-The previous lesson made the pieces small enough to check. In this lesson
-you worked in rounds, and each round ended with a log entry. A piece
-often takes one or two rounds. The next lesson is about the piece that
-keeps needing more, and how to see from the log when it is time to do the
-step yourself.
+Un tour, c’est une consigne, un résultat, une vérification et une
+modification de la consigne. La leçon précédente a rendu les morceaux assez
+petits pour être vérifiés. Dans cette leçon, vous avez travaillé par tours,
+et chaque tour s’est terminé par une entrée dans le journal. Un morceau
+demande souvent un ou deux tours. La leçon suivante porte sur le morceau qui
+en demande toujours davantage, et sur la façon de voir dans le journal le
+moment de faire l’étape vous-même.
 
-Improving work step by step from its failures is also how DeepLearning.AI
-teaches builders to improve an agent workflow. They look at where the
-output goes wrong, and they fix that step first (@DLAI-11). You do the
-same at a smaller size, one piece and one brief at a time.
+Améliorer un travail étape par étape à partir de ses échecs, c’est aussi ce
+que DeepLearning.AI enseigne aux concepteurs pour améliorer un flux de
+travail d’agent. Ils regardent où la sortie déraille, et ils corrigent
+d’abord cette étape (@DLAI-11). Vous faites la même chose à plus petite
+échelle, un morceau et une consigne à la fois.
 
-<Exercise stretch="Run the usage piece from the previous lesson again with the new limit in its brief, and word the limit so it still allows the one total the brief asks for. Add the round to your log. Did your wording hold?">
-Delegate the riders piece with the brief above, or with the first piece of
-your own split and its criteria. Check the result against the criteria,
-one line at a time, and write pass or fail next to each line. Change the
-brief with what the result showed, re-send the riders piece with the
-change in a fresh conversation, and tick its lines again. Then put the
-same change into the brief for the cost piece, and delegate the cost
-piece in a fresh conversation. Keep a two-line log per round, in the
-format above. It takes about ten minutes. A good result is a log with a
-pass or fail for every criterion in each round, and a cost brief that
-holds the new limit. If your first round passed every line,
-skip the re-send, write "Changed: nothing" for the cost piece and say
-what the result showed anyway.
-Which line of your log would you want to read before you start the next
-report of this kind?
+<Exercise stretch="Relancez le morceau « Usage » de la leçon précédente avec la nouvelle limite dans sa consigne, et formulez la limite pour qu’elle permette encore le seul total que demande la consigne. Ajoutez le tour à votre journal. Votre formulation a-t-elle tenu ?">
+Déléguez le morceau « Utilisateurs » avec la consigne ci-dessus, ou avec le
+premier morceau de votre propre découpage et ses critères. Vérifiez le
+résultat au regard des critères, une ligne à la fois, et écrivez réussi ou
+échoué à côté de chaque ligne. Modifiez la consigne avec ce que le résultat a
+montré, renvoyez le morceau « Utilisateurs » avec la modification dans une
+nouvelle conversation, et cochez de nouveau ses lignes. Mettez ensuite la
+même modification dans la consigne du morceau « Coût », et déléguez ce
+morceau dans une nouvelle conversation. Tenez un journal de deux lignes par
+tour, au format ci-dessus. Cela prend une dizaine de minutes. Un bon résultat
+est un journal avec un réussi ou un échoué pour chaque critère à chaque tour,
+et une consigne « Coût » qui contient la nouvelle limite. Si votre premier
+tour a réussi sur toutes les lignes, sautez le nouvel envoi, écrivez
+« Modifié : rien » pour le morceau « Coût », et notez quand même ce que le
+résultat a montré. Quelle ligne de votre journal voudriez-vous lire avant de
+commencer le prochain rapport de ce genre ?
 </Exercise>
 
 <Recap>
-1. Delegate one piece at a time, and check each result line by line against its criteria, pass or fail per line. A read of the whole result gives a feeling, and the lines give you the failing bullet.
-2. Read a miss as feedback on the brief. A miss often shows a limit that was looser than the check, such as a limit that allowed a count worked out from other counts. Change the description of the task with what the judging of the result showed (@Academy ai-fluency-framework-foundations).
-3. The fix goes into the brief as a limit, and into the brief of every later piece with the same gap. A reply in the chat stays in that conversation.
-4. Keep a log of two lines per round: what changed in the brief, and what the result showed. It is light enough to keep on a busy day.
-5. Short rounds keep mistakes cheap, because a miss is found in one small piece before anything else depends on it.
+1. Déléguez un morceau à la fois, et vérifiez chaque résultat ligne par ligne au regard de ses critères, réussi ou échoué pour chaque ligne. Une lecture du résultat entier donne une impression, et les lignes vous donnent la puce qui échoue.
+2. Lisez une erreur comme un retour sur la consigne. Une erreur montre souvent une limite plus lâche que la vérification, comme une limite qui a permis un comptage calculé à partir d’autres comptages. Modifiez la description de la tâche avec ce que le jugement du résultat a montré (@Academy ai-fluency-framework-foundations).
+3. La correction va dans la consigne sous forme de limite, et dans la consigne de chaque morceau suivant qui a le même manque. Une réponse dans la conversation reste dans cette conversation.
+4. Tenez un journal de deux lignes par tour : ce qui a changé dans la consigne, et ce que le résultat a montré. Il est assez léger pour être tenu un jour chargé.
+5. Des tours courts gardent les erreurs bon marché, parce qu’une erreur est trouvée dans un petit morceau avant que quoi que ce soit d’autre en dépende.
 </Recap>
 
 <Habit id="change-the-brief-first">
-The next time a delegated result misses one of its criteria, write the change into the brief before you send anything else to the agent.
+La prochaine fois qu’un résultat délégué échoue à l’un de ses critères, écrivez la modification dans la consigne avant d’envoyer quoi que ce soit d’autre à l’agent.
 </Habit>

@@ -1,8 +1,9 @@
 id: using-agents/when-to-stop
-title: When to stop delegating and do it yourself
+title: Quand arrêter de déléguer et le faire soi-même
 description: >-
-  Read three round logs, name the three signs that another round costs more than doing the step
-  yourself, and see why taking a step back says nothing about the tool or about you.
+  Lire trois journaux de tours, nommer les trois signes qui montrent qu’un tour de plus coûte
+  davantage que de faire l’étape soi-même, et voir pourquoi reprendre une étape ne dit rien de
+  l’outil ni de vous.
 mode: explanation
 covers: using-agents/decomposition
 serves: [using-agents/delegates-and-checks/adjusts-mid-task]
@@ -12,12 +13,12 @@ assumes:
     lesson: using-agents/delegating
     section: vérifier-au-regard-de-la-consigne
 after: [using-agents/delegating-in-rounds]
-shorts: [The third round on one piece is the signal]
+shorts: [Le troisième tour sur un même morceau est le signal]
 exercise:
   kind: judge
   brief: >-
-    Read three supplied round logs and mark, for each, the round where taking the step back would
-    have been cheaper, with the sign that shows it.
+    Lire trois journaux de tours donnés et marquer, pour chacun, le tour où reprendre l’étape aurait
+    coûté moins cher, avec le signe qui le montre.
 sources: [Academy ai-fluency-framework-foundations]
 minutes: 10
 notes: >-

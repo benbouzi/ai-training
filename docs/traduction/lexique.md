@@ -284,3 +284,25 @@ ensemble :
 Les termes du règlement européen sur l’IA suivent sa version française
 officielle. Les citations du règlement dans la leçon sont traduites de la
 version anglaise consolidée, et la leçon le dit.
+
+## Utiliser des agents
+
+| Anglais                                   | Français                                             |
+| ----------------------------------------- | ---------------------------------------------------- |
+| brief                                     | consigne                                             |
+| checkpoint (during a task)                | point d’étape                                        |
+| draft only                                | brouillon seulement                                  |
+| act, and ask before anything irreversible | agir, et demander avant tout ce qui est irréversible |
+| run to completion                         | aller jusqu’au bout                                  |
+| piece / input / output / check            | morceau / entrée / sortie / vérification             |
+| round / round log                         | tour / journal de tours                              |
+| chat / agent / automation                 | conversation / agent / automatisation                |
+| agent with approval                       | agent avec approbation                               |
+| level-change rule                         | règle de changement de niveau                        |
+| model fit                                 | adéquation du modèle (model fit)                     |
+| tool ladder / rung                        | échelle des outils / barreau                         |
+| autocomplete                              | autocomplétion                                       |
+| system of agents                          | système d’agents                                     |
+| trigger                                   | déclencheur                                          |
+| dashboard                                 | tableau de bord                                      |
+| unsorted (folder)                         | non-classes (dossier)                                |

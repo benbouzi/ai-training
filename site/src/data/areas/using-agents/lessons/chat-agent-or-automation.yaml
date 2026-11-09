@@ -1,8 +1,8 @@
 id: using-agents/chat-agent-or-automation
-title: Chat, agent or automation
+title: Conversation, agent ou automatisation
 description: >-
-  Pick chat, agent or automation for a task by its worst case, match the checks to the level, and
-  write the rule that would move the pick up or back.
+  Choisir entre conversation, agent et automatisation pour une tâche d’après son pire cas, adapter
+  les vérifications au niveau, et écrire la règle qui ferait monter ou redescendre le choix.
 mode: explanation
 covers: using-agents/choosing-tools
 serves: [using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation]
@@ -15,15 +15,17 @@ assumes:
     lesson: safety/agent-risk
     section: lhumain-dans-la-boucle
 extends-to:
-  - label: "Agents and Workflows, module 5: plugins, skills and scheduled tasks in ChatGPT, and how to pick the smallest one that fits (OpenAI Academy, free account)"
+  - label: >-
+      Agents and Workflows, module 5 : plugins, skills et tâches planifiées dans ChatGPT, et comment
+      choisir le plus petit qui convient (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/agents-and-workflows-y0qoc
 after: [using-agents/choosing-autonomy]
-shorts: [Picking for the tenth time]
+shorts: [Choisir pour la dixième fois]
 exercise:
   kind: judge
   brief: >-
-    For five supplied tasks, pick chat, agent or automation for the task's worst case, and write
-    what would move each one level up and what would move it back.
+    Pour cinq tâches données, choisir conversation, agent ou automatisation d’après le pire cas de
+    la tâche, et écrire ce qui ferait monter chacune d’un niveau et ce qui la ferait redescendre.
 sources:
   - Academy building-effective-human-agent-teams
   - Academy ai-fluency-for-builders
