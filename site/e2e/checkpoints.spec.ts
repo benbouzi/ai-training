@@ -187,10 +187,10 @@ test('scenario: a wrong decision shows its consequence, the right one passes', a
 	await expect(injection).toHaveAttribute('data-reviewable', 'true');
 	await injection.locator('label:not([data-correct])').first().click();
 	await injection.locator('.cp-check').click();
-	await expect(injection.locator('.cp-feedback')).toHaveText(/^One of the pages has a line in white text/);
+	await expect(injection.locator('.cp-feedback')).toHaveText(/^L’une des pages contient une ligne en texte blanc/);
 	await injection.locator('label[data-correct]').click();
 	await injection.locator('.cp-check').click();
-	await expect(injection.locator('.cp-feedback')).toHaveText(/^Juste\. The agent summarizes the pages/);
+	await expect(injection.locator('.cp-feedback')).toHaveText(/^Juste\. L’agent résume les pages/);
 	await expect(injection).toHaveAttribute('data-state', 'passed');
 });
 
@@ -252,13 +252,13 @@ test('match: one select per row, per-row feedback, rationale on a full pass', as
 	await cp.locator('.cp-check').click();
 	await expect(cp.locator('.cp-feedback')).toHaveText('3 lignes fausses. Chaque ligne indique laquelle.');
 	await expect(rows.first()).toHaveAttribute('data-state', 'wrong');
-	await expect(rows.first().locator('.cp-row-feedback')).toHaveText(/^A reply that is not sent yet/);
+	await expect(rows.first().locator('.cp-row-feedback')).toHaveText(/^Une réponse pas encore envoyée/);
 	for (const row of await rows.all()) {
 		const option = await row.getAttribute('data-option');
 		if (option) await row.locator('select').selectOption(option);
 	}
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText(/^Juste\. In each case the task is done just as well/);
+	await expect(cp.locator('.cp-feedback')).toHaveText(/^Juste\. Dans chaque cas, la tâche est tout aussi bien faite/);
 	await expect(cp).toHaveAttribute('data-state', 'passed');
 });
 

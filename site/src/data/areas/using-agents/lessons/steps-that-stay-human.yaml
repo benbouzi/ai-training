@@ -10,7 +10,7 @@ introduces: [what-to-keep-human]
 assumes:
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/agent-risk
-    section: human-in-the-loop
+    section: lhumain-dans-la-boucle
   - objective: safety/judges-agent-risk/sets-oversight
     lesson: safety/writing-an-ai-policy
     section: the-one-page-template

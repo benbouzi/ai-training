@@ -13,10 +13,10 @@ introduces: [defense-layers]
 assumes:
   - objective: safety/judges-agent-risk/recognizes-injection
     lesson: safety/tracing-a-planted-instruction
-    section: one-page-three-permission-sets
+    section: une-page-trois-ensembles-de-permissions
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/sizing-the-blast-radius
-    section: place-the-approval-on-the-row-that-cant-be-undone
+    section: placer-lapprobation-sur-la-ligne-irréversible
   - objective: safety/judges-agent-risk/sets-oversight
     lesson: safety/reading-agent-logs
     section: what-the-log-must-hold-and-who-reads-it

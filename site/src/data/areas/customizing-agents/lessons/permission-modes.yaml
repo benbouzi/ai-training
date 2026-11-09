@@ -10,7 +10,7 @@ introduces: [permission-modes]
 assumes:
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: blast-radius
+    section: le-rayon-dimpact
   - objective: coding-with-agents/ships-with-agent/runs-a-session
     lesson: coding-with-agents/first-session
     section: the-first-change-and-the-permissions-prompt

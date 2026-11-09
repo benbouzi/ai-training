@@ -100,7 +100,8 @@ def annotate(text: str) -> tuple[str, list[str]]:
         # (« grilles d’évaluation »).
         head, _, tail = fr.partition(" ")
         body = re.escape(head) + r"(?:s|x)?" + re.escape(" " + tail) if tail else re.escape(fr)
-        word = r"(?<![\w’-])(" + body + r")(s|x)?(?![\w’-])"
+        # An elided article (« l’injection ») may stand right before the term.
+        word = r"(?<![\w-])(" + body + r")(s|x)?(?![\w’-])"
         pat = re.compile(word + after, re.IGNORECASE)
         done = False
         for i in prose:

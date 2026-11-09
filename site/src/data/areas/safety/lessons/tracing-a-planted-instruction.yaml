@@ -1,8 +1,8 @@
 id: safety/tracing-a-planted-instruction
-title: Tracing a planted instruction to the tool that leaks
+title: Suivre une instruction placée jusqu’à l’outil qui fuit
 description: >-
-  Follow one planted line on a web page through three permission sets, and find that the tool that
-  can send is the one that leaks.
+  Suivre une ligne placée sur une page web à travers trois ensembles de permissions, et découvrir
+  que l’outil qui peut envoyer est celui qui fuit.
 mode: tutorial
 covers: safety/agent-risk
 serves: [safety/judges-agent-risk/recognizes-injection]
@@ -10,16 +10,17 @@ introduces: []
 assumes:
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: permissions-and-least-privilege
+    section: permissions-et-moindre-privilège
 sources-checked: 2026-09-26
 review-by: 2027-03-26
 after: [safety/agent-risk]
-shorts: [Why a model cannot tell data from commands]
+shorts: [Pourquoi un modèle ne sait pas distinguer les données des commandes]
 exercise:
   kind: judge
   brief: >-
-    For an assistant you use that reads content you did not write, name the outbound abilities it
-    has and which one you would remove or gate for a summarizing task.
+    Pour un assistant que vous utilisez et qui lit des contenus que vous n’avez pas écrits, nommer
+    ses capacités sortantes et celle que vous retireriez ou soumettriez à approbation pour une tâche
+    de résumé.
 sources:
   - AEC-10
   - Academy introduction-to-claude-cowork

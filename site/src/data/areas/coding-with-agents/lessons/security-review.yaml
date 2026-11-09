@@ -10,10 +10,10 @@ introduces: [security-review-of-agent-output]
 assumes:
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: blast-radius
+    section: le-rayon-dimpact
   - objective: safety/judges-agent-risk/recognizes-injection
     lesson: safety/agent-risk
-    section: prompt-injection-when-the-data-gives-orders
+    section: linjection-de-prompt--quand-les-données-donnent-des-ordres
 after: [coding-with-agents/tests-and-docs-that-hold]
 shorts: [the classic mistakes agents copy from their training data]
 exercise:

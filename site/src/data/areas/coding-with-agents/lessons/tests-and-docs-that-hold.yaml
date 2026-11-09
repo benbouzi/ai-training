@@ -13,7 +13,7 @@ introduces: [testing, documentation, deep-modules]
 assumes:
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: blast-radius
+    section: le-rayon-dimpact
 extends-to:
   - label: Reviewing what the agent pulled in
     href: /coding-with-agents/dependency-review/

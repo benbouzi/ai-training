@@ -1,8 +1,8 @@
 id: safety/agent-risk
-title: Why agent safety is different
+title: Pourquoi la sécurité des agents est différente
 description: >-
-  What changes once an AI can act instead of only answer. How to decide what it may reach and do on
-  its own, and where a person must approve first.
+  Ce qui change quand une IA peut agir en plus de répondre. Comment décider ce qu’elle peut
+  atteindre et faire seule, et où une personne doit d’abord approuver.
 mode: explanation
 covers: safety/agent-risk
 serves:
@@ -23,16 +23,17 @@ assumes:
     lesson: safety/checking-what-an-agent-changed
     section: faire-une-pause-avant-létape-irréversible
 extends-to:
-  - label: Sizing an agent's blast radius
+  - label: Mesurer le rayon d’impact d’un agent
     href: /safety/sizing-the-blast-radius/
 after: []
 shorts:
-  - Agents that are only saved prompts
-  - Permission modes (spec S02, extends-to)
+  - Les agents qui ne sont que des prompts enregistrés
+  - Les modes de permission (spec S02, extends-to)
 exercise:
   kind: do
   brief: >-
-    Describe one agent task, list its reach, and place the approval before the irreversible step.
+    Décrire une tâche d’agent, lister ce qu’elle peut atteindre, et placer l’approbation avant
+    l’étape irréversible.
 sources:
   - Academy introduction-to-claude-cowork
 sources-checked: 2026-09-26

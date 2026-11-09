@@ -13,7 +13,7 @@ assumes:
     section: the-loop
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/agent-risk
-    section: human-in-the-loop
+    section: lhumain-dans-la-boucle
   - objective: building-agents/builds-agent-loop/defines-a-tool
     lesson: building-agents/tool-errors
     section: say-what-went-wrong-as-data

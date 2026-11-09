@@ -13,7 +13,7 @@ assumes:
     section: un-seul-test--que-peut-il-faire-sans-nouveau-prompt-
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/agent-risk
-    section: human-in-the-loop
+    section: lhumain-dans-la-boucle
 extends-to:
   - label: "Agents and Workflows, module 5: plugins, skills and scheduled tasks in ChatGPT, and how to pick the smallest one that fits (OpenAI Academy, free account)"
     href: https://academy.openai.com/public/courses/agents-and-workflows-y0qoc

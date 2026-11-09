@@ -10,10 +10,10 @@ introduces: [policy, escalation]
 assumes:
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: permissions-and-least-privilege
+    section: permissions-et-moindre-privilège
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/agent-risk
-    section: human-in-the-loop
+    section: lhumain-dans-la-boucle
 extends-to:
   - label: "AI Leadership, module 5: roles, decision rights and escalation turned into an operating agreement (OpenAI Academy, free account)"
     href: https://academy.openai.com/public/courses/ai-leadership-kaf7k

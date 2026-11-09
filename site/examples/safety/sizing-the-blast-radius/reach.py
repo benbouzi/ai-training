@@ -16,7 +16,7 @@ from typing import NamedTuple, Optional
 
 class Row(NamedTuple):
     number: int
-    kind: str  # read, write or send
+    kind: str  # read, write or send (printed in French by KIND)
     where: str
     actions: str
 
@@ -24,29 +24,32 @@ class Row(NamedTuple):
 # Who a row reaches in each place: a label for the report and a head count.
 # A count of None means there is no fixed limit.
 AUDIENCE = {
-    "Team drive, every folder": ("14 people", 14),
-    "Team drive/Projects/2025": ("5 people", 5),
-    "your mailbox": ("you, and everyone who wrote to you", 1),
-    "mail from your address": ("anyone with an address", None),
-    "all-staff chat channel": ("120 people", 120),
+    "Lecteur d’équipe, tous les dossiers": ("14 personnes", 14),
+    "Lecteur d’équipe/Projets/2025": ("5 personnes", 5),
+    "votre messagerie": ("vous, et tous ceux qui vous ont écrit", 1),
+    "e-mails depuis votre adresse": ("toute personne qui a une adresse", None),
+    "canal de discussion de tout le personnel": ("120 personnes", 120),
 }
 
+# How each kind of row prints.
+KIND = {"read": "lecture", "write": "écriture", "send": "envoi"}
+
 GRANTED = [
-    Row(1, "read", "Team drive, every folder", "open, list"),
-    Row(2, "write", "Team drive, every folder", "create, move, rename"),
-    Row(3, "write", "Team drive, every folder", "delete (no trash)"),
-    Row(4, "read", "your mailbox", "open, search"),
-    Row(5, "send", "mail from your address", "to any address"),
-    Row(6, "send", "all-staff chat channel", "post"),
+    Row(1, "read", "Lecteur d’équipe, tous les dossiers", "ouvrir, lister"),
+    Row(2, "write", "Lecteur d’équipe, tous les dossiers", "créer, déplacer, renommer"),
+    Row(3, "write", "Lecteur d’équipe, tous les dossiers", "supprimer (sans corbeille)"),
+    Row(4, "read", "votre messagerie", "ouvrir, chercher"),
+    Row(5, "send", "e-mails depuis votre adresse", "vers n’importe quelle adresse"),
+    Row(6, "send", "canal de discussion de tout le personnel", "publier"),
 ]
 
 # The same list after the tidy-up task is applied to it: rows 4, 5 and 6
 # crossed out, and rows 1 to 3 narrowed to the one folder.
-FOLDER = "Team drive/Projects/2025"
+FOLDER = "Lecteur d’équipe/Projets/2025"
 NEEDED = [
-    Row(1, "read", FOLDER, "open, list"),
-    Row(2, "write", FOLDER, "create, move, rename"),
-    Row(3, "write", FOLDER, "delete (no trash)"),
+    Row(1, "read", FOLDER, "ouvrir, lister"),
+    Row(2, "write", FOLDER, "créer, déplacer, renommer"),
+    Row(3, "write", FOLDER, "supprimer (sans corbeille)"),
 ]
 
 
@@ -59,10 +62,10 @@ def undo(row: Row) -> str:
     someone has read cannot be taken back.
     """
     if row.kind == "read":
-        return "nothing to undo"
-    if row.kind == "send" or "delete" in row.actions:
-        return "no"
-    return "yes"
+        return "rien à annuler"
+    if row.kind == "send" or "supprimer" in row.actions:
+        return "non"
+    return "oui"
 
 
 def most(rows: list[Row]) -> Optional[str]:
@@ -80,15 +83,16 @@ def report(title: str, rows: list[Row]) -> str:
     """Return one block of the report: a line per row, then a summary."""
     lines = [title]
     for row in rows:
-        lines.append(f"  row {row.number}  {row.kind:<5}  {row.where}: {row.actions}")
-        lines.append(f"         reaches: {AUDIENCE[row.where][0]}   can be undone: {undo(row)}")
-    final = [str(row.number) for row in rows if undo(row) == "no"]
-    lines.append(f"  rows that cannot be undone: {', '.join(final) or 'none'}")
-    lines.append(f"  most people one wrong step can affect: {most(rows) or 'nobody'}")
+        kind = KIND[row.kind]
+        lines.append(f"  ligne {row.number}  {kind:<8}  {row.where} : {row.actions}")
+        lines.append(f"           atteint : {AUDIENCE[row.where][0]}   annulable : {undo(row)}")
+    final = [str(row.number) for row in rows if undo(row) == "non"]
+    lines.append(f"  lignes irréversibles : {', '.join(final) or 'aucune'}")
+    lines.append(f"  le plus de personnes qu’une erreur peut toucher : {most(rows) or 'personne'}")
     return "\n".join(lines)
 
 
 if __name__ == "__main__":
-    print(report("as granted", GRANTED))
+    print(report("accès accordé", GRANTED))
     print()
-    print(report("as the task needs", NEEDED))
+    print(report("accès nécessaire à la tâche", NEEDED))

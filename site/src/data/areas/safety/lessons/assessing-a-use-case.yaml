@@ -10,7 +10,7 @@ introduces: [risk-assessment]
 assumes:
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/agent-risk
-    section: human-in-the-loop
+    section: lhumain-dans-la-boucle
 extends-to:
   - label: "AI Leadership, modules 5 and 8: oversight matched to risk, and testing a workflow before others rely on it (OpenAI Academy, free account)"
     href: https://academy.openai.com/public/courses/ai-leadership-kaf7k

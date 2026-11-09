@@ -13,7 +13,7 @@ assumes:
     section: trois-points-sur-une-même-échelle
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: blast-radius
+    section: le-rayon-dimpact
   - objective: using-agents/delegates-and-checks/writes-a-brief
     lesson: using-agents/delegating
     section: writing-the-brief

@@ -48,7 +48,7 @@ chaque requête, et il exécute les demandes d’outil qui reviennent.
 Une réponse peut demander plusieurs outils à la fois (@Claude Code agent loop).
 Un modèle qui a besoin de trois fichiers peut demander les trois dans une même
 réponse. Le harnais exécute alors les trois et renvoie les trois résultats
-ensemble, dans une seule nouvelle requête. Le nombre d’appels d’outil et le
+ensemble, dans une seule nouvelle requête. Le nombre d’appels d’outil (tool calls) et le
 nombre de requêtes sont donc souvent différents.
 
 Dans un journal, la règle de comptage est la suivante : après la première

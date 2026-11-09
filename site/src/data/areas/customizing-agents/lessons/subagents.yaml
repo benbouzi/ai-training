@@ -10,7 +10,7 @@ introduces: [subagents]
 assumes:
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: blast-radius
+    section: le-rayon-dimpact
 sources-checked: 2026-09-24
 review-by: 2027-03-24
 after: [customizing-agents/allowlists]

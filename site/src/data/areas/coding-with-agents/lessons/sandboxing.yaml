@@ -10,7 +10,7 @@ introduces: [sandbox, trust-boundary]
 assumes:
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
-    section: blast-radius
+    section: le-rayon-dimpact
   - objective: safety/judges-agent-risk/sets-oversight
     lesson: safety/reading-agent-logs
     section: what-the-log-must-hold-and-who-reads-it
