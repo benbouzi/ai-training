@@ -1,240 +1,263 @@
 ---
-title: Running a workshop
-description: Plan and run a one-day, face-to-face workshop on one area of this site, with three tables for three levels.
+title: Animer un atelier
+description: Préparer et animer un atelier d’une journée en présentiel sur un domaine de ce site, avec trois tables pour trois niveaux.
 ---
 
-## Who this is for
+## À qui s’adresse ce guide
 
-This guide is for a trainer who runs one area's course as a face-to-face
-workshop. The room holds 6 to 20 people with their own laptops, and one
-trainer works with a few helpers. The site is the reference for everything
-taught. The worked example is the [Coding with agents](/coding-with-agents/)
-course. The plan works for the other areas too, with the changes for the
-Foundations areas that the next section names.
+Ce guide s’adresse à un formateur qui anime le parcours d’un domaine sous
+forme d’atelier en présentiel. La salle accueille de 6 à 20 personnes avec
+leur propre ordinateur portable, et un formateur travaille avec quelques
+assistants. Le site est la référence pour tout ce qui est enseigné. L’exemple
+développé est le parcours [Coder avec des agents](/coding-with-agents/). Le
+plan convient aussi aux autres domaines, avec les changements pour les
+domaines des Fondamentaux que donne la section suivante.
 
-## Three tables
+## Trois tables
 
-The room has three tables, one per level. People sit at the table that fits
-how they learn best on the day, and the placement quiz suggests which one.
+La salle compte trois tables, une par niveau. Chaque personne s’assoit à la
+table qui correspond le mieux à sa manière d’apprendre ce jour-là, et le
+questionnaire de placement suggère laquelle.
 
-- **(A) Clear-instruction.** A workshop level with no site setting, for
-  people who can't reasonably learn this material from the site on their
-  own. The trainer gives them the most time: a demonstration first, then the
-  same task done together, then alone. People who finish early repeat the
-  exercise without the worked example.
-- **(B) Less comfortable.** The site's `less` comfort level. People here
-  can work from the site with hints, so they try the exercise first and
-  discuss it after. People who finish early take the stretch goal.
-- **(C) More comfortable.** The site's `more` comfort level. People here
-  work ahead and time their own work against a forecast. People who finish
-  early help table B.
+- **(A) Instruction guidée.** Un niveau propre à l’atelier, sans réglage sur
+  le site, pour les personnes qui ne peuvent raisonnablement pas apprendre
+  ce contenu seules à partir du site. Le formateur leur consacre le plus de
+  temps : d’abord une démonstration, puis la même tâche faite ensemble, puis
+  seul. Les personnes qui finissent tôt refont l’exercice sans l’exemple
+  développé.
+- **(B) Moins à l’aise.** Le niveau d’aisance `less` du site. Ces personnes
+  peuvent travailler à partir du site avec des indices : elles essaient
+  d’abord l’exercice et en discutent ensuite. Celles qui finissent tôt
+  prennent l’objectif « Pour aller plus loin ».
+- **(C) Plus à l’aise.** Le niveau d’aisance `more` du site. Ces personnes
+  avancent seules et comparent le temps passé à leur prévision. Celles qui
+  finissent tôt aident la table B.
 
-Learners set their comfort level on the [settings](/settings/) page, so ask
-B and C to set theirs at the start of the day. Table C helps table B, and
-never table A, because table A needs a slower pace and a fixed method.
-Anyone may move to another table after the first block. The Foundations
-areas (Concepts, Safety, Using agents) have no comfort levels on the site.
-In those workshops B and C are workshop levels too, and the finished state
-of an exercise is a written answer.
+Chaque apprenant choisit son niveau d’aisance sur la page
+[Réglages](/settings/) : demandez aux tables B et C de le régler en début de
+journée. La table C aide la table B, et jamais la table A, parce que la
+table A a besoin d’un rythme plus lent et d’une méthode fixe. Chacun peut
+changer de table après le premier bloc. Les domaines des Fondamentaux
+(Concepts, Sécurité, Utiliser des agents) n’ont pas de niveau d’aisance sur
+le site. Dans ces ateliers, B et C sont aussi des niveaux propres à
+l’atelier, et un exercice terminé prend la forme d’une réponse écrite.
 
-## Before the day
+## Avant la journée
 
-- Send the placement quiz and the setup instructions a week ahead.
-- Offer a 30-minute drop-in setup call. By its end, each person has the
-  agent installed and signed in, your fixture repositories cloned, and one
-  command run in it.
-- Have one helper for every eight participants, and put most of them at
+- Envoyez le questionnaire de placement et les instructions d’installation
+  une semaine avant.
+- Proposez un appel d’installation libre de 30 minutes. À la fin de l’appel,
+  chaque personne a installé l’agent et s’y est connectée, a cloné vos dépôts
+  d’exercice et y a lancé une commande.
+- Prévoyez un assistant pour huit participants, et placez la plupart d’entre
+  eux à la table A.
+- Faites vous-même chaque exercice dans la version actuelle du site.
+- Apportez des notes autocollantes de deux couleurs pour chaque personne.
+- Fixez la date de la séance de suivi.
+
+Pour Coder avec des agents, chaque leçon a son propre dépôt d’exercice (sa
+fixture). Faites votre propre copie de chaque fixture utilisée en suivant les
+étapes de la section [The fixture](/coding-with-agents/first-session/#the-fixture)
+de la première leçon. Dans chaque copie, faites un commit et posez une
+étiquette (tag) sur l’état de départ et sur l’état final de chaque exercice.
+Poussez ensuite les copies avec leurs étiquettes à un endroit où les binômes
+les clonent pendant l’appel d’installation.
+
+## Le questionnaire de placement
+
+Le questionnaire prend dix minutes. Présentez-le comme le premier exercice de
+l’atelier. Vous ne notez aucune réponse, et personne ne voit de score. Tirez
+chaque question des leçons du domaine. Les exemples ci-dessous viennent de
+Coder avec des agents.
+
+- **Auto-placement, deux questions.** Chaque question donne une phrase par
+  niveau, et la personne choisit celle qui la décrit le mieux. Exemple : « Je
+  veux voir quelqu’un le faire avant d’essayer » (A), « Je sais suivre des
+  étapes écrites et demander quand je bloque » (B), « Je préfère commencer
+  seul et comparer ensuite » (C).
+- **Que faites-vous ensuite, deux questions.** Chaque question montre une
+  tâche et une partie de la sortie d’un agent, avec quatre options. Chaque
+  option correspond à un niveau. Exemple : l’agent dit avoir corrigé l’erreur
+  de décalage d’une unité dans `done()` et montre un diff sans résultat de
+  tests. Les options sont « faire le commit » (A), « lui demander d’expliquer
+  le diff » (A), « lire le diff » (B) et « lancer les tests soi-même » (C).
+- **Remettre dans l’ordre, une question.** Les étapes d’une modification,
+  mélangées, à remettre dans l’ordre. Exemple : « laisser l’agent faire la
+  modification », « lancer les tests pour vérifier la modification »,
+  « demander un plan à l’agent et le lire ». L’ordre est le plan, puis la
+  modification, puis les tests.
+- **Qu’est-ce qui s’affiche, une question.** Un court morceau de vrai code,
+  comme dans les questions de prédiction du site. Exemple : dans la fixture
+  de la première leçon, partez d’une liste vide dans `/tmp/quiz.json`, pour
+  que rien n’écrive dans le `todos.json` de la fixture. Après
+  `TODO_FILE=/tmp/quiz.json python3 todo.py add "Buy milk"` et
+  `TODO_FILE=/tmp/quiz.json python3 todo.py add "Call Sam"`, qu’affiche
+  `TODO_FILE=/tmp/quiz.json python3 todo.py done 1` ? Il affiche
+  `done #1: Call Sam`. Cette question dévoile le bogue de décalage d’une unité
+  qu’enseigne la première leçon.
+- **Usage, une question.** « La dernière fois que vous avez utilisé un
+  assistant, à quel moment lui avez-vous demandé du code pour la première
+  fois ? » Proposez trois réponses : « au début » (A), « après avoir décrit
+  la tâche » (B) et « après avoir écrit un plan ou un contrôle » (C).
+
+Une mauvaise réponse à la question d’ordre ou d’affichage compte comme A, et
+une bonne réponse compte comme C. Pour le score, comptez les réponses A, B
+et C de chaque personne. La personne commence à la table qui a le plus de
+réponses. En cas d’égalité, prenez la table qui apporte le plus de soutien :
+A avant B, et B avant C. Ce questionnaire n’a pas été validé, donc notez les
+réponses de chaque personne à côté de la table où elle a fini la journée.
+
+## La journée
+
+Ces horaires sont indicatifs et n’ont pas été validés. Corrigez-les après
+votre premier atelier et notez ce qui a changé.
+
+| Quand | Quoi                                                                                                                                                          |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0:00  | Ouverture commune, 30 min : une courte énigme sans code, pourquoi trois tables, le résultat du placement, le droit de changer, une note de confiance de 1 à 5 |
+| 0:30  | Bloc 1, 60 min                                                                                                                                                |
+| 1:30  | Pause, 15 min, fiches minute, changements de table                                                                                                            |
+| 1:45  | Bloc 2, 60 min                                                                                                                                                |
+| 2:45  | Plénière, 15 min : une question à toute la salle, réponse seul, discussion en binôme, nouvelle réponse                                                        |
+| 3:00  | Déjeuner, 45 min, fiches minute, changements de table                                                                                                         |
+| 3:45  | Bloc 3, 60 min                                                                                                                                                |
+| 4:45  | Pause, 15 min, fiches minute                                                                                                                                  |
+| 5:00  | Bloc 4, 60 min                                                                                                                                                |
+| 6:00  | Clôture commune, 30 min                                                                                                                                       |
+
+Un atelier de deux jours reprend les blocs 1 à 4 le deuxième jour. Le premier
+jour se termine alors par les fiches minute et un changement de table. Le
+formateur choisit les leçons de chaque bloc pour chaque domaine. Pour Coder
+avec des agents, les blocs 1 et 2 peuvent ressembler à ceci :
+
+| Bloc | Table A                                                                                                    | Table B                                                                                               | Table C                                                                                                         |
+| ---- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| 1    | [Votre première session avec un agent de code](/coding-with-agents/first-session/), avec une démonstration | Comme la table A                                                                                      | Comme la table A, puis [Garder les clés d’API hors de portée de l’agent](/coding-with-agents/keys-and-secrets/) |
+| 2    | [Garder les clés d’API hors de portée de l’agent](/coding-with-agents/keys-and-secrets/)                   | Comme la table A, puis [Décider s’il faut le construire](/coding-with-agents/deciding-what-to-build/) | [Découper le travail en composants que l’agent construit un par un](/coding-with-agents/decomposing-the-work/)  |
+
+**Ouverture commune.** Tout le monde est réuni pour l’énigme et les raisons
+des trois tables. Ensuite, chaque personne écrit une première note de
+confiance de 1 à 5 et rejoint la table que le questionnaire a suggérée.
+
+**Un bloc de 60 minutes.** Chaque bloc a quatre parties. Relier (5 min)
+rattache le bloc à ce que les personnes ont déjà fait. Concepts (0 à 10 min)
+dure le plus longtemps à la table A et peut tomber à zéro à la table C.
+Pratique (35 à 45 min) est l’exercice, en binôme. Conclusions (10 min) est un
+court débriefing à chaque table.
+
+**Pause.** Ramassez les fiches minute, lisez-les pendant la pause, et
+servez-vous-en pour proposer des changements de table avant le bloc suivant.
+
+**Question de plénière.** Posez à toute la salle une question avec quelques
+réponses possibles. Chacun répond seul, discute en binôme, puis répond de
+nouveau. L’écart entre les deux réponses vous dit ce qu’il faut expliquer.
+
+**Clôture.** Les binômes présentent leur travail, et chacun choisit une
+habitude et écrit une seconde note de confiance. La section « Clôture et
+suivi » ci-dessous donne le détail.
+
+## Règles des exercices
+
+- Donnez à chaque exercice un état de départ, un état final et le diff entre
+  les deux, sous forme d’étiquettes comme `ex1-start` et `ex1-done`. Les
+  binômes lancent `git checkout -f ex1-start` pour revenir au départ et
+  `git checkout -f ex1-done` pour voir l’état final. Les deux commandes
+  effacent leurs modifications mais gardent les nouveaux fichiers, que
+  `git clean -fd` supprime.
+- Laissez une seule chose à trouver au binôme, et préparez tout le reste à
+  l’avance.
+- Donnez toujours à l’agent un contrôle qu’il peut lancer, comme un test, ou
+  une commande dont la sortie est connue.
+- La table A part d’un exemple développé du même exercice, avec la consigne
+  et le contrôle fournis, et seulement le prompt à écrire. Les tables B et C
+  partent de l’exercice tel que la leçon le formule, et l’objectif « Pour
+  aller plus loin » est pour qui termine.
+- Demandez à chaque binôme trois options avant d’en retenir une.
+- Écrivez « relisez chaque ligne du diff » dans les instructions de la
   table A.
-- Do every exercise yourself in the current version of the site.
-- Bring two colors of sticky notes for each person.
-- Set the date of the follow-up session.
 
-For Coding with agents, each lesson has its own fixture. Make your own
-copy of each fixture you use with the steps in [The
-fixture](/coding-with-agents/first-session/#the-fixture) section of the first
-lesson. Commit and tag the start state and the finished state of every
-exercise in each copy. Then push the copies with their tags to a place where
-the pairs clone them at the setup call.
+## Règles de la salle
 
-## The placement quiz
+- Les personnes travaillent en binôme à leur propre table. Elles échangent
+  les rôles trois ou quatre fois par heure, et la personne la moins
+  expérimentée tape au clavier.
+- Vérifiez la compréhension toutes les 10 à 15 minutes avec un moyen simple :
+  une note autocollante sur l’ordinateur, un nombre de 1 à 5, ou une question
+  de rappel en une ligne.
+- Distribuez des fiches minute à chaque pause. Chaque fiche porte une chose
+  apprise et une question restée ouverte, et vous vous en servez pour
+  changer les personnes de table.
+- N’animez jamais seul. Une deuxième personne fait avancer la salle pendant
+  que vous aidez un binôme.
+- Laissez les participants avancés aider à la table B, et tenez-les loin du
+  micro.
+- Commencez et terminez les pauses à l’heure, et limitez un atelier à deux
+  jours.
 
-The quiz takes ten minutes. Present it as the first exercise of the workshop.
-You grade no answers, and nobody sees a score. Take every item from the area's
-own lessons. The example items below come from Coding with agents.
+## Par table
 
-- **Self-placement, two items.** Each item gives one sentence per level, and
-  the person picks the one that describes them best. Example: "I want to
-  watch someone do it before I try" (A), "I can follow written steps and ask
-  when I get stuck" (B), "I would rather start on my own and compare after"
-  (C).
-- **What do you do next, two items.** Each item shows a task and part of an
-  agent's output, with four options. Each option marks a level. Example: the
-  agent says it fixed the off-by-one error in `done()` and shows a diff
-  without test output. The options are "commit it" (A), "ask it to explain
-  the diff" (A), "read the diff" (B), and "run the tests yourself" (C).
-- **Ordering, one item.** The steps of a change, shuffled, to put back in
-  order. Example: "let the agent make the change", "run the tests to check
-  the change", "ask the agent for a plan and read it". The order is plan,
-  then change, then tests.
-- **What does this print, one item.** A short piece of real code, as in the
-  site's predict checkpoints. Example: in the first lesson's fixture, start
-  from an empty list in `/tmp/quiz.json`, so nothing writes to the
-  fixture's `todos.json`. After
-  `TODO_FILE=/tmp/quiz.json python3 todo.py add "Buy milk"` and
-  `TODO_FILE=/tmp/quiz.json python3 todo.py add "Call Sam"`, what does
-  `TODO_FILE=/tmp/quiz.json python3 todo.py done 1` print? It prints
-  `done #1: Call Sam`. This item gives away the off-by-one bug that the
-  first lesson teaches.
-- **Usage, one item.** "The last time you used an assistant, at what point
-  did you first ask it for code?" Offer three answers: "at the start" (A),
-  "after I described the task" (B), and "after I wrote a plan or a check"
-  (C).
+**Table A.** Faites la démonstration de l’exercice avec une erreur
+volontaire, lancez-le, et laissez la salle le voir échouer. Faites ensuite
+l’exercice ensemble, puis laissez les binômes le faire seuls. Donnez à chaque
+binôme le [tuteur](/guides/tutor/) dans une seconde session, à côté de
+l’agent de code, pour les questions sur la leçon. Il donne des indices et
+garde les réponses pour lui. Après une mauvaise réponse, il pose une
+question, et après la suivante, il renvoie à la section qui enseigne l’idée.
 
-A wrong ordering or print answer counts as A, and a right one counts as
-C. To score, count the answers marked A, B, and C for each person. The
-person starts at the table with the highest count. A tie goes to the table
-with more support, so A before B and B before C. This quiz is untested, so
-record each person's answers next to the table where they ended the day.
+**Table B.** Les personnes essaient d’abord l’exercice et débriefent
+ensuite. Apprenez-leur à écrire le contrôle avant le prompt. Avant qu’elles
+laissent l’agent lancer une commande, demandez quel serait le pire résultat
+possible de cette commande.
 
-## The day
+**Table C.** Les personnes prévoient le temps que prend un exercice et le
+comparent au temps réel. Donnez-leur du travail sur le harnais, comme les
+instructions de projet, les hooks et les worktrees en parallèle. Demandez-leur
+de décider ce qu’elles ne confieraient pas à l’agent, et pourquoi.
 
-These timings are a guideline and untested. Correct them after your first
-workshop and note what changed.
+## Clôture et suivi
 
-| When | What                                                                                                                                      |
-| ---- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| 0:00 | Shared opening, 30 min: a short non-coding puzzle, why three tables, the placement result, permission to move, a 1-to-5 confidence number |
-| 0:30 | Block 1, 60 min                                                                                                                           |
-| 1:30 | Break, 15 min, minute cards, re-seat                                                                                                      |
-| 1:45 | Block 2, 60 min                                                                                                                           |
-| 2:45 | Plenary, 15 min: one question to the whole room, answer alone, discuss in pairs, answer again                                             |
-| 3:00 | Lunch, 45 min, minute cards, re-seat                                                                                                      |
-| 3:45 | Block 3, 60 min                                                                                                                           |
-| 4:45 | Break, 15 min, minute cards                                                                                                               |
-| 5:00 | Block 4, 60 min                                                                                                                           |
-| 6:00 | Shared closing, 30 min                                                                                                                    |
+- Chaque binôme explique en deux minutes une modification qu’il a faite et
+  la manière dont il l’a vérifiée.
+- Chaque personne choisit une habitude dans une leçon qu’elle a terminée. Le
+  site propose des habitudes après une leçon terminée et les fait revenir
+  selon un calendrier fixe.
+- Organisez un suivi d’une heure deux à quatre semaines plus tard.
+- Demandez une note de confiance de 1 à 5 au début et à la fin de la
+  journée, sur la même échelle.
 
-A two-day workshop repeats blocks 1 to 4 on day two. Day one then ends
-with minute cards and a re-seat. The trainer chooses which lessons fill
-which block for each area. For Coding with agents, blocks 1 and 2 can look
-like this:
+## Ce qu’il faut noter
 
-| Block | Table A                                                                                            | Table B                                                                                                  | Table C                                                                                                           |
-| ----- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| 1     | [Your first session with a coding agent](/coding-with-agents/first-session/), with a demonstration | Same as table A                                                                                          | Same as table A, then [Keeping API keys out of the agent's reach](/coding-with-agents/keys-and-secrets/)          |
-| 2     | [Keeping API keys out of the agent's reach](/coding-with-agents/keys-and-secrets/)                 | Same as table A, then [Deciding whether to build it at all](/coding-with-agents/deciding-what-to-build/) | [Splitting the work into components the agent can build one at a time](/coding-with-agents/decomposing-the-work/) |
+- Les réponses de chaque personne au questionnaire, à côté de la table où
+  elle a fini la journée.
+- Un formulaire de retour par exercice, avec une ligne par exercice (trop
+  facile, adapté ou trop difficile) et un commentaire.
+- Les fiches minute.
+- Les prévisions de temps de la table C, à côté des temps réels.
+- Les deux notes de confiance de chaque personne.
 
-**Shared opening.** Everyone sits together for the puzzle and the reasons
-for three tables. Then each person writes down a confidence number from 1
-to 5 and goes to the table the quiz suggested.
+Ces relevés servent à corriger les horaires ci-dessus et le calcul du
+questionnaire : gardez-les pour chaque atelier.
 
-**A 60-minute block.** Each block has four parts. Connect (5 min) links
-the block to what people already did. Concepts (0 to 10 min) is longest at
-table A and can be zero at table C. Practice (35 to 45 min) is the
-exercise, in pairs. Conclusions (10 min) is a short debrief at each table.
+## Pour aller plus loin
 
-**Break.** Collect the minute cards, read them during the break, and use
-them to suggest table moves before the next block.
+Les ressources ci-dessous sont en anglais.
 
-**Plenary question.** Ask the whole room one question with a few possible
-answers. People answer alone, discuss in pairs, and answer again, and the
-change between the two answers tells you what to explain.
-
-**Closing.** Pairs present their work, and everyone picks one habit and
-writes down a second confidence number. The section "Closing and follow-up"
-below has the details.
-
-## Exercise rules
-
-- Give each exercise a start state, a finished state, and a diff between
-  them, as tags such as `ex1-start` and `ex1-done`. Pairs run
-  `git checkout -f ex1-start` to reset and `git checkout -f ex1-done` to see
-  the finished state. Both discard their changes but keep new files,
-  which `git clean -fd` removes.
-- Leave one thing for the pair to figure out, and build the rest for them in
-  advance.
-- Always give the agent a check it can run, such as a test, or a command with
-  a known output.
-- Table A starts from a worked example of the same exercise, with the brief
-  and the check given and only the prompt to write. Tables B and C start from
-  the exercise as the lesson states it, and the stretch goal is for whoever
-  finishes.
-- Ask each pair for three options before they commit to one.
-- Write "review every line of the diff" into table A's instructions.
-
-## Room rules
-
-- People work in pairs within their own table. They swap roles three or four
-  times an hour, and the less experienced person types.
-- Check understanding every 10 to 15 minutes with something cheap. Use a
-  sticky note on the laptop, a number from 1 to 5, or a one-line recall
-  question.
-- Hand out minute cards at every break. Each card has one thing learned and
-  one open question, and you use them to re-seat people.
-- Never teach alone. A second person keeps the room moving while you help
-  one pair.
-- Let advanced participants help at table B, and keep them off the
-  microphone.
-- Start and end breaks on time, and keep a workshop to two days at most.
-
-## Per table
-
-**Table A.** Demonstrate the exercise with a deliberate mistake, run it,
-and let the room see it fail. Then do the exercise together, and then let
-pairs do it alone. Give each pair the [tutor](/guides/tutor/) in a second
-session, next to the coding agent, for questions about the lesson. It gives
-hints and keeps the answers back. After a wrong answer it asks a
-question, and after the next one it points to the section that teaches the
-idea.
-
-**Table B.** People try the exercise first and debrief after. Teach them to
-write the check before the prompt. Before they let the agent run a command,
-ask what the worst result of that command could be.
-
-**Table C.** People forecast the time an exercise takes and compare it with
-the actual time. Give them harness work, such as project instructions,
-hooks, and parallel worktrees. Ask them to decide what they would not hand
-to the agent, and why.
-
-## Closing and follow-up
-
-- Each pair explains one change they made and how they checked it, in two
-  minutes.
-- Each person picks one habit from a lesson they finished. The site offers
-  habits after a finished lesson and brings them back on a fixed schedule.
-- Hold a one-hour follow-up two to four weeks later.
-- Ask for a confidence number from 1 to 5 at the start and at the end of the
-  day, on the same scale.
-
-## What to record
-
-- Each person's quiz answers, next to the table where they ended the day.
-- A feedback form per exercise. It has one line per exercise (too easy,
-  right, or too hard) and one comment.
-- The minute cards.
-- Table C's time forecasts next to the actual times.
-- Both confidence numbers for each person.
-
-The timings above and the quiz scoring get corrected from these records,
-so keep them for every workshop.
-
-## Further reading
-
-- [Teaching Tech Together](https://teachtogether.tech/en/): Greg Wilson's
-  book on the approach this guide follows, in particular the chapters [In the
-  Classroom](https://teachtogether.tech/en/index.html#s:classroom) and
-  [Teaching Online](https://teachtogether.tech/en/index.html#s:online) and
-  the section [Plan for Mixed
-  Abilities](https://teachtogether.tech/en/index.html#s:classroom-mixed).
-- [The Carpentries instructor training](https://carpentries.github.io/instructor-training/):
-  the course material behind sticky notes, minute cards and working with
-  helpers.
-- [CS50 Educator Workshop](https://cs50.harvard.edu/workshop/): links to the
-  yearly workshop recordings on YouTube, on teaching less comfortable
-  students and on teaching with AI.
-- [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices):
-  Anthropic's list of five common failure patterns, which works as a
-  checklist in debriefs.
-- [How I Teach](https://kentcdodds.com/blog/how-i-teach): Kent C. Dodds on
-  doing the exercise before the explanation, and on a feedback form after
-  each exercise.
+- [Teaching Tech Together](https://teachtogether.tech/en/) : le livre de
+  Greg Wilson sur l’approche que suit ce guide, en particulier les chapitres
+  [In the Classroom](https://teachtogether.tech/en/index.html#s:classroom) et
+  [Teaching Online](https://teachtogether.tech/en/index.html#s:online), et la
+  section
+  [Plan for Mixed Abilities](https://teachtogether.tech/en/index.html#s:classroom-mixed).
+- [The Carpentries instructor training](https://carpentries.github.io/instructor-training/) :
+  le support de formation à l’origine des notes autocollantes, des fiches
+  minute et du travail avec des assistants.
+- [CS50 Educator Workshop](https://cs50.harvard.edu/workshop/) : des liens
+  vers les enregistrements annuels de l’atelier sur YouTube, sur
+  l’enseignement aux étudiants moins à l’aise et sur l’enseignement avec
+  l’IA.
+- [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices) :
+  la liste d’Anthropic de cinq erreurs fréquentes, qui sert de liste de
+  contrôle dans les débriefings.
+- [How I Teach](https://kentcdodds.com/blog/how-i-teach) : Kent C. Dodds sur
+  l’exercice fait avant l’explication, et sur un formulaire de retour après
+  chaque exercice.
