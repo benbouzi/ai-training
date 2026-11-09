@@ -40,11 +40,11 @@ d’une page à l’autre.
 ## État de la traduction
 
 La traduction avance section par section. Sont traduits : les sections
-Concepts et Sécurité, la page d’accueil, l’interface des leçons, les pages des parcours,
+Concepts, Sécurité et Utiliser des agents, la page d’accueil, l’interface des leçons, les pages des parcours,
 des thèmes et des compétences, les deux cartes, le glossaire, les pages de
 progression, de référence, de révision et de réglages, les pages Contribuer
 et Rédiger des pages, et les guides du tuteur et de l’atelier. Le tuteur
-parle français. Les quatre autres sections et la page À propos s’affichent
+parle français. Les trois autres sections et la page À propos s’affichent
 encore en anglais et seront traduites ensuite. En cas
 de doute sur un passage, la
 [version originale](https://schubergphilis.github.io/ai-training/) fait foi.
