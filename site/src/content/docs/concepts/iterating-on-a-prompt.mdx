@@ -166,7 +166,7 @@ prompt de la semaine prochaine peut la garder (@DLAI-1).
 ## Pourquoi un nouvel essai refait le même type d’erreur
 
 Dans la leçon sur le fonctionnement des modèles, vous avez vu que le modèle
-attribue un score à chaque jeton candidat et en choisit un, et que l’entrée
+attribue un score à chaque jeton (token) candidat et en choisit un, et que l’entrée
 fixe les scores. Le prompt est cette entrée. Envoyez deux fois le même prompt,
 et le modèle tire deux fois dans la même distribution. La formulation change,
 et ce que le prompt rendait probable le reste. Votre premier prompt rendait
@@ -250,7 +250,7 @@ tapées dans la conversation et perdues à sa fermeture. Une correction tapée
 dans la conversation vaut pour cette session. Une correction dans le prompt
 vaut pour chaque essai.
 
-Un **gabarit de prompt** est le prompt que vous gardez : les lignes qui ont
+Un **gabarit de prompt** (prompt template) est le prompt que vous gardez : les lignes qui ont
 montré ce qu’elles corrigent, avec un repère à l’endroit où va le matériau.
 Enregistrez-le dans une note ou un fichier texte, et collez-le chaque semaine.
 Voici le gabarit après les trois essais de cette page, avec les deux lignes

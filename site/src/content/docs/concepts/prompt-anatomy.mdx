@@ -61,7 +61,7 @@ un modèle se replie quand le prompt laisse tout dans l’implicite : la
 prédiction qui convient à la plupart des demandes « résume ceci » de son
 texte d’entraînement. Dans la leçon sur le fonctionnement des modèles, vous
 avez vu que le modèle n’a aucune idée de ce que vous voulez au-delà des
-jetons que vous lui donnez : la réponse à un prompt vague est donc une
+jetons (tokens) que vous lui donnez : la réponse à un prompt vague est donc une
 moyenne des réponses de tout le monde. Chaque partie que nous ajoutons
 ci-dessous retire au modèle l’une de ces suppositions.
 
@@ -124,7 +124,7 @@ instruction s’arrête et où commence le matériau collé, pour qu’aucune li
 du matériau ne puisse passer pour l’ordre.
 </Pitfall>
 
-Un **délimiteur** est un marqueur qui enclôt le matériau. Les triples
+Un **délimiteur** (delimiter) est un marqueur qui enclôt le matériau. Les triples
 guillemets fonctionnent, tout comme une paire de balises telles que `<email>`
 et `</email>`. Le choix du marqueur compte moins que le fait d’en utiliser
 un et de nommer, dans l’instruction, celui que vous avez choisi. Le modèle a

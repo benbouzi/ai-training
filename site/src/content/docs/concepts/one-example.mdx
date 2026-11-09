@@ -3,7 +3,7 @@ import { Choice, Match, Pitfall, Exercise, Recap, Prompt, Response, Sort, Scenar
 Dans la leçon précédente, vous avez indiqué le format en mots et en
 chiffres, et cela a marché parce que « trois puces de moins de 15 mots
 chacune » est un format que des mots peuvent énoncer. Certains formats s’y
-prêtent mal. Dans cette leçon, nous en prenons un, le style maison d’une
+prêtent mal. Dans cette leçon, nous en prenons un, le style maison (house style) d’une
 équipe pour ses comptes rendus de réunion, et nous regardons un paragraphe de
 règles échouer à le produire. Nous remplaçons ensuite les règles par un seul
 exemple complet et nous lançons les deux prompts.
@@ -92,7 +92,7 @@ Toutes les règles figurent dans le prompt, et la réponse enfreint la plupart
 d’entre elles. Il y a un titre, il y a des puces, les étiquettes sont suivies
 de deux points, les éléments sont des phrases complètes, et le jour de la
 semaine manque. Dans la leçon sur le fonctionnement des modèles, vous avez vu
-que le modèle prédit le jeton suivant le plus probable compte tenu de tout le
+que le modèle prédit le jeton (token) suivant le plus probable compte tenu de tout le
 prompt. Les mots « notes de réunion » de votre prompt attirent la prédiction
 vers les millions de comptes rendus de réunion de son texte d’entraînement,
 qui ont des titres et des puces. Votre paragraphe de règles exerce une
@@ -197,7 +197,7 @@ Décrivez avec des mots quand l’exigence tient en un nombre ou en un mot.
 « Moins de 100 mots », « en néerlandais », « trois puces » n’ont besoin
 d’aucun exemple, et un exemple ajouterait des jetons ainsi qu’un sujet que
 le modèle risquerait de recopier en même temps que le format. La leçon sur
-la sortie structurée montre le cas où l’on utilise les deux à la fois : les
+la sortie structurée (structured output) montre le cas où l’on utilise les deux à la fois : les
 noms de champs décrits et un exemple rempli du format.
 
 Combien d’exemples ? L’article qui a popularisé le terme a constaté le plus

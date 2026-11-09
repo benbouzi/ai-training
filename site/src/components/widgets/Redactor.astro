@@ -25,7 +25,7 @@ interface Props {
 	textLabel?: string;
 }
 
-const { text, map, watch, action = 'redact', textLabel = 'The document' } = Astro.props;
+const { text, map, watch, action = 'redact', textLabel = 'Le document' } = Astro.props;
 if (action !== 'redact' && action !== 'restore')
 	throw new Error(`Redactor: action is ${String(action)}, and it must be redact or restore`);
 
@@ -33,7 +33,7 @@ const textValue = exampleFile(text, 'Redactor');
 const mapValue = map === undefined ? '' : exampleFile(map, 'Redactor');
 const watchValue = watch === undefined ? null : exampleFile(watch, 'Redactor');
 const rows = (value: string) => Math.min(Math.max(value.split('\n').length, 4), 24);
-const button = action === 'redact' ? 'Redact' : 'Restore';
+const button = action === 'redact' ? 'Masquer' : 'Restaurer';
 ---
 
 <div class="not-content redactor" data-redactor data-action={action}>
@@ -42,13 +42,13 @@ const button = action === 'redact' ? 'Redact' : 'Restore';
 		<textarea class="rd-text" rows={rows(textValue)} spellcheck="false" autocomplete="off">{textValue}</textarea>
 	</label>
 	<label class="rd-label">
-		<span>The map, one <code>value =&gt; placeholder</code> per line</span>
+		<span>La table de correspondance, une ligne <code>valeur =&gt; marqueur</code> par valeur</span>
 		<textarea class="rd-map" rows={rows(mapValue)} spellcheck="false" autocomplete="off">{mapValue}</textarea>
 	</label>
 	{
 		watchValue !== null && (
 			<label class="rd-label">
-				<span>Details to look for, one <code>value =&gt; label</code> per line</span>
+				<span>Les détails à chercher, une ligne <code>valeur =&gt; étiquette</code> par détail</span>
 				<textarea class="rd-watch" rows={rows(watchValue)} spellcheck="false" autocomplete="off">{watchValue}</textarea>
 			</label>
 		)

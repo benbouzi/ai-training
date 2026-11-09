@@ -99,7 +99,7 @@ chacun est un assistant ou un agent ?
 ## Le harnais
 
 Le logiciel qui entoure le modèle a un nom, que la leçon précédente a déjà
-utilisé : le **harnais**. C’est la partie qui fait d’un modèle un agent, et il
+utilisé : le **harnais** (harness). C’est la partie qui fait d’un modèle un agent, et il
 contient plus que la boucle que vous avez observée. L’Agent Engineer Course
 l’appelle la couche d’orchestration, et lui attribue la boucle, l’état, la
 gestion des erreurs, les conditions d’arrêt et les garde-fous (@AEC-01). Un
@@ -112,7 +112,7 @@ harnais contient :
   jouet, c’était la description en deux lignes de `list_dir` et `read_file`.
 - **Les vérifications de permissions.** L’étape entre une demande d’outil et
   l’outil, où le harnais peut demander à une personne, refuser, ou exécuter.
-- **Le prompt système.** Les instructions permanentes que le modèle lit avant
+- **Le prompt système (system prompt).** Les instructions permanentes que le modèle lit avant
   chaque tâche.
 - **La gestion du contexte.** Ce que le harnais garde dans la conversation, ce
   qu’il en retire quand elle s’allonge, et ce qu’il enregistre pour l’exécution

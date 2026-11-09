@@ -1,41 +1,42 @@
-Ticket NB-2026-08814, Norrbeck Appliances customer support
-Status: open, second visit requested
+Ticket NB-2026-08814, service client de Norrbeck Appliances
+État : ouvert, deuxième visite demandée
 
---- Message 1, from the customer ---
+--- Message 1, de la cliente ---
 
-From: Renske Adelhof <renske.adelhof@example.net>
-To: support@norrbeck-appliances.example
-Subject: Dishwasher still leaking after repair (account NB-4471-0928)
+De : Renske Adelhof <renske.adelhof@example.net>
+À : support@norrbeck-appliances.example
+Objet : Lave-vaisselle qui fuit encore après réparation (compte NB-4471-0928)
 
-Hello,
+Bonjour,
 
-Your technician Tijmen Boskoorn came by on Tuesday to fix the leak in our
-dishwasher, a Norrbeck D410. It worked for two days and now the water is
-back under the sink. I leave for work at 7:30, so please call me on
-+31 6 1234 5678 before that, or write back. My account number is
-NB-4471-0928.
+Votre technicien Tijmen Boskoorn est passé mardi pour réparer la fuite de
+notre lave-vaisselle, un Norrbeck D410. Il a fonctionné deux jours, et l’eau
+est revenue sous l’évier. Je pars au travail à 7 h 30 : merci de m’appeler
+au +31 6 1234 5678 avant cette heure, ou de me répondre par écrit. Mon numéro
+de compte est le NB-4471-0928.
 
-Kind regards,
+Bien cordialement,
 Renske Adelhof
 Kastanjelaan 12, Zwolle
 
---- Message 2, internal note ---
+--- Message 2, note interne ---
 
-From: Tijmen Boskoorn
-To: support@norrbeck-appliances.example
+De : Tijmen Boskoorn
+À : support@norrbeck-appliances.example
 
-I replaced the door seal on the D410 at Kastanjelaan 12 on Tuesday. If it
-leaks again the inlet hose is the next suspect. The customer's partner,
-Sander Adelhof, said the machine was bought at our Zwolle store in March,
-order 55-31972. I can go back on Thursday afternoon. My mobile is
-+31 6 8765 4321 if the planner needs me.
+J’ai remplacé mardi le joint de porte du D410 au Kastanjelaan 12. Si la
+fuite revient, le tuyau d’arrivée est le suspect suivant. Le conjoint de la
+cliente, Sander Adelhof, a dit que la machine a été achetée dans notre
+magasin de Zwolle en mars, commande 55-31972. Je peux repasser jeudi
+après-midi. Mon portable est le +31 6 8765 4321 si le planning a besoin de
+moi.
 
---- Message 3, from the planner ---
+--- Message 3, du planning ---
 
-From: Marit Zandvliet-Oosterhuis <planning@norrbeck-appliances.example>
-To: support@norrbeck-appliances.example
+De : Marit Zandvliet-Oosterhuis <planning@norrbeck-appliances.example>
+À : support@norrbeck-appliances.example
 
-Thursday works. Please draft the reply to the customer: apologize, offer
-the Thursday afternoon visit, which we pay for, ask for a second time
-window in case Thursday fails, and tell them to keep the water supply
-closed until then.
+Jeudi convient. Merci de rédiger la réponse à la cliente : excusez-vous,
+proposez la visite de jeudi après-midi, à nos frais, demandez un second
+créneau au cas où jeudi ne conviendrait pas, et dites-lui de garder l’arrivée
+d’eau fermée d’ici là.

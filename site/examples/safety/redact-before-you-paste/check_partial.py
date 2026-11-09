@@ -33,4 +33,5 @@ def still_identifying(text: str) -> "list[str]":
 
 
 if __name__ == "__main__":
-    print("still identifying: " + ", ".join(still_identifying(PARTIAL)))
+    found = still_identifying(PARTIAL)
+    print("identifie encore : " + (", ".join(found) if found else "aucun des détails listés"))

@@ -1,314 +1,327 @@
 import { Predict, Scenario, Pitfall, Exercise, Recap, Prompt, Response, MultiChoice, Sort } from '@components/lesson';
 import Redactor from '@components/widgets/Redactor.astro';
 
-A customer writes to support about a dishwasher that leaks again after a
-repair. You want an assistant to draft the reply. The email holds the
-customer's name, phone number, email address, home address, and account
-number, and the reply needs none of them. In this lesson we take those
-values out before the email goes anywhere and check that the task still
-works on what's left. Afterwards a map that never left your computer puts
-the values back into the reply.
+Une cliente écrit au service client à propos d’un lave-vaisselle qui fuit de
+nouveau après une réparation. Vous voulez qu’un assistant rédige la réponse.
+L’e-mail contient le nom de la cliente, son numéro de téléphone, son adresse
+e-mail, son adresse postale et son numéro de compte, et la réponse n’a besoin
+d’aucun d’eux. Dans cette leçon, nous retirons ces valeurs avant que l’e-mail
+parte où que ce soit, et nous vérifions que la tâche fonctionne toujours sur
+ce qui reste. Ensuite, une table de correspondance (redaction map) qui n’a jamais quitté
+votre ordinateur remet les valeurs dans la réponse.
 
-Every person and company in the email is invented. The redaction boxes on
-this page run in your browser and send the text nowhere. The one step that
-puts text into an AI tool is optional and uses the redacted version only.
+Toutes les personnes et entreprises de l’e-mail sont inventées. Les zones de
+masquage (redaction) de cette page s’exécutent dans votre navigateur et n’envoient le
+texte nulle part. La seule étape qui place du texte dans un outil d’IA est
+facultative, et elle n’utilise que la version masquée.
 
-Here is the email.
+Voici l’e-mail.
 
 ```text
-From: Renske Adelhof <renske.adelhof@example.net>
-To: support@norrbeck-appliances.example
-Subject: Dishwasher still leaking after repair (account NB-4471-0928)
+De : Renske Adelhof <renske.adelhof@example.net>
+À : support@norrbeck-appliances.example
+Objet : Lave-vaisselle qui fuit encore après réparation (compte NB-4471-0928)
 
-Hello,
+Bonjour,
 
-Your technician Tijmen Boskoorn came by on Tuesday to fix the leak in our
-dishwasher, a Norrbeck D410. It worked for two days and now the water is
-back under the sink. I leave for work at 7:30, so please call me on
-+31 6 1234 5678 before that, or write back. My account number is
-NB-4471-0928.
+Votre technicien Tijmen Boskoorn est passé mardi pour réparer la fuite de
+notre lave-vaisselle, un Norrbeck D410. Il a fonctionné deux jours, et l’eau
+est revenue sous l’évier. Je pars au travail à 7 h 30 : merci de m’appeler
+au +31 6 1234 5678 avant cette heure, ou de me répondre par écrit. Mon numéro
+de compte est le NB-4471-0928.
 
-Kind regards,
+Bien cordialement,
 Renske Adelhof
 Kastanjelaan 12, Zwolle
 ```
 
-## What the task needs
+## Ce dont la tâche a besoin
 
-The task is "draft a reply that apologizes, offers a free second visit,
-and asks for a time window". Read the email once with that task in mind
-and mark what the reply depends on: the leak came back after a repair on
-Tuesday, and the customer leaves early in the morning. Now mark the facts
-that the reply never uses: who the customer is, how to reach them, where they
-live, which account they have. Support sends the reply from the ticket,
-and the ticket system already has those details.
+La tâche est « rédiger une réponse qui présente des excuses, propose une
+deuxième visite gratuite et demande un créneau horaire ». Lisez l’e-mail une
+fois en gardant cette tâche en tête, et repérez ce dont dépend la réponse :
+la fuite est revenue après une réparation faite mardi, et la cliente part tôt
+le matin. Repérez ensuite les informations que la réponse n’utilise jamais :
+qui est la cliente, comment la joindre, où elle habite, quel compte elle a.
+Le service client envoie la réponse depuis le ticket, et le logiciel de
+tickets connaît déjà ces informations.
 
-Everything in the second group is personal data, and the
-[first lesson](/safety/responsible-use/) of this course said to leave it
-out unless the tool is approved for it. Redaction is how you leave it out
-without giving up the tool. The AI Fluency framework files this under
-diligence, the part of working with AI where you take responsibility for
-what you hand over and for what happens with it
+Tout le second groupe est fait de données personnelles, et la
+[première leçon](/safety/responsible-use/) de ce parcours disait de les
+laisser de côté, sauf si l’outil est approuvé pour elles. Le masquage permet
+de les laisser de côté sans renoncer à l’outil. Le cadre AI Fluency range
+cela sous la diligence, la partie du travail avec l’IA où vous prenez la
+responsabilité de ce que vous transmettez et de ce qu’il en advient
 (@Academy ai-fluency-framework-foundations).
 
-## Replace each value with a placeholder that keeps its role
+## Remplacer chaque valeur par un marqueur qui garde son rôle
 
-Deleting a name leaves a sentence with a hole in it, and a model drafting
-a reply from "Your technician came by" can no longer tell that two people
-are in the story. A placeholder keeps the role: `Person 1` for the
-customer and `Person 2` for the technician, `[phone]` and `[address]` for
-the contact details. The
-same placeholder goes everywhere the value appears. Both mentions of the
-account number become `[account number]`, and the reader still knows
-they're one thing.
+Effacer un nom laisse un trou dans la phrase, et un modèle qui rédige une
+réponse à partir de « Votre technicien est passé » ne peut plus voir que
+l’histoire compte deux personnes. Un marqueur (placeholder) garde le rôle : `Personne 1`
+pour la cliente et `Personne 2` pour le technicien, `[téléphone]` et
+`[adresse]` pour les coordonnées. Le même marqueur remplace la valeur partout
+où elle apparaît. Les deux mentions du numéro de compte deviennent
+`[numéro de compte]`, et le lecteur sait toujours qu’il s’agit d’une seule
+chose.
 
-The box below holds the email and a map of six rows, each an original
-value and its placeholder. Press Redact. Redact replaces every value with
-its placeholder, longest value first, so a full name is replaced before a
-shorter value it contains.
+La zone ci-dessous contient l’e-mail et une table de correspondance de six
+lignes, chacune avec une valeur d’origine et son marqueur. Appuyez sur
+Masquer. Le masquage remplace chaque valeur par son marqueur, en commençant
+par la plus longue, pour qu’un nom complet soit remplacé avant une valeur
+plus courte qu’il contient.
 
 <Redactor text="safety/redact-before-you-paste/sample/email.txt"
   map="safety/redact-before-you-paste/sample/email-map.txt" />
 
-This is the redacted email.
+Voici l’e-mail masqué.
 
 ```text
-From: Person 1 <[email]>
-To: support@norrbeck-appliances.example
-Subject: Dishwasher still leaking after repair (account [account number])
+De : Personne 1 <[e-mail]>
+À : support@norrbeck-appliances.example
+Objet : Lave-vaisselle qui fuit encore après réparation (compte [numéro de compte])
 
-Hello,
+Bonjour,
 
-Your technician Person 2 came by on Tuesday to fix the leak in our
-dishwasher, a Norrbeck D410. It worked for two days and now the water is
-back under the sink. I leave for work at 7:30, so please call me on
-[phone] before that, or write back. My account number is
-[account number].
+Votre technicien Personne 2 est passé mardi pour réparer la fuite de
+notre lave-vaisselle, un Norrbeck D410. Il a fonctionné deux jours, et l’eau
+est revenue sous l’évier. Je pars au travail à 7 h 30 : merci de m’appeler
+au [téléphone] avant cette heure, ou de me répondre par écrit. Mon numéro
+de compte est le [numéro de compte].
 
-Kind regards,
-Person 1
-[address]
+Bien cordialement,
+Personne 1
+[adresse]
 ```
 
-Read the result as the model would. It's still a complaint about a leak
-that came back, from someone who has to leave early. The technician was
-there on Tuesday. The support address and the product name are still
-in it, because they belong to the company and the task may need them.
+Lisez le résultat comme le ferait le modèle. C’est toujours la plainte de
+quelqu’un dont la fuite est revenue et qui doit partir tôt. Le technicien est
+passé mardi. L’adresse du service client et le nom du produit sont toujours
+là, parce qu’ils appartiennent à l’entreprise et que la tâche peut en avoir
+besoin.
 
-## The task works as well on the redacted text
+## La tâche fonctionne aussi bien sur le texte masqué
 
-To see this for yourself, put the task and the redacted email into the
-chat tool you use at work. That paste is safe
-because the people are invented and their details are already replaced.
-You can also skip it. The exchange below is illustrative: the author wrote
-it to show the pattern, and yours reads a little differently.
+Pour le constater vous-même, mettez la tâche et l’e-mail masqué dans l’outil
+de conversation que vous utilisez au travail. Ce copier-coller est sans
+risque, puisque les personnes sont inventées et que leurs informations sont
+déjà remplacées. Vous pouvez aussi sauter cette étape. L’échange ci-dessous
+est une illustration : l’auteur l’a écrit pour montrer le principe, et le
+vôtre sera un peu différent.
 
 <Prompt model="illustrative" recorded="illustrative">
-Draft a short reply to the customer email between the triple quotes. Apologize,
-offer a free second visit this week, and ask for two time windows that
-suit them. Keep the placeholders exactly as written.
+Rédige une courte réponse à l’e-mail de la cliente placé entre les triples
+guillemets. Présente des excuses, propose une deuxième visite gratuite cette
+semaine, et demande deux créneaux qui lui conviennent. Garde les marqueurs
+exactement tels qu’ils sont écrits.
 
 """
-[the redacted email, pasted in full]
+[l’e-mail masqué, collé en entier]
 """
 </Prompt>
 <Response>
-Dear Person 1,
+Bonjour Personne 1,
 
-Thank you for letting us know, and I am sorry the leak came back so soon
-after Person 2's visit. We would like to send a technician again this
-week, and we pay for the visit. Could you give us two time windows that
-suit you, outside your morning departure? Until then, please keep the
-water supply to the dishwasher closed.
+Merci de nous avoir prévenus, et je suis désolé que la fuite soit revenue si
+vite après la visite de Personne 2. Nous souhaitons envoyer de nouveau un
+technicien cette semaine, à nos frais. Pourriez-vous nous indiquer deux
+créneaux qui vous conviennent, en dehors de votre départ matinal ? D’ici là,
+merci de garder fermée l’arrivée d’eau du lave-vaisselle.
 
-Kind regards,
-Norrbeck Appliances customer support
+Bien cordialement,
+Le service client de Norrbeck Appliances
 </Response>
 
-The reply is as good as one drafted on the original. The model used the
-early departure and the visit that didn't hold, and it needed nothing that
-was taken out. That's the usual case. Most tasks read the
-facts of a document, and the identifiers in it are there for the humans
-who file and answer it.
+La réponse vaut celle qui aurait été rédigée à partir de l’original. Le
+modèle a utilisé le départ matinal et la visite qui n’a pas tenu, et il
+n’avait besoin de rien de ce qui a été retiré. C’est le cas habituel. La
+plupart des tâches lisent les faits d’un document, et les identifiants qu’il
+contient servent aux personnes qui le classent et y répondent.
 
-<Pitfall title="Leaving an initial and a city">
-A colleague redacts the same email by hand. They shorten the name to
-"R. A." in both places, remove the phone number and the email address, and
-cut the street from the signature but keep the city. The subject line
-stays as it was, with the account number in it, and so does the
-technician's name. Anyone with access to the company's ticket system, and
-anyone who knows the technician's round, can find the customer from that
-in a minute. A redaction that leaves one detail per person is a redaction
-of nothing. Take out every detail that points at the person, and read the
-subject line and the signature as carefully as the body.
+<Pitfall title="Laisser une initiale et une ville">
+Un collègue masque le même e-mail à la main. Il réduit le nom à « R. A. »
+aux deux endroits, retire le numéro de téléphone et l’adresse e-mail, et
+coupe la rue de la signature tout en gardant la ville. L’objet reste tel
+quel, avec le numéro de compte, et le nom du technicien aussi. Toute personne
+qui a accès au logiciel de tickets de l’entreprise, ou qui connaît la tournée
+du technicien, retrouve la cliente en une minute. Un masquage qui laisse un
+détail par personne ne masque rien. Retirez chaque détail qui désigne la
+personne, et lisez l’objet et la signature aussi attentivement que le corps
+du message.
 </Pitfall>
 
-The colleague's version is in the box below, with an empty map. Under it
-is a list of eight details from the original, in this order: name,
-initials, phone, email, account number, street, city, technician. After a
-pass, the box prints `still identifying:` and then the labels of the
-details it still finds, separated by a comma and a space.
+La version du collègue se trouve dans la zone ci-dessous, avec une table de
+correspondance vide. En dessous figure une liste de huit détails de
+l’original, dans cet ordre : nom, initiales, téléphone, e-mail, numéro de
+compte, rue, ville, technicien. Après un passage, la zone affiche
+`identifie encore :` puis les étiquettes des détails qu’elle trouve encore,
+séparées par une virgule et une espace.
 
 <Redactor text="safety/redact-before-you-paste/sample/partial.txt"
   watch="safety/redact-before-you-paste/sample/watch.txt" />
 
 <Predict id="what-the-partial-redaction-leaves" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['data-privacy']}
-  context="A colleague redacted a customer's support email by hand: the name became the initials R. A., the phone number, the email address and the street were removed, and the account number in the subject line, the city under the signature and the technician's name stayed. The checker looks for eight details from the original in this order: name, initials, phone, email, account number, street, city, technician, and prints the labels of the ones still present after the words still identifying: separated by a comma and a space."
-  title="What does the check print?" hint="Read the colleague's version line by line, including the subject and the signature. Which of the eight details are still there, and in which order does the check list them?"
-  answer="still identifying: initials, account number, city, technician">
-Read the colleague's version in the box above, including the subject line
-and the signature. Before you press Redact, write down what the box prints.
+  context="Un collègue a masqué à la main l’e-mail d’une cliente au service client : le nom est devenu les initiales R. A., le numéro de téléphone, l’adresse e-mail et la rue ont été retirés, et le numéro de compte dans l’objet, la ville sous la signature et le nom du technicien sont restés. Le contrôle cherche huit détails de l’original dans cet ordre : nom, initiales, téléphone, e-mail, numéro de compte, rue, ville, technicien, et affiche les étiquettes de ceux qui restent après les mots identifie encore : séparées par une virgule et une espace."
+  title="Qu’affiche le contrôle ?" hint="Lisez la version du collègue ligne par ligne, objet et signature compris. Lesquels des huit détails sont encore là, et dans quel ordre le contrôle les liste-t-il ?"
+  answer="identifie encore : initiales, numéro de compte, ville, technicien">
+Lisez la version du collègue dans la zone ci-dessus, objet et signature
+compris. Avant d’appuyer sur Masquer, notez ce qu’affiche la zone.
 </Predict>
 
-For the colleague's version as it is, the box above prints this line.
+Pour la version du collègue telle quelle, la zone ci-dessus affiche cette
+ligne.
 
 ```text
-still identifying: initials, account number, city, technician
+identifie encore : initiales, numéro de compte, ville, technicien
 ```
 
-Now finish the colleague's redaction. Add a map row for each detail the
-line names, such as `Zwolle => [city]`, and press Redact again. When the
-line says `none of the listed details`, compare the result with the
-redacted email above.
+Terminez maintenant le masquage du collègue. Ajoutez une ligne à la table
+pour chaque détail que la ligne nomme, comme `Zwolle => [ville]`, et appuyez
+de nouveau sur Masquer. Quand la ligne indique `aucun des détails listés`,
+comparez le résultat avec l’e-mail masqué plus haut.
 
-## The redaction map stays with you
+## La table de correspondance reste chez vous
 
-The reply says "Dear Person 1", and that isn't the customer's name. The
-map that produced the redaction turns it back. The box below holds the
-reply from the illustrative response and the same map. Press Restore, and
-each placeholder is replaced by the value it stood for.
+La réponse commence par « Bonjour Personne 1 », et ce n’est pas le nom de la
+cliente. La table qui a produit le masquage le rétablit. La zone ci-dessous
+contient la réponse de l’échange d’illustration et la même table. Appuyez sur
+Restaurer, et chaque marqueur est remplacé par la valeur qu’il représentait.
 
-<Redactor action="restore" textLabel="The reply"
+<Redactor action="restore" textLabel="La réponse"
   text="safety/redact-before-you-paste/sample/reply.txt"
   map="safety/redact-before-you-paste/sample/email-map.txt" />
 
-This is the restored reply.
+Voici la réponse restaurée.
 
 ```text
-Dear Renske Adelhof,
+Bonjour Renske Adelhof,
 
-Thank you for letting us know, and I am sorry the leak came back so soon
-after Tijmen Boskoorn's visit. We would like to send a technician again this
-week, and we pay for the visit. Could you give us two time windows that
-suit you, outside your morning departure? Until then, please keep the
-water supply to the dishwasher closed.
+Merci de nous avoir prévenus, et je suis désolé que la fuite soit revenue si
+vite après la visite de Tijmen Boskoorn. Nous souhaitons envoyer de nouveau un
+technicien cette semaine, à nos frais. Pourriez-vous nous indiquer deux
+créneaux qui vous conviennent, en dehors de votre départ matinal ? D’ici là,
+merci de garder fermée l’arrivée d’eau du lave-vaisselle.
 
-Kind regards,
-Norrbeck Appliances customer support
+Bien cordialement,
+Le service client de Norrbeck Appliances
 ```
 
-The map is the one file in this lesson that holds every identifier in
-one place, so it is the one file that never goes into the tool. Keep it
-where the original document is kept, in the ticket system or in a folder
-your organization already protects, and delete it when the reply has
-gone out. Without the map the redacted text is pseudonymized: the people
-have placeholders instead of names. It isn't anonymous, because the
-dishwasher model, the Tuesday visit and the company address are still in
-it, and someone with the ticket system could match them. With the map the
-reply is still addressed to a person. For a
-document you redact by hand, the map is a two-column table in a text file.
-The map box on this page takes one `value => placeholder` per line, and so
-does the exercise below.
+La table de correspondance est le seul fichier de cette leçon qui réunit tous
+les identifiants au même endroit. C’est donc le seul fichier qui n’entre
+jamais dans l’outil. Gardez-la là où est gardé le document d’origine, dans le
+logiciel de tickets ou dans un dossier que votre organisation protège déjà,
+et supprimez-la une fois la réponse envoyée. Sans la table, le texte masqué
+est pseudonymisé : les personnes ont des marqueurs à la place de leur nom. Il
+n’est pas anonyme pour autant, puisque le modèle de lave-vaisselle, la visite
+du mardi et l’adresse de l’entreprise y figurent encore, et qu’une personne
+qui a accès au logiciel de tickets pourrait les rapprocher. Avec la table, la
+réponse s’adresse de nouveau à une personne. Pour un document que vous
+masquez à la main, la table est un tableau à deux colonnes dans un fichier
+texte. La zone de table de cette page prend une ligne `valeur => marqueur`
+par valeur, tout comme l’exercice ci-dessous.
 
 <Scenario id="the-full-signature" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['confidentiality', 'data-privacy']}
-  context="A colleague is about to paste a customer email into a general-purpose AI assistant to have a reply drafted. They replaced the customer's name in the greeting with a placeholder and left the rest of the email as it was, including the signature block at the bottom with the customer's full name, job title, employer, mobile number and office address."
-  title="Ready to paste?" hint="Where in an email does a person's identity appear besides the greeting, and what does each of those details tell a reader on its own?"
+  context="Une collègue s’apprête à coller l’e-mail d’une cliente dans un assistant d’IA généraliste pour faire rédiger une réponse. Elle a remplacé le nom de la cliente dans la formule d’appel par un marqueur et laissé le reste de l’e-mail tel quel, y compris le bloc de signature en bas, avec le nom complet, la fonction, l’employeur, le numéro de portable et l’adresse du bureau de la cliente."
+  title="Prêt à coller ?" hint="Où l’identité d’une personne apparaît-elle dans un e-mail en dehors de la formule d’appel, et que dit chacun de ces détails à lui seul ?"
   options={[
-    { text: 'Paste it. The name is gone, and a signature block is public information anyway, printed on every business card.', consequence: 'The signature holds the full name, the employer and a mobile number. The tool now retains all of it under its terms, and the placeholder in the greeting protected nothing.' },
-    { text: 'Delete the signature block, then paste. The body has no name left in it, so nothing else needs to change.', consequence: 'Better, but the body still mentions the employer and the office town, and a first name in the second paragraph is untouched. A reader with the company directory has the person in one search.' },
-    { text: 'Replace every detail that points at the person, in the subject, the body and the signature, with a placeholder from a map kept outside the tool.', correct: true, consequence: 'The email that goes in describes a situation and nobody in particular. The map turns the placeholders back into names when the reply is ready.' },
+    { text: 'Le coller. Le nom a disparu, et un bloc de signature est de toute façon public, imprimé sur chaque carte de visite.', consequence: 'La signature contient le nom complet, l’employeur et un numéro de portable. L’outil conserve désormais tout cela selon ses conditions, et le marqueur de la formule d’appel n’a rien protégé.' },
+    { text: 'Supprimer le bloc de signature, puis coller. Le corps ne contient plus de nom, donc rien d’autre ne doit changer.', consequence: 'C’est mieux. Le corps mentionne pourtant encore l’employeur et la ville du bureau, et un prénom du deuxième paragraphe est intact. Avec l’annuaire de l’entreprise, une seule recherche suffit pour trouver la personne.' },
+    { text: 'Remplacer chaque détail qui désigne la personne, dans l’objet, le corps et la signature, par un marqueur tiré d’une table gardée hors de l’outil.', correct: true, consequence: 'L’e-mail qui entre décrit une situation et ne désigne personne. La table retransforme les marqueurs en noms quand la réponse est prête.' },
   ]}>
-A colleague shows you the prompt they're about to send. The greeting
-reads "Dear Person 1", and below the body is the customer's full
-signature block: name, job title, employer, mobile number, and office
-address. What do you tell them?
+Une collègue vous montre le prompt qu’elle va envoyer. La formule d’appel est
+« Bonjour Personne 1 », et sous le corps du message se trouve le bloc de
+signature complet de la cliente : nom, fonction, employeur, numéro de
+portable et adresse du bureau. Que lui dites-vous ?
 </Scenario>
 
 <MultiChoice id="what-still-points-at-them" phase="review" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['data-privacy']}
-  context="A colleague redacted a customer email about a water leak before pasting it into an assistant. They replaced the name in the greeting with Person 1 and removed the phone number. Everything else stayed as it was."
-  title="What still points at the customer?" hint="Read the subject line and the signature as a stranger would. What could they look up?"
+  context="Un collègue a masqué l’e-mail d’une cliente au sujet d’une fuite d’eau avant de le coller dans un assistant. Il a remplacé le nom dans la formule d’appel par Personne 1 et retiré le numéro de téléphone. Tout le reste est resté tel quel."
+  title="Qu’est-ce qui désigne encore la cliente ?" hint="Lisez l’objet et la signature comme le ferait un inconnu. Que pourrait-il chercher ?"
   options={[
-    { text: 'The account number in the subject line.', correct: true },
-    { text: 'The night the leak started.', why: 'The reply needs this fact, and on its own it points at nobody.' },
-    { text: 'The city and employer in the signature.', correct: true },
-    { text: 'The words Person 1 in the greeting.', why: 'That is the placeholder. It keeps the role and says nothing about who it is.' },
+    { text: 'Le numéro de compte dans l’objet.', correct: true },
+    { text: 'La nuit où la fuite a commencé.', why: 'La réponse a besoin de ce fait, et à lui seul il ne désigne personne.' },
+    { text: 'La ville et l’employeur dans la signature.', correct: true },
+    { text: 'Les mots Personne 1 dans la formule d’appel.', why: 'C’est le marqueur. Il garde le rôle et ne dit rien de l’identité.' },
   ]}>
 
-Which two details in the redacted email still point at the customer?
+Quels sont les deux détails de l’e-mail masqué qui désignent encore la
+cliente ?
 
 </MultiChoice>
 
 <Sort id="needs-it-or-placeholder" phase="review" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['data-privacy', 'confidentiality']}
-  context="A learner asks a general-purpose assistant to draft a reply to a tenant's email about a leak in their flat. The lesson splits a document into the facts the task uses and the details that say who is involved."
-  title="Keep it or replace it?" hint="Would the reply be any different if this detail were a placeholder?"
-  buckets={['The task needs it', 'Replace it with a placeholder']}
+  context="Un apprenant demande à un assistant généraliste de rédiger une réponse à l’e-mail d’une locataire au sujet d’une fuite dans son appartement. La leçon sépare un document en deux : les faits que la tâche utilise, et les détails qui disent qui est concerné."
+  title="Garder ou remplacer ?" hint="La réponse serait-elle différente si ce détail était un marqueur ?"
+  buckets={['La tâche en a besoin', 'Le remplacer par un marqueur']}
   items={[
-    { text: 'The leak started on Monday night', bucket: 0 },
-    { text: 'Water through the kitchen ceiling', bucket: 0 },
-    { text: 'The plumber can come on Thursday morning', bucket: 0 },
-    { text: 'The tenant\'s full name', bucket: 1 },
-    { text: 'The flat is at number 12 on the tenant\'s street', bucket: 1 },
-    { text: 'She can be reached on her mobile, 06 1234 5678', bucket: 1 },
+    { text: 'La fuite a commencé lundi soir', bucket: 0 },
+    { text: 'De l’eau passe par le plafond de la cuisine', bucket: 0 },
+    { text: 'Le plombier peut venir jeudi matin', bucket: 0 },
+    { text: 'Le nom complet de la locataire', bucket: 1 },
+    { text: 'L’appartement est au numéro 12 de la rue de la locataire', bucket: 1 },
+    { text: 'On peut la joindre sur son portable, au 06 1234 5678', bucket: 1 },
   ]} />
 
-## Send what the task needs
+## N’envoyer que ce dont la tâche a besoin
 
-Send what the task needs and no more. Before a document goes into a tool, read it with the task in
-mind and split it in two: the facts the task uses, and the details that
-say who is involved. Replace every detail in the second group with a
-placeholder that keeps its role, check the subject line and the
-signature, and then keep the map with the original. When the answer comes
-back, the map puts the people back in.
+Envoyez ce dont la tâche a besoin, et rien de plus. Avant qu’un document
+entre dans un outil, lisez-le en gardant la tâche en tête et séparez-le en
+deux : les faits que la tâche utilise, et les détails qui disent qui est
+concerné. Remplacez chaque détail du second groupe par un marqueur qui garde
+son rôle, vérifiez l’objet et la signature, puis gardez la table de
+correspondance avec l’original. Quand la réponse revient, la table remet les
+personnes à leur place.
 
-<Exercise stretch="Take one document from your own work and do the same on paper: list the values you would replace and their placeholders, without pasting the document anywhere.">
+<Exercise stretch="Prenez un document de votre propre travail et faites la même chose sur papier : listez les valeurs que vous remplaceriez et leurs marqueurs, sans coller le document nulle part.">
 
-The box below holds the full ticket the email came from: the customer's
-email, an internal note from the technician, and a message from the
-planner, about forty lines in all. Its map is empty. Write a map in the map
-box, one `value => placeholder` per line, and press Redact. Read the output
-line by line and add a row for every detail that still points at a person,
-then press Redact again. Plan on ten minutes. This is the whole procedure,
-and after one full pass you can apply it to the next document without
-looking anything up.
+La zone ci-dessous contient le ticket complet d’où vient l’e-mail : l’e-mail
+de la cliente, une note interne du technicien et un message du planning,
+une quarantaine de lignes en tout. Sa table de correspondance est vide.
+Écrivez une table dans la zone prévue, une ligne `valeur => marqueur` par
+valeur, et appuyez sur Masquer. Lisez la sortie ligne par ligne et ajoutez
+une ligne pour chaque détail qui désigne encore une personne, puis appuyez de
+nouveau sur Masquer. Comptez dix minutes. C’est la procédure complète, et
+après un passage entier vous pouvez l’appliquer au document suivant sans
+rien chercher.
 
 <Redactor text="safety/redact-before-you-paste/sample/ticket.txt" />
 
-A good result doesn't name a person or hold a phone number, email address,
-account number, ticket number, order number, or street. A reader can still
-tell that a door seal was replaced and that the inlet hose is the next
-suspect, and that Thursday afternoon is on offer. After your own pass,
-compare your map with this one, which leaves none of those details in the
-ticket.
+Un bon résultat ne nomme personne et ne contient ni numéro de téléphone, ni
+adresse e-mail, ni numéro de compte, de ticket ou de commande, ni rue. Un
+lecteur voit toujours qu’un joint de porte a été remplacé, que le tuyau
+d’arrivée est le prochain suspect, et que jeudi après-midi est proposé.
+Après votre propre passage, comparez votre table avec celle-ci, qui ne laisse
+aucun de ces détails dans le ticket.
 
 ```text
-Renske Adelhof => Person 1
-renske.adelhof@example.net => [email 1]
-Tijmen Boskoorn => Person 2
-Sander Adelhof => Person 3
-Marit Zandvliet-Oosterhuis => Person 4
-+31 6 1234 5678 => [phone 1]
-+31 6 8765 4321 => [phone 2]
-NB-4471-0928 => [account number]
-NB-2026-08814 => [ticket number]
-55-31972 => [order number]
-Kastanjelaan 12, Zwolle => [address]
-Kastanjelaan 12 => [address]
-Zwolle => [city]
+Renske Adelhof => Personne 1
+renske.adelhof@example.net => [e-mail 1]
+Tijmen Boskoorn => Personne 2
+Sander Adelhof => Personne 3
+Marit Zandvliet-Oosterhuis => Personne 4
++31 6 1234 5678 => [téléphone 1]
++31 6 8765 4321 => [téléphone 2]
+NB-4471-0928 => [numéro de compte]
+NB-2026-08814 => [numéro de ticket]
+55-31972 => [numéro de commande]
+Kastanjelaan 12, Zwolle => [adresse]
+Kastanjelaan 12 => [adresse]
+Zwolle => [ville]
 ```
 
-Then answer one question: which detail in the ticket did you notice last,
-and where in the document was it?
+Répondez ensuite à une question : quel détail du ticket avez-vous remarqué en
+dernier, et où se trouvait-il dans le document ?
 
 </Exercise>
 
 <Recap>
-1. Read the document with the task in mind and split it in two: the facts the task uses, and the details that say who is involved. The reply to a leak needs the leak and the departure time. It doesn't need the identifiers.
-2. Replace each identifier with a placeholder that keeps its role, `Person 1`, `Person 2`, `[account number]`, and use the same placeholder everywhere the value appears.
-3. The task works as well on the redacted text. Most tasks read the facts of a document, and the identifiers are there for the people who file and answer it.
-4. A partial redaction that leaves an initial, a city or an account number in the subject line is a redaction of nothing. Check the subject line and the signature.
-5. Keep the redaction map outside the tool, where the original is kept, and use it to put the names back into the answer. Send what the task needs and no more.
+1. Lisez le document en gardant la tâche en tête, et séparez-le en deux : les faits que la tâche utilise, et les détails qui disent qui est concerné. La réponse à une fuite a besoin de la fuite et de l’heure de départ. Elle n’a pas besoin des identifiants.
+2. Remplacez chaque identifiant par un marqueur qui garde son rôle, `Personne 1`, `Personne 2`, `[numéro de compte]`, et utilisez le même marqueur partout où la valeur apparaît.
+3. La tâche fonctionne aussi bien sur le texte masqué. La plupart des tâches lisent les faits d’un document, et les identifiants servent aux personnes qui le classent et y répondent.
+4. Un masquage partiel qui laisse une initiale, une ville ou un numéro de compte dans l’objet ne masque rien. Vérifiez l’objet et la signature.
+5. Gardez la table de correspondance hors de l’outil, là où est gardé l’original, et servez-vous-en pour remettre les noms dans la réponse. N’envoyez que ce dont la tâche a besoin.
 </Recap>

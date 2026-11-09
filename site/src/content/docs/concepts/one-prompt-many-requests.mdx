@@ -25,7 +25,7 @@ boucle : arrêt, le modèle a dit avoir terminé après 3 étapes
 
 Une personne a posé une question. Derrière elle, le logiciel qui entoure le
 modèle a appelé le modèle trois fois, une fois pour chaque ligne `modèle :`.
-Chacun de ces appels est une **requête au modèle** : le logiciel envoie au
+Chacun de ces appels est une **requête au modèle** (model request) : le logiciel envoie au
 modèle un paquet de texte, et le modèle renvoie une réponse
 (@Claude docs messages). Une requête se termine quand sa réponse revient. Si la
 réponse demande un outil, le logiciel l’exécute, et le résultat part vers le
@@ -39,7 +39,7 @@ une requête, parce qu’il fallait interroger le modèle avant qu’il puisse �
 sa réponse.
 
 Le logiciel qui envoie les requêtes et exécute les outils s’appelle le
-**harnais**. La leçon précédente l’appelait la boucle. La leçon suivante montre
+**harnais** (harness). La leçon précédente l’appelait la boucle. La leçon suivante montre
 ce qu’il contient d’autre, et dans cette leçon il fait deux choses : il envoie
 chaque requête, et il exécute les demandes d’outil qui reviennent.
 
@@ -152,7 +152,7 @@ Les requêtes grossissent au fil de l’exécution. L’historique de chaque req
 contient tout ce qui s’est passé jusque-là. Une longue session envoie un long
 historique à chaque appel. Le contexte continue de grandir au fil des tours
 d’une session, et rien ne le vide entre les tours (@Claude Code agent loop).
-Les leçons sur le coût des jetons, plus loin dans ce parcours, s’appuient sur
+Les leçons sur le coût des jetons (tokens), plus loin dans ce parcours, s’appuient sur
 ce point.
 
 C’est le harnais qui décide de ce que sait le modèle. Si le harnais omet
@@ -186,7 +186,7 @@ il a écrit le total ?
 Chaque étape d’une exécution est faite par le modèle, le harnais ou
 l’environnement. Le modèle choisit : il écrit une réponse, qui est soit une
 demande d’outil, soit une réponse finale. Le harnais exécute : il envoie les
-requêtes, vérifie si un appel d’outil est autorisé, et exécute l’outil.
+requêtes, vérifie si un appel d’outil (tool call) est autorisé, et exécute l’outil.
 L’**environnement** est ce sur quoi agissent les outils : les fichiers, les
 programmes, les services et les données à la portée de l’agent. Quand un outil
 s’exécute, le changement se produit dans l’environnement, et ce que renvoie

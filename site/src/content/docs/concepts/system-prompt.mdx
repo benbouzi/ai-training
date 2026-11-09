@@ -5,7 +5,7 @@ message : l’instruction, le matériau, le lecteur et le format. Certaines de
 ces parties sont les mêmes pour chaque message que vous envoyez. Le lecteur
 est toujours votre équipe, les réponses doivent toujours être courtes, et il
 y a des sujets que l’assistant ne doit jamais aborder. Dans cette leçon, nous
-examinons le prompt système, le texte qui contient ces parties et que le
+examinons le prompt système (system prompt), le texte qui contient ces parties et que le
 modèle lit avant le début de la conversation. Nous comparons deux prompts
 système et leurs réponses, puis nous voyons qui en écrit un et où une règle
 doit se trouver quand elle doit s’appliquer à chaque fois.
@@ -31,10 +31,10 @@ répéteraient sinon dans chaque message, comme le public et le format. La
 qu’il faut faire à la place.
 
 Comme le prompt système précède chaque tour, le modèle le traite comme le
-cadre de toute la conversation. Il reste des jetons dans le contexte, comme
+cadre de toute la conversation. Il reste des jetons (tokens) dans le contexte, comme
 tout le reste. Une règle qu’il contient est en concurrence avec tout ce qui
 est dit ensuite, ce que la leçon sur le fonctionnement des modèles a appelé
-la dilution des instructions. Une longue conversation peut s’en éloigner, et
+la dilution des instructions (instruction dilution). Une longue conversation peut s’en éloigner, et
 une règle de prompt système fixe un comportement par défaut fort, sans
 aucune garantie qu’il tienne. Dans une conversation courte, en revanche, le prompt système pèse
 plus sur les réponses qu’un message de l’utilisateur (@AEC-02).

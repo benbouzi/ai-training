@@ -4,7 +4,7 @@ Une collègue ouvre une nouvelle conversation, et l’assistant la salue par son
 nom et lui demande des nouvelles du rapport sur lequel elle a travaillé la
 semaine dernière. « Il s’en est souvenu », dit-elle. Une leçon précédente a
 montré qu’un modèle n’a pas de mémoire propre : les poids ne changent pas quand
-vous tapez, et la fenêtre de contexte est le seul endroit où un fait peut se
+vous tapez, et la fenêtre de contexte (context window) est le seul endroit où un fait peut se
 trouver pour le modèle. Il s’est donc passé autre chose. Un fait a été noté
 quelque part hors de la fenêtre, puis remis dans la fenêtre au début de la
 nouvelle conversation. Dans cette leçon, nous démontons l’expression « il s’en
@@ -14,7 +14,7 @@ contient trop de choses, où les réponses commencent à dériver. Vous lisez un
 longue transcription et marquez l’endroit où la dérive commence, puis vous
 nommez le remède qui aurait aidé. Vous n’installez et ne lancez rien. À la fin,
 vous saurez dire où une mémoire est stockée et relue, reconnaître la
-dégradation du contexte dans l’une de vos propres sessions, et choisir l’une de
+dégradation du contexte (context rot) dans l’une de vos propres sessions, et choisir l’une de
 trois issues.
 
 ## Deux endroits où un fait peut se trouver
@@ -137,7 +137,7 @@ redemande un fait que vous lui avez déjà donné. Ce déclin s’appelle la
 **dégradation du contexte** (@AEC-05).
 
 La [leçon sur le coût des jetons](/concepts/what-tokens-cost/#la-règle-enfouie)
-a traité de la dilution des instructions, où une règle est en concurrence avec le
+a traité de la dilution des instructions (instruction dilution), où une règle est en concurrence avec le
 texte qui la suit dans un même prompt ou un même fichier. La dégradation du
 contexte en est la version à l’échelle d’une session. La concurrence se joue
 entre tout ce qui se trouve dans la fenêtre, et elle augmente à chaque tour, en

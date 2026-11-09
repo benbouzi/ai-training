@@ -16,9 +16,9 @@
  *   break into `\n`, so the widget never meets a lone `\r`.
  * - A value's length for the longest-first order counts code points, as
  *   `len()` does, through `[...value].length`.
- * - The widget reports "none of the listed details" where
- *   `check_partial.py` would print an empty list after the colon, because
- *   an empty line reads like a result that failed to load.
+ * - When no listed detail is left, the widget and `check_partial.py` both
+ *   print "aucun des détails listés" after the colon, because an empty list
+ *   reads like a result that failed to load.
  */
 
 /** One map row: the text as it appears in the document, and what replaces it. */
@@ -37,7 +37,7 @@ export function parseMap(text: string): ParsedMap {
 		const line = raw.trim();
 		if (!line) continue;
 		const at = line.indexOf(' => ');
-		if (at < 0) return { rows: [], error: `map line without ' => ': ${line}` };
+		if (at < 0) return { rows: [], error: `ligne de la table sans ' => ' : ${line}` };
 		rows.push({ value: line.slice(0, at), placeholder: line.slice(at + ' => '.length) });
 	}
 	return { rows, error: null };
@@ -84,7 +84,7 @@ export function stillIdentifying(text: string, watch: readonly MapRow[]): string
 
 /** The line `check_partial.py` prints for these labels. */
 export function leakLine(labels: readonly string[]): string {
-	return `still identifying: ${labels.length ? labels.join(', ') : 'none of the listed details'}`;
+	return `identifie encore : ${labels.length ? labels.join(', ') : 'aucun des détails listés'}`;
 }
 
 /** What the widget shows after a press: the new text and the leak line, or the error that stopped it. */
@@ -106,6 +106,10 @@ export function runPass(action: 'redact' | 'restore', text: string, map: string,
 	if (watch === null) return { text: out, leaks: null, error: null };
 	const parsedWatch = parseMap(watch);
 	if (parsedWatch.error !== null)
-		return { text: out, leaks: null, error: `watch list: ${parsedWatch.error.replace('map line', 'line')}` };
+		return {
+			text: out,
+			leaks: null,
+			error: `liste des détails : ${parsedWatch.error.replace('ligne de la table', 'ligne')}`,
+		};
 	return { text: out, leaks: leakLine(stillIdentifying(out, parsedWatch.rows)), error: null };
 }

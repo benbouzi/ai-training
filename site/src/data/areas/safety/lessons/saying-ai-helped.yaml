@@ -13,10 +13,10 @@ introduces: []
 assumes:
   - objective: safety/handles-data-safely/discloses-ai-use
     lesson: safety/responsible-use
-    section: saying-that-ai-helped
+    section: dire-que-lia-a-aidé
   - objective: safety/handles-data-safely/respects-licenses
     lesson: safety/responsible-use
-    section: where-the-output-came-from
+    section: doù-vient-la-sortie
 extends-to:
   - label: Transparency duties in the EU AI Act
     href: /safety/eu-ai-act/

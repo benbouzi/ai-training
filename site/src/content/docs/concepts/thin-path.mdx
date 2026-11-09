@@ -3,7 +3,7 @@ import { Sort, Scenario, Pitfall, Exercise, Recap, Prompt, Response, Choice, Mat
 Le même modèle, le même après-midi, vous donne une réponse utilisable telle
 quelle et une autre qui est fausse d’une manière que vous découvrez une
 semaine plus tard. Dans la leçon sur le fonctionnement des modèles, vous avez
-vu que les deux viennent du même mécanisme, la prédiction du jeton suivant, et
+vu que les deux viennent du même mécanisme, la prédiction du jeton (token) suivant, et
 vous avez appris deux noms de défaillances, hallucination et date limite des
 connaissances. Dans cette leçon, nous regardons *où* se produit l’invention.
 La question qui permet de la prévoir porte sur la tâche, et une fois que vous
@@ -86,7 +86,7 @@ une citation est soit exactement juste, soit faux.
 La question à poser avant de lire une réponse porte donc sur la tâche. Cette
 tâche est-elle courante, et quelle part de la réponse dépend d’éléments
 précis ? Une tâche courante dont vous pouvez vérifier la réponse dans le
-matériau que vous avez fourni demande une vérification par sondage : vous la
+matériau que vous avez fourni demande une vérification par sondage (spot-check) : vous la
 lisez une fois et vous regardez les deux ou trois endroits où elle a pu
 dériver. Une tâche rare, ou dont la valeur tient à ses éléments précis,
 demande de vérifier chacun d’eux avant de transmettre la réponse.
@@ -143,9 +143,9 @@ d’entraînement, et le modèle complète la phrase à partir d’anciens sché
 sortie. Un modèle qui cède quand vous contestez une réponse juste, c’est la
 prédiction qui rencontre la seconde étape d’entraînement, celle qui a
 récompensé les réponses conciliantes, et que la leçon précédente a appelée
-flagornerie. Une règle du début d’une longue conversation qui cesse sans bruit
+flagornerie (sycophancy). Une règle du début d’une longue conversation qui cesse sans bruit
 d’être suivie, c’est la prédiction qui rencontre un contexte plein de jetons
-plus récents, ce que cette leçon a appelé la dilution des instructions.
+plus récents, ce que cette leçon a appelé la dilution des instructions (instruction dilution).
 
 Nommer la paire est utile parce que chaque paire a sa propre correction, qui
 découle du nom. Un manque de connaissance se comble quand vous placez le

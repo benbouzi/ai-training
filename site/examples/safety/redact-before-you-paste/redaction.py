@@ -61,7 +61,7 @@ def parse_map(text: str) -> "list[tuple[str, str]]":
             continue
         value, separator, placeholder = line.partition(" => ")
         if not separator:
-            raise SystemExit(f"map line without ' => ': {line}")
+            raise SystemExit(f"ligne de la table sans ' => ' : {line}")
         rows.append((value, placeholder))
     return rows
 
