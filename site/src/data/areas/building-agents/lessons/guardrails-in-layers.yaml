@@ -13,7 +13,7 @@ introduces: [defense-layers]
 assumes:
   - objective: safety/judges-agent-risk/recognizes-injection
     lesson: safety/tracing-a-planted-instruction
-    section: one-page-three-permission-sets
+    section: une-page-trois-ensembles-de-permissions
   - objective: safety/judges-agent-risk/chooses-human-in-loop
     lesson: safety/sizing-the-blast-radius
     section: placer-lapprobation-sur-la-ligne-irréversible
