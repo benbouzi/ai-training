@@ -10,13 +10,13 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 const markup = `
 <div class="not-content sampler" data-sampler>
-	<p class="sampler-prefix">The cat sat on the …</p>
+	<p class="sampler-prefix">Le chat dort sur le …</p>
 	<label class="sampler-temp">
-		Temperature <input type="range" min="0.05" max="2" step="0.05" value="1" />
+		Température <input type="range" min="0.05" max="2" step="0.05" value="1" />
 		<output>1.00</output>
 	</label>
 	<div class="sampler-bars"></div>
-	<button type="button" class="sampler-go">Sample next token</button>
+	<button type="button" class="sampler-go">Tirer le jeton suivant</button>
 	<p class="sampler-out" aria-live="polite"></p>
 </div>`;
 
@@ -60,9 +60,9 @@ describe('mountSamplers', () => {
 		const go = el<HTMLButtonElement>(document, '.sampler-go');
 		const out = el<HTMLElement>(document, '.sampler-out');
 		go.click();
-		expect(out.textContent).toBe('The cat sat on the mat.');
+		expect(out.textContent).toBe('Le chat dort sur le tapis.');
 		go.click();
-		expect(out.textContent).toBe('The cat sat on the spreadsheet.');
+		expect(out.textContent).toBe('Le chat dort sur le tableur.');
 	});
 	it('mounts every sampler on the page, and none on a page without one', () => {
 		document.body.innerHTML = markup + markup;

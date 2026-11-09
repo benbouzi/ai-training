@@ -25,7 +25,7 @@ describe('TokenCounter', () => {
 		const html = await container.renderToString(TokenCounter);
 		expect(html).toMatch(/<div class="not-content token-counter[^"]*" data-token-counter/);
 		expect(html).toMatch(/<textarea class="tc-input[^"]*"[^>]*><\/textarea>/);
-		expect(html).toMatch(/<button type="button" class="tc-count[^"]*">Count<\/button>/);
+		expect(html).toMatch(/<button type="button" class="tc-count[^"]*">Compter<\/button>/);
 		expect(html).toMatch(/<ul class="tc-counts[^"]*"><\/ul>/);
 		expect(html).toMatch(/<ul class="tc-pages[^"]*"><\/ul>/);
 	});

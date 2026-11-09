@@ -10,7 +10,7 @@ introduces: [trust-but-verify-for-agents]
 assumes:
   - objective: concepts/recognizes-agents/tells-agent-from-assistant
     lesson: concepts/assistant-or-agent
-    section: one-test-what-can-it-do-without-another-prompt
+    section: un-seul-test--que-peut-il-faire-sans-nouveau-prompt-
   - objective: safety/verifies-output/checks-claims
     lesson: safety/checking-habits
     section: the-routine

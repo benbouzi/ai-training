@@ -1,278 +1,291 @@
 import { Choice, MultiChoice, Sort, Order, Pitfall, Exercise, Recap } from '@components/lesson';
 
-So far in this course the model answered a prompt and stopped. In this
-lesson we watch a toy agent. The same kind of model sits in a loop
-with two tools, and its task is a question about a folder of meeting
-notes. The toy is small enough to read in one sitting. Its "model" is a
-script with a fixed list of replies. Every run below comes out the same
-way, and there is nothing for you to install or run. You read
-three transcripts. By the end you can label each line of one with the
-phase it belongs to, and you can say why the run stopped.
+Jusqu’ici dans ce parcours, le modèle répondait à un prompt et s’arrêtait.
+Dans cette leçon, nous observons un agent jouet. Le même type de modèle est
+placé dans une boucle avec deux outils, et sa tâche est une question sur un
+dossier de notes de réunion. Le jouet est assez petit pour être lu d’une
+traite. Son « modèle » est un script avec une liste fixe de réponses. Chaque
+exécution ci-dessous donne le même résultat à chaque fois, et vous n’avez rien
+à installer ni à lancer. Vous lisez trois transcriptions. À la fin, vous
+saurez associer chaque ligne de l’une d’elles à sa phase, et dire pourquoi
+l’exécution s’est arrêtée.
 
-## A model in a loop with two tools
+## Un modèle dans une boucle avec deux outils
 
-A model takes text in and produces text out, once. It can't open a file
-or look in a folder. An **agent** is software around a model that can.
-The software calls the model and reads the reply. When the reply asks
-for a tool, the software runs that tool and hands the result back to the
-model as more text, and then calls the model again (@AEC-01). The model
-supplies the judgment about what to do next, and the software supplies
-the hands.
+Un modèle reçoit du texte et produit du texte, une fois. Il ne peut ni ouvrir
+un fichier ni regarder dans un dossier. Un **agent** est un logiciel construit
+autour d’un modèle, qui, lui, le peut. Le logiciel appelle le modèle et lit sa
+réponse. Quand la réponse demande un outil, le logiciel exécute cet outil et
+renvoie le résultat au modèle sous forme de texte supplémentaire, puis il
+rappelle le modèle (@AEC-01). Le modèle apporte le jugement sur ce qu’il faut
+faire ensuite, et le logiciel apporte les mains.
 
-The toy has two tools. Before anything runs, the model is told what
-they are, in plain text. Each tool has a name, one sentence on what it
-does, and its parameters, which are the details the model has to fill
-in when it asks for the tool.
+Le jouet dispose de deux outils. Avant toute exécution, le modèle apprend ce
+qu’ils sont, en texte brut. Chaque outil a un nom, une phrase qui dit ce qu’il
+fait, et ses paramètres, c’est-à-dire les détails que le modèle doit remplir
+quand il demande l’outil.
 
 ```text
 list_dir: List the files in a directory. Parameter: path, the directory to list.
 read_file: Return the text of one file. Parameter: path, the file to read.
 ```
 
-That text is the whole of what the model knows about the tools. It never
-sees the code behind `list_dir`, and it doesn't need to. When it wants a
-file listed, it writes a request that names the tool and fills in the
-parameter, and the loop does the rest (@Academy claude-platform-101).
-A tool with a vague description gets used badly, because the sentence
-is all the model has to go on.
+(`list_dir` liste les fichiers d’un dossier dont le paramètre `path` donne le
+chemin, et `read_file` renvoie le texte du fichier désigné par `path`. Les
+descriptions sont en anglais, comme dans la plupart des outils réels.)
 
-The folder the toy works in holds three short meeting notes, from 14, 21
-and 28 March.
+Ce texte est tout ce que le modèle sait des outils. Il ne voit jamais le code
+qui se trouve derrière `list_dir`, et il n’en a pas besoin. Quand il veut la
+liste d’un dossier, il écrit une demande qui nomme l’outil et remplit le
+paramètre, et la boucle fait le reste (@Academy claude-platform-101). Un outil
+dont la description est vague est mal utilisé, parce que cette phrase est tout
+ce dont le modèle dispose.
 
-## Read the transcript
+Le dossier dans lequel travaille le jouet contient trois courtes notes de
+réunion, du 14, du 21 et du 28 mars.
 
-The first task is a question about the notes. The transcript below is
-the toy's output, line for line. The lines that start with `model:` are
-what the model produced, and the ones that start with `loop:` are what
-the software around it did in response.
+## Lire la transcription
+
+La première tâche est une question sur les notes. La transcription ci-dessous
+est la sortie du jouet, ligne pour ligne. Les lignes qui commencent par
+`model:` sont ce que le modèle a produit, et celles qui commencent par `loop:`
+sont ce que le logiciel qui l’entoure a fait en réponse. Les étiquettes de la
+transcription sont celles du programme, en anglais : `call` (appeler), `ran`
+(a exécuté), `result` (résultat), `done` (terminé), `stopped` (arrêté).
 
 ```text
-task: Which meeting note mentions the June delivery?
+task: Quelle note de réunion mentionne la livraison de juin ?
 1. model: call list_dir with path "notes"
    loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
 2. model: call read_file with path "notes/2026-03-14-lantern.txt"
-   loop: ran read_file, result: Project Lantern, 14 March. Sensor boards moved from April to June. Ana confirms the date by Friday.
-3. model: done. The note of 14 March: the sensor boards moved from April to June.
+   loop: ran read_file, result: Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
+3. model: done. La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin.
 loop: stopped, the model said it is done after 3 steps
 ```
 
-Read step 1 slowly, because it is the whole idea. The model didn't list
-the folder. It wrote the words `call list_dir with path "notes"`, which
-is text like any other reply. The loop recognized that text as a request,
-ran the real `list_dir` tool on the real folder, and put the three file
-names into the conversation as the next thing the model reads. In step 2
-the model, now knowing the file names, asked to read the one whose name
-suggested the right project. In step 3 it had what it needed and wrote an
-answer instead of a request, and the loop saw that and stopped.
+Lisez lentement l’étape 1, parce qu’elle contient toute l’idée. Le modèle n’a
+pas listé le dossier. Il a écrit les mots `call list_dir with path "notes"`,
+qui sont du texte comme n’importe quelle autre réponse. La boucle a reconnu ce
+texte comme une demande, a exécuté le vrai outil `list_dir` sur le vrai
+dossier, et a placé les trois noms de fichiers dans la conversation, comme la
+prochaine chose que le modèle lit. À l’étape 2, le modèle, qui connaît
+désormais les noms des fichiers, a demandé à lire celui dont le nom évoquait le
+bon projet. À l’étape 3, il avait ce qu’il lui fallait et a écrit une réponse au
+lieu d’une demande, et la boucle l’a vu et s’est arrêtée.
 
-The model's text reached the folder only through the loop. In a real
-agent the loop is also where permissions are checked and where a request
-can be refused. When people say an agent "read a file", this two-line exchange
-is what happened.
+Le texte du modèle n’a atteint le dossier qu’à travers la boucle. Dans un vrai
+agent, la boucle est aussi l’endroit où les permissions sont vérifiées et où
+une demande peut être refusée. Quand on dit qu’un agent « a lu un fichier »,
+c’est cet échange en deux lignes qui s’est produit.
 
-## Observe, think, act
+## Observer, réfléchir, agir
 
-The transcript has a rhythm, and the **agent loop** is that rhythm. Each
-step is one turn of it: one call to the model, its reply, and the tool
-run that follows, if there is one (@AEC-01). A turn has three phases:
+La transcription a un rythme, et la **boucle d’agent** est ce rythme. Chaque
+étape est un tour de boucle : un appel au modèle, sa réponse, et l’exécution
+d’outil qui suit, s’il y en a une (@AEC-01). Un tour a trois phases :
 
-- **Observe.** The model reads what's in front of it: the task at the
-  start, and after that the result of the last tool.
-- **Think.** The model decides what to do next and writes it down, either
-  a tool request or an answer. In the transcript this is every `model:`
-  line.
-- **Act.** The loop runs the tool the model asked for and returns the
-  result. In the transcript this is every `loop: ran` line.
+- **Observer.** Le modèle lit ce qu’il a sous les yeux : la tâche au départ,
+  puis le résultat du dernier outil.
+- **Réfléchir.** Le modèle décide de ce qu’il fait ensuite et l’écrit, sous
+  forme de demande d’outil ou de réponse. Dans la transcription, ce sont toutes
+  les lignes `model:`.
+- **Agir.** La boucle exécute l’outil demandé par le modèle et renvoie le
+  résultat. Dans la transcription, ce sont toutes les lignes `loop: ran`.
 
-Then the model observes the result, and the turn repeats. Step 1 of the
-transcript is observe (the task), think (`call list_dir`), act (the
-listing comes back). Step 2 is observe (the file names), think
-(`call read_file`), act (the note comes back). Step 3 is observe (the
-note) and think (`done`), with no act, because the model produced an
-answer and there was nothing left to run.
+Le modèle observe ensuite le résultat, et le tour recommence. L’étape 1 de la
+transcription, c’est observer (la tâche), réfléchir (`call list_dir`), agir (la
+liste revient). L’étape 2, c’est observer (les noms de fichiers), réfléchir
+(`call read_file`), agir (la note revient). L’étape 3, c’est observer (la note)
+et réfléchir (`done`), sans agir, parce que le modèle a produit une réponse et
+qu’il ne restait rien à exécuter.
 
-The split matters when something goes wrong. A wrong answer after a
-correct file read is a think problem, and the fix is in the prompt or
-the model. A right request that returned an error is an act problem, and
-the fix is in the tool. An agent that read the wrong file did a
-reasonable think on a poor observe, and the fix is often a better tool
-description or a better folder name. Naming the phase tells you where to
-look.
+Cette distinction compte quand quelque chose tourne mal. Une réponse fausse
+après la lecture correcte d’un fichier est un problème de réflexion, et la
+correction se trouve dans le prompt ou dans le modèle. Une demande correcte qui
+a renvoyé une erreur est un problème d’action, et la correction se trouve dans
+l’outil. Un agent qui a lu le mauvais fichier a raisonné correctement sur une
+mauvaise observation, et la correction passe souvent par une meilleure
+description d’outil ou un meilleur nom de dossier. Nommer la phase vous dit où
+chercher.
 
 <Sort id="label-the-turns" objective="concepts/recognizes-agents/names-the-loop"
   concepts={['agent-loop', 'tool']}
-  context="The lesson shows the transcript of a toy agent with two tools, list_dir and read_file. Lines that start with model: are what the model wrote, and lines that start with loop: are what the software around it did."
-  title="Label the phases" hint="Is something being read, being decided, or being run?"
-  buckets={['Observe', 'Think', 'Act']}
+  context="La leçon montre la transcription d’un agent jouet doté de deux outils, list_dir et read_file. Les lignes qui commencent par model: sont ce que le modèle a écrit, et les lignes qui commencent par loop: sont ce que le logiciel qui l’entoure a fait."
+  title="Nommez les phases" hint="Quelque chose est-il lu, décidé, ou exécuté ?"
+  buckets={['Observer', 'Réfléchir', 'Agir']}
   items={[
-    { text: 'The model reads the task at the top of the transcript', bucket: 0 },
-    { text: 'The model writes a request to list the notes folder', bucket: 1 },
-    { text: 'The list_dir tool runs on the folder and returns three file names', bucket: 2 },
-    { text: 'The model reads the three file names that came back', bucket: 0 },
-    { text: 'The model picks the 14 March note as the one to read next', bucket: 1 },
-    { text: 'The read_file tool runs and returns the text of the note', bucket: 2 },
-    { text: 'The model reads the text of the note', bucket: 0 },
-    { text: 'The model writes the answer instead of another request', bucket: 1 },
+    { text: 'Le modèle lit la tâche en haut de la transcription', bucket: 0 },
+    { text: 'Le modèle écrit une demande pour lister le dossier des notes', bucket: 1 },
+    { text: 'L’outil list_dir s’exécute sur le dossier et renvoie trois noms de fichiers', bucket: 2 },
+    { text: 'Le modèle lit les trois noms de fichiers revenus', bucket: 0 },
+    { text: 'Le modèle choisit la note du 14 mars comme prochaine note à lire', bucket: 1 },
+    { text: 'L’outil read_file s’exécute et renvoie le texte de la note', bucket: 2 },
+    { text: 'Le modèle lit le texte de la note', bucket: 0 },
+    { text: 'Le modèle écrit la réponse au lieu d’une nouvelle demande', bucket: 1 },
   ]} />
 
 <Order id="order-one-turn" phase="review" objective="concepts/recognizes-agents/names-the-loop"
   concepts={['agent-loop', 'tool']}
-  context="An agent is a model in a loop with tools. The question is the order of events inside one turn of the loop, from the moment a tool result comes back until the next result comes back."
-  title="Order one turn of the loop" hint="Which of these can happen before the model has read anything?"
+  context="Un agent est un modèle placé dans une boucle avec des outils. La question porte sur l’ordre des événements dans un tour de boucle, du moment où le résultat d’un outil revient jusqu’au retour du résultat suivant."
+  title="Remettez un tour de boucle dans l’ordre" hint="Lequel de ces événements peut se produire avant que le modèle ait lu quoi que ce soit ?"
   steps={[
-    'The model reads the result of the last tool',
-    'The model writes a request that names a tool and its parameters',
-    'The loop runs the tool',
-    'The loop puts the result in the conversation',
+    'Le modèle lit le résultat du dernier outil',
+    'Le modèle écrit une demande qui nomme un outil et ses paramètres',
+    'La boucle exécute l’outil',
+    'La boucle place le résultat dans la conversation',
   ]} />
 
 <MultiChoice id="who-did-what" phase="review" objective="concepts/recognizes-agents/names-the-loop"
   concepts={['agent-loop', 'tool', 'model-vs-agent']}
-  context="An agent is a model placed in a loop with tools. The model is told each tool's name, purpose and parameters as text."
-  title="Which of these did the model do itself?" hint="What can a model produce other than text?"
+  context="Un agent est un modèle placé dans une boucle avec des outils. Le modèle reçoit sous forme de texte le nom, l’usage et les paramètres de chaque outil."
+  title="Lesquelles de ces actions le modèle a-t-il faites lui-même ?" hint="Que peut produire un modèle, en dehors du texte ?"
   options={[
-    { text: 'Decided which file to read next.', correct: true },
-    { text: 'Opened the folder and listed the files in it.', why: 'The model wrote a request to list the folder. The loop ran the tool and returned the names.' },
-    { text: 'Wrote the request that named the tool and the path.', correct: true },
-    { text: 'Checked that the path was allowed before the file was read.', why: 'Any check on a request happens in the loop, between the request and the tool. The model only produces the request.' },
+    { text: 'Décider quel fichier lire ensuite.', correct: true },
+    { text: 'Ouvrir le dossier et lister les fichiers qu’il contient.', why: 'Le modèle a écrit une demande de liste du dossier. C’est la boucle qui a exécuté l’outil et renvoyé les noms.' },
+    { text: 'Écrire la demande qui nommait l’outil et le chemin.', correct: true },
+    { text: 'Vérifier que le chemin était autorisé avant la lecture du fichier.', why: 'Toute vérification d’une demande se fait dans la boucle, entre la demande et l’outil. Le modèle ne produit que la demande.' },
   ]}>
-Looking at the transcript of an agent that found a fact in a folder of
-notes, which of these did the model do itself?
+Dans la transcription d’un agent qui a trouvé un fait dans un dossier de
+notes, lesquelles de ces actions le modèle a-t-il faites lui-même ?
 </MultiChoice>
 
-## How the loop ends
+## Comment la boucle se termine
 
-A loop with no end is a bug, so every agent has stop rules. The toy has
-two, and a real agent adds a third (@AEC-01).
+Une boucle sans fin est un défaut, et chaque agent a donc des règles d’arrêt.
+Le jouet en a deux, et un vrai agent en ajoute une troisième (@AEC-01).
 
-The model says it is done. This is the good ending, and the first
-transcript shows it: the model wrote an answer instead of a request, and
-the loop stopped after 3 steps.
+Le modèle dit qu’il a terminé. C’est la bonne fin, et la première transcription
+la montre : le modèle a écrit une réponse au lieu d’une demande, et la boucle
+s’est arrêtée après 3 étapes.
 
-The step limit is reached. The loop counts the steps and stops at a
-fixed number even when the model isn't finished. The limit protects
-you from a model that keeps asking for tools without getting anywhere,
-which runs up the bill and, with tools that change things, keeps
-changing them. Here is the toy on a task with a step limit of 3, with a
-script that lists the folder twice and then reads the wrong file.
+La limite d’étapes est atteinte. La boucle compte les étapes et s’arrête à un
+nombre fixé, même quand le modèle n’a pas terminé. Cette limite vous protège
+d’un modèle qui continue à demander des outils sans avancer, ce qui fait
+grimper la facture et, avec des outils qui modifient des choses, continue à
+les modifier. Voici le jouet sur une tâche avec une limite de 3 étapes, avec un
+script qui liste deux fois le dossier puis lit le mauvais fichier.
 
 ```text
-task: Who confirms the delivery date?
+task: Qui confirme la date de livraison ?
 1. model: call list_dir with path "notes"
    loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
 2. model: call list_dir with path "notes"
    loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
 3. model: call read_file with path "notes/2026-03-21-budget.txt"
-   loop: ran read_file, result: Budget review, 21 March. Travel spend is under plan. The training budget is approved.
+   loop: ran read_file, result: Revue budgétaire, 21 mars. Les frais de déplacement sont sous le prévisionnel. Le budget de formation est approuvé.
 loop: stopped, the step limit of 3 was reached, no answer
 ```
 
-The answer was in the note of 14 March, and the model's script would
-have read it in step 4. The loop didn't allow a step 4. The transcript
-has no answer line, because the model never got to write one. The last
-thing it did was ask to read the budget note. A limit that stops a run always
-stops it in the middle of something.
+La réponse se trouvait dans la note du 14 mars, et le script du modèle l’aurait
+lue à l’étape 4. La boucle n’a pas permis d’étape 4. La transcription n’a pas de
+ligne de réponse, parce que le modèle n’a jamais eu l’occasion d’en écrire une.
+La dernière chose qu’il a faite, c’est demander à lire la note budgétaire. Une
+limite qui arrête une exécution l’arrête toujours au milieu de quelque chose.
 
-A person stops it. In a real agent the loop pauses and asks before an
-action that's hard to undo, and a person can say no, or close the
-window at any point (@DLAI-11). A stop of this kind looks like the step
-limit from the model's side: the last request was made, and no answer
-follows.
+Une personne l’arrête. Dans un vrai agent, la boucle fait une pause et demande
+l’autorisation avant une action difficile à annuler, et une personne peut
+refuser, ou fermer la fenêtre à tout moment (@DLAI-11). Vu du modèle, un arrêt
+de ce genre ressemble à la limite d’étapes : la dernière demande a été faite, et
+aucune réponse ne suit.
 
 <Choice id="why-it-stopped" objective="concepts/recognizes-agents/names-the-loop"
   concepts={['agent-loop']}
-  context="A toy agent ran with a step limit of 3. Its transcript shows three tool requests, each with a result, and then a loop line that says the step limit was reached and there is no answer."
-  title="Why did the second run stop?" hint="Read the last line of the transcript. Who wrote it, and what does it say?"
+  context="Un agent jouet a tourné avec une limite de 3 étapes. Sa transcription montre trois demandes d’outil, chacune avec un résultat, puis une ligne de la boucle qui indique que la limite d’étapes a été atteinte et qu’il n’y a pas de réponse."
+  title="Pourquoi la seconde exécution s’est-elle arrêtée ?" hint="Lisez la dernière ligne de la transcription. Qui l’a écrite, et que dit-elle ?"
   options={[
-    { text: 'The model found the answer in the budget note and stopped.', why: 'A finished run has a model line that starts with "done". This transcript has none, and the budget note says nothing about a delivery date.' },
-    { text: 'The tool failed on the second listing, so the loop gave up.', why: 'Both listings returned the same three file names. The tool did its job each time it was asked.' },
-    { text: 'The loop reached its step limit before the model wrote an answer.', correct: true },
-    { text: 'The script ran out of replies, so the model had nothing more to say.', why: 'The script had two more replies, a read of the 14 March note and an answer. The loop stopped before it reached them.' },
+    { text: 'Le modèle a trouvé la réponse dans la note budgétaire et s’est arrêté.', why: 'Une exécution terminée a une ligne du modèle qui commence par « done ». Cette transcription n’en a aucune, et la note budgétaire ne dit rien d’une date de livraison.' },
+    { text: 'L’outil a échoué lors de la seconde liste, et la boucle a abandonné.', why: 'Les deux listes ont renvoyé les trois mêmes noms de fichiers. L’outil a fait son travail chaque fois qu’on le lui a demandé.' },
+    { text: 'La boucle a atteint sa limite d’étapes avant que le modèle écrive une réponse.', correct: true },
+    { text: 'Le script n’avait plus de réponses, et le modèle n’avait donc plus rien à dire.', why: 'Le script avait encore deux réponses, une lecture de la note du 14 mars et une réponse. La boucle s’est arrêtée avant de les atteindre.' },
   ]}>
-In the second transcript the run ends without an answer. Why?
+Dans la seconde transcription, l’exécution se termine sans réponse. Pourquoi ?
 </Choice>
 
 <Choice id="which-ending" phase="review" objective="concepts/recognizes-agents/names-the-loop"
   concepts={['agent-loop']}
-  context="An agent's loop ends in one of three ways: the model writes an answer instead of a tool request, the loop reaches its step limit, or a person stops it."
-  title="Which ending is this?" hint="Did the model get to write an answer, and who decided to stop?"
+  context="La boucle d’un agent se termine de l’une de trois façons : le modèle écrit une réponse au lieu d’une demande d’outil, la boucle atteint sa limite d’étapes, ou une personne l’arrête."
+  title="De quelle fin s’agit-il ?" hint="Le modèle a-t-il pu écrire une réponse, et qui a décidé de s’arrêter ?"
   options={[
-    { text: 'The model said it was done.', why: 'A model that is done writes an answer. This transcript ends after a request, and no answer follows it.' },
-    { text: 'The step limit was reached.', correct: true },
-    { text: 'A person stopped it.', why: 'A person stops a run from outside the loop, and nothing in this transcript records a person. The loop\'s own counter ended it.' },
+    { text: 'Le modèle a dit qu’il avait terminé.', why: 'Un modèle qui a terminé écrit une réponse. Cette transcription se termine après une demande, et aucune réponse ne la suit.' },
+    { text: 'La limite d’étapes a été atteinte.', correct: true },
+    { text: 'Une personne l’a arrêtée.', why: 'Une personne arrête une exécution depuis l’extérieur de la boucle, et rien dans cette transcription n’enregistre de personne. C’est le compteur de la boucle elle-même qui y a mis fin.' },
   ]}>
-An agent's transcript shows twelve tool requests, each with its result,
-and then one line from the loop: "stopped after 12 steps, no answer".
-Nobody was watching the run. Which ending is this?
+La transcription d’un agent montre douze demandes d’outil, chacune avec son
+résultat, puis une ligne de la boucle : « stopped after 12 steps, no answer »
+(arrêtée après 12 étapes, pas de réponse). Personne ne surveillait
+l’exécution. De quelle fin s’agit-il ?
 </Choice>
 
-<Pitfall title="Stopped in the middle">
-A team gives an agent a folder of forty customer reports and a task:
-read each one, write a one-line status into `summary.txt`, and finish
-with a count of the reports that need a follow-up call. The agent has a
-tool that writes to a file, and a step limit of 50, which the team took
-as generous. Listing the folder is one step, and each report takes two
-more, one read and one write, so step 50 is the read of report 25, and
-the loop stops before its write. `summary.txt` has 24 lines out of 40, no total,
-and no note that anything is missing. The person who opens
-it the next morning sees a finished-looking file with a number of lines
-that happens to be short, and nothing on the page says why. The step
-limit did its job of ending the run, and it can't do the other job of
-finishing the work. A run that hit a limit needs to be read as an
-interrupted run. Look at the last request and at what it half did, and
-then decide whether to rerun from there or throw the partial result away.
+<Pitfall title="Arrêtée au milieu">
+Une équipe confie à un agent un dossier de quarante rapports de clients et une
+tâche : lire chacun, écrire une ligne d’état dans `summary.txt`, et terminer
+par le nombre de rapports qui demandent un rappel. L’agent dispose d’un outil
+qui écrit dans un fichier, et d’une limite de 50 étapes, que l’équipe jugeait
+généreuse. Lister le dossier prend une étape, et chaque rapport en prend deux
+de plus, une lecture et une écriture : l’étape 50 est donc la lecture du
+rapport 25, et la boucle s’arrête avant son écriture. `summary.txt` contient
+24 lignes sur 40, pas de total, et aucune mention d’un manque. La personne qui
+l’ouvre le lendemain matin voit un fichier d’apparence terminée, avec un
+nombre de lignes qui se trouve être trop faible, et rien sur la page n’explique
+pourquoi. La limite d’étapes a fait son travail en mettant fin à l’exécution,
+et elle ne peut pas faire l’autre travail, celui de terminer la tâche. Une
+exécution qui a atteint une limite doit être lue comme une exécution
+interrompue. Regardez la dernière demande et ce qu’elle a fait à moitié, puis
+décidez s’il faut relancer à partir de là ou jeter le résultat partiel.
 </Pitfall>
 
-<Exercise stretch="Write the transcript a fourth run would produce for the task 'Which note names Bram?', with the fewest steps a model that read the file names carefully could take, and mark the three phases of each step.">
+<Exercise stretch="Écrivez la transcription que produirait une quatrième exécution pour la tâche « Quelle note nomme Bram ? », avec le moins d’étapes possible pour un modèle qui lirait attentivement les noms de fichiers, et marquez les trois phases de chaque étape.">
 
-Here is a third transcript, on a different task over the same three
-notes. Read it once. Then, on paper or in a note, write one line per
-step, in the form "step, tool used, which phases", where the phases are
-observe, think and act. Step 1 of the first transcript would read
-"1, list_dir, observe (task), think (request), act (listing)". Finish
-with one line that names how the run ended and how you know. Ten minutes
-is enough.
+Voici une troisième transcription, pour une autre tâche sur les trois mêmes
+notes. Lisez-la une fois. Puis, sur papier ou dans une note, écrivez une ligne
+par étape, sous la forme « étape, outil utilisé, phases », où les phases sont
+observer, réfléchir et agir. L’étape 1 de la première transcription
+s’écrirait « 1, list_dir, observer (tâche), réfléchir (demande), agir
+(liste) ». Terminez par une ligne qui nomme la façon dont l’exécution s’est
+terminée et comment vous le savez. Dix minutes suffisent.
 
 ```text
-task: How many of the meeting notes are about project Lantern?
+task: Combien de notes de réunion portent sur le projet Lantern ?
 1. model: call list_dir with path "notes"
    loop: ran list_dir, result: 2026-03-14-lantern.txt, 2026-03-21-budget.txt, 2026-03-28-lantern.txt
 2. model: call read_file with path "notes/2026-03-14-lantern.txt"
-   loop: ran read_file, result: Project Lantern, 14 March. Sensor boards moved from April to June. Ana confirms the date by Friday.
+   loop: ran read_file, result: Projet Lantern, 14 mars. Livraison des cartes capteurs déplacée d’avril à juin. Ana confirme la date d’ici vendredi.
 3. model: call read_file with path "notes/2026-03-21-budget.txt"
-   loop: ran read_file, result: Budget review, 21 March. Travel spend is under plan. The training budget is approved.
+   loop: ran read_file, result: Revue budgétaire, 21 mars. Les frais de déplacement sont sous le prévisionnel. Le budget de formation est approuvé.
 4. model: call read_file with path "notes/2026-03-28-lantern.txt"
-   loop: ran read_file, result: Project Lantern, 28 March. The Utrecht pilot moves to July. Bram writes the short install guide.
-5. model: done. Two of the three notes are about project Lantern: 14 March and 28 March.
+   loop: ran read_file, result: Projet Lantern, 28 mars. Le pilote d’Utrecht passe en juillet. Bram rédige le guide d’installation court.
+5. model: done. Deux des trois notes portent sur le projet Lantern : le 14 et le 28 mars.
 loop: stopped, the model said it is done after 5 steps
 ```
 
-A good result has five lines, four of them naming a tool and the fifth
-naming none, because step 5 has a think and no act. The ending line says
-the model wrote an answer, and points at the `done` line and the loop's
-last line as the evidence. As you write, notice that the model read the
-budget note even though its name gave the answer away. A model in a loop
-does what its judgment tells it, one step at a time, and a step it could
-have skipped costs the same as one it needed. Where in this transcript
-would a better tool description, or a better file name, have saved a
-step?
+Un bon résultat a cinq lignes, dont quatre nomment un outil et la cinquième
+aucun, parce que l’étape 5 comporte une réflexion et aucune action. La ligne
+de fin dit que le modèle a écrit une réponse, et désigne comme preuve la ligne
+`done` et la dernière ligne de la boucle. En écrivant, remarquez que le modèle a
+lu la note budgétaire alors que son nom donnait déjà la réponse. Un modèle dans
+une boucle fait ce que lui dicte son jugement, une étape à la fois, et une
+étape qu’il aurait pu sauter coûte autant qu’une étape nécessaire. À quel
+endroit de cette transcription une meilleure description d’outil, ou un
+meilleur nom de fichier, aurait-elle fait gagner une étape ?
 
 </Exercise>
 
 <Recap>
 
-1. An agent is a model in a loop with tools. The model produces text,
-   and when that text is a request the loop runs the tool and returns the
-   result as more text. The model never runs anything itself (@AEC-01).
-2. A tool is described to the model by name, purpose and parameters, in
-   plain text, and that description is all the model has to decide when
-   and how to ask for it.
-3. Each step of the loop is observe (read the task or the last result),
-   think (write a request or an answer) and act (the loop runs the
-   tool). Naming the phase tells you where a mistake came from.
-4. The loop ends when the model writes an answer, when the step limit is
-   reached, or when a person stops it. A run that ended on a limit or a
-   stop was interrupted in the middle of a step, and its output has to be
-   read that way.
+1. Un agent est un modèle placé dans une boucle avec des outils. Le modèle
+   produit du texte, et quand ce texte est une demande, la boucle exécute
+   l’outil et renvoie le résultat sous forme de texte supplémentaire. Le
+   modèle n’exécute jamais rien lui-même (@AEC-01).
+2. Un outil est décrit au modèle par son nom, son usage et ses paramètres, en
+   texte brut, et cette description est tout ce dont dispose le modèle pour
+   décider quand et comment le demander.
+3. Chaque étape de la boucle se compose d’observer (lire la tâche ou le
+   dernier résultat), réfléchir (écrire une demande ou une réponse) et agir
+   (la boucle exécute l’outil). Nommer la phase vous dit d’où vient une
+   erreur.
+4. La boucle se termine quand le modèle écrit une réponse, quand la limite
+   d’étapes est atteinte, ou quand une personne l’arrête. Une exécution qui
+   s’est terminée sur une limite ou un arrêt a été interrompue au milieu d’une
+   étape, et sa sortie doit être lue comme telle.
 
 </Recap>

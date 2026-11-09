@@ -24,14 +24,14 @@ const { id, objective, title, hint, concepts, context, review, revision, steps, 
 <CheckpointShell {id} {objective} {title} {hint} {concepts} {context} {review} {revision} {phase} kind="order">
 	<slot />
 	<Fragment slot="body">
-		<ol class="cp-order" aria-label="Steps to order">
+		<ol class="cp-order" aria-label="Étapes à ordonner">
 			{
 				steps.map((s, i) => (
 					<li data-pos={i + 1} draggable="true">
 						<span class="cp-step">{s}</span>
 						<span class="cp-move">
-							<button type="button" data-move="up" aria-label={`Move "${s}" up`}>↑</button>
-							<button type="button" data-move="down" aria-label={`Move "${s}" down`}>↓</button>
+							<button type="button" data-move="up" aria-label={`Monter « ${s} »`}>↑</button>
+							<button type="button" data-move="down" aria-label={`Descendre « ${s} »`}>↓</button>
 						</span>
 					</li>
 				))

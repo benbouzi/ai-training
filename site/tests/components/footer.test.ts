@@ -38,7 +38,7 @@ describe('Footer', () => {
 		const updated = html.indexOf(`<time datetime="${lastUpdated.toISOString()}">`);
 		expect(review).toBeGreaterThan(-1);
 		expect(updated).toBeGreaterThan(review);
-		expect(html).toContain('Sources checked on September 20, 2026. Review due by March 20, 2027.');
+		expect(html).toContain('Sources vérifiées le 20 septembre 2026. Révision prévue d’ici le 20 mars 2027.');
 		expect(html).toContain('page.lastUpdated');
 	});
 	it('shows "Last updated" on a page without review-by', async () => {
@@ -50,6 +50,6 @@ describe('Footer', () => {
 	it('keeps the pagination before the meta line, and the AI notice on every page', async () => {
 		const html = await render({ title: 'Concepts' });
 		expect(html).toMatch(/<a href="\/ai-training\/safety\/" rel="next"[\s\S]*<div class="site-footer-meta">/);
-		expect(html).toContain('<p class="ai-notice">Content co-authored by AI.</p>');
+		expect(html).toMatch(/<p class="ai-notice">\s*Contenu coécrit avec l’IA\./);
 	});
 });

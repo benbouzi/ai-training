@@ -66,7 +66,7 @@ export function alternateHints(html) {
 /**
  * Every problem with the hints and alternates under `distDir`.
  * @param {string} distDir
- * @param {string} root the expected site root, such as `https://schubergphilis.github.io/ai-training/`
+ * @param {string} root the expected site root, such as `https://benbouzi.github.io/ai-training/`
  * @returns {{ errors: string[], hints: number }}
  */
 export function checkAlternateHints(distDir, root) {

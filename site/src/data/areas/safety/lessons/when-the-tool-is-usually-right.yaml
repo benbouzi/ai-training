@@ -10,7 +10,7 @@ introduces: [overreliance, automation-complacency]
 assumes:
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
 extends-to:
   - label: Verifying outputs
     href: /safety/verification/

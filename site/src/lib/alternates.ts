@@ -106,10 +106,13 @@ async function courseSources(): Promise<AlternateSource[]> {
 	});
 }
 
-/** Every guide (`/guides/<slug>/`) and the contributing page: the page's Markdown with the lesson link rules. */
+/**
+ * Every guide (`/guides/<slug>/`), the contributing page and the page about the French translation: the page's
+ * Markdown with the lesson link rules.
+ */
 async function plainPageSources(): Promise<AlternateSource[]> {
 	const docs = (await getCollection('docs'))
-		.filter((d) => d.id.startsWith('guides/') || d.id === 'contributing')
+		.filter((d) => d.id.startsWith('guides/') || d.id === 'contributing' || d.id === 'traduction')
 		.sort((a, b) => a.id.localeCompare(b.id));
 	return docs.map((page) => {
 		const path = `/${page.id}/`;

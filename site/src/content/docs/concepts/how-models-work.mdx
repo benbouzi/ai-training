@@ -1,186 +1,201 @@
 import { Choice, Pitfall, Exercise, Recap, Match, Order } from '@components/lesson';
 import Sampler from '@components/widgets/Sampler.astro';
 
-You type a question, and a paragraph comes back that reads like a person
-wrote it. It is tempting to picture a mind on the other side that looked up
-the answer. Nothing like that happens. In this lesson we replace that
-picture with the real one. It is simpler and it explains more: a language
-model predicts the next piece of text, one piece at a time.
+Vous tapez une question, et il revient un paragraphe qui semble écrit par une
+personne. On est tenté d’imaginer, de l’autre côté, un esprit qui a cherché
+la réponse. Rien de tel ne se produit. Dans cette leçon, nous remplaçons
+cette image par la bonne. Elle est plus simple et elle explique davantage :
+un modèle de langage prédit le morceau de texte suivant, un morceau à la
+fois.
 
-## Text becomes tokens
+## Le texte devient des jetons
 
-A model never sees letters or words. Its input is cut into **tokens**, short
-chunks of text that are usually a word, part of a word, or a punctuation
-mark. "Unbelievable" might be three tokens, and "the" is one. Each token has a
-number, and the model works only with those numbers.
+Un modèle ne voit jamais de lettres ni de mots. Son entrée est découpée en
+**jetons** (tokens), de courts morceaux de texte qui correspondent le plus
+souvent à un mot, à une partie de mot ou à un signe de ponctuation.
+« Incroyablement » peut faire trois jetons, et « le » n’en fait qu’un.
+Chaque jeton porte un numéro, et le modèle ne travaille qu’avec ces numéros.
 
-This has consequences you notice. Models are bad at counting letters
-in a word, because they never saw the letters. They're priced per token,
-not per word. And rare names and non-English text often cost more tokens
-per character than common English, because the token vocabulary was built
-around the text that appears most often in training data.
+Cela a des conséquences visibles. Les modèles comptent mal les lettres d’un
+mot, parce qu’ils n’ont jamais vu les lettres. Leur prix se calcule en
+jetons, quel que soit le nombre de mots. Et les noms rares ou les textes dans une autre langue que
+l’anglais coûtent souvent plus de jetons par caractère que l’anglais courant,
+parce que le vocabulaire de jetons a été construit à partir des textes les
+plus fréquents dans les données d’entraînement.
 
-## One token at a time
+## Un jeton à la fois
 
-Given the tokens so far, the model outputs a score for every token in its
-vocabulary: how likely is each one to come next? Those scores become a
-probability distribution. The model picks one token from it, appends it to
-the input, and the whole thing runs again. A hundred-word answer is a hundred
-or so rounds of "what comes next?".
+À partir des jetons déjà présents, le modèle produit un score pour chaque
+jeton de son vocabulaire : quelle est la probabilité que celui-ci vienne
+ensuite ? Ces scores forment une distribution de probabilités. Le modèle y
+choisit un jeton, l’ajoute à l’entrée, et tout recommence. Une réponse de
+cent mots, c’est une centaine de tours de « qu’est-ce qui vient ensuite ? ».
 
-Try it. The widget below is a toy with five candidate tokens and made-up
-scores, but the mechanism is the real one.
+Essayez. Le widget ci-dessous est un jouet, avec cinq jetons candidats et
+des scores inventés, mais le mécanisme est le vrai.
 
 <Sampler />
 
-The input fixes the distribution, so the randomness is in the *pick*
-alone. Along the same line, **temperature** doesn't add knowledge: it
-flattens or sharpens the same distribution. At low temperature the model
-almost always picks the top token and sounds confident and repetitive. At
-high temperature it wanders.
+L’entrée fixe la distribution, donc le hasard se trouve uniquement dans le
+*tirage*. Dans la même logique, la **température** n’ajoute aucune
+connaissance : elle aplatit ou accentue la même distribution. À basse
+température, le modèle choisit presque toujours le jeton le plus probable,
+et il paraît sûr de lui et répétitif. À haute température, il s’égare.
 
-<Pitfall title="Asking the model why">
-You ask a model to solve a puzzle and it gets it wrong. You ask "why did
-you say that?" and it produces a fluent explanation. That explanation is
-*also* next-token prediction conditioned on your question. It is a
-plausible story about the earlier text. The model can't see what happened
-inside. Rule: treat self-explanations as new output to be checked, not as
-evidence.
+<Pitfall title="Demander au modèle pourquoi">
+Vous demandez à un modèle de résoudre une énigme et il se trompe. Vous lui
+demandez « pourquoi as-tu dit ça ? » et il produit une explication fluide.
+Cette explication est *elle aussi* une prédiction du jeton suivant,
+conditionnée par votre question. C’est une histoire plausible sur le texte
+précédent. Le modèle ne peut pas voir ce qui s’est passé à l’intérieur.
+Règle : traitez une auto-explication comme une nouvelle sortie, à vérifier
+avant d’en tirer quoi que ce soit.
 </Pitfall>
 
-## Where the scores come from
+## D’où viennent les scores
 
-A neural network with billions of adjustable numbers, the **weights**,
-produces the scores. During training the network reads enormous
-amounts of text and is nudged, each time, so that the token that really
-came next scores higher, and it doesn't store facts or rules. The result
-is a compressed statistical model of the text it saw: grammar, style,
-common facts, common code, common arguments.
+Les scores sont produits par un réseau de neurones doté de milliards de
+nombres ajustables, les **poids**. Pendant l’entraînement, le réseau lit
+d’énormes quantités de texte et il est légèrement corrigé, à chaque fois,
+pour que le jeton qui venait réellement ensuite obtienne un score plus élevé.
+Il ne stocke ni faits ni règles. Le résultat est un modèle statistique
+compressé du texte qu’il a vu : grammaire, style, faits courants, code
+courant, arguments courants.
 
-So models know a great deal about things that appear often in
-writing and are unreliable about things that appear rarely, recently, or
-only in your organization's private documents. Knowledge is
-frequency-weighted and frozen at the training cutoff.
+Les modèles en savent donc beaucoup sur ce qui apparaît souvent dans les
+écrits, et ils sont peu fiables sur ce qui apparaît rarement, récemment, ou
+seulement dans les documents internes de votre organisation. Leur
+connaissance est pondérée par la fréquence et figée à la date limite de
+l’entraînement.
 
-That first training stage produces a text continuer, and a text continuer
-has no idea that you want an answer. Type a question into a raw model and
-it may reply with more questions, in the pattern of a worksheet. A second,
-shorter stage fixes this: the network is trained on example replies that
-people have rated, and it learns that your text is a question to answer.
-Those ratings have side effects. People tend to rate agreeable replies and
-long replies higher. The finished model leans toward both
-(@Academy ai-capabilities-and-limitations).
+Cette première étape d’entraînement produit un prolongateur de texte, et un
+prolongateur de texte ignore que vous attendez une réponse. Tapez une
+question dans un modèle brut et il risque de répondre par d’autres
+questions, à la manière d’une fiche d’exercices. Une seconde étape, plus
+courte, corrige cela : le réseau est entraîné sur des exemples de réponses
+notées par des personnes, et il apprend que votre texte est une question à
+laquelle répondre. Ces notes ont des effets secondaires. Les gens ont
+tendance à mieux noter les réponses conciliantes et les réponses longues. Le
+modèle final penche vers les deux (@Academy ai-capabilities-and-limitations).
 
 <Choice id="what-the-model-does" objective="concepts/explains-models/explains-generation"
   concepts={['token', 'training-vs-inference']}
-  context="The lesson has a widget that shows a model scoring five candidate tokens, picking one, and repeating."
-  title="What did the model do?"
-  hint="Look back at the widget. What is the one operation it performs, over and over?"
+  context="La leçon contient un widget qui montre un modèle attribuant un score à cinq jetons candidats, en choisissant un, puis recommençant."
+  title="Qu’a fait le modèle ?"
+  hint="Revenez au widget. Quelle est la seule opération qu’il répète encore et encore ?"
   options={[
-    { text: 'It looked the answer up, but the database is called the weights.', why: 'Weights are not a database. Nothing is stored as retrievable records; the network produces scores for next tokens.' },
-    { text: 'It produced the answer token by token, each time scoring what text is likely to come next.', correct: true },
-    { text: 'It searched the web and summarized the results.', why: 'Search is a separate tool some products add on top. The model itself only predicts tokens; it has no built-in search.' },
-    { text: 'It picked the closest match from a library of pre-written answers.', why: 'There is no library. Nothing is stored as finished text; the answer is produced fresh, token by token, and even a model that thinks before answering does that thinking as generated text.' },
+    { text: 'Il a cherché la réponse, mais la base de données s’appelle les poids.', why: 'Les poids ne sont pas une base de données. Rien n’y est stocké sous forme d’enregistrements consultables : le réseau produit des scores pour les jetons suivants.' },
+    { text: 'Il a produit la réponse jeton par jeton, en évaluant à chaque fois quel texte a des chances de venir ensuite.', correct: true },
+    { text: 'Il a cherché sur le web et résumé les résultats.', why: 'La recherche est un outil distinct que certains produits ajoutent par-dessus. Le modèle lui-même ne fait que prédire des jetons et n’a pas de recherche intégrée.' },
+    { text: 'Il a choisi la réponse la plus proche dans une bibliothèque de réponses toutes faites.', why: 'Il n’y a pas de bibliothèque. Rien n’est stocké sous forme de texte fini : la réponse est produite à neuf, jeton par jeton, et même un modèle qui réfléchit avant de répondre fait cette réflexion sous forme de texte généré.' },
   ]}>
 
-A colleague says: "The model looked up the answer in its database and
-returned it." Which correction is right?
+Un collègue affirme : « Le modèle a cherché la réponse dans sa base de
+données et l’a renvoyée. » Quelle correction est la bonne ?
 
 </Choice>
 
 <Order id="order-one-token" phase="review" objective="concepts/explains-models/explains-generation"
   concepts={['token', 'training-vs-inference']}
-  context="The lesson explains what a model does during inference, when it writes an answer to a prompt."
-  title="Put the steps in order" hint="What does the model need before it can score anything, and what does it do with the token it picks?"
-  steps={['Read the prompt and the answer so far as tokens', 'Score each possible next token', 'Pick one token from those scores', 'Add the picked token to the answer', 'Start again with the longer text, until the answer ends']} />
+  context="La leçon explique ce que fait un modèle pendant l’inférence, quand il écrit une réponse à un prompt."
+  title="Remettez les étapes dans l’ordre" hint="De quoi le modèle a-t-il besoin avant de pouvoir attribuer un score, et que fait-il du jeton qu’il choisit ?"
+  steps={['Lire le prompt et la réponse déjà écrite sous forme de jetons', 'Attribuer un score à chaque jeton suivant possible', 'Choisir un jeton à partir de ces scores', 'Ajouter le jeton choisi à la réponse', 'Recommencer avec le texte allongé, jusqu’à la fin de la réponse']} />
 
-## Failure modes, named
+## Les défaillances, nommées
 
-Once you see generation as prediction, the famous failures stop being
-mysterious.
+Dès que l’on voit la génération comme une prédiction, les défaillances
+célèbres cessent d’être mystérieuses.
 
-- **Hallucination.** The most likely continuation of "The 2019 paper by
-  Smith et al. showed" is a plausible citation, even if no such paper exists.
-  Confidence in the prose isn't confidence in the fact. Made-up details
-  concentrate in the specifics, such as a release date, a page number, or a
-  quoted line. A common concept has been written about thousands of times
-  and the prediction is well constrained, but one exact figure has few or
-  no examples behind it, and the model fills the gap with something of the
-  right form. A detail the model saw once comes out in the same confident
-  prose as a fact it saw ten thousand times
+- **Hallucination.** La suite la plus probable de « L’article de Smith et
+  al. publié en 2019 a montré » est une référence plausible, même si cet
+  article n’existe pas. L’assurance du texte n’est pas une assurance sur le
+  fait. Les détails inventés se concentrent dans les éléments précis, comme
+  une date de sortie, un numéro de page ou une phrase citée. Un concept
+  courant a fait l’objet de milliers d’écrits et la prédiction est bien
+  contrainte, alors qu’un chiffre exact n’a que peu d’exemples derrière lui,
+  voire aucun, et le modèle comble le vide avec quelque chose qui a la bonne
+  forme. Un détail que le modèle a vu une seule fois sort avec la même
+  assurance qu’un fait qu’il a vu dix mille fois
   (@Academy ai-capabilities-and-limitations).
-- **Sycophancy.** Agreeable replies were rated well in the second training
-  stage, so agreeing is likely text. Push back and the model often folds,
-  even when its first answer was right.
-- **Instruction dilution.** Everything in the context is just tokens.
-  A rule you stated on page one competes with everything said since, and
-  long conversations drift. Position in the context window matters too. A
-  rule buried on page six of a twelve-page paste weighs less in the
-  prediction than the same rule at the top or at the bottom. Liu and
-  colleagues measured this. When the one document that holds the answer
-  was in the middle of a long context, models answered less accurately than
-  when it was at the start or at the end, and models built for long
-  contexts showed the same curve (@Liu 2024).
-- **Cutoff and staleness.** Anything after training is invisible unless a
-  tool puts it in the context.
+- **Flagornerie.** Les réponses conciliantes ont été bien notées lors de la
+  seconde étape d’entraînement, donc l’accord est un texte probable.
+  Contestez, et le modèle cède souvent, même quand sa première réponse était
+  juste.
+- **Dilution des instructions.** Tout ce qui se trouve dans le contexte n’est
+  que des jetons. Une règle énoncée en page un est en concurrence avec tout
+  ce qui a été dit depuis, et les longues conversations dérivent. La position
+  dans la fenêtre de contexte compte aussi. Une règle enfouie en page six
+  d’un texte collé de douze pages pèse moins dans la prédiction que la même
+  règle placée en haut ou en bas. Liu et ses collègues l’ont mesuré. Quand le
+  seul document qui contenait la réponse se trouvait au milieu d’un long
+  contexte, les modèles répondaient moins juste que lorsqu’il était au début
+  ou à la fin, et les modèles conçus pour les longs contextes montraient la
+  même courbe (@Liu 2024).
+- **Date limite et obsolescence.** Tout ce qui est postérieur à
+  l’entraînement est invisible, sauf si un outil le place dans le contexte.
 
 <Choice id="name-the-failure" objective="concepts/explains-models/names-failure-modes"
   concepts={['knowledge-cutoff', 'hallucination']}
-  title="Name the failure"
-  hint="When did the model's training data end, and when did the event happen?"
+  title="Nommez la défaillance"
+  hint="Quand les données d’entraînement du modèle s’arrêtent-elles, et quand l’événement a-t-il eu lieu ?"
   options={[
-    { text: 'Sycophancy triggered by the phrasing of the question', why: 'Sycophancy is agreeing with the user. Nobody suggested a date here.' },
-    { text: 'Hallucination driven by the training cutoff', correct: true },
-    { text: 'Instruction dilution in a long conversation', why: 'Nothing in the conversation was long enough to dilute; this is a single question.' },
-    { text: 'A tokenization problem with the version number', why: 'Tokenization affects things like counting letters, not knowledge of recent events.' },
+    { text: 'Une flagornerie déclenchée par la formulation de la question', why: 'La flagornerie consiste à donner raison à l’utilisateur. Personne n’a suggéré de date ici.' },
+    { text: 'Une hallucination due à la date limite de l’entraînement', correct: true },
+    { text: 'Une dilution des instructions dans une longue conversation', why: 'Rien dans la conversation n’était assez long pour diluer quoi que ce soit : il s’agit d’une seule question.' },
+    { text: 'Un problème de découpage en jetons du numéro de version', why: 'Le découpage en jetons affecte des choses comme le comptage des lettres, pas la connaissance des événements récents.' },
   ]}>
 
-You ask for the release date of a library version that came out last
-month. The model answers with a specific date, stated confidently, and it
-is wrong. Which failure mode is the best name for this?
+Vous demandez la date de sortie d’une version d’une bibliothèque logicielle
+parue le mois dernier. Le modèle répond par une date précise, avec
+assurance, et elle est fausse. Quel nom de défaillance convient le mieux ?
 
 </Choice>
 
 <Match id="match-the-failure" phase="review" objective="concepts/explains-models/names-failure-modes"
   concepts={['hallucination', 'sycophancy', 'instruction-dilution', 'knowledge-cutoff']}
-  context="The lesson names four failure modes that follow from generation as prediction: hallucination, sycophancy, instruction dilution, and cutoff and staleness."
-  title="Name each failure" hint="Is the model filling a gap, agreeing with you, losing an old rule, or missing what came after training?"
-  options={['Hallucination', 'Sycophancy', 'Instruction dilution', 'Cutoff and staleness']}
+  context="La leçon nomme quatre défaillances qui découlent de la génération comme prédiction : hallucination, flagornerie, dilution des instructions, date limite et obsolescence."
+  title="Nommez chaque défaillance" hint="Le modèle comble-t-il un vide, vous donne-t-il raison, perd-il une règle ancienne, ou lui manque-t-il ce qui est arrivé après l’entraînement ?"
+  options={['Hallucination', 'Flagornerie', 'Dilution des instructions', 'Date limite et obsolescence']}
   rows={[
-    { statement: 'Asked for a quote from a speech, the model gives a line with quotation marks that the speaker never said.', option: 0, why: 'Which failure fills a gap with text of the right form?' },
-    { statement: 'You say you like your own plan, and the model finds only strengths in it.', option: 1, why: 'Which failure follows what the user hopes to hear?' },
-    { statement: 'You asked for short answers at the start of a long chat, and the answers have grown long again.', option: 2, why: 'Which failure is about an early rule that competes with everything said since?' },
-    { statement: 'With no search tool, the model says the newest version of a product is one that was replaced this spring.', option: 3, why: 'Which failure is about events after the training data was collected?' },
+    { statement: 'À qui l’on demande une citation tirée d’un discours, le modèle donne entre guillemets une phrase que l’orateur n’a jamais prononcée.', option: 0, why: 'Quelle défaillance comble un vide avec un texte qui a la bonne forme ?' },
+    { statement: 'Vous dites que vous aimez votre propre plan, et le modèle n’y trouve que des points forts.', option: 1, why: 'Quelle défaillance suit ce que l’utilisateur espère entendre ?' },
+    { statement: 'Vous avez demandé des réponses courtes au début d’une longue conversation, et les réponses se sont rallongées.', option: 2, why: 'Quelle défaillance concerne une règle ancienne en concurrence avec tout ce qui a été dit depuis ?' },
+    { statement: 'Sans outil de recherche, le modèle affirme que la version la plus récente d’un produit est une version remplacée ce printemps.', option: 3, why: 'Quelle défaillance concerne des événements postérieurs à la collecte des données d’entraînement ?' },
   ]}
-  rationale="Each failure follows from the model predicting likely text from what is in its context and what it saw in training.">
-Match each reply to the failure mode it shows.
+  rationale="Chaque défaillance découle du fait que le modèle prédit un texte probable à partir de ce qui se trouve dans son contexte et de ce qu’il a vu à l’entraînement.">
+Associez chaque réponse à la défaillance qu’elle illustre.
 </Match>
 
-<Exercise stretch="Ask the assistant to explain why it got one of them wrong, then decide whether you believe the explanation and why.">
+<Exercise stretch="Demandez à l’assistant d’expliquer pourquoi il s’est trompé sur l’une d’elles, puis décidez si vous croyez cette explication et pourquoi.">
 
-Open any chat assistant you have access to. Ask it to count the letter "r"
-in "strawberry" and to spell the word backwards. Then ask it for the
-opening sentence of a book you know well, and ask that last question a
-second time in a fresh chat. Note which answers are right and, for the
-wrong ones, which failure mode from this lesson explains it. If the two
-answers about the book differ, the difference comes from sampling, the
-pick from the distribution you saw in the widget.
+Ouvrez un assistant conversationnel auquel vous avez accès. Demandez-lui de
+compter les lettres « r » dans le mot anglais « strawberry » et d’écrire ce
+mot à l’envers. Demandez-lui ensuite la première phrase d’un livre que vous
+connaissez bien, puis posez cette dernière question une seconde fois dans
+une nouvelle conversation. Notez quelles réponses sont justes et, pour les
+fausses, quelle défaillance de cette leçon l’explique. Si les deux réponses
+sur le livre diffèrent, la différence vient de l’échantillonnage, le tirage
+dans la distribution que vous avez vu dans le widget.
 
-A good result names one failure mode per wrong answer and can say, in a
-sentence, why prediction rather than lookup produces it.
+Un bon résultat nomme une défaillance par réponse fausse et explique, en une
+phrase, comment la prédiction du texte probable produit cette erreur.
 
 </Exercise>
 
 <Recap>
 
-1. Input is tokens rather than words, and that alone explains a number of odd weaknesses.
-2. Output is one token at a time, sampled from a distribution the model
-   scores. Temperature reshapes the distribution and doesn't add knowledge.
-3. The scores come from weights fitted to training text, so knowledge is
-   frequency-weighted and stops at the cutoff.
-4. A second, shorter training stage on rated replies turns the text
-   continuer into an assistant, and the ratings have side effects.
-5. Hallucination, sycophancy, dilution, and staleness all follow from those
-   two stages (@AEC-02).
+1. Le modèle lit des jetons, et cela suffit à expliquer plusieurs
+   faiblesses étranges.
+2. La sortie est produite un jeton à la fois, tiré d’une distribution dont
+   le modèle calcule les scores. La température remodèle la distribution et
+   n’ajoute aucune connaissance.
+3. Les scores viennent de poids ajustés sur le texte d’entraînement : la
+   connaissance est donc pondérée par la fréquence et s’arrête à la date
+   limite.
+4. Une seconde étape d’entraînement, plus courte, sur des réponses notées
+   transforme le prolongateur de texte en assistant, et ces notes ont des
+   effets secondaires.
+5. Hallucination, flagornerie, dilution et obsolescence découlent toutes de
+   ces deux étapes (@AEC-02).
 
 </Recap>

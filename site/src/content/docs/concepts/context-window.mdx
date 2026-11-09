@@ -1,39 +1,41 @@
 import { Choice, Sort, Pitfall, Exercise, Recap, Prompt, Response, MultiChoice, Scenario } from '@components/lesson';
 import TokenCounter from '@components/widgets/TokenCounter.astro';
 
-You have been working with a chat assistant on a report for two hours. In
-your first message you said the report is for the finance team and must
-stay under two pages. Now you ask for the closing section, and the answer
-runs to four pages and addresses "the engineering team". The transcript
-below is illustrative, written for this lesson rather than recorded from a
-model, but the pattern is one you will meet.
+Vous travaillez depuis deux heures avec un assistant conversationnel sur un
+rapport. Dans votre premier message, vous avez précisé que le rapport est
+destiné à l’équipe financière et qu’il doit tenir en moins de deux pages.
+Vous demandez maintenant la section de conclusion, et la réponse fait quatre
+pages et s’adresse à « l’équipe d’ingénierie ». L’échange ci-dessous est une
+illustration écrite pour cette leçon, et c’est une situation que vous
+rencontrerez.
 
 <Prompt model="illustrative" recorded="illustrative">
-Write the closing section now. Same audience and length as we agreed.
+Rédige maintenant la section de conclusion. Même public et même longueur que convenu.
 </Prompt>
 <Response>
-Here is the closing section for the engineering team. I have kept the
-technical detail you asked for, so it runs to about four pages. Let me know
-if you want the deployment appendix as well.
+Voici la section de conclusion pour l’équipe d’ingénierie. J’ai conservé le
+détail technique que vous aviez demandé, elle fait donc environ quatre pages.
+Dites-moi si vous voulez aussi l’annexe sur le déploiement.
 </Response>
 
-The model did not forget in the way a person forgets. It never saw your
-first message when it wrote this answer. In the previous lesson you learned
-that a model reads tokens and predicts the next one from everything it has
-seen so far. This lesson is about the limit on "everything it has seen so
-far", the **context window**. In this lesson we measure a page of text in
-tokens and work out how many pages a window holds, then watch a chat grow
-past it.
+Le modèle n’a pas oublié à la manière d’une personne. Il n’a jamais vu votre
+premier message quand il a écrit cette réponse. Dans la leçon précédente,
+vous avez appris qu’un modèle lit des jetons et prédit le suivant à partir de
+tout ce qu’il a vu jusque-là. Cette leçon porte sur la limite de ce « tout ce
+qu’il a vu jusque-là » : la **fenêtre de contexte**. Nous allons mesurer une
+page de texte en jetons, calculer combien de pages une fenêtre contient, puis
+regarder une conversation grandir jusqu’à la dépasser.
 
-## Count the tokens of a page
+## Compter les jetons d’une page
 
-A context window is measured in tokens, so the first step is to get a
-feel for how many tokens a page of text is. The counter below contains a
-sample of meeting notes, about half a page. Press Count.
+Une fenêtre de contexte se mesure en jetons. La première étape consiste donc
+à se faire une idée du nombre de jetons d’une page de texte. Le compteur
+ci-dessous contient un exemple de compte rendu de réunion en anglais,
+d’environ une demi-page. Appuyez sur Compter.
 
 <TokenCounter sample="concepts/context-window/sample/notes.txt" />
 
-The first part of the report should read:
+La première partie du rapport doit indiquer :
 
 ```text
 characters: 460
@@ -41,42 +43,45 @@ words: 80
 tokens (estimate): 115
 ```
 
-The counter says "estimate" for a reason. It applies the common rule of
-thumb for English, about four characters per token. A word of up to six
-letters counts as one token and a longer word as one token per four
-letters, with each punctuation mark counted as a token of its own. Real
-tokenizers are more detailed than that, and every vendor has its own, so
-the exact count for a model comes from that vendor. A call to the model
-through the vendor's programming interface (API) returns the number of
-tokens it used along with the answer, and vendors publish a token-counting
-call or a web page that runs their tokenizer. For planning, the rule of
-thumb is close enough: a full page of English text is a few hundred tokens.
+Le compteur dit « estimate » (estimation) pour une raison. Il applique la
+règle empirique courante pour l’anglais, environ quatre caractères par jeton.
+Un mot de six lettres au plus compte pour un jeton, un mot plus long pour un
+jeton toutes les quatre lettres, et chaque signe de ponctuation compte pour un
+jeton à lui seul. Les vrais tokeniseurs sont plus détaillés, et chaque
+fournisseur a le sien, si bien que le compte exact pour un modèle vient de ce
+fournisseur. Un appel au modèle par l’interface de programmation (API) du
+fournisseur renvoie le nombre de jetons utilisés avec la réponse, et les
+fournisseurs publient un appel de comptage ou une page web qui fait tourner
+leur tokeniseur. Pour planifier, la règle empirique suffit : une page pleine
+de texte anglais fait quelques centaines de jetons.
 
-## How a tokenizer splits text
+## Comment un tokeniseur découpe le texte
 
-The counter cuts "delivery" into two tokens by its four-letter rule. That
-rule is a stand-in for what a real tokenizer does. A real tokenizer has a
-fixed vocabulary of tens of thousands of chunks learned from training text,
-and it cuts where that vocabulary happens to have a chunk. A common word
-like "delivery" is in the vocabulary whole and costs one token, however
-long it is. A rare word or a name is split into pieces instead, often at
-places that have nothing to do with syllables or spelling. "Chidi" from the
-sample is two tokens in current tokenizers, and a word in another language
-may end up as one token per letter (@AEC-02). The counter cannot know which
-words are common, so it applies one rule to all of them.
+Le compteur coupe « delivery » en deux jetons selon sa règle des quatre
+lettres. Cette règle remplace ce que fait un vrai tokeniseur. Un vrai
+tokeniseur dispose d’un vocabulaire fixe de dizaines de milliers de morceaux
+appris sur le texte d’entraînement, et il coupe là où ce vocabulaire contient
+un morceau. Un mot courant comme « delivery » figure tel quel dans le
+vocabulaire et coûte un seul jeton, quelle que soit sa longueur. Un mot rare
+ou un nom propre est découpé en morceaux, souvent à des endroits sans rapport
+avec les syllabes ou l’orthographe. « Chidi », tiré de l’exemple, fait deux
+jetons avec les tokeniseurs actuels, et un mot dans une autre langue peut
+finir à un jeton par lettre (@AEC-02). Le compteur ne peut pas savoir quels
+mots sont courants, il applique donc la même règle à tous.
 
-Asking a model how many letters "strawberry" has goes wrong so often for
-the same reason. The model receives the token for "strawberry" as one
-number, and the letters are not in its input, so it predicts a count from
-what it has seen written about the word, the same way it predicts any other
-answer. Counting characters yourself, as the counter does, is the reliable
-way.
+C’est pour la même raison que demander à un modèle combien de lettres
+contient « strawberry » échoue si souvent. Le modèle reçoit le jeton de
+« strawberry » comme un seul nombre, et les lettres ne figurent pas dans son
+entrée : il prédit un nombre à partir de ce qu’il a vu écrit sur ce mot, comme
+il prédit n’importe quelle autre réponse. Compter les caractères vous-même,
+comme le fait le compteur, est la méthode fiable.
 
-## How many pages fit
+## Combien de pages tiennent
 
-The second part of the counter's report takes the token count from the
-first part as the size of one page, and shows how many such pages fit in
-windows of different sizes. For the sample it reads:
+La seconde partie du rapport du compteur prend le nombre de jetons de la
+première partie comme taille d’une page, et indique combien de pages de ce
+type tiennent dans des fenêtres de tailles différentes. Pour l’exemple, elle
+indique :
 
 ```text
 one page: 115 tokens
@@ -86,168 +91,183 @@ one page: 115 tokens
 1,000,000-token window: 8,695 pages
 ```
 
-The window sizes are round numbers that stand for the sizes on the market
-in 2026. The 8,000 row is the size of a few years ago, kept for the
-contrast. Small models that run on a laptop have windows at the low end
-today, and the large vendor models offer 200,000 tokens or more (@AEC-02).
-At the top end the window holds a few thousand pages of text, which sounds
-like more than you will ever need. The next section shows why it still runs
-out.
+Les tailles de fenêtre sont des chiffres ronds qui représentent les tailles
+disponibles sur le marché en 2026. La ligne à 8 000 correspond à la taille
+d’il y a quelques années, gardée pour le contraste. Les petits modèles qui
+tournent sur un ordinateur portable ont aujourd’hui des fenêtres dans le bas
+de cette échelle, et les grands modèles des fournisseurs offrent 200 000
+jetons ou davantage (@AEC-02). Dans le haut de l’échelle, la fenêtre contient
+quelques milliers de pages de texte, ce qui semble plus que ce dont vous aurez
+jamais besoin. La section suivante montre pourquoi elle finit quand même par
+être pleine.
 
-A big window is not free to fill. The model processes every token in the
-window for every response, which makes a fuller window cost more per answer
-and take longer to answer. Nor does the model weigh every part of a full
-window equally well: a fact in the middle of a long paste counts for less
-in the prediction than the same fact at the top or at the bottom, as the
-previous lesson noted under instruction dilution
-(@Academy ai-capabilities-and-limitations).
+Remplir une grande fenêtre a un prix. Le modèle traite chaque jeton de la
+fenêtre pour chaque réponse : une fenêtre plus remplie coûte donc plus cher
+par réponse et met plus de temps à répondre. Le modèle ne pèse pas non plus
+toutes les parties d’une fenêtre pleine avec le même soin : un fait placé au
+milieu d’un long texte collé compte moins dans la prédiction que le même fait
+placé en haut ou en bas, comme la leçon précédente l’a noté à propos de la
+dilution des instructions (@Academy ai-capabilities-and-limitations).
 
-## What the window holds
+## Ce que contient la fenêtre
 
-The window is not only your messages. For one response, the model sees all
-of this at once, and the total must fit:
+La fenêtre contient bien plus que vos messages. Pour une réponse, le modèle
+voit tout ce qui suit à la fois, et le total doit tenir dans la fenêtre :
 
-- The instructions the product or your team set up, which you may never
-  see. In a chat product these are often a few pages by themselves.
-- The conversation so far, with every message from you and every answer.
-- Everything you pasted or attached, in full. A document you attach is
-  turned into tokens like any other text.
-- Results from tools the assistant used, such as a web search or a file
-  that it read.
-- The answer it is producing, token by token, since each new token is
-  predicted from the whole window including the answer so far.
+- Les instructions mises en place par le produit ou par votre équipe, que
+  vous ne voyez peut-être jamais. Dans un produit conversationnel, elles font
+  souvent quelques pages à elles seules.
+- La conversation jusque-là, avec chacun de vos messages et chaque réponse.
+- Tout ce que vous avez collé ou joint, en entier. Un document joint est
+  transformé en jetons comme n’importe quel autre texte.
+- Les résultats des outils utilisés par l’assistant, comme une recherche web
+  ou un fichier qu’il a lu.
+- La réponse en cours de production, jeton par jeton, puisque chaque nouveau
+  jeton est prédit à partir de toute la fenêtre, y compris la réponse déjà
+  écrite.
 
-From this follows the one rule of the lesson: anything outside the window
-does not exist for the model. Yesterday's chat, the file you did not paste,
-and the company wiki are all invisible unless something puts them into the
-window for this response (@Academy ai-capabilities-and-limitations). The
-same rule explains why a model "remembers" nothing between conversations,
-because the weights do not change when you type and so the window is the
-only place a fact can be.
+De là découle la règle unique de cette leçon : ce qui est hors de la fenêtre
+n’existe pas pour le modèle. La conversation d’hier, le fichier que vous
+n’avez pas collé et le wiki de l’entreprise sont invisibles tant que rien ne
+les place dans la fenêtre pour cette réponse
+(@Academy ai-capabilities-and-limitations). La même règle explique pourquoi
+un modèle ne « se souvient » de rien d’une conversation à l’autre : les poids
+ne changent pas quand vous tapez, et la fenêtre est donc le seul endroit où un
+fait peut se trouver.
 
 <Sort id="inside-the-window" objective="concepts/explains-models/explains-generation"
   concepts={['context-window']}
-  title="What can the model see?"
-  hint="For each item, ask: is it in the text being sent to the model for this one response?"
-  buckets={['In the window for this response', 'Does not exist for the model']}
+  title="Que peut voir le modèle ?"
+  hint="Pour chaque élément, demandez-vous s’il fait partie du texte envoyé au modèle pour cette réponse précise."
+  buckets={['Dans la fenêtre pour cette réponse', 'N’existe pas pour le modèle']}
   items={[
-    { text: 'The instructions the product set up before your first message', bucket: 0 },
-    { text: 'The paragraph you pasted two messages ago in a chat that is still short', bucket: 0 },
-    { text: 'The first half of the answer the model is writing right now', bucket: 0 },
-    { text: 'The result of the web search the assistant just ran', bucket: 0 },
-    { text: 'A chat you had with the same assistant last week, with memory features off', bucket: 1 },
-    { text: 'A spreadsheet on your laptop that you mentioned by name', bucket: 1 },
-    { text: 'A page of the company wiki that nobody pasted into the chat', bucket: 1 },
+    { text: 'Les instructions mises en place par le produit avant votre premier message', bucket: 0 },
+    { text: 'Le paragraphe que vous avez collé il y a deux messages, dans une conversation encore courte', bucket: 0 },
+    { text: 'La première moitié de la réponse que le modèle est en train d’écrire', bucket: 0 },
+    { text: 'Le résultat de la recherche web que l’assistant vient de lancer', bucket: 0 },
+    { text: 'Une conversation avec le même assistant la semaine dernière, fonctions de mémoire désactivées', bucket: 1 },
+    { text: 'Un tableur sur votre ordinateur portable, que vous avez cité par son nom', bucket: 1 },
+    { text: 'Une page du wiki de l’entreprise que personne n’a collée dans la conversation', bucket: 1 },
   ]} />
 
-## When the early facts fall out
+## Quand les premiers faits sortent de la fenêtre
 
-Your chat with the assistant grows with every turn, and so does the text
-sent to the model for each response. A long chat with pasted documents can
-pass a 200,000-token window in an afternoon. Products handle the overflow
-in different ways. Some silently drop the oldest turns, some replace them
-with a short summary, and some refuse to continue and ask you to start a
-new chat. In the first two cases you get the report chat from the top of
-this lesson: the answers are still fluent, but a fact from the start of the
-chat has left the window.
+Votre conversation avec l’assistant s’allonge à chaque tour, et le texte
+envoyé au modèle pour chaque réponse s’allonge avec elle. Une longue
+conversation avec des documents collés peut dépasser une fenêtre de 200 000
+jetons en un après-midi. Les produits gèrent ce débordement de différentes
+façons. Certains suppriment sans prévenir les tours les plus anciens, d’autres
+les remplacent par un bref résumé, et d’autres refusent de continuer et vous
+demandent d’ouvrir une nouvelle conversation. Dans les deux premiers cas, vous
+obtenez la conversation sur le rapport du début de cette leçon : les réponses
+restent fluides, mais un fait du début de la conversation a quitté la
+fenêtre.
 
-<Pitfall title="Scolding the model for forgetting">
-Two hours into the report chat, the assistant addresses the wrong team. You
-reply: "I told you at the start this is for finance. Pay attention." The
-next answer apologizes and then makes the same kind of mistake with the
-page limit, because your correction named only the audience. The model
-never saw your first message, so the scolding gave it nothing to work
-with. The rule: when a long chat contradicts itself, restate the facts that
-matter, in the message you are sending now. "This section is for the
-finance team, two pages at most, plain language" puts the facts back in the
-window, and the next answer has them.
+<Pitfall title="Reprocher au modèle d’avoir oublié">
+Deux heures après le début de la conversation sur le rapport, l’assistant
+s’adresse à la mauvaise équipe. Vous répondez : « Je t’ai dit au début que
+c’était pour la finance. Fais attention. » La réponse suivante s’excuse,
+puis commet le même genre d’erreur sur la limite de pages, parce que votre
+correction ne mentionnait que le public. Le modèle n’a jamais vu votre premier
+message, et le reproche ne lui a donc rien donné sur quoi s’appuyer. La
+règle : quand une longue conversation se contredit, reformulez les faits qui
+comptent, dans le message que vous envoyez maintenant. « Cette section est
+pour l’équipe financière, deux pages au plus, langage simple » remet les
+faits dans la fenêtre, et la réponse suivante en dispose.
 </Pitfall>
 
-Restating the facts is the fix in the moment. To prevent the problem, keep
-the facts the model needs every time in one message you can paste again,
-and start a fresh chat for a new piece of work instead of adding it to a
-long one.
+Reformuler les faits règle le problème sur le moment. Pour l’éviter, gardez
+dans un message que vous pouvez coller à nouveau les faits dont le modèle a
+besoin à chaque fois, et ouvrez une nouvelle conversation pour un nouveau
+travail au lieu de l’ajouter à une conversation déjà longue.
 
 <Choice id="why-the-chat-contradicts-itself" objective="concepts/explains-models/explains-generation"
   concepts={['context-window', 'token']}
-  context="The lesson opens with a long chat about a report. The learner stated the audience and the page limit in the first message, and two hours later the assistant writes for a different audience at twice the length."
-  title="Why did the answer change?"
-  hint="Where was the first message when the model produced the latest answer? Count what has been sent to the model since then."
+  context="La leçon commence par une longue conversation sur un rapport. L’apprenant a indiqué le public et la limite de pages dans son premier message, et deux heures plus tard l’assistant écrit pour un autre public, avec une longueur double."
+  title="Pourquoi la réponse a-t-elle changé ?"
+  hint="Où se trouvait le premier message quand le modèle a produit la dernière réponse ? Comptez ce qui a été envoyé au modèle depuis."
   options={[
-    { text: 'The model changed its mind about the audience as the conversation went on.', why: 'A model has no opinion that persists between responses. Look at what it was given, not at what it wanted.' },
-    { text: 'The first message was no longer among the tokens the model saw for this answer.', correct: true },
-    { text: 'The model was trained on more engineering documents than finance documents.', why: 'Training data shapes what the model tends to write, but it does not explain why the model followed the instruction for two hours and then stopped.' },
-    { text: 'Two hours is longer than the model can stay focused.', why: 'Time is not the limit. A model has no clock. Ask what else changed over those two hours.' },
+    { text: 'Le modèle a changé d’avis sur le public au fil de la conversation.', why: 'Un modèle n’a pas d’opinion qui persiste d’une réponse à l’autre. Regardez ce qu’on lui a donné.' },
+    { text: 'Le premier message ne faisait plus partie des jetons que le modèle a vus pour cette réponse.', correct: true },
+    { text: 'Le modèle a été entraîné sur plus de documents d’ingénierie que de documents financiers.', why: 'Les données d’entraînement orientent ce que le modèle a tendance à écrire, mais elles n’expliquent pas pourquoi il a suivi la consigne pendant deux heures avant de s’arrêter.' },
+    { text: 'Deux heures, c’est plus longtemps que le modèle ne peut rester concentré.', why: 'Le temps n’est pas la limite. Un modèle n’a pas d’horloge. Demandez-vous ce qui d’autre a changé pendant ces deux heures.' },
   ]}>
 
-After two hours of chat, the assistant that had been writing for the
-finance team in two pages suddenly writes four pages for the engineering
-team. Which explanation fits what you know about how a model produces an
-answer?
+Après deux heures de conversation, l’assistant qui écrivait deux pages pour
+l’équipe financière écrit soudain quatre pages pour l’équipe d’ingénierie.
+Quelle explication correspond à ce que vous savez de la façon dont un modèle
+produit une réponse ?
 
 </Choice>
 
 <MultiChoice id="what-the-next-answer-sees" phase="review" objective="concepts/explains-models/explains-generation"
   concepts={['context-window']}
-  context="The lesson explains that a model writes each answer from the tokens in its context window for that response, and that a long chat can push early messages out of it. The chat in this item has no memory features turned on."
-  title="What can the next answer use?" hint="Which of these reach the window for this one response?"
+  context="La leçon explique qu’un modèle écrit chaque réponse à partir des jetons de sa fenêtre de contexte pour cette réponse, et qu’une longue conversation peut en faire sortir les premiers messages. Dans cet exercice, la conversation n’a aucune fonction de mémoire activée."
+  title="Que peut utiliser la prochaine réponse ?" hint="Lesquels de ces éléments atteignent la fenêtre pour cette réponse précise ?"
   options={[
-    { text: 'The file you attached earlier in this short chat.', correct: true },
-    { text: 'The notes you keep in another tab of your browser.', why: 'The model only has what reaches its window. A tab it was never given does not exist for it.' },
-    { text: 'The message you just sent.', correct: true },
-    { text: 'What you told the same assistant in a chat yesterday.', why: 'With memory features off, yesterday\'s chat never enters today\'s window.' },
+    { text: 'Le fichier que vous avez joint plus tôt dans cette courte conversation.', correct: true },
+    { text: 'Les notes que vous gardez dans un autre onglet de votre navigateur.', why: 'Le modèle ne dispose que de ce qui atteint sa fenêtre. Un onglet qu’on ne lui a jamais donné n’existe pas pour lui.' },
+    { text: 'Le message que vous venez d’envoyer.', correct: true },
+    { text: 'Ce que vous avez dit au même assistant dans une conversation hier.', why: 'Sans fonction de mémoire, la conversation d’hier n’entre jamais dans la fenêtre d’aujourd’hui.' },
   ]}>
 
-You are in a chat with an assistant that has no memory features. Which two
-of these can the model use for its next answer?
+Vous échangez avec un assistant qui n’a aucune fonction de mémoire. Lesquels
+de ces deux éléments le modèle peut-il utiliser pour sa prochaine réponse ?
 
 </MultiChoice>
 
 <Scenario id="the-budget-it-dropped" phase="review" objective="concepts/explains-models/explains-generation"
   concepts={['context-window', 'token']}
-  context="In the first message of a long chat, the learner gave a budget of 5,000 euros. Many messages later the assistant proposes a plan that costs 9,000 euros."
-  title="The budget from the first message" hint="Is the first message still among the tokens the model reads for this answer?"
+  context="Dans le premier message d’une longue conversation, l’apprenant a indiqué un budget de 5 000 euros. Bien des messages plus tard, l’assistant propose un plan qui coûte 9 000 euros."
+  title="Le budget du premier message" hint="Le premier message fait-il encore partie des jetons que le modèle lit pour cette réponse ?"
   options={[
-    { text: 'Tell the assistant it made a mistake and ask it to try harder this time.', consequence: 'The budget is still outside the window. The next plan misses it too, and the chat grows longer.' },
-    { text: 'Ask the assistant which budget you gave it at the start of the chat.', consequence: 'The model can only answer from its window. It gives a number that sounds right, and you can\'t tell a guess from a memory.' },
-    { text: 'Switch to a model with a bigger vocabulary so that it keeps numbers.', consequence: 'The vocabulary decides how text splits into tokens. The number of tokens that fit is the same, and the first message is still gone.' },
-    { text: 'Restate the budget in your next message and ask for the plan again.', correct: true, consequence: 'The budget is back among the tokens the model reads, and the new plan stays under 5,000 euros.' },
+    { text: 'Dire à l’assistant qu’il s’est trompé et lui demander de faire plus d’efforts cette fois.', consequence: 'Le budget est toujours hors de la fenêtre. Le plan suivant l’ignore aussi, et la conversation s’allonge encore.' },
+    { text: 'Demander à l’assistant quel budget vous lui avez donné au début de la conversation.', consequence: 'Le modèle ne peut répondre qu’à partir de sa fenêtre. Il donne un chiffre qui semble juste, et vous ne pouvez pas distinguer une supposition d’un souvenir.' },
+    { text: 'Passer à un modèle doté d’un vocabulaire plus grand pour qu’il retienne les nombres.', consequence: 'Le vocabulaire détermine la façon dont le texte est découpé en jetons. Le nombre de jetons qui tiennent dans la fenêtre reste le même, et le premier message a toujours disparu.' },
+    { text: 'Rappeler le budget dans votre prochain message et redemander le plan.', correct: true, consequence: 'Le budget fait de nouveau partie des jetons que lit le modèle, et le nouveau plan reste sous les 5 000 euros.' },
   ]}>
 
-Many messages ago you said the budget is 5,000 euros. The assistant now
-proposes a plan for 9,000 euros. What do you do?
+Il y a bien des messages, vous avez indiqué un budget de 5 000 euros.
+L’assistant propose maintenant un plan à 9 000 euros. Que faites-vous ?
 
 </Scenario>
 
-<Exercise stretch="Paste the same page into a chat assistant and ask it how many tokens the page is. Compare its answer with the counter, and decide which one you trust and why.">
+<Exercise stretch="Collez la même page dans un assistant conversationnel et demandez-lui combien de jetons elle contient. Comparez sa réponse avec celle du compteur, et décidez à laquelle vous faites confiance et pourquoi.">
 
-Copy about one page of your own writing, an email or a report section.
-Replace the meeting notes in the counter above with it, and press Count.
-The counter runs in your browser and sends your text nowhere.
-Write down the three numbers: characters, estimated tokens, and how many
-of your pages fit in a 200,000-token window. With these numbers you can judge whether a
-document fits before you paste it, and after how many turns a chat is full.
+Copiez environ une page de vos propres écrits, un courriel ou une section de
+rapport. Remplacez le compte rendu de réunion du compteur ci-dessus par ce
+texte, puis appuyez sur Compter. Le compteur fonctionne dans votre navigateur
+et n’envoie votre texte nulle part. Notez les trois nombres : caractères,
+jetons estimés, et nombre de vos pages qui tiennent dans une fenêtre de
+200 000 jetons. Avec ces nombres, vous pouvez juger si un document tient
+avant de le coller, et après combien de tours une conversation est pleine.
+(Note de traduction : la règle des quatre caractères par jeton vaut pour
+l’anglais. Pour un texte en français, les vrais tokeniseurs donnent en
+général un peu plus de jetons que cette estimation.)
 
-A good result is one line like "my page is 3,100 characters, about 750
-tokens, and 266 pages fit in 200,000 tokens." Then answer this: how many
-pages of instructions, pasted documents and earlier turns would your usual
-chat sessions need before the first message falls out of the window?
+Un bon résultat tient en une ligne comme « ma page fait 3 100 caractères,
+environ 750 jetons, et 266 pages tiennent dans 200 000 jetons ». Répondez
+ensuite à cette question : combien de pages d’instructions, de documents
+collés et de tours précédents faudrait-il à vos conversations habituelles
+pour que le premier message sorte de la fenêtre ?
 
 </Exercise>
 
 <Recap>
 
-1. A context window is the maximum number of tokens the model takes into
-   account for one response, and a page of English text is a few hundred
-   tokens (@AEC-02).
-2. The window holds the instructions, the conversation so far, anything
-   pasted or attached, tool results and the answer being produced. Anything
-   outside it does not exist for the model
+1. Une fenêtre de contexte est le nombre maximal de jetons que le modèle
+   prend en compte pour une réponse, et une page de texte anglais fait
+   quelques centaines de jetons (@AEC-02).
+2. La fenêtre contient les instructions, la conversation jusque-là, tout ce
+   qui a été collé ou joint, les résultats d’outils et la réponse en cours.
+   Ce qui est hors de la fenêtre n’existe pas pour le modèle
    (@Academy ai-capabilities-and-limitations).
-3. When a long chat contradicts itself, an early fact has left the window.
-   Restate the fact in your next message instead of scolding the model.
-4. A fuller window costs more per answer, because every token in it is
-   processed for every response, and the model does not use every part of
-   a full window equally well (@Academy ai-capabilities-and-limitations).
+3. Quand une longue conversation se contredit, un fait du début a quitté la
+   fenêtre. Reformulez ce fait dans votre prochain message, sans reprocher
+   au modèle d’avoir oublié.
+4. Une fenêtre plus remplie coûte plus cher par réponse, parce que chaque
+   jeton qu’elle contient est traité pour chaque réponse, et le modèle
+   n’utilise pas toutes les parties d’une fenêtre pleine avec le même soin
+   (@Academy ai-capabilities-and-limitations).
 
 </Recap>

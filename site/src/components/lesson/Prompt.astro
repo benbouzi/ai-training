@@ -16,7 +16,7 @@ const illustrative = model === 'illustrative' || recorded === 'illustrative';
 
 <figure class="prompt-block" data-illustrative={illustrative}>
 	<figcaption>
-		{illustrative ? 'Prompt (illustrative, not a recorded transcript)' : `Prompt · ${model}, recorded ${recorded}`}
+		{illustrative ? 'Prompt (illustration écrite pour la leçon)' : `Prompt · ${model}, enregistré en ${recorded}`}
 	</figcaption>
 	<div class="prompt-body"><slot /></div>
 </figure>

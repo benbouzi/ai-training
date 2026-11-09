@@ -97,22 +97,22 @@ if (isLesson) {
 		<div class="lesson" data-lesson={lessonId} data-mode={data.mode} data-area={area} data-engineering={String(engineering)}>
 			{skillsCheck.length > 0 && (
 				<aside class="route-card skills-check not-content" data-skills-check data-items={skillsCheck.join(' ')} hidden>
-					<p class="route-title" data-skills-title>Skip ahead?</p>
+					<p class="route-title" data-skills-title>Passer directement ?</p>
 					<p class="skills-note" data-skills-note></p>
 					<div class="skills-actions">
 						<button type="button" class="cp-check" data-skills-start></button>
-						<button type="button" data-skills-dismiss>Not now</button>
+						<button type="button" data-skills-dismiss>Pas maintenant</button>
 					</div>
 					<div class="skills-items" data-skills-items hidden></div>
 				</aside>
 			)}
 			{behind.length > 0 && (
 				<aside class="route-card route-behind not-content" data-route="behind" hidden>
-					<p class="route-title">Worth revisiting first</p>
+					<p class="route-title">À revoir d’abord</p>
 					<ul>
 						{behind.map((b) => (
 							<li>
-								<a href={b.href}>{b.statement}</a> <span class="route-where">in {b.lessonTitle}</span>
+								<a href={b.href}>{b.statement}</a> <span class="route-where">dans « {b.lessonTitle} »</span>
 							</li>
 						))}
 					</ul>

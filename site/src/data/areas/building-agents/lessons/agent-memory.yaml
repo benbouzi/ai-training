@@ -11,7 +11,7 @@ introduces: [memory-storage-choices]
 assumes:
   - objective: concepts/explains-models/explains-grounding
     lesson: concepts/memory
-    section: two-places-a-fact-can-be
+    section: deux-endroits-où-un-fait-peut-se-trouver
   - objective: building-agents/builds-agent-loop/defines-a-tool
     lesson: building-agents/agent-loop
     section: a-tool-is-a-function-plus-a-description

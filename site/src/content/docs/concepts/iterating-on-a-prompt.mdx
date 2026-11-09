@@ -1,353 +1,372 @@
 import { Choice, Scenario, Sort, Pitfall, Exercise, Recap, Prompt, Response, MultiChoice, Match } from '@components/lesson';
 
-In this lesson we take a prompt that gets a wrong summary through three
-rounds. The first answer leaves out the decisions of a meeting, and the
-reflex is to press regenerate. We name what is missing instead and change
-one line of the prompt. After the second run we compare the two answers,
-and we do that once more. At the end the line we had to type twice moves
-into a saved template.
+Dans cette leçon, nous faisons passer par trois essais un prompt qui obtient
+un résumé erroné. La première réponse oublie les décisions d’une réunion, et
+le réflexe est d’appuyer sur « régénérer ». Nous nommons plutôt ce qui
+manque et nous changeons une ligne du prompt. Après le deuxième essai, nous
+comparons les deux réponses, et nous recommençons une fois. À la fin, la
+ligne que nous avons dû taper deux fois rejoint un gabarit enregistré.
 
-You need any chat assistant. Every response shown here is illustrative:
-the author wrote it to show the pattern, and the component says so. Your
-model gives a different text, and the comparison that matters is between
-your own rounds.
+Il vous faut un assistant conversationnel. Toutes les réponses présentées ici
+sont des illustrations : l’auteur les a écrites pour montrer le mécanisme, et
+le composant le signale. Votre modèle donnera un autre texte, et la
+comparaison qui compte se fait entre vos propres essais.
 
-## The summary that skipped the decisions
+## Le résumé qui a oublié les décisions
 
-Here are the notes we work with. They're fictional, and every round uses
-them unchanged. Read them once, so you can judge each answer later.
+Voici le compte rendu sur lequel nous travaillons. Il est fictif, et chaque
+essai l’utilise sans modification. Lisez-le une fois, pour pouvoir juger
+chaque réponse ensuite.
 
-> Team meeting, 6 October. Present: Anna, Ben, Chloe, Tom.
+> Réunion d’équipe, 6 octobre. Présents : Anna, Ben, Chloé, Tom.
 >
-> Ben walked through the numbers of the pilot. Sign-ups are 30 percent
-> above the plan and support tickets are double. Most tickets are about the
-> invoice page. Chloe thinks the page needs a rewrite and Tom thinks a
-> better help text is enough. After some discussion the team decides to do
-> the help text first and look at the ticket numbers again on 20 October.
-> Tom writes the help text.
+> Ben a présenté les chiffres du pilote. Les inscriptions dépassent de
+> 30 % le prévisionnel et les tickets de support ont doublé. La plupart des
+> tickets concernent la page de facturation. Chloé pense que la page doit être
+> réécrite, et Tom pense qu’un meilleur texte d’aide suffit. Après discussion,
+> l’équipe décide de commencer par le texte d’aide et de regarder de nouveau
+> le nombre de tickets le 20 octobre. Tom rédige le texte d’aide.
 >
-> Anna raised the question of the second pilot region. The team decides
-> not to start it before the invoice tickets come down. Anna tells the
-> regional lead.
+> Anna a soulevé la question de la seconde région pilote. L’équipe décide de
+> ne pas la lancer avant que les tickets de facturation diminuent. Anna
+> prévient le responsable régional.
 >
-> Ben asked whether the weekly status mail can go out on Thursday instead
-> of Friday. Nobody objects. Ben changes the schedule.
+> Ben a demandé si le courriel hebdomadaire de suivi pouvait partir le jeudi
+> au lieu du vendredi. Personne ne s’y oppose. Ben modifie le calendrier.
 >
-> Chloe mentioned the new logo drafts. The team looks at them next week.
+> Chloé a parlé des nouvelles maquettes du logo. L’équipe les regarde la
+> semaine prochaine.
 
-Paste the notes into your chat tool with a request above them. This one
-already has an instruction, a fenced context, a reader and a format, as the
-lesson on instruction, context, and format asks.
+Collez le compte rendu dans votre outil conversationnel avec une demande
+au-dessus. Celle-ci comporte déjà une instruction, un contexte enclos, un
+lecteur et un format, comme le demande la leçon sur l’instruction, le
+contexte et le format.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize the meeting notes between the triple quotes for a colleague who
-missed the meeting. Write five bullets, each under 20 words, as plain text.
+Résume le compte rendu de réunion placé entre les triples guillemets pour un
+collègue qui a manqué la réunion. Écris cinq puces de moins de 20 mots
+chacune, en texte brut.
 
 """
-[the notes, pasted in full]
+[le compte rendu, collé en entier]
 """
 </Prompt>
 <Response>
-- Pilot sign-ups are 30 percent above plan, and support tickets have doubled.
-- Most support tickets concern the invoice page.
-- Chloe and Tom disagree on whether the page needs a rewrite or better help text.
-- Anna raised the question of starting a second pilot region.
-- Chloe shared new logo drafts, which the team reviews next week.
+- Les inscriptions au pilote dépassent de 30 % le prévisionnel, et les tickets de support ont doublé.
+- La plupart des tickets de support concernent la page de facturation.
+- Chloé et Tom ne sont pas d’accord : réécrire la page ou améliorer le texte d’aide.
+- Anna a soulevé la question du lancement d’une seconde région pilote.
+- Chloé a montré de nouvelles maquettes du logo, que l’équipe examine la semaine prochaine.
 </Response>
 
-This response is illustrative, like every one on this page. It is five
-bullets under 20 words, and it follows the format. It also misses the
-point. The colleague who missed the meeting learns what was talked about
-and nothing about what was decided. Help text first, no second region
-yet, status mail on Thursday: none of the decisions made the list, and
-the logo drafts, the one item without a decision, did.
+Cette réponse est une illustration, comme toutes celles de cette page. Elle
+fait cinq puces de moins de 20 mots et respecte le format. Elle passe aussi à
+côté de l’essentiel. Le collègue absent apprend de quoi on a parlé et rien de
+ce qui a été décidé. Le texte d’aide d’abord, pas encore de seconde région,
+le courriel de suivi le jeudi : aucune décision n’apparaît dans la liste,
+alors que les maquettes du logo, le seul point sans décision, y figurent.
 
-The reflex here is to press regenerate. Do that once, so you can see what
-it gives. On a first turn, pressing regenerate and sending the same prompt
-in a fresh chat are the same draw, so either works here.
+Le réflexe, ici, est d’appuyer sur « régénérer ». Faites-le une fois, pour
+voir ce que cela donne. Au premier tour, appuyer sur « régénérer » et envoyer
+le même prompt dans une nouvelle conversation reviennent au même tirage, vous
+pouvez donc faire l’un ou l’autre.
 
 <Prompt model="illustrative" recorded="illustrative">
-[the same prompt, sent again in a fresh chat]
+[le même prompt, renvoyé dans une nouvelle conversation]
 </Prompt>
 <Response>
-- Pilot sign-ups are 30 percent over plan, and support tickets doubled.
-- The invoice page causes most of the tickets.
-- The team debated rewriting the invoice page versus improving its help text.
-- Anna asked about a second pilot region, to be revisited later.
-- Ben proposed moving the weekly status mail to Thursday.
+- Les inscriptions au pilote dépassent le prévisionnel de 30 %, et les tickets ont doublé.
+- La page de facturation est à l’origine de la plupart des tickets.
+- L’équipe a débattu entre réécrire la page de facturation et améliorer son texte d’aide.
+- Anna a posé la question d’une seconde région pilote, à revoir plus tard.
+- Ben a proposé d’avancer au jeudi le courriel hebdomadaire de suivi.
 </Response>
 
-The words changed. The logo bullet is gone and the status mail appeared,
-described as a proposal rather than as the decision it was. The help text
-decision and the second-region decision are still missing. You now have
-two summaries of the discussion and still don't know which one to send.
+Les mots ont changé. La puce sur le logo a disparu et le courriel de suivi est
+apparu, présenté comme une proposition alors que c’était une décision. La
+décision sur le texte d’aide et celle sur la seconde région manquent
+toujours. Vous avez maintenant deux résumés de la discussion, et vous ne savez
+toujours pas lequel envoyer.
 
-## Name the gap, change one line
+## Nommer le manque, changer une ligne
 
-**Iteration** is improving a result by changing the prompt after reading
-the output, rather than sending the same prompt again in the hope of a
-better draw. The first step is to say what is wrong with the output, in
-one sentence, as a fact about the text. "It's not great" gives you nothing
-to change. "It lists what was discussed and leaves out what was decided"
-points at a line the prompt doesn't have.
+L’**itération** consiste à améliorer un résultat en modifiant le prompt après
+avoir lu la sortie, au lieu de renvoyer le même prompt dans l’espoir d’un
+meilleur tirage. La première étape consiste à dire ce qui ne va pas dans la
+sortie, en une phrase, comme un fait qui concerne le texte. « Ce n’est pas
+terrible » ne vous donne rien à changer. « Il énumère ce dont on a discuté et
+oublie ce qui a été décidé » désigne une ligne qui manque au prompt.
 
-Add that one line, change nothing else, and run it on the same notes.
+Ajoutez cette seule ligne, ne changez rien d’autre, et lancez le prompt sur le
+même compte rendu.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize the meeting notes between the triple quotes for a colleague who
-missed the meeting. List every decision as its own bullet, starting with
-"Decided:". Write five bullets, each under 20 words, as plain text.
+Résume le compte rendu de réunion placé entre les triples guillemets pour un
+collègue qui a manqué la réunion. Présente chaque décision dans une puce à
+part, qui commence par « Décidé : ». Écris cinq puces de moins de 20 mots
+chacune, en texte brut.
 
 """
-[the notes, pasted in full]
+[le compte rendu, collé en entier]
 """
 </Prompt>
 <Response>
-- Pilot sign-ups are 30 percent above plan, but support tickets have doubled, most about the invoice page.
-- Decided: improve the invoice help text first, then review ticket numbers on 20 October.
-- Decided: do not start the second pilot region until invoice tickets come down.
-- Decided: the weekly status mail moves from Friday to Thursday.
-- Chloe showed new logo drafts, which the team reviews next week.
+- Les inscriptions au pilote dépassent de 30 % le prévisionnel, mais les tickets ont doublé, surtout sur la facturation.
+- Décidé : améliorer d’abord le texte d’aide de la facturation, puis revoir les tickets le 20 octobre.
+- Décidé : ne pas lancer la seconde région pilote avant la baisse des tickets de facturation.
+- Décidé : le courriel hebdomadaire de suivi passe du vendredi au jeudi.
+- Chloé a montré de nouvelles maquettes du logo, que l’équipe examine la semaine prochaine.
 </Response>
 
-Put this next to the first round. Every decision is there, each on
-its own line, and the discussion shrank to the one bullet that gives the
-decisions their reason. One sentence of prompt did that. The regenerate
-round changed the wording of the same gap, and the added line closed it.
+Mettez ce résultat à côté du premier essai. Chaque décision est là, chacune
+sur sa ligne, et la discussion s’est réduite à la seule puce qui donne leur
+raison aux décisions. Une phrase de prompt a suffi. L’essai « régénérer » a
+changé la formulation du même manque, et la ligne ajoutée l’a comblé.
 
-## One more change, then compare
+## Encore un changement, puis comparer
 
-Read the new answer as the colleague would. They know what was decided.
-They don't know who does what next: Tom writes the help text, Anna
-tells the regional lead, and Ben changes the schedule. The notes say all
-three, and the summary says none of them.
+Lisez la nouvelle réponse comme la lirait le collègue. Il sait ce qui a été
+décidé. Il ne sait pas qui fait quoi ensuite : Tom rédige le texte d’aide,
+Anna prévient le responsable régional, et Ben modifie le calendrier. Le
+compte rendu dit ces trois choses, et le résumé n’en dit aucune.
 
-That is the next gap, and it gets its own round. It is also a familiar
-one. Last week's summary of the previous meeting skipped the decisions
-and the owners too, and both fixes went into the chat and closed with it.
-Add one line about the owner, keep the "Decided:" line from the last
-round, and run it again.
+C’est le manque suivant, et il a droit à son propre essai. C’est aussi un
+manque familier. Le résumé de la réunion de la semaine dernière avait lui
+aussi oublié les décisions et les responsables, et les deux corrections ont
+été tapées dans la conversation puis perdues à sa fermeture. Ajoutez une
+ligne sur le responsable, gardez la ligne « Décidé : » de l’essai précédent,
+et relancez.
 
 <Prompt model="illustrative" recorded="illustrative" canonical>
-Summarize the meeting notes between the triple quotes for a colleague who
-missed the meeting. List every decision as its own bullet, starting with
-"Decided:", and end each decision with the name of the person who acts on
-it. Write five bullets, each under 20 words, as plain text.
+Résume le compte rendu de réunion placé entre les triples guillemets pour un
+collègue qui a manqué la réunion. Présente chaque décision dans une puce à
+part, qui commence par « Décidé : », et termine chaque décision par le nom de
+la personne qui s’en charge. Écris cinq puces de moins de 20 mots chacune, en
+texte brut.
 
 """
-[the notes, pasted in full]
+[le compte rendu, collé en entier]
 """
 </Prompt>
 <Response>
-- Pilot sign-ups are 30 percent above plan, but support tickets have doubled, most about the invoice page.
-- Decided: improve the invoice help text first, review tickets again on 20 October. Tom.
-- Decided: no second pilot region until invoice tickets come down. Anna tells the regional lead.
-- Decided: weekly status mail moves from Friday to Thursday. Ben.
-- Chloe showed new logo drafts. The team reviews them next week.
+- Les inscriptions au pilote dépassent de 30 % le prévisionnel, mais les tickets ont doublé, surtout sur la facturation.
+- Décidé : améliorer d’abord le texte d’aide de la facturation, revoir les tickets le 20 octobre. Tom.
+- Décidé : pas de seconde région pilote avant la baisse des tickets de facturation. Anna prévient le responsable régional.
+- Décidé : le courriel hebdomadaire de suivi passe du vendredi au jeudi. Ben.
+- Chloé a montré de nouvelles maquettes du logo. L’équipe les examine la semaine prochaine.
 </Response>
 
-Compare with the previous round, and only with the previous round. The
-decision bullets are the same three facts with a name at the end, and the
-other two bullets barely moved. That is what you want from one change: the
-difference between the two answers comes from the one change you
-made. You know that the owner line works, and next week's prompt can keep
-it (@DLAI-1).
+Comparez avec l’essai précédent, et uniquement avec lui. Les puces de
+décision contiennent les trois mêmes faits avec un nom à la fin, et les deux
+autres puces ont à peine bougé. C’est ce que vous attendez d’un changement
+unique : la différence entre les deux réponses vient du seul changement que
+vous avez fait. Vous savez que la ligne sur le responsable fonctionne, et le
+prompt de la semaine prochaine peut la garder (@DLAI-1).
 
-## Why the retry gives the same class of mistake
+## Pourquoi un nouvel essai refait le même type d’erreur
 
-In the lesson on how models work you saw that the model scores every
-candidate for the next token and picks one, and that the input fixes the
-scores. The prompt is that input. Send the same prompt twice and the model
-draws twice from the same distribution. The wording differs, and the
-things the prompt made likely stay likely. Your first prompt made
-"what was discussed" likely, because that's what most summaries of most
-notes contain, and it said nothing that made "what was decided" likely.
-A retry moves within that distribution. To move the distribution itself
-you change the prompt.
+Dans la leçon sur le fonctionnement des modèles, vous avez vu que le modèle
+attribue un score à chaque jeton candidat et en choisit un, et que l’entrée
+fixe les scores. Le prompt est cette entrée. Envoyez deux fois le même prompt,
+et le modèle tire deux fois dans la même distribution. La formulation change,
+et ce que le prompt rendait probable le reste. Votre premier prompt rendait
+« ce dont on a discuté » probable, parce que c’est ce que contiennent la
+plupart des résumés de la plupart des comptes rendus, et il ne disait rien qui
+rende « ce qui a été décidé » probable. Un nouvel essai se déplace à
+l’intérieur de cette distribution. Pour déplacer la distribution elle-même,
+il faut changer le prompt.
 
-Any gap in the instruction behaves this way. A prompt that doesn't say
-who the reader is gets a general reader on every run, and when a prompt
-doesn't name the format, the format is the model's choice and varies
-between runs. The retry that
-happens to come out right is a draw from the tail, and the next run falls
-back into the middle. So the correction goes into the prompt, where it
-holds on every run (@Academy ai-fluency-framework-foundations).
+Tout manque dans l’instruction se comporte ainsi. Un prompt qui ne dit pas
+qui est le lecteur obtient un lecteur général à chaque essai, et quand un
+prompt ne nomme pas le format, le format est laissé au choix du modèle et
+varie d’un essai à l’autre. L’essai qui tombe juste par chance est un tirage
+dans la queue de la distribution, et l’essai suivant retombe au milieu. La
+correction va donc dans le prompt, où elle vaut pour chaque essai
+(@Academy ai-fluency-framework-foundations).
 
 <Choice id="four-tries" objective="concepts/prompts-reliably/iterates-on-output"
   concepts={['iteration', 'sampling-and-temperature']}
-  context="A colleague summarizes weekly meeting notes with a chat assistant. The prompt asks for five bullets for a colleague who missed the meeting and says nothing about decisions."
-  title="Four tries"
-  hint="What changes between one run and the next, and what stays the same?"
+  context="Une collègue résume chaque semaine des comptes rendus de réunion avec un assistant conversationnel. Le prompt demande cinq puces pour un collègue absent et ne dit rien des décisions."
+  title="Quatre essais"
+  hint="Qu’est-ce qui change d’un essai à l’autre, et qu’est-ce qui reste identique ?"
   options={[
-    { text: 'The model forgot the decisions on the first runs and needed a few reminders before it kept them in mind.', why: 'There is nothing to remind. Each run reads the same prompt from the start and keeps nothing from the run before.' },
-    { text: 'Each run is a draw from one distribution, and the prompt made the decisions unlikely. The fourth draw came from the tail.', correct: true },
-    { text: 'The model learns from the retries inside the session and gets better at the task each time it is asked.', why: 'The weights are fixed while the model answers. A retry changes the random pick and nothing else.' },
+    { text: 'Le modèle a oublié les décisions lors des premiers essais et a eu besoin de quelques rappels avant de les garder en tête.', why: 'Il n’y a rien à rappeler. Chaque essai relit le même prompt depuis le début et ne garde rien de l’essai précédent.' },
+    { text: 'Chaque essai est un tirage dans une même distribution, et le prompt rendait les décisions peu probables. Le quatrième tirage venait de la queue de la distribution.', correct: true },
+    { text: 'Le modèle apprend des essais successifs au sein de la session et s’améliore à chaque nouvelle demande.', why: 'Les poids sont fixes pendant que le modèle répond. Un nouvel essai change le tirage au hasard et rien d’autre.' },
   ]}>
 
-A colleague pressed regenerate until the summary included the decisions.
-It took four tries, and they expect to do the same next week. Which
-explanation fits what happened?
+Une collègue a appuyé sur « régénérer » jusqu’à ce que le résumé contienne
+les décisions. Il lui a fallu quatre essais, et elle s’attend à recommencer la
+semaine prochaine. Quelle explication correspond à ce qui s’est passé ?
 
 </Choice>
 
-## Everything at once
+## Tout à la fois
 
-Once you see what is wrong, the temptation flips: fix everything you can
-think of in one go.
+Une fois que l’on voit ce qui ne va pas, la tentation s’inverse : tout
+corriger d’un coup.
 
-<Pitfall title="The rewrite that worked, somehow">
-A learner reads the first summary, rewrites the prompt from scratch, and
-changes five things at once: the reader, the bullet count, a rule about
-decisions, a rule about dates, and a closing line asking the model to
-check its own work. The new answer is better. Next week the same prompt on
-new notes gives a summary with the decisions and two bullets over the
-length. The learner can't tell which of the five lines did the work,
-which one to build on, and whether the self-check line did anything at
-all. Rule: change one thing per round, so the difference between two
-answers has one cause and every line in the prompt you keep has shown
-what it fixes.
+<Pitfall title="La réécriture qui a marché, on ne sait comment">
+Un apprenant lit le premier résumé, réécrit le prompt de zéro, et change cinq
+choses à la fois : le lecteur, le nombre de puces, une règle sur les
+décisions, une règle sur les dates, et une ligne finale qui demande au modèle
+de vérifier son propre travail. La nouvelle réponse est meilleure. La semaine
+suivante, le même prompt appliqué à un nouveau compte rendu donne un résumé
+avec les décisions et deux puces trop longues. L’apprenant ne peut pas dire
+laquelle des cinq lignes a fait le travail, sur laquelle s’appuyer, ni si la
+ligne d’auto-vérification a servi à quoi que ce soit. Règle : changez une
+seule chose par essai, pour que la différence entre deux réponses ait une
+seule cause et que chaque ligne que vous gardez dans le prompt ait montré ce
+qu’elle corrige.
 </Pitfall>
 
-One change per round feels slow on the first prompt and pays back on every
-prompt after it. You end up knowing what each line does, and a prompt you
-understand is one you can shorten or hand to a colleague (@DLAI-3).
+Un seul changement par essai paraît lent sur le premier prompt, et il est
+rentable sur tous les prompts suivants. Vous finissez par savoir ce que fait
+chaque ligne, et un prompt que vous comprenez est un prompt que vous pouvez
+raccourcir ou transmettre à un collègue (@DLAI-3).
 
 <Scenario id="regenerate-or-change" objective="concepts/prompts-reliably/iterates-on-output"
   concepts={['iteration', 'instruction']}
-  context="A learner asked a chat assistant to summarize meeting notes in five bullets for a colleague who missed the meeting. The answer lists what was discussed and none of the three decisions."
-  title="The summary has no decisions"
-  hint="Which option changes the input the model reads, and by how much?"
+  context="Un apprenant a demandé à un assistant conversationnel de résumer en cinq puces un compte rendu de réunion pour un collègue absent. La réponse énumère ce dont on a discuté et aucune des trois décisions."
+  title="Le résumé sans décisions"
+  hint="Quelle option change l’entrée que lit le modèle, et dans quelle mesure ?"
   options={[
-    { text: 'Press regenerate and read the new answer.', consequence: 'The wording changes and one of the three decisions appears, described as a proposal. You have two summaries and no better idea of what to fix.' },
-    { text: 'Add one line, "List every decision as its own bullet, starting with Decided:", and run it again in a fresh chat.', correct: true, consequence: 'All three decisions come back on their own lines. The other bullets barely change, so you know the new line did it, and you can keep it.' },
-    { text: 'Rewrite the prompt from scratch with everything you would want: reader, decisions, owners, dates, a self-check.', consequence: 'The decisions appear, and so do a new length, a new tone and a new order. The answer is better and you cannot say which line did what. Next week you start from zero again.' },
+    { text: 'Appuyer sur « régénérer » et lire la nouvelle réponse.', consequence: 'La formulation change et l’une des trois décisions apparaît, présentée comme une proposition. Vous avez deux résumés et pas d’idée plus claire de ce qu’il faut corriger.' },
+    { text: 'Ajouter une ligne, « Présente chaque décision dans une puce à part, qui commence par Décidé : », et relancer dans une nouvelle conversation.', correct: true, consequence: 'Les trois décisions reviennent, chacune sur sa ligne. Les autres puces changent à peine : vous savez donc que la nouvelle ligne en est la cause, et vous pouvez la garder.' },
+    { text: 'Réécrire le prompt de zéro avec tout ce que vous voudriez : lecteur, décisions, responsables, dates, auto-vérification.', consequence: 'Les décisions apparaissent, ainsi qu’une nouvelle longueur, un nouveau ton et un nouvel ordre. La réponse est meilleure et vous ne pouvez pas dire quelle ligne a fait quoi. La semaine prochaine, vous repartez de zéro.' },
   ]}>
 
-The summary lists what was discussed and none of the decisions. What do
-you do next?
+Le résumé énumère ce dont on a discuté et aucune des décisions. Que
+faites-vous ensuite ?
 
 </Scenario>
 
-## Move the fix into a template
+## Faire entrer la correction dans un gabarit
 
-Look back at the rounds. The "Decided:" line and the owner line are each
-the second time you had to ask for them. Last week's notes got the same
-first summary and the same two fixes, typed into the chat, and lost when
-the chat closed. A fix you type in the chat is there for that session. A
-fix in the prompt is there for every run.
+Revenez sur les essais. La ligne « Décidé : » et la ligne sur le responsable
+sont chacune demandées pour la deuxième fois. Le compte rendu de la semaine
+dernière avait obtenu le même premier résumé et les deux mêmes corrections,
+tapées dans la conversation et perdues à sa fermeture. Une correction tapée
+dans la conversation vaut pour cette session. Une correction dans le prompt
+vaut pour chaque essai.
 
-A **prompt template** is the prompt you keep: the lines that have shown
-what they fix, with a marker where the material goes. Save it in a note or
-a text file, and paste it in every week. This is the template after the
-three rounds on this page, with both lines that came up for the second
-time.
+Un **gabarit de prompt** est le prompt que vous gardez : les lignes qui ont
+montré ce qu’elles corrigent, avec un repère à l’endroit où va le matériau.
+Enregistrez-le dans une note ou un fichier texte, et collez-le chaque semaine.
+Voici le gabarit après les trois essais de cette page, avec les deux lignes
+demandées pour la deuxième fois.
 
 ```text
-Summarize the meeting notes between the triple quotes for a colleague who
-missed the meeting. List every decision as its own bullet, starting with
-"Decided:", and end each decision with the name of the person who acts on
-it. Write five bullets, each under 20 words, as plain text.
+Résume le compte rendu de réunion placé entre les triples guillemets pour un
+collègue qui a manqué la réunion. Présente chaque décision dans une puce à
+part, qui commence par « Décidé : », et termine chaque décision par le nom de
+la personne qui s’en charge. Écris cinq puces de moins de 20 mots chacune, en
+texte brut.
 
 """
-[paste the notes here]
+[collez le compte rendu ici]
 """
 ```
 
-A line goes into the template when you had to make the correction twice.
-One correction may be about one text. The same correction on two texts is
-about the prompt, and the prompt is where it goes. A line stays out for
-the reason the pitfall gives: you added it without seeing what it fixed.
-When the template grows, it grows by one tested line at a time.
+Une ligne entre dans le gabarit quand vous avez dû faire la correction deux
+fois. Une correction isolée peut concerner un seul texte. La même correction
+sur deux textes concerne le prompt, et c’est donc dans le prompt qu’elle va.
+Une ligne reste dehors pour la raison que donne le piège : vous l’avez ajoutée
+sans voir ce qu’elle corrigeait. Quand le gabarit grandit, il grandit d’une
+ligne testée à la fois.
 
 <Sort id="retry-change-or-keep" objective="concepts/prompts-reliably/iterates-on-output"
   concepts={['iteration']}
-  context="A learner summarizes weekly meeting notes with a chat assistant and keeps a saved prompt they paste in every week. Each item describes something they see after a run."
-  title="Change, keep, or leave it"
-  hint="How many times has this correction come up, and does the answer meet the prompt as it stands?"
-  buckets={['Change one line of the prompt', 'Move the line into the saved template', 'Leave the prompt as it is']}
+  context="Un apprenant résume chaque semaine des comptes rendus de réunion avec un assistant conversationnel et garde un prompt enregistré qu’il colle chaque semaine. Chaque élément décrit ce qu’il constate après un essai."
+  title="Changer, garder, ou laisser tel quel"
+  hint="Combien de fois cette correction s’est-elle présentée, et la réponse respecte-t-elle le prompt tel qu’il est ?"
+  buckets={['Changer une ligne du prompt', 'Faire entrer la ligne dans le gabarit enregistré', 'Laisser le prompt tel quel']}
   items={[
-    { text: 'The summary lists what was discussed and none of the decisions.', bucket: 0 },
-    { text: 'The dates came out as "Friday 3 October", and this is the first week that mattered.', bucket: 0 },
-    { text: 'For the second week running you typed "name the owner of each action" into the chat.', bucket: 1 },
-    { text: 'Last week and this week you asked for the dates as YYYY-MM-DD after reading the answer.', bucket: 1 },
-    { text: 'The answer meets every line of the prompt and the colleague used it as it was.', bucket: 2 },
-    { text: 'You added the reader last round and the tone is fixed. The length is still wrong.', bucket: 0 },
+    { text: 'Le résumé énumère ce dont on a discuté et aucune des décisions.', bucket: 0 },
+    { text: 'Les dates sont sorties sous la forme « vendredi 3 octobre », et c’est la première semaine où cela comptait.', bucket: 0 },
+    { text: 'Pour la deuxième semaine d’affilée, vous avez tapé « nomme le responsable de chaque action » dans la conversation.', bucket: 1 },
+    { text: 'La semaine dernière et cette semaine, vous avez demandé les dates au format YYYY-MM-DD après avoir lu la réponse.', bucket: 1 },
+    { text: 'La réponse respecte chaque ligne du prompt et le collègue l’a utilisée telle quelle.', bucket: 2 },
+    { text: 'Vous avez ajouté le lecteur à l’essai précédent et le ton est réglé. La longueur est encore fausse.', bucket: 0 },
   ]} />
 
 <Match id="after-the-run" phase="review" objective="concepts/prompts-reliably/iterates-on-output"
   concepts={['iteration']}
-  context="A learner writes a weekly project update with a chat assistant from a saved prompt they paste in each week. Each row is something they notice after a run."
-  title="What do you do after this run?" hint="Is it a new gap, a correction you have made before, or no gap at all?"
-  options={['Change one line of the prompt', 'Move the line into the saved prompt', 'Keep the prompt as it is']}
+  context="Un apprenant rédige chaque semaine un point d’avancement de projet avec un assistant conversationnel, à partir d’un prompt enregistré qu’il colle chaque semaine. Chaque ligne décrit ce qu’il remarque après un essai."
+  title="Que faites-vous après cet essai ?" hint="S’agit-il d’un nouveau manque, d’une correction déjà faite, ou d’aucun manque ?"
+  options={['Changer une ligne du prompt', 'Faire entrer la ligne dans le prompt enregistré', 'Garder le prompt tel quel']}
   rows={[
-    { statement: 'The update leaves out the risks, and the prompt never asks for them.', option: 0, why: 'Is this a gap the prompt left, seen for the first time?' },
-    { statement: 'For the third week you typed "put the deadline in the first line" after reading the answer.', option: 1, why: 'How many times have you made this correction by hand?' },
-    { statement: 'The update meets every line of the prompt, and the reader used it without changes.', option: 2, why: 'What would a change fix here?' },
+    { statement: 'Le point d’avancement oublie les risques, et le prompt ne les demande jamais.', option: 0, why: 'Est-ce un manque du prompt, constaté pour la première fois ?' },
+    { statement: 'Pour la troisième semaine, vous avez tapé « mets l’échéance sur la première ligne » après avoir lu la réponse.', option: 1, why: 'Combien de fois avez-vous fait cette correction à la main ?' },
+    { statement: 'Le point d’avancement respecte chaque ligne du prompt, et le lecteur l’a utilisé sans modification.', option: 2, why: 'Que corrigerait un changement ici ?' },
   ]}
-  rationale="A new gap gets one new line, a correction you made more than once goes into the saved prompt, and an answer that does its job needs no change.">
-Match each observation to what you do next.
+  rationale="Un nouveau manque appelle une nouvelle ligne, une correction faite plus d’une fois va dans le prompt enregistré, et une réponse qui fait son travail n’appelle aucun changement.">
+Associez chaque constat à ce que vous faites ensuite.
 </Match>
 
 <MultiChoice id="two-good-next-steps" phase="review" objective="concepts/prompts-reliably/iterates-on-output"
   concepts={['iteration', 'sampling-and-temperature']}
-  context="A chat assistant summarizes a project meeting from a prompt that asks for five bullets and never mentions who owns each action. The summary it gave has no owners."
-  title="The summary without owners" hint="Which steps change what the prompt makes likely, and which let you see what the change did?"
+  context="Un assistant conversationnel résume une réunion de projet à partir d’un prompt qui demande cinq puces et ne mentionne jamais le responsable de chaque action. Le résumé obtenu n’a aucun responsable."
+  title="Le résumé sans responsables" hint="Quelles étapes changent ce que le prompt rend probable, et lesquelles vous permettent de voir l’effet du changement ?"
   options={[
-    { text: 'Press regenerate until one of the runs happens to include the owners.', why: 'Each run is a draw from the same prompt, and the prompt makes owners unlikely. Next week the same gap comes back.' },
-    { text: 'Add one line that asks for the owner of each action.', correct: true },
-    { text: 'Rewrite the whole prompt with every rule you can think of at once.', why: 'When the next answer changes, you can\'t tell which of the new lines caused it.' },
-    { text: 'Compare the new summary with the last one before you change more.', correct: true },
+    { text: 'Appuyer sur « régénérer » jusqu’à ce qu’un essai inclue par hasard les responsables.', why: 'Chaque essai est un tirage à partir du même prompt, et le prompt rend les responsables peu probables. La semaine prochaine, le même manque revient.' },
+    { text: 'Ajouter une ligne qui demande le responsable de chaque action.', correct: true },
+    { text: 'Réécrire tout le prompt avec d’un coup toutes les règles auxquelles vous pensez.', why: 'Quand la réponse suivante change, vous ne pouvez pas dire laquelle des nouvelles lignes en est la cause.' },
+    { text: 'Comparer le nouveau résumé avec le précédent avant de changer autre chose.', correct: true },
   ]}>
 
-The summary lists the actions and none of their owners. Which two steps
-are good ones?
+Le résumé énumère les actions et aucun de leurs responsables. Quelles sont
+les deux bonnes étapes ?
 
 </MultiChoice>
 
 <Choice id="why-one-change" phase="review" objective="concepts/prompts-reliably/iterates-on-output"
   concepts={['iteration']}
-  context="The lesson changes one line of a prompt per round and compares each answer with the one before."
-  title="One change per round" hint="After a round, what do you need to know in order to keep a line?"
+  context="La leçon change une ligne du prompt par essai et compare chaque réponse avec la précédente."
+  title="Un changement par essai" hint="Après un essai, que devez-vous savoir pour garder une ligne ?"
   options={[
-    { text: 'A model can only follow one new instruction in each message it reads.', why: 'A model follows many instructions in one message. The limit is on what you can learn from the result.' },
-    { text: 'A longer prompt costs more to run than a shorter one does.', why: 'The cost of a line is small. The reason is about telling cause from effect.' },
-    { text: 'The model learns each new line and keeps it for your later chats.', why: 'A chat model doesn\'t learn from your prompt. Each run starts from what is in its window.' },
-    { text: 'When the answer changes, you know which line caused the change.', correct: true },
+    { text: 'Un modèle ne peut suivre qu’une nouvelle instruction par message qu’il lit.', why: 'Un modèle suit de nombreuses instructions dans un même message. La limite porte sur ce que vous pouvez apprendre du résultat.' },
+    { text: 'Un prompt plus long coûte plus cher à exécuter qu’un prompt court.', why: 'Le coût d’une ligne est faible. La raison tient à la distinction entre cause et effet.' },
+    { text: 'Le modèle apprend chaque nouvelle ligne et la garde pour vos conversations suivantes.', why: 'Un modèle conversationnel n’apprend pas de votre prompt. Chaque essai part de ce qui se trouve dans sa fenêtre.' },
+    { text: 'Quand la réponse change, vous savez quelle ligne a causé le changement.', correct: true },
   ]}>
 
-Why does the lesson change only one line of the prompt in each round?
+Pourquoi la leçon ne change-t-elle qu’une ligne du prompt à chaque essai ?
 
 </Choice>
 
-<Exercise stretch="Send the finished prompt with a second set of notes you write yourself. Which line of the template holds, and which one needs a fourth round?">
+<Exercise stretch="Envoyez le prompt final avec un second compte rendu que vous écrivez vous-même. Quelle ligne du gabarit tient, et laquelle demande un quatrième essai ?">
 
-Write eight to ten lines of fictional meeting notes with at least two
-decisions and one open question, or reuse the notes from this page. Send
-them with a one-line summary request and read the answer. Then take it
-through three rounds: name one gap in one sentence, change one line of the
-prompt, run it in a fresh chat, and compare with the round before. Keep a
-three-line log, one line per round, in the form "gap: ..., change: ...,
-result: ...". Fifteen minutes is enough. Doing this once with a log is
-what turns "press regenerate" into "change the prompt" the next time an
-answer is wrong.
+Écrivez huit à dix lignes de compte rendu de réunion fictif avec au moins deux
+décisions et une question ouverte, ou reprenez le compte rendu de cette page.
+Envoyez-le avec une demande de résumé d’une ligne et lisez la réponse.
+Faites-lui ensuite passer trois essais : nommez un manque en une phrase,
+changez une ligne du prompt, lancez-le dans une nouvelle conversation, et
+comparez avec l’essai précédent. Tenez un journal de trois lignes, une par
+essai, sous la forme « manque : …, changement : …, résultat : … ». Quinze
+minutes suffisent. Le faire une fois avec un journal, c’est ce qui transforme
+« appuyer sur régénérer » en « changer le prompt » la prochaine fois qu’une
+réponse est fausse.
 
-A good result is a log where every line names a gap in the text, one
-change, and what the change did to the answer, and a final prompt in
-which every line you added has a line in the log. Which of your three changes would
-you have skipped if you had rewritten the prompt in one go?
+Un bon résultat est un journal où chaque ligne nomme un manque dans le texte,
+un changement, et l’effet de ce changement sur la réponse, ainsi qu’un prompt
+final dont chaque ligne ajoutée a sa ligne dans le journal. Lequel de vos
+trois changements auriez-vous sauté si vous aviez réécrit le prompt d’un seul
+coup ?
 
 </Exercise>
 
 <Recap>
 
-1. A retry draws another sample from the same distribution. The wording
-   changes, and the gap the prompt left stays, because the prompt is what
-   makes one answer more likely than another.
-2. Name what is wrong with the output in one sentence, as a fact about
-   the text. That sentence points at the line the prompt is missing.
-3. Change one thing per round and compare with the round before. The
-   difference then has one cause, and you know which line to keep.
-4. A correction you made twice goes into the prompt you keep. A saved
-   template grows by one tested line at a time and never by a rewrite.
+1. Un nouvel essai tire un autre échantillon dans la même distribution. La
+   formulation change, et le manque laissé par le prompt demeure, parce que
+   c’est le prompt qui rend une réponse plus probable qu’une autre.
+2. Dites ce qui ne va pas dans la sortie en une phrase, comme un fait qui
+   concerne le texte. Cette phrase désigne la ligne qui manque au prompt.
+3. Changez une seule chose par essai et comparez avec l’essai précédent. La
+   différence a alors une seule cause, et vous savez quelle ligne garder.
+4. Une correction faite deux fois va dans le prompt que vous gardez. Un
+   gabarit enregistré grandit d’une ligne testée à la fois, et jamais par une
+   réécriture.
 
 </Recap>

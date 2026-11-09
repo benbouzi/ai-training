@@ -13,7 +13,7 @@ introduces: [data-privacy, confidentiality, licensing-and-attribution, disclosur
 assumes:
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
 sources-checked: 2026-09-26
 review-by: 2027-03-26
 extends-to:

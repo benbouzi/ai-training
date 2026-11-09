@@ -1,28 +1,30 @@
 id: concepts/reading-token-counts
-title: Reading the token counts
+title: Lire le nombre de jetons
 description: >-
-  Read the input and output token counts of every request in a short chat and in one prompt to an
-  agent, see why a one-line question late in a conversation costs more than the same question at
-  the start, and learn when to start a new conversation.
+  Lire le nombre de jetons d’entrée et de sortie de chaque requête d’une courte conversation et
+  d’un prompt adressé à un agent, voir pourquoi une question d’une ligne posée tard dans une
+  conversation coûte plus que la même question au début, et apprendre quand ouvrir une nouvelle
+  conversation.
 mode: tutorial
 covers: concepts/tokens-and-cost
-serves: [concepts/reasons-about-cost/reads-token-counts, concepts/reasons-about-cost/explains-growing-cost]
+serves: [concepts/reasons-about-cost/reads-token-counts,
+      concepts/reasons-about-cost/explains-growing-cost]
 introduces: [input-and-output-tokens, growing-session-cost]
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/what-tokens-cost
-    section: what-a-token-costs
+    section: ce-que-coûte-un-jeton
   - objective: concepts/recognizes-agents/follows-one-prompt
     lesson: concepts/one-prompt-many-requests
-    section: what-is-in-each-request
+    section: ce-que-contient-chaque-requête
 extends-to: []
 after: [concepts/what-tokens-cost, concepts/one-prompt-many-requests]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Read the input and output token counts of each request in a short session, and explain why the
-    last question cost more than the first.
+    Lire le nombre de jetons d’entrée et de sortie de chaque requête d’une courte session, et
+    expliquer pourquoi la dernière question a coûté plus que la première.
 sources: [Claude docs messages, Claude Code costs, Claude docs pricing]
 sources-checked: 2026-10-07
 review-by: 2027-04-07

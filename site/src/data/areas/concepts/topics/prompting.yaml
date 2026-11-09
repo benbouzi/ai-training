@@ -1,55 +1,53 @@
 id: concepts/prompting
 area: concepts
-name: Prompting
+name: Rédaction de prompts
 definition: >-
-  Prompting is the craft of writing the text a model responds to. Good prompts
-  state the instruction clearly, supply examples when the format matters, set a
-  role or system prompt that frames the whole conversation, ask for output in a
-  usable shape, and improve through deliberate iteration rather than repeated
-  retries.
+  Rédiger un prompt, c’est écrire le texte auquel un modèle répond. Un bon prompt énonce
+  clairement l’instruction, fournit des exemples quand le format compte, fixe un rôle ou un prompt
+  système qui encadre toute la conversation, demande une sortie dans une forme utilisable, et
+  s’améliore par une itération réfléchie plutôt que par des essais répétés.
 concepts:
   - id: instruction
     name: Instruction
     definition: >-
-      The part of a prompt that says what to do. A clear instruction names the
-      task, the input it applies to, the constraints to respect and what a good
-      result looks like. Vague instructions are filled in by the model with
-      plausible defaults, so most prompt failures trace back to something the
-      instruction left unsaid rather than to the model misunderstanding.
+      La partie d’un prompt qui dit quoi faire. Une instruction claire nomme la tâche, l’entrée à
+      laquelle elle s’applique, les contraintes à respecter et ce à quoi ressemble un bon résultat. Le
+      modèle comble une instruction vague avec des valeurs par défaut plausibles : la plupart des
+      échecs d’un prompt remontent donc à quelque chose que l’instruction n’a pas dit.
   - id: few-shot-example
-    name: Example (few-shot)
+    name: Exemple (few-shot)
     definition: >-
-      One or more worked input-output pairs placed in the prompt so the model
-      can copy the pattern. Few-shot examples are the most reliable way to fix
-      a format, tone or edge-case behavior that is hard to describe in words.
-      Two or three well-chosen examples usually beat a long paragraph of rules,
-      and a bad example teaches the mistake just as well.
+      Une ou plusieurs paires complètes entrée-sortie placées dans le prompt pour que le modèle puisse
+      en copier le motif. Les exemples few-shot sont le moyen le plus fiable de fixer un format, un
+      ton ou un comportement face à un cas particulier difficile à décrire avec des mots. Deux ou
+      trois exemples bien choisis valent en général mieux qu’un long paragraphe de règles, et un
+      mauvais exemple enseigne l’erreur tout aussi bien.
   - id: role-and-system-prompt
-    name: Role and system prompt
+    name: Rôle et prompt système
     definition: >-
-      Text set before the conversation starts that frames every later turn.
-      A system prompt typically assigns a role, sets tone, states standing
-      rules and lists what the model must never do. In chat products the
-      vendor writes one you cannot see; in agents and custom applications the
-      developer writes it, and it is where recurring behavior is fixed.
+      Un texte placé avant le début de la conversation, qui encadre chaque tour suivant. Un prompt
+      système attribue en général un rôle, fixe un ton, énonce des règles permanentes et liste ce que
+      le modèle ne doit jamais faire. Dans les produits conversationnels, c’est le fournisseur qui
+      l’écrit, sans que vous le voyiez. Dans les agents et les applications sur mesure, c’est le
+      développeur qui l’écrit, et c’est là que l’on corrige un comportement récurrent.
   - id: iteration
-    name: Iteration
+    name: Itération
     definition: >-
-      Improving a result by changing the prompt after reading the output,
-      rather than resending the same prompt hoping for a better draw. Each
-      round adds a missing constraint, an example of the failure, or a
-      sharper definition of done. Iteration is the normal way to reach a
-      reliable prompt; a first attempt that works is the exception.
+      Améliorer un résultat en modifiant le prompt après avoir lu la sortie, au lieu de renvoyer le
+      même prompt dans l’espoir d’un meilleur tirage. Chaque essai ajoute une contrainte manquante, un
+      exemple de l’échec, ou une définition plus précise de ce qui est attendu. L’itération est la
+      façon normale d’obtenir un prompt fiable, et une première tentative qui marche est l’exception.
   - id: structured-output
-    name: Structured output
+    name: Sortie structurée
     definition: >-
-      Asking the model to answer in a fixed shape, such as a table, a numbered
-      list with named fields, or a machine-readable format like JSON, so the
-      next step can use the result without a human reformatting it. Naming
-      the fields and giving one example of the shape makes the output far
-      more consistent and makes missing information visible.
+      Demander au modèle de répondre dans une forme fixe, comme un tableau, une liste numérotée avec
+      des champs nommés, ou un format lisible par une machine comme JSON, pour que l’étape suivante
+      puisse utiliser le résultat sans qu’une personne le remette en forme. Nommer les champs et
+      donner un exemple de la forme rend la sortie bien plus régulière et rend visibles les
+      informations manquantes.
 links:
   prerequisites: [concepts/how-models-work]
   related: []
   specializations: []
-sources: [DLAI-1, DLAI-3, Brown 2020, Learn Prompting, Academy ai-fluency-framework-foundations, Academy building-with-the-claude-api]
+sources: [DLAI-1, DLAI-3, Brown 2020, Learn Prompting, Academy ai-fluency-framework-foundations,
+      Academy building-with-the-claude-api]

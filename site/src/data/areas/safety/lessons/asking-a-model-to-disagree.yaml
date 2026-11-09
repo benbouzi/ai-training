@@ -11,7 +11,7 @@ introduces: []
 assumes:
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/straight-answer
-    section: why-agreeing-is-likely-text
+    section: pourquoi-laccord-est-un-texte-probable
 after: [safety/checking-habits]
 shorts: []
 exercise:

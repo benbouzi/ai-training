@@ -72,7 +72,7 @@ const {
 	honor = false,
 	guessable,
 	phase = DEFAULT_PHASE,
-	checkLabel = 'Check',
+	checkLabel = 'Vérifier',
 } = Astro.props;
 if (!isPhase(phase))
 	throw new Error(`Checkpoint "${id}": phase must be one of ${PHASES.join(', ')}, got ${JSON.stringify(phase)}`);
@@ -80,6 +80,17 @@ if (guessable !== undefined && (typeof guessable !== 'string' || !/^[a-z, -]+:\s
 	throw new Error(`Checkpoint "${id}": guessable must be "<cue>: reason", got ${JSON.stringify(guessable)}`);
 if (!Number.isInteger(revision) || revision < 1)
 	throw new Error(`Checkpoint "${id}": revision must be a positive integer, got ${revision}`);
+// French translation: the kind shown in the checkpoint header.
+const KIND_LABEL: Record<string, string> = {
+	choice: 'choix',
+	'multi-choice': 'choix multiple',
+	match: 'association',
+	scenario: 'scénario',
+	predict: 'prédiction',
+	order: 'ordre',
+	sort: 'classement',
+	repair: 'réparation',
+};
 const lessonId = lessonIdOf(Astro);
 const progressId = `${lessonId}#${id}`;
 if (!Array.isArray(concepts) || !concepts.every((c) => typeof c === 'string')) {
@@ -106,7 +117,7 @@ const marker = phase === 'review' ? { 'data-alternate': '' } : { 'data-checkpoin
 	data-concepts={concepts.join(' ')}
 >
 	<header class="cp-head">
-		<span class="cp-kind">Checkpoint · {kind}</span>
+		<span class="cp-kind">Question de contrôle · {KIND_LABEL[kind] ?? kind}</span>
 		<span class="cp-state" aria-live="polite"></span>
 	</header>
 	<SectionTitle {id} {title} />
@@ -115,14 +126,14 @@ const marker = phase === 'review' ? { 'data-alternate': '' } : { 'data-checkpoin
 	<div class="cp-body"><slot name="body" /></div>
 	<div class="cp-controls">
 		<button type="button" class="cp-check">{checkLabel}</button>
-		<button type="button" class="cp-hint-btn" aria-expanded="false">Hint</button>
-		{phase !== 'practice' && <button type="button" class="cp-skip">Skip</button>}
-		<button type="button" class="cp-giveup" hidden>Give up</button>
+		<button type="button" class="cp-hint-btn" aria-expanded="false">Indice</button>
+		{phase !== 'practice' && <button type="button" class="cp-skip">Passer</button>}
+		<button type="button" class="cp-giveup" hidden>Voir la réponse</button>
 	</div>
 	<p class="cp-hint" hidden>{hint}</p>
 	<p class="cp-feedback" role="status" aria-live="polite"></p>
 	<div class="cp-after" hidden>
-		<a class="cp-lesson-link" href={href(`/${lessonId}/#${id}`)}>Open in the lesson</a>
+		<a class="cp-lesson-link" href={href(`/${lessonId}/#${id}`)}>Ouvrir dans la leçon</a>
 		<span class="cp-stage" hidden>
 			<span></span><span></span><span></span><span></span><span></span>
 			<em class="cp-stage-label"></em>

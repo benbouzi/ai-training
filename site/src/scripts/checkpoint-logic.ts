@@ -78,34 +78,34 @@ export function dropPlacement(pointerY: number, rect: { top: number; height: num
 
 /** The `choice` and `scenario` verdict (spec S01 `choice`: a wrong pick shows its own `why`). */
 export function choiceFeedback(ok: boolean, why: string | undefined, consequence: string | undefined): Feedback {
-	if (ok) return { kind: 'ok', text: consequence ? `Correct. ${consequence}` : 'Correct.' };
-	return { kind: 'nope', text: consequence ?? why ?? 'Not quite. Try again.' };
+	if (ok) return { kind: 'ok', text: consequence ? `Juste. ${consequence}` : 'Juste.' };
+	return { kind: 'nope', text: consequence ?? why ?? 'Pas tout à fait. Réessayez.' };
 }
 
 export function predictFeedback(ok: boolean): Feedback {
 	return ok
-		? { kind: 'ok', text: 'Correct. That is exactly the output.' }
-		: { kind: 'nope', text: 'Not quite. Trace it once more.' };
+		? { kind: 'ok', text: 'Juste. C’est exactement la sortie.' }
+		: { kind: 'nope', text: 'Pas tout à fait. Suivez-le encore une fois.' };
 }
 
 /** The honor-system `predict` and `repair` self-grade; only `pass` counts (spec S01 `self-grade`). */
 export function selfGradeFeedback(ok: boolean, kind: 'predict' | 'repair'): Feedback {
-	if (ok) return { kind: 'ok', text: 'Recorded as a pass.' };
+	if (ok) return { kind: 'ok', text: 'Enregistrée comme réussie.' };
 	return kind === 'predict'
-		? { kind: 'nope', text: 'Recorded. Adjust your prediction and try once more when you are ready.' }
-		: { kind: 'nope', text: 'Recorded as partial. Only a pass counts; improve it and grade again.' };
+		? { kind: 'nope', text: 'Enregistrée. Ajustez votre prédiction et réessayez quand vous êtes prêt.' }
+		: { kind: 'nope', text: 'Partielle. Seule une réussite compte : améliorez-la et notez de nouveau.' };
 }
 
 export function orderFeedback(ok: boolean): Feedback {
-	return ok ? { kind: 'ok', text: 'Correct order.' } : { kind: 'nope', text: 'Not the right order yet.' };
+	return ok ? { kind: 'ok', text: 'Ordre juste.' } : { kind: 'nope', text: 'Pas encore le bon ordre.' };
 }
 
 /** `sort`: items still in the pool block grading; otherwise every chip must sit in its own bucket. */
 export function sortFeedback(unplaced: number, allCorrect: boolean): Feedback {
 	if (unplaced > 0) return { kind: 'note', text: `${unplaced} item${unplaced === 1 ? '' : 's'} still to place.` };
 	return allCorrect
-		? { kind: 'ok', text: 'All placed correctly.' }
-		: { kind: 'nope', text: 'Some items are in the wrong bucket.' };
+		? { kind: 'ok', text: 'Tout est bien classé.' }
+		: { kind: 'nope', text: 'Certains éléments sont dans la mauvaise case.' };
 }
 
 /**
@@ -121,9 +121,9 @@ export function multiChoiceVerdict(
 	wrong: number,
 	firstWrongWhy: string | undefined,
 ): { ok: boolean | null; feedback: Feedback } {
-	if (picked === 0) return { ok: null, feedback: { kind: 'note', text: `Pick ${wanted} answers first.` } };
+	if (picked === 0) return { ok: null, feedback: { kind: 'note', text: `Choisissez d’abord ${wanted} réponses.` } };
 	if (wrong > 0)
-		return { ok: false, feedback: { kind: 'nope', text: firstWrongWhy ?? 'One of your picks is not right.' } };
+		return { ok: false, feedback: { kind: 'nope', text: firstWrongWhy ?? 'L’un de vos choix n’est pas juste.' } };
 	const right = picked - wrong;
 	if (right < wanted) {
 		return {
@@ -134,7 +134,7 @@ export function multiChoiceVerdict(
 			},
 		};
 	}
-	return { ok: true, feedback: { kind: 'ok', text: 'Correct.' } };
+	return { ok: true, feedback: { kind: 'ok', text: 'Juste.' } };
 }
 
 const rows = (n: number) => `${n} row${n === 1 ? '' : 's'}`;
@@ -147,27 +147,27 @@ export function matchVerdict(
 ): { ok: boolean | null; feedback: Feedback } {
 	if (empty > 0) return { ok: null, feedback: { kind: 'note', text: `${rows(empty)} still to fill.` } };
 	if (wrong > 0) return { ok: false, feedback: { kind: 'nope', text: `${rows(wrong)} wrong. Each row says which.` } };
-	return { ok: true, feedback: { kind: 'ok', text: `Correct. ${rationale}`.trim() } };
+	return { ok: true, feedback: { kind: 'ok', text: `Juste. ${rationale}`.trim() } };
 }
 
 const questions = (n: number) => `${n} question${n === 1 ? '' : 's'}`;
 
 /** The skills check card's texts (spec S04 "Skills check"): the offer, and the note after each answer. */
 export function skillsCheckOffer(open: number): string {
-	return `Answer ${questions(open)}`;
+	return `Répondre à ${questions(open)}`;
 }
 
 export function skillsCheckNote(answered: number, passed: number, total: number): string {
-	if (answered < total) return `Passed ${passed} of ${answered} so far.`;
+	if (answered < total) return `${passed} réussie(s) sur ${answered} pour l’instant.`;
 	const tail =
-		passed === total ? 'Every objective is covered. Go on to the recap.' : 'The ones you missed are taught below.';
-	return `Passed ${passed} of ${total}. ${tail}`;
+		passed === total ? 'Objectifs couverts. Passez à « À retenir ».' : 'Les manques sont enseignés plus bas.';
+	return `${passed} réussie(s) sur ${total}. ${tail}`;
 }
 
 /** How many of the stage pills light up, and the label under them, for a review item. */
 export function stageDisplay(stage: number | 'done' | undefined): { lit: number; label: string } {
-	if (stage === 'done') return { lit: 5, label: 'retired' };
-	return { lit: stage ?? 0, label: `stage ${stage ?? '-'} of 5` };
+	if (stage === 'done') return { lit: 5, label: 'acquise' };
+	return { lit: stage ?? 0, label: `étape ${stage ?? '-'} sur 5` };
 }
 
 /** The settings page's one-line summary of a review item's answers, from its `history` (spec S05 "Storage"). */

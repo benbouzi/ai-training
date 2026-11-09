@@ -10,7 +10,7 @@ introduces: []
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/what-tokens-cost
-    section: what-a-token-costs
+    section: ce-que-coûte-un-jeton
   - objective: customizing-agents/connects-tools-safely/adds-a-tool
     lesson: customizing-agents/mcp-first-server
     section: connect-the-real-server

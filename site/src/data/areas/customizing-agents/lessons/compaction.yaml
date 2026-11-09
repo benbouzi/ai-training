@@ -10,7 +10,7 @@ introduces: [compaction]
 assumes:
   - objective: concepts/explains-models/explains-grounding
     lesson: concepts/memory
-    section: when-the-window-holds-too-much
+    section: quand-la-fenêtre-contient-trop-de-choses
 after: [customizing-agents/memory-review]
 shorts:
   - Context rot in a long session, and what a compaction summary drops (Academy claude-code-101)

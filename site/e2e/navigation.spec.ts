@@ -39,7 +39,7 @@ function lastLiveConceptsLesson(): string {
 test('the last lesson of a course links to the next course, and the footer carries the AI notice', async ({ page }) => {
 	await page.goto(`${lastLiveConceptsLesson()}/`);
 	await expect(page.locator('.site-footer a[rel=next]')).toHaveAttribute('href', '/ai-training/safety/');
-	await expect(page.locator('.ai-notice')).toHaveText('Content co-authored by AI.');
+	await expect(page.locator('.ai-notice')).toContainText('Contenu coécrit avec l’IA.');
 });
 
 /**
@@ -61,8 +61,8 @@ test('a lesson with review-by shows the review line once, in the footer, then "L
 	await page.goto(`${lessonWithReviewBy()}/`);
 	const footerLine = page.locator('.site-footer-meta .lesson-review[data-review-by]');
 	await expect(footerLine).toHaveCount(1);
-	await expect(footerLine).toContainText('Sources checked on');
-	await expect(footerLine).toContainText('Review due by');
+	await expect(footerLine).toContainText('Sources vérifiées le');
+	await expect(footerLine).toContainText('Révision prévue d’ici le');
 	await expect(page.locator('.lesson .lesson-review')).toHaveCount(0);
 	await expect(page.locator('.site-footer-meta time')).toHaveCount(1);
 	await expect(page.locator('.site-footer-meta .lesson-review ~ * time')).toHaveCount(1);

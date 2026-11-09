@@ -18,7 +18,7 @@ import { requiredElement } from './required-element';
 export const LESSON_SELECTOR = '.lesson[data-lesson]';
 
 const SKILLS_NOTE =
-	'One checkpoint per objective this lesson teaches, one try each. A pass counts as if you answered it in the lesson, and the review schedule picks it up.';
+	'Une question de contrôle par objectif de cette leçon, un essai chacune. Une réussite compte comme si vous y aviez répondu dans la leçon, et le calendrier de révision la prend en compte.';
 
 interface SkillsItem {
 	body: HTMLElement;
@@ -156,7 +156,7 @@ export function mountLesson(root: ParentNode): boolean {
 						answered++;
 						if (ok) passed++;
 						note.textContent = skillsCheckNote(answered, passed, total);
-						if (answered === total) dismiss.textContent = 'Close';
+						if (answered === total) dismiss.textContent = 'Fermer';
 					},
 				});
 			}

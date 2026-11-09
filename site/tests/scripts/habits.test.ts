@@ -12,8 +12,8 @@ function card(): HTMLElement {
 		<aside class="habit" data-habit data-progress-id="${ID}" data-state="unfinished">
 			<p data-habit-status></p>
 			<div data-habit-actions hidden>
-				<button type="button" data-habit-done>Done</button>
-				<button type="button" data-habit-skip>Skip</button>
+				<button type="button" data-habit-done>Fait</button>
+				<button type="button" data-habit-skip>Passer</button>
 			</div>
 			<ol data-habit-results hidden></ol>
 		</aside>`;
@@ -30,10 +30,12 @@ beforeEach(() => {
 describe('habitStatusText', () => {
 	const entry = (over: Partial<HabitEntry>): HabitEntry => ({ since: '2026-03-10', next: null, history: [], ...over });
 	it('has one line per card state', () => {
-		expect(habitStatusText(undefined, '2026-03-10')).toBe('Offered once you finish the lesson.');
-		expect(habitStatusText(entry({ next: '2026-03-11' }), '2026-03-10')).toBe('Next on 2026-03-11.');
-		expect(habitStatusText(entry({ next: '2026-03-10' }), '2026-03-10')).toBe('Due today. Did you do it?');
-		expect(habitStatusText(entry({ next: null }), '2026-03-10')).toBe('Done with this habit.');
+		expect(habitStatusText(undefined, '2026-03-10')).toBe('Proposée une fois la leçon terminée.');
+		expect(habitStatusText(entry({ next: '2026-03-11' }), '2026-03-10')).toBe('Prochaine fois : 2026-03-11.');
+		expect(habitStatusText(entry({ next: '2026-03-10' }), '2026-03-10')).toBe(
+			'Prévue aujourd’hui. L’avez-vous faite ?',
+		);
+		expect(habitStatusText(entry({ next: null }), '2026-03-10')).toBe('Habitude acquise.');
 		expect(habitStatusText(undefined, '2026-03-10', { state: 'finished', at: '2026-03-10' })).toBe('');
 	});
 });
@@ -46,7 +48,7 @@ describe('bindHabit', () => {
 		expect(actions(el).hidden).toBe(true);
 		progress.finishLesson('a/x', [], [ID]);
 		expect(el.dataset.state).toBe('waiting');
-		expect(status(el)).toBe(`Next on ${addDays(today(), 1)}.`);
+		expect(status(el)).toBe(`Prochaine fois : ${addDays(today(), 1)}.`);
 		expect(actions(el).hidden).toBe(true);
 	});
 	it('hides the card of a finished lesson that has no entry, as for a learner who finished before the habit existed', () => {
@@ -98,6 +100,6 @@ describe('bindHabit', () => {
 		expect(progress.load().habits[ID]?.history).toEqual([{ at: today(), result: 'skipped' }]);
 		expect(el.dataset.state).toBe('waiting');
 		drawHabit(el);
-		expect(status(el)).toBe(`Next on ${addDays(today(), 2)}.`);
+		expect(status(el)).toBe(`Prochaine fois : ${addDays(today(), 2)}.`);
 	});
 });

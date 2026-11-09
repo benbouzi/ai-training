@@ -137,11 +137,10 @@ jobs:
       - name: Python tests (pytest)
         run: mise run py-test
 
-      - name: Prose lint
-        run: mise run prose
-
-      - name: Spell check
-        run: mise run spell
+      # French translation: the prose lint (Vale) and the spell check (cspell,
+      # American English) check English prose, so they would flag every
+      # translated sentence. They don't run on this fork. The remaining
+      # steps check the data tree, the types, the tests and the build.
 
       - name: Examples
         run: mise run examples

@@ -10,7 +10,7 @@ introduces: [function-calling, n-x-m-integration-problem]
 assumes:
   - objective: concepts/recognizes-agents/names-the-loop
     lesson: concepts/agent-loop
-    section: observe-think-act
+    section: observer-réfléchir-agir
 after: []
 shorts: []
 exercise:

@@ -5,8 +5,8 @@ import { EXTERNAL_LINKS } from '../../scripts/lib/llms-txt.mjs';
 import { alternateDocs } from './alternate-fixtures';
 import { type CourseFixture, courses, type DocFixture, type LessonPlanFixture, lessonPlans } from './content';
 
-const site = 'https://schubergphilis.github.io';
-const ROOT = 'https://schubergphilis.github.io/ai-training';
+const site = 'https://benbouzi.github.io';
+const ROOT = 'https://benbouzi.github.io/ai-training';
 
 /** What the mocked `astro:content` serves; each test starts from the full fixture set. */
 const state = vi.hoisted(() => ({

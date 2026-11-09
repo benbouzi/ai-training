@@ -51,34 +51,34 @@ class Run(NamedTuple):
 
 RUNS: dict[str, Run] = {
     "find": Run(
-        task="Which meeting note mentions the June delivery?",
+        task="Quelle note de réunion mentionne la livraison de juin ?",
         max_steps=6,
         script=[
             ("list_dir", "notes"),
             ("read_file", "notes/2026-03-14-lantern.txt"),
-            (None, "The note of 14 March: the sensor boards moved from April to June."),
+            (None, "La note du 14 mars : la livraison des cartes capteurs passe d’avril à juin."),
         ],
     ),
     "count": Run(
-        task="How many of the meeting notes are about project Lantern?",
+        task="Combien de notes de réunion portent sur le projet Lantern ?",
         max_steps=6,
         script=[
             ("list_dir", "notes"),
             ("read_file", "notes/2026-03-14-lantern.txt"),
             ("read_file", "notes/2026-03-21-budget.txt"),
             ("read_file", "notes/2026-03-28-lantern.txt"),
-            (None, "Two of the three notes are about project Lantern: 14 March and 28 March."),
+            (None, "Deux des trois notes portent sur le projet Lantern : le 14 et le 28 mars."),
         ],
     ),
     "limit": Run(
-        task="Who confirms the delivery date?",
+        task="Qui confirme la date de livraison ?",
         max_steps=3,
         script=[
             ("list_dir", "notes"),
             ("list_dir", "notes"),
             ("read_file", "notes/2026-03-21-budget.txt"),
             ("read_file", "notes/2026-03-14-lantern.txt"),
-            (None, "Ana confirms the delivery date by Friday."),
+            (None, "Ana confirme la date de livraison d’ici vendredi."),
         ],
     ),
 }

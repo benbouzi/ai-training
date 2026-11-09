@@ -13,8 +13,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('astro:content', async () => (await import('./content')).mockContent());
 
-const site = 'https://schubergphilis.github.io';
-const ROOT = 'https://schubergphilis.github.io/ai-training';
+const site = 'https://benbouzi.github.io';
+const ROOT = 'https://benbouzi.github.io/ai-training';
 
 const bibliography = {
 	K1: { type: 'course', title: 'One', container: 'Course', url: 'https://example.com/one' },

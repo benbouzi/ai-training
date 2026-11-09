@@ -5,7 +5,7 @@
  * script (it loads Starlight and every integration). `vitest.config.ts`
  * sets `test.env` from `BASE` for `src/lib/url.ts`.
  */
-export const SITE = 'https://schubergphilis.github.io';
+export const SITE = 'https://benbouzi.github.io';
 export const BASE = '/ai-training';
 
 /** The site root the published files' absolute URLs start with, with a trailing slash. */

@@ -61,6 +61,6 @@ describe('percent and sentence', () => {
 		expect(percent(0)).toBe('0.0%');
 	});
 	it('joins the token, which starts with its space, to the prefix', () => {
-		expect(sentence(' mat')).toBe('The cat sat on the mat.');
+		expect(sentence(' tapis')).toBe('Le chat dort sur le tapis.');
 	});
 });

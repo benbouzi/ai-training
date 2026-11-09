@@ -29,10 +29,10 @@ function printed(text: string, config?: CheckerConfig): string[] {
 }
 
 const PASSING = [
-	'ok 1: Jonas, fix the password reset email address, 2026-10-03, high',
-	'ok 2: Sam, get two quotes for a new search box, 2026-10-17, low',
-	'ok 3: Maria, replace the old system name in the help texts, 2026-10-10, low',
-	'ok 4: Dana, book the accessibility check with the agency, 2026-10-08, medium',
+	'ok 1: Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high',
+	'ok 2: Sam, obtenir deux devis pour un nouveau champ de recherche, 2026-10-17, low',
+	'ok 3: Maria, remplacer l’ancien nom du système dans les textes d’aide, 2026-10-10, low',
+	'ok 4: Dana, réserver le contrôle d’accessibilité auprès de l’agence, 2026-10-08, medium',
 	'4 of 4 items pass',
 ];
 
@@ -47,11 +47,11 @@ describe('the lesson samples', () => {
 		const report = check(readFileSync(join(SAMPLES, 'bare.json'), 'utf8'));
 		expect(printed(readFileSync(join(SAMPLES, 'bare.json'), 'utf8'))).toEqual([
 			'FAIL 1: missing owner, task, due (found assignee, action, deadline)',
-			'FAIL 1: priority "urgent" is not one of high, low, medium',
+			'FAIL 1: priority "urgente" is not one of high, low, medium',
 			'FAIL 2: missing owner, task, due (found assignee, action, deadline)',
-			'FAIL 2: priority "normal" is not one of high, low, medium',
+			'FAIL 2: priority "normale" is not one of high, low, medium',
 			'FAIL 3: missing owner, task, due (found assignee, action, deadline)',
-			'FAIL 3: priority "normal" is not one of high, low, medium',
+			'FAIL 3: priority "normale" is not one of high, low, medium',
 			'FAIL 4: missing owner, task, due (found assignee, action, deadline)',
 			'0 of 4 items pass',
 		]);

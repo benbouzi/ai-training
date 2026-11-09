@@ -1,8 +1,8 @@
 id: concepts/context-window
-title: What the model can see
+title: Ce que le modèle peut voir
 description: >-
-  Measure a page of text in tokens and work out how many pages a context window holds, so a long
-  chat that contradicts itself has an explanation.
+  Mesurer une page de texte en jetons et calculer combien de pages contient une fenêtre de
+  contexte, pour qu’une longue conversation qui se contredit trouve son explication.
 mode: tutorial
 covers: concepts/how-models-work
 serves: [concepts/explains-models/explains-generation]
@@ -10,28 +10,28 @@ introduces: [context-window]
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: text-becomes-tokens
+    section: le-texte-devient-des-jetons
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: where-the-scores-come-from
+    section: doù-viennent-les-scores
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
 extends-to:
-  - label: What every token costs
+  - label: Ce que coûte chaque jeton
     href: /concepts/what-tokens-cost/
-  - label: Where memory comes from
+  - label: D’où vient la mémoire
     href: /concepts/memory/
 after: [concepts/how-models-work]
-shorts: [how a tokenizer splits text (why letter counting fails)]
+shorts: [comment un tokeniseur découpe le texte (pourquoi compter les lettres échoue)]
 exercise:
   kind: do
   brief: >-
-    Count the tokens of a page of your own text with the counter on the page, and read how many such
-    pages fill a window of a given size.
+    Compter les jetons d’une page de votre propre texte avec le compteur de la page, et lire combien
+    de pages de ce type remplissent une fenêtre d’une taille donnée.
 sources:
   - AEC-02
   - Academy ai-capabilities-and-limitations

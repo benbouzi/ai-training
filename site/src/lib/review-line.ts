@@ -10,9 +10,9 @@ export function isoDate(date: Date): string {
 	return date.toISOString().slice(0, 10);
 }
 
-/** `March 20, 2027`: American English, in UTC so a YAML date renders the same on every machine. */
+/** `20 mars 2027`: French, in UTC so a YAML date renders the same on every machine. */
 export function longDate(date: Date): string {
-	return date.toLocaleDateString('en-US', { dateStyle: 'long', timeZone: 'UTC' });
+	return date.toLocaleDateString('fr-FR', { dateStyle: 'long', timeZone: 'UTC' });
 }
 
 /**
@@ -21,7 +21,7 @@ export function longDate(date: Date): string {
  */
 export function reviewLine(reviewBy: Date | undefined, sourcesChecked: Date | undefined): string | null {
 	if (!reviewBy) return null;
-	const due = `Review due by ${longDate(reviewBy)}.`;
-	if (sourcesChecked) return `Sources checked on ${longDate(sourcesChecked)}. ${due}`;
+	const due = `Révision prévue d’ici le ${longDate(reviewBy)}.`;
+	if (sourcesChecked) return `Sources vérifiées le ${longDate(sourcesChecked)}. ${due}`;
 	return due;
 }

@@ -11,7 +11,7 @@ The lesson [Connecting your first tool server](/customizing-agents/mcp-first-ser
 connected the reference file-system server to a copy of a small
 directory and read every call in the transcript. Here the question is
 what that connection costs on each turn, before the agent uses it and
-after. The lesson on [what a token costs](/concepts/what-tokens-cost/#what-a-token-costs)
+after. The lesson on [what a token costs](/concepts/what-tokens-cost/#ce-que-coûte-un-jeton)
 showed that a model reads its whole input again on every call. A tool
 definition is part of that input.
 
@@ -50,7 +50,7 @@ of the tracker server take?
 
 `definitions.py` asks the stand-in for `tools/list` and counts the
 result with the rule of thumb from the lesson on
-[what the model can see](/concepts/context-window/#count-the-tokens-of-a-page),
+[what the model can see](/concepts/context-window/#compter-les-jetons-dune-page),
 about four characters per token. It counts the names alone too, in the
 `mcp__<server>__<tool>` form that Claude Code uses for MCP tools in
 permission rules (@Claude Code permissions).

@@ -10,10 +10,10 @@ introduces: []
 assumes:
   - objective: concepts/prompts-reliably/iterates-on-output
     lesson: concepts/iterating-on-a-prompt
-    section: why-the-retry-gives-the-same-class-of-mistake
+    section: pourquoi-un-nouvel-essai-refait-le-même-type-derreur
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
 extends-to:
   - label: Breaking work into pieces
     href: /using-agents/breaking-work-into-pieces/

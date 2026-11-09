@@ -38,10 +38,10 @@ describe('TableOfContents', () => {
 		const html = await render(lesson, [{ ...title, children: [heading] }]);
 		expect(html).toMatch(/<starlight-toc[^>]*>[\s\S]*href="#first"[\s\S]*<\/starlight-toc>/);
 		expect(html).toMatch(
-			/<nav class="lesson-toc" aria-labelledby="lesson-toc-checkpoints"><h2 id="lesson-toc-checkpoints">Checkpoints<\/h2><ul><li><a href="#what-the-model-does"><span>What the model does<\/span><\/a><\/li><li><a href="#honor">/,
+			/<nav class="lesson-toc" aria-labelledby="lesson-toc-checkpoints"><h2 id="lesson-toc-checkpoints">Questions de contrôle<\/h2><ul><li><a href="#what-the-model-does"><span>What the model does<\/span><\/a><\/li><li><a href="#honor">/,
 		);
 		expect(html).toMatch(
-			/<nav class="lesson-toc" aria-labelledby="lesson-toc-examples"><h2 id="lesson-toc-examples">Examples<\/h2><ul><li><a href="#shown"><span>Shown<\/span><\/a><\/li><\/ul><\/nav>/,
+			/<nav class="lesson-toc" aria-labelledby="lesson-toc-examples"><h2 id="lesson-toc-examples">Exemples<\/h2><ul><li><a href="#shown"><span>Shown<\/span><\/a><\/li><\/ul><\/nav>/,
 		);
 		expect(html.indexOf('</starlight-toc>')).toBeLessThan(html.indexOf('lesson-toc-checkpoints'));
 		expect(html.indexOf('lesson-toc-checkpoints')).toBeLessThan(html.indexOf('lesson-toc-examples'));

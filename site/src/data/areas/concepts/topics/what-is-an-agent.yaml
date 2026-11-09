@@ -1,80 +1,74 @@
 id: concepts/what-is-an-agent
 area: concepts
-name: What an agent is
+name: Ce qu’est un agent
 definition: >-
-  An agent is a model placed in a loop with tools, so that instead of only
-  answering it can look things up, act, observe the result and decide what to
-  do next. This topic separates the model from the agent built around it,
-  explains tools and the loop, and introduces the scale from "suggests" to
-  "acts unattended".
+  Un agent est un modèle placé dans une boucle avec des outils : au-delà de répondre, il peut
+  chercher des informations, agir, observer le résultat et décider de la suite. Ce thème distingue
+  le modèle de l’agent construit autour de lui, explique les outils et la boucle, et présente
+  l’échelle qui va de « il suggère » à « il agit sans surveillance ».
 concepts:
   - id: model-vs-agent
-    name: Model vs agent
+    name: Modèle ou agent
     definition: >-
-      A model takes text in and produces text out, once. An agent is software
-      that calls a model repeatedly, gives it tools, feeds the tool results
-      back and stops when a goal is met. The model supplies judgment; the
-      agent supplies hands, memory and a loop. Most of what makes an agent
-      useful or dangerous lives in the software around the model.
+      Un modèle reçoit du texte et produit du texte, une fois. Un agent est un logiciel qui appelle un
+      modèle à plusieurs reprises, lui donne des outils, lui renvoie les résultats des outils et
+      s’arrête quand un objectif est atteint. Le modèle apporte le jugement, et l’agent apporte les
+      mains, la mémoire et la boucle. L’essentiel de ce qui rend un agent utile ou dangereux se trouve
+      dans le logiciel qui entoure le modèle.
   - id: tool
-    name: Tool
+    name: Outil
     definition: >-
-      A function the agent can ask to run, described to the model by name,
-      purpose and parameters. Reading a file, searching the web, running a
-      command or calling an API are tools. The model does not execute
-      anything itself; it emits a request, the agent runs it and returns the
-      result. Tools are how an agent reaches beyond its context window.
+      Une fonction que l’agent peut demander à exécuter, décrite au modèle par son nom, son usage et
+      ses paramètres. Lire un fichier, chercher sur le web, lancer une commande ou appeler une API
+      sont des outils. Le modèle n’exécute rien lui-même : il émet une demande, l’agent l’exécute et
+      renvoie le résultat. Les outils permettent à un agent d’atteindre ce qui se trouve au-delà de sa
+      fenêtre de contexte.
   - id: agent-loop
-    name: Agent loop
+    name: Boucle d’agent
     definition: >-
-      The cycle an agent runs: observe the current state, think about what to
-      do, act through a tool, observe the result, repeat. The loop ends when
-      the model says it is done, a step limit is hit or a human intervenes.
-      Everything an agent does, good or bad, is some number of turns of this
-      loop.
+      Le cycle que suit un agent : observer l’état actuel, réfléchir à ce qu’il faut faire, agir au
+      moyen d’un outil, observer le résultat, recommencer. La boucle se termine quand le modèle dit
+      avoir terminé, quand une limite d’étapes est atteinte ou quand une personne intervient. Tout ce
+      que fait un agent, en bien ou en mal, est un certain nombre de tours de cette boucle.
   - id: degree-of-autonomy
-    name: Degree of autonomy
+    name: Degré d’autonomie
     definition: >-
-      How much an agent may do before a human sees it. At one end it only
-      suggests; further along it acts but asks before anything irreversible;
-      at the far end it runs unattended. Autonomy is a setting chosen for a
-      task, not a property of the product, and the right level depends on
-      how costly a mistake is and how easily it can be undone.
+      Ce qu’un agent peut faire avant qu’une personne ne le voie. À une extrémité, il ne fait que
+      suggérer. Plus loin, il agit mais demande avant tout ce qui est irréversible. À l’autre
+      extrémité, il tourne sans surveillance. L’autonomie est un réglage choisi pour une tâche, et le
+      bon niveau dépend du coût d’une erreur et de la facilité avec laquelle on peut l’annuler.
   - id: harness
-    name: Harness
+    name: Harnais
     definition: >-
-      The software around the model that makes it an agent: the loop, the tool
-      definitions, the permission checks, the system prompt, context
-      management and the stop rules. Two agents using the same model can
-      behave very differently because their harnesses differ. When an agent
-      misbehaves, the fix is usually in the harness, not the model.
+      Le logiciel qui entoure le modèle et en fait un agent : la boucle, les définitions d’outils, les
+      vérifications de permissions, le prompt système, la gestion du contexte et les règles d’arrêt.
+      Deux agents qui utilisent le même modèle peuvent se comporter très différemment parce que leurs
+      harnais diffèrent. Quand un agent se comporte mal, la correction se trouve le plus souvent dans
+      le harnais.
   - id: environment
-    name: Environment
+    name: Environnement
     definition: >-
-      The files, programs, services and data that an agent's tools act on.
-      The model chooses an action and the harness carries it out, and the
-      effect lands in the environment: a file changes, a command runs, a
-      message goes out. The environment is the third part of an agent, next
-      to the model and the harness. What it contains decides what the agent
-      can reach and what a mistake can damage, so a test copy limits both.
+      Les fichiers, programmes, services et données sur lesquels agissent les outils d’un agent. Le
+      modèle choisit une action, le harnais l’exécute, et l’effet se produit dans l’environnement : un
+      fichier change, une commande s’exécute, un message part. L’environnement est la troisième partie
+      d’un agent, à côté du modèle et du harnais. Ce qu’il contient décide de ce que l’agent peut
+      atteindre et de ce qu’une erreur peut endommager : une copie de test limite donc les deux.
   - id: model-request
-    name: Model request
+    name: Requête au modèle
     definition: >-
-      One call from the harness to the model, carrying the instructions, the
-      tool descriptions and the history so far, and answered by one
-      response. A single prompt from a person often leads to many requests.
-      The model asks for a tool, the harness runs it and sends the result in
-      a new request, and this repeats until the model answers without asking
-      for a tool. Each of these round trips is one turn of the agent loop.
+      Un appel du harnais au modèle, qui transporte les instructions, les descriptions d’outils et
+      l’historique jusque-là, et qui reçoit une réponse. Un seul prompt d’une personne déclenche
+      souvent de nombreuses requêtes. Le modèle demande un outil, le harnais l’exécute et envoie le
+      résultat dans une nouvelle requête, et cela se répète jusqu’à ce que le modèle réponde sans
+      demander d’outil. Chacun de ces allers-retours est un tour de la boucle d’agent.
   - id: stateless-model
-    name: Stateless model
+    name: Modèle sans état
     definition: >-
-      The model keeps nothing from one request to the next. Each request has
-      to carry everything the model should take into account, so the harness
-      sends the whole conversation again every time. What feels like the
-      agent's memory is text the harness stores and sends again, or notes it
-      writes to files and reads back later. Clearing or shortening that text
-      changes what the model knows at once.
+      Le modèle ne garde rien d’une requête à l’autre. Chaque requête doit transporter tout ce que le
+      modèle doit prendre en compte : le harnais renvoie donc toute la conversation à chaque fois. Ce
+      qui ressemble à la mémoire de l’agent est du texte que le harnais stocke et renvoie, ou des
+      notes qu’il écrit dans des fichiers et relit plus tard. Effacer ou raccourcir ce texte change
+      immédiatement ce que sait le modèle.
 links:
   prerequisites: [concepts/prompting, concepts/limits]
   related: []

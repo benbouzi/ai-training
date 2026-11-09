@@ -10,7 +10,7 @@ introduces: [skill-vs-tool-vs-instruction]
 assumes:
   - objective: concepts/recognizes-agents/names-the-loop
     lesson: concepts/agent-loop
-    section: a-model-in-a-loop-with-two-tools
+    section: un-modèle-dans-une-boucle-avec-deux-outils
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
     section: what-belongs-in-it

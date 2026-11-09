@@ -42,7 +42,7 @@ test('the sidebar and the landing page show the same due count once a finished l
 	await page.goto(`${LESSON}/`);
 	for (const id of FIRST) await passCheckpoint(page, id);
 	await page.locator('[data-finish]').click();
-	await expect(page.locator('[data-finish]')).toHaveText(/^Finished ✓/);
+	await expect(page.locator('[data-finish]')).toHaveText(/^Terminée ✓/);
 	await expect(page.locator('[data-due-count]')).toHaveCount(0);
 	const record = await storedRecord(page);
 	const items = Object.keys(record.reviews ?? {}).filter((id) => id.startsWith(`${LESSON}#`)).length;

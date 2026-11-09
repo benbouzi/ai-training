@@ -30,11 +30,11 @@ INSTRUCTIONS = 1_000
 # Each step is (what was new, tokens of the new text, tokens of the reply,
 # whether the cache had expired before the request).
 SESSION = [
-    ("pastes a contract, asks what it covers", 20_000, 500, False),
-    ("asks when the contract ends", 15, 120, False),
-    ("asks about the penalties", 20, 300, False),
-    ("asks for a summary for the manager", 25, 400, False),
-    ("after lunch, asks who signed it", 15, 80, True),
+    ("colle un contrat, demande son objet", 20_000, 500, False),
+    ("demande quand le contrat prend fin", 15, 120, False),
+    ("demande quelles sont les pénalités", 20, 300, False),
+    ("demande un résumé pour la direction", 25, 400, False),
+    ("après déjeuner, demande qui a signé", 15, 80, True),
 ]
 
 
@@ -82,11 +82,10 @@ def line(name: str, input_tokens: int, written: int, read: int, output: int) -> 
 
 def main() -> None:
     lines = [
-        "one chat, priced without and with a prompt cache",
-        f"prices per million tokens: input {money2(INPUT_PRICE)}, output {money2(OUTPUT_PRICE)},"
-        f" cache write {money2(CACHE_WRITE_PRICE)}, cache read {money2(CACHE_READ_PRICE)}",
-        f"{'request':42}{'input':>8}{'written':>8}{'read':>8}{'output':>7}"
-        f"{'no cache':>10}{'cached':>10}",
+        "une conversation, au prix sans et avec cache de prompt",
+        f"prix par million de jetons : entrée {money2(INPUT_PRICE)}, sortie {money2(OUTPUT_PRICE)},"
+        f" écriture cache {money2(CACHE_WRITE_PRICE)}, lecture cache {money2(CACHE_READ_PRICE)}",
+        f"{'requête':42}{'entrée':>8}{'écrits':>8}{'lus':>8}{'sortie':>7}{'sans':>10}{'avec':>10}",
     ]
     rows = requests()
     for number, (label, input_tokens, written, read, output) in enumerate(rows, start=1):

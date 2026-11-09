@@ -20,11 +20,11 @@ OUTPUT_PRICE = 30.0
 # (what was new, tokens of the new text, tokens of the reply).
 CHAT_INSTRUCTIONS = 500
 CHAT = [
-    ("asks what a kickoff email holds", 15, 400),
-    ("pastes meeting notes, asks for a draft", 1_520, 350),
-    ("asks to make it shorter", 10, 200),
-    ("pastes a budget sheet, asks to add it", 2_020, 250),
-    ("asks for a subject line", 12, 15),
+    ("demande le contenu d’un courriel", 15, 400),
+    ("colle des notes, demande un brouillon", 1_520, 350),
+    ("demande de raccourcir", 10, 200),
+    ("colle un budget, demande de l’ajouter", 2_020, 250),
+    ("demande une ligne d’objet", 12, 15),
 ]
 
 # One prompt to an agent with two tools, as in "One prompt, many requests":
@@ -32,18 +32,18 @@ CHAT = [
 # instructions plus the tool descriptions.
 AGENT_FIXED = 800 + 600
 AGENT = [
-    ("the prompt", 30, 40),
-    ("result: 3 file names", 60, 40),
-    ("result: the text of one note", 2_400, 120),
+    ("le prompt", 30, 40),
+    ("résultat : 3 noms de fichiers", 60, 40),
+    ("résultat : le texte d’une note", 2_400, 120),
 ]
 
 # The exercise: a chat about planning a team day.
 EXERCISE_INSTRUCTIONS = 500
 EXERCISE = [
-    ("asks for team day ideas", 20, 600),
-    ("pastes a price list, asks which fits", 3_000, 300),
-    ("asks for the invitation", 15, 250),
-    ("asks if Friday is better", 8, 60),
+    ("demande des idées de journée d’équipe", 20, 600),
+    ("colle des tarifs, demande le bon choix", 3_000, 300),
+    ("demande l’invitation", 15, 250),
+    ("demande si vendredi est mieux", 8, 60),
 ]
 
 
@@ -77,7 +77,7 @@ def report(title: str, fixed: int, steps: "list[tuple[str, int, int]]") -> "list
     """Return the lines of one usage report, with a total row."""
     lines = [
         title,
-        f"{'request':44}{'input':>7}{'output':>8}{'input $':>10}{'output $':>10}{'total $':>10}",
+        f"{'requête':44}{'entrée':>7}{'sortie':>8}{'entrée $':>10}{'sortie $':>10}{'total $':>10}",
     ]
     rows = requests(fixed, steps)
     for number, (label, input_tokens, output_tokens) in enumerate(rows, start=1):
@@ -90,12 +90,12 @@ def report(title: str, fixed: int, steps: "list[tuple[str, int, int]]") -> "list
 
 def main() -> None:
     blocks = [
-        report("chat session", CHAT_INSTRUCTIONS, CHAT),
-        report("one prompt to an agent", AGENT_FIXED, AGENT),
-        report("exercise: chat about a team day", EXERCISE_INSTRUCTIONS, EXERCISE),
+        report("session de conversation", CHAT_INSTRUCTIONS, CHAT),
+        report("un prompt adressé à un agent", AGENT_FIXED, AGENT),
+        report("exercice : conversation sur une journée d’équipe", EXERCISE_INSTRUCTIONS, EXERCISE),
     ]
     _, new, reply = CHAT[-1]
-    blocks.append([line("question 5 alone, in a new chat", CHAT_INSTRUCTIONS + new, reply)])
+    blocks.append([line("question 5 seule, nouvelle conversation", CHAT_INSTRUCTIONS + new, reply)])
     print("\n\n".join("\n".join(block) for block in blocks))
 
 

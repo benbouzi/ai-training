@@ -1,8 +1,9 @@
 id: concepts/iterating-on-a-prompt
-title: Change the prompt before you retry
+title: Changer le prompt avant de réessayer
 description: >-
-  A summary skips the decisions of a meeting. Name the gap, change one line of the prompt, compare
-  with the last round, and move the fix you made twice into a saved template.
+  Un résumé oublie les décisions d’une réunion. Nommer le manque, changer une ligne du prompt,
+  comparer avec l’essai précédent, et faire entrer dans un gabarit enregistré la correction faite
+  deux fois.
 mode: tutorial
 covers: concepts/prompting
 serves: [concepts/prompts-reliably/iterates-on-output]
@@ -10,22 +11,22 @@ introduces: [iteration]
 assumes:
   - objective: concepts/prompts-reliably/structures-a-prompt
     lesson: concepts/prompt-anatomy
-    section: the-instruction
+    section: linstruction
   - objective: concepts/prompts-reliably/structures-a-prompt
     lesson: concepts/prompt-anatomy
-    section: format-and-length
+    section: format-et-longueur
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
 extends-to:
-  - label: Where a model makes things up
+  - label: Les endroits où un modèle invente
     href: /concepts/thin-path/
 after: [concepts/structured-output]
-shorts: [keeping a prompt template]
+shorts: [garder un gabarit de prompt]
 exercise:
   kind: do
   brief: >-
-    Take a summary prompt through three rounds, changing one thing per round, and keep a three-line
-    log of what each change fixed.
+    Faire passer un prompt de résumé par trois essais, en changeant une chose par essai, et tenir un
+    journal de trois lignes sur ce que chaque changement a corrigé.
 sources: [DLAI-1, DLAI-3, Academy ai-fluency-framework-foundations]
 minutes: 15

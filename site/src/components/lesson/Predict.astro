@@ -74,23 +74,23 @@ const handChecked = graded && !run && !honor && (await lessonProofsOf(lessonIdOf
 			{phase}
 			{honor}
 			kind="predict"
-			checkLabel={honor ? 'Record' : 'Check'}
+			checkLabel={honor ? 'Enregistrer' : 'Vérifier'}
 		>
 			<slot />
 			<Fragment slot="body">
 				<div data-answer={answer} data-run={run} class="cp-predict">
 					<label>
-						<span class="cp-label">{honor ? 'Your prediction' : 'What is printed?'}</span>
+						<span class="cp-label">{honor ? 'Votre prédiction' : 'Qu’est-ce qui s’affiche ?'}</span>
 						<textarea rows={honor ? 3 : 1} spellcheck="false"></textarea>
 					</label>
 					{honor ? (
 						<fieldset class="cp-selfgrade">
-							<legend>After running it, how did your prediction hold up?</legend>
+							<legend>Après l’exécution, votre prédiction était-elle juste ?</legend>
 							<label>
-								<input type="radio" name={`${id}-selfgrade`} value="pass" /> It matched
+								<input type="radio" name={`${id}-selfgrade`} value="pass" /> Oui
 							</label>
 							<label>
-								<input type="radio" name={`${id}-selfgrade`} value="partial" /> Partly
+								<input type="radio" name={`${id}-selfgrade`} value="partial" /> En partie
 							</label>
 						</fieldset>
 					) : (
@@ -98,27 +98,27 @@ const handChecked = graded && !run && !honor && (await lessonProofsOf(lessonIdOf
 					)}
 					{run && (
 						<p class="cp-verified">
-							Output verified in CI from <code>site/examples/{run}</code>.
+							Sortie vérifiée en intégration continue à partir de <code>site/examples/{run}</code>.
 						</p>
 					)}
-					{handChecked && <p class="cp-verified">This example is not run in CI; the output was checked by hand.</p>}
+					{handChecked && <p class="cp-verified">Cet exemple ne tourne pas en intégration continue. Sa sortie a été vérifiée à la main.</p>}
 				</div>
 			</Fragment>
 		</CheckpointShell>
 	) : (
 		<section class="example not-content" id={id} data-example data-run={run}>
 			<header class="cp-head">
-				<span class="cp-kind">Example · run it</span>
+				<span class="cp-kind">Exemple · à exécuter</span>
 			</header>
 			<SectionTitle {id} {title} />
 			<div class="cp-stem">
 				<slot />
 			</div>
 			<div class="cp-body">
-				<span class="cp-label">Output</span>
+				<span class="cp-label">Sortie</span>
 				<pre class="example-output">{answer}</pre>
 				<p class="cp-verified">
-					Output verified in CI from <code>site/examples/{run}</code>.
+					Sortie vérifiée en intégration continue à partir de <code>site/examples/{run}</code>.
 				</p>
 			</div>
 		</section>

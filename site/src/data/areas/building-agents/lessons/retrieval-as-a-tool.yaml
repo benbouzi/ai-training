@@ -10,7 +10,7 @@ introduces: [when-basic-rag-suffices, agentic-rag-loop]
 assumes:
   - objective: concepts/explains-models/explains-grounding
     lesson: concepts/retrieval
-    section: grounding-and-what-it-doesnt-fix
+    section: lancrage-et-ce-quil-ne-corrige-pas
   - objective: building-agents/builds-agent-loop/defines-a-tool
     lesson: building-agents/agent-loop
     section: a-tool-is-a-function-plus-a-description

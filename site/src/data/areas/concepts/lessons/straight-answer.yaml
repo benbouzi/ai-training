@@ -1,8 +1,9 @@
 id: concepts/straight-answer
-title: Getting a straight answer
+title: Obtenir une réponse franche
 description: >-
-  Why a model praises your plan and folds under pushback, how a leading question produces a
-  leading answer, and three ways to ask so that the answer tells you something.
+  Pourquoi un modèle fait l’éloge de votre plan et cède quand on le conteste, comment une question
+  orientée produit une réponse orientée, et trois façons de poser la question pour que la réponse
+  vous apprenne quelque chose.
 mode: tutorial
 covers: concepts/limits
 serves: [concepts/explains-models/names-failure-modes]
@@ -10,20 +11,20 @@ introduces: [sycophancy]
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
 extends-to:
-  - label: Spotting a hallucination
+  - label: Repérer une hallucination
     href: /safety/spotting-hallucination/
 after: [concepts/thin-path]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Ask a leading and a neutral question about the same plan, then ask for the strongest objections,
-    and compare the three answers.
+    Poser une question orientée et une question neutre sur le même plan, puis demander les
+    objections les plus fortes, et comparer les trois réponses.
 sources: [Sharma 2023]
 sources-checked: 2026-09-24
 review-by: 2027-03-24

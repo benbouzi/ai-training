@@ -49,7 +49,9 @@ describe('mountFormatChecker', () => {
 		expect(results(root)).toEqual([]);
 		part<HTMLButtonElement>(root, '.fc-check').click();
 		expect(results(root).map((r) => r.cls)).toEqual(['fc-ok', 'fc-ok', 'fc-ok', 'fc-ok']);
-		expect(results(root)[0]?.text).toBe('ok 1: Jonas, fix the password reset email address, 2026-10-03, high');
+		expect(results(root)[0]?.text).toBe(
+			'ok 1: Jonas, corriger le courriel de réinitialisation du mot de passe, 2026-10-03, high',
+		);
 		expect(part(root, '.fc-summary').textContent).toBe('4 of 4 items pass');
 	});
 	it('fails the bare JSON sample', async () => {

@@ -1,68 +1,100 @@
 id: concepts/prompts-reliably
 area: concepts
-statement: Writes prompts that get reliable results
+statement: Écrit des prompts qui obtiennent des résultats fiables
 topics: [concepts/prompting, concepts/how-models-work]
 objectives:
   - id: concepts/prompts-reliably/structures-a-prompt
-    statement: Turns a vague request into instruction, context, example and format
+    statement: Transforme une demande vague en instruction, contexte, exemple et format
     level: base
     behaviors:
-      - claim: A prompt separates the instruction (what to do) from the context (what to work on) and marks
-          the boundary between them.
-        why: When instruction and material run together, the model treats parts of the material as orders or
-          parts of the order as material.
-        example: '"Summarize the text between the triple quotes for a sales manager" with the pasted email
-          inside the quotes, rather than the email followed by "summarize".'
-      - claim: The prompt names the audience and the purpose of the output.
-        why: The same content for a customer and for a colleague differs in length, tone and what may be
-          left out, and the model cannot guess which.
-        example: '"Write the release note for end users who do not read code; skip internal ticket numbers"
-          replaces "write a release note".'
-      - claim: When the wanted output is hard to describe, the prompt shows one example of it.
-        why: One good example fixes format, length and tone at once, where a paragraph of rules leaves room
-          for interpretation.
-        example: The learner pastes one past meeting summary in the house format and writes "produce the
-          same for these notes".
-      - claim: The prompt states the output format, including length.
-        why: Left to its default, the model picks a length and format for a general reader, which is rarely
-          what the next step needs.
-        example: '"Five bullets, each under 15 words, no introduction" instead of "keep it short".'
+      - claim: >-
+          Un prompt sépare l’instruction (ce qu’il faut faire) du contexte (ce sur quoi travailler) et
+          marque la frontière entre les deux.
+        why: >-
+          Quand l’instruction et le matériau se suivent sans séparation, le modèle prend des parties du
+          matériau pour des ordres, ou des parties de l’ordre pour du matériau.
+        example: >-
+          « Résume pour un responsable commercial le texte placé entre les triples guillemets », avec
+          le
+          courriel collé entre les guillemets, à la place du courriel suivi de « résume ».
+      - claim: Le prompt nomme le public et l’objectif de la sortie.
+        why: >-
+          Le même contenu destiné à un client et à un collègue diffère par sa longueur, son ton et ce
+          que
+          l’on peut omettre, et le modèle ne peut pas deviner lequel on veut.
+        example: >-
+          « Rédige la note de version pour des utilisateurs finaux qui ne lisent pas de code ; omets les
+          numéros de tickets internes » remplace « rédige une note de version ».
+      - claim: Quand la sortie voulue est difficile à décrire, le prompt en montre un exemple.
+        why: >-
+          Un bon exemple fixe d’un coup le format, la longueur et le ton, là où un paragraphe de règles
+          laisse place à l’interprétation.
+        example: >-
+          L’apprenant colle un ancien compte rendu de réunion au format maison et écrit « produis la même
+          chose pour ces notes ».
+      - claim: Le prompt énonce le format de sortie, longueur comprise.
+        why: >-
+          Livré à son réglage par défaut, le modèle choisit une longueur et un format pour un lecteur
+          général, ce qui correspond rarement aux besoins de l’étape suivante.
+        example: '« Cinq puces de moins de 15 mots chacune, sans introduction » au lieu de « fais court
+          ».'
   - id: concepts/prompts-reliably/iterates-on-output
-    statement: Improves a result by changing the prompt, not by retrying
+    statement: Améliore un résultat en changeant le prompt, sans se contenter de réessayer
     level: base
     behaviors:
-      - claim: When the output is wrong, the learner names what is wrong with it and changes the prompt to
-          address that, instead of rerunning the same prompt.
-        why: Rerunning draws another sample from the same distribution, and the same gap in the instructions
-          produces the same class of mistake.
-        example: The summary skipped the decisions made, so the learner adds "list every decision as its own
-          line" instead of pressing regenerate.
-      - claim: The learner changes one thing at a time and compares the result with the previous one.
-        why: Changing five things at once shows whether the total worked and hides which change did it, so
-          the next prompt cannot build on it.
-        example: The learner first adds the audience, sees the tone fix, and only then works on the length.
-      - claim: A correction the learner had to make twice moves into the prompt or into a saved template.
-        why: A fix typed in the chat is gone with the session, but a fix in the prompt is there for every
-          run.
-        example: After twice asking for "dates in ISO format", the learner adds the line to the prompt they
-          keep for the weekly report.
+      - claim: >-
+          Quand la sortie est fausse, l’apprenant nomme ce qui ne va pas et change le prompt pour y
+          remédier, au lieu de relancer le même prompt.
+        why: >-
+          Relancer tire un autre échantillon dans la même distribution, et le même manque dans les
+          instructions produit le même type d’erreur.
+        example: >-
+          Le résumé a oublié les décisions prises : l’apprenant ajoute « présente chaque décision sur
+          sa
+          propre ligne » au lieu d’appuyer sur « régénérer ».
+      - claim: L’apprenant change une chose à la fois et compare le résultat avec le précédent.
+        why: >-
+          Changer cinq choses à la fois montre si l’ensemble a marché et cache le changement qui a fait
+          effet : le prompt suivant ne peut donc pas s’appuyer dessus.
+        example: >-
+          L’apprenant ajoute d’abord le public, constate que le ton est corrigé, et ne s’occupe qu’ensuite
+          de la longueur.
+      - claim: >-
+          Une correction que l’apprenant a dû faire deux fois passe dans le prompt ou dans un gabarit
+          enregistré.
+        why: >-
+          Une correction tapée dans la conversation disparaît avec la session, alors qu’une correction
+          dans le prompt vaut pour chaque exécution.
+        example: >-
+          Après avoir demandé deux fois « les dates au format ISO », l’apprenant ajoute la ligne au prompt
+          qu’il garde pour le rapport hebdomadaire.
   - id: concepts/prompts-reliably/asks-for-structure
-    statement: Asks for output in a shape the next step can use
+    statement: Demande une sortie sous une forme que l’étape suivante peut utiliser
     level: base
     behaviors:
-      - claim: "The learner asks for output in the format the next step consumes: a table, a list of named
-          fields, JSON, or a file in a known layout."
-        why: Prose has to be reformatted by hand or by another prompt, and each reformatting is another
-          place for mistakes.
-        example: 'For action items that go into a tracker, the learner asks for "one line per item: owner,
-          task, due date, separated by tabs".'
-      - claim: The requested format names its fields and the allowed values as well as its type.
-        why: '"Return JSON" gives a different set of keys every run, and naming the keys makes runs
-          comparable and parseable.'
-        example: '"Return a JSON object with keys `sentiment` (one of positive, neutral, negative) and
-          `reason` (one sentence)".'
-      - claim: The learner checks the first structured result against its consumer before scaling up.
-        why: A format that looks right can still fail on the detail the consumer cares about, such as a date
-          format or an empty field.
-        example: The learner pastes the first generated CSV into the spreadsheet import and fixes the column
-          order in the prompt before running the other 200 rows.
+      - claim: >-
+          L’apprenant demande une sortie dans le format que consomme l’étape suivante : un tableau, une
+          liste de champs nommés, du JSON, ou un fichier à la structure connue.
+        why: >-
+          La prose doit être remise en forme à la main ou par un autre prompt, et chaque remise en forme
+          est une occasion d’erreur de plus.
+        example: >-
+          Pour des actions à mener qui vont dans un outil de suivi, l’apprenant demande « une ligne par
+          action : responsable, tâche, échéance, séparés par des tabulations ».
+      - claim: Le format demandé nomme ses champs et les valeurs autorisées, en plus de son type.
+        why: >-
+          « Renvoie du JSON » donne un ensemble de clés différent à chaque essai, et nommer les clés rend
+          les essais comparables et analysables.
+        example: >-
+          « Renvoie un objet JSON avec les clés `sentiment` (positive, neutral ou negative) et `reason`
+          (une phrase) ».
+      - claim: >-
+          L’apprenant vérifie le premier résultat structuré auprès de son destinataire avant de passer
+          à
+          grande échelle.
+        why: >-
+          Un format qui semble juste peut encore échouer sur le détail qui compte pour le destinataire,
+          comme un format de date ou un champ vide.
+        example: >-
+          L’apprenant colle le premier CSV généré dans l’import du tableur et corrige l’ordre des colonnes
+          dans le prompt avant de lancer les 200 autres lignes.

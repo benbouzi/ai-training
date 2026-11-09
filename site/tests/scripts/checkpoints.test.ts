@@ -19,8 +19,8 @@ function shell(kind: string, id: string, body: string, extra = ''): HTMLElement 
 			<div class="cp-controls">
 				<button type="button" class="cp-check">Check</button>
 				<button type="button" class="cp-hint-btn">Hint</button>
-				<button type="button" class="cp-skip">Skip</button>
-				<button type="button" class="cp-giveup" hidden>Give up</button>
+				<button type="button" class="cp-skip">Passer</button>
+				<button type="button" class="cp-giveup" hidden>Voir la réponse</button>
 			</div>
 			<p class="cp-hint" hidden>A hint.</p>
 			<p class="cp-feedback"></p>
@@ -105,7 +105,7 @@ describe('bindCheckpoint', () => {
 		bindCheckpoint(shell('choice', 'c', choiceBody), { onResult });
 		click('.cp-skip');
 		expect(state()).toBe('skipped');
-		expect(feedback()).toContain('Skipped');
+		expect(feedback()).toContain('Passée');
 		expect(onResult).toHaveBeenCalledWith(expect.anything(), false);
 		expect(progress.load().checkpoints[`${LESSON}#c`]).toEqual({ state: 'skipped', attempts: 1 });
 	});
@@ -122,7 +122,7 @@ describe('choice', () => {
 		const onResult = vi.fn();
 		bindCheckpoint(shell('choice', 'c', choiceBody), { onResult });
 		click('.cp-check');
-		expect(feedback()).toBe('Pick an answer first.');
+		expect(feedback()).toBe('Choisissez d’abord une réponse.');
 		expect(onResult).not.toHaveBeenCalled();
 		q<HTMLInputElement>('label:not([data-correct]) input').checked = true;
 		click('.cp-check');
@@ -130,7 +130,7 @@ describe('choice', () => {
 		expect(state()).toBe('attempted');
 		q<HTMLInputElement>('label[data-correct] input').checked = true;
 		click('.cp-check');
-		expect(feedback()).toBe('Correct. It predicts tokens.');
+		expect(feedback()).toBe('Juste. It predicts tokens.');
 		expect(q('.cp-feedback').className).toBe('cp-feedback ok');
 		expect(state()).toBe('passed');
 		expect(progress.load().checkpoints[`${LESSON}#c`]).toEqual({ state: 'passed', attempts: 2 });
@@ -154,28 +154,28 @@ describe('predict', () => {
 	it('compares normalized text and reveals the answer on a pass', () => {
 		bindCheckpoint(shell('predict', 'p', body('27°C, sun')));
 		click('.cp-check');
-		expect(feedback()).toBe('Type your prediction first.');
+		expect(feedback()).toBe('Tapez d’abord votre prédiction.');
 		q<HTMLTextAreaElement>('textarea').value = '27°C, rain';
 		click('.cp-check');
-		expect(feedback()).toBe('Not quite. Trace it once more.');
+		expect(feedback()).toBe('Pas tout à fait. Suivez-le encore une fois.');
 		expect(q('.cp-reveal').hidden).toBe(true);
 		q<HTMLTextAreaElement>('textarea').value = '  27°c,   SUN ';
 		click('.cp-check');
-		expect(feedback()).toBe('Correct. That is exactly the output.');
+		expect(feedback()).toBe('Juste. C’est exactement la sortie.');
 		expect(q('.cp-reveal').hidden).toBe(false);
 		expect(state()).toBe('passed');
 	});
 	it('honor system: self-grade, only pass counts', () => {
 		bindCheckpoint(shell('predict', 'p', body()));
 		click('.cp-check');
-		expect(feedback()).toBe('Run it, then say how your prediction held up.');
+		expect(feedback()).toBe('Lancez-le, puis dites si votre prédiction a tenu.');
 		q<HTMLInputElement>('input[value=partial]').checked = true;
 		click('.cp-check');
-		expect(feedback()).toContain('Adjust your prediction');
+		expect(feedback()).toContain('Ajustez votre prédiction');
 		expect(state()).toBe('attempted');
 		q<HTMLInputElement>('input[value=pass]').checked = true;
 		click('.cp-check');
-		expect(feedback()).toBe('Recorded as a pass.');
+		expect(feedback()).toBe('Enregistrée comme réussie.');
 		expect(state()).toBe('passed');
 	});
 });
@@ -193,7 +193,7 @@ describe('order', () => {
 		bindCheckpoint(shell('order', 'o', body));
 		expect(positions()).not.toEqual([1, 2, 3]);
 		click('.cp-check');
-		expect(feedback()).toBe('Not the right order yet.');
+		expect(feedback()).toBe('Pas encore le bon ordre.');
 		expect(state()).toBe('attempted');
 		// Sort by moving each item up until it sits at its position.
 		for (let pos = 1; pos <= 3; pos++) {
@@ -204,7 +204,7 @@ describe('order', () => {
 		}
 		expect(positions()).toEqual([1, 2, 3]);
 		click('.cp-check');
-		expect(feedback()).toBe('Correct order.');
+		expect(feedback()).toBe('Ordre juste.');
 		expect(state()).toBe('passed');
 	});
 	it('down moves an item later; edges are no-ops', () => {
@@ -245,7 +245,7 @@ describe('order', () => {
 		expect(one.classList.contains('cp-dragging')).toBe(false);
 		expect(positions()).toEqual([1, 2, 3]);
 		click('.cp-check');
-		expect(feedback()).toBe('Correct order.');
+		expect(feedback()).toBe('Ordre juste.');
 		expect(state()).toBe('passed');
 		// A dragover with no drag in progress is ignored.
 		drag(three, 'dragover', 105);
@@ -305,7 +305,7 @@ describe('sort', () => {
 	it('select then place, with unplaced and wrong-bucket feedback', () => {
 		bindCheckpoint(shell('sort', 's', body));
 		bucketTarget(0).click();
-		expect(feedback()).toBe('Select an item first, then a bucket.');
+		expect(feedback()).toBe('Sélectionnez d’abord un élément, puis une case.');
 		click('.cp-check');
 		expect(feedback()).toBe('2 items still to place.');
 		expect(state()).toBe('untouched');
@@ -318,7 +318,7 @@ describe('sort', () => {
 		chip('b').click();
 		bucketTarget(0).click();
 		click('.cp-check');
-		expect(feedback()).toBe('Some items are in the wrong bucket.');
+		expect(feedback()).toBe('Certains éléments sont dans la mauvaise case.');
 		expect(state()).toBe('attempted');
 		// Take one back to the pool, then place both correctly.
 		chip('a').click();
@@ -330,13 +330,13 @@ describe('sort', () => {
 		chip('b').click();
 		bucketTarget(1).click();
 		click('.cp-check');
-		expect(feedback()).toBe('All placed correctly.');
+		expect(feedback()).toBe('Tout est bien classé.');
 		expect(state()).toBe('passed');
 	});
 	it('the dashed drop area places a selected chip too, and asks for a selection otherwise', () => {
 		bindCheckpoint(shell('sort', 's', body));
 		click('.cp-pool');
-		expect(feedback()).toBe('Select an item first, then a bucket.');
+		expect(feedback()).toBe('Sélectionnez d’abord un élément, puis une case.');
 		chip('a').click();
 		q<HTMLElement>('.cp-bucket[data-bucket="0"] .cp-bucket-items').click();
 		expect(q('.cp-bucket[data-bucket="0"] .cp-bucket-items').children).toHaveLength(1);
@@ -388,7 +388,7 @@ describe('sort', () => {
 		drag(bucketItems(1), 'drop');
 		drag(chip('b'), 'dragend');
 		click('.cp-check');
-		expect(feedback()).toBe('All placed correctly.');
+		expect(feedback()).toBe('Tout est bien classé.');
 		expect(state()).toBe('passed');
 	});
 });
@@ -408,24 +408,24 @@ describe('repair', () => {
 	it('reveal first, then grade; retry and partial do not pass', () => {
 		bindCheckpoint(shell('repair', 'r', body));
 		click('.cp-check');
-		expect(feedback()).toBe('Write your fix, then reveal the model answer and compare.');
+		expect(feedback()).toBe('Écrivez votre correction, puis affichez la réponse modèle et comparez.');
 		click('.cp-reveal-btn');
 		expect(q('.cp-model').hidden).toBe(false);
 		expect(q('.cp-selfgrade').hidden).toBe(false);
 		expect(q<HTMLButtonElement>('.cp-reveal-btn').disabled).toBe(true);
 		click('.cp-check');
-		expect(feedback()).toBe('Compare with the model answer and grade yourself.');
+		expect(feedback()).toBe('Comparez avec la réponse modèle et notez-vous.');
 		q<HTMLInputElement>('input[value=retry]').checked = true;
 		click('.cp-check');
-		expect(feedback()).toBe('Edit your version and grade again.');
+		expect(feedback()).toBe('Modifiez votre version et notez-vous de nouveau.');
 		expect(state()).toBe('untouched');
 		q<HTMLInputElement>('input[value=partial]').checked = true;
 		click('.cp-check');
-		expect(feedback()).toContain('Recorded as partial');
+		expect(feedback()).toContain('Partielle');
 		expect(state()).toBe('attempted');
 		q<HTMLInputElement>('input[value=pass]').checked = true;
 		click('.cp-check');
-		expect(feedback()).toBe('Recorded as a pass.');
+		expect(feedback()).toBe('Enregistrée comme réussie.');
 		expect(state()).toBe('passed');
 	});
 });
@@ -456,7 +456,7 @@ describe('skills check copy', () => {
 		const pass = copy.querySelector<HTMLInputElement>('input[value=pass]');
 		if (pass) pass.checked = true;
 		copy.querySelector<HTMLElement>('.cp-check')?.click();
-		expect(copy.querySelector('.cp-feedback')?.textContent).toBe('Recorded as a pass.');
+		expect(copy.querySelector('.cp-feedback')?.textContent).toBe('Enregistrée comme réussie.');
 		expect(record).toHaveBeenCalledWith(`${LESSON}#r`, true);
 		// `record` replaces the default write, so the record is untouched here.
 		expect(progress.load().checkpoints[`${LESSON}#r`]).toBeUndefined();
@@ -497,7 +497,7 @@ describe('review mode', () => {
 		const onResult = vi.fn();
 		bindCheckpoint(shell('choice', 'c', choiceBody), { review: true, onResult });
 		expect(q('.cp-stage').hidden).toBe(false);
-		expect(q('.cp-stage-label').textContent).toBe('stage 2 of 5');
+		expect(q('.cp-stage-label').textContent).toBe('étape 2 sur 5');
 		expect([...document.querySelectorAll('.cp-stage > span')].map((s) => (s as HTMLElement).dataset.on)).toEqual([
 			'true',
 			'true',
@@ -508,7 +508,7 @@ describe('review mode', () => {
 		expect(q<HTMLButtonElement>('.cp-giveup').disabled).toBe(true);
 		q<HTMLInputElement>('label[data-correct] input').checked = true;
 		click('.cp-check');
-		expect(q('.cp-stage-label').textContent).toBe('stage 3 of 5');
+		expect(q('.cp-stage-label').textContent).toBe('étape 3 sur 5');
 		expect(q('.cp-after').hidden).toBe(false);
 		const pass = [{ at: progress.today(), result: 'pass' }];
 		expect(progress.load().reviews[id]?.history).toEqual(pass);
@@ -527,8 +527,8 @@ describe('review mode', () => {
 		expect(q<HTMLButtonElement>('.cp-giveup').disabled).toBe(false);
 		click('.cp-giveup');
 		expect(q('label[data-correct]').classList.contains('cp-answer')).toBe(true);
-		expect(feedback()).toBe('The answer is marked. It predicts tokens.');
-		expect(q('.cp-stage-label').textContent).toBe('stage 1 of 5');
+		expect(feedback()).toBe('La réponse est indiquée. It predicts tokens.');
+		expect(q('.cp-stage-label').textContent).toBe('étape 1 sur 5');
 		expect(q<HTMLButtonElement>('.cp-giveup').disabled).toBe(true);
 		click('.cp-giveup');
 		expect(progress.load().reviews[id]?.history).toEqual([{ at: progress.today(), result: 'fail' }]);
@@ -543,7 +543,7 @@ describe('review mode', () => {
 	it('a retired item shows every pill lit', () => {
 		schedule('done');
 		bindCheckpoint(shell('choice', 'c', choiceBody), { review: true });
-		expect(q('.cp-stage-label').textContent).toBe('retired');
+		expect(q('.cp-stage-label').textContent).toBe('acquise');
 	});
 	it('give up reveals a predict answer', () => {
 		progress.update((r) => {
@@ -561,7 +561,7 @@ describe('review mode', () => {
 		click('.cp-check');
 		click('.cp-giveup');
 		expect(q('.cp-reveal').hidden).toBe(false);
-		expect(feedback()).toBe('The output is shown below.');
+		expect(feedback()).toBe('La sortie est affichée ci-dessous.');
 	});
 	it('give up solves an order and fills a sort', () => {
 		progress.update((r) => {
@@ -579,7 +579,7 @@ describe('review mode', () => {
 		click('.cp-check');
 		click('.cp-giveup');
 		expect([...q('ol').children].map((li) => (li as HTMLElement).dataset.pos)).toEqual(['1', '2', '3']);
-		expect(feedback()).toBe('The steps are now in the right order.');
+		expect(feedback()).toBe('Les étapes sont maintenant dans le bon ordre.');
 
 		bindCheckpoint(
 			shell(
@@ -597,7 +597,7 @@ describe('review mode', () => {
 		click('.cp-check');
 		click('.cp-giveup');
 		expect(q('.cp-bucket[data-bucket="0"] .cp-bucket-items').children).toHaveLength(1);
-		expect(feedback()).toBe('Every item is now in its bucket.');
+		expect(feedback()).toBe('Chaque élément est maintenant dans sa case.');
 	});
 });
 
@@ -613,7 +613,7 @@ describe('multi-choice', () => {
 	it('needs picks, names a wrong pick, counts the missing ones, then passes', () => {
 		bindCheckpoint(shell('multi-choice', 'm', body));
 		click('.cp-check');
-		expect(feedback()).toBe('Pick 2 answers first.');
+		expect(feedback()).toBe('Choisissez d’abord 2 réponses.');
 		expect(state()).toBe('untouched');
 		box(1).checked = true;
 		click('.cp-check');
@@ -625,7 +625,7 @@ describe('multi-choice', () => {
 		box(2).checked = false;
 		box(3).checked = true;
 		click('.cp-check');
-		expect(feedback()).toBe('Correct.');
+		expect(feedback()).toBe('Juste.');
 		expect(state()).toBe('passed');
 	});
 	it('give up marks the correct items', () => {
@@ -637,7 +637,7 @@ describe('multi-choice', () => {
 		click('.cp-check');
 		click('.cp-giveup');
 		expect(document.querySelectorAll('label.cp-answer')).toHaveLength(2);
-		expect(feedback()).toBe('The correct items are marked.');
+		expect(feedback()).toBe('Les bons éléments sont indiqués.');
 	});
 });
 
@@ -645,11 +645,11 @@ describe('match', () => {
 	const body = `
 		<div class="cp-match" data-rationale="Smaller is safer.">
 			<div class="cp-match-row" data-option="0" data-why="Keep the send step.">
-				<select><option value="">Choose…</option><option value="0">Drafts</option><option value="1">Copy</option></select>
+				<select><option value="">Choisir…</option><option value="0">Drafts</option><option value="1">Copy</option></select>
 				<span class="cp-row-feedback"></span>
 			</div>
 			<div class="cp-match-row" data-option="1">
-				<select><option value="">Choose…</option><option value="0">Drafts</option><option value="1">Copy</option></select>
+				<select><option value="">Choisir…</option><option value="0">Drafts</option><option value="1">Copy</option></select>
 				<span class="cp-row-feedback"></span>
 			</div>
 		</div>`;
@@ -669,13 +669,13 @@ describe('match', () => {
 		expect(feedback()).toBe('2 rows wrong. Each row says which.');
 		expect(row(1).dataset.state).toBe('wrong');
 		expect(row(1).querySelector('.cp-row-feedback')?.textContent).toBe('Keep the send step.');
-		expect(row(2).querySelector('.cp-row-feedback')?.textContent).toBe('Not this one.');
+		expect(row(2).querySelector('.cp-row-feedback')?.textContent).toBe('Pas celle-ci.');
 		select(1).value = '0';
 		select(2).value = '1';
 		click('.cp-check');
-		expect(feedback()).toBe('Correct. Smaller is safer.');
+		expect(feedback()).toBe('Juste. Smaller is safer.');
 		expect(row(1).dataset.state).toBe('right');
-		expect(row(1).querySelector('.cp-row-feedback')?.textContent).toBe('Right.');
+		expect(row(1).querySelector('.cp-row-feedback')?.textContent).toBe('Juste.');
 		expect(state()).toBe('passed');
 	});
 	it('give up fills every row neutrally and shows the rationale', () => {
@@ -691,6 +691,6 @@ describe('match', () => {
 		expect(select(2).value).toBe('1');
 		expect(row(1).dataset.state).toBe('revealed');
 		expect(row(1).querySelector('.cp-row-feedback')?.textContent).toBe('');
-		expect(feedback()).toBe('Each row now shows its answer. Smaller is safer.');
+		expect(feedback()).toBe('Chaque ligne affiche maintenant sa réponse. Smaller is safer.');
 	});
 });

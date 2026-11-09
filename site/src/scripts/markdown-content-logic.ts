@@ -41,10 +41,10 @@ export function finishView(lesson: LessonEntry | undefined, open: number): Finis
 	const finished = lesson?.state === 'finished';
 	return {
 		disabled: finished || open > 0,
-		label: finished ? `Finished ✓ (${lesson.at})` : 'Mark lesson finished',
+		label: finished ? `Terminée ✓ (${lesson.at})` : 'Marquer la leçon comme terminée',
 		note:
 			!finished && open > 0
-				? `Pass or skip ${open} more checkpoint${open === 1 ? '' : 's'} to finish this lesson.`
+				? `Réussissez ou passez encore ${open} question${open === 1 ? '' : 's'} de contrôle pour terminer cette leçon.`
 				: '',
 	};
 }
@@ -53,6 +53,6 @@ export function finishView(lesson: LessonEntry | undefined, open: number): Finis
 export function skipView(lesson: LessonEntry | undefined): { disabled: boolean; label: string } {
 	return {
 		disabled: lesson?.state === 'skipped' || lesson?.state === 'finished',
-		label: lesson?.state === 'skipped' ? `Skipped (${lesson.at})` : 'I know this, skip it',
+		label: lesson?.state === 'skipped' ? `Passée (${lesson.at})` : 'Je connais déjà, passer',
 	};
 }

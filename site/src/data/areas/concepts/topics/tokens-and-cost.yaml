@@ -1,55 +1,51 @@
 id: concepts/tokens-and-cost
 area: concepts
-name: Tokens, cost and effort
+name: Jetons, coût et effort
 definition: >-
-  Every request to a model is counted and billed in tokens. This topic covers
-  the counts a request reports, why each request in a long session costs more
-  than the one before, how prompt caching makes an unchanged start of a
-  request cheap, and how an effort setting trades thoroughness against
-  tokens.
+  Chaque requête à un modèle est comptée et facturée en jetons. Ce thème couvre les nombres
+  qu’indique une requête, la raison pour laquelle chaque requête d’une longue session coûte plus
+  que la précédente, la façon dont la mise en cache du prompt rend peu coûteux le début inchangé
+  d’une requête, et la façon dont un réglage d’effort arbitre entre minutie et nombre de jetons.
 concepts:
   - id: input-and-output-tokens
-    name: Input and output tokens
+    name: Jetons d’entrée et de sortie
     definition: >-
-      The two counts every response reports. Input tokens are everything the
-      request sent: instructions, tool descriptions, the history and the new
-      message. Output tokens are what the model wrote, including tool
-      requests and any thinking, and each one costs several times as much as
-      an input token. With prompt caching, the input count is split further
-      into tokens written to the cache, tokens read from it and the rest.
-      Reading these counts shows where the cost of a request comes from.
+      Les deux nombres qu’indique chaque réponse. Les jetons d’entrée couvrent tout ce que la requête
+      a envoyé : instructions, descriptions d’outils, historique et nouveau message. Les jetons de
+      sortie couvrent ce que le modèle a écrit, demandes d’outils et réflexion comprises, et chacun
+      coûte plusieurs fois le prix d’un jeton d’entrée. Avec la mise en cache du prompt, le nombre
+      d’entrée se découpe encore en jetons écrits dans le cache, jetons lus depuis le cache, et le
+      reste. Lire ces nombres montre d’où vient le coût d’une requête.
   - id: growing-session-cost
-    name: Growing session cost
+    name: Coût croissant d’une session
     definition: >-
-      Because the model is stateless, each request in a
-      session sends the whole conversation again, and an agent sends a new
-      request after every batch of tool results. So each request carries
-      everything before it, and a question late in a long session costs more
-      than the same question in a new one. Starting fresh for an unrelated
-      task resets the history, and compacting shrinks it at the price of one
-      large summary request.
+      Comme le modèle est sans état, chaque requête d’une session renvoie toute la conversation, et un
+      agent envoie une nouvelle requête après chaque lot de résultats d’outils. Chaque requête
+      transporte donc tout ce qui la précède, et une question posée tard dans une longue session coûte
+      plus cher que la même question dans une nouvelle session. Repartir de zéro pour une tâche sans
+      rapport remet l’historique à zéro, et le compactage le réduit au prix d’une grosse requête de
+      résumé.
   - id: prompt-caching
-    name: Prompt caching
+    name: Mise en cache du prompt
     definition: >-
-      Reusing the processing of the opening part of a request when a later
-      request starts with exactly the same tokens. The reused part is billed
-      at a small fraction of the normal input price. The opening part has a
-      fixed order: tool descriptions, then the system prompt, then the
-      messages. After a change, everything from that point on is cached
-      again, at more than the normal input price. An unused cache expires
-      after five minutes, or after one hour at a higher write price.
+      La réutilisation du traitement de la partie initiale d’une requête quand une requête ultérieure
+      commence par exactement les mêmes jetons. La partie réutilisée est facturée à une petite
+      fraction du prix d’entrée normal. La partie initiale suit un ordre fixe : descriptions d’outils,
+      puis prompt système, puis messages. Après une modification, tout ce qui suit ce point est remis
+      en cache, à un prix supérieur au prix d’entrée normal. Un cache inutilisé expire au bout de cinq
+      minutes, ou au bout d’une heure à un prix d’écriture plus élevé.
   - id: effort-level
-    name: Effort level
+    name: Niveau d’effort
     definition: >-
-      A setting that tells the model how many tokens to spend on a response,
-      from low to max. Higher effort gives more thinking and more thorough
-      tool use, and costs more tokens and time. Lower effort is faster and
-      cheaper and suits simple work. The setting guides the model but does
-      not set a hard limit, and on at least one model it does not reliably
-      change the length of the answer. Changing it in one conversation can
-      invalidate the prompt cache.
+      Un réglage qui indique au modèle combien de jetons consacrer à une réponse, de bas à max. Un
+      effort plus élevé donne plus de réflexion et un usage des outils plus minutieux, et il coûte
+      plus de jetons et de temps. Un effort plus bas est plus rapide et moins cher, et il convient au
+      travail simple. Le réglage oriente le modèle sans fixer de limite stricte, et sur au moins un
+      modèle il ne change pas de façon fiable la longueur de la réponse. Le modifier au cours d’une
+      conversation peut invalider le cache du prompt.
 links:
   prerequisites: [concepts/how-models-work]
   related: [concepts/limits, using-agents/choosing-tools]
   specializations: []
-sources: [Claude docs prompt-caching, Claude Code costs, Claude docs effort, Claude docs messages, Claude docs pricing, OpenAI Academy optimize-ai-application-performance-1k50h]
+sources: [Claude docs prompt-caching, Claude Code costs, Claude docs effort, Claude docs messages,
+      Claude docs pricing, OpenAI Academy optimize-ai-application-performance-1k50h]

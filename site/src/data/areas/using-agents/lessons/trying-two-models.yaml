@@ -11,10 +11,10 @@ introduces: [model-fit, cost-and-speed]
 assumes:
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
 extends-to:
   - label: "Applied AI Foundations, module 2: when to switch ChatGPT to a reasoning model (OpenAI Academy, free account)"
     href: https://academy.openai.com/public/courses/applied-ai-foundations-szsmv

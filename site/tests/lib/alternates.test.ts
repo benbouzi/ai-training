@@ -2,8 +2,8 @@ import { alternatePaths, alternateSources, coursePlanMarkdown } from '@lib/alter
 import { getCourse } from '@lib/courses';
 import { describe, expect, it, vi } from 'vitest';
 
-const site = 'https://schubergphilis.github.io';
-const ROOT = 'https://schubergphilis.github.io/ai-training';
+const site = 'https://benbouzi.github.io';
+const ROOT = 'https://benbouzi.github.io/ai-training';
 
 vi.mock('astro:content', async () => {
 	const { alternateDocs } = await import('./alternate-fixtures');

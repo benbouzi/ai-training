@@ -1,251 +1,256 @@
 import { Choice, MultiChoice, Sort, Pitfall, Exercise, Recap } from '@components/lesson';
 
-In the last lesson you learned to tell an assistant from an agent by
-asking what it can do without another prompt, and you saw that the
-harness holds a permission check between a tool request and the tool.
-This lesson puts that check on a scale. Agents with the same tools can
-be far apart on it, and one agent can move along it with a change of
-settings. By the end you can place any product or workflow on the scale
-by asking one question, and you can say what would move it one step up
-or down.
+Dans la leçon précédente, vous avez appris à distinguer un assistant d’un agent
+en demandant ce qu’il peut faire sans nouveau prompt, et vous avez vu que le
+harnais place une vérification de permissions entre une demande d’outil et
+l’outil. Cette leçon place cette vérification sur une échelle. Des agents dotés
+des mêmes outils peuvent être très éloignés sur cette échelle, et un même agent
+peut s’y déplacer avec un changement de réglage. À la fin, vous saurez placer
+n’importe quel produit ou processus sur l’échelle en posant une seule question,
+et dire ce qui le ferait monter ou descendre d’un cran.
 
-## Three points on one scale
+## Trois points sur une même échelle
 
-The **degree of autonomy** of a workflow is how much the system may do
-before a person sees it. The scale has many points, and three of them
-are enough for most conversations.
+Le **degré d’autonomie** d’un processus est ce que le système peut faire avant
+qu’une personne ne le voie. L’échelle compte de nombreux points, et trois
+suffisent pour la plupart des discussions.
 
-- **Suggests.** The system proposes, and a person does every action.
-  A drafted email that waits for you to press send, or a proposed code
-  change that waits for you to accept it, sits here.
-- **Acts, and asks before anything hard to undo.** The system takes the
-  ordinary steps on its own and stops for approval at the steps that
-  can't be taken back. An agent that changes files in a folder by itself
-  and asks before it runs a command that reaches outside the folder sits
-  here.
-- **Runs unattended.** The system finishes the whole task, and a person
-  looks at the result afterwards, if at all. A job that runs
-  overnight and posts its result to a channel sits here.
+- **Il suggère.** Le système propose, et une personne fait chaque action. Un
+  courriel rédigé qui attend que vous appuyiez sur « envoyer », ou une
+  modification de code proposée qui attend que vous l’acceptiez, se situe ici.
+- **Il agit, et demande avant tout ce qui est difficile à annuler.** Le système
+  fait seul les étapes ordinaires et s’arrête pour obtenir un accord aux étapes
+  sur lesquelles on ne peut pas revenir. Un agent qui modifie seul les fichiers
+  d’un dossier et demande avant de lancer une commande qui sort du dossier se
+  situe ici.
+- **Il tourne sans surveillance.** Le système termine toute la tâche, et une
+  personne regarde le résultat après coup, si elle le regarde. Une tâche qui
+  tourne la nuit et publie son résultat dans un canal se situe ici.
 
-The points share one question, and it isn't "how much did the
-model write". It is "who decided the next step". At the low end a
-person decides every step. In the middle the system decides most steps
-and a person decides the ones that matter most. At the high end the
-system decides every step (@DLAI-11).
+Les trois points répondent à une seule question : qui a décidé de l’étape
+suivante ? En bas de
+l’échelle, une personne décide de chaque étape. Au milieu, le système décide de
+la plupart des étapes et une personne décide de celles qui comptent le plus. En
+haut, le système décide de chaque étape (@DLAI-11).
 
-## Who decides the next step?
+## Qui décide de l’étape suivante ?
 
-The amount of text a system produces tells you nothing about its
-autonomy. Autocomplete in a code editor can write a whole function from
-one comment. It is still at the low end, because nothing goes into the
-file until the programmer presses a key to accept it. A person decided
-every step. A small job that renames one file every night with no one
-watching is at the high end, because nobody decided anything after it was
-set up.
+La quantité de texte que produit un système ne dit rien de son autonomie.
+L’autocomplétion d’un éditeur de code peut écrire une fonction entière à partir
+d’un commentaire. Elle reste en bas de l’échelle, parce que rien n’entre dans le
+fichier tant que le programmeur n’appuie pas sur une touche pour l’accepter. Une
+personne a décidé de chaque étape. Une petite tâche qui renomme un fichier
+chaque nuit sans que personne ne regarde se situe en haut, parce que personne
+n’a rien décidé après sa mise en place.
 
-So when you place a workflow, ignore the size of the output and the name
-on the box. Follow one task from the prompt to the end, and at each step
-ask who chose it. The harness from the last lesson is where the answer
-is written down: the permission check either asks a person, or it lets
-the action through (@AEC-01). Count how often it asks, and at which
-steps, and you have the workflow's place on the scale.
+Quand vous placez un processus, ignorez donc la taille de la sortie et le nom
+sur la boîte. Suivez une tâche du prompt jusqu’à la fin, et à chaque étape
+demandez qui l’a choisie. Le harnais de la leçon précédente est l’endroit où la
+réponse est écrite : la vérification de permissions demande à une personne, ou
+elle laisse passer l’action (@AEC-01). Comptez combien de fois elle demande, et à
+quelles étapes, et vous avez la place du processus sur l’échelle.
 
 <Sort id="sort-six-workflows" objective="concepts/recognizes-agents/places-on-autonomy-scale"
   concepts={['degree-of-autonomy']}
-  context="The lesson gives a three-point autonomy scale: suggests (a person does every action), acts and asks before anything hard to undo, and runs unattended. The place on the scale comes from who decides the next step, never from how much text the system produces."
-  title="Where does each workflow sit?" hint="For each one, follow the task to its end. Who decided the steps along the way, and at which steps did a person get asked?"
-  buckets={['Suggests', 'Acts, asks before the hard-to-undo step', 'Runs unattended']}
+  context="La leçon donne une échelle d’autonomie en trois points : il suggère (une personne fait chaque action), il agit et demande avant tout ce qui est difficile à annuler, et il tourne sans surveillance. La place sur l’échelle vient de qui décide de l’étape suivante, jamais de la quantité de texte produite."
+  title="Où se situe chaque processus ?" hint="Pour chacun, suivez la tâche jusqu’au bout. Qui a décidé des étapes en chemin, et à quelles étapes a-t-on demandé à une personne ?"
+  buckets={['Il suggère', 'Il agit, demande avant l’étape difficile à annuler', 'Il tourne sans surveillance']}
   items={[
-    { text: 'Autocomplete in an editor writes a whole function, and the programmer presses a key to accept it', bucket: 0 },
-    { text: 'A mail assistant drafts a reply and waits for you to press send', bucket: 0 },
-    { text: 'A coding agent changes files in the project folder on its own and stops to ask before it sends anything to a shared server', bucket: 1 },
-    { text: 'A travel agent app fills in the booking for the flights it finds, and asks you before it pays', bucket: 1 },
-    { text: 'A nightly job reads the support inbox, files each ticket under a category and closes the duplicates', bucket: 2 },
-    { text: 'A research agent searches, reads and writes a report while you sleep, and you read it in the morning', bucket: 2 },
+    { text: 'L’autocomplétion d’un éditeur écrit une fonction entière, et le programmeur appuie sur une touche pour l’accepter', bucket: 0 },
+    { text: 'Un assistant de messagerie rédige une réponse et attend que vous appuyiez sur « envoyer »', bucket: 0 },
+    { text: 'Un agent de code modifie seul les fichiers du dossier du projet et s’arrête pour demander avant d’envoyer quoi que ce soit vers un serveur partagé', bucket: 1 },
+    { text: 'Une application d’agence de voyages remplit la réservation des vols qu’elle trouve, et vous demande avant de payer', bucket: 1 },
+    { text: 'Une tâche nocturne lit la boîte du support, classe chaque ticket dans une catégorie et clôt les doublons', bucket: 2 },
+    { text: 'Un agent de recherche cherche, lit et rédige un rapport pendant que vous dormez, et vous le lisez le matin', bucket: 2 },
   ]} />
 
 <Choice id="whole-function-low-autonomy" phase="review" objective="concepts/recognizes-agents/places-on-autonomy-scale"
   concepts={['degree-of-autonomy']}
-  context="The autonomy scale runs from suggests, through acts and asks before anything hard to undo, to runs unattended. The place comes from who decides the next step, and the amount of text produced says nothing about it."
-  title="Where does the autocomplete sit?" hint="After the function appears on screen, who decides whether it goes into the file?"
+  context="L’échelle d’autonomie va de il suggère, en passant par il agit et demande avant tout ce qui est difficile à annuler, jusqu’à il tourne sans surveillance. La place vient de qui décide de l’étape suivante, et la quantité de texte produite n’en dit rien."
+  title="Où se situe l’autocomplétion ?" hint="Une fois la fonction affichée à l’écran, qui décide si elle entre dans le fichier ?"
   options={[
-    { text: 'High, because it wrote a whole function from one comment.', why: 'The size of the output is the wrong measure. A long suggestion that a person has to accept is still a suggestion.' },
-    { text: 'In the middle, because it acts but the programmer can undo the edit.', why: 'Undo is available after the fact, but the autocomplete never acted on its own. It waited for a keypress before anything changed.' },
-    { text: 'Low, because the programmer accepts each suggestion before it goes in.', correct: true },
+    { text: 'En haut, parce qu’elle a écrit une fonction entière à partir d’un commentaire.', why: 'La taille de la sortie n’est pas la bonne mesure. Une longue suggestion qu’une personne doit accepter reste une suggestion.' },
+    { text: 'Au milieu, parce qu’elle agit mais que le programmeur peut annuler la modification.', why: 'L’annulation est possible après coup, mais l’autocomplétion n’a jamais agi seule. Elle a attendu une touche avant que quoi que ce soit change.' },
+    { text: 'En bas, parce que le programmeur accepte chaque suggestion avant qu’elle entre dans le fichier.', correct: true },
   ]}>
-An editor's autocomplete writes a fifty-line function from a one-line
-comment. Where is that workflow on the autonomy scale?
+L’autocomplétion d’un éditeur écrit une fonction de cinquante lignes à partir
+d’un commentaire d’une ligne. Où se situe ce processus sur l’échelle
+d’autonomie ?
 </Choice>
 
-## One agent, three settings
+## Un agent, trois réglages
 
-Autonomy is a setting chosen for a task, and the same product can sit on
-each of the three points in turn. Take a coding agent that runs in a
-programmer's editor. Its vendor documents a set of permission modes, and
-the mode decides which actions the agent takes without asking
-(@Claude Code permission modes). Described in plain words:
+L’autonomie est un réglage choisi pour une tâche, et un même produit peut
+occuper tour à tour chacun des trois points. Prenez un agent de code qui
+fonctionne dans l’éditeur d’un programmeur. Son fournisseur documente un
+ensemble de modes de permission, et le mode décide des actions que l’agent
+effectue sans demander (@Claude Code permission modes). En termes simples :
 
-- In its manual mode, the agent reads files and runs a few read-only
-  commands on its own, and asks before every edit, every other command
-  and anything that reaches the network. Every change waits for a yes.
-  This is the low end of the scale.
-- In its accept-edits mode, the agent edits, moves, copies and removes
-  files inside the project folder by itself, and asks before any other
-  command. It acts inside the folder, and it asks before the steps that
-  reach past it. This is the middle.
-- In its skip-all-checks mode, the agent runs nearly everything without
-  a prompt.
-  The vendor's page says to use this mode only inside an isolated
-  container or virtual machine, a place where a mistake can't reach the
-  rest of the computer. This is the high end.
+- Dans son mode manuel, l’agent lit des fichiers et lance seul quelques
+  commandes en lecture seule, et il demande avant chaque modification, chaque
+  autre commande et tout ce qui passe par le réseau. Chaque changement attend un
+  oui. C’est le bas de l’échelle.
+- Dans son mode d’acceptation des modifications, l’agent modifie, déplace,
+  copie et supprime seul des fichiers dans le dossier du projet, et il demande
+  avant toute autre commande. Il agit dans le dossier, et il demande avant les
+  étapes qui en sortent. C’est le milieu.
+- Dans son mode qui saute toutes les vérifications, l’agent lance presque tout
+  sans demander. La page du fournisseur recommande de n’utiliser ce mode que
+  dans un conteneur ou une machine virtuelle isolés, un endroit d’où une erreur
+  ne peut pas atteindre le reste de l’ordinateur. C’est le haut de l’échelle.
 
-The agent, the model and the tools are the same in all three, and the
-agent is at three places on the scale. One setting in the harness made
-the difference, so a product on its own can't be placed. A product page
-that says "agent" describes a range, and
-the place on the scale is fixed only once someone picks the setting for
-a task (@Claude Code permission modes).
+L’agent, le modèle et les outils sont les mêmes dans les trois cas, et l’agent
+se trouve à trois endroits de l’échelle. Un seul réglage du harnais a fait la
+différence : un produit seul ne peut donc pas être placé. Une page de
+présentation qui dit « agent » décrit une plage, et la place sur l’échelle n’est
+fixée qu’une fois que quelqu’un a choisi le réglage pour une tâche
+(@Claude Code permission modes).
 
-Which setting fits a task depends on how costly a mistake is and how
-easily it can be undone. Edits in a folder under
-version control are cheap to undo, so a person can let
-the agent make them and read the result afterwards. A command that
-deletes files, sends a message or spends money is costly or impossible
-to take back, so the agent should stop there. Where both answers are
-"cheap and easy", the high end is fine. Where either answer is "costly"
-or "hard", pick a setting that asks before that step.
+Le réglage qui convient à une tâche dépend du coût d’une erreur et de la
+facilité avec laquelle on peut l’annuler. Des modifications dans un dossier sous
+gestion de versions s’annulent facilement : une personne peut donc laisser
+l’agent les faire et lire le résultat après coup. Une commande qui supprime des
+fichiers, envoie un message ou dépense de l’argent est coûteuse, voire
+impossible, à annuler : l’agent doit donc s’arrêter là. Quand les deux réponses
+sont « peu coûteux et facile », le haut de l’échelle convient. Quand l’une des
+réponses est « coûteux » ou « difficile », choisissez un réglage qui demande
+avant cette étape.
 
 <Choice id="pick-the-setting" objective="concepts/recognizes-agents/places-on-autonomy-scale"
   concepts={['degree-of-autonomy', 'harness']}
-  context="A coding agent has three permission settings: manual (asks before every edit and nearly every command), accept-edits (edits, moves, copies and removes files in the project folder by itself and asks before any other command) and skip-all-checks (nearly no prompts, for use inside an isolated container only). The right setting depends on how costly a mistake is and how easily it can be undone."
-  title="Which setting for this task?" hint="Which steps of this task are cheap to undo, and which one isn't?"
+  context="Un agent de code a trois réglages de permission : manuel (il demande avant chaque modification et presque chaque commande), acceptation des modifications (il modifie, déplace, copie et supprime seul des fichiers dans le dossier du projet et demande avant toute autre commande) et saut de toutes les vérifications (presque aucune demande, à utiliser seulement dans un conteneur isolé). Le bon réglage dépend du coût d’une erreur et de la facilité avec laquelle on peut l’annuler."
+  title="Quel réglage pour cette tâche ?" hint="Quelles étapes de cette tâche s’annulent facilement, et laquelle ne s’annule pas ?"
   options={[
-    { text: 'Manual, so that she approves each of the many small edits by hand.', why: 'The edits are tracked by version control and cheap to undo. Approving each of them one by one costs her time and buys her nothing that reading the result afterwards would not.' },
-    { text: 'Accept-edits, so the edits run on their own and the agent asks before the publish command.', correct: true },
-    { text: 'Skip-all-checks, because the edits are tracked and the publish command is routine.', why: 'The edits can be undone, but a published site can\'t be unpublished by pressing undo, and in this mode nothing asks before that step. The vendor also limits this mode to an isolated container, which her laptop isn\'t.' },
+    { text: 'Le mode manuel, pour qu’elle approuve à la main chacune des nombreuses petites modifications.', why: 'Les modifications sont suivies par la gestion de versions et faciles à annuler. Les approuver une par une lui coûte du temps et ne lui apporte rien de plus qu’une lecture du résultat après coup.' },
+    { text: 'L’acceptation des modifications, pour que les corrections se fassent seules et que l’agent demande avant la commande de publication.', correct: true },
+    { text: 'Le saut de toutes les vérifications, parce que les modifications sont suivies et que la commande de publication est routinière.', why: 'Les modifications peuvent être annulées, mais on ne dépublie pas un site en appuyant sur « annuler », et dans ce mode rien ne demande avant cette étape. Le fournisseur réserve aussi ce mode à un conteneur isolé, ce que n’est pas son ordinateur portable.' },
   ]}>
-A writer asks a coding agent to fix the spelling in forty documentation
-files that version control tracks, and then to run the command that
-publishes the site. She works on her own laptop. Which setting fits?
+Une rédactrice demande à un agent de code de corriger l’orthographe de quarante
+fichiers de documentation suivis par la gestion de versions, puis de lancer la
+commande qui publie le site. Elle travaille sur son propre ordinateur portable.
+Quel réglage convient ?
 </Choice>
 
 <Choice id="same-product-two-places" phase="review" objective="concepts/recognizes-agents/places-on-autonomy-scale"
   concepts={['degree-of-autonomy', 'harness']}
-  context="The autonomy scale runs from suggests, through acts and asks before anything hard to undo, to runs unattended. One agent product can sit at different points depending on its permission setting, because the setting decides which actions the harness lets through without asking."
-  title="Same product, one report" hint="What is the report about: the product, or the product as each team runs it?"
+  context="L’échelle d’autonomie va de il suggère, en passant par il agit et demande avant tout ce qui est difficile à annuler, jusqu’à il tourne sans surveillance. Un même produit d’agent peut occuper différents points selon son réglage de permission, parce que ce réglage décide des actions que le harnais laisse passer sans demander."
+  title="Même produit, un seul rapport" hint="Sur quoi porte le rapport : sur le produit, ou sur le produit tel que chaque équipe l’utilise ?"
   options={[
-    { text: 'The report is right, because a product has one place on the scale and the second team is using it wrong.', why: 'A product describes a range. Where it sits is fixed by the setting a team picks, and two settings give two honest answers.' },
-    { text: 'The report needs one line per team, because the setting each team picked decides where its agent sits.', correct: true },
-    { text: 'The report should place the product at the high end, because that is the most it can do.', why: 'The most a product can do describes its reach. The scale is about who decides the next step in a given workflow, and in the first team a person decides every edit.' },
+    { text: 'Le rapport a raison, parce qu’un produit a une seule place sur l’échelle et que la seconde équipe l’utilise mal.', why: 'Un produit décrit une plage. Sa place est fixée par le réglage que choisit une équipe, et deux réglages donnent deux réponses honnêtes.' },
+    { text: 'Le rapport a besoin d’une ligne par équipe, parce que le réglage choisi par chaque équipe décide de la place de son agent.', correct: true },
+    { text: 'Le rapport devrait placer le produit en haut de l’échelle, parce que c’est le maximum de ce qu’il peut faire.', why: 'Le maximum de ce que peut faire un produit décrit sa portée. L’échelle porte sur qui décide de l’étape suivante dans un processus donné, et dans la première équipe, une personne décide de chaque modification.' },
   ]}>
-Two teams use the same coding agent. One runs it in manual mode, and the
-other in a mode that skips every prompt inside a container. A colleague
-writes "this product is a low-autonomy tool" in a report about it. What
-is wrong with that line?
+Deux équipes utilisent le même agent de code. L’une le fait tourner en mode
+manuel, et l’autre dans un mode qui saute toutes les demandes, à l’intérieur
+d’un conteneur. Un collègue écrit « ce produit est un outil peu autonome » dans
+un rapport à son sujet. Qu’est-ce qui ne va pas dans cette ligne ?
 </Choice>
 
-## What moves a workflow a step
+## Ce qui fait bouger un processus d’un cran
 
-Once a workflow has its place, ask what would move it. The answer is
-always a step where the decision changes hands, and naming it makes the
-design choice visible.
+Une fois qu’un processus a sa place, demandez ce qui le ferait bouger. La
+réponse est toujours une étape où la décision change de mains, et la nommer rend
+visible le choix de conception.
 
-Take an agent that fixes a bug and opens a pull request for a person to
-review and merge. It acts, and a person approves the step that changes
-the shared code. Let the same agent merge the pull request itself, and it
-moves up a point: the change reaches everyone without a person seeing
-it first. If the same agent is changed to display the proposed change without
-touching any file, it moves down a point, to suggests.
+Prenez un agent qui corrige un bogue et ouvre une pull request qu’une personne
+relit et fusionne. Il agit, et une personne approuve l’étape qui modifie le code
+partagé. Laissez le même agent fusionner lui-même la pull request, et il monte
+d’un point : la modification atteint tout le monde sans qu’une personne l’ait vue
+d’abord. Si le même agent est modifié pour afficher la modification proposée
+sans toucher à aucun fichier, il descend d’un point, vers « il suggère ».
 
-The moves in the other examples work the same way. The mail assistant
-that drafts a reply moves up when it is given a send tool and permission
-to use it. The nightly job that closes duplicate tickets moves down when
-it is changed to list the duplicates for a person to close in the
-morning. In each case the tool list may not change at all. The change
-is which step a person decides, and that is a choice someone made, or
-left to the product's default.
+Les déplacements des autres exemples fonctionnent de la même façon. L’assistant
+de messagerie qui rédige une réponse monte quand on lui donne un outil d’envoi
+et la permission de s’en servir. La tâche nocturne qui clôt les tickets en
+double descend quand on la modifie pour qu’elle liste les doublons et laisse une
+personne les clore le matin. Dans chaque cas, la liste d’outils peut ne pas
+changer du tout. Ce qui change, c’est l’étape dont une personne décide, et c’est
+un choix que quelqu’un a fait, ou laissé au réglage par défaut du produit.
 
 <MultiChoice id="what-moves-it" objective="concepts/recognizes-agents/places-on-autonomy-scale"
   concepts={['degree-of-autonomy', 'tool']}
-  context="A workflow moves up the autonomy scale when a step that a person decided is handed to the system, and down when a step the system decided is handed back to a person. The lesson's example is an agent that opens a pull request, which moves up if it also merges it."
-  title="Which changes move it up?" hint="For each change, ask whether a step a person used to decide now happens without them."
+  context="Un processus monte sur l’échelle d’autonomie quand une étape dont décidait une personne est confiée au système, et il descend quand une étape dont décidait le système est rendue à une personne. L’exemple de la leçon est un agent qui ouvre une pull request, et qui monte s’il la fusionne aussi."
+  title="Quels changements le font monter ?" hint="Pour chaque changement, demandez-vous si une étape dont décidait une personne se fait maintenant sans elle."
   options={[
-    { text: 'The agent merges the pull request itself once the checks pass.', correct: true },
-    { text: 'The agent is given a faster model so the fix arrives in half the time.', why: 'Speed changes how long the work takes. A person still reviews and merges, so the same steps are decided by the same people.' },
-    { text: 'The agent also deploys the merged change to production without a prompt.', correct: true },
-    { text: 'The agent writes a longer description in the pull request.', why: 'More text in the description is more output, and output size says nothing about autonomy. The merge still waits for a person.' },
+    { text: 'L’agent fusionne lui-même la pull request une fois les contrôles passés.', correct: true },
+    { text: 'L’agent reçoit un modèle plus rapide, et la correction arrive deux fois plus vite.', why: 'La vitesse change la durée du travail. Une personne relit et fusionne toujours : les mêmes étapes sont décidées par les mêmes personnes.' },
+    { text: 'L’agent déploie aussi en production la modification fusionnée, sans demander.', correct: true },
+    { text: 'L’agent écrit une description plus longue dans la pull request.', why: 'Une description plus longue est une sortie plus abondante, et la taille de la sortie ne dit rien de l’autonomie. La fusion attend toujours une personne.' },
   ]}>
-An agent fixes bugs and opens a pull request for a person to review and
-merge. Which of these changes move the workflow up the scale?
+Un agent corrige des bogues et ouvre une pull request qu’une personne relit et
+fusionne. Lesquels de ces changements font monter le processus sur l’échelle ?
 </MultiChoice>
 
 <Choice id="one-step-down" phase="review" objective="concepts/recognizes-agents/places-on-autonomy-scale"
   concepts={['degree-of-autonomy']}
-  context="A workflow moves down the autonomy scale when a step the system decided is handed back to a person, and up when a step a person decided is handed to the system. The tool list may stay the same."
-  title="Which change moves it down?" hint="Which change puts a person back in front of a step the job used to take on its own?"
+  context="Un processus descend sur l’échelle d’autonomie quand une étape dont décidait le système est rendue à une personne, et il monte quand une étape dont décidait une personne est confiée au système. La liste d’outils peut rester la même."
+  title="Quel changement le fait descendre ?" hint="Quel changement replace une personne devant une étape que la tâche faisait seule ?"
   options={[
-    { text: 'Run the job twice a night instead of once.', why: 'Running more often changes the schedule and nothing about who decides. Each run still closes tickets with nobody watching.' },
-    { text: 'Have the job list the duplicates it found and leave the closing to a person.', correct: true },
-    { text: 'Give the job a better model so it finds fewer false duplicates.', why: 'Fewer mistakes is a good change, and it doesn\'t move the workflow. The job still decides every close on its own.' },
+    { text: 'Lancer la tâche deux fois par nuit au lieu d’une.', why: 'Lancer plus souvent change le calendrier et rien à qui décide. Chaque exécution clôt encore des tickets sans que personne ne regarde.' },
+    { text: 'Faire lister par la tâche les doublons trouvés, et laisser leur clôture à une personne.', correct: true },
+    { text: 'Donner à la tâche un meilleur modèle pour qu’elle trouve moins de faux doublons.', why: 'Moins d’erreurs, c’est un bon changement, et il ne fait pas bouger le processus. La tâche décide toujours seule de chaque clôture.' },
   ]}>
-A nightly job reads the support inbox and closes the tickets it judges
-to be duplicates. Which change moves it one step down the scale?
+Une tâche nocturne lit la boîte du support et clôt les tickets qu’elle juge être
+des doublons. Quel changement la fait descendre d’un cran sur l’échelle ?
 </Choice>
 
-<Pitfall title="The default nobody looked at">
-A team lead installs a coding agent for her team and tells everyone it
-asks before it changes anything, because that is what she remembers from
-a demo a few months back. Nobody checks. On the plan the team is on, the
-vendor's built-in starting mode isn't the one she remembers from the
-demo. A fresh session starts in a mode where a second model approves
-actions instead of the person at the keyboard (@Claude Code permission modes).
-A week later a colleague finds that a run has rewritten files she meant
-to review first. Nothing went wrong that couldn't be undone, but the
-team had placed the product on the scale from memory, and the setting
-was another one. The setting decides the place, so the first thing to read
-when you install an agent, and again after each big update, is which
-mode it starts in.
+<Pitfall title="Le réglage par défaut que personne n’a regardé">
+Une cheffe d’équipe installe un agent de code pour son équipe et dit à tout le
+monde qu’il demande avant de modifier quoi que ce soit, parce que c’est ce
+dont elle se souvient d’une démonstration vue quelques mois plus tôt. Personne
+ne vérifie. Avec l’offre souscrite par l’équipe, le mode de départ intégré du
+fournisseur n’est pas celui dont elle se souvient. Une nouvelle session démarre
+dans un mode où un second modèle approuve les actions de l’agent, sans
+consulter la personne au clavier (@Claude Code permission modes). Une semaine plus tard, une
+collègue découvre qu’une exécution a réécrit des fichiers qu’elle comptait
+relire d’abord. Rien ne s’est passé qui ne puisse être annulé, mais l’équipe
+avait placé le produit sur l’échelle de mémoire, et le réglage était un autre.
+Le réglage décide de la place : la première chose à lire quand vous installez
+un agent, et de nouveau après chaque grosse mise à jour, c’est le mode dans
+lequel il démarre.
 </Pitfall>
 
-<Exercise stretch="Do the same for one agent product you use that isn't a coding agent, such as a mail assistant or a meeting notetaker. Find its permission settings on the settings screen, and write down which of the three points each setting lands on.">
+<Exercise stretch="Faites la même chose pour un produit d’agent que vous utilisez et qui n’est pas un agent de code, comme un assistant de messagerie ou un outil de prise de notes en réunion. Trouvez ses réglages de permission dans l’écran des réglages, et notez sur lequel des trois points tombe chaque réglage.">
 
-Pick one coding agent, either the one from this lesson or one your team
-uses. Read the vendor's page on its permission settings. For three of
-the settings, write one line each in a note: the name of the setting,
-which of the three points on the scale it lands on, and the one
-sentence that explains why (who decides which step). Then, for each
-line, add what would move that setting's workflow one step up and one
-step down. Fifteen minutes is enough.
+Choisissez un agent de code, celui de cette leçon ou celui qu’utilise votre
+équipe. Lisez la page du fournisseur sur ses réglages de permission. Pour trois
+de ces réglages, écrivez une ligne chacun dans une note : le nom du réglage, le
+point de l’échelle sur lequel il tombe, et la phrase qui explique pourquoi (qui
+décide de quelle étape). Ajoutez ensuite, pour chaque ligne, ce qui ferait monter
+d’un cran le processus de ce réglage, et ce qui le ferait descendre d’un cran.
+Quinze minutes suffisent.
 
-In a good result, each placement names a step and who decides it. "The
-agent edits by itself and asks before a command" is a placement, and
-"it is pretty autonomous" isn't. Each move names a step that changes
-hands, such as "let it merge" or "make it show the change instead of
-writing it". If two of your three settings landed on the same point,
-say what still separates them, because the scale has more points than
-the three named here.
+Dans un bon résultat, chaque placement nomme une étape et qui en décide.
+« L’agent modifie seul et demande avant une commande » est un placement, « il
+est assez autonome » n’en est pas un. Chaque déplacement nomme une étape qui
+change de mains, comme « le laisser fusionner » ou « lui faire montrer la
+modification au lieu de l’écrire ». Si deux de vos trois réglages sont tombés
+sur le même point, dites ce qui les sépare encore, parce que l’échelle compte
+plus de points que les trois nommés ici.
 
 </Exercise>
 
 <Recap>
 
-1. The degree of autonomy of a workflow is how much the system may do
-   before a person sees it. Three points cover most conversations:
-   suggests, acts and asks before anything hard to undo, and runs
-   unattended (@DLAI-11).
-2. Place a workflow by asking who decides the next step, never by how
-   much text the system produces. Autocomplete that writes a whole
-   function is low autonomy, because a person accepts each suggestion.
-3. Autonomy is a setting chosen for a task. One coding agent lands on
-   three different points in three permission modes, and the choice
-   depends on how costly a mistake is and how easily it can be undone
-   (@Claude Code permission modes).
-4. To move a workflow one step, change which step a person decides. An
-   agent that merges its own pull request has moved up. An agent that
-   shows a change instead of writing it has moved down.
-5. The safety course's [human in the loop](/safety/agent-risk/#human-in-the-loop)
-   section picks the steps that need a person, and the using-agents
-   course's [choosing autonomy](/using-agents/delegating/#choosing-autonomy)
-   section applies the same scale to a task you delegate.
+1. Le degré d’autonomie d’un processus est ce que le système peut faire avant
+   qu’une personne ne le voie. Trois points couvrent la plupart des
+   discussions : il suggère, il agit et demande avant tout ce qui est difficile
+   à annuler, et il tourne sans surveillance (@DLAI-11).
+2. Placez un processus en demandant qui décide de l’étape suivante, jamais
+   d’après la quantité de texte que produit le système. Une autocomplétion qui
+   écrit une fonction entière est peu autonome, parce qu’une personne accepte
+   chaque suggestion.
+3. L’autonomie est un réglage choisi pour une tâche. Un même agent de code tombe
+   sur trois points différents dans trois modes de permission, et le choix
+   dépend du coût d’une erreur et de la facilité avec laquelle on peut
+   l’annuler (@Claude Code permission modes).
+4. Pour faire bouger un processus d’un cran, changez l’étape dont une personne
+   décide. Un agent qui fusionne sa propre pull request est monté. Un agent qui
+   montre une modification au lieu de l’écrire est descendu.
+5. La section [humain dans la boucle](/safety/agent-risk/#human-in-the-loop) du
+   parcours sur la sécurité choisit les étapes qui demandent une personne, et la
+   section [choisir l’autonomie](/using-agents/delegating/#choosing-autonomy) du
+   parcours sur l’usage des agents applique la même échelle à une tâche que vous
+   déléguez.
 
 </Recap>

@@ -10,7 +10,7 @@ introduces: [reasoning-across-tool-levels]
 assumes:
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/thin-path
-    section: the-pair-behind-a-failure
+    section: la-paire-derrière-une-défaillance
   - objective: safety/verifies-output/calibrates-trust
     lesson: safety/checking-habits
     section: depth-scales-with-stakes

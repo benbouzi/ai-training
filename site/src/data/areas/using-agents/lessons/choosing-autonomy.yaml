@@ -10,7 +10,7 @@ introduces: []
 assumes:
   - objective: concepts/recognizes-agents/places-on-autonomy-scale
     lesson: concepts/autonomy-scale
-    section: three-points-on-one-scale
+    section: trois-points-sur-une-même-échelle
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
     section: blast-radius

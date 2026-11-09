@@ -1,8 +1,8 @@
 id: concepts/wrong-about-the-world
-title: Wrong about the world, or wrong about the text
+title: Se tromper sur le monde, ou sur le texte
 description: >-
-  Two kinds of wrong answer, one wrong about the world and one wrong about the text you gave the
-  model, and the check that finds each kind.
+  Deux types de réponse fausse, l’un qui se trompe sur le monde et l’autre sur le texte que vous
+  avez donné au modèle, et le contrôle qui repère chacun.
 mode: explanation
 covers: concepts/limits
 serves: [concepts/explains-models/names-failure-modes]
@@ -10,17 +10,17 @@ introduces: [factuality-and-faithfulness]
 assumes:
   - objective: concepts/explains-models/names-failure-modes
     lesson: concepts/how-models-work
-    section: failure-modes-named
+    section: les-défaillances-nommées
 extends-to:
-  - label: Spotting a hallucination
+  - label: Repérer une hallucination
     href: /safety/spotting-hallucination/
 after: [concepts/straight-answer]
 shorts: []
 exercise:
   kind: judge
   brief: >-
-    Sort five wrong answers into ones that are wrong about the world and ones that misstate the text
-    they were given, and name the check that finds each kind.
+    Classer cinq réponses fausses selon qu’elles se trompent sur le monde ou déforment le texte qui
+    leur a été donné, et nommer le contrôle qui repère chaque type.
 sources: [Huang 2025]
 issue: 684
 minutes: 10

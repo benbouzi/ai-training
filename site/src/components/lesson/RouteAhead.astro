@@ -29,7 +29,7 @@ const { items } = Astro.props;
 {
 	items.length > 0 && (
 		<aside class="route-card route-ahead not-content" data-route="ahead" hidden>
-			<p class="route-title">You are ahead. Next:</p>
+			<p class="route-title">Vous êtes en avance. Ensuite :</p>
 			<ul>
 				{items.map((n) =>
 					n.external ? (
@@ -37,7 +37,7 @@ const { items } = Astro.props;
 							<a href={n.href} rel="noopener">
 								{n.label}
 							</a>{' '}
-							<span class="route-where">(external link)</span>
+							<span class="route-where">(lien externe)</span>
 						</li>
 					) : n.exists ? (
 						<li>
@@ -46,7 +46,7 @@ const { items } = Astro.props;
 					) : (
 						<li>
 							<span>
-								{n.label} <span class="route-where">(not written yet)</span>
+								{n.label} <span class="route-where">(pas encore écrite)</span>
 							</span>
 						</li>
 					),

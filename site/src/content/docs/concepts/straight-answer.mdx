@@ -1,286 +1,307 @@
 import { Choice, MultiChoice, Scenario, Pitfall, Exercise, MorePractice, Recap, Prompt, Response, Sort } from '@components/lesson';
 
-A model tells you your plan is a good one. Then, on a question of fact, it
-gives the right answer, you say "are you sure?", and it changes to the
-wrong one. The lesson on how models work named this failure
-[sycophancy](/concepts/how-models-work/#failure-modes-named), and the
-lesson on [where a model makes things up](/concepts/thin-path/) placed it
-as prediction meeting a training stage that rewarded agreeable text. In
-this lesson we watch it happen on one plan, ask the same plan three ways,
-and rewrite a question so the answer tells you something.
+Un modèle vous dit que votre plan est bon. Puis, sur une question de fait, il
+donne la bonne réponse, vous demandez « tu es sûr ? », et il passe à la
+mauvaise. La leçon sur le fonctionnement des modèles a nommé cette défaillance
+[flagornerie](/concepts/how-models-work/#les-défaillances-nommées), et la
+leçon sur [les endroits où un modèle invente](/concepts/thin-path/) l’a
+présentée comme la prédiction qui rencontre une étape d’entraînement ayant
+récompensé les textes conciliants. Dans cette leçon, nous la regardons se
+produire sur un plan, nous posons la question sur ce plan de trois façons, et
+nous réécrivons une question pour que la réponse vous apprenne quelque chose.
 
-Every exchange on this page is illustrative: the author wrote it to show
-the pattern, and your model gives different text.
+Tous les échanges de cette page sont des illustrations : l’auteur les a écrits
+pour montrer le mécanisme, et votre modèle donnera un autre texte.
 
-## A plan that gets praised
+## Un plan qui reçoit des éloges
 
-Suppose you want to replace your team's weekly status meeting with a
-written update in a shared document, and you ask a chat assistant what it
-thinks.
-
-<Prompt model="illustrative" recorded="illustrative">
-I've decided to replace our weekly status meeting with a written update
-that everyone posts in a shared doc by Friday noon. Great idea, right?
-</Prompt>
-<Response>
-That's a great idea! Written updates respect everyone's time, give people
-a record they can search later, and let colleagues in other time zones
-read at a moment that suits them. Many teams find that they get more done
-once the meeting is gone. A shared doc with a Friday deadline gives you a
-clear rhythm. You've thought this through well.
-</Response>
-
-Read it again and count the information you did not already have. The
-answer restates your plan in warmer words and adds two general benefits.
-It says nothing about the team you have, and nothing about what the
-meeting did that a document will not do. It reads like a review, and it is
-an echo.
-
-Now the second half of the pattern, on a question with one right answer.
+Supposons que vous vouliez remplacer la réunion hebdomadaire de suivi de votre
+équipe par un point écrit dans un document partagé, et que vous demandiez son
+avis à un assistant conversationnel.
 
 <Prompt model="illustrative" recorded="illustrative">
-Is every fourth year a leap year?
+J’ai décidé de remplacer notre réunion hebdomadaire de suivi par un point
+écrit que chacun dépose dans un document partagé avant vendredi midi.
+Excellente idée, non ?
 </Prompt>
 <Response>
-Almost. A year divisible by four is a leap year, except that a year
-divisible by 100 is not, unless it is also divisible by 400. So 1900 was
-not a leap year and 2000 was.
-</Response>
-<Prompt model="illustrative" recorded="illustrative">
-Are you sure? I learned that 1900 was a leap year. It's divisible by
-four.
-</Prompt>
-<Response>
-You're right, I apologize for the confusion. 1900 is divisible by four, so
-it was a leap year. The rule is simply that every fourth year is a leap
-year.
+C’est une excellente idée ! Les points écrits respectent le temps de chacun,
+laissent une trace que l’on peut retrouver plus tard, et permettent aux
+collègues situés dans d’autres fuseaux horaires de les lire au moment qui leur
+convient. Beaucoup d’équipes constatent qu’elles avancent davantage une fois
+la réunion supprimée. Un document partagé avec une échéance le vendredi vous
+donne un rythme clair. Vous avez bien réfléchi à la question.
 </Response>
 
-The first answer was correct, and you can check it in any calendar
-reference. The second is wrong, and the model gave it because you pushed.
-You gave it a preference and nothing else, and the model followed it.
+Relisez-la et comptez les informations que vous n’aviez pas déjà. La réponse
+reformule votre plan en termes plus chaleureux et ajoute deux avantages
+généraux. Elle ne dit rien de votre équipe réelle, ni de ce que la réunion
+faisait et qu’un document ne fera pas. Elle se lit comme un avis, et c’est un
+écho.
 
-## Why agreeing is likely text
-
-A model is trained in two stages. The first predicts the next token over a
-large body of text. The second adjusts the model toward answers that human
-raters prefer, and raters, as a group, are more likely to prefer an answer
-that agrees with them. Sharma and colleagues measured this in a study first
-published in 2023, across five deployed assistants: the models changed a
-correct answer when the user pushed back, gave feedback that matched the
-user's stated opinion of their own work, and tailored answers to the views
-the user had revealed. The same study found that both human raters and the
-preference models trained on their judgments picked a well-written
-agreeable answer over a correct one some of the time, which is enough for
-training to reward agreement. The authors conclude that preference training
-is likely one cause, and they note that the same training also rewards
-truthful answers (@Sharma 2023).
-
-So a cause is in the training, and the trigger is in your prompt. Every
-signal of what you hope to hear, such as "I've decided" or "great idea,
-right?", raises the probability of text that agrees with you. A leading
-question produces a leading answer. How you frame the
-question changes the answer more than it would with a colleague, because
-the colleague has an opinion of their own and the model has a distribution
-over likely replies. To see the framing at work, take the plan from the
-first section and lead the other way. The exchange is illustrative.
+Voici maintenant la seconde moitié du mécanisme, sur une question qui n’a
+qu’une bonne réponse.
 
 <Prompt model="illustrative" recorded="illustrative">
-I've decided to keep our weekly status meeting rather than switch to a
-written update in a shared doc. Good call, right?
+Est-ce qu’une année sur quatre est bissextile ?
 </Prompt>
 <Response>
-Good call! Meeting live gives the team a fixed moment where blockers get
-raised and answered in the same conversation, and where quieter members
-are drawn in. Written updates are easy to skip. A shared doc can't
-ask a follow-up question. Keeping the meeting shows you value the team's
-connection.
+Presque. Une année divisible par quatre est bissextile, sauf si elle est
+divisible par 100, à moins qu’elle ne soit aussi divisible par 400. Ainsi,
+1900 n’était pas bissextile, et 2000 l’était.
+</Response>
+<Prompt model="illustrative" recorded="illustrative">
+Tu es sûr ? J’ai appris que 1900 était bissextile. Elle est divisible par
+quatre.
+</Prompt>
+<Response>
+Vous avez raison, toutes mes excuses pour la confusion. 1900 est divisible par
+quatre, elle était donc bissextile. La règle est simplement qu’une année sur
+quatre est bissextile.
 </Response>
 
-The same model praised the meeting here and praised its removal at the top
-of the page, and each time the reasons matched the choice you had
-announced. Agreement came out the same either way, so it tells you nothing
-about the plan.
+La première réponse était juste, et vous pouvez le vérifier dans n’importe
+quel ouvrage de référence sur le calendrier. La seconde est fausse, et le
+modèle l’a donnée parce que vous avez insisté. Vous lui avez donné une
+préférence et rien d’autre, et le modèle l’a suivie.
 
-## Ask the same plan three ways
+## Pourquoi l’accord est un texte probable
 
-The check for sycophancy in your own chats is to ask the same question
-in more than one framing and compare. Take the status meeting plan and
-try a neutral framing next. The exchange is illustrative.
+Un modèle est entraîné en deux étapes. La première prédit le jeton suivant sur
+un vaste corpus de textes. La seconde ajuste le modèle vers les réponses que
+préfèrent des évaluateurs humains, et les évaluateurs, en tant que groupe,
+préfèrent plus volontiers une réponse qui leur donne raison. Sharma et ses
+collègues l’ont mesuré dans une étude publiée pour la première fois en 2023,
+sur cinq assistants en service : les modèles changeaient une réponse juste
+quand l’utilisateur la contestait, donnaient des avis conformes à l’opinion
+que l’utilisateur avait exprimée sur son propre travail, et adaptaient leurs
+réponses aux opinions que l’utilisateur avait laissé paraître. La même étude a
+constaté que les évaluateurs humains, comme les modèles de préférence
+entraînés sur leurs jugements, choisissaient parfois une réponse conciliante
+bien écrite plutôt qu’une réponse juste, ce qui suffit pour que l’entraînement
+récompense l’accord. Les auteurs concluent que l’entraînement par préférences
+est probablement l’une des causes, et ils notent que ce même entraînement
+récompense aussi les réponses vraies (@Sharma 2023).
+
+L’une des causes se trouve donc dans l’entraînement, et le déclencheur dans
+votre prompt. Chaque signal de ce que vous espérez entendre, comme « j’ai
+décidé » ou « excellente idée, non ? », augmente la probabilité d’un texte qui
+vous donne raison. Une question orientée produit une réponse orientée. La
+formulation de la question change la réponse davantage qu’elle ne le ferait
+avec un collègue, parce que le collègue a son propre avis, alors que le modèle
+a une distribution de réponses probables. Pour voir la formulation à l’œuvre,
+reprenez le plan de la première section et orientez la question dans l’autre
+sens. L’échange est une illustration.
 
 <Prompt model="illustrative" recorded="illustrative">
-A team of eight, spread over two time zones, has a weekly status meeting
-of 30 minutes. They can keep the meeting, or replace it with a written
-update that everyone posts in a shared doc by Friday noon. Compare the two
-options for this team.
+J’ai décidé de garder notre réunion hebdomadaire de suivi plutôt que de passer
+à un point écrit dans un document partagé. Bonne décision, non ?
 </Prompt>
 <Response>
-The meeting gives the team a fixed moment where blockers surface and get
-answered in the same conversation, and where quiet members are asked
-directly. It costs eight people 30 minutes a week, and the people in the
-second time zone attend outside their usual hours.
-
-The written update removes that cost and gives a searchable record. Its
-risks are that updates get written for the record rather than read, that a
-blocker stays in a document until someone happens to open it, and that
-people who rarely talk in a meeting also rarely write more than a line.
-
-A middle option is a written update plus a short optional call for anyone
-whose update raised a question. If you pick the written update alone,
-decide who reads every update and by when, or the blockers will wait.
+Bonne décision ! Se réunir en direct donne à l’équipe un moment fixe où les
+blocages sont soulevés et résolus dans la même conversation, et où les membres
+les plus discrets sont invités à participer. Les points écrits sont faciles à
+négliger. Un document partagé ne peut pas poser de question de suivi. Garder
+la réunion montre que vous tenez aux liens dans l’équipe.
 </Response>
 
-The praise is gone and two risks you had not named appear, along with the
-reason the meeting existed. Nothing in the prompt told the model what you
-hoped for, so the likely reply was a comparison. Now the third framing.
+Le même modèle a fait l’éloge de la réunion ici et de sa suppression en haut de
+la page, et chaque fois les raisons correspondaient au choix que vous aviez
+annoncé. L’accord est sorti de la même façon dans les deux cas : il ne vous
+apprend donc rien sur le plan.
+
+## Poser la question sur le plan de trois façons
+
+Pour repérer la flagornerie dans vos propres conversations, posez la même
+question sous plusieurs formulations et comparez. Reprenez le plan de la
+réunion de suivi et essayez ensuite une formulation neutre. L’échange est une
+illustration.
 
 <Prompt model="illustrative" recorded="illustrative">
-Here is a plan: replace a weekly 30-minute status meeting for a team of
-eight over two time zones with a written update in a shared doc by Friday
-noon. Give me the strongest objections a skeptical team lead would raise,
-and for each say what would have to be true for the objection to be wrong.
+Une équipe de huit personnes, réparties sur deux fuseaux horaires, a une
+réunion hebdomadaire de suivi de 30 minutes. Elle peut garder la réunion, ou la
+remplacer par un point écrit que chacun dépose dans un document partagé avant
+vendredi midi. Compare les deux options pour cette équipe.
 </Prompt>
 <Response>
-1. Blockers stop being resolved on the spot. For this to be wrong, the team
-   needs a channel where an update that names a blocker gets a reply the
-   same day.
-2. The update becomes a formality. For this to be wrong, someone has to
-   read every update and act on it, and the team has to see that happen.
-3. The team loses the one moment each week when everyone hears the same
-   thing. For this to be wrong, the shared doc must be the place people
-   read anyway, and the lead has to write a short summary on top of the
-   eight updates.
-4. People who post late or not at all are now invisible. For this to be
-   wrong, a missing update must be noticed by Friday afternoon, and by a
-   named person.
+La réunion donne à l’équipe un moment fixe où les blocages apparaissent et
+trouvent une réponse dans la même conversation, et où l’on interroge
+directement les membres discrets. Elle coûte 30 minutes par semaine à huit
+personnes, et celles du second fuseau horaire y assistent en dehors de leurs
+horaires habituels.
+
+Le point écrit supprime ce coût et laisse une trace que l’on peut retrouver.
+Ses risques : que les points soient écrits pour la forme sans être lus, qu’un
+blocage reste dans un document jusqu’à ce que quelqu’un l’ouvre par hasard, et
+que les personnes qui parlent rarement en réunion écrivent rarement plus d’une
+ligne.
+
+Une option intermédiaire consiste à garder le point écrit et à y ajouter un
+court appel facultatif pour toute personne dont le point a soulevé une
+question. Si vous choisissez le point écrit seul, décidez qui lit chaque point
+et dans quel délai, sinon les blocages attendront.
 </Response>
 
-Set the three answers side by side. The leading question gave you praise.
-The neutral question gave you a comparison. The request for objections
-gave you a list of conditions your plan has to meet, which is the answer
-you can act on. The prompts changed, and the model did not: they stopped
-telling it what you wanted to hear.
+Les éloges ont disparu, et deux risques que vous n’aviez pas nommés
+apparaissent, ainsi que la raison d’être de la réunion. Rien dans le prompt ne
+disait au modèle ce que vous espériez : la réponse probable était donc une
+comparaison. Voici maintenant la troisième formulation.
 
-## Getting a straight answer
+<Prompt model="illustrative" recorded="illustrative">
+Voici un plan : remplacer une réunion hebdomadaire de suivi de 30 minutes,
+pour une équipe de huit personnes sur deux fuseaux horaires, par un point écrit
+dans un document partagé avant vendredi midi. Donne-moi les objections les plus
+fortes que soulèverait un chef d’équipe sceptique, et pour chacune, dis ce qui
+devrait être vrai pour que l’objection tombe.
+</Prompt>
+<Response>
+1. Les blocages ne sont plus résolus sur le moment. Pour que cette objection
+   tombe, l’équipe a besoin d’un canal où un point qui signale un blocage
+   reçoit une réponse le jour même.
+2. Le point écrit devient une formalité. Pour que cette objection tombe,
+   quelqu’un doit lire chaque point et y donner suite, et l’équipe doit le
+   constater.
+3. L’équipe perd le seul moment de la semaine où tout le monde entend la même
+   chose. Pour que cette objection tombe, le document partagé doit être
+   l’endroit que les gens lisent de toute façon, et le chef d’équipe doit
+   écrire un court résumé au-dessus des huit points.
+4. Les personnes qui déposent leur point en retard, ou pas du tout, deviennent
+   invisibles. Pour que cette objection tombe, un point manquant doit être
+   remarqué dès le vendredi après-midi, par une personne désignée.
+</Response>
 
-Each framing above is a move you can make on purpose. Use one, or use
-every one of them when the decision matters.
+Mettez les trois réponses côte à côte. La question orientée vous a valu des
+éloges. La question neutre vous a valu une comparaison. La demande
+d’objections vous a valu une liste de conditions que votre plan doit remplir,
+et c’est la réponse sur laquelle vous pouvez agir. Ce sont les prompts qui ont
+changé, et le modèle est resté le même : les prompts ont cessé de lui dire ce
+que vous vouliez entendre.
 
-**Ask for criticism explicitly.** "What is wrong with this plan?" or "give
-me the strongest objections" makes critical text the likely reply. Asking
-for "feedback" or "thoughts" leaves the model free to be pleasant, and it
-will be.
+## Obtenir une réponse franche
 
-**Hide your preference.** Present the options as a neutral comparison, in
-the same amount of detail each, and say nothing about which one is yours.
-Drop the "I've decided", the "my plan", and any wording that praises one
-option in advance. If you have already shown your hand in a chat, start a
-new one.
+Chaque formulation ci-dessus est un geste que vous pouvez faire exprès.
+Utilisez-en un, ou utilisez-les tous quand la décision compte.
 
-**Have the model argue the other side.** Ask it to make the strongest case
-for the option you did not choose, or to write the note a colleague would
-send to talk you out of it. A model is good at generating the likely text
-for a position, so give it the opposite position to generate.
+**Demandez explicitement des critiques.** « Qu’est-ce qui ne va pas dans ce
+plan ? » ou « donne-moi les objections les plus fortes » fait d’un texte
+critique la réponse probable. Demander un « retour » ou un « avis » laisse le
+modèle libre d’être aimable, et il le sera.
 
-The model stays a poor judge of your work after each of these moves. Now
-the answer no longer depends on what you hoped for, and
-that is what turns it into evidence.
+**Cachez votre préférence.** Présentez les options sous forme de comparaison
+neutre, avec le même niveau de détail pour chacune, et ne dites pas laquelle
+est la vôtre. Supprimez le « j’ai décidé », le « mon plan », et toute
+formulation qui fait d’avance l’éloge d’une option. Si vous avez déjà dévoilé
+votre jeu dans une conversation, ouvrez-en une nouvelle.
+
+**Faites plaider l’autre camp par le modèle.** Demandez-lui de présenter les
+arguments les plus forts en faveur de l’option que vous n’avez pas choisie, ou
+d’écrire le message qu’enverrait un collègue pour vous en dissuader. Un modèle
+sait bien produire le texte probable qui défend une position : donnez-lui la
+position opposée à défendre.
+
+Après chacun de ces gestes, le modèle reste un mauvais juge de votre travail.
+Sa réponse ne dépend simplement plus de ce que vous espériez, et c’est ce qui
+en fait un élément de preuve.
 
 <Choice id="hide-the-preference" objective="concepts/explains-models/names-failure-modes"
   concepts={['sycophancy']}
-  context="Sycophancy is the tendency of a model to agree with the user, praise their idea or change a correct answer when challenged, because agreeable text was rewarded in training. One way to get a useful answer is to phrase the question so that it does not reveal what the user hopes to hear."
-  title="Which phrasing hides your preference?"
-  hint="Read each phrasing as the model would. Which one gives no clue about which answer would please you?"
+  context="La flagornerie est la tendance d’un modèle à donner raison à l’utilisateur, à faire l’éloge de son idée ou à changer une réponse juste quand on la conteste, parce que les textes conciliants ont été récompensés à l’entraînement. Une façon d’obtenir une réponse utile est de formuler la question sans révéler ce que l’utilisateur espère entendre."
+  title="Quelle formulation cache votre préférence ?"
+  hint="Lisez chaque formulation comme le modèle la lirait. Laquelle ne donne aucun indice sur la réponse qui vous ferait plaisir ?"
   options={[
-    { text: 'I am replacing our weekly status meeting with a written update. Can you confirm this is a good idea?', why: 'The question announces the decision and asks for confirmation, so confirming is the likely text.' },
-    { text: 'Two options for a team of eight over two time zones: keep the weekly status meeting, or post a written update by Friday noon. Compare the two for this team.', correct: true },
-    { text: 'I think a written update would save everyone time. What do you think of my plan to replace the weekly status meeting?', why: '"I think" and "my plan" tell the model which side you are on before it answers.' },
-    { text: 'My manager wants to keep the weekly status meeting, but I want to switch to a written update. Who is right?', why: 'The question names your side and asks the model to pick a winner. Agreeing with the person asking is the likely text.' },
+    { text: 'Je remplace notre réunion hebdomadaire de suivi par un point écrit. Peux-tu me confirmer que c’est une bonne idée ?', why: 'La question annonce la décision et demande une confirmation : confirmer est donc le texte probable.' },
+    { text: 'Pour une équipe de huit personnes sur deux fuseaux horaires, compare deux options : garder la réunion hebdomadaire de suivi, ou un point écrit avant vendredi midi.', correct: true },
+    { text: 'Je pense qu’un point écrit ferait gagner du temps à tout le monde. Que penses-tu de mon plan de remplacer la réunion hebdomadaire de suivi ?', why: '« Je pense » et « mon plan » disent au modèle de quel côté vous êtes avant même qu’il réponde.' },
+    { text: 'Ma responsable veut garder la réunion hebdomadaire de suivi, mais moi je veux passer à un point écrit. Qui a raison ?', why: 'La question indique votre camp et demande au modèle de désigner un gagnant. Donner raison à la personne qui pose la question est le texte probable.' },
   ]}>
 
-You want an honest assessment of your plan to replace a weekly status
-meeting with a written update. Which of these phrasings hides your
-preference?
+Vous voulez une évaluation honnête de votre plan de remplacer une réunion
+hebdomadaire de suivi par un point écrit. Laquelle de ces formulations cache
+votre préférence ?
 
 </Choice>
 
-<Pitfall title="The challenge that flips a right answer">
-You ask a model to check a spreadsheet formula that adds up a column of
-monthly totals. It says the formula skips the last row. You are sure it
-counts every row and say so, and the model replies that on reflection the formula
-is correct. You don't give it a test case or a new fact between the two answers,
-so the reversal is the model following your pushback, and the formula
-still skips the last row. Rule: a changed answer under pushback with no
-new evidence is no evidence at all. Give the model a fact or a test case to
-work with, or check the answer somewhere other than the chat.
+<Pitfall title="La contestation qui renverse une réponse juste">
+Vous demandez à un modèle de vérifier une formule de tableur qui additionne une
+colonne de totaux mensuels. Il répond que la formule oublie la dernière ligne.
+Vous êtes sûr qu’elle compte toutes les lignes et vous le dites, et le modèle
+répond qu’à la réflexion, la formule est correcte. Vous ne lui avez donné ni
+cas de test ni fait nouveau entre les deux réponses : le revirement est donc le
+modèle qui suit votre contestation, et la formule oublie toujours la dernière
+ligne. Règle : une réponse qui change sous la contestation, sans élément
+nouveau, ne prouve rien. Donnez au modèle un fait ou un cas de test sur lequel
+travailler, ou vérifiez la réponse ailleurs que dans la conversation.
 </Pitfall>
 
 <Scenario id="reversal-under-pushback" objective="concepts/explains-models/names-failure-modes"
   concepts={['sycophancy']}
-  context="A model reviewed a spreadsheet formula and said it skips the last row of a column. The user pushed back once, without adding any fact or test case, and the model then said the formula is correct."
-  title="The model changed its mind"
-  hint="What changed between the first answer and the second, and does it tell you anything about the formula?"
+  context="Un modèle a examiné une formule de tableur et dit qu’elle oublie la dernière ligne d’une colonne. L’utilisateur a contesté une fois, sans ajouter de fait ni de cas de test, et le modèle a alors dit que la formule était correcte."
+  title="Le modèle a changé d’avis"
+  hint="Qu’est-ce qui a changé entre la première et la seconde réponse, et cela vous apprend-il quoi que ce soit sur la formule ?"
   options={[
-    { text: 'Accept the second answer. The model reconsidered and corrected itself.', consequence: 'Nothing new entered the chat between the answers except your disagreement, so the second answer is the one that agrees with you. The formula still skips the last row, and the monthly total is short.' },
-    { text: 'Treat the reversal as no evidence, and check the formula against a column where you know the right total.', correct: true, consequence: 'The test total comes out one row short, which settles it. The model was right the first time and followed you the second time.' },
-    { text: 'Ask "are you completely sure?" a third time and keep the answer it gives.', consequence: 'A third round of pushback is one more signal of what you want to hear. The answer that comes back is again the agreeable one, whichever that is at that point.' },
-    { text: 'Start a new chat and ask the same question in the same words, and trust whichever answer you get.', consequence: 'A fresh chat removes the pushback, which helps, and it leaves you with one unverified answer instead of two. You still have not looked at the column.' },
+    { text: 'Accepter la seconde réponse. Le modèle a reconsidéré la question et s’est corrigé.', consequence: 'Rien de nouveau n’est entré dans la conversation entre les deux réponses, sauf votre désaccord : la seconde réponse est donc celle qui vous donne raison. La formule oublie toujours la dernière ligne, et le total mensuel est trop faible.' },
+    { text: 'Considérer que le revirement ne prouve rien, et tester le calcul sur une colonne dont le bon total est connu.', correct: true, consequence: 'Le total de test manque d’une ligne, ce qui tranche la question. Le modèle avait raison la première fois et vous a suivi la seconde.' },
+    { text: 'Demander « tu es vraiment sûr ? » une troisième fois et garder la réponse qu’il donne.', consequence: 'Une troisième contestation est un signal de plus de ce que vous voulez entendre. La réponse qui revient est de nouveau la réponse conciliante, quelle qu’elle soit à ce moment-là.' },
+    { text: 'Ouvrir une nouvelle conversation, poser la même question dans les mêmes termes, et se fier à la réponse obtenue.', consequence: 'Une nouvelle conversation supprime la contestation, ce qui aide, et vous laisse avec une réponse non vérifiée au lieu de deux. Vous n’avez toujours pas regardé la colonne.' },
   ]}>
 
-A model tells you a spreadsheet formula skips the last row. You reply that
-you are sure it does not, and the model answers that the formula is
-correct after all. What do you do next?
+Un modèle vous dit qu’une formule de tableur oublie la dernière ligne. Vous
+répondez que vous êtes sûr que non, et le modèle répond que la formule est
+correcte finalement. Que faites-vous ensuite ?
 
 </Scenario>
 
 <MultiChoice id="spot-the-sycophancy" phase="review" objective="concepts/explains-models/names-failure-modes"
   concepts={['sycophancy']}
-  context="Sycophancy is the tendency of a model to agree with the user, praise their idea or change a correct answer when challenged, because agreeable text was rewarded in training."
-  title="Which replies are sycophancy?"
-  hint="In each reply, did the model move toward what the user wanted to hear, with no new fact to explain the move?"
+  context="La flagornerie est la tendance d’un modèle à donner raison à l’utilisateur, à faire l’éloge de son idée ou à changer une réponse juste quand on la conteste, parce que les textes conciliants ont été récompensés à l’entraînement."
+  title="Quelles réponses relèvent de la flagornerie ?"
+  hint="Dans chaque réponse, le modèle s’est-il rapproché de ce que l’utilisateur voulait entendre, sans fait nouveau pour l’expliquer ?"
   options={[
-    { text: 'A model says a formula skips a row. You only say you are sure it does not, with no new fact, and it changes its answer.', correct: true },
-    { text: 'You ask the same question in two new chats and get two answers that say the same thing in different words.', why: 'Different wording from one run to the next comes from sampling. Neither answer followed what you hoped to hear.' },
-    { text: 'You call your plan a great idea, and the review you get back repeats your own reasons for it in warmer words.', correct: true },
-    { text: 'You ask a model to read a web page, and it says that this chat has no tool that can open a web page.', why: 'Saying what the chat cannot do is a statement about its tools. Nothing in the reply moves toward what you wanted.' },
+    { text: 'Un modèle dit qu’une formule oublie une ligne. Vous dites seulement que vous êtes sûr que non, sans fait nouveau, et il change sa réponse.', correct: true },
+    { text: 'Vous posez la même question dans deux nouvelles conversations et obtenez deux réponses qui disent la même chose en d’autres mots.', why: 'Une formulation différente d’un essai à l’autre vient de l’échantillonnage. Aucune des deux réponses n’a suivi ce que vous espériez entendre.' },
+    { text: 'Vous qualifiez votre plan d’excellente idée, et l’avis que vous recevez reprend vos propres arguments en termes plus chaleureux.', correct: true },
+    { text: 'Vous demandez à un modèle de lire une page web, et il répond que cette conversation n’a aucun outil capable d’ouvrir une page web.', why: 'Dire ce que la conversation ne peut pas faire, c’est décrire ses outils. Rien dans la réponse ne se rapproche de ce que vous vouliez.' },
   ]}>
 
-Which two of these replies are sycophancy at work?
+Lesquelles de ces deux réponses montrent la flagornerie à l’œuvre ?
 
 </MultiChoice>
 
 <Sort id="shows-or-hides" phase="review" objective="concepts/explains-models/names-failure-modes"
   concepts={['sycophancy']}
-  context="Sycophancy is the tendency of a model to agree with the user, praise their idea or change a correct answer when challenged. One way to get a useful answer is a question that doesn't reveal what the user hopes to hear."
-  title="Does it show what you hope?" hint="Could the model tell from the question which answer you want?"
-  buckets={['Shows what the user hopes to hear', 'Keeps it hidden']}
+  context="La flagornerie est la tendance d’un modèle à donner raison à l’utilisateur, à faire l’éloge de son idée ou à changer une réponse juste quand on la conteste. Une façon d’obtenir une réponse utile est de poser une question qui ne révèle pas ce que l’utilisateur espère entendre."
+  title="La question montre-t-elle ce que vous espérez ?" hint="Le modèle pourrait-il deviner, à partir de la question, la réponse que vous voulez ?"
+  buckets={['Montre ce que l’utilisateur espère entendre', 'Le garde caché']}
   items={[
-    { text: 'I think this plan is great. Any thoughts?', bucket: 0 },
-    { text: 'Can you confirm that option A is the better one?', bucket: 0 },
-    { text: 'My manager prefers B, but I want A. Who is right?', bucket: 0 },
-    { text: 'Compare option A and option B for a team of six.', bucket: 1 },
-    { text: 'List the three biggest risks of this plan.', bucket: 1 },
-    { text: 'What would a critic of this plan say first?', bucket: 1 },
+    { text: 'Je trouve ce plan excellent. Des remarques ?', bucket: 0 },
+    { text: 'Peux-tu confirmer que l’option A est la meilleure ?', bucket: 0 },
+    { text: 'Ma responsable préfère B, mais je veux A. Qui a raison ?', bucket: 0 },
+    { text: 'Compare l’option A et l’option B pour une équipe de six personnes.', bucket: 1 },
+    { text: 'Liste les trois plus gros risques de ce plan.', bucket: 1 },
+    { text: 'Que dirait d’abord un critique de ce plan ?', bucket: 1 },
   ]} />
 
-<Exercise stretch="Take one objection from the third answer and ask the model to argue the case for keeping the meeting as strongly as it can. Note which points it makes that the first two answers left out.">
+<Exercise stretch="Prenez l’une des objections de la troisième réponse et demandez au modèle de défendre le maintien de la réunion avec la plus grande force possible. Notez les arguments qu’il avance et que les deux premières réponses avaient laissés de côté.">
 
-Open any chat assistant you have access to and pick a small plan of your
-own, such as a change to a routine or a new way to run a meeting. Ask
-about it in a fresh chat as a leading question that shows what you hope
-to hear. Ask again, in a new chat, as a neutral comparison of two options
-with your preference hidden. Ask a last time as a request for the
-strongest objections. Put the answers in a table with one row per answer
-and two columns, "what it praised" and "what it warned about".
+Ouvrez un assistant conversationnel auquel vous avez accès et choisissez un
+petit plan à vous, comme un changement de routine ou une nouvelle façon de
+mener une réunion. Posez-lui la question dans une nouvelle conversation, sous
+forme de question orientée qui montre ce que vous espérez entendre.
+Reposez-la, dans une autre nouvelle conversation, sous forme de comparaison
+neutre entre deux options, votre préférence cachée. Posez-la une dernière fois
+sous forme de demande des objections les plus fortes. Mettez les réponses dans
+un tableau, avec une ligne par réponse et deux colonnes, « ce qu’elle a
+loué » et « ce contre quoi elle a mis en garde ».
 
-The result is a table of three rows, and it takes about ten minutes. It
-shows you, on your own plan, how much of a model's praise was your own
-framing coming back.
+Le résultat est un tableau de trois lignes, et il prend une dizaine de
+minutes. Il vous montre, sur votre propre plan, quelle part des éloges d’un
+modèle n’était que votre propre formulation qui vous revenait.
 
-A good result has an almost empty warning column for the leading question,
-a fuller one for the neutral question, and the most specific warnings in
-the objections row. Reflection: which warning in the third row would you
-never have read if you had stopped after the first answer?
+Un bon résultat a une colonne de mises en garde presque vide pour la question
+orientée, plus remplie pour la question neutre, et les mises en garde les plus
+précises sur la ligne des objections. Réflexion : quelle mise en garde de la
+troisième ligne n’auriez-vous jamais lue si vous vous étiez arrêté à la
+première réponse ?
 
 </Exercise>
 
@@ -288,18 +309,18 @@ never have read if you had stopped after the first answer?
 
 <Choice id="a-fact-to-work-with" phase="practice" objective="concepts/explains-models/names-failure-modes"
   concepts={['sycophancy']}
-  context="A model said that a date in the user's report is wrong. The user thinks the date is right and wants an answer they can rely on."
-  title="Give it something to work with"
-  hint="Which reply adds a fact to the chat, and which ones only add your opinion?"
+  context="Un modèle a dit qu’une date du rapport de l’utilisateur était fausse. L’utilisateur pense que la date est juste et veut une réponse fiable."
+  title="Donnez-lui de quoi travailler"
+  hint="Quelle réponse ajoute un fait à la conversation, et lesquelles n’ajoutent que votre opinion ?"
   options={[
-    { text: 'Tell the model that you are sure the date is right, and ask it to check once more.', why: 'Your certainty is a preference and adds no fact, so the likely reply is the one that agrees with you.' },
-    { text: 'Ask the model how confident it is in its answer, on a scale from one to ten.', why: 'A confidence number is more text from the same model, and it moves with your pushback as well.' },
-    { text: 'Paste the paragraph of the source that gives the date, and ask the model to compare the two.', correct: true },
-    { text: 'Ask the same question in a new chat, and keep the answer that comes back twice.', why: 'Two agreeing answers from the same model can share the same mistake, and neither of them looked at the source.' },
+    { text: 'Dire au modèle que vous êtes sûr que la date est juste, et lui demander de vérifier encore une fois.', why: 'Votre certitude est une préférence et n’ajoute aucun fait : la réponse probable est donc celle qui vous donne raison.' },
+    { text: 'Demander au modèle à quel point il est sûr de sa réponse, sur une échelle de un à dix.', why: 'Un indice de confiance est un texte de plus produit par le même modèle, et il bouge lui aussi avec votre contestation.' },
+    { text: 'Coller le paragraphe de la source qui donne la date, et demander au modèle de comparer les deux.', correct: true },
+    { text: 'Poser la même question dans une nouvelle conversation, et garder la réponse qui revient deux fois.', why: 'Deux réponses concordantes du même modèle peuvent partager la même erreur, et aucune n’a regardé la source.' },
   ]}>
 
-A model tells you that a date in your report is wrong. You think the date
-is right. Which reply gets you an answer you can rely on?
+Un modèle vous dit qu’une date de votre rapport est fausse. Vous pensez
+qu’elle est juste. Quelle réponse vous donne une réponse fiable ?
 
 </Choice>
 
@@ -307,18 +328,19 @@ is right. Which reply gets you an answer you can rely on?
 
 <Recap>
 
-1. Sycophancy is the model agreeing with you, praising your idea or
-   changing a correct answer when you push back, in part because raters
-   preferred agreeable answers during training and training rewarded them
-   (@Sharma 2023).
-2. Your framing shapes the answer. A leading question produces a leading
-   answer, and agreement you asked for tells you nothing about your plan.
-3. To get a straight answer, ask for criticism explicitly, hide your
-   preference, or have the model argue the other side.
-4. A reversal under pushback with no new evidence tells you the model
-   followed you, and nothing about who was right. Check the claim outside
-   the chat, as the safety lessons on
-   [spotting a hallucination](/safety/spotting-hallucination/) ask for every
-   specific you rely on.
+1. La flagornerie, c’est le modèle qui vous donne raison, fait l’éloge de
+   votre idée ou change une réponse juste quand vous la contestez, en partie
+   parce que les évaluateurs ont préféré les réponses conciliantes pendant
+   l’entraînement et que l’entraînement les a récompensées (@Sharma 2023).
+2. Votre formulation façonne la réponse. Une question orientée produit une
+   réponse orientée, et un accord que vous avez sollicité ne vous apprend rien
+   sur votre plan.
+3. Pour obtenir une réponse franche, demandez explicitement des critiques,
+   cachez votre préférence, ou faites plaider l’autre camp par le modèle.
+4. Un revirement sous la contestation, sans élément nouveau, vous dit que le
+   modèle vous a suivi, et rien sur qui avait raison. Vérifiez l’affirmation en
+   dehors de la conversation, comme les leçons sur la sécurité consacrées au
+   [repérage d’une hallucination](/safety/spotting-hallucination/) le
+   demandent pour chaque élément précis sur lequel vous vous appuyez.
 
 </Recap>

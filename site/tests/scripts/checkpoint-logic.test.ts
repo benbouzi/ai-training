@@ -68,28 +68,28 @@ describe('dropPlacement', () => {
 
 describe('feedback', () => {
 	it('choice: correct with or without a consequence', () => {
-		expect(choiceFeedback(true, 'why', undefined)).toEqual({ kind: 'ok', text: 'Correct.' });
-		expect(choiceFeedback(true, undefined, 'It runs.')).toEqual({ kind: 'ok', text: 'Correct. It runs.' });
+		expect(choiceFeedback(true, 'why', undefined)).toEqual({ kind: 'ok', text: 'Juste.' });
+		expect(choiceFeedback(true, undefined, 'It runs.')).toEqual({ kind: 'ok', text: 'Juste. It runs.' });
 	});
 	it('choice: a wrong pick shows consequence, then why, then a default', () => {
 		expect(choiceFeedback(false, 'why', 'bad')).toEqual({ kind: 'nope', text: 'bad' });
 		expect(choiceFeedback(false, 'why', undefined)).toEqual({ kind: 'nope', text: 'why' });
-		expect(choiceFeedback(false, undefined, undefined).text).toBe('Not quite. Try again.');
+		expect(choiceFeedback(false, undefined, undefined).text).toBe('Pas tout à fait. Réessayez.');
 	});
 	it('predict, order and self-grade texts', () => {
 		expect(predictFeedback(true).kind).toBe('ok');
-		expect(predictFeedback(false).text).toBe('Not quite. Trace it once more.');
-		expect(orderFeedback(true).text).toBe('Correct order.');
+		expect(predictFeedback(false).text).toBe('Pas tout à fait. Suivez-le encore une fois.');
+		expect(orderFeedback(true).text).toBe('Ordre juste.');
 		expect(orderFeedback(false).kind).toBe('nope');
-		expect(selfGradeFeedback(true, 'predict').text).toBe('Recorded as a pass.');
-		expect(selfGradeFeedback(false, 'predict').text).toContain('Adjust your prediction');
-		expect(selfGradeFeedback(false, 'repair').text).toContain('Recorded as partial');
+		expect(selfGradeFeedback(true, 'predict').text).toBe('Enregistrée comme réussie.');
+		expect(selfGradeFeedback(false, 'predict').text).toContain('Ajustez votre prédiction');
+		expect(selfGradeFeedback(false, 'repair').text).toContain('Partielle');
 	});
 	it('sort: unplaced items block grading', () => {
 		expect(sortFeedback(1, true)).toEqual({ kind: 'note', text: '1 item still to place.' });
 		expect(sortFeedback(2, false).text).toBe('2 items still to place.');
 		expect(sortFeedback(0, true).kind).toBe('ok');
-		expect(sortFeedback(0, false).text).toBe('Some items are in the wrong bucket.');
+		expect(sortFeedback(0, false).text).toBe('Certains éléments sont dans la mauvaise case.');
 	});
 });
 
@@ -109,21 +109,21 @@ describe('phases', () => {
 
 describe('skills check texts', () => {
 	it('pluralizes the offer', () => {
-		expect(skillsCheckOffer(1)).toBe('Answer 1 question');
-		expect(skillsCheckOffer(2)).toBe('Answer 2 questions');
+		expect(skillsCheckOffer(1)).toBe('Répondre à 1 question');
+		expect(skillsCheckOffer(2)).toBe('Répondre à 2 questions');
 	});
 	it('counts passes while open, then sums up', () => {
-		expect(skillsCheckNote(1, 1, 2)).toBe('Passed 1 of 1 so far.');
-		expect(skillsCheckNote(2, 2, 2)).toBe('Passed 2 of 2. Every objective is covered. Go on to the recap.');
-		expect(skillsCheckNote(2, 1, 2)).toBe('Passed 1 of 2. The ones you missed are taught below.');
+		expect(skillsCheckNote(1, 1, 2)).toBe('1 réussie(s) sur 1 pour l’instant.');
+		expect(skillsCheckNote(2, 2, 2)).toBe('2 réussie(s) sur 2. Objectifs couverts. Passez à « À retenir ».');
+		expect(skillsCheckNote(2, 1, 2)).toBe('1 réussie(s) sur 2. Les manques sont enseignés plus bas.');
 	});
 });
 
 describe('stageDisplay', () => {
 	it('lights one pill per stage, all five when retired, none when unknown', () => {
-		expect(stageDisplay(3)).toEqual({ lit: 3, label: 'stage 3 of 5' });
-		expect(stageDisplay('done')).toEqual({ lit: 5, label: 'retired' });
-		expect(stageDisplay(undefined)).toEqual({ lit: 0, label: 'stage - of 5' });
+		expect(stageDisplay(3)).toEqual({ lit: 3, label: 'étape 3 sur 5' });
+		expect(stageDisplay('done')).toEqual({ lit: 5, label: 'acquise' });
+		expect(stageDisplay(undefined)).toEqual({ lit: 0, label: 'étape - sur 5' });
 	});
 });
 
@@ -131,18 +131,18 @@ describe('multiChoiceVerdict', () => {
 	it('asks for picks, names the first wrong why, counts what is still missing, then passes', () => {
 		expect(multiChoiceVerdict(3, 0, 0, undefined)).toEqual({
 			ok: null,
-			feedback: { kind: 'note', text: 'Pick 3 answers first.' },
+			feedback: { kind: 'note', text: 'Choisissez d’abord 3 réponses.' },
 		});
 		expect(multiChoiceVerdict(3, 2, 1, 'Clear to whom?')).toEqual({
 			ok: false,
 			feedback: { kind: 'nope', text: 'Clear to whom?' },
 		});
-		expect(multiChoiceVerdict(3, 1, 1, undefined).feedback.text).toBe('One of your picks is not right.');
+		expect(multiChoiceVerdict(3, 1, 1, undefined).feedback.text).toBe('L’un de vos choix n’est pas juste.');
 		expect(multiChoiceVerdict(3, 1, 0, undefined)).toEqual({
 			ok: false,
 			feedback: { kind: 'nope', text: '1 of 3 so far, and nothing wrong. 2 more to find.' },
 		});
-		expect(multiChoiceVerdict(3, 3, 0, undefined)).toEqual({ ok: true, feedback: { kind: 'ok', text: 'Correct.' } });
+		expect(multiChoiceVerdict(3, 3, 0, undefined)).toEqual({ ok: true, feedback: { kind: 'ok', text: 'Juste.' } });
 	});
 });
 
@@ -155,8 +155,8 @@ describe('matchVerdict', () => {
 			feedback: { kind: 'nope', text: '1 row wrong. Each row says which.' },
 		});
 		expect(matchVerdict(0, 2, 'r').feedback.text).toBe('2 rows wrong. Each row says which.');
-		expect(matchVerdict(0, 0, 'Because.')).toEqual({ ok: true, feedback: { kind: 'ok', text: 'Correct. Because.' } });
-		expect(matchVerdict(0, 0, '').feedback.text).toBe('Correct.');
+		expect(matchVerdict(0, 0, 'Because.')).toEqual({ ok: true, feedback: { kind: 'ok', text: 'Juste. Because.' } });
+		expect(matchVerdict(0, 0, '').feedback.text).toBe('Juste.');
 	});
 });
 

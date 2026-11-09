@@ -1,238 +1,259 @@
 import { Sort, Scenario, Pitfall, Exercise, Recap, Prompt, Response, Choice, Match } from '@components/lesson';
 
-The same model, in the same afternoon, gives you one answer you can use as
-it is and one that is wrong in a way you only find out about a week later.
-In the lesson on how models work you saw that both come from the same
-mechanism, next-token prediction, and you learned the names hallucination
-and knowledge cutoff for two of the failures. In this lesson we look at
-*where* the invention happens. The question that predicts it is about the
-task, and once you can ask that question you know how much checking each
-answer needs before you rely on it.
+Le même modèle, le même après-midi, vous donne une réponse utilisable telle
+quelle et une autre qui est fausse d’une manière que vous découvrez une
+semaine plus tard. Dans la leçon sur le fonctionnement des modèles, vous avez
+vu que les deux viennent du même mécanisme, la prédiction du jeton suivant, et
+vous avez appris deux noms de défaillances, hallucination et date limite des
+connaissances. Dans cette leçon, nous regardons *où* se produit l’invention.
+La question qui permet de la prévoir porte sur la tâche, et une fois que vous
+savez la poser, vous savez combien de vérification chaque réponse demande
+avant que vous vous y fiiez.
 
-Both exchanges below are illustrative: the author wrote them to show the
-pattern, and your model gives different text.
+Les deux échanges ci-dessous sont des illustrations : l’auteur les a écrits
+pour montrer le mécanisme, et votre modèle donnera un autre texte.
 
-## One model, a reliable answer and an invented one
+## Un modèle, une réponse fiable et une réponse inventée
 
-First, a task you have probably given a model many times.
-
-<Prompt model="illustrative" recorded="illustrative">
-Summarize this in two sentences for someone who missed the meeting.
-
-[a page of meeting notes, pasted in full]
-</Prompt>
-<Response>
-The team agreed to move the release from Friday to the following Tuesday
-so the payment fix can be tested on staging first. Sam writes the test
-plan, and Tom tells the two customers who asked about the date.
-</Response>
-
-Read the notes and the summary side by side and the summary holds up. It
-leaves things out, as a summary should, and what it keeps is in the notes.
-
-Now a different kind of task.
+D’abord, une tâche que vous avez probablement confiée bien des fois à un
+modèle.
 
 <Prompt model="illustrative" recorded="illustrative">
-Which paper first proposed attention gating for summarizing long documents?
-Give the authors, the year, and the venue.
+Résume ceci en deux phrases pour quelqu’un qui a manqué la réunion.
+
+[une page de compte rendu de réunion, collée en entier]
 </Prompt>
 <Response>
-The approach was introduced by Okonkwo-Varga and Tervonen (2017) in
-"Attention gating for long-document summarization", presented at the Nordic
-Workshop on Applied Language Modeling, pages 44 to 58. It was extended the
-following year to multi-document settings.
+L’équipe a décidé de repousser la mise en production du vendredi au mardi
+suivant, pour que le correctif de paiement puisse d’abord être testé en
+préproduction. Sam rédige le plan de test, et Tom prévient les deux clients
+qui avaient demandé la date.
 </Response>
 
-Every part of this answer is in the right form. The names sound like names,
-the year is plausible, the venue is the kind of venue that exists, and the
-page range is exact. None of it is real. The paper, the authors, and the
-workshop are all invented, and you find that out the moment you search for
-any of them.
+Lisez le compte rendu et le résumé côte à côte : le résumé tient. Il laisse
+des choses de côté, comme doit le faire un résumé, et ce qu’il garde se
+trouve dans le compte rendu.
 
-Nothing about the model changed between the two prompts. The same weights
-produced both answers in the same confident prose. The task changed.
+Maintenant, un autre type de tâche.
 
-## How well-trodden is the path
+<Prompt model="illustrative" recorded="illustrative">
+Quel article a proposé le premier le filtrage par attention (attention gating)
+pour résumer de longs documents ? Donne les auteurs, l’année et le lieu de
+publication.
+</Prompt>
+<Response>
+L’approche a été introduite par Okonkwo-Varga et Tervonen (2017) dans
+« Attention gating for long-document summarization », présenté au Nordic
+Workshop on Applied Language Modeling, pages 44 à 58. Elle a été étendue
+l’année suivante au cas de plusieurs documents.
+</Response>
 
-A model is a compressed record of the text it was trained on, and its
-prediction for the next token is well constrained where the training text
-has many examples of the pattern and poorly constrained where it has few
-(@Academy ai-capabilities-and-limitations). Picture the training data as a
-field crossed by paths. A task that people have written about millions of
-times is a wide path: summarizing, reformatting, translating, explaining a
-concept that appears in every textbook. The model has seen so many good
-completions that its prediction has little room to go wrong. A rare topic,
-an exact figure, a niche paper or an event after the cutoff is a thin path,
-worn by a few examples or by none. The prediction still runs, because
-prediction always runs, but it is filling a gap with something of the right
-form.
+Chaque partie de cette réponse a la bonne forme. Les noms ressemblent à des
+noms, l’année est plausible, le lieu de publication est du genre qui existe,
+et les pages sont précises. Rien de tout cela n’est réel. L’article, les
+auteurs et l’atelier sont tous inventés, et vous le découvrez dès que vous
+cherchez l’un d’eux.
 
-So invention concentrates on specifics. "Summarize these notes" is
-a wide path even when the notes are about something obscure, because the
-material is in the prompt and the *task* is common. "Give me the authors,
-year and page range" hinges on exact tokens that were either in the training
-text or were not, and when they were not, the model produces tokens that
-look like them. The summary can be loosely right. A citation, a version
-number, a date or a quoted line is either exactly right or wrong.
+Rien n’a changé dans le modèle entre les deux prompts. Les mêmes poids ont
+produit les deux réponses, avec la même assurance. C’est la tâche qui a
+changé.
 
-So the question to ask before you read an answer is about the task. How common is this task, and how much of the answer
-hinges on exact specifics? A common task whose answer you can check against
-material you gave it needs a spot-check: you read it once and look at the
-two or three places where it could have drifted. A rare task, or one whose
-value is in its specifics, needs a check of every specific in it before you
-pass it on.
+## Le chemin est-il bien tracé ?
+
+Un modèle est une trace compressée du texte sur lequel il a été entraîné, et
+sa prédiction du jeton suivant est bien contrainte là où le texte
+d’entraînement contient beaucoup d’exemples du motif, et mal contrainte là où
+il en contient peu (@Academy ai-capabilities-and-limitations). Imaginez les
+données d’entraînement comme un champ traversé de chemins. Une tâche sur
+laquelle des gens ont écrit des millions de fois est un chemin large :
+résumer, remettre en forme, traduire, expliquer un concept qui figure dans
+tous les manuels. Le modèle a vu tant de bonnes suites que sa prédiction n’a
+guère de place pour se tromper. Un sujet rare, un chiffre exact, un article
+confidentiel ou un événement postérieur à la date limite est un chemin
+étroit, tracé par quelques exemples ou par aucun. La prédiction s’exécute
+quand même, parce qu’elle s’exécute toujours, mais elle comble un vide avec
+quelque chose qui a la bonne forme.
+
+L’invention se concentre donc sur les éléments précis. « Résume ce compte
+rendu » est un chemin large même quand le compte rendu porte sur un sujet
+obscur, parce que le matériau est dans le prompt et que la *tâche* est
+courante. « Donne-moi les auteurs, l’année et les pages » dépend de jetons
+exacts qui figuraient ou non dans le texte d’entraînement, et quand ils n’y
+figuraient pas, le modèle produit des jetons qui leur ressemblent. Le résumé
+peut être juste à peu près. Une référence, un numéro de version, une date ou
+une citation est soit exactement juste, soit faux.
+
+La question à poser avant de lire une réponse porte donc sur la tâche. Cette
+tâche est-elle courante, et quelle part de la réponse dépend d’éléments
+précis ? Une tâche courante dont vous pouvez vérifier la réponse dans le
+matériau que vous avez fourni demande une vérification par sondage : vous la
+lisez une fois et vous regardez les deux ou trois endroits où elle a pu
+dériver. Une tâche rare, ou dont la valeur tient à ses éléments précis,
+demande de vérifier chacun d’eux avant de transmettre la réponse.
 
 <Sort id="spot-check-or-verify" objective="concepts/explains-models/names-failure-modes"
   concepts={['hallucination', 'knowledge-cutoff']}
-  context="The lesson distinguishes tasks the model has seen millions of examples of, such as summarizing text that is in the prompt, from tasks that hinge on exact specifics the model may never have seen, such as a citation or a recent release date."
-  title="How much checking does each task need?"
-  hint="For each task, ask how common the task is in written text, and whether the answer stands or falls on exact specifics the model would have had to see."
-  buckets={['Trust and spot-check', 'Verify every specific']}
+  context="La leçon distingue les tâches dont le modèle a vu des millions d’exemples, comme résumer un texte qui se trouve dans le prompt, des tâches qui dépendent d’éléments précis que le modèle n’a peut-être jamais vus, comme une référence ou une date de sortie récente."
+  title="Combien de vérification chaque tâche demande-t-elle ?"
+  hint="Pour chaque tâche, demandez-vous si elle est courante dans les textes écrits, et si la réponse tient ou tombe sur des éléments précis que le modèle aurait dû voir."
+  buckets={['Faire confiance et sonder', 'Vérifier chaque élément précis']}
   items={[
-    { text: 'Summarize the customer complaint you pasted in, in three sentences', bucket: 0 },
-    { text: 'Rewrite your draft email in a friendlier tone', bucket: 0 },
-    { text: 'Give the version number and release date of a library update from last month', bucket: 1 },
-    { text: 'List three published studies, with authors and years, on a narrow topic in your field', bucket: 1 },
-    { text: 'Explain in plain words what a database index does', bucket: 0 },
-    { text: 'Quote the exact clause of a contract you have not pasted in', bucket: 1 },
+    { text: 'Résumer en trois phrases la réclamation de client que vous avez collée', bucket: 0 },
+    { text: 'Réécrire votre brouillon de courriel sur un ton plus aimable', bucket: 0 },
+    { text: 'Donner le numéro de version et la date de sortie de la mise à jour d’une bibliothèque logicielle parue le mois dernier', bucket: 1 },
+    { text: 'Citer trois études publiées, avec auteurs et années, sur un sujet pointu de votre domaine', bucket: 1 },
+    { text: 'Expliquer simplement à quoi sert un index de base de données', bucket: 0 },
+    { text: 'Citer mot pour mot la clause d’un contrat que vous n’avez pas collé', bucket: 1 },
   ]}>
 
-Place each task by how much checking its answer needs before you rely on
-it.
+Classez chaque tâche selon la vérification que sa réponse demande avant que
+vous vous y fiiez.
 
 </Sort>
 
-<Pitfall title="The citation that looked fine">
-A colleague puts a report together and asks a model for a source for one
-claim. It returns a reference with a plausible venue, a page range and a
-year. It passes review because it looks like every other reference in the
-report, and it comes out as invented only when a reader tries to find it.
-Look up the citation from the second answer above yourself, by searching
-for the title in quotes and then for the author names. Rule: a citation, a
-figure or a quoted line that the model produced from its own knowledge has
-not been checked until you have found it somewhere other than the model's
-answer.
+<Pitfall title="La référence qui avait l’air correcte">
+Une collègue assemble un rapport et demande à un modèle une source pour une
+affirmation. Il renvoie une référence avec un lieu de publication plausible,
+des numéros de pages et une année. Elle passe la relecture parce qu’elle
+ressemble à toutes les autres références du rapport, et elle ne se révèle
+inventée que lorsqu’un lecteur essaie de la trouver. Cherchez vous-même la
+référence de la seconde réponse ci-dessus, en tapant le titre entre
+guillemets, puis les noms des auteurs. Règle : une référence, un chiffre ou
+une citation que le modèle a produits à partir de ses propres connaissances
+ne sont pas vérifiés tant que vous ne les avez pas trouvés ailleurs que dans
+sa réponse.
 </Pitfall>
 
-## The pair behind a failure
+## La paire derrière une défaillance
 
-When you look closely at a wrong answer, it is rarely one failure on its
-own. It is two properties of the model meeting on one task. The invented
-citation above is prediction (the model always produces the likely next
-token) meeting a knowledge gap (the training text has no such paper, or only
-a fragment). Prediction on its own gives you a fine summary. A knowledge gap
-on its own would be harmless if the model could say "I have nothing on
-that". Put together, they produce a confident citation with nothing behind
-it.
+Quand on regarde de près une réponse fausse, on y trouve rarement une
+défaillance isolée. Ce sont deux propriétés du modèle qui se rencontrent sur
+une même tâche. La référence inventée ci-dessus, c’est la prédiction (le
+modèle produit toujours le jeton suivant probable) qui rencontre un manque de
+connaissance (le texte d’entraînement ne contient aucun article de ce genre,
+ou seulement un fragment). La prédiction seule vous donne un bon résumé. Un
+manque de connaissance seul serait sans danger si le modèle pouvait dire « je
+n’ai rien là-dessus ». Ensemble, ils produisent une référence assurée qui ne
+repose sur rien.
 
-The same move explains the other common failures. A confident wrong release
-date is prediction meeting the knowledge cutoff: the update happened after
-the training data ends, and the model completes the sentence from older
-release patterns. A model that folds when you push back on a right answer
-is prediction meeting the second training stage that rewarded agreeable
-replies, which the earlier lesson named sycophancy. A rule from the start
-of a long chat that quietly stops being followed is prediction meeting a
-context full of newer tokens, which that lesson named instruction dilution.
+Le même raisonnement explique les autres défaillances courantes. Une date de
+sortie fausse et assurée, c’est la prédiction qui rencontre la date limite
+des connaissances : la mise à jour a eu lieu après la fin des données
+d’entraînement, et le modèle complète la phrase à partir d’anciens schémas de
+sortie. Un modèle qui cède quand vous contestez une réponse juste, c’est la
+prédiction qui rencontre la seconde étape d’entraînement, celle qui a
+récompensé les réponses conciliantes, et que la leçon précédente a appelée
+flagornerie. Une règle du début d’une longue conversation qui cesse sans bruit
+d’être suivie, c’est la prédiction qui rencontre un contexte plein de jetons
+plus récents, ce que cette leçon a appelé la dilution des instructions.
 
-Naming the pair is useful because each pair has a different fix, and the
-fix follows from the name. A knowledge gap closes when you put the
-material in the prompt or give the model a tool that looks it up. The
-cutoff closes the same way, with the recent document or a search result
-pasted in. Neither closes by asking the model to try harder. An instruction
-to say "I do not know" when it has nothing does change how often the model
-declines, so give it. It adds nothing to the training data, and the gap
-stays a gap. Prediction is the part you cannot switch off. The
-fix is always on the other side of the pair. Either you supply what is missing,
-or you verify what came out.
+Nommer la paire est utile parce que chaque paire a sa propre correction, qui
+découle du nom. Un manque de connaissance se comble quand vous placez le
+matériau dans le prompt ou donnez au modèle un outil qui va le chercher. La
+date limite se comble de la même façon, avec le document récent ou un
+résultat de recherche collé dans le prompt. Demander au modèle de faire plus
+d’efforts ne comble ni l’un ni l’autre. Une instruction qui lui demande de
+dire « je ne sais pas » quand il n’a rien change bien la fréquence à laquelle
+il décline : donnez-la donc. Elle n’ajoute rien aux données d’entraînement,
+et le manque reste un manque. La prédiction est la part que vous ne pouvez
+pas désactiver. La correction se trouve toujours de l’autre côté de la paire.
+Soit vous fournissez ce qui manque, soit vous vérifiez ce qui est sorti.
 
 <Scenario id="name-the-pair" objective="concepts/explains-models/names-failure-modes"
   concepts={['hallucination', 'knowledge-cutoff']}
-  context="A colleague asked a chat assistant for the standard reference on a narrow technical topic and received a citation with authors, a year and a journal name. The colleague searched for it and nothing with that title or those authors exists."
-  title="Which two properties met?"
-  hint="One property is always there. Which second property turned it into an invented reference, and what does that tell you to do?"
+  context="Un collègue a demandé à un assistant conversationnel la référence de base sur un sujet technique pointu, et il a reçu une référence avec des auteurs, une année et un nom de revue. Il l’a cherchée, et rien n’existe avec ce titre ou ces auteurs."
+  title="Quelles deux propriétés se sont rencontrées ?"
+  hint="L’une des propriétés est toujours présente. Quelle seconde propriété l’a transformée en référence inventée, et qu’est-ce que cela vous dit de faire ?"
   options={[
-    { text: 'The model lied to cover a gap, so I ask it to be honest and try again.', consequence: 'Sometimes the model now declines, which is an improvement, and sometimes you get a second citation in the same confident form. The model produced the likely next tokens both times. Asking for honesty changes how often it declines, and it adds no paper to its training data.' },
-    { text: 'Next-token prediction met a knowledge gap on a rare topic, so I paste in the papers I already have and ask it to work from those.', correct: true, consequence: 'The model summarizes and compares the papers you gave it, and every citation in the answer is one you can see in the prompt. Supplying the material closed the gap.' },
-    { text: 'Non-determinism produced a bad sample, so I ask about the same topic a few more times and keep the citation that repeats.', consequence: 'An invented citation on a thin path can repeat across runs, because the same weights are filling the same gap. Agreement between samples tells you the gap is stable, and nothing about whether the paper exists.' },
-    { text: 'Instruction dilution let an earlier rule about citing sources fade, so I restate the rule.', consequence: 'The question was one message long, so nothing diluted. The restated rule produces the same citation with a sentence about how important sources are.' },
+    { text: 'Le modèle a menti pour masquer un manque, donc je lui demande d’être honnête et je réessaie.', consequence: 'Parfois, le modèle décline désormais, ce qui est un progrès, et parfois vous obtenez une seconde référence avec la même assurance. Le modèle a produit les jetons suivants probables les deux fois. Demander de l’honnêteté change la fréquence à laquelle il décline, et n’ajoute aucun article à ses données d’entraînement.' },
+    { text: 'La prédiction du jeton suivant a rencontré un manque de connaissance sur un sujet rare, donc je colle les articles dont je dispose déjà et je lui demande de travailler à partir d’eux.', correct: true, consequence: 'Le modèle résume et compare les articles que vous lui avez donnés, et chaque référence de la réponse est une référence que vous voyez dans le prompt. Fournir le matériau a comblé le manque.' },
+    { text: 'Le non-déterminisme a produit un mauvais échantillon, donc je pose quelques fois de plus la même question et je garde la référence qui revient.', consequence: 'Une référence inventée sur un chemin étroit peut revenir d’un essai à l’autre, parce que les mêmes poids comblent le même vide. L’accord entre les échantillons vous dit que le manque est stable, et rien sur l’existence de l’article.' },
+    { text: 'La dilution des instructions a fait s’estomper une règle antérieure sur la citation des sources, donc je rappelle la règle.', consequence: 'La question tenait en un message, rien ne s’est donc dilué. La règle rappelée produit la même référence, avec une phrase sur l’importance des sources.' },
   ]}>
 
-A colleague asks a chat assistant for "the standard reference on" a narrow
-topic in your field and gets a citation with two authors, a year and a
-journal. They search for it and find nothing. They ask you what went wrong
-and what to do instead. Which answer do you give?
+Un collègue demande à un assistant conversationnel « la référence de base
+sur » un sujet pointu de votre domaine, et il obtient une référence avec deux
+auteurs, une année et une revue. Il la cherche et ne trouve rien. Il vous
+demande ce qui n’a pas marché et ce qu’il faut faire à la place. Quelle
+réponse lui donnez-vous ?
 
 </Scenario>
 
 <Choice id="which-needs-checking" phase="review" objective="concepts/explains-models/names-failure-modes"
   concepts={['hallucination', 'knowledge-cutoff']}
-  context="The lesson asks two questions about a task: how common it is in written text, and how much of the answer hinges on exact specifics such as names, numbers, dates and citations."
-  title="Which one needs every specific checked?" hint="Which task is rare in written text and hinges on exact facts?"
+  context="La leçon pose deux questions sur une tâche : est-elle courante dans les textes écrits, et quelle part de la réponse dépend d’éléments précis comme des noms, des nombres, des dates et des références ?"
+  title="Laquelle demande de vérifier chaque élément précis ?" hint="Quelle tâche est rare dans les textes écrits et dépend de faits exacts ?"
   options={[
-    { text: 'A three-sentence summary of the customer letter you pasted in.', why: 'The material is in the prompt, and summaries are common. A spot-check against the letter is enough.' },
-    { text: 'A friendlier version of the email draft you wrote yourself.', why: 'Rewriting a tone is a common task, and every fact came from you.' },
-    { text: 'The dates and cities of three conferences in a narrow field next year.', correct: true },
-    { text: 'A plain explanation of what a spreadsheet pivot table does.', why: 'A textbook concept is written about thousands of times, so the prediction is well constrained.' },
+    { text: 'Un résumé en trois phrases de la lettre de client que vous avez collée.', why: 'Le matériau est dans le prompt, et les résumés sont courants. Une vérification par sondage, en relisant la lettre, suffit.' },
+    { text: 'Une version plus aimable du brouillon de courriel que vous avez écrit vous-même.', why: 'Changer le ton d’un texte est une tâche courante, et chaque fait vient de vous.' },
+    { text: 'Les dates et les villes de trois conférences d’un domaine pointu l’an prochain.', correct: true },
+    { text: 'Une explication simple de ce que fait un tableau croisé dynamique dans un tableur.', why: 'Un concept de manuel fait l’objet de milliers d’écrits : la prédiction est bien contrainte.' },
   ]}>
 
-Which of these answers needs a check of every specific before you pass it
-on?
+Laquelle de ces réponses demande de vérifier chaque élément précis avant de
+la transmettre ?
 
 </Choice>
 
 <Match id="match-the-pair" phase="review" objective="concepts/explains-models/names-failure-modes"
   concepts={['hallucination', 'knowledge-cutoff']}
-  context="The lesson explains a wrong answer as two properties meeting on one task: prediction, which always produces a likely next token, and something on the other side of the pair."
-  title="Name the other side of the pair" hint="What did the model lack, or what pulled its prediction the wrong way?"
-  options={['A knowledge gap', 'The knowledge cutoff', 'Sycophancy', 'Instruction dilution']}
+  context="La leçon explique une réponse fausse comme la rencontre de deux propriétés sur une même tâche : la prédiction, qui produit toujours un jeton suivant probable, et quelque chose de l’autre côté de la paire."
+  title="Nommez l’autre côté de la paire" hint="Que manquait-il au modèle, ou qu’est-ce qui a tiré sa prédiction dans la mauvaise direction ?"
+  options={['Un manque de connaissance', 'La date limite des connaissances', 'La flagornerie', 'La dilution des instructions']}
   rows={[
-    { statement: 'A confident name for the author of a rare local report that has no author named anywhere.', option: 0, why: 'Was the fact ever in the training text?' },
-    { statement: 'A confident but wrong price for a phone model that came out last month.', option: 1, why: 'When did the fact come into the world, compared with the training data?' },
-    { statement: 'A right answer that turns into a wrong one after you say you disagree.', option: 2, why: 'What moved the answer: a new fact or your reaction?' },
-    { statement: 'A rule from the first message that stops being followed late in a long chat.', option: 3, why: 'What else is in the context now, next to the rule?' },
+    { statement: 'Un nom d’auteur donné avec assurance pour un rapport local rare dont l’auteur n’est mentionné nulle part.', option: 0, why: 'Le fait a-t-il jamais figuré dans le texte d’entraînement ?' },
+    { statement: 'Un prix assuré mais faux pour un modèle de téléphone sorti le mois dernier.', option: 1, why: 'Quand le fait est-il apparu dans le monde, par rapport aux données d’entraînement ?' },
+    { statement: 'Une réponse juste qui devient fausse après que vous avez dit ne pas être d’accord.', option: 2, why: 'Qu’est-ce qui a fait bouger la réponse : un fait nouveau, ou votre réaction ?' },
+    { statement: 'Une règle du premier message qui cesse d’être suivie tard dans une longue conversation.', option: 3, why: 'Qu’y a-t-il d’autre maintenant dans le contexte, à côté de la règle ?' },
   ]}
-  rationale="Prediction can't be switched off, so the fix is on the other side of the pair: supply what is missing, or check what came out.">
-Match each failure to the property that met prediction.
+  rationale="La prédiction ne peut pas être désactivée : la correction se trouve donc de l’autre côté de la paire. Fournissez ce qui manque, ou vérifiez ce qui est sorti.">
+Associez chaque défaillance à la propriété qui a rencontré la prédiction.
 </Match>
 
-<Exercise stretch="Take one of the answers you marked wrong, close the gap the way the pair suggests (paste in the source, or give the recent document), and ask again. Note whether the specifics now match what you gave it.">
+<Exercise stretch="Reprenez l’une des réponses que vous avez jugées fausses, comblez le manque comme le suggère la paire (collez la source, ou donnez le document récent), et reposez la question. Notez si les éléments précis correspondent maintenant à ce que vous avez fourni.">
 
-Open any chat assistant you have access to. Write down five tasks you
-could give it this week, then place each one as "trust and spot-check" or
-"verify every specific" before you run it. Run at least the two you placed
-under "verify every specific" and check each specific in the answer against
-a source that is not the model. For one specific that turns out wrong,
-write one sentence naming the two properties that met to produce it.
+Ouvrez un assistant conversationnel auquel vous avez accès. Notez cinq tâches
+que vous pourriez lui confier cette semaine, puis classez chacune en « faire
+confiance et sonder » ou « vérifier chaque élément précis » avant de la
+lancer. Lancez au moins les deux que vous avez classées en « vérifier chaque
+élément précis », et vérifiez chaque élément précis de la réponse auprès
+d’une source autre que le modèle. Pour un élément précis qui se révèle faux,
+écrivez une phrase qui nomme les deux propriétés qui se sont rencontrées pour
+le produire.
 
-The result is a table with five rows and a sentence, and it is small
-enough to do in ten minutes. It protects you from the answer that passes
-review because it looks like every other answer.
+Le résultat est un tableau de cinq lignes et une phrase, assez court pour être
+fait en dix minutes. Il vous protège de la réponse qui passe la relecture
+parce qu’elle ressemble à toutes les autres.
 
-A good result places the tasks by how common the task is and how much the
-answer hinges on specifics, finds at least one wrong specific, and names
-the pair behind it in terms from this lesson. Reflection: which of your five tasks would have been safe to
-pass on without checking, and what made it safe?
+Un bon résultat classe les tâches selon leur fréquence et selon la part de
+la réponse qui dépend d’éléments précis, trouve au moins un élément précis
+faux, et nomme la paire qui l’explique avec les termes de cette leçon.
+Réflexion : laquelle de vos cinq tâches aurait-on pu transmettre sans
+vérification, et qu’est-ce qui la rendait sûre ?
 
 </Exercise>
 
 <Recap>
 
-1. One mechanism produces both the answer you can use and the invented
-   one. The task differs, so the question to ask is about the task
+1. Un même mécanisme produit la réponse utilisable et la réponse inventée.
+   C’est la tâche qui diffère : la question à poser porte donc sur la tâche
    (@Academy ai-capabilities-and-limitations).
-2. The first question is how common the task is in written text. A summary,
-   a reformat or a textbook concept is a wide path. A niche topic, an exact
-   figure or an event after the cutoff is a thin one.
-3. The second question is how much of the answer hinges on exact specifics.
-   Invention concentrates in names, numbers, dates, quotes and citations,
-   because each is exactly right or wrong.
-4. A wide-path task needs a spot-check against the material you gave it. A
-   thin-path task needs a check of every specific before you pass it on, in
-   proportion to what a wrong specific would cost
-   (@Academy ai-fluency-framework-foundations).
-5. A real failure is two properties meeting, such as prediction plus a
-   knowledge gap or prediction plus the cutoff. Prediction cannot be
-   switched off, so the fix is on the other side of the pair: supply what
-   is missing, or verify what came out.
+2. La première question est la fréquence de la tâche dans les textes écrits.
+   Un résumé, une remise en forme ou un concept de manuel est un chemin large.
+   Un sujet pointu, un chiffre exact ou un événement postérieur à la date
+   limite est un chemin étroit.
+3. La seconde question est la part de la réponse qui dépend d’éléments
+   précis. L’invention se concentre dans les noms, les nombres, les dates, les
+   citations et les références, parce que chacun est soit exactement juste,
+   soit faux.
+4. Une tâche sur un chemin large demande une vérification par sondage dans le
+   matériau que vous avez fourni. Une tâche sur un chemin étroit demande de
+   vérifier chaque élément précis avant de la transmettre, en proportion de ce
+   que coûterait un élément faux (@Academy ai-fluency-framework-foundations).
+5. Une vraie défaillance est la rencontre de deux propriétés, comme la
+   prédiction et un manque de connaissance, ou la prédiction et la date
+   limite. La prédiction ne peut pas être désactivée, et la correction se
+   trouve donc de l’autre côté de la paire : fournissez ce qui manque, ou
+   vérifiez ce qui est sorti.
 
 </Recap>

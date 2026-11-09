@@ -10,10 +10,10 @@ introduces: [progressive-disclosure]
 assumes:
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/how-models-work
-    section: one-token-at-a-time
+    section: un-jeton-à-la-fois
   - objective: concepts/explains-models/explains-generation
     lesson: concepts/context-window
-    section: count-the-tokens-of-a-page
+    section: compter-les-jetons-dune-page
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/first-skill
     section: pass-one-the-directory-and-the-description
