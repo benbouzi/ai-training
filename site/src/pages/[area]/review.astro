@@ -37,15 +37,15 @@ const catalog = lessons.map((l) => {
 });
 ---
 
-<StarlightPage frontmatter={{ title: `Review: ${area.name}`, description: `Review items due for the ${area.name} course.`, tableOfContents: false }}>
+<StarlightPage frontmatter={{ title: `Révision : ${area.name}`, description: `Les questions à revoir du parcours ${area.name}.`, tableOfContents: false }}>
 	<div class="not-content review" data-review={area.slug} data-catalog={JSON.stringify(catalog)}>
 		<ReviewIntro area={area.slug} />
 		<div class="review-habits" data-habits hidden></div>
-		<div class="review-progress" aria-label="Items in this session"><div data-bar></div></div>
+		<div class="review-progress" aria-label="Questions de cette session"><div data-bar></div></div>
 		<p data-status role="status"></p>
 		<div data-items></div>
 		<div class="review-actions">
-			<a href={href(`/${area.slug}/`)}>Back to the course</a>
+			<a href={href(`/${area.slug}/`)}>Retour au parcours</a>
 		</div>
 	</div>
 </StarlightPage>

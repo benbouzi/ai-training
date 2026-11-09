@@ -1,4 +1,4 @@
 id: building-agents
-name: Building agents
+name: Construire des agents
 group: engineering
-description: Build an agent from a model, a loop and tools.
+description: Construire un agent à partir d’un modèle, d’une boucle et d’outils.

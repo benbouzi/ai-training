@@ -30,7 +30,7 @@ function render(edges = '[{"from":"concepts/a","to":"concepts/b"},{"from":"conce
 			<a data-node="concepts/b"><span data-node-ring></span><span data-node-count></span></a>
 			<script type="application/json" data-edges>${edges}</script>
 		</div>
-		<aside data-review-card data-due="false"><a data-review-label>Review: nothing due yet</a></aside>
+		<aside data-review-card data-due="false"><a data-review-label>Révision : rien à revoir pour l’instant</a></aside>
 	</div>`;
 }
 
@@ -54,7 +54,7 @@ describe('mountCourseGraph', () => {
 		render();
 		expect(mountCourseGraph()).toBe(1);
 		expect(q('[data-node="concepts/a"]').dataset.state).toBe('untouched');
-		expect(q('[data-node="concepts/a"] [data-node-count]').textContent).toBe('0/1 checkpoints');
+		expect(q('[data-node="concepts/a"] [data-node-count]').textContent).toBe('0/1 questions');
 		expect(q('[data-node="concepts/b"] [data-node-count]').textContent).toBe('');
 		expect([...document.querySelectorAll<HTMLElement>('[data-stop]')].map((s) => s.dataset.reached)).toEqual([
 			'true',
@@ -87,9 +87,9 @@ describe('mountCourseGraph', () => {
 		expect(q('[data-ring-label]').textContent).toBe('50%');
 		expect(q('[data-milestone-fill]').style.width).toBe('50%');
 		expect(q('[data-skipped]').hidden).toBe(false);
-		expect(q('[data-skipped]').textContent).toBe('1 skipped');
+		expect(q('[data-skipped]').textContent).toBe('1 passée');
 		expect(q('[data-review-card]').dataset.due).toBe('true');
-		expect(q('[data-review-label]').textContent).toBe('Review due: 1 item');
+		expect(q('[data-review-label]').textContent).toBe('Révision : 1 question à revoir');
 	});
 
 	it('skips the edges when the edge data is missing', () => {

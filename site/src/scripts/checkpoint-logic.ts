@@ -102,7 +102,7 @@ export function orderFeedback(ok: boolean): Feedback {
 
 /** `sort`: items still in the pool block grading; otherwise every chip must sit in its own bucket. */
 export function sortFeedback(unplaced: number, allCorrect: boolean): Feedback {
-	if (unplaced > 0) return { kind: 'note', text: `${unplaced} item${unplaced === 1 ? '' : 's'} still to place.` };
+	if (unplaced > 0) return { kind: 'note', text: `Encore ${unplaced} élément${unplaced > 1 ? 's' : ''} à classer.` };
 	return allCorrect
 		? { kind: 'ok', text: 'Tout est bien classé.' }
 		: { kind: 'nope', text: 'Certains éléments sont dans la mauvaise case.' };
@@ -130,14 +130,14 @@ export function multiChoiceVerdict(
 			ok: false,
 			feedback: {
 				kind: 'nope',
-				text: `${right} of ${wanted} so far, and nothing wrong. ${wanted - right} more to find.`,
+				text: `${right} sur ${wanted} pour l’instant, sans erreur. Encore ${wanted - right} à trouver.`,
 			},
 		};
 	}
 	return { ok: true, feedback: { kind: 'ok', text: 'Juste.' } };
 }
 
-const rows = (n: number) => `${n} row${n === 1 ? '' : 's'}`;
+const rows = (n: number) => `${n} ligne${n > 1 ? 's' : ''}`;
 
 /** `match` (spec S01): every row filled, then every row right. The rationale shows only on a full pass. */
 export function matchVerdict(
@@ -145,8 +145,12 @@ export function matchVerdict(
 	wrong: number,
 	rationale: string,
 ): { ok: boolean | null; feedback: Feedback } {
-	if (empty > 0) return { ok: null, feedback: { kind: 'note', text: `${rows(empty)} still to fill.` } };
-	if (wrong > 0) return { ok: false, feedback: { kind: 'nope', text: `${rows(wrong)} wrong. Each row says which.` } };
+	if (empty > 0) return { ok: null, feedback: { kind: 'note', text: `Encore ${rows(empty)} à remplir.` } };
+	if (wrong > 0)
+		return {
+			ok: false,
+			feedback: { kind: 'nope', text: `${rows(wrong)} fausse${wrong > 1 ? 's' : ''}. Chaque ligne indique laquelle.` },
+		};
 	return { ok: true, feedback: { kind: 'ok', text: `Juste. ${rationale}`.trim() } };
 }
 
@@ -158,10 +162,10 @@ export function skillsCheckOffer(open: number): string {
 }
 
 export function skillsCheckNote(answered: number, passed: number, total: number): string {
-	if (answered < total) return `${passed} réussie(s) sur ${answered} pour l’instant.`;
+	if (answered < total) return `${passed} sur ${answered} réussie${passed > 1 ? 's' : ''} pour l’instant.`;
 	const tail =
 		passed === total ? 'Objectifs couverts. Passez à « À retenir ».' : 'Les manques sont enseignés plus bas.';
-	return `${passed} réussie(s) sur ${total}. ${tail}`;
+	return `${passed} sur ${total} réussie${passed > 1 ? 's' : ''}. ${tail}`;
 }
 
 /** How many of the stage pills light up, and the label under them, for a review item. */
@@ -173,6 +177,6 @@ export function stageDisplay(stage: number | 'done' | undefined): { lit: number;
 /** The settings page's one-line summary of a review item's answers, from its `history` (spec S05 "Storage"). */
 export function historyDisplay(history: readonly ReviewTrace[]): string {
 	const last = history[history.length - 1];
-	if (!last) return 'not answered yet';
-	return `${history.length} answered, last ${last.result} on ${last.at}`;
+	if (!last) return 'pas encore répondu';
+	return `${history.length} réponse${history.length > 1 ? 's' : ''}, la dernière ${last.result === 'pass' ? 'réussie' : 'échouée'} le ${last.at}`;
 }

@@ -78,12 +78,12 @@ test('the course page shows the finished node, the ring and the review card', as
 	await expect(page.locator('[data-ring-label]')).toHaveText(`${percent}%`);
 	// Every seeded review is due today, and there is more than one, so the card uses the plural.
 	expect(FIRST.length).toBeGreaterThan(1);
-	await expect(page.locator('[data-review-card]')).toHaveText(`Review due: ${FIRST.length} items`);
+	await expect(page.locator('[data-review-card]')).toHaveText(`Révision : ${FIRST.length} questions à revoir`);
 });
 
 test('nothing due shows a linked review card', async ({ page }) => {
 	await page.goto('concepts/');
-	await expect(page.locator('[data-review-card]')).toHaveText('Review: nothing due yet');
+	await expect(page.locator('[data-review-card]')).toHaveText('Révision : rien à revoir pour l’instant');
 	await expect(page.locator('[data-review-card] a')).toHaveAttribute('href', '/ai-training/concepts/review/');
 });
 
@@ -143,7 +143,9 @@ test('the progress page exports, resets and imports the record', async ({ page, 
 	expect(await page.locator('.progress-course').count()).toBeGreaterThan(0);
 	expect(await page.locator('.progress-lesson').count()).toBeGreaterThan(0);
 	expect(FIRST.length).toBeGreaterThan(1);
-	await expect(page.locator('[data-progress-review=concepts]')).toHaveText(`Review due: ${FIRST.length} items`);
+	await expect(page.locator('[data-progress-review=concepts]')).toHaveText(
+		`Révision : ${FIRST.length} questions à revoir`,
+	);
 	const before = await page.locator('[data-dump]').textContent();
 
 	const [download] = await Promise.all([page.waitForEvent('download'), page.locator('[data-export]').click()]);
@@ -151,7 +153,7 @@ test('the progress page exports, resets and imports the record', async ({ page, 
 
 	page.once('dialog', (d) => d.accept());
 	await page.locator('[data-reset]').click();
-	await expect(page.locator('[data-message]')).toHaveText('Progress reset.');
+	await expect(page.locator('[data-message]')).toHaveText('Progression réinitialisée.');
 	expect(JSON.parse((await page.locator('[data-dump]').textContent()) ?? '{}').lessons).toEqual({});
 	// Both keys are gone. (No reload here: the seed init script would write them again on the next navigation.)
 	expect(await storedRecord(page, storageKeyFor(1))).toEqual({});
@@ -159,6 +161,6 @@ test('the progress page exports, resets and imports the record', async ({ page, 
 
 	page.once('dialog', (d) => d.accept());
 	await page.locator('[data-import]').setInputFiles(file);
-	await expect(page.locator('[data-message]')).toHaveText('Imported.');
+	await expect(page.locator('[data-message]')).toHaveText('Importé.');
 	await expect(page.locator('[data-dump]')).toHaveText(before ?? '');
 });

@@ -3,6 +3,8 @@
  * ids the build still knows, and the labels on each course card.
  * `progress-overview.ts` draws the page from these.
  */
+
+import { CHECKPOINT_STATE_LABEL, labelOf } from '@lib/labels-fr';
 import type { CatalogHabit } from './overview';
 import type { CheckpointEntry } from './progress-model';
 
@@ -43,7 +45,7 @@ export function knownIds(catalog: readonly CatalogCourse[]): KnownIds {
 	};
 }
 
-/** The hover text of one checkpoint square: "c1: passed" or "c1: not attempted". */
+/** The hover text of one checkpoint square: "c1 : réussie" or "c1 : pas tentée". */
 export function checkpointTitle(checkpointId: string, entry: CheckpointEntry | undefined): string {
-	return `${checkpointId}: ${entry?.state ?? 'not attempted'}`;
+	return `${checkpointId} : ${entry ? labelOf(CHECKPOINT_STATE_LABEL, entry.state) : 'pas tentée'}`;
 }

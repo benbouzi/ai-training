@@ -7,7 +7,7 @@ test('the comfort level is set on the settings page, not on a lesson', async ({ 
 	await expect(less).toHaveCount(1);
 	await less.click();
 	await expect(less).toHaveAttribute('aria-pressed', 'true');
-	await expect(page.locator('[data-comfort-note]')).toHaveText('Set: less comfortable.');
+	await expect(page.locator('[data-comfort-note]')).toHaveText('Choisi : moins à l’aise.');
 	await less.click();
 	await expect(less).toHaveAttribute('aria-pressed', 'false');
 	await page.goto('building-agents/agent-loop/');

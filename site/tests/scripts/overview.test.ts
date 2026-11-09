@@ -133,9 +133,11 @@ describe('habit lines (spec S07 "Where habits surface")', () => {
 		expect(activeHabits({ id: 'x/y', title: 'Y', checkpoints: [] }, rec)).toEqual([]);
 	});
 	it('summarizes the next date and the results so far', () => {
-		expect(habitSummary({ next: '2026-01-04', results: [] })).toBe('Next on 2026-01-04. No result yet.');
+		expect(habitSummary({ next: '2026-01-04', results: [] })).toBe(
+			'Prochaine fois : 2026-01-04. Pas encore de résultat.',
+		);
 		expect(habitSummary({ next: '2026-01-08', results: ['done', 'skipped'] })).toBe(
-			'Next on 2026-01-08. So far: done, skipped.',
+			'Prochaine fois : 2026-01-08. Jusqu’ici : fait, passé.',
 		);
 	});
 });

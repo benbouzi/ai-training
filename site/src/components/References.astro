@@ -17,7 +17,7 @@ const { references } = Astro.props;
 {
 	references.length > 0 && (
 		<>
-			<h2 id="references">References</h2>
+			<h2 id="references">Références</h2>
 			<ol class="references">
 				{references.map(({ n, key, entry }) => <li id={`ref-${n}`} set:html={referenceHtml(key, entry)} />)}
 			</ol>

@@ -36,10 +36,10 @@ export function mountSettings(doc: ParentNode = document): boolean {
 	function drawDueNow(rec: progress.ProgressRecord) {
 		const courses = dueByCourse(catalog, rec, progress.today());
 		if (!courses.length) {
-			dueNow.textContent = 'Nothing due right now.';
+			dueNow.textContent = 'Rien à revoir pour l’instant.';
 			return;
 		}
-		dueNow.replaceChildren('Due now: ');
+		dueNow.replaceChildren('À revoir maintenant : ');
 		courses.forEach((course, i) => {
 			if (i > 0) dueNow.append(', ');
 			const a = document.createElement('a');
@@ -78,7 +78,7 @@ export function mountSettings(doc: ParentNode = document): boolean {
 		}
 		const label = document.createElement('em');
 		label.className = 'cp-stage-label';
-		label.textContent = `stage ${stage} of 5, due ${item.due}`;
+		label.textContent = `étape ${stage} sur 5, à revoir le ${item.due}`;
 		pills.appendChild(label);
 		const history = document.createElement('span');
 		history.className = 'schedule-history';
@@ -86,8 +86,8 @@ export function mountSettings(doc: ParentNode = document): boolean {
 		const actions = document.createElement('span');
 		actions.className = 'schedule-actions';
 		actions.append(
-			stageButton('cp-sooner', 'See this sooner', stage <= 1, () => progress.adjustReviewStage(id, -1)),
-			stageButton('cp-later', 'See this less often', stage >= 5, () => progress.adjustReviewStage(id, +1)),
+			stageButton('cp-sooner', 'Revoir plus tôt', stage <= 1, () => progress.adjustReviewStage(id, -1)),
+			stageButton('cp-later', 'Revoir moins souvent', stage >= 5, () => progress.adjustReviewStage(id, +1)),
 		);
 		row.append(name, pills, actions, history);
 		return row;
@@ -99,7 +99,7 @@ export function mountSettings(doc: ParentNode = document): boolean {
 		const rows = scheduleRows(rec);
 		if (!rows.length) {
 			schedule.innerHTML =
-				'<p class="review-empty">Nothing scheduled. Finish a lesson and its checkpoints appear here.</p>';
+				'<p class="review-empty">Rien de prévu. Terminez une leçon et ses questions de contrôle apparaissent ici.</p>';
 			return;
 		}
 		schedule.replaceChildren(...rows.map(([id, item]) => scheduleRow(id, item)));

@@ -44,9 +44,9 @@ describe('CourseGraph', () => {
 			{ from: 'safety/agent-risk', to: 'safety/deeper' },
 			{ from: 'safety/deeper', to: 'safety/coming' },
 		]);
-		expect(html).toContain('2 lessons, 1 checkpoint, 1 more coming');
+		expect(html).toContain('2 leçons, 1 question de contrôle, 1 à venir');
 		expect(html).toContain('href="/ai-training/safety/review/"');
-		expect(html).toContain('Review: nothing due yet');
+		expect(html).toContain('Révision : rien à revoir pour l’instant');
 	});
 	it('renders a planned lesson as a coming node without a link, outside the progress node list', async () => {
 		const html = await container.renderToString(CourseGraph, { props: { area: 'safety' } });
@@ -65,8 +65,8 @@ describe('CourseGraph', () => {
 		const html = await container.renderToString(CourseGraph, { props: { area: 'concepts' } });
 		expect(html).toContain('Explains what a model does');
 		expect(html).toContain('href="/ai-training/competencies/concepts/explains-models/"');
-		expect(html).toContain('Nothing; start here.');
-		expect(html).toContain('1 lesson, 5 checkpoints');
+		expect(html).toContain('Rien : commencez ici.');
+		expect(html).toContain('1 leçon, 5 questions de contrôle');
 	});
 	it('rejects an unknown area', async () => {
 		await expect(container.renderToString(CourseGraph, { props: { area: 'nope' } })).rejects.toThrow(/Unknown area/);
@@ -92,20 +92,20 @@ describe('CompetencyObjectives and References', () => {
 		const citations = createCitations(bib, 'test');
 		renderObjectives(objectivesOf('safety/judges-output'), citations);
 		const html = await container.renderToString(References, { props: { references: citations.references() } });
-		expect(html).toContain('<h2 id="references">References</h2>');
+		expect(html).toContain('<h2 id="references">Références</h2>');
 		expect(html).toContain('<ol class="references">');
 		expect(html).toContain(
 			'<li id="ref-1">A. Osmani. <a href="https://example.com/aec"><em>How agents think</em></a>.',
 		);
-		expect(html).toContain('Agent Engineer Course. Course. <code>AEC-02</code>');
-		expect(html).toContain('<li id="ref-2"><em>Taste</em>. Brilliant. Reference. <code>Brilliant TAS</code>');
+		expect(html).toContain('Agent Engineer Course. Cours. <code>AEC-02</code>');
+		expect(html).toContain('<li id="ref-2"><em>Taste</em>. Brilliant. Référence. <code>Brilliant TAS</code>');
 		expect(html.match(/<li id="ref-/g)).toHaveLength(2);
 	});
 	it('renders no References section when nothing cites', async () => {
 		const citations = createCitations(bib, 'test');
 		const objectives = renderObjectives(objectivesOf('concepts/explains-models'), citations);
 		const html = await container.renderToString(CompetencyObjectives, { props: { objectives } });
-		expect(html).toContain('Behaviors not written yet.');
+		expect(html).toContain('Comportements pas encore rédigés.');
 		const refs = await container.renderToString(References, { props: { references: citations.references() } });
 		expect(refs.trim()).toBe('');
 	});
@@ -119,7 +119,7 @@ describe('TopicMap', () => {
 		expect(html).toContain('data-topic="safety/governance" data-state="untouched"');
 		expect(html).not.toContain('data-has-lesson');
 		expect(html).not.toContain('data-planned');
-		expect(html).toContain('<span data-k="untouched">not started</span>');
+		expect(html).toContain('<span data-k="untouched">pas commencé</span>');
 		expect(html).not.toContain('solid line');
 		expect(html).toContain('href="/ai-training/topics/safety/risk/"');
 		const edges = JSON.parse(/data-edges>([^<]*)</.exec(html)?.[1] ?? '[]');
@@ -160,7 +160,7 @@ describe('CompetencyMap', () => {
 	it('names the topics from other areas only for a competency that draws on them', async () => {
 		const html = await container.renderToString(CompetencyMap, {});
 		expect(box(html, 'safety/spots-injection')?.[1]).toContain(
-			'Draws on topics from other areas: <a href="/ai-training/topics/concepts/models/">Models</a>',
+			'S’appuie sur des thèmes d’autres domaines : <a href="/ai-training/topics/concepts/models/">Models</a>',
 		);
 		expect(box(html, 'safety/judges-output')?.[1]).not.toContain('Draws on');
 		expect(box(html, 'concepts/explains-models')?.[1]).not.toContain('Draws on');
@@ -173,7 +173,7 @@ describe('CompetencyMap', () => {
 		expect(html).toMatch(/data-competency="safety\/judges-output" data-state="untouched">/);
 		expect(html).not.toContain('data-has-lesson');
 		expect(html).not.toContain('data-planned');
-		expect(html).toContain('<span data-k="untouched">not started</span>');
+		expect(html).toContain('<span data-k="untouched">pas commencé</span>');
 		expect(html).not.toContain('solid line');
 		const coverage = JSON.parse(/data-coverage="([^"]*)"/.exec(html)?.[1]?.replace(/&quot;/g, '"') ?? '[]');
 		expect(coverage).toContainEqual({
@@ -194,10 +194,10 @@ describe('Competency page', () => {
 	};
 	it('names the course that teaches the competency and links to its course page (#514)', async () => {
 		expect(await courseLine('safety/spots-injection')).toContain(
-			'<p data-competency-course><strong>Taught in:</strong> the <a href="/ai-training/safety/">Safety</a> course</p>',
+			'<p data-competency-course><strong>Enseignée dans :</strong> le parcours <a href="/ai-training/safety/">Safety</a></p>',
 		);
 		expect(await courseLine('concepts/explains-models')).toContain(
-			'<strong>Taught in:</strong> the <a href="/ai-training/concepts/">Concepts</a> course',
+			'<strong>Enseignée dans :</strong> le parcours <a href="/ai-training/concepts/">Concepts</a>',
 		);
 	});
 });
@@ -213,16 +213,16 @@ describe('ReviewIntro', () => {
 	};
 	it('separates the format names and keeps the spaces around the bold words (#517)', async () => {
 		const text = await intro('concepts');
-		const formats = /answer formats: ([^.]*)\./.exec(text)?.[1] ?? '';
+		const formats = /sous ces formes : ([^.]*)\./.exec(text)?.[1] ?? '';
 		// The fixture's concepts lessons ask two or more kinds, whatever they are.
 		const names = formats.split(', ');
 		expect(names.length).toBeGreaterThanOrEqual(2);
-		for (const name of names) expect(name).toMatch(/^[a-z-]+$/);
-		expect(text).toContain('intervals. This course asks them');
-		expect(text).toContain('. Hint gives a nudge. Give up shows the answer');
+		for (const name of names) expect(name).toMatch(/^[a-zé ]+$/);
+		expect(text).toContain('intervalles croissants. Ce parcours les pose');
+		expect(text).toContain('. Indice donne un coup de pouce. Voir la réponse montre la réponse');
 	});
 	it('says so when the course has nothing to ask', async () => {
-		expect(await intro('using-agents')).toContain('This course has no items to ask yet. Hint gives a nudge.');
+		expect(await intro('using-agents')).toContain('Ce parcours n’a pas encore de question à poser. Indice donne un coup de pouce.');
 	});
 });
 
@@ -262,7 +262,7 @@ describe('TopicReference', () => {
 			/<section class="reference-lesson" data-reference-lesson="concepts\/how-models-work" data-unlocked="false"/,
 		);
 		expect(html).toContain(
-			'Unlocks when you finish <a href="/ai-training/concepts/how-models-work/">How a language model works</a>.',
+			'Se débloque quand vous terminez <a href="/ai-training/concepts/how-models-work/">How a language model works</a>.',
 		);
 		expect(html).toContain('<div class="reference-body" data-reference-body hidden>');
 		expect(html).toContain('<li>Tokens, <strong>not</strong> words.</li>');
@@ -278,11 +278,11 @@ describe('TopicReference', () => {
 		expect(html).toContain('Prompt (illustration écrite pour la leçon)');
 		expect(html).toContain('<ul><li>Keep every date.</li><li>Add nothing.</li></ul>');
 		expect(html).toContain('<figure class="response-block"><figcaption>Réponse</figcaption>');
-		expect(html).toContain('This lesson has no recap takeaways yet.');
+		expect(html).toContain('Cette leçon n’a pas encore de points à retenir.');
 		// safety/deeper covers nothing, and safety/risk has only a planned lesson.
 		expect(html).not.toContain('data-reference-lesson="safety/deeper"');
 		const none = await container.renderToString(TopicReference, { props: { topicId: 'safety/risk' } });
-		expect(none).toContain('No lesson covers this topic yet');
+		expect(none).toContain('Aucune leçon ne couvre encore ce thème');
 	});
 });
 
@@ -306,13 +306,13 @@ describe('CoursePlan', () => {
 	it('renders one row per lesson in course order, a heading row per part, folded under a counted summary', async () => {
 		const html = await container.renderToString(CoursePlan, { props: { area: 'safety' } });
 		expect(html).toMatch(/<details class="course-plan not-content" data-course-plan="safety"/);
-		expect(html).toContain('<summary>Lesson plan (3 lessons, 2 live)</summary>');
+		expect(html).toContain('<summary>Plan du parcours (3 leçons, 2 en ligne)</summary>');
 		const rows = [...html.matchAll(/data-plan-entry="([^"]+)"/g)].map((m) => m[1]);
 		expect(rows).toEqual(['safety/agent-risk', 'safety/deeper', 'safety/coming']);
 		const parts = [...html.matchAll(/data-plan-part="([^"]+)"/g)].map((m) => m[1]);
 		expect(parts).toEqual(['Risk', 'Later']);
-		expect(html).toContain('<td>tutorial</td>');
-		expect(html).toContain('<td>do, judge</td>');
+		expect(html).toContain('<td>tutoriel</td>');
+		expect(html).toContain('<td>faire, juger</td>');
 		// A flat course has no part rows.
 		const flat = await container.renderToString(CoursePlan, { props: { area: 'concepts' } });
 		expect(flat).not.toContain('data-plan-part');
@@ -341,10 +341,10 @@ describe('CoursePlan', () => {
 		const row = (id: string) =>
 			new RegExp(`data-plan-entry="${id.replace('/', '\\/')}"[\\s\\S]*?</tr>`).exec(html)?.[0] ?? '';
 		expect(row('safety/agent-risk')).toContain(
-			'<td data-minutes="estimate">5 <small class="course-plan-minutes">estimate</small></td>',
+			'<td data-minutes="estimate">5 <small class="course-plan-minutes">estimation</small></td>',
 		);
 		expect(row('safety/coming')).toContain(
-			'<td data-minutes="target">15 <small class="course-plan-minutes">target</small></td>',
+			'<td data-minutes="target">15 <small class="course-plan-minutes">cible</small></td>',
 		);
 	});
 	it('rejects an area without a course file', async () => {

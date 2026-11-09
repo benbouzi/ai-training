@@ -123,8 +123,8 @@ export interface Heading {
  */
 export function competencyHeadings(alignmentRows: number, references: number): Heading[] {
 	return [
-		{ depth: 2, slug: 'objectives', text: 'Learning objectives' },
-		...(alignmentRows > 0 ? [{ depth: 2, slug: 'alignment', text: 'Alignment' }] : []),
-		...(references > 0 ? [{ depth: 2, slug: 'references', text: 'References' }] : []),
+		{ depth: 2, slug: 'objectives', text: 'Objectifs d’apprentissage' },
+		...(alignmentRows > 0 ? [{ depth: 2, slug: 'alignment', text: 'Correspondance avec les référentiels' }] : []),
+		...(references > 0 ? [{ depth: 2, slug: 'references', text: 'Références' }] : []),
 	];
 }

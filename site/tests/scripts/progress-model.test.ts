@@ -537,8 +537,11 @@ describe('export and import', () => {
 		]);
 	});
 	it('refuses bad input with a message', () => {
-		expect(parseImport('{')).toEqual({ ok: false, message: 'That file is not valid JSON.' });
-		expect(parseImport('{"lessons":{}}')).toMatchObject({ ok: false, message: expect.stringContaining('no numeric') });
+		expect(parseImport('{')).toEqual({ ok: false, message: 'Ce fichier n’est pas du JSON valide.' });
+		expect(parseImport('{"lessons":{}}')).toMatchObject({
+			ok: false,
+			message: expect.stringContaining('pas de champ numérique'),
+		});
 		expect(parseImport('[]')).toMatchObject({ ok: false });
 		expect(parseImport(`{"version":${VERSION + 1}}`)).toMatchObject({
 			ok: false,

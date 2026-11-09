@@ -47,7 +47,7 @@ function bindOverall(root: HTMLElement) {
 		bar.setAttribute('aria-valuenow', String(o.percent));
 		pct.textContent = `${o.percent}%`;
 		// Spec S04 "Progress display": skipped is out of the percent and shown as its own count.
-		skippedEl.textContent = `${o.skipped} skipped`;
+		skippedEl.textContent = `${o.skipped} passée${o.skipped > 1 ? 's' : ''}`;
 		skippedEl.hidden = o.skipped === 0;
 		if (text) text.textContent = overallText(o);
 		const link = continueLink(o, base);

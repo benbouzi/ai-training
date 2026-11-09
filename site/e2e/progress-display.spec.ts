@@ -48,7 +48,7 @@ test('the course ring and milestone bar show the same percent and leave the skip
 	const expected = percent(1, ids.length, 1);
 	await expect(page.locator('[data-ring-label]')).toHaveText(`${expected}%`);
 	await expect.poll(() => page.locator('[data-milestone-fill]').evaluate((el) => el.style.width)).toBe(`${expected}%`);
-	await expect(page.locator('.course [data-skipped]')).toHaveText('1 skipped');
+	await expect(page.locator('.course [data-skipped]')).toHaveText('1 passée');
 	await expect(page.locator(`a[data-node="${ids[1]}"]`)).toHaveAttribute('data-state', 'skipped');
 });
 
@@ -60,12 +60,12 @@ test('the overall bar uses the same formula as the course page and shows the ski
 	const expected = percent(1, ids.length, 1);
 	await expect(page.locator('[data-percent]')).toHaveText(`${expected}%`);
 	await expect(page.locator('[data-bar]')).toHaveAttribute('aria-valuenow', String(expected));
-	await expect(page.locator('[data-overall] [data-skipped]')).toHaveText('1 skipped');
-	await expect(page.locator('[data-text]')).toContainText(`1 of ${ids.length} lessons finished`);
+	await expect(page.locator('[data-overall] [data-skipped]')).toHaveText('1 passée');
+	await expect(page.locator('[data-text]')).toContainText(`Leçons terminées : 1 sur ${ids.length}`);
 	// The landing page bar reads the same record and shows the same figure.
 	await page.goto('/ai-training/');
 	await expect(page.locator('[data-percent]')).toHaveText(`${expected}%`);
-	await expect(page.locator('[data-overall] [data-skipped]')).toHaveText('1 skipped');
+	await expect(page.locator('[data-overall] [data-skipped]')).toHaveText('1 passée');
 });
 
 test('with every lesson finished or skipped, continue offers the first skipped lesson', async ({ page, seed }) => {
@@ -80,9 +80,9 @@ test('with every lesson finished or skipped, continue offers the first skipped l
 	});
 	await page.reload();
 	await expect(page.locator('[data-percent]')).toHaveText('100%');
-	await expect(page.locator('[data-overall] [data-skipped]')).toHaveText('1 skipped');
+	await expect(page.locator('[data-overall] [data-skipped]')).toHaveText('1 passée');
 	const cont = page.locator('[data-continue]');
-	await expect(cont).toHaveText('All lessons finished, 1 skipped');
+	await expect(cont).toHaveText('Toutes les leçons sont terminées, 1 passée');
 	await expect(cont).toHaveAttribute('href', `/ai-training/${skippedId}/`);
 });
 
@@ -95,9 +95,9 @@ test('with every lesson skipped and none finished, continue offers the first ski
 	await seed({ lessons: Object.fromEntries(ids.map((id) => [id, { state: 'skipped', at: AT }])) });
 	await page.reload();
 	await expect(page.locator('[data-percent]')).toHaveText('0%');
-	await expect(page.locator('[data-overall] [data-skipped]')).toHaveText(`${ids.length} skipped`);
+	await expect(page.locator('[data-overall] [data-skipped]')).toHaveText(`${ids.length} passées`);
 	const cont = page.locator('[data-continue]');
-	await expect(cont).toHaveText(/^Continue with: /);
+	await expect(cont).toHaveText(/^Continuer avec : /);
 	await expect(cont).toHaveAttribute('href', `/ai-training/${ids[0]}/`);
 });
 
@@ -109,6 +109,6 @@ test('with every lesson finished and none skipped, continue points at the topic 
 	await expect(page.locator('[data-percent]')).toHaveText('100%');
 	await expect(page.locator('[data-overall] [data-skipped]')).toBeHidden();
 	const cont = page.locator('[data-continue]');
-	await expect(cont).toHaveText('All lessons finished: see the topic map');
+	await expect(cont).toHaveText('Toutes les leçons sont terminées : voir la carte des thèmes');
 	await expect(cont).toHaveAttribute('href', '/ai-training/map/');
 });

@@ -1,4 +1,5 @@
 import type { PlanEntry } from './courses';
+import { EXERCISE_KIND_LABEL, labelOf } from './labels-fr';
 import { lessonTime } from './lesson-time';
 
 /**
@@ -45,12 +46,12 @@ export function afterTitles(after: string[], plan: PlanEntry[]): string[] {
 /** The `<summary>` text: how many entries the plan holds and how many are live. */
 export function planSummary(plan: PlanEntry[]): string {
 	const live = plan.filter((e) => e.status === 'live').length;
-	return `Lesson plan (${plan.length} lesson${plan.length === 1 ? '' : 's'}, ${live} live)`;
+	return `Plan du parcours (${plan.length} leçon${plan.length > 1 ? 's' : ''}, ${live} en ligne)`;
 }
 
 /** The exercise cell: each exercise's kind, so a course's mix of do and judge is visible at a glance. */
 export function exerciseKinds(entry: Pick<PlanEntry, 'exercises'>): string {
-	return entry.exercises.map((x) => x.kind).join(', ');
+	return entry.exercises.map((x) => labelOf(EXERCISE_KIND_LABEL, x.kind)).join(', ');
 }
 
 /** The GitHub issue URL of an entry, or undefined when it has none. */

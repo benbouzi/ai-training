@@ -9,19 +9,20 @@ const catalog = await buildCatalog();
 <div class="not-content progress" data-catalog={JSON.stringify(catalog)}>
 	<div class="progress-overview" data-overview></div>
 
-	<h2 id="export-import-reset">Export, import, reset</h2>
+	<h2 id="export-import-reset">Exporter, importer, réinitialiser</h2>
 	<p>
-		Progress is stored in this browser only, under the local-storage key <code>{STORAGE_KEY}</code>. Nothing is sent
-		anywhere. Export it to move to another browser or to show a tutor; import replaces what is here.
+		La progression est conservée dans ce navigateur seulement, sous la clé de stockage local <code>{STORAGE_KEY}</code>.
+		Rien n’est envoyé nulle part. Exportez-la pour passer à un autre navigateur ou pour la montrer à un tuteur. Un
+		import remplace ce qui est ici.
 	</p>
 	<div class="progress-actions">
-		<button type="button" data-export>Export JSON</button>
-		<label>Import: <input type="file" accept="application/json" data-import /></label>
-		<button type="button" data-reset>Reset all</button>
+		<button type="button" data-export>Exporter en JSON</button>
+		<label>Importer : <input type="file" accept="application/json" data-import /></label>
+		<button type="button" data-reset>Tout réinitialiser</button>
 		<span class="progress-message" role="status" data-message></span>
 	</div>
 
-	<h2 id="raw-record">Raw record</h2>
+	<h2 id="raw-record">Enregistrement brut</h2>
 	<pre class="progress-dump" data-dump></pre>
 </div>
 

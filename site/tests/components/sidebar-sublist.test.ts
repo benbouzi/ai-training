@@ -57,7 +57,7 @@ describe('SidebarSublist', () => {
 		const html = await render([course]);
 		// The heading link comes first in the item, then the details with a labelled, text-free summary.
 		expect(html).toMatch(
-			/<li class="linked[^"]*"><a href="\/ai-training\/concepts\/" class="large[^"]*" data-group-link><span[^>]*>Concepts<\/span><\/a><details class[^>]*><summary class="caret-only[^"]*" aria-label="Toggle Concepts"><svg/,
+			/<li class="linked[^"]*"><a href="\/ai-training\/concepts\/" class="large[^"]*" data-group-link><span[^>]*>Concepts<\/span><\/a><details class[^>]*><summary class="caret-only[^"]*" aria-label="Ouvrir ou fermer « Concepts »"><svg/,
 		);
 		expect(html).not.toMatch(/class="group-label[^"]*"><span class="large[^"]*">Concepts</);
 		// The part label is plain, and its lesson is nested under it.

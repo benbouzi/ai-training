@@ -9,6 +9,7 @@ import { getCollection } from 'astro:content';
 import { areaOf, getAreas } from '@lib/areas';
 import { dependenciesOf, getCoursePlan, isLive, planLevels } from '@lib/courses';
 import { jsonForScript } from '@lib/json';
+import { labelOf, MODE_LABEL, plural } from '@lib/labels-fr';
 import { checkpointsOf } from '@lib/lessons';
 import { href } from '@lib/url';
 
@@ -49,16 +50,16 @@ const totalCheckpoints = nodes.reduce((n, l) => n + l.checkpoints.length, 0);
 
 <div class="course not-content" data-course={area} data-nodes={JSON.stringify(nodes)}>
 	<div class="course-top">
-		<div class="course-ring" data-ring style="--pct: 0" aria-label="Completion">
+		<div class="course-ring" data-ring style="--pct: 0" aria-label="Avancement">
 			<span data-ring-label>0%</span>
 		</div>
-		<div class="course-milestone" aria-label="Milestones">
+		<div class="course-milestone" aria-label="Étapes">
 			<div class="course-milestone-track"><div class="course-milestone-fill" data-milestone-fill></div></div>
 			<ol class="course-milestone-stops">
-				<li data-stop="0">getting started</li>
-				<li data-stop="50">halfway</li>
-				<li data-stop="80">almost there</li>
-				<li data-stop="100">complete</li>
+				<li data-stop="0">premiers pas</li>
+				<li data-stop="50">à mi-chemin</li>
+				<li data-stop="80">presque fini</li>
+				<li data-stop="100">terminé</li>
 			</ol>
 			<p class="course-skipped" data-skipped hidden></p>
 		</div>
@@ -74,18 +75,18 @@ const totalCheckpoints = nodes.reduce((n, l) => n + l.checkpoints.length, 0);
 							<a class="course-node" href={href(`/${e.id}/`)} data-node={e.id} data-state="untouched">
 								<span class="course-node-ring" data-node-ring style="--pct: 0"></span>
 								<span class="course-node-body">
-									<span class="course-node-mode">{e.lesson.data.mode}</span>
+									<span class="course-node-mode">{labelOf(MODE_LABEL, e.lesson.data.mode)}</span>
 									<span class="course-node-title">{e.lesson.data.title}</span>
 									<span class="course-node-count" data-node-count></span>
 								</span>
 							</a>
 						) : (
-							<span class="course-node" data-node={e.id} data-state="coming" aria-label={`${e.title} (coming)`}>
+							<span class="course-node" data-node={e.id} data-state="coming" aria-label={`${e.title} (à venir)`}>
 								<span class="course-node-ring" style="--pct: 0"></span>
 								<span class="course-node-body">
-									<span class="course-node-mode">coming</span>
+									<span class="course-node-mode">à venir</span>
 									<span class="course-node-title">{e.title}</span>
-									<span class="course-node-count">planned</span>
+									<span class="course-node-count">prévue</span>
 								</span>
 							</span>
 						)
@@ -97,34 +98,34 @@ const totalCheckpoints = nodes.reduce((n, l) => n + l.checkpoints.length, 0);
 	</div>
 
 	<aside class="course-review" data-review-card data-due="false">
-		<a href={href(`/${area}/review/`)} data-review-label>Review: nothing due yet</a>
+		<a href={href(`/${area}/review/`)} data-review-label>Révision : rien à revoir pour l’instant</a>
 	</aside>
 
 	<aside class="course-about">
-		<p class="course-about-title">About this course</p>
+		<p class="course-about-title">À propos de ce parcours</p>
 		<dl>
-			<dt>Goals</dt>
+			<dt>Objectifs</dt>
 			<dd>
 				<ul>
 					{competencies.map((c) => <li><a href={href(`/competencies/${c.id}/`)}>{c.statement}</a></li>)}
 				</ul>
 			</dd>
-			<dt>Counts</dt>
+			<dt>En chiffres</dt>
 			<dd>
-				{lessons.length} lesson{lessons.length === 1 ? '' : 's'}, {totalCheckpoints} checkpoint{totalCheckpoints === 1 ? '' : 's'}{coming > 0 && <>, {coming} more coming</>}
+				{plural(lessons.length, 'leçon')}, {plural(totalCheckpoints, 'question de contrôle', 'questions de contrôle')}{coming > 0 && <>, {coming} à venir</>}
 			</dd>
-			<dt>Builds on</dt>
+			<dt>S’appuie sur</dt>
 			<dd>
 				{prerequisites.length ? (
 					<ul>
 						{prerequisites.map((t) => <li><a href={href(`/topics/${t.data.id}/`)}>{t.data.name}</a></li>)}
 					</ul>
 				) : (
-					<span>Nothing; start here.</span>
+					<span>Rien : commencez ici.</span>
 				)}
 			</dd>
 		</dl>
-		<p class="course-about-note">{info.description} Progress is kept in this browser; see <a href={href('/progress/')}>your progress</a>.</p>
+		<p class="course-about-note">{info.description} La progression est conservée dans ce navigateur : voir <a href={href('/progress/')}>votre progression</a>.</p>
 	</aside>
 </div>
 

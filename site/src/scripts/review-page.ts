@@ -155,7 +155,7 @@ export function mountReviewPage(root: ParentNode, fetchPage: FetchText = fetchTe
 		status.textContent = doneText(answered, totalDue - due.length);
 		const btn = document.createElement('a');
 		btn.href = backHref;
-		btn.textContent = 'Finish review';
+		btn.textContent = 'Terminer la révision';
 		btn.className = 'cp-check';
 		items.appendChild(btn);
 	}
@@ -164,7 +164,7 @@ export function mountReviewPage(root: ParentNode, fetchPage: FetchText = fetchTe
 		bar.style.width = barWidth(i, due.length);
 		const progressId = due[i];
 		if (progressId === undefined) return finish();
-		status.textContent = `Item ${i + 1} of ${due.length}`;
+		status.textContent = `Question ${i + 1} sur ${due.length}`;
 		const section = await fetchSection(progressId);
 		if (!section) {
 			// Orphaned item (content changed): drop it and move on.
@@ -188,7 +188,7 @@ export function mountReviewPage(root: ParentNode, fetchPage: FetchText = fetchTe
 				answered++;
 				const btn = document.createElement('button');
 				btn.type = 'button';
-				btn.textContent = 'Next item';
+				btn.textContent = 'Question suivante';
 				btn.className = 'cp-check';
 				btn.addEventListener('click', () => next(i + 1));
 				section.querySelector('.cp-after')?.appendChild(btn);
@@ -198,7 +198,7 @@ export function mountReviewPage(root: ParentNode, fetchPage: FetchText = fetchTe
 	}
 
 	if (!due.length) {
-		items.innerHTML = '<div class="review-empty">Nothing due. Finish a lesson and come back tomorrow.</div>';
+		items.innerHTML = '<div class="review-empty">Rien à revoir. Terminez une leçon et revenez demain.</div>';
 		bar.style.width = '100%';
 		return Promise.resolve();
 	}

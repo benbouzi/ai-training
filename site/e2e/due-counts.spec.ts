@@ -55,8 +55,8 @@ test('the sidebar and the landing page show the same due count once a finished l
 	await page.goto('concepts/');
 	const count = page.locator('[data-due-count="concepts"]');
 	await expect(count).toBeVisible();
-	await expect(count).toHaveText(`${items} review items due`);
-	await expect(page.locator('[data-review-card]')).toHaveText(`Review due: ${items} items`);
+	await expect(count).toHaveText(`${items} questions à revoir`);
+	await expect(page.locator('[data-review-card]')).toHaveText(`Révision : ${items} questions à revoir`);
 	await expect(page.locator('[data-due-count]')).toHaveCount(1);
 
 	// The landing page shows one line for the course, linking to its review page.
@@ -64,33 +64,33 @@ test('the sidebar and the landing page show the same due count once a finished l
 	const lines = page.locator('[data-due-lines]');
 	await expect(lines).toBeVisible();
 	await expect(lines.locator('li')).toHaveCount(1);
-	await expect(lines.locator('[data-due-line="concepts"]')).toHaveText(`Concepts: ${items} items due`);
+	await expect(lines.locator('[data-due-line="concepts"]')).toHaveText(`Concepts : ${items} questions à revoir`);
 	await expect(lines.locator('[data-due-line="concepts"]')).toHaveAttribute('href', '/ai-training/concepts/review/');
 
 	// Each review redraws the sidebar count on the progress event, without a reload. Review until one item is
 	// left, so the singular is always tested. The served item is solved by its kind, which may be an alternate's.
 	await page.goto('concepts/review/');
-	await expect(count).toHaveText(`${items} review items due`);
+	await expect(count).toHaveText(`${items} questions à revoir`);
 	for (let reviewed = 1; reviewed < items; reviewed++) {
 		if (reviewed > 1) {
 			// The button is inside the answered item, which the page replaces. It writes the status line before the
 			// swap, so wait for the old item to be gone first.
-			await page.getByRole('button', { name: 'Next item' }).click();
-			await expect(page.getByRole('button', { name: 'Next item' })).toHaveCount(0);
+			await page.getByRole('button', { name: 'Question suivante' }).click();
+			await expect(page.getByRole('button', { name: 'Question suivante' })).toHaveCount(0);
 		}
-		await expect(page.locator('[data-status]')).toHaveText(`Item ${reviewed} of ${items}`);
+		await expect(page.locator('[data-status]')).toHaveText(`Question ${reviewed} sur ${items}`);
 		await solveCheckpoint(page.locator('.review [data-checkpoint]'));
 		const left = items - reviewed;
-		if (left > 1) await expect(count).toHaveText(`${left} review items due`);
+		if (left > 1) await expect(count).toHaveText(`${left} questions à revoir`);
 	}
-	await expect(count).toHaveText('1 review item due');
+	await expect(count).toHaveText('1 question à revoir');
 
 	// The progress page shows the same line, and clearing progress hides both surfaces without a reload.
 	await page.goto('progress/');
-	await expect(page.locator('[data-due-line="concepts"]')).toHaveText('Concepts: 1 item due');
+	await expect(page.locator('[data-due-line="concepts"]')).toHaveText('Concepts : 1 question à revoir');
 	page.once('dialog', (d) => d.accept());
 	await page.locator('[data-reset]').click();
-	await expect(page.locator('[data-message]')).toHaveText('Progress reset.');
+	await expect(page.locator('[data-message]')).toHaveText('Progression réinitialisée.');
 	await expect(page.locator('[data-due-lines]')).toBeHidden();
 	await expect(count).toHaveCount(0);
 });

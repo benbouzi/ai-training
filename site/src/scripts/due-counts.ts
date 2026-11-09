@@ -28,15 +28,15 @@ export function dueByCourse(
 
 /** The landing and progress page line: "Concepts: 3 items due". */
 export function dueLine(course: DueCourse): string {
-	return `${course.title}: ${course.due} ${course.due === 1 ? 'item' : 'items'} due`;
+	return `${course.title} : ${course.due} ${course.due === 1 ? 'question' : 'questions'} à revoir`;
 }
 
 /** The review link on a course card and the course page: "Review due: 2 items" or "Review: nothing due yet". */
 export function reviewDueLabel(due: number): string {
-	return due ? `Review due: ${due} item${due === 1 ? '' : 's'}` : 'Review: nothing due yet';
+	return due ? `Révision : ${due} question${due === 1 ? '' : 's'} à revoir` : 'Révision : rien à revoir pour l’instant';
 }
 
 /** The screen-reader text after the sidebar count, so the link reads "Concepts 3 review items due". */
 export function dueCountLabel(due: number): string {
-	return due === 1 ? ' review item due' : ' review items due';
+	return due === 1 ? ' question à revoir' : ' questions à revoir';
 }

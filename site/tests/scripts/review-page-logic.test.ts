@@ -43,7 +43,7 @@ describe('reviewableOf', () => {
 describe('habitCards', () => {
 	it('builds a card per due habit the catalog knows, in order', () => {
 		expect(habitCards(catalog, ['concepts/a#h', 'concepts/a#gone', 'other/x#h'])).toEqual([
-			{ progressId: 'concepts/a#h', title: 'Habit from A', html: 'Do <em>this</em>.' },
+			{ progressId: 'concepts/a#h', title: 'Habitude de la leçon A', html: 'Do <em>this</em>.' },
 		]);
 	});
 });
@@ -81,8 +81,8 @@ describe('barWidth', () => {
 
 describe('doneText', () => {
 	it('counts the answered items and the due ones left, never below zero', () => {
-		expect(doneText(1, 0)).toBe('Done: 1 item reviewed. 0 more remain due.');
-		expect(doneText(2, 5)).toBe('Done: 2 items reviewed. 5 more remain due.');
-		expect(doneText(0, -1)).toBe('Done: 0 items reviewed. 0 more remain due.');
+		expect(doneText(1, 0)).toBe('Terminé : 1 question revue. Encore 0 à revoir.');
+		expect(doneText(2, 5)).toBe('Terminé : 2 questions revues. Encore 5 à revoir.');
+		expect(doneText(0, -1)).toBe('Terminé : 0 question revue. Encore 0 à revoir.');
 	});
 });

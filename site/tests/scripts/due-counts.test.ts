@@ -48,22 +48,22 @@ describe('dueByCourse', () => {
 
 describe('dueLine', () => {
 	it('uses the singular for one item', () => {
-		expect(dueLine({ area: 'concepts', title: 'Concepts', due: 1 })).toBe('Concepts: 1 item due');
-		expect(dueLine({ area: 'safety', title: 'Safety', due: 3 })).toBe('Safety: 3 items due');
+		expect(dueLine({ area: 'concepts', title: 'Concepts', due: 1 })).toBe('Concepts : 1 question à revoir');
+		expect(dueLine({ area: 'safety', title: 'Safety', due: 3 })).toBe('Safety : 3 questions à revoir');
 	});
 });
 
 describe('dueCountLabel', () => {
 	it('uses the singular for one item', () => {
-		expect(dueCountLabel(1)).toBe(' review item due');
-		expect(dueCountLabel(2)).toBe(' review items due');
+		expect(dueCountLabel(1)).toBe(' question à revoir');
+		expect(dueCountLabel(2)).toBe(' questions à revoir');
 	});
 });
 
 describe('reviewDueLabel', () => {
 	it('counts due items with the right plural, and says when none is due', () => {
-		expect(reviewDueLabel(0)).toBe('Review: nothing due yet');
-		expect(reviewDueLabel(1)).toBe('Review due: 1 item');
-		expect(reviewDueLabel(3)).toBe('Review due: 3 items');
+		expect(reviewDueLabel(0)).toBe('Révision : rien à revoir pour l’instant');
+		expect(reviewDueLabel(1)).toBe('Révision : 1 question à revoir');
+		expect(reviewDueLabel(3)).toBe('Révision : 3 questions à revoir');
 	});
 });

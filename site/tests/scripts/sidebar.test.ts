@@ -24,7 +24,7 @@ function page(list: string = JSON.stringify(courses)): void {
 		<script type="application/json" data-sidebar-courses>${list}</script>`;
 }
 
-/** A record with `n` review items due long ago in `area`. */
+/** A record with `n` questions à revoir long ago in `area`. */
 function withDue(r: ProgressRecord, area: string, n: number): ProgressRecord {
 	for (let i = 0; i < n; i++) {
 		r.reviews[`${area}/l#c${i}`] = { stage: 1, due: '2000-01-01', last: null, history: [] };
@@ -48,11 +48,11 @@ describe('mountSidebarDueCounts', () => {
 		page();
 		mountSidebarDueCounts(document, '/ai-training/');
 		progress.save(withDue(withDue(emptyRecord(), 'concepts', 3), 'safety', 1));
-		expect(count('concepts')?.textContent).toBe('3 review items due');
-		expect(count('safety')?.textContent).toBe('1 review item due');
+		expect(count('concepts')?.textContent).toBe('3 questions à revoir');
+		expect(count('safety')?.textContent).toBe('1 question à revoir');
 		expect(count('concepts')?.className).toBe('due-count not-content');
 		progress.save(withDue(emptyRecord(), 'concepts', 2));
-		expect(count('concepts')?.textContent).toBe('2 review items due');
+		expect(count('concepts')?.textContent).toBe('2 questions à revoir');
 		expect(document.querySelectorAll('[data-due-count="concepts"]')).toHaveLength(1);
 		expect(count('safety')).toBeNull();
 	});

@@ -6,6 +6,7 @@
  * owns the citation numbering and renders the References list last.
  */
 import type { Objective } from '@lib/citations';
+import { LEVEL_LABEL, labelOf } from '@lib/labels-fr';
 import { getLessons } from '@lib/lessons';
 import { href } from '@lib/url';
 
@@ -21,19 +22,19 @@ const serving = (objectiveId: string) => lessons.filter((l) => l.data.serves.inc
 {
 	objectives.map((o) => (
 		<section>
-			<h3 id={o.id.split('/').pop()}>{o.statement} <small>({o.level})</small></h3>
+			<h3 id={o.id.split('/').pop()}>{o.statement} <small>({labelOf(LEVEL_LABEL, o.level)})</small></h3>
 			{o.behaviors.length ? (
 				<table>
-					<thead><tr><th>Claim</th><th>Why</th><th>Example</th></tr></thead>
+					<thead><tr><th>Comportement</th><th>Pourquoi</th><th>Exemple</th></tr></thead>
 					<tbody>{o.behaviors.map((b) => <tr><td set:html={b.claim} /><td set:html={b.why} /><td set:html={b.example} /></tr>)}</tbody>
 				</table>
 			) : (
-				<p><em>Behaviors not written yet.</em></p>
+				<p><em>Comportements pas encore rédigés.</em></p>
 			)}
 			{serving(o.id).length ? (
-				<p>Served by: {serving(o.id).map((l, i) => (<>{i > 0 && ', '}<a href={href(`/${l.id}/`)}>{l.data.title}</a></>))}</p>
+				<p>Leçons qui le servent : {serving(o.id).map((l, i) => (<>{i > 0 && ', '}<a href={href(`/${l.id}/`)}>{l.data.title}</a></>))}</p>
 			) : (
-				<p>No lesson serves this objective yet.</p>
+				<p>Aucune leçon ne sert encore cet objectif.</p>
 			)}
 		</section>
 	))

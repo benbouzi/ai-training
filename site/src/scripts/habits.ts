@@ -7,6 +7,7 @@
  * file only draws the state and records Done and Skip.
  */
 
+import { HABIT_RESULT_LABEL, labelOf } from '@lib/labels-fr';
 import * as progress from './progress';
 import type { HabitEntry, HabitResult, LessonEntry } from './progress-model';
 
@@ -52,7 +53,7 @@ export function drawHabit(el: HTMLElement): void {
 			...history.map((h) => {
 				const li = document.createElement('li');
 				li.dataset.result = h.result;
-				li.textContent = `${h.at}: ${h.result}`;
+				li.textContent = `${h.at} : ${labelOf(HABIT_RESULT_LABEL, h.result)}`;
 				return li;
 			}),
 		);

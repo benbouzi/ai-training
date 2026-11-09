@@ -27,7 +27,7 @@ test('comfort more: a pass in the card passes the body checkpoint and schedules 
 	await expect(first).toHaveAttribute('data-state', 'passed');
 	await expect(first.locator('.cp-check')).toBeDisabled();
 	await expect(page.locator(`#${FIRST}`)).toHaveAttribute('data-state', 'passed');
-	await expect(card.locator('[data-skills-note]')).toHaveText('1 réussie(s) sur 1 pour l’instant.');
+	await expect(card.locator('[data-skills-note]')).toHaveText('1 sur 1 réussie pour l’instant.');
 
 	// A fail records `attempted` and creates no review item.
 	const second = card.locator(`[data-skills-item="${SECOND}"]`);
@@ -35,7 +35,7 @@ test('comfort more: a pass in the card passes the body checkpoint and schedules 
 	await second.locator('.cp-check').click();
 	await expect(second).toHaveAttribute('data-state', 'attempted');
 	await expect(page.locator(`#${SECOND}`)).toHaveAttribute('data-state', 'attempted');
-	await expect(card.locator('[data-skills-note]')).toContainText('1 réussie(s) sur 2.');
+	await expect(card.locator('[data-skills-note]')).toContainText('1 sur 2 réussie.');
 	await expect(card.getByRole('button', { name: 'Fermer' })).toBeVisible();
 
 	const record = await storedRecord(page);

@@ -24,21 +24,21 @@ test('the settings page lists scheduled items and nudges their stage', async ({ 
 	await seed(scheduled('2999-01-01'));
 	await page.goto('settings/');
 	await expect(page.locator('[data-review-item]')).toHaveCount(2);
-	await expect(page.locator('[data-due-now]')).toHaveText('Nothing due right now.');
+	await expect(page.locator('[data-due-now]')).toHaveText('Rien à revoir pour l’instant.');
 	const item = page.locator(`[data-review-item="${ITEM}"]`);
 	await expect(item.locator('.cp-sooner')).toBeDisabled();
 	await expect(item.locator('.cp-later')).toBeEnabled();
 	await item.locator('.cp-later').click();
-	await expect(item.locator('.cp-stage-label')).toHaveText(/^stage 2 of 5, due \d{4}-\d{2}-\d{2}$/);
+	await expect(item.locator('.cp-stage-label')).toHaveText(/^étape 2 sur 5, à revoir le \d{4}-\d{2}-\d{2}$/);
 	await item.locator('.cp-sooner').click();
-	await expect(item.locator('.cp-stage-label')).toHaveText(/^stage 1 of 5/);
+	await expect(item.locator('.cp-stage-label')).toHaveText(/^étape 1 sur 5/);
 	await expect(item.locator('.cp-sooner')).toBeDisabled();
 });
 
 test('due items are listed per course on the settings page', async ({ page, seed }) => {
 	await seed(scheduled('2000-01-01'));
 	await page.goto('settings/');
-	await expect(page.locator('[data-due-now]')).toHaveText(/^Due now: .*Concepts \(2\)/);
+	await expect(page.locator('[data-due-now]')).toHaveText(/^À revoir maintenant : .*Concepts \(2\)/);
 	await expect(page.locator('[data-due-now] a')).toHaveAttribute('href', '/ai-training/concepts/review/');
 });
 
@@ -47,7 +47,7 @@ test('the review page records one result per item: pass on Check, fail on Give U
 	await page.goto('concepts/review/');
 	const cp = page.locator('.review [data-checkpoint]');
 	await expect(cp).toBeVisible();
-	await expect(page.locator('[data-status]')).toHaveText('Item 1 of 2');
+	await expect(page.locator('[data-status]')).toHaveText('Question 1 sur 2');
 	await expect(cp).toHaveAttribute('data-kind', 'choice');
 	await expect(cp.locator('.cp-giveup')).toBeDisabled();
 	// The author's `context` is hidden in the lesson and shown here (spec S03 "Checkpoints").
@@ -60,8 +60,8 @@ test('the review page records one result per item: pass on Check, fail on Give U
 	await expect(cp.locator('.cp-stage-label')).toHaveText('étape 2 sur 5');
 	await expect(cp.locator('.cp-check').first()).toBeDisabled();
 	await expect(cp.locator('.cp-giveup')).toBeDisabled();
-	await page.getByRole('button', { name: 'Next item' }).click();
-	await expect(page.locator('[data-status]')).toHaveText('Item 2 of 2');
+	await page.getByRole('button', { name: 'Question suivante' }).click();
+	await expect(page.locator('[data-status]')).toHaveText('Question 2 sur 2');
 
 	// Item 2: a wrong answer records nothing; Give Up reveals and records the fail.
 	const second = page.locator('.review [data-checkpoint]');
@@ -83,8 +83,8 @@ test('the review page records one result per item: pass on Check, fail on Give U
 	// One seeded answer each, plus the one recorded here.
 	expect(histories).toEqual([2, 2]);
 
-	await page.getByRole('button', { name: 'Next item' }).click();
-	await expect(page.locator('[data-status]')).toHaveText('Done: 2 items reviewed. 0 more remain due.');
+	await page.getByRole('button', { name: 'Question suivante' }).click();
+	await expect(page.locator('[data-status]')).toHaveText('Terminé : 2 questions revues. Encore 0 à revoir.');
 });
 
 test('the review page clones an order checkpoint that drags like the lesson copy', async ({ page, seed }) => {
@@ -189,12 +189,12 @@ test('one review session never asks the same alternate for two items', async ({ 
 	});
 	await page.goto('concepts/review/');
 	const cp = page.locator('.review [data-checkpoint]');
-	await expect(page.locator('[data-status]')).toHaveText('Item 1 of 2');
+	await expect(page.locator('[data-status]')).toHaveText('Question 1 sur 2');
 	await expect(cp).toHaveAttribute('id', ALTERNATE);
 	for (const label of await cp.locator('label[data-correct]').all()) await label.click();
 	await cp.locator('.cp-check').first().click();
-	await page.getByRole('button', { name: 'Next item' }).click();
-	await expect(page.locator('[data-status]')).toHaveText('Item 2 of 2');
+	await page.getByRole('button', { name: 'Question suivante' }).click();
+	await expect(page.locator('[data-status]')).toHaveText('Question 2 sur 2');
 	// The first alternate is taken, so the second item asks the other one.
 	await expect(cp).toHaveAttribute('id', SECOND_ALTERNATE);
 	await expect(cp).toHaveAttribute('data-progress-id', other);

@@ -31,7 +31,7 @@ describe('knownIds', () => {
 
 describe('checkpointTitle', () => {
 	it('names the state, or says the checkpoint was not attempted', () => {
-		expect(checkpointTitle('c1', { state: 'passed', attempts: 1 })).toBe('c1: passed');
-		expect(checkpointTitle('c1', undefined)).toBe('c1: not attempted');
+		expect(checkpointTitle('c1', { state: 'passed', attempts: 1 })).toBe('c1 : réussie');
+		expect(checkpointTitle('c1', undefined)).toBe('c1 : pas tentée');
 	});
 });

@@ -9,6 +9,7 @@
  * sentence, so no space depends on source whitespace, which the compiler
  * drops at a tag's line edge.
  */
+import { CHECKPOINT_KIND_LABEL, labelOf } from '@lib/labels-fr';
 import { checkpointsOf, getLessons } from '@lib/lessons';
 
 interface Props {
@@ -28,10 +29,10 @@ const formats = [
 	),
 ];
 const formatText = formats.length
-	? `This course asks them in these answer formats: ${formats.join(', ')}.`
-	: 'This course has no items to ask yet.';
+	? `Ce parcours les pose sous ces formes : ${formats.map((f) => labelOf(CHECKPOINT_KIND_LABEL, f)).join(', ')}.`
+	: 'Ce parcours n’a pas encore de question à poser.';
 ---
 
 <p data-review-intro>
-	Items from lessons you finished come back at growing intervals. {formatText} <strong>Hint</strong> gives a nudge. <strong>Give up</strong> shows the answer after one attempt, and the item counts as failed.
+	Les questions des leçons terminées reviennent à des intervalles croissants. {formatText} <strong>Indice</strong> donne un coup de pouce. <strong>Voir la réponse</strong> montre la réponse après un essai, et la question compte comme échouée.
 </p>

@@ -34,7 +34,7 @@ describe('nodeProgress', () => {
 		rec.checkpoints['concepts/a#c1'] = { state: 'passed', attempts: 1 };
 		rec.checkpoints['concepts/a#c2'] = { state: 'attempted', attempts: 2 };
 		rec.checkpoints['concepts/b#c3'] = { state: 'passed', attempts: 1 };
-		expect(nodeProgress(node, rec)).toEqual({ ring: 33, count: '1/3 checkpoints' });
+		expect(nodeProgress(node, rec)).toEqual({ ring: 33, count: '1/3 questions' });
 	});
 	it('shows nothing for a lesson without checkpoints', () => {
 		expect(nodeProgress({ id: 'x/y', checkpoints: [] }, emptyRecord())).toEqual({ ring: 0, count: '' });

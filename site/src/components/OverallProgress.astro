@@ -23,11 +23,11 @@ const first = catalog.flatMap((c) => c.lessons)[0];
 		<strong data-percent>0%</strong>
 		<span class="overall-skipped" data-skipped hidden></span>
 	</div>
-	{!landing && <p class="overall-text" data-text>No progress yet.</p>}
+	{!landing && <p class="overall-text" data-text>Aucune progression pour l’instant.</p>}
 	<ul class="overall-due" data-due-lines hidden></ul>
 	<p class="overall-actions">
-		<a class="overall-continue" data-continue href={first ? href(`/${first.id}/`) : href('/concepts/')}>Start with: {first?.title ?? 'Concepts'}</a>
-		{landing && <a class="overall-map" href={href('/map/')}>Topic map</a>}
+		<a class="overall-continue" data-continue href={first ? href(`/${first.id}/`) : href('/concepts/')}>Commencer par : {first?.title ?? 'Concepts'}</a>
+		{landing && <a class="overall-map" href={href('/map/')}>Carte des thèmes</a>}
 	</p>
 </div>
 

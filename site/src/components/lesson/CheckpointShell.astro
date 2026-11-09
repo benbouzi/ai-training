@@ -25,6 +25,7 @@ import {
 	PHASES,
 } from '@lib/checkpoint-rules';
 import { assertKnownConcepts, knownConceptIds } from '@lib/concepts';
+import { CHECKPOINT_KIND_LABEL, labelOf } from '@lib/labels-fr';
 import { lessonIdOf } from '@lib/lesson-context';
 import { href } from '@lib/url';
 import SectionTitle from './SectionTitle.astro';
@@ -80,17 +81,6 @@ if (guessable !== undefined && (typeof guessable !== 'string' || !/^[a-z, -]+:\s
 	throw new Error(`Checkpoint "${id}": guessable must be "<cue>: reason", got ${JSON.stringify(guessable)}`);
 if (!Number.isInteger(revision) || revision < 1)
 	throw new Error(`Checkpoint "${id}": revision must be a positive integer, got ${revision}`);
-// French translation: the kind shown in the checkpoint header.
-const KIND_LABEL: Record<string, string> = {
-	choice: 'choix',
-	'multi-choice': 'choix multiple',
-	match: 'association',
-	scenario: 'scénario',
-	predict: 'prédiction',
-	order: 'ordre',
-	sort: 'classement',
-	repair: 'réparation',
-};
 const lessonId = lessonIdOf(Astro);
 const progressId = `${lessonId}#${id}`;
 if (!Array.isArray(concepts) || !concepts.every((c) => typeof c === 'string')) {
@@ -117,7 +107,7 @@ const marker = phase === 'review' ? { 'data-alternate': '' } : { 'data-checkpoin
 	data-concepts={concepts.join(' ')}
 >
 	<header class="cp-head">
-		<span class="cp-kind">Question de contrôle · {KIND_LABEL[kind] ?? kind}</span>
+		<span class="cp-kind">Question de contrôle · {labelOf(CHECKPOINT_KIND_LABEL, kind)}</span>
 		<span class="cp-state" aria-live="polite"></span>
 	</header>
 	<SectionTitle {id} {title} />

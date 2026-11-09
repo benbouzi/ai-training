@@ -28,8 +28,8 @@ const catalog: ReferenceArea[] = (await getAreas()).map((a) => ({
 
 <div class="not-content learners-reference" data-learners-reference data-catalog={JSON.stringify(catalog)} data-base={href('/')}>
 	<p class="reference-empty" data-reference-empty hidden>
-		Nothing here yet. Finish a lesson and its takeaways and example appear on the topic page it covers, and the lesson
-		is listed here. <a href={href('/progress/')}>Your progress</a> shows where you are.
+		Rien pour l’instant. Terminez une leçon : ses points à retenir et son exemple apparaissent sur la page du thème
+		qu’elle couvre, et la leçon figure ici. <a href={href('/progress/')}>Votre progression</a> montre où vous en êtes.
 	</p>
 	<div data-reference-areas></div>
 </div>

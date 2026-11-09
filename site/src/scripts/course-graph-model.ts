@@ -33,7 +33,7 @@ export function nodeProgress(node: GraphNode, rec: ProgressRecord): NodeProgress
 	const total = node.checkpoints.length;
 	if (!total) return { ring: 0, count: '' };
 	const passed = node.checkpoints.filter((c) => rec.checkpoints[`${node.id}#${c.id}`]?.state === 'passed').length;
-	return { ring: Math.round((passed / total) * 100), count: `${passed}/${total} checkpoints` };
+	return { ring: Math.round((passed / total) * 100), count: `${passed}/${total} questions` };
 }
 
 /** Whether a milestone stop is reached. At 0% only the "getting started" stop (0) is lit. */
