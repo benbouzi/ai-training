@@ -48,7 +48,8 @@ NEXT_WORD = re.compile(r"\s+([A-Za-zÀ-ÿ]+|%)")
 # A figure is shown with the word after it ("38 percent"), unless that word
 # says nothing about what the number counts.
 STOP_WORDS = {"a", "an", "and", "in", "of", "on", "or", "the", "to"}
-STOP_WORDS |= {"à", "au", "aux", "d", "de", "des", "du", "en", "et", "l", "la", "le", "les", "ou", "un", "une"}
+STOP_WORDS |= {"à", "au", "aux", "d", "de", "des", "du", "en", "et"}
+STOP_WORDS |= {"l", "la", "le", "les", "ou", "un", "une"}
 
 
 def squash(text):
