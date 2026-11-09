@@ -19,14 +19,26 @@ NEW = "assistant-2026-09"
 
 # Task id, email subject, agreed action, action on OLD, action on NEW.
 TASK_SET = [
-    ("T1", "Where is my order 5531?", "send", "send", "send"),
-    ("T2", "Order 3307: I want my money back", "draft", "draft", "send"),
-    ("T3", "Can I change my delivery address?", "send", "send", "send"),
-    ("T4", "Order 7730 arrived damaged, refund please", "draft", "draft", "draft"),
-    ("T5", "Has order 6120 shipped yet?", "send", "send", "send"),
-    ("T6", "Order 4410: you charged me twice", "draft", "send", "draft"),
-    ("T7", "Do you ship to Norway?", "send", "send", "send"),
-    ("T8", "Order 9001 is late, cancel it and pay me back", "draft", "draft", "draft"),
+    ("T1", "Où est ma commande 5531 ?", "envoi", "envoi", "envoi"),
+    ("T2", "Commande 3307 : je veux récupérer mon argent", "brouillon", "brouillon", "envoi"),
+    ("T3", "Puis-je changer mon adresse de livraison ?", "envoi", "envoi", "envoi"),
+    (
+        "T4",
+        "Commande 7730 arrivée abîmée, remboursement svp",
+        "brouillon",
+        "brouillon",
+        "brouillon",
+    ),
+    ("T5", "La commande 6120 est-elle partie ?", "envoi", "envoi", "envoi"),
+    ("T6", "Commande 4410 : vous m’avez débité deux fois", "brouillon", "envoi", "brouillon"),
+    ("T7", "Livrez-vous en Norvège ?", "envoi", "envoi", "envoi"),
+    (
+        "T8",
+        "Commande 9001 en retard, annulez-la et remboursez-moi",
+        "brouillon",
+        "brouillon",
+        "brouillon",
+    ),
 ]
 
 
@@ -36,26 +48,27 @@ def verdict(agreed: str, new: str) -> str:
     Only rows where the two versions differ reach this function, and there
     are two actions, so exactly one of the versions did the agreed thing.
     """
-    return "better" if new == agreed else "WORSE"
+    return "meilleur" if new == agreed else "PIRE"
 
 
 def main() -> None:
-    print(f"task set: {len(TASK_SET)} emails, run on {OLD} and on {NEW}")
+    print(f"jeu de tâches : {len(TASK_SET)} e-mails, passés sur {OLD} et sur {NEW}")
     print()
-    print("rows that differ:")
-    print(f"  {'task':<5} {'subject':<34} {'agreed':<7} {'old':<6} {'new':<6} verdict")
+    print("lignes qui diffèrent :")
+    print(f"  {'tâche':<6} {'objet':<45} {'convenu':<10} {'ancien':<10} {'nouveau':<10} verdict")
     differ = []
     for task, subject, agreed, old, new in TASK_SET:
         if old == new:
             continue
         result = verdict(agreed, new)
         differ.append(result)
-        print(f"  {task:<5} {subject:<34} {agreed:<7} {old:<6} {new:<6} {result}")
+        print(f"  {task:<6} {subject:<45} {agreed:<10} {old:<10} {new:<10} {result}")
     print()
     same = len(TASK_SET) - len(differ)
-    print(f"same on both versions: {same} of {len(TASK_SET)}")
+    print(f"identiques sur les deux versions : {same} sur {len(TASK_SET)}")
     print(
-        f"differ: {len(differ)}, better: {differ.count('better')}, worse: {differ.count('WORSE')}"
+        f"différentes : {len(differ)}, meilleures : {differ.count('meilleur')}, "
+        f"pires : {differ.count('PIRE')}"
     )
 
 

@@ -19,7 +19,7 @@ assumes:
     section: placer-lapprobation-sur-la-ligne-irréversible
   - objective: safety/judges-agent-risk/sets-oversight
     lesson: safety/reading-agent-logs
-    section: what-the-log-must-hold-and-who-reads-it
+    section: ce-que-le-journal-doit-contenir-et-qui-le-lit
 after:
   - building-agents/agent-attack-surface
   - building-agents/stopping-the-loop
