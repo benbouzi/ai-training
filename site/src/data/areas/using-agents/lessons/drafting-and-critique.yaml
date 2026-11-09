@@ -1,9 +1,9 @@
 id: using-agents/drafting-and-critique
-title: Drafting a text and asking for critique
+title: Rédiger un texte et demander une critique
 description: >-
-  Brief a chat assistant for a short email and check every fact in the draft, then ask for
-  critique of it as a colleague's text against criteria you wrote first, and get problems in place
-  of praise.
+  Donner à un assistant conversationnel une consigne pour un court e-mail et vérifier chaque fait
+  du brouillon, puis en demander la critique comme s’il s’agissait du texte d’un collègue, au
+  regard de critères écrits d’abord, et obtenir des problèmes à la place des compliments.
 mode: tutorial
 covers: using-agents/assistant-work
 serves:
@@ -18,17 +18,18 @@ assumes:
     lesson: safety/asking-a-model-to-disagree
     section: des-habitudes-du-côté-du-prompt
 extends-to:
-  - label: Delegating a task to an agent
+  - label: Déléguer une tâche à un agent
     href: /using-agents/delegating/
 after: [using-agents/thought-partner]
-shorts: [Grading against stated criteria]
+shorts: [Noter au regard de critères énoncés]
 exercise:
   kind: do
   brief: >-
-    Brief the assistant for a short email (audience, purpose, two points that must appear, tone,
-    length) with two or three done-criteria, and mark every fact in the draft as from the brief, a
-    placeholder or added by the model. Then paste the draft into a fresh chat as a colleague's text
-    with those criteria, and ask for problems only, pass or fail per criterion.
+    Donner à l’assistant une consigne pour un court e-mail (public, objectif, deux points qui
+    doivent figurer, ton, longueur) avec deux ou trois critères d’achèvement, et marquer chaque fait
+    du brouillon comme venu de la consigne, marqueur à remplir ou ajouté par le modèle. Puis coller
+    le brouillon dans une nouvelle conversation comme le texte d’un collègue avec ces critères, et
+    demander uniquement les problèmes, réussi ou échoué par critère.
 sources: [Sharma 2023]
 issue: 142
 minutes: 15
