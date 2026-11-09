@@ -1,8 +1,9 @@
 id: using-agents/choosing-autonomy
-title: How much the agent may do before it asks
+title: Ce que l’agent peut faire avant de demander
 description: >-
-  Choose draft only, ask before anything that can't be undone, or run to completion by what a wrong
-  step costs, add check-ins on a first run, and write the setting as one sentence.
+  Choisir entre brouillon seulement, demander avant tout ce qui est irréversible, ou aller
+  jusqu’au bout selon ce que coûte une erreur, ajouter des points d’étape à la première exécution,
+  et écrire le réglage en une phrase.
 mode: explanation
 covers: using-agents/delegating
 serves: [using-agents/delegates-and-checks/chooses-autonomy]
@@ -18,15 +19,15 @@ assumes:
     lesson: using-agents/delegating
     section: écrire-la-consigne
 extends-to:
-  - label: Sizing the blast radius
+  - label: Mesurer le rayon d’impact
     href: /safety/sizing-the-blast-radius/
 after: [using-agents/delegating]
-shorts: [Widening autonomy as results pass]
+shorts: [Élargir l’autonomie à mesure que les résultats passent]
 exercise:
   kind: judge
   brief: >-
-    Sort six supplied tasks into draft only, ask before anything irreversible, or run to completion,
-    and write the one-sentence boundary for two of them.
+    Classer six tâches données entre brouillon seulement, demander avant tout ce qui est
+    irréversible, ou aller jusqu’au bout, et écrire la phrase de limite de deux d’entre elles.
 sources: [DLAI-11, Academy introduction-to-claude-cowork]
 sources-checked: 2026-09-25
 review-by: 2027-03-25
