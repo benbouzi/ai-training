@@ -1,8 +1,9 @@
 id: using-agents/breaking-work-into-pieces
-title: Breaking a task into pieces an agent can finish
+title: Découper une tâche en morceaux qu’un agent peut terminer
 description: >-
-  Hand a three-part report to an agent as one prompt and see it blend. Then split the task into
-  pieces that each have an input, an output and a check, and run the first one.
+  Confier à un agent un rapport en trois parties en un seul prompt et voir les parties se
+  mélanger. Puis découper la tâche en morceaux qui ont chacun une entrée, une sortie et une
+  vérification, et lancer le premier.
 mode: tutorial
 covers: using-agents/decomposition
 serves: [using-agents/delegates-and-checks/writes-a-brief]
@@ -12,16 +13,18 @@ assumes:
     lesson: using-agents/delegating
     section: vérifier-au-regard-de-la-consigne
 extends-to:
-  - label: "Applied AI Foundations, module 4: a recurring task written as steps with a check after each (OpenAI Academy, free account)"
+  - label: >-
+      Applied AI Foundations, module 4 : une tâche récurrente écrite en étapes, avec une vérification
+      après chacune (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/applied-ai-foundations-szsmv
 after: [using-agents/delegating]
-shorts: [The decisions that are yours to make first]
+shorts: [Les décisions qui vous reviennent d’abord]
 exercise:
   kind: do
   brief: >-
-    Take the supplied large task (a three-part report from three source files), split it into pieces
-    that each have an input, an output and a check, write the brief for the first piece, and run
-    that piece so the result is what you look at.
+    Prendre la grande tâche donnée (un rapport en trois parties tiré de trois fichiers sources), la
+    découper en morceaux qui ont chacun une entrée, une sortie et une vérification, écrire la
+    consigne du premier morceau, et lancer ce morceau pour examiner son résultat.
 sources: [DLAI-11, Academy ai-fluency-framework-foundations]
 sources-checked: 2026-09-26
 review-by: 2027-03-26

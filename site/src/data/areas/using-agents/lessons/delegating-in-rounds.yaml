@@ -1,8 +1,9 @@
 id: using-agents/delegating-in-rounds
-title: Delegating in rounds
+title: Déléguer par tours
 description: >-
-  Delegate one piece of a split report, check the result line by line, change the brief with what
-  the miss showed, and carry the change into the next piece, with a two-line log per round.
+  Déléguer un morceau d’un rapport découpé, vérifier le résultat ligne par ligne, modifier la
+  consigne avec ce que l’erreur a montré, et reporter le changement sur le morceau suivant, avec
+  un journal de deux lignes par tour.
 mode: tutorial
 covers: using-agents/decomposition
 serves:
@@ -15,15 +16,16 @@ assumes:
     section: inscrire-la-marque-dans-le-processus
   - objective: using-agents/delegates-and-checks/writes-a-brief
     lesson: using-agents/breaking-work-into-pieces
-    section: briefing-and-running-the-first-piece
+    section: écrire-la-consigne-et-lancer-le-premier-morceau
 after: [using-agents/breaking-work-into-pieces, using-agents/adjusting-the-brief]
-shorts: [Keeping rounds short]
+shorts: [Garder des tours courts]
 exercise:
   kind: do
   brief: >-
-    Delegate the supplied first piece and its criteria (a model answer to the previous exercise;
-    your own split works too), check the result against the criteria, change the brief with what the
-    result showed, and delegate the second piece. Keep a two-line log per round.
+    Déléguer le premier morceau donné et ses critères (une réponse modèle à l’exercice précédent ;
+    votre propre découpage convient aussi), vérifier le résultat au regard des critères, modifier la
+    consigne avec ce que le résultat a montré, et déléguer le deuxième morceau. Tenir un journal de
+    deux lignes par tour.
 sources: [Academy ai-fluency-framework-foundations, DLAI-11]
 issue: 154
 minutes: 15
