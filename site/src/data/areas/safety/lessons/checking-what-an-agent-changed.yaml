@@ -13,7 +13,7 @@ assumes:
     section: un-seul-test--que-peut-il-faire-sans-nouveau-prompt-
   - objective: safety/verifies-output/checks-claims
     lesson: safety/checking-habits
-    section: the-routine
+    section: la-routine
 after: [safety/checking-habits]
 shorts: []
 exercise:

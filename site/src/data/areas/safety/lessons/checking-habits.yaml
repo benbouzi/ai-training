@@ -1,9 +1,9 @@
 id: safety/checking-habits
-title: Checking habits that run when you are in a hurry
+title: Des habitudes de vérification qui tiennent quand vous êtes pressé
 description: >-
-  Find the row that does not add up in a table a chat assistant wrote, learn the four checks that
-  run on everything that leaves your desk, and set how deep each one goes from the cost of being
-  wrong.
+  Trouver la ligne dont le total est faux dans un tableau rédigé par un assistant conversationnel,
+  apprendre les quatre vérifications à faire sur tout ce qui quitte votre bureau, et fixer leur
+  profondeur d’après le coût d’une erreur.
 mode: tutorial
 covers: safety/verification
 serves: [safety/verifies-output/checks-claims, safety/verifies-output/calibrates-trust]
@@ -20,8 +20,9 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    Apply the four checks to one AI-written document from your week: read it against the request,
-    find the claims you did not supply, open one link, redo one calculation.
+    Appliquer les quatre vérifications à un document de votre semaine rédigé par l’IA : le relire en
+    regard de la demande, trouver les affirmations que vous n’avez pas fournies, ouvrir un lien,
+    refaire un calcul.
 sources: [CS50x, Liu 2024b, Academy ai-fluency-framework-foundations]
 sources-checked: 2026-09-26
 review-by: 2027-03-26

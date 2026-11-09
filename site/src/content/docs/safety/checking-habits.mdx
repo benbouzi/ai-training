@@ -1,216 +1,232 @@
 import { Choice, Match, Pitfall, Exercise, Recap, Order } from '@components/lesson';
 
-In this lesson we find the row that doesn't add up in a table a chat
-assistant wrote from three months of ticket counts. The check that finds
-it is one of four, and the four together are a routine short enough to
-run in the ten minutes before a meeting. Earlier lessons in this course showed what
-an invented specific looks like and why attention to a good tool fades.
-The routine here is what you do about both, and the last section sets how
-deep each check goes from the cost of being wrong.
+Dans cette leçon, nous trouvons la ligne dont le total est faux dans un
+tableau qu’un assistant conversationnel a rédigé à partir de trois mois de
+comptes de tickets. La vérification qui la trouve est l’une de quatre, et les
+quatre ensemble forment une routine assez courte pour tenir dans les dix
+minutes avant une réunion. Les leçons précédentes de ce cours ont montré à
+quoi ressemble un détail précis inventé, et pourquoi l’attention portée à un
+bon outil s’use. La routine présentée ici répond aux deux, et la dernière
+section fixe la profondeur de chaque vérification d’après le coût d’une
+erreur.
 
-## A table sent in a hurry
+## Un tableau envoyé dans l’urgence
 
-It is ten minutes before a meeting. A colleague pastes three monthly
-reports into a chat assistant and asks for "a table of tickets closed per
-team, with a total per team and a grand total". The assistant answers in a
-second, and the table goes into the slides as it came back. The teams and
-the numbers are invented for this lesson, and the assistant's table is the
-author's.
+Il reste dix minutes avant une réunion. Une collègue colle trois rapports
+mensuels dans un assistant conversationnel et demande « un tableau des
+tickets clos par équipe, avec un total par équipe et un total général ».
+L’assistant répond en une seconde, et le tableau entre dans les diapositives
+tel quel. Les équipes et les nombres sont inventés pour cette leçon, et le
+tableau de l’assistant est celui de l’auteur.
 
-| Team        | Jul | Aug | Sep | Total |
-| ----------- | --- | --- | --- | ----- |
-| Design      | 124 | 98  | 111 | 333   |
-| Support     | 82  | 86  | 90  | 258   |
-| Marketing   | 145 | 162 | 139 | 466   |
-| Operations  | 67  | 71  | 69  | 207   |
-| Grand total |     |     |     | 1,264 |
+| Équipe        | Juil. | Août | Sept. | Total |
+| ------------- | ----- | ---- | ----- | ----- |
+| Design        | 124   | 98   | 111   | 333   |
+| Assistance    | 82    | 86   | 90    | 258   |
+| Marketing     | 145   | 162  | 139   | 466   |
+| Opérations    | 67    | 71   | 69    | 207   |
+| Total général |       |      |       | 1 264 |
 
-The table reads well. The columns line up, the totals are in the right
-place, and every number is one your colleague could have typed. One row
-adds up wrong. Before reading on, add up the rows yourself and decide which.
+Le tableau se lit bien. Les colonnes sont alignées, les totaux sont à leur
+place, et chaque nombre pourrait avoir été tapé par votre collègue. Une ligne
+a un total faux. Avant de poursuivre, additionnez les lignes vous-même et
+trouvez laquelle.
 
 <Choice id="which-row-fails" objective="safety/verifies-output/checks-claims"
   concepts={['checking-habits']}
-  context="A chat assistant wrote a table of tickets closed per team over three months, with a total per team. Design has 124, 98 and 111 with total 333. Support has 82, 86 and 90 with total 258. Marketing has 145, 162 and 139 with total 466. Operations has 67, 71 and 69 with total 207. One of the four totals is not the sum of its three months."
-  title="Which row does not add up?"
-  hint="Add the three months of each row and compare the sum with the total column. Which row is off, and by how much?"
+  context="Un assistant conversationnel a rédigé un tableau des tickets clos par équipe sur trois mois, avec un total par équipe. Design a 124, 98 et 111, avec un total de 333. Assistance a 82, 86 et 90, avec un total de 258. Marketing a 145, 162 et 139, avec un total de 466. Opérations a 67, 71 et 69, avec un total de 207. L’un des quatre totaux n’est pas la somme de ses trois mois."
+  title="Quelle ligne a un total faux ?"
+  hint="Additionnez les trois mois de chaque ligne et comparez la somme avec la colonne des totaux. Quelle ligne est fausse, et de combien ?"
   options={[
-    { text: 'Design: 124, 98 and 111 with total 333.', why: 'Add the three months again. This total is the sum of its row.' },
-    { text: 'Support: 82, 86 and 90 with total 258.', why: 'Add the three months again. This total is the sum of its row.' },
-    { text: 'Marketing: 145, 162 and 139 with total 466.', correct: true },
-    { text: 'Operations: 67, 71 and 69 with total 207.', why: 'Add the three months again. This total is the sum of its row.' },
+    { text: 'Design : 124, 98 et 111, avec un total de 333.', why: 'Additionnez de nouveau les trois mois. Ce total est bien la somme de sa ligne.' },
+    { text: 'Assistance : 82, 86 et 90, avec un total de 258.', why: 'Additionnez de nouveau les trois mois. Ce total est bien la somme de sa ligne.' },
+    { text: 'Marketing : 145, 162 et 139, avec un total de 466.', correct: true },
+    { text: 'Opérations : 67, 71 et 69, avec un total de 207.', why: 'Additionnez de nouveau les trois mois. Ce total est bien la somme de sa ligne.' },
   ]}>
-Which row's total isn't the sum of its three months?
+Quelle ligne a un total qui n’est pas la somme de ses trois mois ?
 </Choice>
 
 <Order id="order-the-routine" phase="review" objective="safety/verifies-output/checks-claims"
   concepts={['checking-habits']}
-  context="The lesson gives a routine of four checks that run together, in one order, on every model output that leaves your desk."
-  title="Put the routine in order" hint="What do you compare the output with first, and which check needs a number to redo?"
-  steps={['Read the output against the request', 'Mark the claims you did not supply', 'Open one link or source it cites', 'Redo one calculation by hand']} />
+  context="La leçon donne une routine de quatre vérifications qui s’enchaînent, dans un ordre fixe, sur chaque sortie de modèle qui quitte votre bureau."
+  title="Remettez la routine dans l’ordre" hint="À quoi comparez-vous la sortie en premier, et quelle vérification demande un nombre à refaire ?"
+  steps={['Relire la sortie en regard de la demande', 'Repérer les affirmations que vous n’avez pas fournies', 'Ouvrir un lien ou une source cités', 'Refaire un calcul à la main']} />
 
-A short program written for this lesson adds every row again and compares
-the sum with the total the assistant wrote. This is what it prints.
+Un petit programme écrit pour cette leçon additionne de nouveau chaque ligne
+et compare la somme avec le total écrit par l’assistant. Voici ce qu’il
+affiche.
 
 ```text
-ok        Design      written   333  recomputed   333
-ok        Support     written   258  recomputed   258
-MISMATCH  Marketing   written   466  recomputed   446
-ok        Operations  written   207  recomputed   207
-MISMATCH  Grand total written  1264  recomputed  1244
-rows that do not add up: 1 of 4 (Marketing)
+ok     Design        écrit   333  recalculé   333
+ok     Assistance    écrit   258  recalculé   258
+ÉCART  Marketing     écrit   466  recalculé   446
+ok     Opérations    écrit   207  recalculé   207
+ÉCART  Total général écrit  1264  recalculé  1244
+lignes dont le total est faux : 1 sur 4 (Marketing)
 ```
 
-Marketing closed 446 tickets, and the table says 466. The grand total is
-wrong by the same 20, because the assistant added its own row totals
-rather than the months. One slip, two wrong numbers on the slide, and
-nothing in the way the table looks tells you which two. The model predicted
-the totals the way it predicts every other number in the table, and 466
-is a likely number. It isn't the sum. The lesson
-[What an invented fact looks like](/safety/spotting-hallucination/#la-précision-est-lindice)
-called this specificity without a source. A total is a specific, and its
-source is the arithmetic, which you can redo in the time it takes to read
-the row.
+Le marketing a clos 446 tickets, et le tableau dit 466. Le total général est
+faux des mêmes 20, parce que l’assistant a additionné ses propres totaux de
+ligne au lieu des mois. Une seule erreur, deux nombres faux sur la
+diapositive, et rien dans l’aspect du tableau ne vous dit lesquels. Le
+modèle a prédit les totaux comme il prédit tous les autres nombres du
+tableau, et 466 est un nombre probable. Ce n’est pas la somme. La leçon
+[À quoi ressemble un fait inventé](/safety/spotting-hallucination/#la-précision-est-lindice)
+appelait cela une précision sans source. Un total est un détail précis, et
+sa source est l’arithmétique, que vous pouvez refaire le temps de lire la
+ligne.
 
-## The routine
+## La routine
 
-The check that caught the Marketing row is one of four. Together they're
-what **checking habits** means in this course, and they take a few minutes
-on a page of output.
+La vérification qui a repéré la ligne Marketing est l’une de quatre.
+Ensemble, elles constituent ce que ce cours appelle les **habitudes de
+vérification**, et elles prennent quelques minutes sur une page de sortie.
 
-1. **Read the output against the request.** Put the prompt next to the
-   answer and read them together. Did you ask for tickets closed, and is
-   that what the column says? Did you ask for a total per team, and is
-   there one for every team? A model answers a nearby question as fluently
-   as the one you asked.
-2. **Look for claims you didn't supply.** Every number, name, date and
-   reference in the output came from what you pasted, or it came from the
-   model. Mark the ones you didn't supply. Each is a claim to check or to
-   take out, as the lesson on invented facts showed.
-3. **Open one link.** If the output cites anything, a page, a document, a
-   section number, open one and read whether it says what the output says.
-   One is enough to tell you whether the rest deserve the same.
-4. **Redo one calculation.** Pick one row, one percentage, one date
-   difference, and do it by hand or in a spreadsheet cell. If it holds,
-   the others probably hold too. If it fails, none of them can go out
-   unchecked.
+1. **Relire la sortie en regard de la demande.** Placez le prompt à côté de
+   la réponse et lisez-les ensemble. Avez-vous demandé les tickets clos, et
+   est-ce bien ce que dit la colonne ? Avez-vous demandé un total par
+   équipe, et y en a-t-il un pour chaque équipe ? Un modèle répond à une
+   question voisine avec la même aisance qu’à celle que vous avez posée.
+2. **Repérer les affirmations que vous n’avez pas fournies.** Chaque nombre,
+   nom, date et référence de la sortie vient de ce que vous avez collé, ou
+   vient du modèle. Repérez ceux que vous n’avez pas fournis. Chacun est une
+   affirmation à vérifier ou à retirer, comme l’a montré la leçon sur les
+   faits inventés.
+3. **Ouvrir un lien.** Si la sortie cite quelque chose, une page, un
+   document, un numéro de section, ouvrez-en un et lisez s’il dit ce que dit
+   la sortie. Un seul suffit à vous dire si les autres méritent le même
+   examen.
+4. **Refaire un calcul.** Choisissez une ligne, un pourcentage, un écart de
+   dates, et refaites-le à la main ou dans une cellule de tableur. S’il
+   tient, les autres tiennent probablement aussi. S’il est faux, aucun ne
+   peut partir sans vérification.
 
-They're one routine because they run together and in this order on
-everything that leaves your desk. Output that stays with you, a
-brainstorm or a note to yourself, may skip them, and the next section
-says how to tell. For output that goes to someone else, you don't decide
-each time whether to run them. Anthropic's AI Fluency course calls the skill of
-judging what a model gave you discernment. It pairs that skill with the
-skill of asking well, which it calls description, and has you move between
-the two in a loop (@Academy ai-fluency-framework-foundations). The routine here is
-discernment made small enough to run when you have ten minutes.
+Elles forment une seule routine parce qu’elles s’enchaînent, dans cet
+ordre, sur tout ce qui quitte votre bureau. Une sortie qui reste chez vous,
+un remue-méninges ou une note pour vous-même, peut s’en passer, et la
+section suivante dit comment faire la différence. Pour une sortie qui va à
+quelqu’un d’autre, vous ne décidez pas à chaque fois s’il faut les faire.
+Le cours AI Fluency d’Anthropic appelle discernement (discernment) la
+compétence qui consiste à juger ce qu’un modèle vous a donné. Il l’associe à
+la compétence de bien demander, qu’il appelle description, et vous fait
+passer de l’une à l’autre en boucle
+(@Academy ai-fluency-framework-foundations). La routine présentée ici est un
+discernement réduit à une taille qui tient en dix minutes.
 
-<Pitfall title="The check that gets skipped">
-The colleague with ten minutes before the meeting ran the first check and
-the second. The table answered the request, every monthly count in it was
-one from the reports, and the totals were marked as the model's own. The third check had nothing to open, because the
-table has no links. The fourth check, redo one calculation, felt like the
-one that could wait, because adding up a row takes longer than reading it.
-It is the check that finds the error. A busy person skips it, and errors
-get through in those busy moments. When you notice
-that you are about to skip a check, that is the check you run. A routine
-that has a step you drop under time pressure is a routine that only works
-when you don't need it.
+<Pitfall title="La vérification qu’on saute">
+La collègue qui avait dix minutes avant la réunion a fait la première
+vérification et la deuxième. Le tableau répondait à la demande, chaque
+compte mensuel venait des rapports, et les totaux étaient repérés comme
+venant du modèle. La troisième vérification n’avait rien à ouvrir, parce que
+le tableau n’a pas de lien. La quatrième, refaire un calcul, semblait
+pouvoir attendre, parce qu’additionner une ligne prend plus de temps que la
+lire. C’est la vérification qui trouve l’erreur. Une personne pressée la
+saute, et les erreurs passent dans ces moments de presse. Quand vous
+remarquez que vous êtes sur le point de sauter une vérification, c’est
+celle-là que vous faites. Une routine dont vous abandonnez une étape sous la
+pression du temps ne fonctionne que quand vous n’en avez pas besoin.
 </Pitfall>
 
-## Depth scales with stakes
+## La profondeur suit les enjeux
 
-The routine is the same every time, and the depth of each check isn't. The
-last lesson,
-[When the tool is usually right](/safety/when-the-tool-is-usually-right/#intégrer-la-vérification),
-said to build the check into the process and to set its depth from what
-happens when the output is wrong. Fluency is constant and consequences are
-not, so the cost of a mistake is the only thing that should change the
-effort. The depth comes from whether the output can be undone, and from
-who reads it and whether they check it themselves.
+La routine est la même à chaque fois, et la profondeur de chaque
+vérification varie. La leçon précédente,
+[Quand l’outil a en général raison](/safety/when-the-tool-is-usually-right/#intégrer-la-vérification),
+demandait d’intégrer la vérification au processus et de fixer sa profondeur
+d’après ce qui se passe quand la sortie est fausse. La fluidité reste
+constante et les conséquences varient, donc le coût d’une erreur est la
+seule chose qui devrait changer l’effort. La profondeur dépend de la
+possibilité d’annuler la sortie, et de qui la lit et s’il la vérifie
+lui-même.
 
-A brainstorm list of names for an internal project isn't checked at all.
-A wrong entry doesn't cost anything, and you throw most of them away. A summary of a
-meeting for your own notes gets one read against the request, because you
-were in the meeting and you'll notice a wrong point when you use the
-notes. A briefing with three cited reports for your manager gets every
-link opened and every number redone, because your manager acts on it and
-does not open the reports. A price table on the public web page gets every
-value read by a second person, because it cannot be recalled once a
-customer has seen it, and the customer checks nothing. The list, the
-notes, the briefing and the price table read as fluently as each other.
-The depth of the check comes from the cost of the mistake.
+Une liste de noms issue d’un remue-méninges pour un projet interne n’est
+pas vérifiée du tout. Une entrée fausse ne coûte rien, et vous en jetez la
+plupart. Le résumé d’une réunion pour vos propres notes reçoit une relecture
+en regard de la demande, parce que vous étiez à la réunion et que vous
+remarquerez un point faux en utilisant les notes. Une note d’information
+citant trois rapports, destinée à votre responsable, voit chaque lien ouvert
+et chaque nombre refait, parce que votre responsable agit dessus et n’ouvre
+pas les rapports. Un tableau de prix sur la page web publique voit chaque
+valeur relue par une deuxième personne, parce qu’on ne peut plus le
+reprendre une fois qu’un client l’a vu, et que le client ne vérifie rien. La
+liste, les notes, la note d’information et le tableau de prix se lisent
+avec la même aisance. La profondeur de la vérification vient du coût de
+l’erreur.
 
-One more case sets the depth to the maximum whatever the size of the task.
-A domain you cannot judge is high risk even when the output is one
-paragraph, because you cannot see the mistake. A one-paragraph legal clause
-goes to the legal team, however well it reads.
+Un dernier cas pousse la profondeur au maximum, quelle que soit la taille de
+la tâche. Un domaine que vous ne savez pas juger est à haut risque même
+quand la sortie fait un paragraphe, parce que vous ne pouvez pas voir
+l’erreur. Une clause juridique d’un paragraphe part chez l’équipe juridique,
+aussi bien qu’elle se lise.
 
 <Match id="how-deep-each-check" objective="safety/verifies-output/calibrates-trust"
   concepts={['checking-habits']}
-  context="The lesson gives four checks that run on everything a model writes before it leaves the learner's desk, and says that how far each check goes depends on what happens if the output is wrong: whether it can be undone, and whether its readers will check it themselves."
-  title="How deep does each check go?"
-  hint="For each output, ask what happens if it is wrong: can you undo it, and does its reader check it?"
+  context="La leçon donne quatre vérifications à faire sur tout ce qu’écrit un modèle avant que cela quitte le bureau de l’apprenant, et dit que la profondeur de chaque vérification dépend de ce qui se passe si la sortie est fausse : si elle peut être annulée, et si ses lecteurs la vérifieront eux-mêmes."
+  title="Quelle profondeur pour chaque vérification ?"
+  hint="Pour chaque sortie, demandez-vous ce qui se passe si elle est fausse : pouvez-vous l’annuler, et son lecteur la vérifie-t-il ?"
   options={[
-    'No check',
-    'One read against the request',
-    'Every link opened and every number redone',
-    'Every value read by a second person',
+    'Aucune vérification',
+    'Une relecture en regard de la demande',
+    'Chaque lien ouvert et chaque nombre refait',
+    'Chaque valeur relue par une deuxième personne',
   ]}
   rows={[
-    { statement: 'A list of twenty candidate names for an internal project', option: 0, why: 'What does a wrong entry on this list cost, and how many of the twenty will you keep?' },
-    { statement: 'A summary of a meeting you attended, for your own notes', option: 1, why: 'Who reads these notes, and were they in the room?' },
-    { statement: 'A briefing with three cited reports, for your manager to act on', option: 2, why: 'Will your manager open the reports, or act on what the briefing says they say?' },
-    { statement: 'A price table for the public web page', option: 3, why: 'Once a customer has seen a price, can you take it back, and does the customer check it?' },
+    { statement: 'Une liste de vingt noms possibles pour un projet interne', option: 0, why: 'Que coûte une entrée fausse dans cette liste, et combien des vingt garderez-vous ?' },
+    { statement: 'Le résumé d’une réunion à laquelle vous avez assisté, pour vos propres notes', option: 1, why: 'Qui lit ces notes, et était-il dans la salle ?' },
+    { statement: 'Une note d’information citant trois rapports, sur laquelle votre responsable va agir', option: 2, why: 'Votre responsable ouvrira-t-il les rapports, ou agira-t-il sur ce que la note dit qu’ils disent ?' },
+    { statement: 'Un tableau de prix pour la page web publique', option: 3, why: 'Une fois qu’un client a vu un prix, pouvez-vous le reprendre, et le client le vérifie-t-il ?' },
   ]}
-  rationale="The four outputs are equally fluent. What sets the depth is the cost of being wrong: whether the output can be undone and whether its readers will catch a mistake themselves.">
-Match each output to the depth of checking it gets before it leaves your
-desk.
+  rationale="Les quatre sorties sont aussi fluides les unes que les autres. Ce qui fixe la profondeur est le coût d’une erreur : si la sortie peut être annulée et si ses lecteurs repéreront une erreur eux-mêmes.">
+Associez chaque sortie à la profondeur de vérification qu’elle reçoit avant
+de quitter votre bureau.
 </Match>
 
-Harvard's CS50 course gives its students an AI helper (@CS50x) (@Liu 2024b).
-The helper also answers questions on the course forum. A staff member can
-endorse, amend or delete each of those answers, and the forum shows which
-ones a staff member endorsed, so a student can tell a checked answer from a
-raw one (@Liu 2024b). The idea transfers to your desk. What the assistant
-wrote and what you have checked are two different things, and the depth of
-checking is what turns one into the other. A later lesson in this course is
-about making that difference visible to the next reader.
+Le cours CS50 de Harvard donne à ses étudiants un assistant d’IA
+(@CS50x) (@Liu 2024b). L’assistant répond aussi aux questions sur le forum du
+cours. Un membre de l’équipe pédagogique peut valider, modifier ou supprimer
+chacune de ces réponses, et le forum indique celles qu’un membre de l’équipe
+a validées, pour qu’un étudiant distingue une réponse vérifiée d’une réponse
+brute (@Liu 2024b). L’idée vaut aussi pour votre bureau. Ce que l’assistant a
+écrit et ce que vous avez vérifié sont deux choses différentes, et c’est la
+profondeur de la vérification qui fait passer de l’une à l’autre. Une leçon
+plus loin dans ce cours apprend à rendre cette différence visible pour le
+lecteur suivant.
 
 <Choice id="which-gets-the-deeper-check" phase="review" objective="safety/verifies-output/calibrates-trust"
   concepts={['checking-habits']}
-  context="The lesson says the depth of checking a model's output gets comes from what happens if the output is wrong: whether it can be undone, and whether its readers will check it themselves. The learner compares four outputs of similar length and fluency."
-  title="Which output gets the deeper check?"
-  hint="Which of the four cannot be undone, or goes to a reader who will not check it?"
+  context="La leçon dit que la profondeur de vérification d’une sortie de modèle vient de ce qui se passe si la sortie est fausse : si elle peut être annulée, et si ses lecteurs la vérifieront eux-mêmes. L’apprenant compare quatre sorties de longueur et d’aisance comparables."
+  title="Quelle sortie reçoit la vérification la plus poussée ?"
+  hint="Laquelle des quatre ne peut pas être annulée, ou va à un lecteur qui ne la vérifiera pas ?"
   options={[
-    { text: 'A three-line answer to a customer, posted on a public help page.', correct: true },
-    { text: 'A three-page internal report your team reads before a workshop.', why: 'It is long, and it has readers who know the subject and will raise a wrong point in the workshop.' },
-    { text: 'A one-page plan for your own next week.', why: 'You wrote the input and you are the reader. A wrong item costs you a moment when you meet it.' },
-    { text: 'Ten draft subject lines for an email you have not written yet.', why: 'You will pick one and drop nine. The pick is the check.' },
+    { text: 'Une réponse de trois lignes à un client, publiée sur une page d’aide publique.', correct: true },
+    { text: 'Un rapport interne de trois pages que votre équipe lit avant un atelier.', why: 'Il est long, et il a des lecteurs qui connaissent le sujet et relèveront un point faux pendant l’atelier.' },
+    { text: 'Un plan d’une page pour votre propre semaine prochaine.', why: 'Vous avez écrit l’entrée et vous êtes le lecteur. Une entrée fausse vous coûte un instant quand vous tombez dessus.' },
+    { text: 'Dix objets possibles pour un e-mail que vous n’avez pas encore écrit.', why: 'Vous en choisirez un et en jetterez neuf. Le choix est la vérification.' },
   ]}>
-The same assistant wrote these four outputs for you today. Which one gets
-the deepest check before it goes anywhere?
+Le même assistant a rédigé ces quatre sorties pour vous aujourd’hui.
+Laquelle reçoit la vérification la plus poussée avant de partir ?
 </Choice>
 
-<Exercise stretch="Do the same for a second document, one going to a reader outside your team, and compare how deep each check went.">
-Pick one document from your week that an assistant wrote or drafted: a
-summary, a table, a reply, a report section. Run the four checks on it in
-a note. Read it against the request you gave and write down any question
-it answered instead. List the claims you did not supply. Open one link or
-reference, if it has any, and write what the source says next to what the
-document says. Redo one calculation, if it has any, and write both numbers
-down. Fifteen minutes is enough.
+<Exercise stretch="Faites de même pour un second document, destiné à un lecteur hors de votre équipe, et comparez la profondeur de chaque vérification.">
+Choisissez un document de votre semaine qu’un assistant a rédigé ou ébauché :
+un résumé, un tableau, une réponse, une section de rapport. Faites les
+quatre vérifications dans une note. Relisez-le en regard de la demande que
+vous avez faite, et notez toute question à laquelle il a répondu à la place.
+Listez les affirmations que vous n’avez pas fournies. Ouvrez un lien ou une
+référence, s’il y en a, et notez ce que dit la source à côté de ce que dit le
+document. Refaites un calcul, s’il y en a, et notez les deux nombres. Quinze
+minutes suffisent.
 
-A good result is a note with four headings and something under each, even
-if that something is "no links" or "no numbers". Which of the four checks
-would you have skipped, and would the document have gone out with what it
-found?
+Un bon résultat est une note avec quatre titres et quelque chose sous
+chacun, même si ce quelque chose est « pas de lien » ou « pas de nombre ».
+Laquelle des quatre vérifications auriez-vous sautée, et le document
+serait-il parti avec ce qu’elle a trouvé ?
 </Exercise>
 
 <Recap>
-1. Before a model's output leaves your desk, read it against the request and look for claims you did not supply. Then open one link and redo one calculation.
-2. A total is a specific like any other, and its source is the arithmetic. One wrong row total in a table can put two wrong numbers on a slide, and the table looks the same either way.
-3. The check you are about to skip is the one you run. Errors get through at the moment a routine loses a step, which is when you are busy.
-4. The routine is the same every time, and its depth comes from the cost of being wrong: whether the output can be undone, and whether its readers check it themselves.
-5. A habit is better than a rule because it runs when you are in a hurry, which is when a rule gets skipped.
+1. Avant qu’une sortie de modèle quitte votre bureau, relisez-la en regard de la demande et repérez les affirmations que vous n’avez pas fournies. Ouvrez ensuite un lien et refaites un calcul.
+2. Un total est un détail précis comme un autre, et sa source est l’arithmétique. Un seul total de ligne faux dans un tableau peut mettre deux nombres faux sur une diapositive, et le tableau a le même aspect dans les deux cas.
+3. La vérification que vous êtes sur le point de sauter est celle que vous faites. Les erreurs passent au moment où une routine perd une étape, c’est-à-dire quand vous êtes occupé.
+4. La routine est la même à chaque fois, et sa profondeur vient du coût d’une erreur : si la sortie peut être annulée, et si ses lecteurs la vérifient eux-mêmes.
+5. Une habitude vaut mieux qu’une règle, parce qu’elle fonctionne quand vous êtes pressé, et c’est là qu’une règle est sautée.
 </Recap>
