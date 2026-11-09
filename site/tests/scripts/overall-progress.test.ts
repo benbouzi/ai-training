@@ -27,9 +27,9 @@ function block(landing: boolean): string {
 		<div data-bar aria-valuenow="0"><div></div></div>
 		<strong data-percent>0%</strong>
 		<span data-skipped hidden></span>
-		${landing ? '' : '<p data-text>No progress yet.</p>'}
+		${landing ? '' : '<p data-text>Aucune progression pour l’instant.</p>'}
 		<ul data-due-lines hidden></ul>
-		<a data-continue href="/ai-training/concepts/a/">Start with: Lesson A</a>
+		<a data-continue href="/ai-training/concepts/a/">Commencer par : Lesson A</a>
 	</div>`;
 }
 
@@ -49,9 +49,9 @@ describe('mountOverallProgress', () => {
 		document.body.innerHTML = block(false);
 		expect(mountOverallProgress()).toBe(1);
 		expect(all('[data-text]')[0]?.textContent).toBe(
-			'2 lessons and 1 checkpoints across six courses. Nothing started yet.',
+			'2 leçons et 1 questions de contrôle dans six parcours. Rien n’est commencé.',
 		);
-		expect(all('[data-continue]')[0]?.textContent).toBe('Start with: Lesson A');
+		expect(all('[data-continue]')[0]?.textContent).toBe('Commencer par : Lesson A');
 		expect(all('[data-skipped]')[0]?.hidden).toBe(true);
 		expect(all('[data-due-lines]')[0]?.hidden).toBe(true);
 	});
@@ -71,15 +71,15 @@ describe('mountOverallProgress', () => {
 			expect((bar.firstElementChild as HTMLElement).style.width).toBe('100%');
 		}
 		expect(all('[data-skipped]').map((s) => [s.textContent, s.hidden])).toEqual([
-			['1 skipped', false],
-			['1 skipped', false],
+			['1 passée', false],
+			['1 passée', false],
 		]);
 		expect(all('[data-continue]').map((c) => c.textContent)).toEqual([
-			'All lessons finished, 1 skipped',
-			'All lessons finished, 1 skipped',
+			'Toutes les leçons sont terminées, 1 passée',
+			'Toutes les leçons sont terminées, 1 passée',
 		]);
 		const line = all('[data-due-line="concepts"]')[0];
-		expect(line?.textContent).toBe('Concepts: 1 item due');
+		expect(line?.textContent).toBe('Concepts : 1 question à revoir');
 		expect(line?.getAttribute('href')).toBe('/ai-training/concepts/review/');
 		expect(all('[data-due-lines]')[0]?.hidden).toBe(false);
 	});

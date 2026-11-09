@@ -50,7 +50,7 @@ function bindCourse(root: HTMLElement) {
 		if (label) label.textContent = `${percent}%`;
 		const skippedEl = root.querySelector<HTMLElement>('[data-skipped]');
 		if (skippedEl) {
-			skippedEl.textContent = `${skipped} skipped`;
+			skippedEl.textContent = `${skipped} passée${skipped > 1 ? 's' : ''}`;
 			skippedEl.hidden = skipped === 0;
 		}
 		// Review card: always linked; counts every due item, not just one session's worth.

@@ -70,8 +70,12 @@ ensemble :
   traduction des titres, et vérifie qu’aucun lien ne vise une ancre absente.
 - `docs/traduction/outils/yaml_champs.py` : extrait les champs affichés des
   YAML en JSON, puis réinjecte la traduction sans toucher au reste du fichier.
-- `docs/traduction/outils/interface.py` : table des libellés de l’interface,
-  appliquée aux composants et aux tests qui les citent.
+- `docs/traduction/outils/interface.py` : table des libellés de l’interface
+  des leçons, appliquée aux composants et aux tests qui les citent.
+- `site/src/lib/labels-fr.ts` : libellés français des valeurs que les données
+  gardent en anglais (mode d’une leçon, état d’une question, type d’une
+  source, etc.). Les valeurs restent celles que lisent les contrôles et
+  l’enregistrement de la progression, seul l’affichage change.
 
 ## Structure du site
 
@@ -194,3 +198,23 @@ ensemble :
 | commit / pull request / diff | commit / pull request / diff         |
 | CI                           | intégration continue (CI)            |
 | worktree                     | worktree                             |
+
+## Interface et progression
+
+| Anglais                 | Français                      |
+| ----------------------- | ----------------------------- |
+| skip / skipped          | passer / passée               |
+| pass / passed           | réussir / réussie             |
+| attempted               | tentée                        |
+| item (review)           | question (à revoir)           |
+| due                     | à revoir                      |
+| stage (review)          | étape                         |
+| comfort level           | niveau d’aisance              |
+| less / more comfortable | moins / plus à l’aise         |
+| takeaways               | points à retenir              |
+| learner’s reference     | votre référence               |
+| course plan             | plan du parcours              |
+| milestone               | étape (de progression)        |
+| Builds on / Leads to    | S’appuie sur / Mène à         |
+| Served by (objective)   | Leçons qui le servent         |
+| alignment (frameworks)  | correspondance (référentiels) |

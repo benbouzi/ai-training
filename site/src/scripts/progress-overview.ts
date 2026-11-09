@@ -74,7 +74,7 @@ export function mountProgressOverview(doc: ParentNode = document): boolean {
 		card.appendChild(h);
 		if (!course.lessons.length) {
 			const p = document.createElement('p');
-			p.textContent = 'No lessons yet.';
+			p.textContent = 'Pas encore de leçon.';
 			card.appendChild(p);
 			return card;
 		}
@@ -105,9 +105,9 @@ export function mountProgressOverview(doc: ParentNode = document): boolean {
 		URL.revokeObjectURL(a.href);
 	});
 	root.querySelector('[data-reset]')?.addEventListener('click', () => {
-		if (confirm('Reset all progress in this browser?')) {
+		if (confirm('Réinitialiser toute la progression dans ce navigateur ?')) {
 			progress.reset();
-			message.textContent = 'Progress reset.';
+			message.textContent = 'Progression réinitialisée.';
 		}
 	});
 	root.querySelector<HTMLInputElement>('[data-import]')?.addEventListener('change', async (e) => {
@@ -115,10 +115,10 @@ export function mountProgressOverview(doc: ParentNode = document): boolean {
 		const file = input.files?.[0];
 		if (!file) return;
 		const text = await file.text();
-		if (!confirm('Replace your progress with the imported file?')) return;
+		if (!confirm('Remplacer votre progression par le fichier importé ?')) return;
 		const result = progress.importJson(text);
 		if (result.ok) pruneOrphans();
-		message.textContent = result.ok ? 'Imported.' : result.message;
+		message.textContent = result.ok ? 'Importé.' : result.message;
 		input.value = '';
 	});
 

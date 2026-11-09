@@ -33,7 +33,7 @@ test('an unfinished lesson keeps the unlock note, also when it was skipped', asy
 	const section = page.locator('[data-reference-lesson="concepts/how-models-work"]');
 	await expect(section).toHaveAttribute('data-unlocked', 'false');
 	await expect(section.locator('[data-reference-locked]')).toHaveText(
-		'Unlocks when you finish Comment fonctionne un modèle de langage.',
+		'Se débloque quand vous terminez Comment fonctionne un modèle de langage.',
 	);
 	await expect(section.locator('[data-reference-locked] a')).toHaveAttribute(
 		'href',
@@ -47,7 +47,7 @@ test('the reference page lists finished lessons by area and links to the topic p
 	await page.goto('reference/');
 	await expect(page.locator('[data-reference-empty]')).toBeHidden();
 	await expect(page.locator('[data-reference-area]')).toHaveCount(1);
-	await expect(page.locator('[data-reference-area="building-agents"] h2')).toHaveText('Building agents');
+	await expect(page.locator('[data-reference-area="building-agents"] h2')).toHaveText('Construire des agents');
 	const item = page.locator('[data-reference-finished="building-agents/agent-loop"]');
 	await expect(item.locator('a').first()).toHaveAttribute('href', '/ai-training/building-agents/agent-loop/');
 	await expect(item.locator('a').last()).toHaveAttribute(

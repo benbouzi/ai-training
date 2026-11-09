@@ -280,7 +280,7 @@ describe('remarkCitations', () => {
 			{ type: 'title', value: 'T', url: 'https://x' },
 			{ type: 'text', value: '.' },
 			{ type: 'text', value: ' C.' },
-			{ type: 'text', value: ' Course.' },
+			{ type: 'text', value: ' Cours.' },
 			{ type: 'text', value: ' ' },
 			{ type: 'code', value: 'K' },
 		]);
@@ -302,18 +302,16 @@ describe('remarkCitations', () => {
 		const heading = tree.children?.at(-2);
 		const list = tree.children?.at(-1);
 		expect(heading?.type).toBe('heading');
-		expect(text(heading as Node)).toBe('References');
+		expect(text(heading as Node)).toBe('Références');
 		expect(list?.type).toBe('list');
 		expect(list?.children?.map((li) => li.data?.hProperties?.id)).toEqual(['ref-1', 'ref-2']);
-		expect(text(list?.children?.[0] as Node)).toBe(
-			'A. Osmani. How agents think. Agent Engineer Course. Course. AEC-02',
-		);
+		expect(text(list?.children?.[0] as Node)).toBe('A. Osmani. How agents think. Agent Engineer Course. Cours. AEC-02');
 		expect(links(list?.children?.[0] as Node, 'citation')).toHaveLength(0);
 		const [first, second] = list?.children ?? [];
 		expect(first && allLinks(first).map((l) => l.url)).toEqual(['https://example.com/aec']);
 		expect(second && allLinks(second)).toEqual([]);
 		expect(text(list?.children?.[1] as Node)).toBe(
-			'Taste: what is worth building. Brilliant. Reference. Brilliant TAS',
+			'Taste: what is worth building. Brilliant. Référence. Brilliant TAS',
 		);
 	});
 
@@ -322,7 +320,7 @@ describe('remarkCitations', () => {
 		const list = tree.children?.at(-1);
 		const [entry] = list?.children ?? [];
 		expect(entry && text(entry)).toBe(
-			'N. Liu and 6 others. Lost in the Middle. TACL 12 (2024), 157-173. Paper. Liu 2024',
+			'N. Liu and 6 others. Lost in the Middle. TACL 12 (2024), 157-173. Article. Liu 2024',
 		);
 		expect(entry && allLinks(entry).map((l) => l.url)).toEqual(['https://aclanthology.org/2024.tacl-1.9/']);
 	});

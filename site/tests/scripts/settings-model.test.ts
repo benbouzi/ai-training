@@ -20,9 +20,9 @@ const catalog: CatalogCourse[] = [
 
 describe('comfortNote', () => {
 	it('names the set level, or says none is set', () => {
-		expect(comfortNote('less')).toBe('Set: less comfortable.');
-		expect(comfortNote('more')).toBe('Set: more comfortable.');
-		expect(comfortNote(undefined)).toBe('Not set.');
+		expect(comfortNote('less')).toBe('Choisi : moins à l’aise.');
+		expect(comfortNote('more')).toBe('Choisi : plus à l’aise.');
+		expect(comfortNote(undefined)).toBe('Aucun niveau choisi.');
 	});
 });
 

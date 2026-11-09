@@ -307,7 +307,7 @@ describe('sort', () => {
 		bucketTarget(0).click();
 		expect(feedback()).toBe('Sélectionnez d’abord un élément, puis une case.');
 		click('.cp-check');
-		expect(feedback()).toBe('2 items still to place.');
+		expect(feedback()).toBe('Encore 2 éléments à classer.');
 		expect(state()).toBe('untouched');
 		chip('a').click();
 		expect(chip('a').getAttribute('aria-pressed')).toBe('true');
@@ -617,7 +617,7 @@ describe('multi-choice', () => {
 		expect(state()).toBe('untouched');
 		box(1).checked = true;
 		click('.cp-check');
-		expect(feedback()).toBe('1 of 2 so far, and nothing wrong. 1 more to find.');
+		expect(feedback()).toBe('1 sur 2 pour l’instant, sans erreur. Encore 1 à trouver.');
 		expect(state()).toBe('attempted');
 		box(2).checked = true;
 		click('.cp-check');
@@ -659,14 +659,14 @@ describe('match', () => {
 	it('needs every row filled, marks each row, and shows the rationale on a full pass', () => {
 		bindCheckpoint(shell('match', 'x', body));
 		click('.cp-check');
-		expect(feedback()).toBe('2 rows still to fill.');
+		expect(feedback()).toBe('Encore 2 lignes à remplir.');
 		select(1).value = '1';
 		click('.cp-check');
-		expect(feedback()).toBe('1 row still to fill.');
+		expect(feedback()).toBe('Encore 1 ligne à remplir.');
 		expect(state()).toBe('untouched');
 		select(2).value = '0';
 		click('.cp-check');
-		expect(feedback()).toBe('2 rows wrong. Each row says which.');
+		expect(feedback()).toBe('2 lignes fausses. Chaque ligne indique laquelle.');
 		expect(row(1).dataset.state).toBe('wrong');
 		expect(row(1).querySelector('.cp-row-feedback')?.textContent).toBe('Keep the send step.');
 		expect(row(2).querySelector('.cp-row-feedback')?.textContent).toBe('Pas celle-ci.');

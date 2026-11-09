@@ -67,7 +67,7 @@ const { sublist, nested, plainLabels } = Astro.props;
 							{badge && <Badge variant={badge.variant} class={badge.class} text={badge.text} />}
 						</a>
 						<details open={startsOpen(entry)}>
-							<summary class="caret-only" aria-label={`Toggle ${linked.link.label}`}>
+							<summary class="caret-only" aria-label={`Ouvrir ou fermer « ${linked.link.label} »`}>
 								<Icon name="right-caret" class="caret" size="1.25rem" />
 							</summary>
 							<SidebarRestorePoint />

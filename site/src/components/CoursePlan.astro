@@ -18,6 +18,7 @@ import {
 	planSummary,
 } from '@lib/course-plan-table';
 import { getCourse, isLive, type PlanEntry } from '@lib/courses';
+import { labelOf, MINUTES_KIND_LABEL, MODE_LABEL, STATUS_LABEL } from '@lib/labels-fr';
 import { href } from '@lib/url';
 
 interface Props {
@@ -39,15 +40,15 @@ let n = 0;
 		<thead>
 			<tr>
 				<th scope="col">#</th>
-				<th scope="col">Lesson</th>
-				<th scope="col">Status</th>
+				<th scope="col">Leçon</th>
+				<th scope="col">État</th>
 				<th scope="col">Mode</th>
 				<th scope="col">Minutes</th>
-				<th scope="col">Covers</th>
-				<th scope="col">Serves</th>
-				<th scope="col">Exercise</th>
-				<th scope="col">After</th>
-				<th scope="col">Issue</th>
+				<th scope="col">Couvre</th>
+				<th scope="col">Sert</th>
+				<th scope="col">Exercice</th>
+				<th scope="col">Après</th>
+				<th scope="col">Ticket</th>
 			</tr>
 		</thead>
 		{
@@ -69,9 +70,9 @@ let n = 0;
 									{isLive(e) ? <a href={href(`/${e.id}/`)}>{e.title}</a> : e.title}
 									<small class="course-plan-id">{e.id}</small>
 								</td>
-								<td>{e.status}</td>
-								<td>{e.mode}</td>
-								<td data-minutes={time.kind}>{time.minutes} <small class="course-plan-minutes">{time.kind}</small></td>
+								<td>{labelOf(STATUS_LABEL, e.status)}</td>
+								<td>{labelOf(MODE_LABEL, e.mode)}</td>
+								<td data-minutes={time.kind}>{time.minutes} <small class="course-plan-minutes">{labelOf(MINUTES_KIND_LABEL, time.kind)}</small></td>
 								<td>
 									<a href={href(`/topics/${e.covers}/`)} title={e.covers}>{idTail(e.covers)}</a>
 								</td>

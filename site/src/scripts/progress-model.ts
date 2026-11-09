@@ -709,20 +709,23 @@ export function parseImport(text: string): ImportResult {
 	try {
 		raw = JSON.parse(text);
 	} catch {
-		return { ok: false, message: 'That file is not valid JSON.' };
+		return { ok: false, message: 'Ce fichier n’est pas du JSON valide.' };
 	}
 	if (!isObject(raw) || typeof raw.version !== 'number') {
-		return { ok: false, message: 'That file is not a progress record: it has no numeric "version" field.' };
+		return {
+			ok: false,
+			message: 'Ce fichier n’est pas un enregistrement de progression : il n’a pas de champ numérique « version ».',
+		};
 	}
 	const parsed = migrate(raw);
 	if (!isObject(parsed) || parsed.version !== VERSION) {
 		return {
 			ok: false,
-			message: `That file is version ${raw.version}; this site stores version ${VERSION} and has no migration for it.`,
+			message: `Ce fichier est en version ${raw.version}. Ce site enregistre la version ${VERSION} et ne sait pas convertir celle-là.`,
 		};
 	}
 	const warnings: NormalizeWarning[] = [];
 	const record = normalize(parsed, warnings);
-	if (!record) return { ok: false, message: 'That file is not a progress record.' };
+	if (!record) return { ok: false, message: 'Ce fichier n’est pas un enregistrement de progression.' };
 	return { ok: true, record, warnings };
 }

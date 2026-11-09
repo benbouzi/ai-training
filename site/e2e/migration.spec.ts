@@ -46,10 +46,10 @@ test('a version 1 record in local storage migrates on load and keeps its schedul
 	await expect(page.locator('[data-review-item]')).toHaveCount(2);
 	await expect(page.locator('[data-due-now] a')).toHaveText('Concepts (1)');
 	const item = page.locator(`[data-review-item="${ITEM}"]`);
-	await expect(item.locator('.cp-stage-label')).toHaveText('stage 2 of 5, due 2999-03-13');
-	await expect(item.locator('.schedule-history')).toHaveText('2 answered, last pass on 2999-03-10');
+	await expect(item.locator('.cp-stage-label')).toHaveText('étape 2 sur 5, à revoir le 2999-03-13');
+	await expect(item.locator('.schedule-history')).toHaveText('2 réponses, la dernière réussie le 2999-03-10');
 	await expect(page.locator(`[data-review-item="${OTHER}"] .schedule-history`)).toHaveText(
-		'1 answered, last fail on 2026-03-10',
+		'1 réponse, la dernière échouée le 2026-03-10',
 	);
 
 	const record = await storedRecord(page);
@@ -70,9 +70,9 @@ test('a version 1 export file imports through the migration', async ({ page }) =
 		mimeType: 'application/json',
 		buffer: Buffer.from(JSON.stringify(v1Record, null, 2)),
 	});
-	await expect(page.locator('[data-message]')).toHaveText('Imported.');
+	await expect(page.locator('[data-message]')).toHaveText('Importé.');
 	const dump = JSON.parse((await page.locator('[data-dump]').textContent()) ?? '{}');
 	expect(dump.version).toBe(VERSION);
 	expect(dump.reviews).toEqual(migratedReviews);
-	await expect(page.locator('[data-progress-review=concepts]')).toHaveText('Review due: 1 item');
+	await expect(page.locator('[data-progress-review=concepts]')).toHaveText('Révision : 1 question à revoir');
 });

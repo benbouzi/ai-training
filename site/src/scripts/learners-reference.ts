@@ -33,7 +33,7 @@ function areaSection(base: string, area: ReferenceArea): HTMLElement {
 		li.dataset.referenceFinished = lesson.id;
 		li.appendChild(link(base, `/${lesson.id}/`, lesson.title));
 		if (lesson.topics.length) {
-			li.append(' · reference: ');
+			li.append(' · référence : ');
 			lesson.topics.forEach((t, i) => {
 				if (i > 0) li.append(', ');
 				li.appendChild(link(base, `/topics/${t.id}/#reference`, t.name));

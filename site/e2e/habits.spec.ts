@@ -81,10 +81,10 @@ test('finishing the lesson enters its habits, and Done on a due habit moves it o
 	const lines = page.locator('[data-progress-habit]');
 	await expect(lines).toHaveCount(2);
 	await expect(page.locator(`[data-progress-habit="${HABITS[0]}"] .progress-habit-when`)).toHaveText(
-		/^Next on \d{4}-\d{2}-\d{2}\. So far: skipped\.$/,
+		/^Prochaine fois : \d{4}-\d{2}-\d{2}\. Jusqu’ici : passé\.$/,
 	);
 	await expect(page.locator(`[data-progress-habit="${HABITS[1]}"] .progress-habit-when`)).toHaveText(
-		/^Next on \d{4}-\d{2}-\d{2}\. So far: done\.$/,
+		/^Prochaine fois : \d{4}-\d{2}-\d{2}\. Jusqu’ici : fait\.$/,
 	);
 });
 
@@ -113,7 +113,7 @@ test('a version 2 export file imports with an empty habits map', async ({ page }
 		mimeType: 'application/json',
 		buffer: Buffer.from(JSON.stringify(v2Record, null, 2)),
 	});
-	await expect(page.locator('[data-message]')).toHaveText('Imported.');
+	await expect(page.locator('[data-message]')).toHaveText('Importé.');
 	const dump = JSON.parse((await page.locator('[data-dump]').textContent()) ?? '{}');
 	expect(dump.version).toBe(VERSION);
 	expect(dump.habits).toEqual({});

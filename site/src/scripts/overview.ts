@@ -1,4 +1,6 @@
 /** Overall progress figures derived from the catalog and the progress record, and the progress page's habit lines. */
+
+import { HABIT_RESULT_LABEL, labelOf } from '@lib/labels-fr';
 import type { HabitEntry, ProgressRecord } from './progress';
 
 /** Mirrors `lib/catalog.ts` (that module imports astro:content, which client scripts cannot). */
@@ -117,8 +119,10 @@ export function activeHabits(lesson: CatalogLesson, rec: ProgressRecord): HabitL
 	return out;
 }
 
-/** The schedule part of a habit line: "Next on 2026-09-27. So far: done, skipped." */
+/** The schedule part of a habit line: "Prochaine fois : 2026-09-27. Jusqu’ici : fait, passé." */
 export function habitSummary(line: Pick<HabitLine, 'next' | 'results'>): string {
-	const results = line.results.length ? `So far: ${line.results.join(', ')}.` : 'No result yet.';
-	return `Next on ${line.next}. ${results}`;
+	const results = line.results.length
+		? `Jusqu’ici : ${line.results.map((r) => labelOf(HABIT_RESULT_LABEL, r)).join(', ')}.`
+		: 'Pas encore de résultat.';
+	return `Prochaine fois : ${line.next}. ${results}`;
 }

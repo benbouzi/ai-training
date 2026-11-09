@@ -26,16 +26,16 @@ const lang = (s: Segment & { kind: 'code' }) => s.lang || 'text';
 
 {/* Not `not-content`: the block is build-rendered prose (headings, lists, figures) that should read like the page; the script only toggles `hidden`. */}
 <div class="reference" data-reference={topicId}>
-	{entries.length === 0 && <p>No lesson covers this topic yet, so there is nothing to unlock here.</p>}
+	{entries.length === 0 && <p>Aucune leçon ne couvre encore ce thème : rien à débloquer ici.</p>}
 	{
 		entries.map(({ lesson, takeaways, example }) => (
 			<section class="reference-lesson" data-reference-lesson={lesson.id} data-unlocked="false">
 				<h3>{lesson.data.title}</h3>
 				<p class="reference-locked" data-reference-locked>
-					Unlocks when you finish <a href={href(`/${lesson.id}/`)}>{lesson.data.title}</a>.
+					Se débloque quand vous terminez <a href={href(`/${lesson.id}/`)}>{lesson.data.title}</a>.
 				</p>
 				<div class="reference-body" data-reference-body hidden>
-					<h4>Takeaways</h4>
+					<h4>À retenir</h4>
 					{takeaways.length ? (
 						<ol class="reference-takeaways">
 							{takeaways.map((t) => (
@@ -43,23 +43,23 @@ const lang = (s: Segment & { kind: 'code' }) => s.lang || 'text';
 							))}
 						</ol>
 					) : (
-						<p>This lesson has no recap takeaways yet.</p>
+						<p>Cette leçon n’a pas encore de points à retenir.</p>
 					)}
-					<h4>Example</h4>
-					{!example && <p class="reference-no-example">This lesson has no runnable example or prompt block.</p>}
+					<h4>Exemple</h4>
+					{!example && <p class="reference-no-example">Cette leçon n’a ni exemple à exécuter ni bloc de prompt.</p>}
 					{example?.kind === 'predict' && (
 						<div class="reference-example reference-predict">
 							<p class="reference-example-title">
-								<strong>{example.title}</strong> · <a href={href(`/${lesson.id}/#${example.id}`)}>open in the lesson</a>
+								<strong>{example.title}</strong> · <a href={href(`/${lesson.id}/#${example.id}`)}>ouvrir dans la leçon</a>
 							</p>
 							{example.body.map((s) => (s.kind === 'code' ? <Code code={s.code} lang={lang(s)} /> : <div set:html={s.html} />))}
 							{example.answer !== undefined && (
 								<p class="reference-answer">
-									Prints{example.answer.includes('\n') ? ' the lines below' : <>: <code>{example.answer}</code></>}
+									Affiche{example.answer.includes('\n') ? ' les lignes ci-dessous' : <> : <code>{example.answer}</code></>}
 									{example.run && (
 										<>
 											{' '}
-											(verified in CI from <code>site/examples/{example.run}</code>)
+											(vérifié en intégration continue à partir de <code>site/examples/{example.run}</code>)
 										</>
 									)}
 								</p>

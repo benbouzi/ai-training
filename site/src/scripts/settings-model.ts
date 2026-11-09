@@ -23,9 +23,9 @@ export interface CatalogCourse {
 
 /** The status line next to the comfort buttons. */
 export function comfortNote(level: Comfort | undefined): string {
-	if (level === 'less') return 'Set: less comfortable.';
-	if (level === 'more') return 'Set: more comfortable.';
-	return 'Not set.';
+	if (level === 'less') return 'Choisi : moins à l’aise.';
+	if (level === 'more') return 'Choisi : plus à l’aise.';
+	return 'Aucun niveau choisi.';
 }
 
 /** The level after a click on `clicked`: clicking the chosen level again unsets it. */

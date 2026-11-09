@@ -58,7 +58,13 @@ export function remarkCitations({ bibliography }) {
 
 		if (order.length === 0) return;
 		tree.children.push(
-			{ type: 'heading', depth: 2, children: [{ type: 'text', value: 'References' }] },
+			{
+				// French translation: the id stays `references`, the id `lib/page-ids.ts` reserves.
+				type: 'heading',
+				depth: 2,
+				data: { hProperties: { id: 'references' } },
+				children: [{ type: 'text', value: 'Références' }],
+			},
 			{
 				type: 'list',
 				ordered: true,

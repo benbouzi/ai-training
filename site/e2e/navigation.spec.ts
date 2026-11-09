@@ -90,7 +90,7 @@ test('topic, competency and glossary pages render', async ({ page }) => {
 	const courseArea = competency.split('/')[0];
 	await expect(page.locator('[data-competency-course] a')).toHaveAttribute('href', `/ai-training/${courseArea}/`);
 	await page.goto('glossary/');
-	await expect(page.locator('h1')).toHaveText('Glossary');
+	await expect(page.locator('h1')).toHaveText('Glossaire');
 });
 
 test('the landing page points at the first lesson', async ({ page }) => {

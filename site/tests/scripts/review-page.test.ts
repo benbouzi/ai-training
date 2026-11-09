@@ -60,7 +60,7 @@ function page(): void {
 			<div class="review-progress"><div data-bar></div></div>
 			<p data-status role="status"></p>
 			<div data-items></div>
-			<div class="review-actions"><a href="/ai-training/concepts/">Back to the course</a></div>
+			<div class="review-actions"><a href="/ai-training/concepts/">Retour au parcours</a></div>
 		</div>`;
 }
 
@@ -105,7 +105,7 @@ describe('mountReviewPage', () => {
 		page();
 		const fetch = fetchPage(lessonPage());
 		await mountReviewPage(document, fetch);
-		expect(q('[data-items]').textContent).toContain('Nothing due.');
+		expect(q('[data-items]').textContent).toContain('Rien à revoir.');
 		expect(q('[data-bar]').style.width).toBe('100%');
 		expect(q('[data-habits]').hidden).toBe(true);
 		expect(fetch).not.toHaveBeenCalled();
@@ -118,7 +118,7 @@ describe('mountReviewPage', () => {
 		await mountReviewPage(document, fetchPage(lessonPage()));
 		const block = q('[data-habits]');
 		expect(block.hidden).toBe(false);
-		expect(q('.habit-title', block).textContent).toBe('Habit from A');
+		expect(q('.habit-title', block).textContent).toBe('Habitude de la leçon A');
 		expect(q('.habit-text', block).innerHTML).toBe('Do <em>this</em>.');
 		q('[data-habit-done]', block).click();
 		expect(block.querySelector('[data-habit]')).toBeNull();
@@ -130,7 +130,7 @@ describe('mountReviewPage', () => {
 		const fetch = fetchPage(lessonPage());
 		await mountReviewPage(document, fetch);
 		expect(fetch).toHaveBeenCalledWith(HREF);
-		expect(q('[data-status]').textContent).toBe('Item 1 of 2');
+		expect(q('[data-status]').textContent).toBe('Question 1 sur 2');
 		expect(q('[data-bar]').style.width).toBe('0%');
 		const first = q('[data-items] [data-checkpoint]');
 		expect(first.dataset.progressId).toBe(`${LESSON}#q1`);
@@ -149,12 +149,14 @@ describe('mountReviewPage', () => {
 		]);
 		q('.cp-after button', first).click();
 		await vi.waitFor(() => expect(q('[data-items] [data-checkpoint]').dataset.progressId).toBe(`${LESSON}#q2`));
-		expect(q('[data-status]').textContent).toBe('Item 2 of 2');
+		expect(q('[data-status]').textContent).toBe('Question 2 sur 2');
 		const second = q('[data-items] [data-checkpoint]');
 		expect(second.dataset.served).toBeUndefined();
 		answerShown();
 		q('.cp-after button', second).click();
-		await vi.waitFor(() => expect(q('[data-status]').textContent).toBe('Done: 2 items reviewed. 0 more remain due.'));
+		await vi.waitFor(() =>
+			expect(q('[data-status]').textContent).toBe('Terminé : 2 questions revues. Encore 0 à revoir.'),
+		);
 		expect(q<HTMLAnchorElement>('[data-items] a.cp-check').href).toBe(
 			new URL('/ai-training/concepts/', location.href).href,
 		);
@@ -175,6 +177,6 @@ describe('mountReviewPage', () => {
 		const rec = progress.load();
 		expect(rec.reviews[`${LESSON}#gone`]).toBeUndefined();
 		expect(rec.reviews[`${LESSON}#q2`]).toBeUndefined();
-		expect(q('[data-status]').textContent).toBe('Done: 0 items reviewed. 0 more remain due.');
+		expect(q('[data-status]').textContent).toBe('Terminé : 0 question revue. Encore 0 à revoir.');
 	});
 });

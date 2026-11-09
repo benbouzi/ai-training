@@ -47,7 +47,7 @@ export function habitCards(catalog: readonly CatalogLesson[], due: readonly stri
 		const lesson = catalog.find((l) => l.id === lessonId);
 		const habit = lesson?.habits.find((h) => h.id === itemId);
 		if (!lesson || !habit) return [];
-		return [{ progressId, title: `Habit from ${lesson.title}`, html: habit.html }];
+		return [{ progressId, title: `Habitude de la leçon ${lesson.title}`, html: habit.html }];
 	});
 }
 
@@ -92,5 +92,6 @@ export function barWidth(i: number, total: number): string {
 
 /** The status line at the end of a session. `remaining` counts the due items beyond the session cap. */
 export function doneText(answered: number, remaining: number): string {
-	return `Done: ${answered} item${answered === 1 ? '' : 's'} reviewed. ${Math.max(0, remaining)} more remain due.`;
+	const left = Math.max(0, remaining);
+	return `Terminé : ${answered} question${answered > 1 ? 's' : ''} revue${answered > 1 ? 's' : ''}. Encore ${left} à revoir.`;
 }

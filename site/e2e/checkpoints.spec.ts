@@ -98,7 +98,7 @@ test('sort: select a chip, then a bucket; all correct passes', async ({ page }) 
 	const count = await chips.count();
 	expect(count).toBeGreaterThanOrEqual(2);
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText(`${count} items still to place.`);
+	await expect(cp.locator('.cp-feedback')).toHaveText(`Encore ${count} éléments à classer.`);
 	for (let i = 0; i < count; i++) {
 		const chip = chips.first();
 		const bucket = await chip.getAttribute('data-bucket');
@@ -228,7 +228,7 @@ test('multi-choice: exactly the correct boxes, a wrong pick shows its why', asyn
 	await expect(cp.locator('.cp-feedback')).toHaveText('Choisissez d’abord 3 réponses.');
 	await cp.locator('label[data-correct]').first().click();
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('1 of 3 so far, and nothing wrong. 2 more to find.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('1 sur 3 pour l’instant, sans erreur. Encore 2 à trouver.');
 	await cp.locator('label:not([data-correct])').first().click();
 	await cp.locator('.cp-check').click();
 	await expect(cp.locator('.cp-feedback')).toHaveText(/^Clear to whom\?/);
@@ -246,11 +246,11 @@ test('match: one select per row, per-row feedback, rationale on a full pass', as
 	const cp = page.locator('#smallest-access');
 	await expect(cp).toHaveAttribute('data-reviewable', 'true');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('3 rows still to fill.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('Encore 3 lignes à remplir.');
 	const rows = cp.locator('.cp-match-row');
 	for (const row of await rows.all()) await row.locator('select').selectOption('3');
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText('3 rows wrong. Each row says which.');
+	await expect(cp.locator('.cp-feedback')).toHaveText('3 lignes fausses. Chaque ligne indique laquelle.');
 	await expect(rows.first()).toHaveAttribute('data-state', 'wrong');
 	await expect(rows.first().locator('.cp-row-feedback')).toHaveText(/^A reply that is not sent yet/);
 	for (const row of await rows.all()) {

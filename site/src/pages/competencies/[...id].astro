@@ -35,23 +35,23 @@ const references = citations.references();
 const headings = competencyHeadings(alignment.length, references.length);
 ---
 
-<StarlightPage frontmatter={{ title: competency.statement, description: `Competency ${competency.id}` }} headings={headings}>
-	<p><em>{area.name}</em> · competency <code>{competency.id}</code></p>
+<StarlightPage frontmatter={{ title: competency.statement, description: `Compétence ${competency.id}` }} headings={headings}>
+	<p><em>{area.name}</em> · compétence <code>{competency.id}</code></p>
 	<CompetencyCourse area={area} />
 	<p>
-		<strong>Draws on:</strong>{' '}
+		<strong>S’appuie sur :</strong>{' '}
 		{competency.topics.map((t, i) => (<>{i > 0 && ', '}<a href={href(`/topics/${t}/`)}>{topics.find((x) => x.id === t)?.name ?? t}</a></>))}
 	</p>
 
-	<h2 id="objectives">Learning objectives</h2>
+	<h2 id="objectives">Objectifs d’apprentissage</h2>
 	<CompetencyObjectives objectives={objectives} />
 
 	{
 		alignment.length > 0 && (
 			<>
-				<h2 id="alignment">Alignment</h2>
+				<h2 id="alignment">Correspondance avec les référentiels</h2>
 				<table>
-					<thead><tr><th>Framework</th><th>Code</th><th>Asks</th><th>Objectives here</th></tr></thead>
+					<thead><tr><th>Référentiel</th><th>Code</th><th>Exigence</th><th>Objectifs ici</th></tr></thead>
 					<tbody>
 						{alignment.map((a) => (
 							<tr>

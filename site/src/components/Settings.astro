@@ -11,23 +11,25 @@ const catalog = await buildCatalog();
 ---
 
 <div class="not-content settings" data-catalog={JSON.stringify(catalog)}>
-	<h2 id="comfort">Comfort level</h2>
+	<h2 id="comfort">Niveau d’aisance</h2>
 	<p>
-		Applies to the Engineering lessons. It changes what the lesson suggests around the content, never the content itself.{' '}
-		<em>Less comfortable</em> lists the sections a lesson builds on at its top, and puts new review items in your next
-		session. <em>More comfortable</em> shows the extensions at the end of a lesson, and starts new review items at stage 2.
-		Click the chosen level again to unset it.
+		S’applique aux leçons d’Ingénierie. Le réglage change ce que la leçon propose autour du contenu, et le contenu reste le
+		même.{' '}<em>Moins à l’aise</em> affiche en tête de leçon les sections sur lesquelles elle s’appuie, et place les
+		nouvelles questions à revoir dans votre prochaine session. <em>Plus à l’aise</em> affiche les prolongements en fin de
+		leçon, et fait démarrer les nouvelles questions à revoir à l’étape 2. Cliquez de nouveau sur le niveau choisi pour
+		l’annuler.
 	</p>
-	<div class="comfort" role="group" aria-label="Comfort level">
-		<button type="button" data-comfort="less" aria-pressed="false">less comfortable</button>
-		<button type="button" data-comfort="more" aria-pressed="false">more comfortable</button>
+	<div class="comfort" role="group" aria-label="Niveau d’aisance">
+		<button type="button" data-comfort="less" aria-pressed="false">moins à l’aise</button>
+		<button type="button" data-comfort="more" aria-pressed="false">plus à l’aise</button>
 		<span class="comfort-note" data-comfort-note></span>
 	</div>
 
-	<h2 id="review-schedule">Review schedule</h2>
+	<h2 id="review-schedule">Calendrier des révisions</h2>
 	<p>
-		Every checkpoint of a lesson you finished comes back for review at growing intervals: 1, 3, 7, 21, then 60 days. A pass
-		moves an item up a stage; a fail drops it to stage 1. Nudge an item here if that pace is wrong for you.
+		Chaque question de contrôle d’une leçon terminée revient en révision à des intervalles croissants : 1, 3, 7, 21, puis
+		60 jours. Une réussite fait monter la question d’une étape, et un échec la renvoie à l’étape 1. Ajustez une question
+		ici si ce rythme ne vous convient pas.
 	</p>
 	<p class="schedule-due" data-due-now></p>
 	<div class="review-schedule" data-schedule></div>

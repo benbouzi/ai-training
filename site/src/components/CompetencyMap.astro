@@ -8,6 +8,7 @@
 import { getCollection } from 'astro:content';
 import { getAreas } from '@lib/areas';
 import { getCoursePlan } from '@lib/courses';
+import { LEVEL_LABEL, labelOf } from '@lib/labels-fr';
 import { getLessons } from '@lib/lessons';
 import { href } from '@lib/url';
 import { type CompetencyCoverage, orderByCoursePlan } from '@scripts/competency-map-model';
@@ -54,12 +55,12 @@ const coverage: CompetencyCoverage[] = competencies.map((c) => ({
 							<ul class="competency-objectives">
 								{c.objectives.map((o) => (
 									<li>
-										<a class="competency-objective" href={href(`/competencies/${c.id}/#${anchor(o.id)}`)} data-objective={o.id} data-state="untouched">{o.statement} <span class="competency-level">{o.level}</span></a>
+										<a class="competency-objective" href={href(`/competencies/${c.id}/#${anchor(o.id)}`)} data-objective={o.id} data-state="untouched">{o.statement} <span class="competency-level">{labelOf(LEVEL_LABEL, o.level)}</span></a>
 									</li>
 								))}
 							</ul>
 							{c.elsewhere.length > 0 && (
-								<p class="competency-draws">Draws on topics from other areas: {c.elsewhere.map((t, i) => (<>{i > 0 && ', '}<a href={href(`/topics/${t.id}/`)}>{t.name}</a></>))}</p>
+								<p class="competency-draws">S’appuie sur des thèmes d’autres domaines : {c.elsewhere.map((t, i) => (<>{i > 0 && ', '}<a href={href(`/topics/${t.id}/`)}>{t.name}</a></>))}</p>
 							)}
 						</div>
 					))}
@@ -68,9 +69,9 @@ const coverage: CompetencyCoverage[] = competencies.map((c) => ({
 		}
 	</div>
 	<p class="topic-legend">
-		<span data-k="untouched">not started</span>
-		<span data-k="in-progress">in progress</span>
-		<span data-k="finished">finished</span>
+		<span data-k="untouched">pas commencé</span>
+		<span data-k="in-progress">en cours</span>
+		<span data-k="finished">terminé</span>
 	</p>
 </div>
 

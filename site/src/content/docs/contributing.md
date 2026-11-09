@@ -1,29 +1,40 @@
 ---
-title: Contributing
-description: Building the site and contributing to it.
+title: Contribuer
+description: Construire le site et y contribuer.
 ---
 
-This site is built with [Astro Starlight](https://starlight.astro.build/) and
-published to GitHub Pages. Contributions are welcome - see
+Ce site est construit avec [Astro Starlight](https://starlight.astro.build/)
+et publié sur GitHub Pages. Pour une remarque sur la traduction française,
+ouvrez un ticket sur le
+[dépôt de la traduction](https://github.com/benbouzi/ai-training/issues). Pour
+le contenu d’origine, le fichier
 [CONTRIBUTING.md](https://github.com/schubergphilis/ai-training/blob/main/CONTRIBUTING.md)
-in the repository root.
+du dépôt d’origine explique comment contribuer.
 
-## The site
+## Le site
 
-Tools are pinned in `.mise.toml`. Run `mise install` once. Then:
+Les outils sont fixés dans `.mise.toml`. Lancez `mise install` une fois,
+puis :
 
-- `mise run site-install` - install the site dependencies (bun).
-- `mise run site-dev` - start the live-reloading dev server.
-- `mise run site-build` - build the static site into `site/dist`.
-- `mise run site-check` - run the Astro type/content check.
-- `mise run lint` - run the prek hooks over every file, plus `actionlint`.
-- `mise run ci` - the full gate: install, lint, check, build. CI runs the same.
+- `mise run site-install` : installe les dépendances du site (bun).
+- `mise run site-dev` : démarre le serveur de développement, qui se recharge à
+  chaque modification.
+- `mise run site-build` : construit le site statique dans `site/dist`.
+- `mise run site-check` : lance la vérification des types et du contenu
+  d’Astro.
+- `mise run lint` : lance les hooks prek sur tous les fichiers, plus
+  `actionlint`.
+- `mise run ci` : le contrôle complet (installation, lint, vérification,
+  construction). L’intégration continue lance le même.
 
-Content is in `site/src/content/docs/`, and static assets are in `site/public/`.
+Le contenu se trouve dans `site/src/content/docs/`, et les fichiers statiques
+dans `site/public/`.
 
 ## Conventions
 
-Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
-Git hooks (formatting, linting, link checking, secret scanning, commit-message
-linting) are managed with [prek](https://prek.j178.dev); install them once per
-clone with `prek install -t pre-commit -t commit-msg -t pre-push`.
+Les messages de commit suivent les
+[Conventional Commits](https://www.conventionalcommits.org/). Les hooks Git
+(mise en forme, lint, vérification des liens, détection de secrets, contrôle
+des messages de commit) sont gérés avec [prek](https://prek.j178.dev).
+Installez-les une fois par clone avec
+`prek install -t pre-commit -t commit-msg -t pre-push`.

@@ -86,8 +86,8 @@ describe('feedback', () => {
 		expect(selfGradeFeedback(false, 'repair').text).toContain('Partielle');
 	});
 	it('sort: unplaced items block grading', () => {
-		expect(sortFeedback(1, true)).toEqual({ kind: 'note', text: '1 item still to place.' });
-		expect(sortFeedback(2, false).text).toBe('2 items still to place.');
+		expect(sortFeedback(1, true)).toEqual({ kind: 'note', text: 'Encore 1 élément à classer.' });
+		expect(sortFeedback(2, false).text).toBe('Encore 2 éléments à classer.');
 		expect(sortFeedback(0, true).kind).toBe('ok');
 		expect(sortFeedback(0, false).text).toBe('Certains éléments sont dans la mauvaise case.');
 	});
@@ -113,9 +113,9 @@ describe('skills check texts', () => {
 		expect(skillsCheckOffer(2)).toBe('Répondre à 2 questions');
 	});
 	it('counts passes while open, then sums up', () => {
-		expect(skillsCheckNote(1, 1, 2)).toBe('1 réussie(s) sur 1 pour l’instant.');
-		expect(skillsCheckNote(2, 2, 2)).toBe('2 réussie(s) sur 2. Objectifs couverts. Passez à « À retenir ».');
-		expect(skillsCheckNote(2, 1, 2)).toBe('1 réussie(s) sur 2. Les manques sont enseignés plus bas.');
+		expect(skillsCheckNote(1, 1, 2)).toBe('1 sur 1 réussie pour l’instant.');
+		expect(skillsCheckNote(2, 2, 2)).toBe('2 sur 2 réussies. Objectifs couverts. Passez à « À retenir ».');
+		expect(skillsCheckNote(2, 1, 2)).toBe('1 sur 2 réussie. Les manques sont enseignés plus bas.');
 	});
 });
 
@@ -140,7 +140,7 @@ describe('multiChoiceVerdict', () => {
 		expect(multiChoiceVerdict(3, 1, 1, undefined).feedback.text).toBe('L’un de vos choix n’est pas juste.');
 		expect(multiChoiceVerdict(3, 1, 0, undefined)).toEqual({
 			ok: false,
-			feedback: { kind: 'nope', text: '1 of 3 so far, and nothing wrong. 2 more to find.' },
+			feedback: { kind: 'nope', text: '1 sur 3 pour l’instant, sans erreur. Encore 2 à trouver.' },
 		});
 		expect(multiChoiceVerdict(3, 3, 0, undefined)).toEqual({ ok: true, feedback: { kind: 'ok', text: 'Juste.' } });
 	});
@@ -148,13 +148,16 @@ describe('multiChoiceVerdict', () => {
 
 describe('matchVerdict', () => {
 	it('blocks on empty rows, counts wrong rows, and shows the rationale on a full pass', () => {
-		expect(matchVerdict(1, 0, 'r')).toEqual({ ok: null, feedback: { kind: 'note', text: '1 row still to fill.' } });
-		expect(matchVerdict(3, 0, 'r').feedback.text).toBe('3 rows still to fill.');
+		expect(matchVerdict(1, 0, 'r')).toEqual({
+			ok: null,
+			feedback: { kind: 'note', text: 'Encore 1 ligne à remplir.' },
+		});
+		expect(matchVerdict(3, 0, 'r').feedback.text).toBe('Encore 3 lignes à remplir.');
 		expect(matchVerdict(0, 1, 'r')).toEqual({
 			ok: false,
-			feedback: { kind: 'nope', text: '1 row wrong. Each row says which.' },
+			feedback: { kind: 'nope', text: '1 ligne fausse. Chaque ligne indique laquelle.' },
 		});
-		expect(matchVerdict(0, 2, 'r').feedback.text).toBe('2 rows wrong. Each row says which.');
+		expect(matchVerdict(0, 2, 'r').feedback.text).toBe('2 lignes fausses. Chaque ligne indique laquelle.');
 		expect(matchVerdict(0, 0, 'Because.')).toEqual({ ok: true, feedback: { kind: 'ok', text: 'Juste. Because.' } });
 		expect(matchVerdict(0, 0, '').feedback.text).toBe('Juste.');
 	});
@@ -162,7 +165,7 @@ describe('matchVerdict', () => {
 
 describe('historyDisplay', () => {
 	it('says when an item was never answered', () => {
-		expect(historyDisplay([])).toBe('not answered yet');
+		expect(historyDisplay([])).toBe('pas encore répondu');
 	});
 	it('counts the answers and names the last one with its day', () => {
 		expect(
@@ -170,6 +173,6 @@ describe('historyDisplay', () => {
 				{ at: '2026-03-08', result: 'fail' },
 				{ at: '2026-03-10', result: 'pass' },
 			]),
-		).toBe('2 answered, last pass on 2026-03-10');
+		).toBe('2 réponses, la dernière réussie le 2026-03-10');
 	});
 });

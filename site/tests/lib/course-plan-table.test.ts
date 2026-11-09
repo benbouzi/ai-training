@@ -68,9 +68,9 @@ describe('afterTitles', () => {
 describe('planSummary', () => {
 	it('counts entries and live entries', () => {
 		expect(planSummary([entry({ id: 'a/one', status: 'live' }), entry({ id: 'a/two' })])).toBe(
-			'Lesson plan (2 lessons, 1 live)',
+			'Plan du parcours (2 leçons, 1 en ligne)',
 		);
-		expect(planSummary([entry({ id: 'a/one' })])).toBe('Lesson plan (1 lesson, 0 live)');
+		expect(planSummary([entry({ id: 'a/one' })])).toBe('Plan du parcours (1 leçon, 0 en ligne)');
 	});
 });
 
@@ -83,7 +83,7 @@ describe('exerciseKinds', () => {
 					{ kind: 'judge', brief: 'b' },
 				],
 			}),
-		).toBe('do, judge');
+		).toBe('faire, juger');
 		expect(exerciseKinds({ exercises: [] })).toBe('');
 	});
 });

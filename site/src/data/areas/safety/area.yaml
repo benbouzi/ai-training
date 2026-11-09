@@ -1,4 +1,4 @@
 id: safety
-name: Safety
+name: Sécurité
 group: foundations
-description: Using AI safely, and judging the risk of letting an agent act.
+description: Utiliser l’IA en sécurité, et juger le risque de laisser un agent agir.

@@ -36,9 +36,9 @@ function render() {
 	root.dataset.catalog = JSON.stringify(catalog);
 	root.innerHTML = `
 		<div data-overview></div>
-		<button type="button" data-export>Export JSON</button>
+		<button type="button" data-export>Exporter en JSON</button>
 		<input type="file" data-import />
-		<button type="button" data-reset>Reset all</button>
+		<button type="button" data-reset>Tout réinitialiser</button>
 		<span data-message></span>
 		<pre data-dump></pre>`;
 	document.body.replaceChildren(root);
@@ -81,11 +81,11 @@ describe('mountProgressOverview', () => {
 		expect(q('.progress-lesson').dataset.state).toBe('finished');
 		expect(q('.progress-lesson a').getAttribute('href')).toBe('/ai-training/concepts/a/');
 		const squares = [...document.querySelectorAll<HTMLElement>('.cps span')];
-		expect(squares.map((s) => s.title)).toEqual(['c1: passed', 'c2: not attempted']);
+		expect(squares.map((s) => s.title)).toEqual(['c1 : réussie', 'c2 : pas tentée']);
 		expect(squares.map((s) => s.dataset.state)).toEqual(['passed', 'none']);
 		expect(q('[data-progress-habit="concepts/a#h1"] .progress-habit-text').innerHTML).toBe('Say it <em>out loud</em>.');
-		expect(q('[data-progress-review="concepts"]').textContent).toBe('Review: nothing due yet');
-		expect(cards[1]?.textContent).toContain('No lessons yet.');
+		expect(q('[data-progress-review="concepts"]').textContent).toBe('Révision : rien à revoir pour l’instant');
+		expect(cards[1]?.textContent).toContain('Pas encore de leçon.');
 		expect(document.querySelector('[data-progress-review="safety"]')).toBeNull();
 		expect(q('[data-dump]').textContent).toContain('"concepts/a"');
 	});
@@ -109,7 +109,7 @@ describe('mountProgressOverview', () => {
 		vi.stubGlobal('confirm', () => true);
 		q('[data-reset]').click();
 		expect(progress.load().lessons['concepts/a']).toBeUndefined();
-		expect(q('[data-message]').textContent).toBe('Progress reset.');
+		expect(q('[data-message]').textContent).toBe('Progression réinitialisée.');
 	});
 
 	it('exports the record as a dated JSON download', () => {
@@ -134,11 +134,11 @@ describe('mountProgressOverview', () => {
 		other.lessons['concepts/a'] = { state: 'finished', at: '2026-01-01' };
 		vi.stubGlobal('confirm', () => true);
 		importFile(progress.exportJson(other));
-		await vi.waitFor(() => expect(q('[data-message]').textContent).toBe('Imported.'));
+		await vi.waitFor(() => expect(q('[data-message]').textContent).toBe('Importé.'));
 		expect(progress.load().lessons['concepts/a']?.state).toBe('finished');
 
 		importFile('{"version": 9999}');
-		await vi.waitFor(() => expect(q('[data-message]').textContent).not.toBe('Imported.'));
+		await vi.waitFor(() => expect(q('[data-message]').textContent).not.toBe('Importé.'));
 	});
 
 	it('leaves the record alone when the import is not confirmed or has no file', async () => {

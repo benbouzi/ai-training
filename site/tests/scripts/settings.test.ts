@@ -67,21 +67,21 @@ describe('mountSettings', () => {
 	it('toggles the comfort level and shows it', () => {
 		render();
 		mountSettings();
-		expect(q('[data-comfort-note]').textContent).toBe('Not set.');
+		expect(q('[data-comfort-note]').textContent).toBe('Aucun niveau choisi.');
 		q('[data-comfort="less"]').click();
 		expect(progress.load().comfort).toBe('less');
 		expect(q('[data-comfort="less"]').getAttribute('aria-pressed')).toBe('true');
-		expect(q('[data-comfort-note]').textContent).toBe('Set: less comfortable.');
+		expect(q('[data-comfort-note]').textContent).toBe('Choisi : moins à l’aise.');
 		q('[data-comfort="less"]').click();
 		expect(progress.load().comfort).toBeUndefined();
-		expect(q('[data-comfort-note]').textContent).toBe('Not set.');
+		expect(q('[data-comfort-note]').textContent).toBe('Aucun niveau choisi.');
 	});
 
 	it('says nothing is scheduled or due for a new learner', () => {
 		render();
 		mountSettings();
-		expect(q('[data-due-now]').textContent).toBe('Nothing due right now.');
-		expect(q('.review-empty').textContent).toContain('Nothing scheduled');
+		expect(q('[data-due-now]').textContent).toBe('Rien à revoir pour l’instant.');
+		expect(q('.review-empty').textContent).toContain('Rien de prévu');
 	});
 
 	it('lists scheduled items, links due courses and moves a stage on a click', () => {
@@ -101,9 +101,9 @@ describe('mountSettings', () => {
 		expect(first.querySelector('.schedule-name')?.textContent).toBe('First check (Lesson A)');
 		expect(first.querySelector('.schedule-name')?.getAttribute('href')).toBe('/ai-training/concepts/a/#c1');
 		expect(first.querySelectorAll('[data-on="true"]')).toHaveLength(1);
-		expect(first.querySelector('.schedule-history')?.textContent).toBe('not answered yet');
+		expect(first.querySelector('.schedule-history')?.textContent).toBe('pas encore répondu');
 		expect(q('[data-review-item="concepts/gone"] .schedule-name').textContent).toBe('concepts/gone');
-		expect(q('[data-due-now]').textContent).toBe('Due now: Concepts (1).');
+		expect(q('[data-due-now]').textContent).toBe('À revoir maintenant : Concepts (1).');
 		expect(q('[data-due-now] a').getAttribute('href')).toBe('/ai-training/concepts/review/');
 
 		const sooner = first.querySelector<HTMLButtonElement>('.cp-sooner');
@@ -126,6 +126,6 @@ describe('mountSettings', () => {
 			for (const item of Object.values(r.reviews)) item.due = progress.today();
 		});
 		mountSettings();
-		expect(q('[data-due-now]').textContent).toBe('Due now: Concepts (1), Safety (1).');
+		expect(q('[data-due-now]').textContent).toBe('À revoir maintenant : Concepts (1), Safety (1).');
 	});
 });

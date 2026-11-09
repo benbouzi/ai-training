@@ -59,7 +59,7 @@ describe('mountLearnersReference', () => {
 		finish('concepts/a');
 		expect(root.querySelector<HTMLElement>('[data-reference-empty]')?.hidden).toBe(true);
 		const li = root.querySelector('[data-reference-area="concepts"] [data-reference-finished="concepts/a"]');
-		expect(li?.textContent).toBe('A · reference: T, U');
+		expect(li?.textContent).toBe('A · référence : T, U');
 		const hrefs = [...(li?.querySelectorAll('a') ?? [])].map((a) => a.getAttribute('href'));
 		expect(hrefs).toEqual([
 			'/ai-training/concepts/a/',

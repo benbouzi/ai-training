@@ -69,10 +69,10 @@ describe('createCitations divergences from remark', () => {
 describe('referenceHtml', () => {
 	it('renders author, linked title, container, type and key, and skips what the entry lacks', () => {
 		expect(referenceHtml('AEC-02', bibliography['AEC-02'])).toBe(
-			'A. Osmani. <a href="https://example.com/aec"><em>How agents think</em></a>. Course. <code>AEC-02</code>',
+			'A. Osmani. <a href="https://example.com/aec"><em>How agents think</em></a>. Cours. <code>AEC-02</code>',
 		);
 		expect(referenceHtml('Brilliant TAS', bibliography['Brilliant TAS'])).toBe(
-			'<em>Taste</em>. Brilliant. Reference. <code>Brilliant TAS</code>',
+			'<em>Taste</em>. Brilliant. Référence. <code>Brilliant TAS</code>',
 		);
 	});
 	it('escapes the entry text and skips a container equal to the title', () => {
@@ -112,6 +112,6 @@ describe('competencyHeadings', () => {
 		expect(competencyHeadings(2, 1).map((h) => h.slug)).toEqual(['objectives', 'alignment', 'references']);
 		expect(competencyHeadings(0, 1).map((h) => h.slug)).toEqual(['objectives', 'references']);
 		expect(competencyHeadings(1, 0).map((h) => h.slug)).toEqual(['objectives', 'alignment']);
-		expect(competencyHeadings(0, 0)).toEqual([{ depth: 2, slug: 'objectives', text: 'Learning objectives' }]);
+		expect(competencyHeadings(0, 0)).toEqual([{ depth: 2, slug: 'objectives', text: 'Objectifs d’apprentissage' }]);
 	});
 });

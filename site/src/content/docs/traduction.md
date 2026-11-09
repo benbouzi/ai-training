@@ -39,7 +39,11 @@ d’une page à l’autre.
 
 ## État de la traduction
 
-La traduction avance section par section. La section Concepts est traduite.
-Les autres sections s’affichent encore en anglais et seront traduites
-ensuite. En cas de doute sur un passage, la
+La traduction avance section par section. Sont traduits : la section
+Concepts, la page d’accueil, l’interface des leçons, les pages des parcours,
+des thèmes et des compétences, les deux cartes, le glossaire, les pages de
+progression, de référence, de révision et de réglages, ainsi que les pages
+Contribuer et Rédiger des pages. Les cinq autres sections, la page À propos et
+deux guides s’affichent encore en anglais et seront traduits ensuite. En cas
+de doute sur un passage, la
 [version originale](https://schubergphilis.github.io/ai-training/) fait foi.

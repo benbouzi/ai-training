@@ -183,10 +183,17 @@ export function referenceParts(key, entry) {
 	parts.push({ type: 'title', value: entry.title, url: entry.url ?? null });
 	parts.push({ type: 'text', value: '.' });
 	if (entry.container && entry.container !== entry.title) parts.push({ type: 'text', value: ` ${entry.container}.` });
-	if (entry.type) parts.push({ type: 'text', value: ` ${capitalize(entry.type)}.` });
+	if (entry.type) parts.push({ type: 'text', value: ` ${capitalize(TYPE_LABEL[entry.type] ?? entry.type)}.` });
 	parts.push({ type: 'text', value: ' ' }, { type: 'code', value: key });
 	return parts;
 }
+
+/**
+ * French translation: the type of a source as the reference shows it. The
+ * bibliography keeps the English value, which the schema checks.
+ * @type {Record<string, string>}
+ */
+const TYPE_LABEL = { book: 'livre', course: 'cours', paper: 'article', reference: 'référence', video: 'vidéo' };
 
 /** @param {string} s */
 function capitalize(s) {

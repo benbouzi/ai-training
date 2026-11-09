@@ -19,14 +19,14 @@ const base: Overall = {
 
 describe('overallText', () => {
 	it('gives the totals before any progress', () => {
-		expect(overallText(base)).toBe('2 lessons and 5 checkpoints across six courses. Nothing started yet.');
+		expect(overallText(base)).toBe('2 leçons et 5 questions de contrôle dans six parcours. Rien n’est commencé.');
 	});
 	it('counts finished and passed, and adds the in-progress count only when there is one', () => {
 		expect(overallText({ ...base, any: true, finished: 1, passed: 2 })).toBe(
-			'1 of 2 lessons finished; 2 of 5 checkpoints passed.',
+			'Leçons terminées : 1 sur 2. Questions de contrôle réussies : 2 sur 5.',
 		);
 		expect(overallText({ ...base, any: true, started: 1 })).toBe(
-			'0 of 2 lessons finished, 1 in progress; 0 of 5 checkpoints passed.',
+			'Leçons terminées : 0 sur 2, 1 en cours. Questions de contrôle réussies : 0 sur 5.',
 		);
 	});
 });
@@ -38,25 +38,25 @@ describe('continueLink', () => {
 	it('points at the next unfinished lesson', () => {
 		expect(continueLink({ ...base, any: true, next: b }, '/ai-training')).toEqual({
 			href: '/ai-training/concepts/b/',
-			text: 'Continue with: Lesson B',
+			text: 'Continuer avec : Lesson B',
 		});
 	});
 	it('with everything skipped, continues with the first skipped lesson', () => {
 		expect(continueLink({ ...base, any: true, next: null, firstSkipped: a, skipped: 2 }, '')).toEqual({
 			href: '/concepts/a/',
-			text: 'Continue with: Lesson A',
+			text: 'Continuer avec : Lesson A',
 		});
 	});
 	it('with the rest finished, names the skipped count', () => {
 		expect(continueLink({ ...base, any: true, next: null, firstSkipped: a, finished: 1, skipped: 1 }, '')).toEqual({
 			href: '/concepts/a/',
-			text: 'All lessons finished, 1 skipped',
+			text: 'Toutes les leçons sont terminées, 1 passée',
 		});
 	});
 	it('with every lesson finished, points at the topic map', () => {
 		expect(continueLink({ ...base, any: true, next: null, finished: 2 }, '')).toEqual({
 			href: '/map/',
-			text: 'All lessons finished: see the topic map',
+			text: 'Toutes les leçons sont terminées : voir la carte des thèmes',
 		});
 	});
 });

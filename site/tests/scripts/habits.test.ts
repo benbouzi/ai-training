@@ -83,7 +83,7 @@ describe('bindHabit', () => {
 		expect(el.dataset.state).toBe('retired');
 		expect(actions(el).hidden).toBe(true);
 		expect(results(el).hidden).toBe(false);
-		expect(results(el).querySelector('li')?.textContent).toBe(`${today()}: done`);
+		expect(results(el).querySelector('li')?.textContent).toBe(`${today()} : fait`);
 		expect(results(el).querySelector('li')?.dataset.result).toBe('done');
 		expect(seen).toEqual([]);
 	});

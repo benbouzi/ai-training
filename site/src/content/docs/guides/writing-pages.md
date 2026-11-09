@@ -1,61 +1,64 @@
 ---
-title: Writing pages
-description: Add Markdown pages, wire them into the sidebar, and link between them.
+title: Rédiger des pages
+description: Ajouter des pages Markdown, les placer dans la barre latérale et les relier entre elles.
 ---
 
-Pages are Markdown (`.md`) or MDX (`.mdx`) files under
-`site/src/content/docs/`. The path under that directory becomes the URL, and
-each page needs at least a `title` in its frontmatter.
+Les pages sont des fichiers Markdown (`.md`) ou MDX (`.mdx`) placés sous
+`site/src/content/docs/`. Le chemin sous ce dossier devient l’adresse de la
+page, et chaque page a au minimum un `title` dans son en-tête (frontmatter).
 
-## Add a page
+## Ajouter une page
 
-Create `site/src/content/docs/guides/my-page.md`:
+Créez `site/src/content/docs/guides/ma-page.md` :
 
 ```markdown
 ---
-title: My page
-description: A short summary used for SEO and social cards.
+title: Ma page
+description: Un court résumé, utilisé pour le référencement et les cartes de partage.
 ---
 
-Your content here.
+Votre contenu ici.
 ```
 
-That page is served at `/guides/my-page/` (under the deploy base path).
+Cette page est servie à l’adresse `/guides/ma-page/` (sous le chemin de base
+du déploiement).
 
-## Wire it into the sidebar
+## La placer dans la barre latérale
 
-The sidebar is defined explicitly in `site/astro.config.mjs`. Add your page to
-a group's `items`:
+La barre latérale est définie explicitement dans `site/astro.config.mjs`.
+Ajoutez votre page aux `items` d’un groupe :
 
 ```js
 {
-	label: 'Authoring',
+	label: 'Contribuer',
 	items: [
-		{ slug: 'guides/writing-pages', label: 'Writing pages' },
-		{ slug: 'guides/my-page', label: 'My page' },
+		{ slug: 'guides/writing-pages', label: 'Rédiger des pages' },
+		{ slug: 'guides/ma-page', label: 'Ma page' },
 	],
 },
 ```
 
-## Links and images
+## Liens et images
 
-Write internal links and image sources **root-relative**
-(`/guides/my-page/`, `/diagram.png`) rather than with the deploy base path.
-A small rehype plugin in `astro.config.mjs` prepends the base path
-(`/ai-training`) at render time. This lets the same Markdown work in
-local dev and on GitHub Pages.
+Écrivez les liens internes et les sources d’images **relatifs à la racine**
+(`/guides/ma-page/`, `/schema.png`), sans le chemin de base du déploiement. Un
+petit plugin rehype dans `astro.config.mjs` ajoute le chemin de base
+(`/ai-training`) au moment du rendu. Le même Markdown fonctionne ainsi en
+développement local et sur GitHub Pages.
 
 ```markdown
-See the [contributing page](/contributing/).
+Voir la [page Contribuer](/contributing/).
 
-![A diagram](/diagram.png)
+![Un schéma](/schema.png)
 ```
 
-The one exception is the landing page's hero action links and any raw HTML
-`<a>` tags, which are used verbatim and must include the base path.
+Les liens d’action de l’en-tête de la page d’accueil et les balises HTML `<a>`
+brutes font exception : ils sont utilisés tels quels et doivent inclure le
+chemin de base.
 
-## The landing page
+## La page d’accueil
 
-`index.mdx` uses Starlight's `splash` template to render a hero and card grid
-instead of the usual docs layout. It is a separate landing page - not the first
-sidebar entry - so the sidebar starts with your actual content.
+`index.mdx` utilise le gabarit `splash` de Starlight, qui affiche un en-tête et
+une grille de cartes à la place de la mise en page habituelle de la
+documentation. C’est une page d’accueil séparée, et la barre latérale commence
+directement par le contenu.
