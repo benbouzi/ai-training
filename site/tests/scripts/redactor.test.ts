@@ -52,7 +52,7 @@ describe('mountRedactor', () => {
 		expect(output.hidden).toBe(true);
 		press(root);
 		expect(output.hidden).toBe(false);
-		expect(output.textContent).toContain('From: Person 1 <[email]>');
+		expect(output.textContent).toContain('De : Personne 1 <[e-mail]>');
 		expect(part(root, '.rd-leaks').textContent).toBe('');
 		expect(part(root, '.rd-error').textContent).toBe('');
 	});
@@ -60,27 +60,29 @@ describe('mountRedactor', () => {
 		const root = await show({ text: `${DIR}partial.txt`, watch: `${DIR}watch.txt` });
 		mountRedactor(root);
 		press(root);
-		expect(part(root, '.rd-leaks').textContent).toBe('still identifying: initials, account number, city, technician');
-		type(root, '.rd-map', 'R. A. => Person 1\nNB-4471-0928 => [account number]\nZwolle => [city]');
+		expect(part(root, '.rd-leaks').textContent).toBe(
+			'identifie encore : initiales, numéro de compte, ville, technicien',
+		);
+		type(root, '.rd-map', 'R. A. => Personne 1\nNB-4471-0928 => [numéro de compte]\nZwolle => [ville]');
 		expect(part(root, '.rd-leaks').textContent).toBe('');
 		press(root);
-		expect(part(root, '.rd-leaks').textContent).toBe('still identifying: technician');
-		type(root, '.rd-map', `${part<HTMLTextAreaElement>(root, '.rd-map').value}\nTijmen Boskoorn => Person 2`);
+		expect(part(root, '.rd-leaks').textContent).toBe('identifie encore : technicien');
+		type(root, '.rd-map', `${part<HTMLTextAreaElement>(root, '.rd-map').value}\nTijmen Boskoorn => Personne 2`);
 		press(root);
-		expect(part(root, '.rd-leaks').textContent).toBe('still identifying: none of the listed details');
+		expect(part(root, '.rd-leaks').textContent).toBe('identifie encore : aucun des détails listés');
 	});
 	it('restores the reply with the map', async () => {
 		const root = await show({ action: 'restore', text: `${DIR}reply.txt`, map: `${DIR}email-map.txt` });
 		mountRedactor(root);
 		press(root);
-		expect(part(root, '.rd-output').textContent?.startsWith('Dear Renske Adelhof,')).toBe(true);
+		expect(part(root, '.rd-output').textContent?.startsWith('Bonjour Renske Adelhof,')).toBe(true);
 	});
 	it('shows the error for a map line it cannot read, and clears it on an edit', async () => {
 		const root = await show({ text: `${DIR}ticket.txt` });
 		mountRedactor(root);
-		type(root, '.rd-map', 'Renske Adelhof -> Person 1');
+		type(root, '.rd-map', 'Renske Adelhof -> Personne 1');
 		press(root);
-		expect(part(root, '.rd-error').textContent).toBe("map line without ' => ': Renske Adelhof -> Person 1");
+		expect(part(root, '.rd-error').textContent).toBe("ligne de la table sans ' => ' : Renske Adelhof -> Personne 1");
 		expect(part<HTMLPreElement>(root, '.rd-output').hidden).toBe(true);
 		type(root, '.rd-text', 'x');
 		expect(part(root, '.rd-error').textContent).toBe('');
@@ -110,7 +112,7 @@ describe('mountRedactors', () => {
 		const [first, second] = [...document.querySelectorAll<HTMLElement>(ROOT_SELECTOR)] as [HTMLElement, HTMLElement];
 		press(second);
 		expect(part(first, '.rd-output').textContent).toBe('');
-		expect(part(second, '.rd-output').textContent).toContain('Person 2');
+		expect(part(second, '.rd-output').textContent).toContain('Personne 2');
 		document.body.innerHTML = '<p>no redactor</p>';
 		expect(mountRedactors(document)).toBe(0);
 	});

@@ -103,8 +103,8 @@ test('the redactor prints what the page shows for the email, the colleague versi
 	const email = page.locator('.redactor[data-action=redact]').filter({ has: page.locator('.rd-map:not(:empty)') });
 	const reply = page.locator('.redactor[data-action=restore]');
 	for (const [widget, shown] of [
-		[email, 'From: Person 1 <[email]>'],
-		[reply, 'Dear Renske Adelhof,'],
+		[email, 'De : Personne 1 <[e-mail]>'],
+		[reply, 'Bonjour Renske Adelhof,'],
 	] as const) {
 		await expect(widget).toHaveCount(1);
 		await expect(widget.locator('.rd-output')).toBeHidden();
@@ -113,12 +113,12 @@ test('the redactor prints what the page shows for the email, the colleague versi
 	}
 	const partial = page.locator('.redactor').filter({ has: page.locator('.rd-watch') });
 	await expect(partial).toHaveCount(1);
-	await partial.getByRole('button', { name: 'Redact' }).click();
-	await expect(partial.locator('.rd-leaks')).toHaveText((await fence('still identifying:')).join('\n'));
-	await partial.locator('.rd-map').fill('R. A. => Person 1\nNB-4471-0928 => [account number]\nZwolle => [city]');
+	await partial.getByRole('button', { name: 'Masquer' }).click();
+	await expect(partial.locator('.rd-leaks')).toHaveText((await fence('identifie encore :')).join('\n'));
+	await partial.locator('.rd-map').fill('R. A. => Personne 1\nNB-4471-0928 => [numéro de compte]\nZwolle => [ville]');
 	await expect(partial.locator('.rd-leaks')).toBeEmpty();
-	await partial.getByRole('button', { name: 'Redact' }).click();
-	await expect(partial.locator('.rd-leaks')).toHaveText('still identifying: technician');
+	await partial.getByRole('button', { name: 'Masquer' }).click();
+	await expect(partial.locator('.rd-leaks')).toHaveText('identifie encore : technicien');
 });
 
 test('the claim checker prints the report the page shows for the first summary', async ({ page }) => {

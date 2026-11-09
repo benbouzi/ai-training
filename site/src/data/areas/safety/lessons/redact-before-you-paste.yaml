@@ -1,9 +1,9 @@
 id: safety/redact-before-you-paste
-title: Redacting a document before you paste it
+title: Masquer un document avant de le coller
 description: >-
-  Take the names, numbers and addresses a task does not need out of a document before it goes into
-  an AI tool, check that the task still works on what is left, and put the values back with a map
-  that never left your computer.
+  Retirer d’un document les noms, les numéros et les adresses dont la tâche n’a pas besoin avant
+  qu’il entre dans un outil d’IA, vérifier que la tâche fonctionne toujours sur ce qui reste, et
+  remettre les valeurs grâce à une table de correspondance qui n’a jamais quitté votre ordinateur.
 mode: tutorial
 covers: safety/responsible-use
 serves: [safety/handles-data-safely/decides-what-to-share]
@@ -11,18 +11,22 @@ introduces: []
 assumes:
   - objective: safety/handles-data-safely/decides-what-to-share
     lesson: safety/responsible-use
-    section: what-may-go-in-four-tiers
+    section: ce-qui-peut-y-entrer--quatre-niveaux
 extends-to:
-  - label: "AI Foundations, module 5: OpenAI's short guidance on what not to share with ChatGPT (OpenAI Academy, free account)"
+  - label: >-
+      AI Foundations, module 5 : les conseils courts d’OpenAI sur ce qu’il ne faut pas partager avec
+      ChatGPT (OpenAI Academy, compte gratuit, en anglais)
     href: https://academy.openai.com/public/courses/ai-foundations-dnq5w
 after: [safety/responsible-use]
-shorts: [Controller and processor in one page, Anonymized data can be re-identified]
+shorts: [Responsable du traitement et sous-traitant en une page, Des données anonymisées peuvent
+      être réidentifiées]
 exercise:
   kind: do
   brief: >-
-    Redact the full support ticket the lesson's email came from down to what the task needs, in the
-    redaction box on the page, and compare the map with one that gets there. Stretch: do the same for
-    one document of your own, on paper, without pasting it anywhere.
+    Masquez le ticket complet d’où vient l’e-mail de la leçon jusqu’à ne garder que ce dont la tâche
+    a besoin, dans la zone de masquage de la page, et comparez votre table avec une table qui y
+    parvient. Pour aller plus loin : faites la même chose pour un document à vous, sur papier, sans
+    le coller nulle part.
 sources: [Academy ai-fluency-framework-foundations]
 minutes: 15
 proofs:

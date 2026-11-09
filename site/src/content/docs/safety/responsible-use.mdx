@@ -1,447 +1,475 @@
 import { Choice, Scenario, Sort, Repair, Pitfall, Exercise, Recap, MultiChoice, Match } from '@components/lesson';
 
-Most people who use an AI tool at work picked it themselves. It was free,
-or a colleague recommended it, or it came with a product they already had.
-Nobody asked, and nobody reviewed it. Security teams call this **shadow
-AI**. The term sounds like an accusation, but it only describes how most
-tools arrive. The risk is in what goes into them.
-In this lesson we follow a prompt
-from your screen to the places it ends up. We then sort the data you handle
-into four tiers, and we set the two boundaries that separate trying a tool
-from using it. We end with two habits for the output side: saying that AI
-helped, and checking what the output was copied from.
+La plupart des personnes qui utilisent un outil d’IA au travail l’ont choisi
+elles-mêmes. Il était gratuit, un collègue l’a recommandé, ou il venait avec
+un produit qu’elles avaient déjà. Personne n’a rien demandé, et personne ne
+l’a examiné. Les équipes de sécurité appellent cela l’**IA fantôme** (shadow
+AI). Le terme sonne comme une accusation. Il décrit pourtant simplement la
+façon dont arrivent la plupart des outils. Le risque tient à ce qu’on y met.
+Dans cette leçon, nous suivons un prompt depuis votre écran jusqu’aux
+endroits où il aboutit. Nous classons ensuite les données que vous manipulez
+en quatre niveaux, et nous fixons les deux limites qui séparent l’essai d’un
+outil de son usage réel. Nous terminons par deux habitudes pour la sortie :
+dire que l’IA a aidé, et vérifier d’où la sortie a été copiée.
 
-The lesson doesn't depend on which product you use. Have the terms page
-or trust page of a tool you use nearby, because the exercise at the end
-asks you to look four facts up in it.
+La leçon vaut quel que soit le produit que vous utilisez. Gardez sous la main
+la page des conditions d’utilisation ou la page de confiance (trust page)
+d’un outil que vous utilisez, car l’exercice final vous demande d’y chercher
+quatre informations.
 
-## Can I...?
+## Est-ce que je peux… ?
 
-Start with your gut. Assume the tool is one your organization has already
-approved. Sort these requests before reading on, and come back after the
-lesson to see whether you would move any of them.
+Commencez par votre intuition. Supposez que l’outil a déjà été approuvé par
+votre organisation. Classez ces demandes avant de lire la suite, et revenez-y
+après la leçon pour voir si vous en déplaceriez certaines.
 
 <Sort id="can-i-sort" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['data-privacy', 'confidentiality']}
-  context="Each item is something you might do with a general-purpose AI assistant at work. Sort it by whether you may do it."
-  title="Can I...?" hint="Whose information is it, and can it be taken back once it has been sent?"
-  buckets={['Yes', 'Only with their approval', 'Never']}
+  context="Chaque élément est une chose que vous pourriez faire avec un assistant d’IA généraliste au travail. Classez-le selon que vous pouvez le faire ou non."
+  title="Est-ce que je peux… ?" hint="À qui appartient l’information, et peut-on la reprendre une fois qu’elle est envoyée ?"
+  buckets={['Oui', 'Seulement avec leur accord', 'Jamais']}
   items={[
-    { text: 'Review my own draft report with it', bucket: 0 },
-    { text: 'Discuss how our team plans its work', bucket: 0 },
-    { text: 'Mention a colleague by name and work email', bucket: 0 },
-    { text: 'Paste a document a customer gave us in confidence', bucket: 1 },
-    { text: 'Describe a customer\'s internal systems in detail', bucket: 1 },
-    { text: 'Paste a password or an API key (a password a program uses)', bucket: 2 },
-    { text: 'Upload an HR file, medical note or identity number', bucket: 2 },
-    { text: 'Send the output to a customer without reading it', bucket: 2 },
+    { text: 'Faire relire mon propre projet de rapport', bucket: 0 },
+    { text: 'Discuter de la façon dont notre équipe planifie son travail', bucket: 0 },
+    { text: 'Citer un collègue par son nom et son adresse e-mail professionnelle', bucket: 0 },
+    { text: 'Coller un document qu’un client nous a confié à titre confidentiel', bucket: 1 },
+    { text: 'Décrire en détail les systèmes internes d’un client', bucket: 1 },
+    { text: 'Coller un mot de passe ou une clé d’API (un mot de passe qu’utilise un programme)', bucket: 2 },
+    { text: 'Envoyer un dossier RH, une note médicale ou un numéro d’identité', bucket: 2 },
+    { text: 'Envoyer la sortie à un client sans l’avoir lue', bucket: 2 },
   ]} />
 
-The rest of the lesson explains why the answers fall where they do.
+La suite de la leçon explique pourquoi les réponses tombent là où elles
+tombent.
 
-## Where a prompt goes
+## Où va un prompt
 
-Unless the tool runs on your own computer, the text of your prompt leaves
-it when you press enter and is processed on the provider's servers, in a
-region the provider chooses. The response comes back the same way. So far
-that is like sending an email. The differences are in what happens
-afterwards, and the terms of the tool set them, so look each of the facts
-below up for your own tool.
+Sauf si l’outil tourne sur votre propre ordinateur, le texte de votre prompt
+quitte votre machine quand vous appuyez sur Entrée. Il est traité sur les
+serveurs du fournisseur, dans une région que le fournisseur choisit. La
+réponse revient par le même chemin. Jusque-là, c’est comme envoyer un e-mail.
+Les différences tiennent à ce qui se passe ensuite, et ce sont les conditions
+de l’outil qui en décident. Cherchez donc chacune des informations ci-dessous
+pour votre propre outil.
 
-**Retention.** The provider keeps the conversation for some time. It may be
-thirty days for abuse checks, or as long as your account exists, or until
-you delete it, and deleting it in the interface may or may not delete it on
-the server. Find the number.
+**Conservation.** Le fournisseur garde la conversation un certain temps. Cela
+peut être trente jours pour la détection des abus, aussi longtemps que votre
+compte existe, ou jusqu’à ce que vous la supprimiez. La supprimer dans
+l’interface ne la supprime pas forcément sur le serveur. Trouvez la durée.
 
-**Training.** Some tiers use your conversations to train future models.
-Consumer subscriptions often do, and business tiers usually don't, and the
-default can be a setting you have to switch. One vendor as an example:
-Anthropic's privacy pages say that its consumer plans train on chats and
-coding sessions when a model-improvement setting in the privacy settings
-is on (@Claude privacy consumer-training), and that its business products
-and API don't train on them by default (@Claude privacy commercial-training).
-Find the sentence in the terms of your own tool that says so, and find the
-setting.
+**Entraînement.** Certaines offres utilisent vos conversations pour entraîner
+de futurs modèles. Les abonnements grand public le font souvent, les offres
+professionnelles rarement, et le comportement par défaut peut dépendre d’un
+réglage à changer. Un fournisseur à titre d’exemple : les pages de
+confidentialité d’Anthropic indiquent que ses offres grand public
+s’entraînent sur les conversations et les sessions de code quand un réglage
+d’amélioration du modèle est activé dans les paramètres de confidentialité
+(@Claude privacy consumer-training), et que ses produits professionnels et
+son API ne s’entraînent pas dessus par défaut
+(@Claude privacy commercial-training). Trouvez la phrase des conditions de
+votre propre outil qui le dit, et trouvez le réglage.
 
-**Region.** Where the data is stored and where it is processed are two
-separate questions. A vendor that promises storage in your region may still
-process prompts elsewhere. Ask both.
+**Région.** L’endroit où les données sont stockées et l’endroit où elles sont
+traitées sont deux questions distinctes. Un fournisseur qui promet un
+stockage dans votre région peut tout de même traiter les prompts ailleurs.
+Posez les deux questions.
 
-**The chain.** A tool is rarely one company. An assistant built into an
-office product may send your text to a gateway, which sends it to a model
-vendor, and each link has its own retention, training and region terms. A
-tool built on a gateway built on a model vendor has three such policies.
-The vendor list is usually published as "subprocessors".
+**La chaîne.** Un outil repose rarement sur une seule entreprise. Un
+assistant intégré à une suite bureautique peut envoyer votre texte à une
+passerelle, qui l’envoie à un fournisseur de modèle, et chaque maillon a ses
+propres règles de conservation, d’entraînement et de région. Un outil bâti
+sur une passerelle, elle-même bâtie sur un fournisseur de modèle, a trois
+politiques de ce type. La liste des fournisseurs est en général publiée sous
+le nom de « sous-traitants » (subprocessors).
 
-**Web search.** When an assistant searches the web for you, it writes a
-short query derived from your prompt and sends that to a search provider,
-which is often a fourth company with its own terms. The search provider
-usually sees only that query rather than your whole prompt, but it sees
-enough to know what you were asking about. Keep sensitive detail out of prompts that trigger search, or
-turn search off for that conversation.
+**Recherche web.** Quand un assistant cherche sur le web pour vous, il écrit
+une courte requête tirée de votre prompt et l’envoie à un fournisseur de
+recherche, souvent une quatrième entreprise, avec ses propres conditions. Le
+fournisseur de recherche ne voit en général que cette requête, et pas votre
+prompt entier, mais il en voit assez pour savoir sur quoi portait votre
+question. Gardez les détails sensibles hors des prompts qui déclenchent une
+recherche, ou désactivez la recherche pour cette conversation.
 
-There is one more thing to notice about "where it goes". The prompt is more
-than the text you typed. Depending on the tool, it can include the files
-you uploaded earlier in the conversation, the documents a connector can
-reach, your recent history, and details about your device or account.
-Before you decide what may go in, know what already goes in.
+Encore un point sur « où il va ». Le prompt contient plus que le texte que
+vous avez tapé. Selon l’outil, il peut inclure les fichiers envoyés plus tôt
+dans la conversation, les documents qu’un connecteur peut atteindre, votre
+historique récent, et des informations sur votre appareil ou votre compte.
+Avant de décider ce qui peut y entrer, sachez ce qui y entre déjà.
 
-<Pitfall title="Assuming the chat is storage">
-A team keeps its meeting notes as a running conversation with an assistant,
-because it is convenient to ask "what did we decide last month?". Six months
-later the provider changes its retention policy, and the conversation is
-gone. A chat tool is a processing service with no backup and no restore.
-Copy out anything you need to keep, and keep it where your organization
-keeps documents.
+<Pitfall title="Prendre la conversation pour un espace de stockage">
+Une équipe tient ses comptes rendus de réunion dans une conversation suivie
+avec un assistant, parce qu’il est pratique de demander « qu’avons-nous
+décidé le mois dernier ? ». Six mois plus tard, le fournisseur change sa
+politique de conservation, et la conversation a disparu. Un outil de
+conversation est un service de traitement, sans sauvegarde ni restauration.
+Copiez tout ce que vous devez garder, et rangez-le là où votre organisation
+range ses documents.
 </Pitfall>
 
-## What may go in: four tiers
+## Ce qui peut y entrer : quatre niveaux
 
-The "Can I...?" answers come from asking two questions about any piece of
-information: whose is it, and what role do we hold with respect to it.
-Privacy law names two roles. A **controller** decides what happens to the
-data and why. A **processor** handles it on the controller's behalf and may
-only do what the controller allows. Most of the time you don't need the
-words, and one plain sentence covers it: information you hold for someone
-else is theirs to decide about.
+Les réponses à « Est-ce que je peux… ? » viennent de deux questions qu’on
+pose à toute information : à qui appartient-elle, et quel rôle tenons-nous à
+son égard ? Le droit de la protection des données nomme deux rôles. Le
+**responsable du traitement** décide de ce qu’il advient des données et
+pourquoi. Le **sous-traitant** les traite pour le compte du responsable et
+ne peut faire que ce que celui-ci autorise. La plupart du temps, vous n’avez
+pas besoin de ces mots, et une phrase simple suffit : l’information que vous
+détenez pour quelqu’un d’autre lui appartient, et c’est à lui d’en décider.
 
-That gives four tiers.
+Cela donne quatre niveaux.
 
-| Tier                            | Meaning                                                                                                                | Rule for AI tools            |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| Public                          | Anyone may see it                                                                                                      | Fine                         |
-| Internal confidential           | Ours. Not for disclosure, and we decide what happens to it                                                             | Approved tools only          |
-| Held to serve someone else      | Details about a customer or partner that we keep in order to work with them, including personal data of their people   | Approved tools, with care    |
-| Someone else's own data         | Part of a customer's product, records or service. We only process it for them                                          | Only with their agreement    |
+| Niveau                               | Sens                                                                                                                       | Règle pour les outils d’IA  |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| Public                               | Tout le monde peut le voir                                                                                                 | Sans restriction            |
+| Interne confidentiel                 | À nous. Pas destiné à être divulgué, et nous décidons de ce qu’il en advient                                               | Outils approuvés seulement  |
+| Détenu pour servir quelqu’un d’autre | Des informations sur un client ou un partenaire que nous gardons pour travailler avec lui, y compris les données personnelles de ses équipes | Outils approuvés, avec soin |
+| Données propres d’un tiers           | Une partie du produit, des dossiers ou du service d’un client. Nous les traitons seulement pour lui                        | Seulement avec son accord   |
 
-"Approved" means a tool your organization has looked at and said yes to.
-The terms it checked are the ones from the previous section, and if you
-are the one choosing, those are the terms you check.
+« Approuvé » désigne un outil que votre organisation a examiné et accepté.
+Les conditions qu’elle a vérifiées sont celles de la section précédente, et
+si c’est vous qui choisissez, ce sont celles que vous vérifiez.
 
-Two categories cut across all four tiers and get their own rules.
+Deux catégories traversent les quatre niveaux et ont leurs propres règles.
 
-**Personal data.** Identity numbers, identity documents, medical content,
-HR file content, financial records with account numbers. Leave it out
-unless the tool is approved for that kind of data. A useful test is
-whether you would put the same text in an email to a colleague who has no
-reason to see it.
+**Données personnelles.** Numéros d’identité, pièces d’identité, contenus
+médicaux, contenu de dossiers RH, relevés financiers avec numéros de compte.
+Laissez-les de côté, sauf si l’outil est approuvé pour ce type de données. Un
+test utile : mettriez-vous le même texte dans un e-mail à un collègue qui n’a
+aucune raison de le voir ?
 
-**Secrets.** Passwords, API keys, tokens, certificates. Secrets never go
-in, whatever the tool and whatever the tier. Replace them with placeholders
-such as `<API_KEY>`. A secret that has been pasted into a conversation has
-to be treated as leaked and replaced (security teams say "rotated"),
-whoever pasted it and however trusted the tool.
+**Secrets.** Mots de passe, clés d’API, jetons d’accès, certificats. Les
+secrets n’y entrent jamais, quel que soit l’outil et quel que soit le niveau.
+Remplacez-les par des marqueurs comme `<API_KEY>`. Un secret collé
+dans une conversation doit être considéré comme divulgué, et remplacé (les
+équipes de sécurité parlent de « rotation »), qui que soit la personne qui
+l’a collé et quelle que soit la confiance accordée à l’outil.
 
-There is a personal version of this too. Many people ask an assistant
-about their health, their mental state or their relationships. That is
-allowed, and it can be useful. Know that the content is retained under the
-same terms as everything else and is hard to get back. Be aware whom you
-are telling.
+Il en existe aussi une version personnelle. Beaucoup de gens interrogent un
+assistant sur leur santé, leur état psychologique ou leurs relations. C’est
+permis, et cela peut être utile. Sachez que ce contenu est conservé selon les
+mêmes conditions que tout le reste, et qu’il est difficile à récupérer.
+Sachez à qui vous parlez.
 
 <Repair id="replace-the-secrets" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['confidentiality', 'data-privacy']}
-  title="Make the prompt safe to send" hint="Which parts of the prompt does the model need in order to help, and which parts are only there because you pasted the whole thing?"
-  broken={`Our deploy script fails. Here is the config:
+  title="Rendre le prompt sûr à envoyer" hint="De quelles parties du prompt le modèle a-t-il besoin pour aider, et quelles parties sont là seulement parce que vous avez tout collé ?"
+  broken={`Notre script de déploiement échoue. Voici la configuration :
 DB_HOST=db.internal.example
 DB_USER=admin
 DB_PASSWORD=Tr0ub4dor&3
 CONTACT=maria.lopez@customer.example, +31 6 1234 5678
-What is wrong with it?`}
-  model={`Our deploy script fails. Here is the config, with the values replaced:
-DB_HOST=<host>
-DB_USER=<user>
-DB_PASSWORD=<password>
-CONTACT=<contact email>, <contact phone>
-What is wrong with it?
+Qu’est-ce qui ne va pas ?`}
+  model={`Notre script de déploiement échoue. Voici la configuration, avec les valeurs remplacées :
+DB_HOST=<hôte>
+DB_USER=<utilisateur>
+DB_PASSWORD=<mot de passe>
+CONTACT=<e-mail du contact>, <téléphone du contact>
+Qu’est-ce qui ne va pas ?
 
-If the model needs a real value to diagnose the problem, it can say which one, and you can decide then whether that value may go in.`}>
-A colleague is about to send this prompt to a general-purpose assistant.
-Rewrite it so that it can still get help, with nothing in it that would be
-an incident if the conversation leaked.
+Si le modèle a besoin d’une vraie valeur pour diagnostiquer le problème, il peut dire laquelle, et vous déciderez alors si cette valeur peut être envoyée.`}>
+Un collègue s’apprête à envoyer ce prompt à un assistant généraliste.
+Réécrivez-le pour qu’il obtienne encore de l’aide, sans rien qui
+deviendrait un incident si la conversation fuitait.
 </Repair>
 
 <Scenario id="web-search-on-a-sensitive-topic" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['confidentiality']}
-  title="Search or no search?" hint="How many companies see part of this prompt if search stays on, and what does each of them keep?"
+  title="Avec ou sans recherche ?" hint="Combien d’entreprises voient une partie de ce prompt si la recherche reste active, et que garde chacune d’elles ?"
   options={[
-    { text: 'Turn off web search, or use a general prompt without the customer name, and look up the specific law yourself.', correct: true, consequence: 'The model vendor sees a general question about notification rules. Nobody outside the chain you already checked learns who the customer is or what happened.' },
-    { text: 'Ask as planned, with the customer name and the incident details, and let the assistant search.', consequence: 'The assistant sends a query naming the customer and the type of breach to a search provider. That provider keeps the query under its own terms, which you have not read.' },
-    { text: 'Refuse to use the assistant for anything about this incident.', consequence: 'Safe, and a legitimate choice, but you gave up a useful tool for drafting and structuring work that never needed the customer name in it at all.' },
+    { text: 'Désactiver la recherche web, ou poser une question générale sans le nom du client, et chercher vous-même la loi précise.', correct: true, consequence: 'Le fournisseur du modèle voit une question générale sur les règles de notification. Personne hors de la chaîne que vous avez déjà vérifiée n’apprend qui est le client ni ce qui s’est passé.' },
+    { text: 'Poser la question prévue, avec le nom du client et les détails de l’incident, et laisser l’assistant chercher.', consequence: 'L’assistant envoie à un fournisseur de recherche une requête qui nomme le client et le type de fuite. Ce fournisseur garde la requête selon ses propres conditions, que vous n’avez pas lues.' },
+    { text: 'Refuser d’utiliser l’assistant pour tout ce qui touche à cet incident.', consequence: 'C’est sûr, et c’est un choix légitime. Vous vous privez cependant d’un outil utile pour rédiger et structurer un travail qui n’a jamais eu besoin du nom du client.' },
   ]}>
-A customer has had a security incident and you are helping them work out
-who must be notified. You want to ask an assistant which notification rules
-apply. The assistant has web search on by default. What do you do?
+Un client a subi un incident de sécurité, et vous l’aidez à déterminer qui
+doit être prévenu. Vous voulez demander à un assistant quelles règles de
+notification s’appliquent. La recherche web de l’assistant est activée par
+défaut. Que faites-vous ?
 </Scenario>
 
-## Trying a tool without exposing anything
+## Essayer un outil sans rien exposer
 
-A new tool appears every week, and "use only approved tools" doesn't tell
-you how a tool gets approved. There is a level below approval that anyone
-may use without asking, as long as it stays there. Call it experimenting.
+Un nouvel outil apparaît chaque semaine, et « n’utilisez que des outils
+approuvés » ne dit pas comment un outil obtient son approbation. Il existe un
+niveau en dessous de l’approbation, que chacun peut utiliser sans demander,
+tant qu’il y reste. Appelons-le l’expérimentation.
 
-Experimenting means the tool only ever sees dummy, synthetic or public
-data, and has no access to real systems. Under those conditions the terms
-of the tool don't matter much, because nothing that goes in is anyone's
-to protect. A short self-check, with the reason for each item, keeps you
-inside the line.
+Expérimenter veut dire que l’outil ne voit jamais que des données fictives,
+synthétiques ou publiques, et n’a accès à aucun système réel. Dans ces
+conditions, les conditions d’utilisation de l’outil comptent peu, puisque
+rien de ce qui y entre n’est à protéger. Une courte auto-vérification, avec
+la raison de chaque point, vous garde du bon côté de la limite.
 
-| Check                                                                                                               | Why                                                                  |
-| ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| I use only dummy, synthetic or public data. No real company data, customer data or production systems.              | Real data, even internal, needs a proper assessment and can be exposed |
-| I have checked that no real names, email addresses, IP addresses or production values are in the test data.        | "Anonymized" real data can often be re-identified                     |
-| The tool has no read or write access to production systems, and no access to real company systems or data stores. | Even read access exposes information, and write access can cause outages |
-| I have set a spending limit where the tool bills by use.                                                            | Experiments left running keep billing                                 |
-| I delete accounts, data and integrations when the experiment ends.                                                  | Forgotten accounts become vulnerabilities over time                   |
-| I have written down what I'm testing and share what I learn.                                                        | Others learn from it and avoid duplicate work                         |
-| I report security concerns or incidents to whoever handles security.                                                | Fast reporting limits damage                                          |
+| Point à vérifier                                                                                                                  | Pourquoi                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| J’utilise seulement des données fictives, synthétiques ou publiques. Aucune donnée réelle de l’entreprise ou des clients, aucun système de production. | Les données réelles, même internes, demandent une vraie évaluation et peuvent être exposées |
+| J’ai vérifié que les données de test ne contiennent ni vrais noms, ni adresses e-mail, ni adresses IP, ni valeurs de production. | Des données réelles « anonymisées » peuvent souvent être réidentifiées                |
+| L’outil n’a aucun accès en lecture ou en écriture aux systèmes de production, ni aux systèmes ou aux stockages de données réels de l’entreprise. | Même un accès en lecture expose des informations, et un accès en écriture peut provoquer des pannes |
+| J’ai fixé une limite de dépenses quand l’outil facture à l’usage.                                                                 | Une expérience oubliée continue de coûter                                             |
+| Je supprime les comptes, les données et les intégrations à la fin de l’expérience.                                                | Les comptes oubliés deviennent des failles avec le temps                              |
+| J’ai noté ce que je teste, et je partage ce que j’apprends.                                                                       | Les autres en profitent et évitent de refaire le même travail                         |
+| Je signale les problèmes ou les incidents de sécurité à la personne qui gère la sécurité.                                         | Un signalement rapide limite les dégâts                                               |
 
-The checklist has two boundaries, and both are easy to cross by accident.
+La liste comporte deux limites, et toutes deux se franchissent facilement par
+accident.
 
-**Experimenting ends the moment real information appears.** Opening the
-tool in a meeting with a customer, pointing it at non-public notes, or
-letting it read your real inbox is no longer experimenting, however new
-the tool is. The question to ask before each use is "is anything in this
-session real?".
+**L’expérimentation s’arrête dès qu’une information réelle apparaît.** Ouvrir
+l’outil pendant une réunion avec un client, lui donner des notes non
+publiques, ou le laisser lire votre vraie boîte de réception, ce n’est plus
+expérimenter, aussi nouveau que soit l’outil. La question à poser avant chaque
+usage : « y a-t-il quelque chose de réel dans cette session ? ».
 
-**Moving up needs an owner.** A tool that people start to rely on needs
-someone who is responsible for it: who patches it, who watches for
-vulnerabilities, who grants and removes access, who cleans up when it is
-retired. Without an owner the tool stays at the experimenting level, no
-matter how useful it is.
+**Passer au niveau supérieur demande un responsable.** Un outil sur lequel on
+commence à compter a besoin d’une personne qui en répond : qui le met à jour,
+qui surveille ses failles, qui donne et retire les accès, qui fait le ménage
+quand il est abandonné. Sans responsable, l’outil reste au niveau de
+l’expérimentation, aussi utile soit-il.
 
 <Scenario id="experiment-meets-real-data" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['confidentiality', 'data-privacy']}
-  context="The lesson gives a checklist for trying a tool that nobody has assessed yet. Its first item: the tool only ever sees dummy, synthetic or public data, never real company or customer data."
-  title="Still an experiment?" hint="Which item on the checklist stops being true the moment the recording goes in?"
+  context="La leçon donne une liste de vérification pour essayer un outil que personne n’a encore évalué. Son premier point : l’outil ne voit jamais que des données fictives, synthétiques ou publiques, jamais de données réelles de l’entreprise ou des clients."
+  title="Toujours une expérience ?" hint="Quel point de la liste cesse d’être vrai dès que l’enregistrement y entre ?"
   options={[
-    { text: 'Go ahead. It is still a trial, the recording is only one file, and you can delete it from the tool afterwards.', consequence: 'The recording holds the voices, names and plans of everyone in the meeting. A tool nobody has assessed now retains all of it, under terms nobody has read.' },
-    { text: 'Ask the customer for permission at the start of the call, then upload the recording if they agree.', consequence: 'Permission from the customer covers their side, but the tool itself has still not been assessed, and your own colleagues in the recording were not asked either.' },
-    { text: 'Stop the experiment here. Write down what the dummy tests showed and propose the tool for assessment, naming who would own it.', correct: true, consequence: 'The trial ends with a note and a proposal. If the tool is approved, the next recording can go in under known terms and with an owner.' },
+    { text: 'Y aller. C’est encore un essai, l’enregistrement n’est qu’un fichier, et vous pourrez le supprimer de l’outil ensuite.', consequence: 'L’enregistrement contient les voix, les noms et les projets de tous les participants. Un outil que personne n’a évalué conserve désormais tout cela, selon des conditions que personne n’a lues.' },
+    { text: 'Demander l’autorisation du client au début de l’appel, puis envoyer l’enregistrement s’il accepte.', consequence: 'L’accord du client couvre sa part. L’outil n’a pourtant toujours pas été évalué, et vos propres collègues présents dans l’enregistrement n’ont pas été consultés non plus.' },
+    { text: 'Arrêter l’expérience ici. Noter ce qu’ont montré les tests avec des données fictives, et proposer l’outil pour évaluation, en nommant qui en serait responsable.', correct: true, consequence: 'L’essai se termine par une note et une proposition. Si l’outil est approuvé, le prochain enregistrement pourra y entrer selon des conditions connues et avec un responsable.' },
   ]}>
-You have been trying a meeting-summary tool with recordings of yourself
-reading a script. It works well. This afternoon you have a real call with a
-customer, and it would be a perfect test. What do you do?
+Vous essayez un outil de résumé de réunions avec des enregistrements de
+vous-même en train de lire un texte. Il fonctionne bien. Cet après-midi, vous
+avez un vrai appel avec un client, et ce serait un test parfait. Que
+faites-vous ?
 </Scenario>
 
 <Match id="may-it-go-in" phase="review" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['data-privacy', 'confidentiality']}
-  context="The lesson sorts what may go into a general-purpose AI assistant at work by asking whose information it is. Assume your organization approved the assistant for general work, and not for personal data."
-  title="May it go in?" hint="Whose information is it, and could it ever be safe in a prompt?"
-  options={['Yes', 'Only with their approval', 'Never']}
+  context="La leçon classe ce qui peut entrer dans un assistant d’IA généraliste au travail en demandant à qui appartient l’information. Supposez que votre organisation a approuvé l’assistant pour le travail courant, et pas pour les données personnelles."
+  title="Peut-il y entrer ?" hint="À qui appartient l’information, et pourrait-elle un jour être sans risque dans un prompt ?"
+  options={['Oui', 'Seulement avec leur accord', 'Jamais']}
   rows={[
-    { statement: 'Your own slide deck, for feedback on its structure', option: 0, why: 'Whose work is it?' },
-    { statement: 'A price list a supplier shared with you under a confidentiality agreement', option: 1, why: 'Who decides where this list may go?' },
-    { statement: 'The database password from the team\'s password vault', option: 2, why: 'What happens to a secret once it is in a prompt?' },
-    { statement: 'A scan of a colleague\'s passport', option: 2, why: 'Is the assistant approved for identity documents, and is the passport yours to share?' },
+    { statement: 'Votre propre présentation, pour un avis sur sa structure', option: 0, why: 'À qui appartient ce travail ?' },
+    { statement: 'Une liste de prix qu’un fournisseur vous a transmise sous accord de confidentialité', option: 1, why: 'Qui décide où cette liste peut aller ?' },
+    { statement: 'Le mot de passe de la base de données, tiré du coffre-fort de mots de passe de l’équipe', option: 2, why: 'Que devient un secret une fois dans un prompt ?' },
+    { statement: 'Le scan du passeport d’un collègue', option: 2, why: 'L’assistant est-il approuvé pour les pièces d’identité, et ce passeport est-il à vous de le partager ?' },
   ]}
-  rationale="Your own work may go in, what you hold for others goes in with their approval, and secrets and personal data the tool isn't approved for stay out.">
-Match each item to whether it may go into the assistant.
+  rationale="Votre propre travail peut y entrer, ce que vous détenez pour d’autres y entre avec leur accord, et les secrets ainsi que les données personnelles pour lesquelles l’outil n’est pas approuvé restent dehors.">
+Associez chaque élément à la possibilité de l’envoyer à l’assistant.
 </Match>
 
 <Choice id="search-is-on" phase="review" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['confidentiality']}
-  context="The lesson says that when an assistant searches the web, it sends a query based on the prompt to a separate search provider, under that provider's terms."
-  title="The assistant searches by default" hint="Where does the text of your question go when the assistant searches?"
+  context="La leçon dit que lorsqu’un assistant cherche sur le web, il envoie une requête tirée du prompt à un fournisseur de recherche distinct, selon les conditions de ce fournisseur."
+  title="L’assistant cherche par défaut" hint="Où va le texte de votre question quand l’assistant fait une recherche ?"
   options={[
-    { text: 'Turn search off, or write the question in general terms without the customer\'s name.', correct: true },
-    { text: 'Ask as planned, because the assistant\'s own terms cover what its search sends out.', why: 'The query goes to another provider with its own terms, which you haven\'t looked up.' },
-    { text: 'Ask as planned, and delete the chat afterwards so that nothing is kept.', why: 'Deleting the chat doesn\'t call back the query that already went to the search provider.' },
-    { text: 'Put the customer\'s name in quotation marks so that the search skips it.', why: 'Quotation marks change how a search matches. The name is still in the query.' },
+    { text: 'Désactiver la recherche, ou formuler la question en termes généraux, sans le nom du client.', correct: true },
+    { text: 'Poser la question prévue, puisque les conditions de l’assistant couvrent ce que sa recherche envoie.', why: 'La requête va chez un autre fournisseur, avec ses propres conditions, que vous n’avez pas consultées.' },
+    { text: 'Poser la question prévue, puis supprimer la conversation pour que rien ne soit gardé.', why: 'Supprimer la conversation ne rappelle pas la requête déjà partie chez le fournisseur de recherche.' },
+    { text: 'Mettre le nom du client entre guillemets pour que la recherche l’ignore.', why: 'Les guillemets changent la façon dont une recherche fait correspondre les mots. Le nom reste dans la requête.' },
   ]}>
 
-You want to ask an assistant how to answer a customer whose data leaked, and
-your prompt names the customer. The assistant has web search on. What do you
-do?
+Vous voulez demander à un assistant comment répondre à un client dont les
+données ont fuité, et votre prompt nomme le client. La recherche web de
+l’assistant est activée. Que faites-vous ?
 
 </Choice>
 
 <MultiChoice id="the-unassessed-tool" phase="review" objective="safety/handles-data-safely/decides-what-to-share"
   concepts={['confidentiality', 'data-privacy']}
-  context="The lesson has a checklist for trying out a tool that nobody in the organization has assessed yet."
-  title="Trying a tool nobody assessed" hint="What kind of data may the tool see during a trial, and what ends the trial?"
+  context="La leçon propose une liste de vérification pour essayer un outil que personne dans l’organisation n’a encore évalué."
+  title="Essayer un outil que personne n’a évalué" hint="Quel type de données l’outil peut-il voir pendant un essai, et qu’est-ce qui met fin à l’essai ?"
   options={[
-    { text: 'Test it on a recording of yourself reading a made-up script.', correct: true },
-    { text: 'Test it on one real customer call, and delete the file afterwards.', why: 'Real data ends the experiment, whatever happens to the file later.' },
-    { text: 'Use it on internal meetings only, because colleagues are not customers.', why: 'A recording of colleagues at work is real company data too.' },
-    { text: 'Write down what the tests showed, and name who would own it.', correct: true },
+    { text: 'Le tester sur un enregistrement de vous-même lisant un texte inventé.', correct: true },
+    { text: 'Le tester sur un seul vrai appel client, puis supprimer le fichier.', why: 'Des données réelles mettent fin à l’expérience, quoi qu’il arrive ensuite au fichier.' },
+    { text: 'L’utiliser seulement pour les réunions internes, puisque les collègues ne sont pas des clients.', why: 'Un enregistrement de collègues au travail est aussi une donnée réelle de l’entreprise.' },
+    { text: 'Noter ce qu’ont montré les tests, et nommer qui en serait responsable.', correct: true },
   ]}>
 
-You want to try a transcription tool that nobody has assessed. Which two
-steps fit the checklist?
+Vous voulez essayer un outil de transcription que personne n’a évalué.
+Quelles sont les deux étapes conformes à la liste de vérification ?
 
 </MultiChoice>
 
-## Questions to ask your organization or a vendor
+## Les questions à poser à votre organisation ou à un fournisseur
 
-At some point a tool moves from experimenting to real use, and someone has
-to ask the vendor questions. They apply just as well to the person in your
-organization who approved a tool, and the answers belong in a place the
-whole team can find. Some of the terms below are vendor vocabulary. Bring
-them to the vendor as written, and look up the ones you don't know in the
-[glossary](/glossary/).
+Un jour, un outil passe de l’expérimentation à l’usage réel, et quelqu’un
+doit poser des questions au fournisseur. Elles valent tout autant pour la
+personne de votre organisation qui a approuvé un outil, et les réponses
+doivent être rangées là où toute l’équipe peut les trouver. Certains termes
+ci-dessous appartiennent au vocabulaire des fournisseurs. Posez-les tels
+quels au fournisseur, et cherchez ceux que vous ne connaissez pas dans le
+[glossaire](/glossary/).
 
-1. What data is shared with you when I use the AI features, and does the
-   AI bypass any of the permissions I already have?
-2. What is stored, for how long, and encrypted how?
-3. Who else receives it (subprocessors, model vendors), and can I turn them
-   off?
-4. Is my data used to train models? Where is that written?
-5. Which certifications cover the AI features specifically, and in which
-   role do you act, processor or controller?
-6. How is intellectual property protected: indemnity (you cover my legal
-   costs if the output infringes), citations, content credentials (a
-   signed label saying who made an image or video and how) on generated
-   media?
-7. How do you reduce over-reliance on wrong answers: grounding (answers
-   built from my own documents), citations, confidence signals?
-8. How do you detect and handle prompt injection, both in what I type and
-   in the documents the AI reads?
+1. Quelles données vous sont transmises quand j’utilise les fonctions d’IA,
+   et l’IA contourne-t-elle certaines des permissions que j’ai déjà ?
+2. Qu’est-ce qui est stocké, combien de temps, et avec quel chiffrement ?
+3. Qui d’autre le reçoit (sous-traitants, fournisseurs de modèles), et
+   puis-je le désactiver ?
+4. Mes données servent-elles à entraîner des modèles ? Où est-ce écrit ?
+5. Quelles certifications couvrent précisément les fonctions d’IA, et dans
+   quel rôle agissez-vous, sous-traitant ou responsable du traitement ?
+6. Comment la propriété intellectuelle est-elle protégée : garantie
+   juridique (vous couvrez mes frais si la sortie enfreint un droit),
+   citations, certificats de contenu (une étiquette signée qui dit qui a
+   produit une image ou une vidéo, et comment) sur les médias générés ?
+7. Comment réduisez-vous la dépendance excessive aux mauvaises réponses :
+   ancrage (des réponses construites à partir de mes propres documents),
+   citations, signaux de confiance ?
+8. Comment détectez-vous et traitez-vous l’injection de prompt, aussi bien
+   dans ce que je tape que dans les documents que lit l’IA ?
 
-If a vendor can't answer question 4 with a sentence you can find in their
-terms, treat the answer as "yes".
+Si un fournisseur ne peut pas répondre à la question 4 par une phrase que
+vous trouvez dans ses conditions, considérez que la réponse est « oui ».
 
-## Saying that AI helped
+## Dire que l’IA a aidé
 
-So far the lesson has been about what goes in. Two habits apply to what
-comes out, and the first is disclosure.
+Jusqu’ici, la leçon a porté sur ce qui entre. Deux habitudes s’appliquent à
+ce qui sort, et la première est la mention de l’usage de l’IA.
 
-Disclosure means saying that AI was used, to the extent the audience
-expects to know. A reader of a report wants to know whether a machine
-drafted the text and who checked it. A code reviewer wants to know which
-parts were generated. A party to a contract wants to know that a person is
-accountable for the wording. Disclosure is about trust. The useful form states what the AI did, what
-you did, and who is accountable. A line such
-as "Drafted with an AI assistant and reviewed by the author" is enough
-for most documents, and it is the norm to expect from others.
+La mention de l’usage de l’IA consiste à dire que l’IA a servi, dans la
+mesure où le public s’attend à le savoir. Le lecteur d’un rapport veut savoir
+si une machine a rédigé le texte et qui l’a vérifié. Une personne qui relit
+du code veut savoir quelles parties ont été générées. La partie à un contrat
+veut savoir qu’une personne répond de la formulation. Cette mention est une
+question de confiance. Sa forme utile dit ce que l’IA a fait, ce que vous
+avez fait, et qui répond du résultat. Une ligne comme « Rédigé avec un
+assistant d’IA et relu par l’auteur » suffit pour la plupart des documents,
+et c’est la norme à attendre des autres.
 
-For a larger piece of work, such as a report or a published article, the
-one line grows into a short statement that also names the tool and says how
-you checked the result (@Academy ai-fluency-framework-foundations). What
-counts as enough differs by setting. A newsroom expects something different
-from a client project, and the expectation is usually written down
-somewhere. Find out what the reader's setting expects before you decide how
-much to say.
+Pour un travail plus important, comme un rapport ou un article publié, cette
+ligne devient une courte déclaration qui nomme aussi l’outil et dit comment
+vous avez vérifié le résultat (@Academy ai-fluency-framework-foundations).
+Ce qui suffit dépend du contexte. Une rédaction de presse n’attend pas la
+même chose qu’un projet client, et l’attente est en général écrite quelque
+part. Renseignez-vous sur ce qu’attend le contexte du lecteur avant de
+décider de ce que vous direz.
 
-Disclosure belongs in a safety lesson because of the failure modes you
-met in the concepts course. The model is confident when it is wrong. Someone
-reading a text that was produced in seconds and checked by nobody deserves
-to know that, and you are accountable for the result whether or not the
-tool is mentioned.
+Cette mention a sa place dans une leçon de sécurité à cause des défaillances
+vues dans le parcours Concepts. Le modèle est sûr de lui quand il se trompe.
+La personne qui lit un texte produit en quelques secondes et vérifié par
+personne mérite de le savoir, et vous répondez du résultat, que l’outil soit
+mentionné ou non.
 
 <Choice id="when-to-disclose" objective="safety/handles-data-safely/discloses-ai-use"
   concepts={['disclosure']}
-  title="Who needs to know?" hint="Who is relying on the text, and what would they do differently if they knew a machine drafted it?"
+  title="Qui doit le savoir ?" hint="Qui s’appuie sur le texte, et que ferait cette personne autrement si elle savait qu’une machine l’a rédigé ?"
   options={[
-    { text: 'Nobody. The text is yours once you have edited it, and mentioning AI only invites doubt.', why: 'Editing makes you accountable for the text. It does not change what the reader expects to be told about how it was produced.' },
-    { text: 'The customer, with a line that says the summary was drafted with an AI assistant and reviewed by you.', correct: true },
-    { text: 'Only your manager, in private, in case something goes wrong later.', why: 'The reader who relies on the text is the customer. A private note to your manager protects you and tells the customer nothing.' },
-    { text: 'Everyone, with the full prompt and model output attached.', why: 'More than the audience needs. Disclosure states what the AI did and who checked it. The transcript is for you.' },
+    { text: 'Personne. Le texte est à vous une fois que vous l’avez modifié, et parler de l’IA ne fait qu’inviter le doute.', why: 'Le modifier vous rend responsable du texte. Le lecteur s’attend toujours à savoir comment il a été produit.' },
+    { text: 'Le client, avec une ligne qui dit que le résumé a été rédigé avec un assistant d’IA et relu par vous.', correct: true },
+    { text: 'Seulement votre responsable, en privé, au cas où un problème surviendrait plus tard.', why: 'Le lecteur qui s’appuie sur le texte est le client. Une note privée à votre responsable vous protège et ne dit rien au client.' },
+    { text: 'Tout le monde, avec le prompt complet et la sortie du modèle en pièce jointe.', why: 'C’est plus que ce dont le public a besoin. La mention dit ce que l’IA a fait et qui a vérifié. La transcription est pour vous.' },
   ]}>
-You used an assistant to draft a summary of a project's status for a
-customer. You edited it and checked the figures against the tracker. Who
-needs to know that AI was involved, and how?
+Vous avez utilisé un assistant pour rédiger un point d’avancement d’un projet
+destiné à un client. Vous l’avez modifié et avez vérifié les chiffres dans
+l’outil de suivi. Qui doit savoir que l’IA a servi, et comment ?
 </Choice>
 
 <Sort id="line-or-no-line" phase="review" objective="safety/handles-data-safely/discloses-ai-use"
   concepts={['disclosure']}
-  context="The lesson says to tell people that AI helped, to the extent the audience expects, when they would judge the work differently knowing it."
-  title="Does the reader need to know?" hint="Would the reader judge this work differently if they knew what the AI did?"
-  buckets={['Say that AI helped', 'No line needed']}
+  context="La leçon dit d’indiquer que l’IA a aidé, dans la mesure où le public s’y attend, quand il jugerait le travail autrement en le sachant."
+  title="Le lecteur doit-il le savoir ?" hint="Le lecteur jugerait-il ce travail autrement s’il savait ce que l’IA a fait ?"
+  buckets={['Dire que l’IA a aidé', 'Pas besoin de mention']}
   items={[
-    { text: 'A status report for a customer that an assistant drafted and you edited', bucket: 0 },
-    { text: 'A presentation whose images an AI tool generated', bucket: 0 },
-    { text: 'A letter to a customer that an AI tool translated', bucket: 0 },
-    { text: 'An email where you accepted the spelling suggestions', bucket: 1 },
-    { text: 'A list of notes for yourself that an assistant tidied up', bucket: 1 },
+    { text: 'Un point d’avancement pour un client, rédigé par un assistant et modifié par vous', bucket: 0 },
+    { text: 'Une présentation dont un outil d’IA a généré les images', bucket: 0 },
+    { text: 'Une lettre à un client traduite par un outil d’IA', bucket: 0 },
+    { text: 'Un e-mail pour lequel vous avez accepté les suggestions d’orthographe', bucket: 1 },
+    { text: 'Une liste de notes personnelles qu’un assistant a mise au propre', bucket: 1 },
   ]} />
 
-## Where the output came from
+## D’où vient la sortie
 
-The second output habit is checking what the model may have copied.
+La deuxième habitude de sortie consiste à vérifier ce que le modèle a pu
+copier.
 
-Material you give a model and material it produces both come with
-obligations. Feeding in text or code you may not redistribute doesn't remove
-the restriction on it. Output that reproduces a source needs the attribution
-the source demands, and code output can reproduce public code closely enough
-that its license applies. Some coding assistants check each suggestion
-against public code, and then, depending on a setting, either drop a match
-or show it with a reference that names the source and its license
-(@GitHub docs code-referencing). Without such a check there is a chance of
-reproducing licensed code word for word, and the legal position of such
-output is unsettled. The honest summary is that nobody can promise you the
-output is free of other people's work, so the check is yours.
+Ce que vous donnez à un modèle et ce qu’il produit s’accompagnent tous deux
+d’obligations. Fournir un texte ou du code que vous n’avez pas le droit de
+redistribuer ne lève pas la restriction qui pèse sur lui. Une sortie qui
+reproduit une source exige l’attribution que demande cette source, et une
+sortie de code peut reproduire du code public de si près que sa licence
+s’applique. Certains assistants de code comparent chaque suggestion au code
+public, puis, selon un réglage, écartent une correspondance ou l’affichent
+avec une référence qui nomme la source et sa licence
+(@GitHub docs code-referencing). Sans ce contrôle, il existe un risque de
+reproduire mot pour mot du code sous licence, et la situation juridique d’une
+telle sortie n’est pas tranchée. En toute honnêteté, personne ne peut vous
+promettre que la sortie ne contient rien du travail d’autrui. La
+vérification vous revient donc.
 
-The habit is small. Keep track of where your inputs came from. Search for a phrase
-from any output that looks copied or more polished than the rest, and
-from a block of code that arrives with someone else's comments in it. If it matches a source, credit it
-as the source demands or replace it.
+L’habitude est modeste. Gardez trace de la provenance de vos entrées.
+Cherchez une phrase de toute sortie qui semble copiée ou plus soignée que le
+reste, et d’un bloc de code qui arrive avec les commentaires de quelqu’un
+d’autre. Si elle correspond à une source, citez-la comme la source l’exige,
+ou remplacez-la.
 
 <Choice id="the-suspiciously-complete-function" objective="safety/handles-data-safely/respects-licenses"
   concepts={['licensing-and-attribution']}
-  title="The function that arrived finished" hint="What does the presence of someone else's comments tell you about where the text came from?"
+  title="La fonction arrivée toute prête" hint="Que vous apprennent les commentaires de quelqu’un d’autre sur la provenance du texte ?"
   options={[
-    { text: 'Use it as it is. The tool produced it, so the tool\'s license covers it, whatever the header comment says.', why: 'A tool\'s terms cover your use of the tool. They cannot grant you rights to code the model reproduced from somewhere else.' },
-    { text: 'Delete the header comment and use the code. Without the comment nobody can tell where it came from.', why: 'Removing the evidence of copying does not remove the obligation, and it makes the copy harder to trace when a reviewer asks.' },
-    { text: 'Search for a distinctive line from it. If it matches a public source, follow that source\'s license or write your own version.', correct: true },
+    { text: 'L’utiliser telle quelle. L’outil l’a produite, donc la licence de l’outil la couvre, quoi que dise le commentaire d’en-tête.', why: 'Les conditions d’un outil couvrent votre usage de l’outil. Elles ne vous donnent aucun droit sur du code que le modèle a reproduit d’ailleurs.' },
+    { text: 'Supprimer le commentaire d’en-tête et utiliser le code. Sans le commentaire, personne ne peut savoir d’où il vient.', why: 'Effacer la trace de la copie laisse l’obligation intacte, et rend la copie plus difficile à retrouver quand une personne qui relit pose la question.' },
+    { text: 'Chercher une ligne caractéristique du code. Si elle correspond à une source publique, suivre la licence de cette source ou écrire votre propre version.', correct: true },
   ]}>
-A coding assistant returns a forty-line function in one go, including a
-header comment with an author name and a year that is not yours. It does
-exactly what you asked. What do you do?
+Un assistant de code renvoie d’un coup une fonction de quarante lignes, avec
+un commentaire d’en-tête qui porte un nom d’auteur et une année qui ne sont
+pas les vôtres. Elle fait exactement ce que vous avez demandé. Que
+faites-vous ?
 </Choice>
 
 <Scenario id="the-finished-config" phase="review" objective="safety/handles-data-safely/respects-licenses"
   concepts={['licensing-and-attribution']}
-  context="A coding assistant returned a complete configuration file, far more finished than the request, with a comment at the top that names an open-source project and a license."
-  title="A file with someone else's header" hint="Where might this text have come from, and what would its license ask of you?"
+  context="Un assistant de code a renvoyé un fichier de configuration complet, bien plus abouti que la demande, avec en tête un commentaire qui nomme un projet open source et une licence."
+  title="Un fichier avec l’en-tête de quelqu’un d’autre" hint="D’où ce texte a-t-il pu venir, et que vous demanderait sa licence ?"
   options={[
-    { text: 'Delete the comment and use the file, because nobody can trace it without the comment.', consequence: 'The text is still the project\'s work under its license, and now the one clue to where it came from is gone.' },
-    { text: 'Use it as it is, because what an assistant produces for you is yours to use.', consequence: 'The tool\'s terms don\'t cancel the license of a source it reproduced. The file ships under terms you never read.' },
-    { text: 'Ask the assistant whether the file is original, and use it if it says yes.', consequence: 'The assistant can\'t know what it reproduced. Its yes is text, and it checks nothing.' },
-    { text: 'Search for a distinctive line, and follow the license of any match or write your own.', correct: true, consequence: 'The search finds the project. Its license asks for the notice to stay, so you keep the header and the file.' },
+    { text: 'Supprimer le commentaire et utiliser le fichier, puisque personne ne peut en retrouver l’origine sans le commentaire.', consequence: 'Le texte reste le travail du projet, sous sa licence, et le seul indice de sa provenance a disparu.' },
+    { text: 'L’utiliser tel quel, puisque ce qu’un assistant produit pour vous est à vous.', consequence: 'Les conditions de l’outil n’annulent pas la licence d’une source qu’il a reproduite. Le fichier part avec des conditions que vous n’avez jamais lues.' },
+    { text: 'Demander à l’assistant si le fichier est original, et l’utiliser s’il répond oui.', consequence: 'L’assistant ne peut pas savoir ce qu’il a reproduit. Son oui est du texte, et il ne vérifie rien.' },
+    { text: 'Chercher une ligne caractéristique, et suivre la licence de toute correspondance ou écrire votre propre version.', correct: true, consequence: 'La recherche trouve le projet. Sa licence demande de garder l’avis de licence, donc vous gardez l’en-tête et le fichier.' },
   ]}>
 
-The assistant's configuration file has a header naming an open-source
-project and its license. What do you do?
+Le fichier de configuration de l’assistant porte un en-tête qui nomme un
+projet open source et sa licence. Que faites-vous ?
 
 </Scenario>
 
-## Putting it together
+## En résumé
 
-Before a prompt goes in, run down the list.
+Avant d’envoyer un prompt, parcourez la liste.
 
-1. **Where does it go?** Retention, training, region, and the chain of
-   vendors, for this tool. Look them up once, write them down for the team.
-2. **Whose is it?** Public, ours, held for someone else, or someone else's
-   own. The tier sets the rule.
-3. **Anything personal or secret?** Leave it out or replace it with a
-   placeholder, whatever the tier.
-4. **Is this session real?** If yes, the tool must be approved and owned.
-   If no, keep it that way.
+1. **Où va-t-il ?** Conservation, entraînement, région et chaîne de
+   fournisseurs, pour cet outil. Cherchez-les une fois, notez-les pour
+   l’équipe.
+2. **À qui est-ce ?** Public, à nous, détenu pour quelqu’un d’autre, ou
+   données propres d’un tiers. Le niveau fixe la règle.
+3. **Quelque chose de personnel ou de secret ?** Laissez-le de côté ou
+   remplacez-le par un marqueur, quel que soit le niveau.
+4. **Cette session est-elle réelle ?** Si oui, l’outil doit être approuvé et
+   avoir un responsable. Si non, gardez-la ainsi.
 
-And when the output goes out: say that AI helped, and check what it may
-have been copied from.
+Et quand la sortie part : dites que l’IA a aidé, et vérifiez d’où elle a pu
+être copiée.
 
-<Exercise stretch="Now do the same for a second tool you use, and compare the two answers side by side.">
-Take one AI tool you use at work. Find its terms, privacy page or trust
-page, and write down four facts as four short lines: its retention period for
-conversations, whether and how it may train on them (and where the setting is, if
-there is one), the regions for storing and processing data, and the
-subprocessors it lists. Spend no more than fifteen minutes. This
-is the lookup the lesson keeps pointing at, and once you have done it for
-one tool you can do it for any tool.
+<Exercise stretch="Faites la même chose pour un deuxième outil que vous utilisez, et comparez les deux réponses côte à côte.">
+Prenez un outil d’IA que vous utilisez au travail. Trouvez ses conditions
+d’utilisation, sa page de confidentialité ou sa page de confiance, et notez
+quatre informations en quatre lignes courtes : sa durée de conservation des
+conversations, s’il peut s’entraîner dessus et comment (et où se trouve le
+réglage, s’il y en a un), les régions de stockage et de traitement des
+données, et les sous-traitants qu’il liste. N’y passez pas plus de quinze
+minutes. C’est la recherche à laquelle la leçon renvoie sans cesse, et une
+fois que vous l’avez faite pour un outil, vous savez la faire pour n’importe
+lequel.
 
-A good result has a source for each line: a page, a section, a sentence.
-If you couldn't find one of the four, write "could not find" for that
-line, because that is itself the finding. Then answer one question: given
-those four facts, which tier of information from this lesson would you be
-comfortable putting into this tool?
+Un bon résultat donne une source pour chaque ligne : une page, une section,
+une phrase. Si vous n’avez pas trouvé l’une des quatre, écrivez « introuvable »
+pour cette ligne, car c’est en soi un résultat. Répondez ensuite à une
+question : au vu de ces quatre informations, quel niveau d’information de
+cette leçon seriez-vous à l’aise de confier à cet outil ?
 </Exercise>
 
 <Recap>
-1. A prompt is processed on the provider's servers under the tool's terms. Retention, training, region and the chain of subprocessors are facts to look up for your own tool, once, and write down for your team.
-2. Web search sends a derived query to a separate provider with its own terms. Keep sensitive detail out of prompts that search, or turn search off.
-3. Sort information into four tiers by asking whose it is and what role you hold. Information you hold for someone else is theirs to decide about.
-4. Personal data stays out unless the tool is approved for it. Secrets stay out of every tool, and a pasted secret is a leaked secret.
-5. Experimenting with dummy data needs no approval. It ends the moment anything real appears, and moving up needs an owner.
-6. Say that AI helped, to the extent the audience expects, and check output that looks copied before you use it.
+1. Un prompt est traité sur les serveurs du fournisseur, selon les conditions de l’outil. La conservation, l’entraînement, la région et la chaîne de sous-traitants sont des informations à chercher pour votre propre outil, une fois, et à noter pour votre équipe.
+2. La recherche web envoie une requête dérivée à un fournisseur distinct, avec ses propres conditions. Gardez les détails sensibles hors des prompts qui déclenchent une recherche, ou désactivez la recherche.
+3. Classez l’information en quatre niveaux en demandant à qui elle appartient et quel rôle vous tenez. L’information que vous détenez pour quelqu’un d’autre lui appartient, et c’est à lui d’en décider.
+4. Les données personnelles restent dehors, sauf si l’outil est approuvé pour elles. Les secrets restent hors de tout outil, et un secret collé est un secret divulgué.
+5. Expérimenter avec des données fictives ne demande aucune approbation. L’expérience s’arrête dès que quelque chose de réel apparaît, et passer au niveau supérieur demande un responsable.
+6. Dites que l’IA a aidé, dans la mesure où le public s’y attend, et vérifiez une sortie qui semble copiée avant de l’utiliser.
 </Recap>

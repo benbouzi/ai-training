@@ -29,7 +29,7 @@ describe('Redactor', () => {
 		expect(html).toMatch(/<div class="not-content redactor[^"]*" data-redactor data-action="redact"/);
 		expect(html).toContain(`>${escaped(readFileSync(join(EXAMPLES, DIR, 'email.txt'), 'utf8'))}</textarea>`);
 		expect(html).toContain(`>${escaped(readFileSync(join(EXAMPLES, DIR, 'email-map.txt'), 'utf8'))}</textarea>`);
-		expect(html).toMatch(/<button type="button" class="rd-run[^"]*">Redact<\/button>/);
+		expect(html).toMatch(/<button type="button" class="rd-run[^"]*">Masquer<\/button>/);
 		expect(html).not.toContain('rd-watch');
 		expect(html).toMatch(/<pre class="rd-output[^"]*" tabindex="0" hidden><\/pre>/);
 	});
@@ -46,7 +46,7 @@ describe('Redactor', () => {
 			props: { action: 'restore', text: `${DIR}reply.txt`, map: `${DIR}email-map.txt` },
 		});
 		expect(html).toContain('data-action="restore"');
-		expect(html).toMatch(/>Restore<\/button>/);
+		expect(html).toMatch(/>Restaurer<\/button>/);
 	});
 	it('fails the build on a file that is not there and on an unknown action', async () => {
 		await expect(container.renderToString(Redactor, { props: { text: `${DIR}none.txt` } })).rejects.toThrow(
