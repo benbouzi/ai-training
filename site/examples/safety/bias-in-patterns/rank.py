@@ -43,7 +43,7 @@ import sys
 SHORTLIST = 6
 
 # (years of experience, certificates, months since the last role)
-# The last field prints as `gap`.
+# The last field prints as `interruption`.
 RECORDS: list[tuple[int, int, int]] = [
     (7, 2, 3),
     (4, 1, 4),
@@ -134,10 +134,10 @@ def print_ranking(title: str, ranking: list[tuple[int, int, str]]) -> None:
     print(title)
     for position, (score, index, name) in enumerate(ranking, start=1):
         years, certificates, gap_months = RECORDS[index]
-        marker = "shortlist" if position <= SHORTLIST else "         "
+        marker = "retenu" if position <= SHORTLIST else "      "
         print(
-            f"  {position:2d}. {marker}  score {score:2d}  {name:<15} list {group_of(name)}"
-            f"  (experience {years}, certificates {certificates}, gap {gap_months})"
+            f"  {position:2d}. {marker}  score {score:2d}  {name:<15} liste {group_of(name)}"
+            f"  (expérience {years}, certificats {certificates}, interruption {gap_months})"
         )
 
 
@@ -145,7 +145,7 @@ def totals_line(run_1: dict[str, int], run_2: dict[str, int]) -> str:
     """The one line the lesson asks the learner to predict."""
     total_a = run_1["A"] + run_2["A"]
     total_b = run_1["B"] + run_2["B"]
-    return f"shortlisted over both runs: list A {total_a}, list B {total_b}"
+    return f"retenus sur les deux passages : liste A {total_a}, liste B {total_b}"
 
 
 def main(argv: list[str]) -> None:
@@ -155,11 +155,11 @@ def main(argv: list[str]) -> None:
     run_1 = tally(ranking_1)
     run_2 = tally(ranking_2)
     if "--totals" not in argv[1:]:
-        print_ranking("Run 1", ranking_1)
-        print(f"  shortlisted: list A {run_1['A']}, list B {run_1['B']}")
+        print_ranking("Passage 1", ranking_1)
+        print(f"  retenus : liste A {run_1['A']}, liste B {run_1['B']}")
         print()
-        print_ranking("Run 2: the same records, names swapped", ranking_2)
-        print(f"  shortlisted: list A {run_2['A']}, list B {run_2['B']}")
+        print_ranking("Passage 2 : les mêmes dossiers, noms échangés", ranking_2)
+        print(f"  retenus : liste A {run_2['A']}, liste B {run_2['B']}")
         print()
     print(totals_line(run_1, run_2))
 

@@ -14,10 +14,10 @@ import { DEFAULT_BONUS, MAX_BONUS } from '@scripts/bias-in-patterns-ranker-logic
 
 <div class="not-content bias-in-patterns-ranker" data-bias-in-patterns-ranker>
 	<label class="bp-bonus">
-		Points added to a list A name <input type="range" min="0" max={MAX_BONUS} step="1" value={DEFAULT_BONUS} />
+		Points ajoutés à un nom de la liste A <input type="range" min="0" max={MAX_BONUS} step="1" value={DEFAULT_BONUS} />
 		<output>{DEFAULT_BONUS}</output>
 	</label>
-	<button type="button" class="bp-go">Rank both runs</button>
+	<button type="button" class="bp-go">Classer les deux passages</button>
 	<div class="bp-report">
 		<pre class="bp-runs"></pre>
 		<p class="bp-totals" aria-live="polite"></p>

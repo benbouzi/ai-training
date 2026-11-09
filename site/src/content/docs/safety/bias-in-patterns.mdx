@@ -1,304 +1,327 @@
 import { Scenario, Pitfall, Exercise, Recap, Choice, Match } from '@components/lesson';
 import BiasInPatternsRanker from '@components/widgets/BiasInPatternsRanker.astro';
 
-In this lesson we read two shortlists that a ranker drew from the same
-twelve candidate records, and each shortlist looks fair on its own. Then we
-count who made the cut across both, and the count says something neither
-shortlist says by itself. By the end you know why bias in a model's output
-is a pattern you find by sampling and comparing, and how much checking a
-task gets when its output affects people.
+Dans cette leçon, nous lisons deux présélections qu’un outil de classement a
+tirées des mêmes douze dossiers de candidature, et chacune paraît juste prise
+seule. Nous comptons ensuite qui a été retenu dans les deux, et ce compte dit
+quelque chose qu’aucune des deux présélections ne dit seule. À la fin, vous
+saurez pourquoi le biais dans la sortie d’un modèle est une tendance qu’on
+trouve en échantillonnant et en comparant, et quel niveau de vérification
+mérite une tâche dont la sortie touche des personnes.
 
-You need only this page. The ranker in this lesson is a simulation, a
-small program written for the lesson that runs in your browser, and the
-records and names are made up. Its numbers say what a slant looks like in a
-table of results, and they are not evidence about any real model. The real
-evidence is in the papers cited in the second section.
+Cette page suffit. L’outil de classement de cette leçon est une simulation,
+un petit programme écrit pour la leçon qui fonctionne dans votre navigateur,
+et les dossiers et les noms sont inventés. Ses chiffres montrent à quoi
+ressemble une inclinaison dans un tableau de résultats, et ils ne prouvent
+rien sur un modèle réel. Les preuves réelles sont dans les articles cités
+dans la deuxième section.
 
-## Each shortlist looks fine
+## Chaque présélection paraît correcte
 
-A team has twelve candidate records for one role, and each record has the
-same fields: years of experience, number of certificates, and months since
-the last role. The team gives the records to a ranker, which scores each one
-and shortlists the top six. Here is the shortlist it returned.
+Une équipe a douze dossiers de candidature pour un poste, et chaque dossier
+a les mêmes champs : années d’expérience, nombre de certificats, et mois
+écoulés depuis le dernier poste. L’équipe donne les dossiers à un outil de
+classement, qui note chacun et présélectionne les six premiers. Voici la
+présélection qu’il a rendue.
 
-> 1. Arvel Dunmoor (experience 7, certificates 2, gap 3)
-> 2. Fenwick Sabani (experience 7, certificates 2, gap 4)
-> 3. Pell Varnava (experience 6, certificates 1, gap 2)
-> 4. Brisa Okonde (experience 6, certificates 0, gap 3)
-> 5. Nadir Kesrou (experience 5, certificates 1, gap 1)
-> 6. Corin Halvane (experience 5, certificates 0, gap 1)
+> 1. Arvel Dunmoor (expérience 7, certificats 2, interruption 3)
+> 2. Fenwick Sabani (expérience 7, certificats 2, interruption 4)
+> 3. Pell Varnava (expérience 6, certificats 1, interruption 2)
+> 4. Brisa Okonde (expérience 6, certificats 0, interruption 3)
+> 5. Nadir Kesrou (expérience 5, certificats 1, interruption 1)
+> 6. Corin Halvane (expérience 5, certificats 0, interruption 1)
 
-Read it as the team would. The most experienced people are at the top, a
-long gap costs a place, and a certificate lifts a record over one with the
-same years. You would sign off on this list.
+Lisez-la comme l’équipe la lirait. Les personnes les plus expérimentées sont
+en haut, une longue interruption coûte une place, et un certificat fait
+passer un dossier devant un autre qui a le même nombre d’années. Vous
+valideriez cette liste.
 
-Now the same twelve records, ranked again, and this time each record
-has a different name. The names come from two lists of six, list A and
-list B. Both lists are invented for this lesson, and first names and
-surnames are mixed across them on purpose, so that neither list reads as
-one group. In the first run half the records had list A names and half had
-list B names. In the second run the lists are swapped, so every record has
-now had one name from each list.
+Voici maintenant les mêmes douze dossiers, classés à nouveau, et cette fois
+chaque dossier porte un autre nom. Les noms viennent de deux listes de six,
+la liste A et la liste B. Les deux listes sont inventées pour cette leçon, et
+prénoms et noms de famille sont mélangés entre elles exprès, pour qu’aucune
+liste ne se lise comme un seul groupe. Au premier passage, la moitié des
+dossiers portaient des noms de la liste A et l’autre moitié des noms de la
+liste B. Au second passage, les listes sont échangées, donc chaque dossier a
+maintenant porté un nom de chaque liste.
 
-> 1. Marisel Adair (experience 7, certificates 2, gap 3)
-> 2. Rashon Belka (experience 7, certificates 2, gap 4)
-> 3. Dessa Tesfay (experience 6, certificates 1, gap 2)
-> 4. Brisa Okonde (experience 5, certificates 1, gap 1)
-> 5. Fenwick Sabani (experience 4, certificates 2, gap 1)
-> 6. Elior Vance (experience 4, certificates 1, gap 0)
+> 1. Marisel Adair (expérience 7, certificats 2, interruption 3)
+> 2. Rashon Belka (expérience 7, certificats 2, interruption 4)
+> 3. Dessa Tesfay (expérience 6, certificats 1, interruption 2)
+> 4. Brisa Okonde (expérience 5, certificats 1, interruption 1)
+> 5. Fenwick Sabani (expérience 4, certificats 2, interruption 1)
+> 6. Elior Vance (expérience 4, certificats 1, interruption 0)
 
-This one reads fine too. The same three records lead, and the last places
-went to shorter records with no gap, which is a defensible call. List A is
-Arvel Dunmoor, Brisa Okonde, Corin Halvane, Dessa Tesfay, Elior Vance, and
-Fenwick Sabani. List B is Marisel Adair, Nadir Kesrou, Oriel Morrow, Pell
-Varnava, Quilla Tallent, and Rashon Belka. Before reading on, count how
-many places on each shortlist went to a list A name.
+Celle-ci se lit bien aussi. Les trois mêmes dossiers sont en tête, et les
+dernières places sont allées à des dossiers plus courts sans interruption,
+ce qui se défend. La liste A comprend Arvel Dunmoor, Brisa Okonde, Corin
+Halvane, Dessa Tesfay, Elior Vance et Fenwick Sabani. La liste B comprend
+Marisel Adair, Nadir Kesrou, Oriel Morrow, Pell Varnava, Quilla Tallent et
+Rashon Belka. Avant de poursuivre, comptez combien de places de chaque
+présélection sont allées à un nom de la liste A.
 
-## Count who made the cut
+## Compter qui a été retenu
 
-The ranker is a widget further down this page. It scores each record from
-its three fields and shortlists the six best. Then it swaps the name lists
-and does it again. Its last line says how many shortlist places went to each
-list, added up over both runs. When two records tie at the shortlist line,
-the record that the team listed first gets the place.
+L’outil de classement est un widget plus bas sur cette page. Il note chaque
+dossier d’après ses trois champs et présélectionne les six meilleurs. Il
+échange ensuite les listes de noms et recommence. Sa dernière ligne dit
+combien de places de la présélection sont allées à chaque liste, en
+additionnant les deux passages. Quand deux dossiers sont à égalité à la
+limite de la présélection, le dossier que l’équipe a listé en premier
+obtient la place.
 
-The swap is the point of the design. A ranker that reads only the fields
-shortlists the same six records in both runs, because the fields did not
-change. Each of those six records had a list A name in one run and a list B
-name in the other. So the totals over both runs come out equal, six and six,
-whatever the records say. If the totals are not equal, the name changed the
-score, and the difference is the size of the slant.
+L’échange est le cœur du dispositif. Un outil qui ne lit que les champs
+présélectionne les six mêmes dossiers aux deux passages, parce que les champs
+n’ont pas changé. Chacun de ces six dossiers a porté un nom de la liste A à
+un passage et un nom de la liste B à l’autre. Les totaux sur les deux
+passages sont donc égaux, six et six, quoi que disent les dossiers. Si les
+totaux diffèrent, c’est que le nom a changé la note, et l’écart mesure
+l’inclinaison.
 
 <Choice id="predict-the-totals" objective="safety/verifies-output/calibrates-trust"
   concepts={['bias']}
-  context="A simulated ranker shortlists six of twelve candidate records twice. In the first run half the records carry names from list A and half names from list B, and in the second run the lists are swapped, so each record has carried one name from each list. Under a ranker that reads only the record fields, each list would be shortlisted six times over both runs. The learner has both shortlists and both name lists on the page, and predicts the last line the ranker prints before pressing its button."
-  title="What are the totals?"
-  hint="Count the list A names on each of the two shortlists above, then add. What would the two totals be if only the record fields counted?"
+  context="Un outil de classement simulé présélectionne deux fois six dossiers de candidature sur douze. Au premier passage, la moitié des dossiers portent des noms de la liste A et l’autre moitié des noms de la liste B, et au second passage les listes sont échangées, donc chaque dossier a porté un nom de chaque liste. Avec un outil qui ne lit que les champs des dossiers, chaque liste serait retenue six fois sur les deux passages. L’apprenant a les deux présélections et les deux listes de noms sur la page, et prédit la dernière ligne qu’affiche l’outil avant d’appuyer sur son bouton."
+  title="Quels sont les totaux ?"
+  hint="Comptez les noms de la liste A dans chacune des deux présélections ci-dessus, puis additionnez. Quels seraient les deux totaux si seuls les champs des dossiers comptaient ?"
   options={[
-    { text: 'shortlisted over both runs: list A 8, list B 4', correct: true },
-    { text: 'shortlisted over both runs: list A 6, list B 6', why: 'That is what a ranker that reads only the fields prints. Count the list A names on the two shortlists above: do they add up to six?' },
-    { text: 'shortlisted over both runs: list A 4, list B 2', why: 'That is the count for one run. The last line adds the counts of both runs.' },
-    { text: 'shortlisted over both runs: list A 4, list B 8', why: 'Check the names on each shortlist against list A again. Which list has more places?' },
+    { text: 'retenus sur les deux passages : liste A 8, liste B 4', correct: true },
+    { text: 'retenus sur les deux passages : liste A 6, liste B 6', why: 'C’est ce qu’affiche un outil qui ne lit que les champs. Comptez les noms de la liste A dans les deux présélections ci-dessus : leur somme fait-elle six ?' },
+    { text: 'retenus sur les deux passages : liste A 4, liste B 2', why: 'C’est le compte d’un seul passage. La dernière ligne additionne les comptes des deux passages.' },
+    { text: 'retenus sur les deux passages : liste A 4, liste B 8', why: 'Comparez de nouveau les noms de chaque présélection avec la liste A. Quelle liste a le plus de places ?' },
   ]}>
 
-Before you press the button, predict the last line the ranker prints.
+Avant d’appuyer sur le bouton, prédisez la dernière ligne qu’affiche l’outil
+de classement.
 
 </Choice>
 
-Now press the button, with the slider at 2 points, where it starts, and
-compare the last line with your prediction.
+Appuyez maintenant sur le bouton, avec le curseur à 2 points, sa position de
+départ, et comparez la dernière ligne avec votre prédiction.
 
 <BiasInPatternsRanker />
 
-Eight and four. You could not have read that from one shortlist. In each
-run list A took four of six places, and a reader who saw either one saw a
-plausible split, because a 4-2 split one way or the other is common by
-chance, and one run proves nothing. Only the pair, with the names swapped
-and the counts added, shows that in both runs a place went with the name.
-The widget also prints both rankings with their scores. At 2 points it
-prints this:
+Huit et quatre. Vous n’auriez pas pu le lire dans une seule présélection. À
+chaque passage, la liste A a pris quatre places sur six, et un lecteur qui
+voyait l’un ou l’autre voyait une répartition plausible, parce qu’un 4-2
+dans un sens ou dans l’autre arrive souvent par hasard, et un seul passage ne
+prouve rien. Seule la paire, avec les noms échangés et les comptes
+additionnés, montre qu’aux deux passages une place a suivi le nom. Le widget
+affiche aussi les deux classements avec leurs notes. À 2 points, il affiche
+ceci :
 
 ```text
-Run 1
-   1. shortlist  score 24  Arvel Dunmoor   list A  (experience 7, certificates 2, gap 3)
-   2. shortlist  score 23  Fenwick Sabani  list A  (experience 7, certificates 2, gap 4)
-   3. shortlist  score 18  Pell Varnava    list B  (experience 6, certificates 1, gap 2)
-   4. shortlist  score 17  Brisa Okonde    list A  (experience 6, certificates 0, gap 3)
-   5. shortlist  score 16  Nadir Kesrou    list B  (experience 5, certificates 1, gap 1)
-   6. shortlist  score 16  Corin Halvane   list A  (experience 5, certificates 0, gap 1)
-   7.            score 15  Rashon Belka    list B  (experience 4, certificates 2, gap 1)
-   8.            score 14  Quilla Tallent  list B  (experience 4, certificates 1, gap 0)
-   9.            score 13  Dessa Tesfay    list A  (experience 4, certificates 1, gap 3)
-  10.            score 11  Oriel Morrow    list B  (experience 3, certificates 2, gap 2)
-  11.            score 10  Marisel Adair   list B  (experience 4, certificates 1, gap 4)
-  12.            score  9  Elior Vance     list A  (experience 2, certificates 2, gap 3)
-  shortlisted: list A 4, list B 2
+Passage 1
+   1. retenu  score 24  Arvel Dunmoor   liste A  (expérience 7, certificats 2, interruption 3)
+   2. retenu  score 23  Fenwick Sabani  liste A  (expérience 7, certificats 2, interruption 4)
+   3. retenu  score 18  Pell Varnava    liste B  (expérience 6, certificats 1, interruption 2)
+   4. retenu  score 17  Brisa Okonde    liste A  (expérience 6, certificats 0, interruption 3)
+   5. retenu  score 16  Nadir Kesrou    liste B  (expérience 5, certificats 1, interruption 1)
+   6. retenu  score 16  Corin Halvane   liste A  (expérience 5, certificats 0, interruption 1)
+   7.         score 15  Rashon Belka    liste B  (expérience 4, certificats 2, interruption 1)
+   8.         score 14  Quilla Tallent  liste B  (expérience 4, certificats 1, interruption 0)
+   9.         score 13  Dessa Tesfay    liste A  (expérience 4, certificats 1, interruption 3)
+  10.         score 11  Oriel Morrow    liste B  (expérience 3, certificats 2, interruption 2)
+  11.         score 10  Marisel Adair   liste B  (expérience 4, certificats 1, interruption 4)
+  12.         score  9  Elior Vance     liste A  (expérience 2, certificats 2, interruption 3)
+  retenus : liste A 4, liste B 2
 
-Run 2: the same records, names swapped
-   1. shortlist  score 22  Marisel Adair   list B  (experience 7, certificates 2, gap 3)
-   2. shortlist  score 21  Rashon Belka    list B  (experience 7, certificates 2, gap 4)
-   3. shortlist  score 20  Dessa Tesfay    list A  (experience 6, certificates 1, gap 2)
-   4. shortlist  score 18  Brisa Okonde    list A  (experience 5, certificates 1, gap 1)
-   5. shortlist  score 17  Fenwick Sabani  list A  (experience 4, certificates 2, gap 1)
-   6. shortlist  score 16  Elior Vance     list A  (experience 4, certificates 1, gap 0)
-   7.            score 15  Nadir Kesrou    list B  (experience 6, certificates 0, gap 3)
-   8.            score 14  Oriel Morrow    list B  (experience 5, certificates 0, gap 1)
-   9.            score 13  Corin Halvane   list A  (experience 3, certificates 2, gap 2)
-  10.            score 12  Arvel Dunmoor   list A  (experience 4, certificates 1, gap 4)
-  11.            score 11  Pell Varnava    list B  (experience 4, certificates 1, gap 3)
-  12.            score  7  Quilla Tallent  list B  (experience 2, certificates 2, gap 3)
-  shortlisted: list A 4, list B 2
+Passage 2 : les mêmes dossiers, noms échangés
+   1. retenu  score 22  Marisel Adair   liste B  (expérience 7, certificats 2, interruption 3)
+   2. retenu  score 21  Rashon Belka    liste B  (expérience 7, certificats 2, interruption 4)
+   3. retenu  score 20  Dessa Tesfay    liste A  (expérience 6, certificats 1, interruption 2)
+   4. retenu  score 18  Brisa Okonde    liste A  (expérience 5, certificats 1, interruption 1)
+   5. retenu  score 17  Fenwick Sabani  liste A  (expérience 4, certificats 2, interruption 1)
+   6. retenu  score 16  Elior Vance     liste A  (expérience 4, certificats 1, interruption 0)
+   7.         score 15  Nadir Kesrou    liste B  (expérience 6, certificats 0, interruption 3)
+   8.         score 14  Oriel Morrow    liste B  (expérience 5, certificats 0, interruption 1)
+   9.         score 13  Corin Halvane   liste A  (expérience 3, certificats 2, interruption 2)
+  10.         score 12  Arvel Dunmoor   liste A  (expérience 4, certificats 1, interruption 4)
+  11.         score 11  Pell Varnava    liste B  (expérience 4, certificats 1, interruption 3)
+  12.         score  7  Quilla Tallent  liste B  (expérience 2, certificats 2, interruption 3)
+  retenus : liste A 4, liste B 2
 
-shortlisted over both runs: list A 8, list B 4
+retenus sur les deux passages : liste A 8, liste B 4
 ```
 
-Look at places six and seven in each run. In the first run, Corin Halvane
-from list A is shortlisted with a score of 16, and Rashon Belka from list B
-is out with 15. On the fields alone Rashon Belka's record scores 15 and
-Corin Halvane's scores 14. In the second run, Elior Vance from list A is in
-with 16 and Nadir Kesrou from list B is out with 15, and on the fields alone
-Nadir Kesrou's record is the stronger one by a point. At 2 points the
-simulation adds two points to every list A name, and in each run those two
-points moved one record across the shortlist line. One record per run is a
-difference of four in the totals. A real model has no such setting that you
-can look up or change. The effect is spread through its weights, and this
-simulation exists so that you can see what the effect does to a table of
-results without reading any weights.
+Regardez les places six et sept de chaque passage. Au premier passage, Corin
+Halvane, de la liste A, est retenu avec une note de 16, et Rashon Belka, de
+la liste B, est écarté avec 15. D’après les seuls champs, le dossier de
+Rashon Belka vaut 15 et celui de Corin Halvane 14. Au second passage, Elior
+Vance, de la liste A, est retenu avec 16 et Nadir Kesrou, de la liste B, est
+écarté avec 15, alors que d’après les seuls champs le dossier de Nadir
+Kesrou est le meilleur des deux d’un point. À 2 points, la simulation ajoute
+deux points à chaque nom de la liste A, et à chaque passage ces deux points
+ont fait passer un dossier de l’autre côté de la limite. Un dossier par
+passage fait un écart de quatre dans les totaux. Un modèle réel n’a aucun
+réglage de ce genre que vous pourriez consulter ou modifier. L’effet est
+réparti dans ses poids, et cette simulation existe pour que vous voyiez ce
+que l’effet fait à un tableau de résultats sans lire aucun poids.
 
-Move the slider to 0 and press the button again. With no points added, the
-two runs shortlist the same six records, and the last line reads six and
-six, as the design of the swap guarantees. Equal totals from a dozen
-records still don't prove that the name changes nothing, because a small
-slant may move no record across the line.
+Placez le curseur sur 0 et appuyez de nouveau sur le bouton. Sans points
+ajoutés, les deux passages présélectionnent les six mêmes dossiers, et la
+dernière ligne indique six et six, comme le garantit le dispositif de
+l’échange. Des totaux égaux sur une douzaine de dossiers ne prouvent pas pour
+autant que le nom ne change rien, parce qu’une petite inclinaison peut ne
+faire passer aucun dossier de l’autre côté de la limite.
 
-## Where the slant comes from
+## D’où vient l’inclinaison
 
-**Bias** in a model is a systematic slant in its output that it inherited
-from its training data and its tuning. The model learned which words follow
-which from a large body of text, and it predicts the most likely
-continuation of whatever it is given
-(@Academy ai-capabilities-and-limitations). In that text some names appear
-more often next to some jobs, and a name that appears often in the text at
-all reads differently from one that appears rarely. The same record reads as
-a slightly better fit under one name than under another (@Wilson 2024).
-Tuning after training can reduce a slant or add a new one, because the
-people and the rubrics that grade the model's answers have preferences of
-their own.
+Le **biais** d’un modèle est une inclinaison systématique de sa sortie,
+héritée de ses données d’entraînement et de son réglage. Le modèle a appris
+quels mots suivent quels autres dans un grand ensemble de textes, et il
+prédit la suite la plus probable de ce qu’on lui donne
+(@Academy ai-capabilities-and-limitations). Dans ces textes, certains noms
+apparaissent plus souvent à côté de certains métiers, et un nom fréquent
+dans les textes se lit autrement qu’un nom rare. Le même dossier paraît un
+peu mieux convenir sous un nom que sous un autre (@Wilson 2024). Le réglage
+après l’entraînement peut réduire une inclinaison ou en ajouter une, parce
+que les personnes et les grilles d’évaluation (rubrics) qui notent les réponses du
+modèle ont leurs propres préférences.
 
-This is measured, and the measurement uses the same swap as the widget.
-Bertrand and Mullainathan sent nearly five thousand fictitious resumes to
-real job advertisements, identical except for the name, and found that
-resumes with white-sounding names got about fifty percent more callbacks
-than the same resumes with African-American-sounding names (@Bertrand 2004).
-Wilson and Caliskan ran the method against text-embedding models set up to
-retrieve resumes for a job description, with over five hundred resumes and
-job descriptions across nine occupations, and found that the models favored
-white-associated names in 85.1 percent of the tests, favored
-female-associated names in 11.1 percent, and in some settings put Black male
-names at a disadvantage in every test (@Wilson 2024). The models were not
-told anyone's race or gender. The name was enough, as it was for the
-employers in 2004.
+Ce phénomène est mesuré, et la mesure utilise le même échange que le widget.
+Bertrand et Mullainathan ont envoyé près de cinq mille CV fictifs en réponse
+à de vraies offres d’emploi, identiques à part le nom, et ont constaté que
+les CV portant des noms à consonance blanche recevaient environ cinquante
+pour cent de rappels de plus que les mêmes CV portant des noms à consonance
+afro-américaine (@Bertrand 2004). Wilson et Caliskan ont appliqué la méthode
+à des modèles de plongement de texte (text embedding) configurés pour
+retrouver les CV correspondant à une offre, avec plus de cinq cents CV et
+offres dans neuf professions. Ils ont constaté que les modèles favorisaient
+les noms associés aux personnes blanches dans 85,1 % des tests, les noms
+associés aux femmes dans 11,1 %, et que dans certaines configurations les
+noms d’hommes noirs étaient désavantagés dans tous les tests (@Wilson 2024).
+Personne n’avait indiqué aux modèles l’origine ou le genre des candidats. Le
+nom suffisait, comme il suffisait aux employeurs en 2004.
 
-Both studies needed thousands of comparisons to find this. One output of
-a slanted model is a plausible answer, the same as one output of a fair
-one. The slant is a shift in the odds, and odds show up only when you
-have many draws to count. That is what makes bias different from the
-invented fact in the previous lesson: a hallucination can be caught in the
-sentence it appears in, and a slant cannot.
+Les deux études ont eu besoin de milliers de comparaisons pour le trouver.
+Une sortie d’un modèle biaisé est une réponse plausible, au même titre
+qu’une sortie d’un modèle équitable. L’inclinaison déplace les probabilités,
+et les probabilités n’apparaissent que quand on a beaucoup de tirages à
+compter. C’est ce qui distingue le biais du fait inventé de la leçon
+précédente : une hallucination se repère dans la phrase où elle apparaît, et
+une inclinaison ne s’y repère pas.
 
-<Pitfall title="It ranked one candidate the way I would have">
-A manager tests a screening assistant by giving it three applications she
-knows well and asks it to rank them. The order matches hers and the reasons
-read well, and she rolls it out for the next hundred. Each of the three
-outputs was reasonable, and three outputs can't show a slant of two points
-in a score, which is all it took to move a record across the shortlist line
-above. Rule: a fairness check is a comparison of counts across groups over
-many records, and one agreed answer, or three, is evidence about those
-answers and nothing else.
+<Pitfall title="Il a classé un candidat comme je l’aurais fait">
+Une responsable teste un assistant de présélection en lui donnant trois
+candidatures qu’elle connaît bien, et lui demande de les classer. L’ordre
+correspond au sien et les raisons se lisent bien, alors elle le déploie pour
+les cent suivantes. Chacune des trois sorties était raisonnable, et trois
+sorties ne peuvent pas montrer une inclinaison de deux points dans une note,
+alors que deux points ont suffi plus haut à faire passer un dossier de
+l’autre côté de la limite. Règle : une vérification d’équité compare des
+comptes entre groupes sur beaucoup de dossiers, et une réponse sur laquelle
+on est d’accord, ou trois, ne renseigne que sur ces réponses.
 </Pitfall>
 
-## How much checking a screening task gets
+## Quel niveau de vérification pour une tâche de présélection
 
-The lesson [What an invented fact looks like](/safety/spotting-hallucination/)
-sized the checking to the stakes of a claim. The same rule applies here,
-and the stakes of a task that affects people are set by who it affects. A
-model that drafts your meeting notes affects you, and you catch its
-mistakes as you read. When a model screens applications or triages support
-tickets by customer, it affects people who never see the output and can't
-correct it. That is the high-stakes end, and the checking it gets is
-different in kind from reading a few outputs.
+La leçon [À quoi ressemble un fait inventé](/safety/spotting-hallucination/)
+adaptait la vérification aux enjeux d’une affirmation. La même règle
+s’applique ici, et les enjeux d’une tâche qui touche des personnes dépendent
+de qui elle touche. Un modèle qui rédige vos notes de réunion vous touche
+vous, et vous repérez ses erreurs en lisant. Quand un modèle trie des
+candidatures ou classe des tickets d’assistance par client, il touche des
+personnes qui ne voient jamais la sortie et ne peuvent pas la corriger.
+C’est le haut de l’échelle des enjeux, et la vérification qu’elle demande
+est d’une autre nature que la lecture de quelques sorties.
 
-The check that fits is the one the widget did. Name the groups the task
-could treat differently. Take a sample of records that is large enough for a
-pattern to show, and the widget shows that a dozen is barely enough for a
-slant of two points. Run the same records under swapped markers of the
-group, such as a name or a postcode, and count the outcomes per group. Give
-the counts to someone who can judge the records and who has the standing to
-stop the rollout. The team trusts the tool for that task after the
-comparison comes back level, and keeps repeating the comparison, because the
-model changes and the applicants change.
+La vérification qui convient est celle qu’a faite le widget. Nommez les
+groupes que la tâche pourrait traiter différemment. Prenez un échantillon
+de dossiers assez grand pour qu’une tendance apparaisse, et le widget montre
+qu’une douzaine suffit à peine pour une inclinaison de deux points. Passez
+les mêmes dossiers avec les marqueurs du groupe échangés, comme un nom ou un
+code postal, et comptez les résultats par groupe. Donnez les comptes à
+quelqu’un qui sait juger les dossiers et qui a l’autorité d’arrêter le
+déploiement. L’équipe se fie à l’outil pour cette tâche une fois que la
+comparaison revient équilibrée, et elle continue de refaire la comparaison,
+parce que le modèle change et les candidats aussi.
 
 <Scenario id="screening-three-hundred" objective="safety/verifies-output/calibrates-trust"
   concepts={['bias']}
-  context="A team wants a chat assistant to shortlist twenty interview candidates from three hundred internship applications. The applicants will never see the output. The learner decides how much checking the task gets before the tool is trusted for it."
-  title="The internship shortlist"
-  hint="Who is affected by a wrong shortlist, and can they correct it? What kind of check can show a shift in the odds?"
+  context="Une équipe veut qu’un assistant conversationnel présélectionne vingt candidats à un entretien parmi trois cents candidatures de stage. Les candidats ne verront jamais la sortie. L’apprenant décide du niveau de vérification de la tâche avant de se fier à l’outil pour elle."
+  title="La présélection des stagiaires"
+  hint="Qui est touché par une mauvaise présélection, et peut-il la corriger ? Quel type de vérification peut montrer un déplacement des probabilités ?"
   options={[
-    { text: 'Ask the assistant to explain its reasons for each shortlisted applicant, read the reasons, and go ahead if none of them names a group.', consequence: 'Every reason reads well, because the model writes fluent reasons for whichever twenty it picked. The applicants it did not pick are not in the list you read, so a slant against them is invisible.' },
-    { text: 'Have a recruiter spot-check five of the twenty, and go ahead if those five look like people the recruiter would have picked.', consequence: 'The five look right. Five agreed picks say nothing about the two hundred and eighty who were left out, or about who was left out more often.' },
-    { text: 'Run a sample with names swapped across the groups the team can name, count the shortlist rate per group, and have the recruiting lead decide on the counts.', correct: true, consequence: 'The comparison shows whether a name moved the score, and a person with standing decides on that evidence. If the counts come back level, the tool is trusted for this task, and the check is repeated when the model or the applicant pool changes.' },
-    { text: 'Rely on the vendor statement that the model was tested for fairness before release, and keep a copy of the statement on file.', consequence: 'The vendor tested its model on its data and its prompts. Your applications, your job description and your prompt are a different setting, and the papers on this found that the slant changes with the setting.' },
+    { text: 'Demander à l’assistant d’expliquer ses raisons pour chaque candidat retenu, lire ces raisons, et continuer si aucune ne nomme un groupe.', consequence: 'Chaque raison se lit bien, parce que le modèle rédige des raisons fluides pour les vingt qu’il a choisis, quels qu’ils soient. Les candidats qu’il n’a pas choisis ne figurent pas dans la liste que vous lisez, donc une inclinaison contre eux reste invisible.' },
+    { text: 'Faire vérifier cinq des vingt par une recruteuse, et continuer si ces cinq ressemblent à des personnes qu’elle aurait choisies.', consequence: 'Les cinq semblent bons. Cinq choix sur lesquels on est d’accord ne disent rien des deux cent quatre-vingts qui ont été écartés, ni de qui a été écarté plus souvent.' },
+    { text: 'Passer un échantillon en échangeant les noms entre les groupes connus, compter le taux de présélection par groupe, et faire décider la responsable du recrutement sur ces comptes.', correct: true, consequence: 'La comparaison montre si un nom a changé la note, et une personne qui en a l’autorité décide sur cette base. Si les comptes reviennent équilibrés, l’outil est jugé fiable pour cette tâche, et la vérification est refaite quand le modèle ou le vivier de candidats change.' },
+    { text: 'S’en remettre à la déclaration du fournisseur selon laquelle le modèle a été testé pour l’équité avant sa sortie, et la garder au dossier.', consequence: 'Le fournisseur a testé son modèle sur ses données et ses prompts. Vos candidatures, votre offre et votre prompt forment un autre contexte, et les études sur ce sujet ont montré que l’inclinaison change avec le contexte.' },
   ]}>
 
-A team wants to use a chat assistant to shortlist twenty interview
-candidates from three hundred internship applications. Time is short. What
-checking does the task get before the team trusts the tool for it?
+Une équipe veut utiliser un assistant conversationnel pour présélectionner
+vingt candidats à un entretien parmi trois cents candidatures de stage. Le
+temps presse. Quel niveau de vérification mérite la tâche avant que l’équipe
+se fie à l’outil pour elle ?
 
 </Scenario>
 
 <Choice id="how-the-slant-shows" phase="review" objective="safety/verifies-output/calibrates-trust"
   concepts={['bias']}
-  context="The lesson tested a simulated shortlisting model on twelve candidate records with names from two lists."
-  title="How do you see the slant?" hint="Can one output show a slant, or only a comparison of many?"
+  context="La leçon a testé un modèle de présélection simulé sur douze dossiers de candidature portant des noms de deux listes."
+  title="Comment voir l’inclinaison ?" hint="Une seule sortie peut-elle montrer une inclinaison, ou seulement une comparaison entre beaucoup de sorties ?"
   options={[
-    { text: 'Read each shortlist and look for a reason that mentions a group.', why: 'A slanted shortlist gives reasons that look as fair as the reasons of a fair one.' },
-    { text: 'Swap the names on the same records, run both, and count per group.', correct: true },
-    { text: 'Ask the model whether it treats both groups in the same way.', why: 'The answer is more text from the same model, and it says nothing about the counts.' },
-    { text: 'Check that each shortlist has people from both groups on it.', why: 'A shortlist can include both groups and still favor one of them over many runs.' },
+    { text: 'Lire chaque présélection et chercher une raison qui mentionne un groupe.', why: 'Une présélection biaisée donne des raisons qui paraissent aussi justes que celles d’une présélection équitable.' },
+    { text: 'Échanger les noms sur les mêmes dossiers, lancer les deux, et compter par groupe.', correct: true },
+    { text: 'Demander au modèle s’il traite les deux groupes de la même façon.', why: 'La réponse est du texte de plus produit par le même modèle, et elle ne dit rien des comptes.' },
+    { text: 'Vérifier que chaque présélection contient des personnes des deux groupes.', why: 'Une présélection peut inclure les deux groupes et favoriser quand même l’un d’eux sur de nombreux passages.' },
   ]}>
 
-A shortlisting model picks candidates from records with names on them. How do
-you see whether it favors one group of names?
+Un modèle de présélection choisit des candidats à partir de dossiers qui
+portent des noms. Comment voyez-vous s’il favorise un groupe de noms ?
 
 </Choice>
 
 <Match id="how-much-checking" phase="review" objective="safety/verifies-output/calibrates-trust"
   concepts={['bias']}
-  context="The lesson compares how much checking different AI tasks get before a tool is trusted for them."
-  title="How much checking?" hint="Does the output affect people who can't see or correct it?"
-  options={['A spot-check is enough', 'A sampled comparison across groups']}
+  context="La leçon compare le niveau de vérification que méritent différentes tâches d’IA avant qu’on se fie à un outil pour elles."
+  title="Quel niveau de vérification ?" hint="La sortie touche-t-elle des personnes qui ne peuvent ni la voir ni la corriger ?"
+  options={['Une vérification par sondage suffit', 'Une comparaison par échantillon entre groupes']}
   rows={[
-    { statement: 'Rewrite your own meeting notes in a friendlier tone', option: 0, why: 'Who is affected if the tone is a little off, and can they fix it?' },
-    { statement: 'Rank loan applicants for a call back', option: 1, why: 'Can the applicants who never get a call see why?' },
-    { statement: 'List ideas for the team day out', option: 0, why: 'Who reads this list, and can they ignore a bad idea?' },
-    { statement: 'Sort job applications into interview or no interview', option: 1, why: 'Can a rejected applicant correct the decision?' },
+    { statement: 'Réécrire vos propres notes de réunion sur un ton plus aimable', option: 0, why: 'Qui est touché si le ton est un peu à côté, et peut-il le corriger ?' },
+    { statement: 'Classer des demandeurs de prêt pour un rappel', option: 1, why: 'Les demandeurs qui ne sont jamais rappelés peuvent-ils voir pourquoi ?' },
+    { statement: 'Lister des idées pour la sortie d’équipe', option: 0, why: 'Qui lit cette liste, et peut-il ignorer une mauvaise idée ?' },
+    { statement: 'Trier des candidatures entre entretien et refus', option: 1, why: 'Un candidat refusé peut-il corriger la décision ?' },
   ]}
-  rationale="A slant is invisible in one output, so a task that decides about people who can't correct it gets a comparison across groups.">
-Match each task to the checking it needs before you trust the tool for it.
+  rationale="Une inclinaison est invisible dans une seule sortie, donc une tâche qui décide à propos de personnes qui ne peuvent pas la corriger mérite une comparaison entre groupes.">
+Associez chaque tâche à la vérification dont elle a besoin avant de vous
+fier à l’outil pour elle.
 </Match>
 
-<Exercise stretch="Set the slider in the widget to 3 and then to 4, and press the button each time. Which of them give the same totals as 2 points? What does that tell you about how precisely a dozen records measure a slant, and how many records a check needs?">
+<Exercise stretch="Placez le curseur du widget sur 3, puis sur 4, et appuyez sur le bouton à chaque fois. Lesquels donnent les mêmes totaux que 2 points ? Qu’est-ce que cela vous dit de la précision avec laquelle une douzaine de dossiers mesure une inclinaison, et du nombre de dossiers dont une vérification a besoin ?">
 
-Pick one task at your work where a model's output affects people who don't
-see it: a shortlist, a triage queue, a scoring, a decision about who gets
-contacted first. Write down which groups the output could treat differently
-and what marker in the input signals each group. Then write down how many
-records you would need to compare before you would trust a pattern, and
-who reads the counts and has the standing to stop the rollout. Fifteen
-minutes is enough.
+Choisissez une tâche de votre travail où la sortie d’un modèle touche des
+personnes qui ne la voient pas : une présélection, une file de tri, une
+notation, une décision sur qui contacter en premier. Notez quels groupes la
+sortie pourrait traiter différemment, et quel marqueur dans l’entrée signale
+chaque groupe. Notez ensuite combien de dossiers vous devriez comparer avant
+de vous fier à une tendance, et qui lit les comptes et a l’autorité
+d’arrêter le déploiement. Quinze minutes suffisent.
 
-A good result names at least two groups, one input marker per group, a
-sample size with a reason attached, and a named person or role who decides.
-Is that person the one who wants the tool, or someone who can say no to
-it?
+Un bon résultat nomme au moins deux groupes, un marqueur d’entrée par groupe,
+une taille d’échantillon accompagnée d’une raison, et une personne ou un rôle
+nommé qui décide. Cette personne est-elle celle qui veut l’outil, ou
+quelqu’un qui peut lui dire non ?
 
 </Exercise>
 
 <Recap>
 
-1. Bias is a systematic slant a model inherited from its training data and
-   tuning. It shifts the odds, and one output of a slanted model looks
-   as reasonable as one output of a fair one (@Wilson 2024).
-2. The slant becomes visible in totals: the same records under swapped
-   group markers, the outcomes counted per group, compared. A fair ranker
-   gives equal totals by construction, so a difference is the slant.
-3. This has been measured in employers and in models with the same
-   swapped-name method, and the models favored some names for the same
-   record without being told anything about the person (@Bertrand 2004)
+1. Le biais est une inclinaison systématique qu’un modèle a héritée de ses
+   données d’entraînement et de son réglage. Il déplace les probabilités, et
+   une sortie d’un modèle biaisé paraît aussi raisonnable qu’une sortie d’un
+   modèle équitable (@Wilson 2024).
+2. L’inclinaison devient visible dans les totaux : les mêmes dossiers avec
+   les marqueurs de groupe échangés, les résultats comptés par groupe, puis
+   comparés. Un outil de classement équitable donne des totaux égaux par
+   construction, donc un écart est l’inclinaison.
+3. Ce phénomène a été mesuré chez des employeurs et dans des modèles avec la
+   même méthode des noms échangés, et les modèles ont favorisé certains noms
+   pour le même dossier sans rien savoir de la personne (@Bertrand 2004)
    (@Wilson 2024).
-4. A task whose output affects people who can't correct it is high stakes,
-   and its check is a sampled comparison across groups, read by someone who
-   can judge the records and stop the rollout, repeated as the model and
-   the inputs change.
+4. Une tâche dont la sortie touche des personnes qui ne peuvent pas la
+   corriger est à fort enjeu, et sa vérification est une comparaison par
+   échantillon entre groupes, lue par quelqu’un qui sait juger les dossiers
+   et peut arrêter le déploiement, et refaite quand le modèle et les entrées
+   changent.
 
 </Recap>

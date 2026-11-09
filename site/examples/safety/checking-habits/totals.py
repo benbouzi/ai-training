@@ -16,9 +16,9 @@ the kind of slip a model makes when it writes a table from prose.
 # the total the assistant gave for the row.
 TABLE = [
     ("Design", [124, 98, 111], 333),
-    ("Support", [82, 86, 90], 258),
+    ("Assistance", [82, 86, 90], 258),
     ("Marketing", [145, 162, 139], 466),
-    ("Operations", [67, 71, 69], 207),
+    ("Opérations", [67, 71, 69], 207),
 ]
 
 # The grand total the assistant wrote under the table.
@@ -30,16 +30,16 @@ def check_rows(table: "list[tuple[str, list[int], int]]") -> "list[str]":
     lines = []
     for team, months, written in table:
         computed = sum(months)
-        verdict = "ok      " if computed == written else "MISMATCH"
-        lines.append(f"{verdict}  {team:<11} written {written:>5}  recomputed {computed:>5}")
+        verdict = "ok   " if computed == written else "ÉCART"
+        lines.append(f"{verdict}  {team:<13} écrit {written:>5}  recalculé {computed:>5}")
     return lines
 
 
 def check_grand_total(table: "list[tuple[str, list[int], int]]", written: int) -> str:
     """Return the line for the grand total, recomputed from the months."""
     computed = sum(sum(months) for _, months, _ in table)
-    verdict = "ok      " if computed == written else "MISMATCH"
-    return f"{verdict}  {'Grand total':<11} written {written:>5}  recomputed {computed:>5}"
+    verdict = "ok   " if computed == written else "ÉCART"
+    return f"{verdict}  {'Total général':<13} écrit {written:>5}  recalculé {computed:>5}"
 
 
 def mismatches(table: "list[tuple[str, list[int], int]]") -> "list[str]":
@@ -52,7 +52,7 @@ def main() -> None:
         print(line)
     print(check_grand_total(TABLE, WRITTEN_GRAND_TOTAL))
     wrong = mismatches(TABLE)
-    print(f"rows that do not add up: {len(wrong)} of {len(TABLE)} ({', '.join(wrong)})")
+    print(f"lignes dont le total est faux : {len(wrong)} sur {len(TABLE)} ({', '.join(wrong)})")
 
 
 if __name__ == "__main__":

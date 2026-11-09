@@ -1,9 +1,9 @@
 id: safety/bias-in-patterns
-title: Seeing bias across many answers
+title: Voir le biais sur de nombreuses réponses
 description: >-
-  Read two shortlists from a simulated ranker on the page that each look fair on their own, count
-  who made the cut when the names are swapped, and decide how much checking a task that affects
-  people gets.
+  Lire deux présélections d’un outil de classement simulé sur la page, qui paraissent chacune
+  justes prises seules, compter qui est retenu quand les noms sont échangés, et décider quel
+  niveau de vérification mérite une tâche qui touche des personnes.
 mode: tutorial
 covers: safety/failure-modes
 serves: [safety/verifies-output/calibrates-trust]
@@ -13,16 +13,17 @@ assumes:
     lesson: concepts/how-models-work
     section: les-défaillances-nommées
 extends-to:
-  - label: Verifying outputs
+  - label: Vérifier les sorties
     href: /safety/verification/
 after: [safety/spotting-hallucination]
-shorts: [Bias from training data and bias from tuning]
+shorts: [Le biais venu des données d’entraînement et le biais venu du réglage]
 exercise:
   kind: judge
   brief: >-
-    For one task at your work where a model's output affects people, write down which groups you
-    would compare, how many samples you need before you would trust a pattern, and, given who the
-    output affects, how much checking that task gets and by whom.
+    Pour une tâche de votre travail où la sortie d’un modèle touche des personnes, noter quels
+    groupes vous compareriez, combien d’échantillons il vous faut avant de vous fier à une tendance,
+    et, selon les personnes que touche la sortie, quel niveau de vérification mérite cette tâche et
+    qui la fait.
 sources: [Wilson 2024, Bertrand 2004, Academy ai-capabilities-and-limitations]
 sources-checked: 2026-09-24
 review-by: 2027-03-24

@@ -1,244 +1,270 @@
 import { Choice, MultiChoice, Scenario, Pitfall, Exercise, Recap } from '@components/lesson';
 
-In this lesson we look at what happens to a person's attention when a
-tool has been right for a long time, and why the rare wrong answer then
-passes. The earlier lessons in this part showed an invented fact and a
-slant across many answers. This one is about the reader, because a failure
-the reader has stopped looking for is one nobody catches. By the end you
-can name the effect and set up a check that still works on a Friday
-afternoon in month six, when willpower has run out.
+Dans cette leçon, nous regardons ce que devient l’attention d’une personne
+quand un outil a eu raison pendant longtemps, et pourquoi la rare réponse
+fausse passe alors. Les leçons précédentes de cette partie ont montré un
+fait inventé et une inclinaison sur de nombreuses réponses. Celle-ci porte
+sur le lecteur, parce qu’une défaillance que le lecteur ne cherche plus,
+personne ne la repère. À la fin, vous saurez nommer l’effet et mettre en
+place une vérification qui fonctionne encore un vendredi après-midi du
+sixième mois, quand la volonté est épuisée.
 
-Consider a team that uses a chat assistant to draft the covering note for
-every invoice it sends. The team is invented for this lesson. In the first
-week everyone reads each note before it goes out and fixes a wrong date or
-a misread total. In the first month they find two mistakes in about two
-hundred notes. By the second month nobody reads the notes any more. The
-assistant is good at this, the notes all look the same, and reading them
-feels like a waste of a skilled person's time. In the fifth month a
-customer replies to ask why the note offers a discount for early payment
-that the invoice does not mention. The assistant had picked the sentence
-up from an earlier customer's terms, and it had been in every note to
-that customer for three weeks. Everyone on the team had been careful in
-the first month. The process had lost its check since then, and the tool
-being good is what removed it.
+Prenons une équipe qui utilise un assistant conversationnel pour rédiger le
+mot d’accompagnement de chaque facture qu’elle envoie. L’équipe est inventée
+pour cette leçon. La première semaine, tout le monde lit chaque mot avant
+l’envoi et corrige une date fausse ou un total mal lu. Le premier mois,
+l’équipe trouve deux erreurs sur environ deux cents mots. Au deuxième mois,
+plus personne ne lit les mots. L’assistant fait bien ce travail, les mots se
+ressemblent tous, et les lire semble une perte de temps pour une personne
+qualifiée. Au cinquième mois, un client répond pour demander pourquoi le mot
+propose une remise pour paiement anticipé dont la facture ne parle pas.
+L’assistant avait repris la phrase dans les conditions d’un client
+précédent, et elle figurait dans chaque mot envoyé à ce client depuis trois
+semaines. Tout le monde dans l’équipe avait été attentif le premier mois.
+Depuis, le processus avait perdu sa vérification, et c’est la qualité de
+l’outil qui l’avait fait disparaître.
 
-## Trust that spreads
+## Une confiance qui s’étend
 
-**Overreliance** is trusting a tool's output beyond what you have checked
-or could check (@Academy ai-capabilities-and-limitations). It starts in a
-place that looks safe. You know the task well. The first fifty outputs
-were right when you read them closely, so you stop reading closely. The
-trust is built on that task. Then the same tool is used on a task next to
-it, where you know less, and the trust carries over without anyone
-deciding that it should. On the first task you could tell a good answer
-from a plausible one at a glance. On the second you can't, and a model
-produces plausible text whether or not it is right, because fluent text is
-what it is built to produce. The spread is the problem. Trust that was
-calibrated on tasks you could judge ends up covering tasks you can't.
+La **dépendance excessive** (overreliance) consiste à se fier à la sortie
+d’un outil au-delà de ce que vous avez vérifié ou pourriez vérifier
+(@Academy ai-capabilities-and-limitations). Elle commence à un endroit qui
+semble sûr. Vous connaissez bien la tâche. Les cinquante premières sorties
+étaient justes quand vous les lisiez attentivement, alors vous cessez de
+les lire attentivement. La confiance s’est construite sur cette tâche. Puis
+le même outil sert pour une tâche voisine, que vous connaissez moins, et la
+confiance s’y reporte sans que personne ne l’ait décidé. Sur la première
+tâche, vous distinguiez d’un coup d’œil une bonne réponse d’une réponse
+plausible. Sur la seconde, vous ne le pouvez pas, et un modèle produit un
+texte plausible qu’il soit juste ou non, parce que produire un texte fluide
+est ce pour quoi il est construit. Le problème est cette extension. Une
+confiance calibrée sur des tâches que vous saviez juger finit par couvrir
+des tâches que vous ne savez pas juger.
 
-The invoicing team shows the pattern in one setting. The notes were a task
-the team knew. The customer's payment terms were a fact stored in a
-different document, and no one on the team was reading the notes against
-it, so the tool's mistake about the terms looked like every other correct
-note. The check that would have caught it was a comparison, and a comparison
-is exactly the kind of reading people stop doing once the output looks
-right every time.
+L’équipe de facturation montre ce schéma dans un cadre précis. Les mots
+d’accompagnement étaient une tâche que l’équipe connaissait. Les conditions
+de paiement du client étaient un fait rangé dans un autre document, et
+personne dans l’équipe ne comparait les mots à ce document, donc l’erreur de
+l’outil sur les conditions ressemblait à tous les autres mots corrects. La
+vérification qui l’aurait repérée était une comparaison, et une comparaison
+est justement le genre de lecture qu’on cesse de faire une fois que la
+sortie semble juste à chaque fois.
 
-## A known effect with a name
+## Un effet connu, qui a un nom
 
-Researchers who study people working with automated systems have a name
-for the second half of this story. **Automation complacency** is the
-habit of waving a tool's output through because it has been right many
-times before. Parasuraman and Manzey reviewed decades of studies on
-pilots, operators and clinicians and describe complacency and automation
-bias as effects of how attention is spent. When a person has other
-tasks to attend to and one of them is a reliable machine, attention goes
-to the others, and the machine's rare failure arrives when nobody is
-watching it (@Parasuraman 2010). The reliability is the cause. A tool
-that is wrong one time in three keeps people reading. When the tool is wrong
-one time in three hundred, it trains them to stop.
+Les chercheurs qui étudient les personnes travaillant avec des systèmes
+automatisés ont un nom pour la seconde moitié de cette histoire. La
+**complaisance envers l’automatisation** (automation complacency) est
+l’habitude de laisser passer la sortie d’un outil parce qu’il a eu raison de
+nombreuses fois. Parasuraman et Manzey ont passé en revue des décennies
+d’études sur des pilotes, des opérateurs et des soignants, et décrivent la
+complaisance et le biais d’automatisation (automation bias) comme des effets
+de la façon dont l’attention se répartit. Quand une personne a d’autres
+tâches à suivre et que l’une d’elles est une machine fiable, l’attention va
+aux autres, et la rare défaillance de la machine arrive quand personne ne la
+surveille (@Parasuraman 2010). La fiabilité en est la cause. Un outil qui se
+trompe une fois sur trois oblige les gens à continuer de lire. Quand l’outil
+se trompe une fois sur trois cents, il leur apprend à arrêter.
 
-Aviation is where the effect was first studied in depth, and the accident
-reports name it. In 2013 an airliner on approach to San Francisco struck
-the seawall short of the runway. The National Transportation Safety Board
-found that the crew had not noticed that the autothrottle was no longer
-controlling the airspeed. Among its findings it gave the crew's reliance
-on the automation as one reason the airspeed went unmonitored, and it
-listed the complexity of the autothrottle and autopilot systems among the
-contributing factors (@NTSB Asiana 214). The crew were trained
-professionals in a cockpit built for monitoring. Experience with the
-system did not protect them from the mode it was in.
+L’aviation est le domaine où l’effet a d’abord été étudié en profondeur, et
+les rapports d’accident le nomment. En 2013, un avion de ligne en approche
+de San Francisco a heurté la digue avant la piste. Le National
+Transportation Safety Board, l’organisme américain d’enquête sur les
+accidents de transport, a établi que l’équipage n’avait pas remarqué que
+l’automanette (autothrottle) ne contrôlait plus la vitesse. Parmi ses
+conclusions, il a cité la dépendance de l’équipage envers l’automatisation
+comme une raison pour laquelle la vitesse n’a pas été surveillée, et il a
+rangé la complexité de l’automanette et du pilote automatique parmi les
+facteurs contributifs (@NTSB Asiana 214). L’équipage était composé de
+professionnels formés, dans un poste de pilotage conçu pour la
+surveillance. Leur expérience du système ne les a pas protégés du mode dans
+lequel il se trouvait.
 
-Medicine has the same finding for decision support software, the systems
-that suggest a diagnosis or flag a drug interaction. Goddard, Roudsari and
-Wyatt reviewed the studies that gave clinicians deliberately wrong advice
-and found that clinicians followed a wrong suggestion more often than a
-control group that worked without the system. In the studies they reviewed, a
-correct decision was changed to a wrong one on the system's advice in
-between 6 and 11 percent of cases. The effect was larger under
-time pressure and in people less sure of their own answer, and smaller in
-the experienced (@Goddard 2012). The clinicians in these studies were
-making a normal trade of attention against a tool with a good record, and
-laziness has no part in it.
+La médecine fait le même constat pour les logiciels d’aide à la décision,
+les systèmes qui suggèrent un diagnostic ou signalent une interaction
+médicamenteuse. Goddard, Roudsari et Wyatt ont passé en revue les études qui
+donnaient délibérément de mauvais conseils à des soignants, et ont constaté
+que les soignants suivaient une suggestion fausse plus souvent qu’un groupe
+témoin qui travaillait sans le système. Dans les études examinées, une
+décision correcte devenait fausse sur le conseil du système dans 6 à 11 %
+des cas. L’effet était plus fort sous la pression du temps et chez les
+personnes moins sûres de leur propre réponse, et plus faible chez les
+personnes expérimentées (@Goddard 2012). Les soignants de ces études
+faisaient un arbitrage normal de leur attention face à un outil au bon
+historique, et la paresse n’y joue aucun rôle.
 
-<Pitfall title="I need to concentrate harder">
-A team lead reads the story of the invoicing team and resolves that from
-now on she will read every note the assistant produces with full
-attention. For two weeks she does, and finds nothing, and in the third
-week a long day pushes the notes to the end of the queue and she signs
-them off in a batch. The resolve was sincere, and it was aimed at the
-wrong place. Attention to a source of rare errors decays in everyone, and
-the decay is faster when the person is busy and the tool is good
-(@Parasuraman 2010). Rule: treat complacency as a property of the setup
-you are in, and change the setup. A person who has decided to be more
-careful has changed nothing that will still be true in month six.
+<Pitfall title="Je dois me concentrer davantage">
+Une cheffe d’équipe lit l’histoire de l’équipe de facturation et décide que
+désormais elle lira chaque mot produit par l’assistant avec toute son
+attention. Pendant deux semaines, elle le fait et ne trouve rien, puis la
+troisième semaine, une longue journée repousse les mots en fin de file et
+elle les valide en bloc. Sa résolution était sincère, et elle visait le
+mauvais endroit. L’attention portée à une source d’erreurs rares baisse chez
+tout le monde, et elle baisse plus vite quand la personne est occupée et que
+l’outil est bon (@Parasuraman 2010). Règle : traitez la complaisance comme
+une propriété du dispositif dans lequel vous êtes, et changez le dispositif.
+Une personne qui a décidé d’être plus attentive n’a rien changé qui sera
+encore vrai au sixième mois.
 </Pitfall>
 
-## Build the check in
+## Intégrer la vérification
 
-If attention cannot be relied on, the check has to live somewhere else.
-The counters that hold up are all process. They work when the person
-running them is tired, and they work for the new colleague who never saw
-the tool make a mistake. These are the ones that fit most settings.
+Si l’on ne peut pas compter sur l’attention, la vérification doit se
+trouver ailleurs. Les contre-mesures qui tiennent relèvent toutes du
+processus. Elles fonctionnent quand la personne qui les applique est
+fatiguée, et elles fonctionnent pour le nouveau collègue qui n’a jamais vu
+l’outil se tromper. Voici celles qui conviennent à la plupart des
+situations.
 
-- **A designed check.** Decide, before the tool is trusted for a task,
-  what a wrong output would cost and who would see it, and write down
-  what gets checked and against what. For the invoicing team that would
-  have been "the note is compared against the invoice and the customer's
-  terms". A check that has a name and a place in the process is still done in a
-  busy week. A check that exists only in someone's intention is skipped.
-- **Sampling.** Reading everything is not sustainable, and it is not
-  what a check needs. Pick a fixed share of outputs, or every output above
-  a stake threshold, and read those with the source open. The share can be
-  small when the stakes are low. It is fixed in advance rather than left
-  to whoever has time.
-- **Rotating who reviews.** One reviewer's attention decays on the
-  same curve as everyone else's. When the review moves between people, the
-  fresh eyes arrive on a schedule, and a mistake that has been there for
-  three weeks looks new to someone. The medical review found that giving
-  people the reasons behind a suggestion rather than a bare answer reduced
-  how often they followed wrong advice, and that making them accountable
-  for the decision helped in some studies and not in others
-  (@Goddard 2012). Both are process changes, and neither asks anyone to
-  try harder.
-- **Keeping your own skill.** Bainbridge pointed out in 1983 that an
-  operator who only watches a machine loses the skill to do the task, and
-  is then asked to take over exactly when the machine fails
-  (@Bainbridge 1983). A person who hasn't drafted a covering note or
-  checked a figure for a year is in the same position. Do part of the task by hand
-  now and then, so that you can still tell a wrong output when you see
-  one.
+- **Une vérification conçue.** Avant de se fier à l’outil pour une tâche,
+  décidez ce que coûterait une sortie fausse et qui la verrait, et notez ce
+  qui est vérifié et par rapport à quoi. Pour l’équipe de facturation, cela
+  aurait été « le mot est comparé à la facture et aux conditions du
+  client ». Une vérification qui a un nom et une place dans le processus est
+  encore faite pendant une semaine chargée. Une vérification qui n’existe
+  que dans l’intention de quelqu’un est sautée.
+- **L’échantillonnage.** Tout lire n’est pas tenable, et une vérification
+  n’en a pas besoin. Choisissez une part fixe des sorties, ou toutes les
+  sorties au-dessus d’un seuil d’enjeu, et lisez-les avec la source ouverte.
+  La part peut être petite quand les enjeux sont faibles. Elle est fixée à
+  l’avance, et ne dépend pas de qui a du temps.
+- **La rotation des relecteurs.** L’attention d’un relecteur baisse selon la
+  même courbe que celle de tout le monde. Quand la relecture passe d’une
+  personne à l’autre, un regard neuf arrive à date fixe, et une erreur
+  présente depuis trois semaines paraît nouvelle à quelqu’un. La revue
+  médicale a constaté que donner aux personnes les raisons d’une suggestion,
+  au lieu d’une réponse seule, réduisait la fréquence à laquelle elles
+  suivaient un mauvais conseil, et que les rendre responsables de la
+  décision aidait dans certaines études et pas dans d’autres
+  (@Goddard 2012). Ce sont deux changements de processus, et aucun des deux
+  ne demande à quelqu’un de faire plus d’efforts.
+- **Garder sa propre compétence.** Bainbridge a fait remarquer en 1983
+  qu’un opérateur qui ne fait que surveiller une machine perd la compétence
+  de faire la tâche, et qu’on lui demande ensuite de reprendre la main
+  précisément quand la machine tombe en panne (@Bainbridge 1983). Une
+  personne qui n’a pas rédigé de mot d’accompagnement ni vérifié de chiffre
+  depuis un an est dans la même situation. Faites une partie de la tâche à
+  la main de temps en temps, pour savoir encore reconnaître une sortie fausse
+  quand vous en voyez une.
 
-Match the depth of these to the stakes, as the earlier lessons in this
-part did for an invented fact and for bias. An internal brainstorm list
-needs none of them. Output that goes to a customer or can't be taken
-back gets a designed check and a named reviewer, and so does an output in
-a domain you can't judge. The tool's good record is the reason the check
-has to be designed, because that record is what removes the reading.
+Adaptez la profondeur de ces mesures aux enjeux, comme les leçons
+précédentes de cette partie l’ont fait pour un fait inventé et pour le
+biais. Une liste interne issue d’un remue-méninges n’en demande aucune. Une
+sortie qui va à un client ou ne peut pas être reprise reçoit une
+vérification conçue et un relecteur nommé, tout comme une sortie dans un
+domaine que vous ne savez pas juger. Le bon historique de l’outil est la
+raison pour laquelle la vérification doit être conçue, parce que c’est cet
+historique qui fait disparaître la lecture.
 
 <Scenario id="the-quiet-quarter" objective="safety/verifies-output/calibrates-trust"
   concepts={['overreliance', 'automation-complacency']}
-  context="A support team has used a chat assistant to draft replies to customer questions for three months. Nobody has found a mistake in the drafts since the first two weeks, and the replies go out under the team's name. The learner decides what checking the task gets from here."
-  title="Three months without a mistake"
-  hint="Where does the customer's reply go if the draft is wrong, and what does three months without a found mistake tell you about how closely people were looking?"
+  context="Une équipe d’assistance utilise depuis trois mois un assistant conversationnel pour rédiger les réponses aux questions des clients. Personne n’a trouvé d’erreur dans les brouillons depuis les deux premières semaines, et les réponses partent au nom de l’équipe. L’apprenant décide de la vérification que reçoit la tâche à partir de maintenant."
+  title="Trois mois sans erreur"
+  hint="Où va la réponse au client si le brouillon est faux, et que vous disent trois mois sans erreur trouvée sur l’attention avec laquelle les gens regardaient ?"
   options={[
-    { text: 'Keep reading every draft, and remind the team at the next meeting that the drafts still need a careful read.', consequence: 'The reminder works for a fortnight. The drafts look the same as they did, and attention to them decays again, because nothing about the setup has changed.' },
-    { text: 'Stop checking. Three months without a mistake is enough evidence that the tool is reliable for this task.', consequence: 'Three months is evidence that nobody found a mistake, and the team stopped looking after two weeks. The next wrong reply goes to a customer under your name, and the customer is who finds it.' },
-    { text: 'Set a fixed sample, say one draft in ten plus every reply about money or a cancellation, read those with the ticket open, and rotate the reviewer each week.', correct: true, consequence: 'The check has a size and an owner and does not depend on anyone remembering. A wrong draft about a refund is caught before it leaves, and the rotating reviewer sees the drafts fresh.' },
-    { text: 'Ask the assistant to add a line at the end of each draft saying whether it is confident, and read only the drafts it marks as uncertain.', consequence: 'The model writes the confidence line in the same fluent voice as the rest, and the drafts that were wrong in month five read as confident as the ones that were right. The check now depends on the tool judging itself.' },
+    { text: 'Continuer à lire chaque brouillon, et rappeler à l’équipe à la prochaine réunion que les brouillons demandent toujours une lecture attentive.', consequence: 'Le rappel marche quinze jours. Les brouillons ressemblent à ce qu’ils étaient, et l’attention qu’on leur porte baisse de nouveau, parce que rien n’a changé dans le dispositif.' },
+    { text: 'Arrêter de vérifier. Trois mois sans erreur prouvent assez que l’outil est fiable pour cette tâche.', consequence: 'Trois mois prouvent que personne n’a trouvé d’erreur, et l’équipe a cessé de regarder au bout de deux semaines. La prochaine réponse fausse part chez un client à votre nom, et c’est le client qui la trouve.' },
+    { text: 'Fixer un échantillon, un brouillon sur dix plus chaque réponse sur l’argent ou une résiliation, le lire avec le ticket ouvert, et changer de relecteur chaque semaine.', correct: true, consequence: 'La vérification a une taille et un responsable, et ne dépend de la mémoire de personne. Un brouillon faux sur un remboursement est repéré avant de partir, et le relecteur qui change voit les brouillons d’un œil neuf.' },
+    { text: 'Demander à l’assistant d’ajouter à la fin de chaque brouillon une ligne disant s’il est sûr de lui, et ne lire que les brouillons qu’il marque comme incertains.', consequence: 'Le modèle rédige la ligne de confiance avec la même aisance que le reste, et les brouillons faux du cinquième mois paraissent aussi sûrs que les justes. La vérification dépend maintenant de l’outil qui se juge lui-même.' },
   ]}>
 
-A support team has used a chat assistant to draft replies for three
-months. Nobody has found a mistake in the drafts since the first two
-weeks, and the replies go out under the team's name. What checking does
-the task get from here?
+Une équipe d’assistance utilise depuis trois mois un assistant
+conversationnel pour rédiger ses réponses. Personne n’a trouvé d’erreur dans
+les brouillons depuis les deux premières semaines, et les réponses partent
+au nom de l’équipe. Quelle vérification reçoit la tâche à partir de
+maintenant ?
 
 </Scenario>
 
 <Choice id="process-or-willpower" objective="safety/verifies-output/calibrates-trust"
   concepts={['automation-complacency']}
-  context="The lesson argues that counters to automation complacency have to be built into the process, because attention to a reliable tool decays in everyone. The learner sorts a list of counters a team proposed into the one that changes the setup and the ones that ask a person to try harder."
-  title="Which counter is process?"
-  hint="Which of these is still in place on a busy afternoon in month six, when nobody is thinking about it?"
+  context="La leçon soutient que les contre-mesures à la complaisance envers l’automatisation doivent être intégrées au processus, parce que l’attention portée à un outil fiable baisse chez tout le monde. L’apprenant trie une liste de contre-mesures proposées par une équipe entre celle qui change le dispositif et celles qui demandent à une personne de faire plus d’efforts."
+  title="Quelle contre-mesure relève du processus ?"
+  hint="Laquelle est encore en place un après-midi chargé du sixième mois, quand personne n’y pense ?"
   options={[
-    { text: 'Everyone on the team commits to reading the drafts with the same care they gave them in the first week.', why: 'A commitment is a decision about attention, and attention to a tool with a good record decays whatever the person decided.' },
-    { text: 'The team lead puts a note above her desk that says "the tool can be wrong".', why: 'The note is read closely for a week and becomes part of the wall. It changes nothing about which drafts get compared against a source.' },
-    { text: 'Every draft that mentions a price or a date is compared against the invoice by whoever is on review duty that week.', correct: true },
-    { text: 'New team members are told the story of the discount sentence on their first day, so that they know the tool has failed before.', why: 'The story raises attention in the person who hears it, for a while. It does not name which drafts get checked, or by whom, or against what.' },
+    { text: 'Tous les membres de l’équipe s’engagent à lire les brouillons avec le même soin que la première semaine.', why: 'Un engagement est une décision sur l’attention, et l’attention portée à un outil au bon historique baisse quoi que la personne ait décidé.' },
+    { text: 'La cheffe d’équipe affiche au-dessus de son bureau une note qui dit « l’outil peut se tromper ».', why: 'La note est lue avec attention une semaine, puis se fond dans le mur. Elle ne change rien à la question de savoir quels brouillons sont comparés à une source.' },
+    { text: 'Chaque brouillon qui mentionne un prix ou une date est comparé à la facture par la personne de relecture de la semaine.', correct: true },
+    { text: 'Les nouveaux venus entendent dès leur premier jour l’histoire de la phrase sur la remise, pour savoir que l’outil a déjà failli.', why: 'L’histoire augmente l’attention de celui qui l’entend, pour un temps. Elle ne dit pas quels brouillons sont vérifiés, ni par qui, ni par rapport à quoi.' },
   ]}>
 
-A team proposes four ways to stop waving the assistant's drafts through.
-Which one is a change to the process rather than a request for more
-willpower?
+Une équipe propose quatre façons d’arrêter de laisser passer les brouillons
+de l’assistant. Laquelle change le processus, et ne repose pas sur un
+surcroît de volonté ?
 
 </Choice>
 
 <MultiChoice id="what-decays-attention" phase="review" objective="safety/verifies-output/calibrates-trust"
   concepts={['automation-complacency', 'overreliance']}
-  context="The lesson describes automation complacency as an effect of how attention is spent when a person works alongside a reliable tool, drawing on studies of pilots and clinicians. The learner picks the conditions under which the effect is stronger."
-  title="When is the effect stronger?"
-  hint="Think about what the tool's record and the person's workload each do to where attention goes."
+  context="La leçon décrit la complaisance envers l’automatisation comme un effet de la façon dont l’attention se répartit quand une personne travaille avec un outil fiable, en s’appuyant sur des études sur des pilotes et des soignants. L’apprenant choisit les conditions dans lesquelles l’effet est plus fort."
+  title="Quand l’effet est-il plus fort ?"
+  hint="Pensez à ce que l’historique de l’outil et la charge de travail de la personne font chacun à la répartition de l’attention."
   options={[
-    { text: 'The tool has been right for a long time.', correct: true },
-    { text: 'The tool is wrong about one output in three.', why: 'A tool that fails often keeps people reading its output. Frequent failure is what the effect is not about.' },
-    { text: 'The person has several other things to attend to at the same time.', correct: true },
-    { text: 'The person has been told that the tool can make mistakes.', why: 'Knowing that a tool can fail raises attention for a while, and the studies found the effect in people who knew the systems well.' },
+    { text: 'L’outil a eu raison longtemps.', correct: true },
+    { text: 'L’outil se trompe sur une sortie sur trois.', why: 'Un outil qui échoue souvent oblige les gens à continuer de lire sa sortie. L’effet concerne au contraire l’outil qui échoue rarement.' },
+    { text: 'La personne a plusieurs autres choses à suivre en même temps.', correct: true },
+    { text: 'On a dit à la personne que l’outil peut se tromper.', why: 'Savoir qu’un outil peut échouer augmente l’attention pour un temps, et les études ont trouvé l’effet chez des personnes qui connaissaient bien les systèmes.' },
   ]}>
 
-Under which of these conditions is a person more likely to wave a tool's
-wrong output through?
+Dans lesquelles de ces conditions une personne risque-t-elle davantage de
+laisser passer une sortie fausse d’un outil ?
 
 </MultiChoice>
 
 <Choice id="where-the-check-lives" phase="review" objective="safety/verifies-output/calibrates-trust"
   concepts={['automation-complacency']}
-  context="The lesson argues that the check on a usually-right tool's output has to be built into the process, sized to what a wrong output would cost, rather than left to each person's attention."
-  title="Where does the check live?"
-  hint="What is the one thing about a check that makes it still happen when the tool has been right for six months?"
+  context="La leçon soutient que la vérification de la sortie d’un outil qui a en général raison doit être intégrée au processus, à la mesure de ce que coûterait une sortie fausse, au lieu d’être laissée à l’attention de chacun."
+  title="Où se trouve la vérification ?"
+  hint="Quelle est la chose qui fait qu’une vérification a encore lieu quand l’outil a eu raison pendant six mois ?"
   options={[
-    { text: 'In the tool, which is asked to flag the outputs it is unsure about.', why: 'The tool writes its flags in the same fluent text as its answers, and its wrong outputs are the ones it did not know were wrong.' },
-    { text: 'In the process, as a fixed sample or a rule about which outputs are compared against a source, with a named reviewer.', correct: true },
-    { text: 'In each person, who is trusted to know when an output needs a closer read.', why: 'A person who has seen the tool be right for months reads its output as right. That is the effect the lesson is about.' },
-    { text: 'In the first month, when the tool is new and everyone reads its output closely anyway.', why: 'The first month is when the check is least needed and most likely to happen. The wrong output that matters arrives later.' },
+    { text: 'Dans l’outil, à qui l’on demande de signaler les sorties dont il n’est pas sûr.', why: 'L’outil rédige ses signalements avec la même aisance que ses réponses, et ses sorties fausses sont celles dont il ignorait qu’elles étaient fausses.' },
+    { text: 'Dans le processus, sous forme d’échantillon fixe ou de règle sur les sorties comparées à une source, avec un relecteur nommé.', correct: true },
+    { text: 'Dans chaque personne, à qui l’on fait confiance pour savoir quand une sortie mérite une lecture attentive.', why: 'Une personne qui a vu l’outil avoir raison pendant des mois lit sa sortie comme juste. C’est l’effet dont parle la leçon.' },
+    { text: 'Dans le premier mois, quand l’outil est nouveau et que tout le monde lit de toute façon sa sortie avec attention.', why: 'Le premier mois est le moment où la vérification est le moins nécessaire et le plus probable. La sortie fausse qui compte arrive plus tard.' },
   ]}>
 
-A team wants its check on a usually-right tool to still be working in six
-months. Where does the check have to live?
+Une équipe veut que sa vérification d’un outil qui a en général raison
+fonctionne encore dans six mois. Où la vérification doit-elle se trouver ?
 
 </Choice>
 
-<Exercise stretch="Do the same for a task a colleague has stopped checking, and compare the two answers on who would find the mistake. If the answer is 'the customer' for either, that is the first check to design.">
+<Exercise stretch="Faites de même pour une tâche qu’un collègue a cessé de vérifier, et comparez les deux réponses sur la question de qui trouverait l’erreur. Si la réponse est « le client » dans l’un des deux cas, c’est la première vérification à concevoir.">
 
-Pick one task at your work where you or your team once read a tool's
-output closely and no longer do. Write down what the last unchecked
-mistake would have cost and who would have been the first to find it.
-Then write down what a designed check for it would compare against what.
-Ten minutes is enough. The exercise shows that the tasks you have stopped
-checking are the ones where the tool has your trust, and that this is the
-condition under which a mistake passes.
+Choisissez une tâche de votre travail où vous ou votre équipe lisiez autrefois
+attentivement la sortie d’un outil et ne le faites plus. Notez ce qu’aurait
+coûté la dernière erreur non vérifiée et qui l’aurait trouvée en premier.
+Notez ensuite ce qu’une vérification conçue pour cette tâche comparerait, et
+à quoi. Dix minutes suffisent. L’exercice montre que les tâches que vous
+avez cessé de vérifier sont celles où l’outil a votre confiance, et que
+c’est dans cette situation qu’une erreur passe.
 
-A good result names a specific cost (a refund, a wrong figure in a report
-that went to a client, an hour of a colleague's time), a specific finder,
-and a check with a size and an owner. If the finder you wrote down is
-outside your team, does the depth of your check match that?
+Un bon résultat nomme un coût précis (un remboursement, un chiffre faux dans
+un rapport parti chez un client, une heure du temps d’un collègue), une
+personne précise qui trouverait l’erreur, et une vérification avec une
+taille et un responsable. Si la personne que vous avez notée est hors de
+votre équipe, la profondeur de votre vérification est-elle à la hauteur ?
 
 </Exercise>
 
 <Recap>
 
-1. Overreliance is trusting a tool's output beyond what you have checked
-   or could check. It starts on tasks you know well and spreads to tasks
-   where a good answer and a plausible one look the same
+1. La dépendance excessive consiste à se fier à la sortie d’un outil au-delà
+   de ce que vous avez vérifié ou pourriez vérifier. Elle commence sur des
+   tâches que vous connaissez bien et s’étend à des tâches où une bonne
+   réponse et une réponse plausible se ressemblent
    (@Academy ai-capabilities-and-limitations).
-2. Automation complacency is the habit of waving a usually-right tool's
-   output through. It is an effect of how attention is spent, found in
-   trained pilots and clinicians, and it is stronger when the tool is
-   reliable and the person is busy (@Parasuraman 2010) (@Goddard 2012).
-3. Willpower is the wrong counter, because attention decays in everyone.
-   The counters that hold are process: a designed check, a fixed sample,
-   a rotating reviewer, and doing part of the task by hand so that you can
-   still see a wrong output (@Bainbridge 1983).
-4. Attention decays fastest when the tool is good, so the check has to be
-   built in before the tool has the record that would remove it.
+2. La complaisance envers l’automatisation est l’habitude de laisser passer
+   la sortie d’un outil qui a en général raison. C’est un effet de la façon
+   dont l’attention se répartit, observé chez des pilotes et des soignants
+   formés, et il est plus fort quand l’outil est fiable et que la personne
+   est occupée (@Parasuraman 2010) (@Goddard 2012).
+3. La volonté est la mauvaise contre-mesure, parce que l’attention baisse
+   chez tout le monde. Les contre-mesures qui tiennent relèvent du
+   processus : une vérification conçue, un échantillon fixe, un relecteur
+   qui change, et une partie de la tâche faite à la main pour savoir encore
+   voir une sortie fausse (@Bainbridge 1983).
+4. L’attention baisse le plus vite quand l’outil est bon, donc la
+   vérification doit être intégrée avant que l’outil ait l’historique qui la
+   ferait disparaître.
 
 </Recap>

@@ -13,7 +13,7 @@ assumes:
     section: la-paire-derrière-une-défaillance
   - objective: safety/verifies-output/calibrates-trust
     lesson: safety/checking-habits
-    section: depth-scales-with-stakes
+    section: la-profondeur-suit-les-enjeux
 after: [using-agents/steps-that-stay-human, using-agents/trying-two-models]
 shorts: [Going down a level when the number looks round]
 exercise:

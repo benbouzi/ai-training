@@ -11,7 +11,7 @@ introduces: [source-checking]
 assumes:
   - objective: safety/verifies-output/checks-claims
     lesson: safety/checking-habits
-    section: the-routine
+    section: la-routine
 after: [safety/checking-habits]
 shorts:
   - Real title, invented finding
