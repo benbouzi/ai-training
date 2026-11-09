@@ -46,8 +46,8 @@ export function compare(candidate: string, source: string, sourceName: string): 
 		total: candidateLines.length,
 		onlyHere,
 		lines: [
-			`${shared} of ${candidateLines.length} lines also appear in ${sourceName}`,
-			`lines not in ${sourceName}:`,
+			`${shared} ${shared > 1 ? 'lignes' : 'ligne'} sur ${candidateLines.length} ${shared > 1 ? 'figurent' : 'figure'} aussi dans ${sourceName}`,
+			`lignes absentes de ${sourceName} :`,
 			...onlyHere.map((line) => `  ${line}`),
 		],
 	};

@@ -1,8 +1,8 @@
 ---
 /**
  * ClaimChecker: the learner pastes a summary a chat assistant wrote, presses
- * Check, and reads one entry per quote, reference and figure in it: `found`
- * with the source file, line number and sentence, or `NO SOURCE`, and a
+ * Vérifier, and reads one entry per quote, reference and figure in it: `trouvé`
+ * with the source file, line number and sentence, or `SANS SOURCE`, and a
  * summary line. These are the lines `check_claims.py` prints for the same
  * summary. The sources are shown in the widget, numbered, so the learner can
  * read a found sentence in its place. Teaches and never grades (spec S03
@@ -54,10 +54,10 @@ const numbered = (body: string) =>
 		)
 	}
 	<label class="cc-label">
-		<span>Paste the summary here</span>
+		<span>Collez le résumé ici</span>
 		<textarea class="cc-input" rows="8" spellcheck="false" autocomplete="off">{text}</textarea>
 	</label>
-	<button type="button" class="cc-check">Check</button>
+	<button type="button" class="cc-check">Vérifier</button>
 	<div class="cc-report" aria-live="polite">
 		<pre class="cc-lines" tabindex="0" hidden></pre>
 	</div>

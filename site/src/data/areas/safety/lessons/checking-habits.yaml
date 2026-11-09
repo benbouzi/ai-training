@@ -11,7 +11,7 @@ introduces: [checking-habits]
 assumes:
   - objective: safety/verifies-output/checks-claims
     lesson: safety/spotting-hallucination
-    section: specificity-is-the-tell
+    section: la-précision-est-lindice
   - objective: safety/verifies-output/calibrates-trust
     lesson: safety/when-the-tool-is-usually-right
     section: build-the-check-in

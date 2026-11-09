@@ -6,29 +6,29 @@ notes: |-
 
   Safety is a Foundations course for every knowledge worker. No lesson here requires running or configuring an agent, a terminal or a programming language (spec S03 "Foundations audience"). Tutorial-mode lessons have the learner type prompts into a chat tool they already use, or try a widget on the page.
 parts:
-  - title: Responsible use
+  - title: Usage responsable
     lessons:
       - safety/responsible-use
       - safety/redact-before-you-paste
       - safety/saying-ai-helped
-  - title: Recognizing failure
+  - title: Reconnaître les défaillances
     lessons:
       - safety/spotting-hallucination
       - safety/bias-in-patterns
       - safety/when-the-tool-is-usually-right
-  - title: Verifying outputs
+  - title: Vérifier les sorties
     lessons:
       - safety/checking-habits
       - safety/following-the-source
       - safety/asking-a-model-to-disagree
       - safety/marking-what-a-person-checked
       - safety/checking-what-an-agent-changed
-  - title: Agent risk
+  - title: Risques des agents
     lessons:
       - safety/agent-risk
       - safety/sizing-the-blast-radius
       - safety/tracing-a-planted-instruction
-  - title: Governance and oversight
+  - title: Gouvernance et supervision
     lessons:
       - safety/writing-an-ai-policy
       - safety/reading-agent-logs

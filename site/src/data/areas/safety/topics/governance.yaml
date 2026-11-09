@@ -1,69 +1,69 @@
 id: safety/governance
 area: safety
-name: Governance and oversight
+name: Gouvernance et supervision
 definition: >-
-  Once agents work inside an organization, individual care is not enough.
-  This topic covers the shared controls: a policy that says what is allowed,
-  logs that make agent actions reviewable, awareness that a model update can
-  change behavior overnight, a clear route for escalating when something
-  goes wrong, the regulation that applies to AI use, and a method for
-  assessing a use case's risk before it starts.
+  Une fois que des agents travaillent dans une organisation, la vigilance individuelle ne suffit
+  plus. Ce thème couvre les contrôles partagés : une politique qui dit ce qui est permis, des
+  journaux qui rendent les actions des agents vérifiables, la conscience qu’une mise à jour du
+  modèle peut changer son comportement du jour au lendemain, une voie claire pour faire remonter
+  un problème, la réglementation qui s’applique à l’usage de l’IA, et une méthode pour évaluer le
+  risque d’un cas d’usage avant qu’il démarre.
 concepts:
   - id: policy
-    name: Policy
+    name: Politique
     definition: >-
-      A written statement of which AI tools may be used, with what data, for
-      what tasks, and with what checks before results are relied on. A good
-      policy is short, names owners and gives examples of allowed and
-      disallowed use. Without one, every person invents their own rules and
-      the organization's exposure is the sum of the most careless choices.
+      Un texte écrit qui dit quels outils d’IA peuvent être utilisés, avec quelles données, pour
+      quelles tâches, et avec quelles vérifications avant de se fier aux résultats. Une bonne
+      politique est courte, nomme des responsables et donne des exemples d’usages permis et interdits.
+      Sans politique, chacun invente ses propres règles, et l’exposition de l’organisation est la
+      somme des choix les plus imprudents.
   - id: logging-and-audit
-    name: Logging and audit
+    name: Journalisation et audit
     definition: >-
-      Recording what an agent was asked, what it did, which tools it called
-      and what changed, so that a person can later reconstruct and judge its
-      actions. Logs turn an opaque incident into a traceable one and make
-      patterns visible across many sessions. Store them where the agent
-      itself cannot edit them, and review a sample even when nothing has gone
-      wrong.
+      Enregistrer ce qu’on a demandé à un agent, ce qu’il a fait, quels outils il a appelés et ce qui
+      a changé, pour qu’une personne puisse plus tard reconstituer et juger ses actions. Les journaux
+      (logs) transforment un incident opaque en incident traçable et rendent visibles les tendances
+      sur de nombreuses sessions. Stockez-les là où l’agent lui-même ne peut pas les modifier, et
+      relisez-en un échantillon même quand rien ne s’est mal passé.
   - id: model-change-risk
-    name: Model change risk
+    name: Risque lié au changement de modèle
     definition: >-
-      Providers update models, and a workflow that behaved well can behave
-      differently after an update: a format changes, a refusal appears, a
-      shortcut is taken. Because the model is outside your control, treat
-      each change like a dependency upgrade: pin versions where possible,
-      keep a test set that represents your tasks, and re-run it when the
-      model changes.
+      Les fournisseurs mettent leurs modèles à jour, et un flux de travail qui fonctionnait bien peut
+      se comporter autrement après une mise à jour : un format change, un refus apparaît, un raccourci
+      est pris. Comme le modèle échappe à votre contrôle, traitez chaque changement comme la mise à
+      jour d’une dépendance : figez les versions quand c’est possible, gardez un jeu de tests
+      représentatif de vos tâches, et relancez-le quand le modèle change.
   - id: escalation
-    name: Escalation
+    name: Remontée des incidents
     definition: >-
-      The agreed route for raising an AI-related problem: a leaked document,
-      an agent that took a wrong action, output that harmed someone. It names
-      who to tell, how fast and what to preserve. People report faster when
-      the route is known and blameless, and the organization learns from
-      near-misses instead of only from disasters.
+      La voie convenue pour signaler un problème lié à l’IA : un document qui a fuité, un agent qui a
+      fait une mauvaise action, une sortie qui a nui à quelqu’un. Elle dit qui prévenir, dans quel
+      délai et quoi conserver. Les gens signalent plus vite quand la voie est connue et sans recherche
+      de coupable, et l’organisation apprend des incidents évités de justesse, avant d’avoir à
+      apprendre des catastrophes.
   - id: regulation
-    name: Regulation
+    name: Réglementation
     definition: >-
-      Law that applies to how an organization builds and uses AI, with the
-      EU AI Act as the main example. It defines what counts as an AI system,
-      sorts uses into risk tiers from prohibited to minimal, and puts
-      different duties on the provider who builds a system and the deployer
-      who uses it. Deployers owe transparency to the people affected and must
-      make sure their staff have enough AI literacy for the tools they use.
+      Le droit qui s’applique à la façon dont une organisation construit et utilise l’IA, avec le
+      règlement européen sur l’IA (EU AI Act) comme principal exemple. Il définit ce qui compte comme
+      un système d’IA, classe les usages en niveaux de risque, de l’interdit au minimal, et impose des
+      obligations différentes au fournisseur (provider) qui construit un système et au déployeur
+      (deployer) qui l’utilise. Les déployeurs doivent la transparence aux personnes concernées et
+      doivent s’assurer que leur personnel a une maîtrise de l’IA suffisante pour les outils qu’il
+      utilise.
   - id: risk-assessment
-    name: Risk assessment
+    name: Évaluation des risques
     definition: >-
-      A short, written method for judging an AI use case before it starts.
-      Name the domains it touches, such as personal data, money, safety or
-      reputation, then rate impact and likelihood on agreed scales and
-      combine them into a level. A level above the agreed threshold needs
-      extra controls or a decision, in writing, from someone with the
-      authority to accept the risk. The record is what makes the decision
-      reviewable later.
+      Une méthode courte et écrite pour juger un cas d’usage de l’IA avant qu’il démarre. Nommez les
+      domaines qu’il touche, comme les données personnelles, l’argent, la sécurité ou la réputation,
+      puis notez l’impact et la probabilité sur des échelles convenues, et combinez-les en un niveau.
+      Un niveau au-dessus du seuil convenu exige des contrôles supplémentaires ou une décision écrite
+      d’une personne habilitée à accepter le risque. Ce compte rendu est ce qui permet de réexaminer
+      la décision plus tard.
 links:
   prerequisites: [safety/agent-risk]
   related: []
   specializations: []
-sources: [AEC-10, AEC-11, Academy deploying-claude-enterprise-with-confidence, Academy building-effective-human-agent-teams, AI Act, AI Act OJ, EC AI Act, EC AI Office, OpenAI Academy ai-leadership-kaf7k]
+sources: [AEC-10, AEC-11, Academy deploying-claude-enterprise-with-confidence, Academy
+      building-effective-human-agent-teams, AI Act, AI Act OJ, EC AI Act, EC AI Office, OpenAI
+      Academy ai-leadership-kaf7k]

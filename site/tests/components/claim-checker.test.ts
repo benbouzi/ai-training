@@ -34,8 +34,8 @@ describe('ClaimChecker', () => {
 		});
 		expect(html).toMatch(/<div class="not-content claim-checker[^"]*" data-claim-checker data-sources="/);
 		expect(html).toMatch(/<figcaption[^>]*>report.txt<\/figcaption>/);
-		expect(html).toContain(' 3  On a weekday morning in March the team counted 890 bicycles');
-		expect(html).toContain(' 9  No cost estimate was made for this review.</pre>');
+		expect(html).toContain(' 3  Un matin de semaine en mars, l’équipe a compté 890 vélos');
+		expect(html).toContain(' 9  Aucune estimation des coûts n’a été faite pour cette étude.</pre>');
 		expect(html).toContain(`>${escaped(readFileSync(join(EXAMPLES, DIR, 'sample/summary_1.txt'), 'utf8'))}</textarea>`);
 		const attr = /data-sources="([^"]*)"/.exec(html)?.[1] ?? '';
 		const data: unknown = JSON.parse(attr.replaceAll('&quot;', '"').replaceAll('&#39;', "'").replaceAll('&amp;', '&'));
@@ -43,7 +43,7 @@ describe('ClaimChecker', () => {
 			{ name: 'report.txt', text: readFileSync(join(EXAMPLES, DIR, 'sources/report.txt'), 'utf8') },
 			{ name: 'minutes.txt', text: readFileSync(join(EXAMPLES, DIR, 'sources/minutes.txt'), 'utf8') },
 		]);
-		expect(html).toMatch(/<button type="button" class="cc-check[^"]*">Check<\/button>/);
+		expect(html).toMatch(/<button type="button" class="cc-check[^"]*">Vérifier<\/button>/);
 	});
 	it('leaves the source text out with showSources false and starts empty without a summary', async () => {
 		const html = await container.renderToString(ClaimChecker, { props: { sources: SOURCES, showSources: false } });

@@ -37,9 +37,11 @@ def report(candidate: str, library: str = LIBRARY) -> str:
     shared = [line for line in candidate_lines if line in library_lines]
     only_here = [line for line in candidate_lines if line not in library_lines]
     name = os.path.basename(library)
+    n, total = len(shared), len(candidate_lines)
+    noun, verb = ("lignes", "figurent") if n > 1 else ("ligne", "figure")
     lines = [
-        f"{len(shared)} of {len(candidate_lines)} lines also appear in {name}",
-        f"lines not in {name}:",
+        f"{n} {noun} sur {total} {verb} aussi dans {name}",
+        f"lignes absentes de {name} :",
     ]
     lines.extend("  " + line for line in only_here)
     return "\n".join(lines)

@@ -126,8 +126,8 @@ test('the claim checker prints the report the page shows for the first summary',
 	const checker = page.locator('.claim-checker').filter({ has: page.locator('.cc-sources') });
 	await expect(checker).toHaveCount(1);
 	await expect(checker.locator('.cc-lines')).toBeHidden();
-	await checker.getByRole('button', { name: 'Check' }).click();
-	const fence = checker.locator('xpath=following::pre[contains(., "claims have no source")][1]');
+	await checker.getByRole('button', { name: 'Vérifier' }).click();
+	const fence = checker.locator('xpath=following::pre[contains(., "pas de source")][1]');
 	expect((await checker.locator('.cc-lines').innerText()).trim()).toBe((await fence.innerText()).trim());
 	await expect(checker.locator('.cc-missing')).toHaveCount(4);
 });
@@ -141,16 +141,16 @@ test('the line comparer prints the report the page shows after each sample, and 
 	for (let i = 0; i < 2; i++) {
 		const widget = widgets.nth(i);
 		await expect(widget.locator('.lc-lines')).toBeHidden();
-		await widget.getByRole('button', { name: 'Compare' }).click();
-		const fence = widget.locator('xpath=following::pre[contains(., "lines also appear in")][1]');
+		await widget.getByRole('button', { name: 'Comparer' }).click();
+		const fence = widget.locator('xpath=following::pre[contains(., "aussi dans truncate.py")][1]');
 		expect((await widget.locator('.lc-lines').innerText()).trim()).toBe((await fence.innerText()).trim());
 	}
 	const first = widgets.first();
 	await first.locator('textarea').fill('words = text.split()\nprint(words)');
 	await expect(first.locator('.lc-lines')).toBeHidden();
-	await first.getByRole('button', { name: 'Compare' }).click();
+	await first.getByRole('button', { name: 'Comparer' }).click();
 	await expect(first.locator('.lc-lines')).toHaveText(
-		'1 of 2 lines also appear in truncate.py\nlines not in truncate.py:\n  print(words)',
+		'1 ligne sur 2 figure aussi dans truncate.py\nlignes absentes de truncate.py :\n  print(words)',
 	);
 });
 

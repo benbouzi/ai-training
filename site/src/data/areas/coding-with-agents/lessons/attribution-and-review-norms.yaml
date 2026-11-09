@@ -12,7 +12,7 @@ introduces: [review-norms, attribution]
 assumes:
   - objective: safety/handles-data-safely/discloses-ai-use
     lesson: safety/saying-ai-helped
-    section: the-three-parts-of-a-disclosure-line
+    section: les-trois-parties-dune-ligne-de-mention
   - objective: coding-with-agents/verifies-agent-work/reviews-others-code
     lesson: coding-with-agents/reviewing-the-diff
     section: every-changed-file

@@ -28,8 +28,8 @@ describe('compare', () => {
 	it('prints what compare.py prints for the generated function', () => {
 		const result = compare(read('sample/generated.py'), read('sources/truncate.py'), 'truncate.py');
 		expect(result.lines).toEqual([
-			'9 of 10 lines also appear in truncate.py',
-			'lines not in truncate.py:',
+			'9 lignes sur 10 figurent aussi dans truncate.py',
+			'lignes absentes de truncate.py :',
 			'  def shorten(text, limit, marker="..."):',
 		]);
 		expect(result.shared).toBe(9);
@@ -38,8 +38,8 @@ describe('compare', () => {
 	it('prints what compare_rewrite.py prints for the rewrite', () => {
 		const result = compare(read('sample/rewritten.py'), read('sources/truncate.py'), 'truncate.py');
 		expect(result.lines).toEqual([
-			'3 of 6 lines also appear in truncate.py',
-			'lines not in truncate.py:',
+			'3 lignes sur 6 figurent aussi dans truncate.py',
+			'lignes absentes de truncate.py :',
 			'  def shorten(text, limit, marker="..."):',
 			'  """Return at most limit words, with a marker when words were dropped."""',
 			'  return " ".join(words[:limit]).rstrip(",;:") + marker',
@@ -47,8 +47,8 @@ describe('compare', () => {
 	});
 	it('counts a line shared when only its indent differs', () => {
 		expect(compare('    x = 1\ny = 2', 'x = 1', 'a.py').lines).toEqual([
-			'1 of 2 lines also appear in a.py',
-			'lines not in a.py:',
+			'1 ligne sur 2 figure aussi dans a.py',
+			'lignes absentes de a.py :',
 			'  y = 2',
 		]);
 	});
@@ -57,13 +57,13 @@ describe('compare', () => {
 			shared: 2,
 			total: 3,
 			onlyHere: ['z'],
-			lines: ['2 of 3 lines also appear in a.py', 'lines not in a.py:', '  z'],
+			lines: ['2 lignes sur 3 figurent aussi dans a.py', 'lignes absentes de a.py :', '  z'],
 		});
 	});
 	it('reports 0 of 0 for an empty paste, with no lines under the heading', () => {
 		expect(compare('\n  \n', 'x = 1', 'a.py').lines).toEqual([
-			'0 of 0 lines also appear in a.py',
-			'lines not in a.py:',
+			'0 ligne sur 0 figure aussi dans a.py',
+			'lignes absentes de a.py :',
 		]);
 	});
 });
