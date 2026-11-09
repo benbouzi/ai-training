@@ -17,7 +17,7 @@ introduces:
 assumes:
   - objective: using-agents/delegates-and-checks/writes-a-brief
     lesson: using-agents/delegating
-    section: writing-the-brief
+    section: écrire-la-consigne
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
     section: le-rayon-dimpact

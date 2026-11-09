@@ -1,264 +1,275 @@
 import { Choice, MultiChoice, Match, Sort, Scenario, Repair, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-In the lesson on delegating you added one line to the brief, and the line
-set how much the agent may do before it comes back to you. This lesson
-explains that choice. We name three settings and show that the setting
-follows from what a wrong step costs. Then we look at the first run of a
-new kind of task, and at the end you write the setting as one sentence the
-agent can follow.
+Dans la leçon sur la délégation, vous avez ajouté une ligne à la consigne,
+et cette ligne fixait ce que l’agent peut faire avant de revenir vers vous.
+Cette leçon explique ce choix. Nous nommons trois réglages et nous montrons
+que le réglage découle de ce que coûte une erreur. Puis nous regardons la
+première exécution d’un nouveau type de tâche, et à la fin vous écrivez le
+réglage en une phrase que l’agent peut suivre.
 
-The tasks come from the calibration team at Brindlewick Instruments, the
-fictional company from the earlier lessons. You don't need an agent open for
-this lesson.
+Les tâches viennent de l’équipe d’étalonnage de Brindlewick Instruments,
+l’entreprise fictive des leçons précédentes. Vous n’avez pas besoin d’ouvrir
+un agent pour cette leçon.
 
-## Settings you write into the brief
+## Des réglages que vous écrivez dans la consigne
 
-The concepts course placed a workflow on a scale by asking who decides the
-next step, and named three points on it: the system suggests, the system
-acts and asks before anything hard to undo, and the system runs
-unattended ([Three points on one scale](/concepts/autonomy-scale/#trois-points-sur-une-même-échelle))
-(@DLAI-11). When you delegate one task, the same three points become three
-settings you write into the brief.
+Le cours sur les concepts plaçait un flux de travail sur une échelle en
+demandant qui décide de l’étape suivante, et y nommait trois points : le
+système suggère, le système agit et demande avant tout ce qui est difficile à
+annuler, et le système tourne sans surveillance
+([Trois points sur une même échelle](/concepts/autonomy-scale/#trois-points-sur-une-même-échelle))
+(@DLAI-11). Quand vous déléguez une tâche, ces trois points deviennent trois
+réglages que vous écrivez dans la consigne.
 
-- **Draft only.** The agent gathers and drafts, and you decide and take
-  every action yourself. Next week has one free calibration slot, and
-  two customers want it. Mira asks the agent to lay out both requests
-  with their due dates. She decides who gets the slot and writes to both customers
-  herself.
-- **Act, and ask before anything that can't be undone.** The agent does
-  the ordinary steps on its own and stops for a yes at each step that
-  can't be taken back. Mira asks the agent to answer twelve customers who
-  want to know when their instruments come back. It looks up each date,
-  writes each reply, and asks before it sends each one.
-- **Run to completion.** The agent finishes the whole task, and you check
-  the result afterwards. Mira asks the agent for a summary of this
-  week's team meeting in her own notes file. It writes the summary, and she
-  reads it the next morning.
+- **Brouillon seulement.** L’agent rassemble et rédige, et vous décidez et
+  faites chaque action vous-même. La semaine prochaine a un seul créneau
+  d’étalonnage libre, et deux clients le veulent. Mira demande à l’agent de
+  présenter les deux demandes avec leurs échéances. Elle décide qui obtient
+  le créneau et écrit elle-même aux deux clients.
+- **Agir, et demander avant tout ce qui est irréversible.** L’agent fait
+  seul les étapes ordinaires et s’arrête pour obtenir un oui à chaque étape
+  qui ne peut pas être reprise. Mira demande à l’agent de répondre à douze
+  clients qui veulent savoir quand leurs instruments reviennent. Il cherche
+  chaque date, rédige chaque réponse, et demande avant d’envoyer chacune.
+- **Aller jusqu’au bout.** L’agent termine toute la tâche, et vous vérifiez
+  le résultat après. Mira demande à l’agent un résumé de la réunion d’équipe
+  de la semaine dans son propre fichier de notes. Il écrit le résumé, et
+  elle le lit le lendemain matin.
 
-In the lesson on delegating the same three settings were called "human
-decides", "agent proposes, human approves" and "agent acts, human
-reviews after". The names differ and the settings are the same.
+Dans la leçon sur la délégation, les trois mêmes réglages s’appelaient « la
+personne décide », « l’agent propose, la personne approuve » et « l’agent
+agit, la personne vérifie après ». Les noms diffèrent, et les réglages sont
+les mêmes.
 
 <Match id="three-tasks-three-settings" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="The lesson names three settings for a delegated task: draft only (you take every action), act and ask before anything that can't be undone, and run to completion (you check the result afterwards). The tasks come from a fictional calibration team."
-  title="Which setting fits each task?" hint="For each task, find the step that goes wrong worst. Can you take that step back, does it reach anyone but you, and is the choice itself one you answer for?"
-  options={['Draft only', 'Act, and ask before anything that cannot be undone', 'Run to completion']}
+  context="La leçon nomme trois réglages pour une tâche déléguée : brouillon seulement (vous faites chaque action), agir et demander avant tout ce qui est irréversible, et aller jusqu’au bout (vous vérifiez le résultat après). Les tâches viennent d’une équipe d’étalonnage fictive."
+  title="Quel réglage pour chaque tâche ?" hint="Pour chaque tâche, trouvez l’étape dont l’erreur coûte le plus. Pouvez-vous la reprendre, atteint-elle quelqu’un d’autre que vous, et le choix lui-même est-il un choix dont vous répondez ?"
+  options={['Brouillon seulement', 'Agir, et demander avant tout ce qui est irréversible', 'Aller jusqu’au bout']}
   rows={[
-    { statement: 'Summarize the team meeting into your own notes file', option: 2, why: 'A wrong line in your own notes reaches nobody else, and you fix it when you read it. Which setting lets the agent finish on its own?' },
-    { statement: 'Look up the return dates and reply to twelve customers', option: 1, why: 'The lookups and the drafts are cheap to redo. Only the send reaches a customer. Which setting stops at that step alone?' },
-    { statement: 'Choose which of two customers gets the one free slot next week', option: 0, why: 'The task is a judgment about customers, and you answer for it. Which setting leaves the choice and the action with you?' },
+    { statement: 'Résumer la réunion d’équipe dans votre propre fichier de notes', option: 2, why: 'Une ligne fausse dans vos propres notes n’atteint personne d’autre, et vous la corrigez en la lisant. Quel réglage laisse l’agent terminer seul ?' },
+    { statement: 'Chercher les dates de retour et répondre à douze clients', option: 1, why: 'Les recherches et les brouillons se refont facilement. Seul l’envoi atteint un client. Quel réglage s’arrête à cette seule étape ?' },
+    { statement: 'Choisir lequel de deux clients obtient le seul créneau libre de la semaine prochaine', option: 0, why: 'La tâche est un jugement sur des clients, et vous en répondez. Quel réglage vous laisse le choix et l’action ?' },
   ]}
-  rationale="Each setting stops the agent at the step where a mistake stops being cheap: never, before each send, or before the choice itself.">
-Match each task to the setting it needs.
+  rationale="Chaque réglage arrête l’agent à l’étape où une erreur cesse d’être bon marché : jamais, avant chaque envoi, ou avant le choix lui-même.">
+Associez chaque tâche au réglage dont elle a besoin.
 </Match>
 
-## The cost of a wrong step sets the level
+## Le coût d’une erreur fixe le niveau
 
-The setting comes from what a wrong step costs and how easily you can
-undo it. The **blast radius** from the safety course answers the cost
-part: say what the step can reach, including the things you didn't mean
-it to reach ([Blast radius](/safety/agent-risk/#le-rayon-dimpact)). The undo
-part asks whether a wrong step can be taken back once it has happened.
+Le réglage découle de ce que coûte une erreur et de la facilité à l’annuler.
+Le **rayon d’impact** (blast radius) du cours sur la sécurité répond pour le coût : dites
+ce que l’étape peut atteindre, y compris ce que vous ne vouliez pas qu’elle
+atteigne ([Le rayon d’impact](/safety/agent-risk/#le-rayon-dimpact)). Pour
+l’annulation, la question est de savoir si une étape fausse peut être
+reprise une fois qu’elle a eu lieu.
 
-- When every step is cheap and can be undone, the agent may run to
-  completion. A wrong summary in your own notes costs you one reread.
-- When most steps are cheap and a few can't be taken back, the agent acts
-  and asks before those few. A wrong lookup costs a redo, and a wrong
-  reply that has been sent is in a customer's inbox.
-- When the task is a choice only you may make, such as a judgment about
-  a person or a customer, the agent gathers and drafts, and you decide
-  and act. A wrong choice costs trust, and once you announce it you can't
-  take it back.
+- Quand chaque étape coûte peu et peut être annulée, l’agent peut aller
+  jusqu’au bout. Un résumé faux dans vos propres notes vous coûte une
+  relecture.
+- Quand la plupart des étapes coûtent peu et que quelques-unes ne peuvent
+  pas être reprises, l’agent agit et demande avant ces quelques étapes. Une
+  recherche fausse coûte une reprise, et une réponse fausse envoyée est dans
+  la boîte de réception d’un client.
+- Quand la tâche est un choix que vous seul pouvez faire, comme un jugement
+  sur une personne ou un client, l’agent rassemble et rédige, et vous décidez
+  et agissez. Un mauvais choix coûte de la confiance, et une fois annoncé,
+  vous ne pouvez plus le reprendre.
 
-How capable the agent seems plays no part in the cost or the undo. Suppose
-Mira's agent writes twenty replies to customers, and all twenty are right.
-That tells her the agent is good at this task. It doesn't change what the
-twenty-first reply costs if it gives a customer the wrong return date. The
-customer still plans around the date, and a correction email later doesn't
-take the first one out of their inbox. The meeting summary shows the other
-side. A wrong summary reaches only Mira's own notes and costs her one
-reread, so a check-in would save her nothing, and she lets it run
-unattended even on the first run.
+Le degré de compétence apparent de l’agent ne joue aucun rôle dans le coût
+ni dans l’annulation. Supposons que l’agent de Mira écrive vingt réponses à
+des clients, et que les vingt soient justes. Cela lui apprend que l’agent
+fait bien cette tâche. Cela ne change pas ce que coûte la vingt et unième
+réponse si elle donne à un client une mauvaise date de retour. Le client
+s’organise quand même autour de cette date, et un e-mail de correction
+envoyé plus tard ne retire pas le premier de sa boîte de réception. Le
+résumé de réunion montre l’autre cas. Un résumé faux n’atteint que les
+propres notes de Mira et lui coûte une relecture, donc un point d’étape ne
+lui ferait rien gagner, et elle le laisse tourner sans surveillance même à
+la première exécution.
 
 <Scenario id="twenty-good-replies" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy', 'blast-radius']}
-  context="A team member has an agent that looks up return dates and writes replies to customers, and it asks before it sends each reply. Twenty replies in a row have been correct."
-  title="Twenty good replies" hint="Did the twenty good replies change what one wrong reply costs, or only how likely it is?"
+  context="Un membre de l’équipe a un agent qui cherche les dates de retour et rédige les réponses aux clients, et qui demande avant d’envoyer chaque réponse. Vingt réponses d’affilée ont été justes."
+  title="Vingt bonnes réponses" hint="Les vingt bonnes réponses ont-elles changé ce que coûte une réponse fausse, ou seulement sa probabilité ?"
   options={[
-    { text: 'Let the agent send on its own, because twenty correct replies show that it handles this task well.', consequence: 'Reply twenty-three gives a date the lab cannot meet. The customer books a site visit around it, and you hear about it from the customer.' },
-    { text: 'Keep the approval before each send, because a wrong reply to a customer costs what it did on the first day.', correct: true, consequence: 'Each approval takes a few seconds. Reply twenty-three has a date that looks wrong, and you catch it before it leaves.' },
-    { text: 'Let the agent send on its own, and read every sent reply at the end of the day to catch any mistake.', consequence: 'You find the wrong date at six in the evening. The customer read it at ten in the morning, and a sent reply cannot be called back.' },
-    { text: 'Keep the approval only for customers you have not written to before, because regular customers know the lab.', consequence: 'The wrong date goes to a regular customer, who trusts it all the more. A wrong date costs a regular customer as much as a new one.' },
+    { text: 'Laisser l’agent envoyer seul, puisque vingt réponses justes montrent qu’il fait bien cette tâche.', consequence: 'La vingt-troisième réponse donne une date que le laboratoire ne peut pas tenir. Le client organise une visite sur site autour de cette date, et c’est par lui que vous l’apprenez.' },
+    { text: 'Garder l’approbation avant chaque envoi, puisqu’une réponse fausse coûte autant qu’au premier jour.', correct: true, consequence: 'Chaque approbation prend quelques secondes. La vingt-troisième réponse a une date qui semble fausse, et vous la repérez avant qu’elle parte.' },
+    { text: 'Laisser l’agent envoyer seul, et lire chaque réponse envoyée en fin de journée pour repérer les erreurs.', consequence: 'Vous trouvez la mauvaise date à dix-huit heures. Le client l’a lue à dix heures, et une réponse envoyée ne se rappelle pas.' },
+    { text: 'Garder l’approbation seulement pour les nouveaux clients, puisque les clients habituels connaissent le laboratoire.', consequence: 'La mauvaise date part chez un client habituel, qui lui fait d’autant plus confiance. Une date fausse coûte autant chez un client habituel que chez un nouveau.' },
   ]}>
-A colleague has watched the agent write twenty correct replies to
-customers in a row, each one approved before it went out. They suggest
-that it is time to let it send on its own. What do you do?
+Un collègue a vu l’agent écrire vingt réponses justes d’affilée à des
+clients, chacune approuvée avant de partir. Il suggère qu’il est temps de le
+laisser envoyer seul. Que faites-vous ?
 </Scenario>
 
-## The first run of a new kind of task
+## La première exécution d’un nouveau type de tâche
 
-Cost and undo give the setting you work toward. On the first run of a
-new kind of task you also don't know how the agent reads the input, which
-source it picks, or how it handles an odd case. A mistake in the first
-step then affects every later step, and you find it at the end. The
-lesson on delegating said to sit one step below the target setting for
-the first runs. On a task with more than one step, check-ins are how you do
-that: ask the agent to show its plan before it starts, and to stop after
-the first item. A person then approves the early steps as well as the
-one that can't be undone. Each check-in costs you a minute, and a
-misreading then costs one item instead of the whole task.
+Le coût et l’annulation donnent le réglage vers lequel vous allez. À la
+première exécution d’un nouveau type de tâche, vous ne savez pas non plus
+comment l’agent lit l’entrée, quelle source il choisit, ni comment il traite
+un cas inhabituel. Une erreur à la première étape se répercute alors sur
+toutes les suivantes, et vous la découvrez à la fin. La leçon sur la
+délégation disait de vous placer un cran en dessous du réglage visé pour
+les premières exécutions. Sur une tâche de plusieurs étapes, les points
+d’étape sont la façon de le faire : demandez à l’agent de montrer son plan
+avant de commencer, et de s’arrêter après le premier élément. Une personne
+approuve alors les premières étapes en plus de celle qui ne peut pas être
+annulée. Chaque point d’étape vous coûte une minute, et une mauvaise lecture
+ne coûte alors qu’un élément, et plus toute la tâche.
 
-When a few results have passed your review against the brief without a
-surprise, drop the extra check-ins
-(@Academy introduction-to-claude-cowork). That's how autonomy widens as
-results pass. It widens up to the setting that cost and undo gave, and
-stops there. A task whose send reaches anyone else keeps its approval
-before the send, whatever the number of results that passed.
+Quand quelques résultats ont passé votre vérification au regard de la
+consigne sans surprise, retirez les points d’étape supplémentaires
+(@Academy introduction-to-claude-cowork). C’est ainsi que l’autonomie
+s’élargit à mesure que les résultats passent. Elle s’élargit jusqu’au réglage
+que donnaient le coût et l’annulation, et s’arrête là. Une tâche dont l’envoi
+atteint quelqu’un d’autre garde son approbation avant l’envoi, quel que soit
+le nombre de résultats réussis.
 
 <Choice id="first-stock-report" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="The lesson says that on the first run of a new kind of task you add check-ins, such as seeing the plan and stopping after the first item, on top of the setting the task needs. The task here ends in a send to a manager."
-  title="The first stock report" hint="Where in this task would a misreading of the counts first show, and which setting shows it to you there?"
+  context="La leçon dit qu’à la première exécution d’un nouveau type de tâche, on ajoute des points d’étape, comme voir le plan et s’arrêter après le premier élément, en plus du réglage dont la tâche a besoin. La tâche se termine ici par un envoi à un responsable."
+  title="Le premier rapport de stock" hint="À quel endroit de cette tâche une mauvaise lecture des comptages apparaîtrait-elle d’abord, et quel réglage vous la montre à cet endroit ?"
   options={[
-    { text: 'Show the plan and stop after the first storeroom, and ask again before sending the report.', correct: true },
-    { text: 'Ask only before sending the report, because the send is the one step that cannot be undone.', why: 'That is the setting for later runs. On a first run, a misread count shows only in the finished report, and every section is built on it.' },
-    { text: 'Show the plan and stop after the first storeroom, then let it send without asking if that storeroom passes.', why: 'The plan and first-storeroom stops are for the first run. The send reaches the director on every run, so it keeps its yes however well the first storeroom went.' },
-    { text: 'Run to completion, because the report only copies numbers from the counts into a table.', why: 'The report goes to the director, and a wrong number in it cannot be unread. The send needs a yes on every run, and the first run needs more.' },
+    { text: 'Montrer le plan et s’arrêter après la première réserve, puis demander encore avant d’envoyer le rapport.', correct: true },
+    { text: 'Demander seulement avant d’envoyer le rapport, puisque l’envoi est la seule étape irréversible.', why: 'C’est le réglage des exécutions suivantes. À la première exécution, un comptage mal lu n’apparaît que dans le rapport fini, et chaque section repose dessus.' },
+    { text: 'Montrer le plan et s’arrêter après la première réserve, puis envoyer sans demander si cette réserve est juste.', why: 'Le plan et l’arrêt après la première réserve servent à la première exécution. L’envoi atteint le directeur à chaque exécution, donc il garde son oui, quelle que soit la qualité de la première réserve.' },
+    { text: 'Aller jusqu’au bout, puisque le rapport ne fait que recopier les nombres des comptages dans un tableau.', why: 'Le rapport part chez le directeur, et un nombre faux qu’il a lu ne s’efface pas. L’envoi demande un oui à chaque exécution, et la première exécution demande davantage.' },
   ]}>
-Sam wants the agent to turn the monthly counts from four storerooms into
-a stock report and send it to the operations director. It's the first
-time anyone has given the agent this task. Which setting fits this first
-run?
+Sam veut que l’agent transforme les comptages mensuels de quatre réserves en
+un rapport de stock et l’envoie au directeur des opérations. C’est la
+première fois que quelqu’un confie cette tâche à l’agent. Quel réglage
+convient à cette première exécution ?
 </Choice>
 
-## The boundary in one sentence
+## La limite en une phrase
 
-The setting only works when the agent can follow it, and the agent
-follows what the brief says. Write the setting as one sentence with two
-parts: what the agent may do on its own, and the step where it stops and
-asks. "Look up the dates and write the replies on your own, and ask me
-before you send any of them" is one such sentence. The agent can check
-each step against it, and so can you when you review.
+Le réglage ne fonctionne que si l’agent peut le suivre, et l’agent suit ce
+que dit la consigne. Écrivez le réglage en une phrase en deux parties : ce
+que l’agent peut faire seul, et l’étape où il s’arrête et demande. « Cherche
+les dates et rédige les réponses seul, et demande-moi avant d’en envoyer
+une » est une phrase de ce type. L’agent peut vérifier chaque étape par
+rapport à elle, et vous aussi quand vous relisez.
 
-<Pitfall title="A boundary nobody can check">
-Sam writes "tidy the shared drafts folder, but be careful with anything
-important" and starts the agent. The agent decides that files older than
-a year aren't important and deletes them. One of them is the only copy of
-a signed certificate. The brief had a boundary, but the boundary didn't
-name a step, so the agent drew its own line where Sam would never have
-drawn it. The rule: if you can't say the boundary in one sentence that
-names the step where the agent stops, you haven't chosen a setting yet,
-and the agent chooses one for you.
+<Pitfall title="Une limite que personne ne peut vérifier">
+Sam écrit « range le dossier partagé des brouillons, mais fais attention à
+tout ce qui est important » et lance l’agent. L’agent décide que les
+fichiers de plus d’un an ne sont pas importants et les supprime. L’un d’eux
+est le seul exemplaire d’un certificat signé. La consigne avait une limite,
+mais cette limite ne nommait aucune étape, donc l’agent a tracé sa propre
+ligne là où Sam ne l’aurait jamais tracée. La règle : si vous ne pouvez pas
+dire la limite en une phrase qui nomme l’étape où l’agent s’arrête, vous
+n’avez pas encore choisi de réglage, et l’agent en choisit un pour vous.
 </Pitfall>
 
 <MultiChoice id="which-boundaries-hold" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="The lesson asks for the autonomy setting to be written as one sentence that says what the agent may do on its own and names the step where it stops and asks."
-  title="Which boundaries can the agent follow?" hint="For each line, could the agent tell from the words alone whether its next step needs a yes?"
+  context="La leçon demande d’écrire le réglage d’autonomie en une phrase qui dit ce que l’agent peut faire seul et nomme l’étape où il s’arrête et demande."
+  title="Quelles limites l’agent peut-il suivre ?" hint="Pour chaque ligne, l’agent pourrait-il savoir à partir des seuls mots si son étape suivante demande un oui ?"
   options={[
-    { text: 'Draft and save the replies on your own, and stop before sending any of them.', correct: true },
-    { text: 'Work through the replies carefully, and check with me on anything that seems important.', why: 'Important to whom? The agent decides what counts, so the stop falls where the agent puts it.' },
-    { text: 'Rename and move the files in the copy on your own, and ask before deleting any file.', correct: true },
-    { text: 'Use your own judgment about when a step is big enough that you should stop and ask.', why: 'This hands the choice of setting back to the agent. The brief names no step, so nothing can be checked.' },
-    { text: 'Go ahead with the whole folder, and ask me whenever you are not sure about a file.', why: 'An agent that is wrong is often sure. The stop depends on how the agent feels, and no step is named.' },
+    { text: 'Rédige et enregistre les réponses seul, et arrête-toi avant d’envoyer l’une d’elles.', correct: true },
+    { text: 'Traite les réponses avec soin, et vérifie avec moi tout ce qui te semble important.', why: 'Important pour qui ? L’agent décide de ce qui compte, donc l’arrêt tombe là où l’agent le place.' },
+    { text: 'Renomme et déplace seul les fichiers de la copie, et demande avant de supprimer un fichier.', correct: true },
+    { text: 'Juge toi-même quand une étape est assez importante pour que tu t’arrêtes et demandes.', why: 'Cela rend le choix du réglage à l’agent. La consigne ne nomme aucune étape, donc rien ne peut être vérifié.' },
+    { text: 'Traite tout le dossier, et demande-moi chaque fois que tu n’es pas sûr d’un fichier.', why: 'Un agent qui se trompe est souvent sûr de lui. L’arrêt dépend de ce que ressent l’agent, et aucune étape n’est nommée.' },
   ]}>
-Which of these lines are boundaries that an agent can follow and that you
-can check afterwards?
+Lesquelles de ces lignes sont des limites qu’un agent peut suivre et que
+vous pouvez vérifier après coup ?
 </MultiChoice>
 
 <Repair id="write-the-boundary" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  title="Write the boundary" hint="Which step in this task can't be taken back, and what may the agent do before it?"
-  broken={`Tidy up the shared drafts folder, but be careful with anything important.`}
-  model={`Move and rename the files in the shared drafts folder on your own, and stop and ask me before you delete any file.`}>
-Rewrite Sam's line as one sentence that says what the agent may do on its
-own and names the step where it stops and asks.
+  title="Écrivez la limite" hint="Quelle étape de cette tâche ne peut pas être reprise, et que peut faire l’agent avant elle ?"
+  broken={`Range le dossier partagé des brouillons, mais fais attention à tout ce qui est important.`}
+  model={`Déplace et renomme seul les fichiers du dossier partagé des brouillons, et arrête-toi pour me demander avant de supprimer un fichier.`}>
+Réécrivez la ligne de Sam en une phrase qui dit ce que l’agent peut faire
+seul et nomme l’étape où il s’arrête et demande.
 </Repair>
 
 <Sort id="sort-by-cost" phase="review" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="Each item is a task you could delegate to an agent. The three settings are draft only (you take every action), act and ask before anything that can't be undone, and run to completion (you check the result afterwards). The setting follows from what a wrong step costs and how easily it is undone."
-  title="Sort by the cost of a wrong step" hint="For each task, find the worst wrong step. Does it reach anyone but you, and can it be taken back?"
-  buckets={['Draft only', 'Act, and ask before anything that cannot be undone', 'Run to completion']}
+  context="Chaque élément est une tâche que vous pourriez déléguer à un agent. Les trois réglages sont brouillon seulement (vous faites chaque action), agir et demander avant tout ce qui est irréversible, et aller jusqu’au bout (vous vérifiez le résultat après). Le réglage découle de ce que coûte une erreur et de la facilité à l’annuler."
+  title="Classez selon le coût d’une erreur" hint="Pour chaque tâche, trouvez la pire erreur possible. Atteint-elle quelqu’un d’autre que vous, et peut-elle être reprise ?"
+  buckets={['Brouillon seulement', 'Agir, et demander avant tout ce qui est irréversible', 'Aller jusqu’au bout']}
   items={[
-    { text: 'Decide whether a colleague\'s leave request is approved', bucket: 0 },
-    { text: 'Choose which of two suppliers gets next year\'s contract', bucket: 0 },
-    { text: 'Find the overdue certificates and email a reminder to each customer', bucket: 1 },
-    { text: 'Clear out last year\'s files from the shared drive', bucket: 1 },
-    { text: 'Sort your own saved articles into folders by topic', bucket: 2 },
-    { text: 'Summarize a long report into your own notes', bucket: 2 },
+    { text: 'Décider si la demande de congé d’un collègue est acceptée', bucket: 0 },
+    { text: 'Choisir lequel de deux fournisseurs obtient le contrat de l’an prochain', bucket: 0 },
+    { text: 'Trouver les certificats en retard et envoyer un rappel à chaque client', bucket: 1 },
+    { text: 'Faire le ménage dans les fichiers de l’an dernier sur le lecteur partagé', bucket: 1 },
+    { text: 'Ranger vos propres articles enregistrés dans des dossiers par thème', bucket: 2 },
+    { text: 'Résumer un long rapport dans vos propres notes', bucket: 2 },
   ]} />
 
 <Choice id="after-six-reports" phase="review" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="An agent writes a monthly stock report that is sent to a manager. On the first runs it showed its plan, stopped after the first storeroom, and asked before sending. Six reports in a row have passed review."
-  title="After six good reports" hint="Which check-ins were there because the task was new, and which one is there because of what the send reaches?"
+  context="Un agent rédige un rapport de stock mensuel envoyé à un responsable. Aux premières exécutions, il a montré son plan, s’est arrêté après la première réserve et a demandé avant l’envoi. Six rapports d’affilée ont passé la vérification."
+  title="Après six bons rapports" hint="Quels points d’étape étaient là parce que la tâche était nouvelle, et lequel est là à cause de ce que l’envoi atteint ?"
   options={[
-    { text: 'Drop every check-in, the approval before the send included, since six reports have passed.', why: 'Six good reports say the agent reads the counts well. A wrong report sent to the director costs the same as it did on the first run.' },
-    { text: 'Keep every check-in, because a report that goes to the director should never get less attention.', why: 'The plan and first-storeroom stops were for the unknowns of a new task, and six reports have answered them. Stops you no longer need train you to approve without reading.' },
-    { text: 'Drop the plan and the first-storeroom stops, and keep asking before each report is sent.', correct: true },
+    { text: 'Retirer tous les points d’étape, y compris l’approbation avant l’envoi, puisque six rapports sont passés.', why: 'Six bons rapports disent que l’agent lit bien les comptages. Un rapport faux envoyé au directeur coûte autant qu’à la première exécution.' },
+    { text: 'Garder tous les points d’étape, puisqu’un rapport destiné au directeur ne doit jamais recevoir moins d’attention.', why: 'Le plan et l’arrêt après la première réserve répondaient aux inconnues d’une tâche nouvelle, et six rapports y ont répondu. Des arrêts dont vous n’avez plus besoin vous habituent à approuver sans lire.' },
+    { text: 'Retirer le plan et l’arrêt après la première réserve, et continuer à demander avant chaque envoi.', correct: true },
   ]}>
-The agent has written six monthly stock reports, and each one passed
-review. Which check-ins do you keep?
+L’agent a rédigé six rapports de stock mensuels, et chacun a passé la
+vérification. Quels points d’étape gardez-vous ?
 </Choice>
 
 <Choice id="boundary-that-names-a-step" phase="review" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="The lesson asks for the autonomy setting to be written as one sentence that says what the agent may do on its own and names the step where it stops and asks."
-  title="Which line sets the boundary?" hint="Which line lets you point at one step and say whether it needed a yes?"
+  context="La leçon demande d’écrire le réglage d’autonomie en une phrase qui dit ce que l’agent peut faire seul et nomme l’étape où il s’arrête et demande."
+  title="Quelle ligne fixe la limite ?" hint="Quelle ligne vous permet de désigner une étape et de dire si elle demandait un oui ?"
   options={[
-    { text: 'Book the travel as you see fit, and check with me on anything that looks expensive.', why: 'Expensive is the agent\'s call here. The line names no step, so neither of you can check where the stop was.' },
-    { text: 'Find the trains and fill in the booking on your own, and ask me before you pay for any ticket.', correct: true },
-    { text: 'Book the travel carefully and ask me whenever you are unsure which option I would prefer.', why: 'An agent is often sure when it is wrong. The stop depends on how the agent feels about a choice, and no step is named.' },
+    { text: 'Réserve le voyage comme tu l’entends, et vérifie avec moi tout ce qui semble cher.', why: 'Ce qui est cher, c’est l’agent qui en juge. La ligne ne nomme aucune étape, donc aucun de vous deux ne peut vérifier où était l’arrêt.' },
+    { text: 'Trouve les trains et remplis la réservation seul, et demande-moi avant de payer un billet.', correct: true },
+    { text: 'Réserve le voyage avec soin et demande-moi chaque fois que tu ne sais pas quelle option je préférerais.', why: 'Un agent est souvent sûr de lui quand il se trompe. L’arrêt dépend de ce que l’agent ressent face à un choix, et aucune étape n’est nommée.' },
   ]}>
-You delegate booking the train travel for a site visit. Which line in the
-brief sets a boundary the agent can follow?
+Vous déléguez la réservation des billets de train pour une visite sur site.
+Quelle ligne de la consigne fixe une limite que l’agent peut suivre ?
 </Choice>
 
 <MultiChoice id="what-sets-the-level" phase="review" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="A delegated task can be set to draft only, to act and ask before anything that can't be undone, or to run to completion. A team at Brindlewick Instruments, a fictional company, is choosing the setting for an agent that files supplier invoices and answers the suppliers."
-  title="What decides the setting?" hint="Which of these would still be true on the day the agent makes its first mistake?"
+  context="Une tâche déléguée peut être réglée sur brouillon seulement, sur agir et demander avant tout ce qui est irréversible, ou sur aller jusqu’au bout. Une équipe de Brindlewick Instruments, une entreprise fictive, choisit le réglage d’un agent qui classe les factures des fournisseurs et leur répond."
+  title="Qu’est-ce qui décide du réglage ?" hint="Lesquels de ces éléments seraient encore vrais le jour où l’agent fait sa première erreur ?"
   options={[
-    { text: 'What a wrong payment or a wrong reply to a supplier would cost Brindlewick.', correct: true },
-    { text: 'How many invoices the agent has already handled without a single error.', why: 'A clean record says a mistake is less likely. It says nothing about what the next mistake costs.' },
-    { text: 'Whether a wrong step can be taken back, as a misfiled invoice can be moved.', correct: true },
-    { text: 'How capable the newest model behind the agent seemed in the vendor demo.', why: 'Capability changes how often the agent is wrong. A wrong payment costs the same whichever model made it.' },
+    { text: 'Ce que coûterait à Brindlewick un mauvais paiement ou une mauvaise réponse à un fournisseur.', correct: true },
+    { text: 'Le nombre de factures que l’agent a déjà traitées sans la moindre erreur.', why: 'Un historique sans faute dit qu’une erreur est moins probable. Il ne dit rien de ce que coûte la prochaine erreur.' },
+    { text: 'Le fait qu’une erreur puisse être reprise, comme une facture mal classée qui peut être déplacée.', correct: true },
+    { text: 'La compétence du modèle le plus récent derrière l’agent, telle qu’elle est apparue dans la démonstration.', why: 'La compétence change la fréquence des erreurs de l’agent. Un mauvais paiement coûte autant, quel que soit le modèle qui l’a fait.' },
   ]}>
-Which of these should decide the setting the team works toward for this
-task?
+Lesquels de ces éléments doivent décider du réglage vers lequel l’équipe va
+pour cette tâche ?
 </MultiChoice>
 
-<Exercise stretch="Take one task you delegated in the last month and write its boundary sentence. Then say whether the brief you actually sent contained that sentence, and what the agent did at the step it names.">
-Take these tasks from the calibration team. On paper or in a note, put
-each one under draft only, act and ask before anything that can't be
-undone, or run to completion.
+<Exercise stretch="Prenez une tâche que vous avez déléguée le mois dernier et écrivez sa phrase de limite. Dites ensuite si la consigne que vous avez réellement envoyée contenait cette phrase, et ce qu’a fait l’agent à l’étape qu’elle nomme.">
+Prenez ces tâches de l’équipe d’étalonnage. Sur papier ou dans une note,
+placez chacune sous brouillon seulement, agir et demander avant tout ce qui
+est irréversible, ou aller jusqu’au bout.
 
-1. Summarize this week's calibration notes into your own notes file.
-2. Rename the scanned certificates in a copy of the folder by date.
-3. Answer twelve customers who asked when their instruments come back.
-4. Remove old drafts from the team's shared drive.
-5. Decide which team member covers the weekend shift next month.
-6. Choose which of two job applicants the team invites back.
+1. Résumer les notes d’étalonnage de la semaine dans votre propre fichier de notes.
+2. Renommer par date les certificats numérisés, dans une copie du dossier.
+3. Répondre à douze clients qui ont demandé quand leurs instruments reviennent.
+4. Retirer les anciens brouillons du lecteur partagé de l’équipe.
+5. Décider quel membre de l’équipe assure la permanence du week-end le mois prochain.
+6. Choisir lequel de deux candidats l’équipe invite à un second entretien.
 
-Then write the one-sentence boundary for tasks 3 and 4, in the form of
-what the agent may do on its own and the step where it stops and asks.
-It takes five minutes, and it is the same choice you make each time you
-delegate. In a good result each placement names the worst wrong step and
-says whether it can be taken back, and each boundary sentence names one
-step that you could point at in a review. Which of the six would you give
-more check-ins on the first run, and which check-ins?
+Écrivez ensuite la phrase de limite des tâches 3 et 4, sous la forme de ce
+que l’agent peut faire seul et de l’étape où il s’arrête et demande. Cela
+prend cinq minutes, et c’est le même choix que vous faites à chaque
+délégation. Dans un bon résultat, chaque placement nomme la pire erreur
+possible et dit si elle peut être reprise, et chaque phrase de limite nomme
+une étape que vous pourriez désigner lors d’une vérification. Laquelle des
+six tâches recevrait davantage de points d’étape à la première exécution,
+et lesquels ?
 </Exercise>
 
 <Recap>
-1. Most delegated tasks fit one of draft only, act and ask before anything that can't be undone, or run to completion (@DLAI-11).
-2. The setting follows from how costly a wrong step is and how easily it is undone. Name the blast radius of the worst step to judge the cost.
-3. Good results say the agent is capable. They don't change what one wrong step costs, so they don't move the setting past what the cost allows.
-4. On the first run of a new kind of task, add check-ins such as the plan and the first item, and drop them as results pass review (@Academy introduction-to-claude-cowork).
-5. Write the setting as one sentence: what the agent may do on its own, and the step where it stops and asks.
+1. La plupart des tâches déléguées entrent dans l’un de ces réglages : brouillon seulement, agir et demander avant tout ce qui est irréversible, ou aller jusqu’au bout (@DLAI-11).
+2. Le réglage découle du coût d’une erreur et de la facilité à l’annuler. Nommez le rayon d’impact de la pire étape pour juger du coût.
+3. De bons résultats disent que l’agent est compétent. Ils ne changent pas ce que coûte une erreur, donc ils ne déplacent pas le réglage au-delà de ce que permet le coût.
+4. À la première exécution d’un nouveau type de tâche, ajoutez des points d’étape comme le plan et le premier élément, et retirez-les à mesure que les résultats passent la vérification (@Academy introduction-to-claude-cowork).
+5. Écrivez le réglage en une phrase : ce que l’agent peut faire seul, et l’étape où il s’arrête et demande.
 </Recap>
 
 <Habit id="write-the-stop-step">
-The next time you delegate a task that sends, deletes, pays or publishes, write in the brief the one step where the agent stops and asks.
+La prochaine fois que vous déléguez une tâche qui envoie, supprime, paie ou publie, écrivez dans la consigne la seule étape où l’agent s’arrête et demande.
 </Habit>

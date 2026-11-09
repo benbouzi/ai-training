@@ -231,7 +231,7 @@ test('multi-choice: exactly the correct boxes, a wrong pick shows its why', asyn
 	await expect(cp.locator('.cp-feedback')).toHaveText('1 sur 3 pour l’instant, sans erreur. Encore 2 à trouver.');
 	await cp.locator('label:not([data-correct])').first().click();
 	await cp.locator('.cp-check').click();
-	await expect(cp.locator('.cp-feedback')).toHaveText(/^Clear to whom\?/);
+	await expect(cp.locator('.cp-feedback')).toHaveText(/^Clair pour qui \?/);
 	await cp.locator('label:not([data-correct])').first().click();
 	for (const label of await cp.locator('label[data-correct]').all()) {
 		if (!(await label.locator('input').isChecked())) await label.click();

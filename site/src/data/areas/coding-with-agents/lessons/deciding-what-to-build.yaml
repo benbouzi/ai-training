@@ -13,7 +13,7 @@ introduces: [what-is-worth-building, success-criteria]
 assumes:
   - objective: using-agents/delegates-and-checks/writes-a-brief
     lesson: using-agents/delegating
-    section: writing-the-brief
+    section: écrire-la-consigne
 extends-to:
   - label: Deciding and specifying
     href: /topics/coding-with-agents/specification/

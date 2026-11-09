@@ -10,7 +10,7 @@ introduces: [when-to-stop-and-do-it-yourself]
 assumes:
   - objective: using-agents/delegates-and-checks/reviews-against-brief
     lesson: using-agents/delegating
-    section: reviewing-against-the-brief
+    section: vérifier-au-regard-de-la-consigne
 after: [using-agents/delegating-in-rounds]
 shorts: [The third round on one piece is the signal]
 exercise:

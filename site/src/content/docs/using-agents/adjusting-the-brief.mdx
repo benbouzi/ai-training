@@ -1,327 +1,353 @@
 import { Choice, Scenario, Repair, Pitfall, Exercise, Recap, Prompt, Response, Match, Sort } from '@components/lesson';
 
-In this lesson we give an agent a brief with a gap in it and watch what the
-agent does with the gap. Then we answer the agent's question in two places,
-first in the chat and then in the brief. A second run after each answer
-shows which one survives. After that we change a limit in the brief between
-two runs, and we stop a run whose first result shows the goal
-itself was wrong. The task is small, and you can run it as often as you
-like.
+Dans cette leçon, nous donnons à un agent une consigne qui comporte un
+manque, et nous regardons ce que l’agent en fait. Puis nous répondons à la
+question de l’agent à deux endroits, d’abord dans la conversation, puis dans
+la consigne. Une deuxième exécution après chaque réponse montre laquelle des
+deux tient. Ensuite, nous changeons une limite de la consigne entre deux
+exécutions, et nous arrêtons une exécution dont le premier résultat montre
+que l’objectif lui-même était faux. La tâche est petite, et vous pouvez la
+lancer aussi souvent que vous voulez.
 
-You need an agent that can read a folder of files, such as Claude Cowork or
-a chat tool with file access. If your tool reads only what you paste, paste
-the four files below into the chat with their names above them. Every step
-of the lesson then works the same way. Every exchange shown here is
-illustrative. The author wrote it to show the pattern, and your agent gives
-a different text.
+Il vous faut un agent capable de lire un dossier de fichiers, comme Claude
+Cowork ou un outil de conversation qui a accès aux fichiers. Si votre outil
+ne lit que ce que vous collez, collez les quatre fichiers ci-dessous dans la
+conversation, chacun précédé de son nom. Chaque étape de la leçon fonctionne
+alors de la même façon. Chaque échange montré ici est un exemple
+illustratif. L’auteur l’a écrit pour montrer le schéma, et votre agent
+donnera un autre texte.
 
-## The task and its gap
+## La tâche et son manque
 
-Make a folder with these files. They belong to Brindlewick Instruments,
-the fictional company from the earlier lessons, and the task is the
-calibration team's weekly status update for the operations director.
+Créez un dossier avec ces fichiers. Ils appartiennent à Brindlewick
+Instruments, l’entreprise fictive des leçons précédentes, et la tâche est le
+point d’étape hebdomadaire de l’équipe d’étalonnage pour la directrice des
+opérations.
 
-`notes.md`:
-
-```text
-Week 38, calibration team
-- Finished the recalibration of the 20 torque wrenches for the Delft site (Jonas)
-- Started the thermocouple batch for the food lab, 12 of 40 done (Mira)
-- Waiting on the 1 kg reference weight from the supplier, due 26 Sep (Mira)
-- Storeroom B stock count done, two calipers over, three probes short (Sam)
-- Next week: finish the thermocouple batch, start the spirit levels for the survey team
-```
-
-`templates/short-update.md`:
+`notes.md` :
 
 ```text
-Subject: Calibration team, week <number>
-One paragraph of at most 120 words: what was finished, what is in
-progress, what is blocked and by whom, and what comes next week.
+Semaine 38, équipe d’étalonnage
+- Terminé le réétalonnage des 20 clés dynamométriques pour le site de Delft (Jonas)
+- Commencé le lot de thermocouples pour le laboratoire alimentaire, 12 sur 40 faits (Mira)
+- En attente du poids de référence de 1 kg chez le fournisseur, prévu le 26 sept. (Mira)
+- Inventaire de la réserve B fait, deux pieds à coulisse en trop, trois sondes manquantes (Sam)
+- Semaine prochaine : finir le lot de thermocouples, commencer les niveaux à bulle pour l’équipe de topographie
 ```
 
-`templates/full-update.md`:
+`gabarits/court.md` :
 
 ```text
-Subject: Calibration team, week <number>
-## Done
-## In progress
-## Blocked
-## Next week
-One bullet per item under each heading. Keep each bullet to one line.
+Objet : Équipe d’étalonnage, semaine <numéro>
+Un paragraphe de 120 mots au plus : ce qui est terminé, ce qui est en cours,
+ce qui est bloqué et par qui, et ce qui vient la semaine prochaine.
 ```
 
-`brief.md`:
+`gabarits/complet.md` :
 
 ```text
-Write this week's status update for the operations director. Take the
-items from notes.md and use the template in templates/. Use only the
-notes as your source, and do not add work that is not in them. Done when
-every item in the notes appears exactly once, each under the heading that
-fits it, and the update follows the template.
+Objet : Équipe d’étalonnage, semaine <numéro>
+## Fait
+## En cours
+## Bloqué
+## Semaine prochaine
+Une puce par élément sous chaque titre. Chaque puce tient sur une ligne.
 ```
 
-The brief has the four parts from the lesson on delegating: a goal, the
-context to use, limits, and done-criteria. It also has a gap, and you can
-see it before the agent does. The folder holds two templates and the brief
-says "the template". Predict what happens when you send it. Then open a
-fresh session in your agent, point it at the folder, and send this.
+`consigne.md` :
+
+```text
+Rédige le point d’étape de la semaine pour la directrice des opérations.
+Prends les éléments dans notes.md et utilise le gabarit du dossier
+gabarits/. N’utilise que les notes comme source, et n’ajoute aucun travail
+qui n’y figure pas. Terminé quand chaque élément des notes apparaît une
+seule fois, chacun sous le titre qui lui convient, et que le point d’étape
+suit le gabarit.
+```
+
+La consigne a les quatre parties de la leçon sur la délégation : un
+objectif, le contexte à utiliser, des limites et des critères d’achèvement (done-criteria).
+Elle a aussi un manque, et vous pouvez le voir avant l’agent. Le dossier
+contient deux gabarits, et la consigne dit « le gabarit ». Prédisez ce qui se
+passe quand vous l’envoyez. Ouvrez ensuite une nouvelle session dans votre
+agent, dirigez-le vers le dossier, et envoyez ceci.
 
 <Prompt model="illustrative" recorded="illustrative">
-Do the task in brief.md.
+Fais la tâche décrite dans consigne.md.
 </Prompt>
 <Response>
-Before I write the update: `templates/` holds two files, `short-update.md`
-(one paragraph, at most 120 words) and `full-update.md` (four headings
-with bullets). The brief says "the template" and doesn't say which. Which
-one should I use?
+Avant de rédiger le point d’étape : `gabarits/` contient deux fichiers,
+`court.md` (un paragraphe de 120 mots au plus) et `complet.md` (quatre
+titres avec des puces). La consigne dit « le gabarit » sans préciser lequel.
+Lequel dois-je utiliser ?
 </Response>
 
-Some agents ask, as this one does. Others pick one, write the update and
-mention the pick at the end, or don't mention it at all. Either way the gap
-is the same gap. When the agent asks, the gap is now your question. When the
-agent guesses, the gap is filled with a default you didn't choose. Both tell
-you something the brief left out, and that is the thing you have to add.
+Certains agents demandent, comme celui-ci. D’autres en choisissent un,
+rédigent le point d’étape et signalent leur choix à la fin, ou ne le
+signalent pas du tout. Dans les deux cas, le manque est le même. Quand
+l’agent demande, le manque devient votre question. Quand l’agent devine, le
+manque est comblé par un choix par défaut que vous n’avez pas fait. Les deux
+vous montrent ce que la consigne a omis, et c’est ce qu’il vous faut ajouter.
 
-## Answer in the chat or in the brief
+## Répondre dans la conversation ou dans la consigne
 
-You have the answer. You want the full update, with the four headings. The
-question is where the answer goes. Try both places, one after the other.
+Vous avez la réponse. Vous voulez le point d’étape complet, avec les quatre
+titres. La question est de savoir où mettre cette réponse. Essayez les deux
+endroits, l’un après l’autre.
 
-First, answer in the chat. Type the answer as a reply and let the agent
-finish.
+D’abord, répondez dans la conversation. Tapez la réponse et laissez l’agent
+terminer.
 
 <Prompt model="illustrative" recorded="illustrative">
-Use full-update.md.
+Utilise complet.md.
 </Prompt>
 <Response>
 
 ```text
-Subject: Calibration team, week 38
+Objet : Équipe d’étalonnage, semaine 38
 
-## Done
-- Finished the recalibration of the 20 torque wrenches for the Delft site
-- Storeroom B stock count done, two calipers over, three probes short
+## Fait
+- Terminé le réétalonnage des 20 clés dynamométriques pour le site de Delft
+- Inventaire de la réserve B fait, deux pieds à coulisse en trop, trois sondes manquantes
 
-## In progress
-- Thermocouple batch for the food lab, 12 of 40 done
+## En cours
+- Lot de thermocouples pour le laboratoire alimentaire, 12 sur 40 faits
 
-## Blocked
-- 1 kg reference weight from the supplier, due 26 Sep
+## Bloqué
+- Poids de référence de 1 kg chez le fournisseur, prévu le 26 sept.
 
-## Next week
-- Finish the thermocouple batch
-- Start the spirit levels for the survey team
+## Semaine prochaine
+- Finir le lot de thermocouples
+- Commencer les niveaux à bulle pour l’équipe de topographie
 ```
 
 </Response>
 
-Check it against the done-criteria. The notes hold five lines and the
-update has six bullets, because the last line of the notes holds two
-items. Every item appears once, under a heading that fits, and the update
-follows the template. The names in parentheses are gone, and the template's
-one-line limit is a fair reason for that. The result passes. Now close
-this session, open a fresh one on the same folder, and send "Do the task
-in brief.md" again. The agent asks the same question, or picks a template
-again, and the pick is the agent's default and not your answer. The
-answer you typed was part of the chat, and a new session starts from the
-files. The chat is over, and nothing in the folder says which template you
-meant. The same thing happens next week when a colleague runs the brief,
-or when you run it in a session that doesn't have this conversation.
+Vérifiez-le au regard des critères d’achèvement. Les notes ont cinq lignes et
+le point d’étape a six puces, parce que la dernière ligne des notes contient
+deux éléments. Chaque élément apparaît une fois, sous un titre qui lui
+convient, et le point d’étape suit le gabarit. Les noms entre parenthèses
+ont disparu, et la limite d’une ligne par puce du gabarit l’explique. Le
+résultat passe. Fermez maintenant cette session, ouvrez-en une nouvelle sur
+le même dossier, et envoyez de nouveau « Fais la tâche décrite dans
+consigne.md ». L’agent pose la même question, ou choisit encore un gabarit,
+et ce choix est celui de l’agent par défaut, et non votre réponse. La
+réponse que vous avez tapée faisait partie de la conversation, et une
+nouvelle session part des fichiers. La conversation est terminée, et rien
+dans le dossier ne dit quel gabarit vous vouliez. La même chose arrive la
+semaine suivante quand un collègue lance la consigne, ou quand vous la lancez
+dans une session qui n’a pas cette conversation.
 
-Now put the answer in the second place. Edit `brief.md` and change "use
-the template in templates/" to "use the template in
-templates/full-update.md". Open a fresh session, send the same one line,
-and this time there is no question. The agent writes the update, and it
-does so every time anyone runs this brief from now on.
+Mettez maintenant la réponse au second endroit. Modifiez `consigne.md` et
+remplacez « utilise le gabarit du dossier gabarits/ » par « utilise le
+gabarit gabarits/complet.md ». Ouvrez une nouvelle session, envoyez la même
+ligne, et cette fois, il n’y a pas de question. L’agent rédige le point
+d’étape, et il le fera chaque fois que quelqu’un lancera cette consigne.
 
-This is the same fact you met when iterating on a prompt: a correction
-holds only where the next run reads it (@Academy
-ai-fluency-framework-foundations). In a chat, the next run reads the
-prompt. In a delegated task, the next run reads the brief and the files
-next to it. A reply in the chat fixes this run. An edit to the brief fixes
-every run.
+C’est le fait que vous avez rencontré en améliorant un prompt : une
+correction ne tient que là où l’exécution suivante la lit (@Academy
+ai-fluency-framework-foundations). Dans une conversation, l’exécution
+suivante lit le prompt. Dans une tâche déléguée, l’exécution suivante lit la
+consigne et les fichiers qui l’accompagnent. Une réponse dans la
+conversation corrige cette exécution. Une modification de la consigne
+corrige toutes les exécutions.
 
 <Choice id="where-the-answer-goes" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['task-brief']}
-  context="A learner runs a written brief with an agent that reads a folder of files. The brief points at a folder of two templates without naming one, the other template is used for another weekly message, and the agent asks which template to use."
-  title="Where does the answer go?" hint="Which of these will the next run of this brief still see?"
+  context="Un apprenant lance une consigne écrite avec un agent qui lit un dossier de fichiers. La consigne renvoie à un dossier de deux gabarits sans en nommer un, l’autre gabarit sert à un autre message hebdomadaire, et l’agent demande quel gabarit utiliser."
+  title="Où va la réponse ?" hint="Laquelle de ces réponses la prochaine exécution de cette consigne verra-t-elle encore ?"
   options={[
-    { text: 'Reply in the chat with the template name and let the agent finish.', why: 'The run finishes, and the next run starts from the files and asks the same question. The chat is not among the files.' },
-    { text: 'Reply in the chat, and once the result passes, save the result as the template for next time.', why: 'The result is one update. The brief still says "the template", and the next run still has two to choose from.' },
-    { text: 'Edit the brief so it names the template file, then restart the agent from the edited brief.', correct: true },
-    { text: 'Delete the template you did not want, so the agent has only one to find.', why: 'It removes the question for this brief and breaks every other brief that used the short template. The gap was in the brief, so the fix belongs in the brief.' },
+    { text: 'Répondre dans la conversation avec le nom du gabarit et laisser l’agent terminer.', why: 'L’exécution se termine, et la suivante part des fichiers et pose la même question. La conversation ne fait pas partie des fichiers.' },
+    { text: 'Répondre dans la conversation, puis, quand le résultat passe, l’enregistrer comme gabarit pour la prochaine fois.', why: 'Le résultat est un seul point d’étape. La consigne dit toujours « le gabarit », et l’exécution suivante a toujours deux gabarits au choix.' },
+    { text: 'Modifier la consigne pour qu’elle nomme le fichier du gabarit, puis relancer l’agent depuis la consigne modifiée.', correct: true },
+    { text: 'Supprimer le gabarit dont vous ne voulez pas, pour que l’agent n’en trouve plus qu’un.', why: 'Cela supprime la question pour cette consigne et casse toutes les autres consignes qui utilisaient le gabarit court. Le manque était dans la consigne, donc la correction va dans la consigne.' },
   ]}>
-The agent asks which of two templates to use. You know the answer, and the short
-template is used for another weekly message. Where does the answer belong?
+L’agent demande lequel de deux gabarits utiliser. Vous connaissez la
+réponse, et le gabarit court sert à un autre message hebdomadaire. Où va la
+réponse ?
 </Choice>
 
-## Changing a limit between runs
+## Changer une limite entre deux exécutions
 
-The full template says "keep each bullet to one line". The first update came
-back without the names, and the director wants to know who is responsible
-for each item. The notes have the names, and a one-line bullet barely fits
-them. You want the bullets to name the person and be allowed a second line.
-This is a change to a limit, and how you state it matters.
+Le gabarit complet dit « chaque puce tient sur une ligne ». Le premier point
+d’étape est revenu sans les noms, et la directrice veut savoir qui est
+responsable de chaque élément. Les notes donnent les noms, et une puce d’une
+ligne a à peine la place pour eux. Vous voulez que les puces nomment la
+personne et puissent tenir sur deux lignes. C’est le changement d’une
+limite, et la façon de le formuler compte.
 
-Type "add who is responsible to each bullet" and the agent now has two
-instructions: the template's one-line limit and your new one. It tries to
-satisfy both. You get a bullet that makes room for the name by dropping
-another fact, or a name squeezed in as initials. Nothing told it the earlier
-limit no longer applies, so it holds on to it. State the change as a change
-instead, in the chat for this run and in the file for every run after it.
+Tapez « ajoute le responsable à chaque puce », et l’agent a maintenant deux
+instructions : la limite d’une ligne du gabarit et votre nouvelle demande.
+Il essaie de satisfaire les deux. Vous obtenez une puce qui fait de la place
+au nom en supprimant un autre fait, ou un nom réduit à des initiales. Rien
+ne lui a dit que l’ancienne limite ne s’applique plus, donc il la garde.
+Formulez donc le changement comme un changement, dans la conversation pour
+cette exécution et dans le fichier pour toutes les suivantes.
 
 <Prompt model="illustrative" recorded="illustrative">
-Replace the limit "keep each bullet to one line" with this one: each
-bullet names the person responsible and may run to two lines. Rewrite
-the update with that change and nothing else changed.
+Remplace la limite « chaque puce tient sur une ligne » par celle-ci : chaque
+puce nomme la personne responsable et peut tenir sur deux lignes. Réécris le
+point d’étape avec ce changement, sans rien changer d’autre.
 </Prompt>
 <Response>
 
 ```text
-Subject: Calibration team, week 38
+Objet : Équipe d’étalonnage, semaine 38
 
-## Done
-- Finished the recalibration of the 20 torque wrenches for the Delft site.
-  Responsible: Jonas.
-- Storeroom B stock count done, two calipers over, three probes short.
-  Responsible: Sam.
+## Fait
+- Terminé le réétalonnage des 20 clés dynamométriques pour le site de Delft.
+  Responsable : Jonas.
+- Inventaire de la réserve B fait, deux pieds à coulisse en trop, trois sondes
+  manquantes. Responsable : Sam.
 
-## In progress
-- Thermocouple batch for the food lab, 12 of 40 done. Responsible: Mira.
+## En cours
+- Lot de thermocouples pour le laboratoire alimentaire, 12 sur 40 faits.
+  Responsable : Mira.
 
-## Blocked
-- 1 kg reference weight from the supplier, due 26 Sep. Responsible: Mira.
+## Bloqué
+- Poids de référence de 1 kg chez le fournisseur, prévu le 26 sept.
+  Responsable : Mira.
 
-## Next week
-- Finish the thermocouple batch. Responsible: not in the notes.
-- Start the spirit levels for the survey team. Responsible: not in the notes.
+## Semaine prochaine
+- Finir le lot de thermocouples. Responsable : absent des notes.
+- Commencer les niveaux à bulle pour l’équipe de topographie. Responsable :
+  absent des notes.
 ```
 
 </Response>
 
-The exchange above is illustrative. In your own result, look for a name on
-every bullet and no bullet cut short to make room. Where the notes give no
-name, as on both next-week lines, a plain "not in the notes" is right and a
-guessed name is a failure, even where the guess is easy. Then make the same
-change in `templates/full-update.md`. The next run gets the new limit
-without being told. The word "replace" did the work here. It names the old
-instruction and retires it, where "also" or "add" would have left it
-standing.
+L’échange ci-dessus est illustratif. Dans votre propre résultat, cherchez
+un nom sur chaque puce, et aucune puce raccourcie pour faire de la place.
+Là où les notes ne donnent pas de nom, comme sur les deux lignes de la
+semaine prochaine, un simple « absent des notes » est juste, et un nom
+deviné est un échec, même quand la supposition est facile. Faites ensuite
+le même changement dans `gabarits/complet.md`. L’exécution suivante reçoit
+la nouvelle limite sans qu’on la lui dise. Le mot « remplace » a fait le
+travail ici. Il nomme l’ancienne instruction et la retire, alors que
+« aussi » ou « ajoute » l’auraient laissée en place.
 
 <Repair id="state-the-change" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['task-brief']}
-  title="State the change as a change" hint="Which earlier instruction does the agent still hold, and does your message tell it to let go?"
-  broken={`Also put the name of the person responsible on each bullet.`}
-  model={`Replace the limit "keep each bullet to one line" with: each bullet names the person responsible and may run to two lines. Change nothing else.`}>
-The template the agent has just used says "keep each bullet to one line".
-A colleague sends the message below and gets bullets with initials
-squeezed onto the end of each line. Rewrite the message so the agent drops
-the old limit.
+  title="Formulez le changement comme un changement" hint="Quelle instruction précédente l’agent garde-t-il encore, et votre message lui dit-il de l’abandonner ?"
+  broken={`Mets aussi le nom du responsable sur chaque puce.`}
+  model={`Remplace la limite « chaque puce tient sur une ligne » par : chaque puce nomme la personne responsable et peut tenir sur deux lignes. Ne change rien d’autre.`}>
+Le gabarit que l’agent vient d’utiliser dit « chaque puce tient sur une
+ligne ». Un collègue envoie le message ci-dessous et obtient des puces avec
+des initiales serrées à la fin de chaque ligne. Réécrivez le message pour
+que l’agent abandonne l’ancienne limite.
 </Repair>
 
-## When the first result shows the goal was wrong
+## Quand le premier résultat montre que l’objectif était faux
 
-Sometimes the first result tells you something worse than a missing name. It
-tells you the goal was wrong. Suppose the update comes back with the torque
-wrenches under "Done", and that line reminds you of what the director said
-last week: she signed those off in a meeting and wants the update to cover
-the decisions she has to take. A list of what happened was never the
-document she asked for. The update the brief asks for is the wrong document.
-Every criterion in the brief can pass, and the result is still no use.
+Parfois, le premier résultat vous apprend quelque chose de plus grave qu’un
+nom manquant. Il vous apprend que l’objectif était faux. Supposons que le
+point d’étape revienne avec les clés dynamométriques sous « Fait », et que
+cette ligne vous rappelle ce que la directrice a dit la semaine dernière :
+elle a validé ces travaux en réunion, et elle veut que le point d’étape
+couvre les décisions qu’elle doit prendre. Une liste de ce qui s’est passé
+n’a jamais été le document qu’elle demandait. Le point d’étape que demande
+la consigne est le mauvais document. Chaque critère de la consigne peut
+passer, et le résultat reste inutile.
 
-<Pitfall title="Letting it finish the wrong thing well">
-A learner reads the first draft, sees that the director wants decisions and
-the brief asks for a task list, and thinks "let it finish, then I'll ask for
-the decisions". The agent finishes a tidy task list. The done-criteria pass
-on review. The learner then asks for the decisions in the chat. The second
-result mixes a decision list into the task list, because the brief still
-asks for the task list. Two runs and two reviews went into a document that
-was wrong from the first line. The rule: when the first result shows the
-goal itself was wrong, stop the run and rewrite the goal and the done-
-criteria in the brief. Stopping a run costs one run. A finished wrong result
-costs the run, the review, and the next run too.
+<Pitfall title="Laisser l’agent bien finir la mauvaise chose">
+Un apprenant lit le premier brouillon, voit que la directrice veut des
+décisions et que la consigne demande une liste de tâches, et se dit
+« laissons-le finir, je demanderai les décisions ensuite ». L’agent termine
+une liste de tâches bien rangée. Les critères d’achèvement passent à la
+vérification. L’apprenant demande ensuite les décisions dans la
+conversation. Le deuxième résultat mélange une liste de décisions à la liste
+de tâches, parce que la consigne demande toujours la liste de tâches. Deux
+exécutions et deux vérifications ont servi un document faux dès la première
+ligne. La règle : quand le premier résultat montre que l’objectif lui-même
+était faux, arrêtez l’exécution et réécrivez l’objectif et les critères
+d’achèvement dans la consigne. Arrêter une exécution coûte une exécution. Un
+résultat faux mené à terme coûte l’exécution, la vérification, et
+l’exécution suivante.
 </Pitfall>
 
-Stopping is cheap because the work so far was the agent's, and the agent
-starts again from the brief without complaint. The expensive part is the
-review you would give a result that can pass every criterion and still
-miss the point. So a first result gets checked against the done-criteria and then
-against the reason you wrote them. Does meeting them still get you what
-you wanted? When that answer is no, the brief has the wrong goal,
-and the edit goes there.
+Arrêter coûte peu, parce que le travail fait jusque-là était celui de
+l’agent, et l’agent repart de la consigne sans se plaindre. Ce qui coûte
+cher, c’est la vérification d’un résultat qui peut passer chaque critère et
+manquer quand même l’essentiel. Un premier résultat se vérifie donc au
+regard des critères d’achèvement, puis au regard de la raison pour laquelle
+vous les avez écrits. Les remplir vous donne-t-il encore ce que vous
+vouliez ? Quand la réponse est non, l’objectif de la consigne est faux, et
+c’est là que va la modification.
 
 <Scenario id="stop-or-finish" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['checking-results']}
-  context="An agent is producing a weekly status update from a brief. The brief asks for a list of work items under four headings, with done-criteria about every item appearing once. Partway through, the first section shows the reader wanted a list of decisions to take, not a list of work done."
-  title="Stop or finish?" hint="What does the brief's goal say, and will finishing this run change what the brief says?"
+  context="Un agent produit un point d’étape hebdomadaire à partir d’une consigne. La consigne demande une liste d’éléments de travail sous quatre titres, avec des critères d’achèvement qui demandent que chaque élément apparaisse une fois. En cours de route, la première section montre que la lectrice voulait une liste de décisions à prendre, et la consigne demande une liste du travail fait."
+  title="Arrêter ou terminer ?" hint="Que dit l’objectif de la consigne, et terminer cette exécution changera-t-il ce que dit la consigne ?"
   options={[
-    { text: 'Let the run finish, review it against the done-criteria, and then ask for the decisions in the chat as a follow-up request.', consequence: 'The result passes every criterion and is the wrong document. The follow-up asks for something the brief still does not say, so the next result mixes the two, and you have reviewed twice.' },
-    { text: 'Stop the run, rewrite the goal and the done-criteria to ask for the decisions the director has to take, and restart from the edited brief.', correct: true, consequence: 'One run is lost. The next result is checked against criteria that describe the document the director asked for, and the brief is right for next week as well.' },
-    { text: 'Let the run finish and fix the document yourself, since you know what the director wants.', consequence: 'You have the document, and the brief still asks for the task list. Next week the agent produces the task list again and you fix it again.' },
-    { text: 'Stop the run and tell the agent in the chat to write the decisions instead, then let it continue.', consequence: 'This run comes out right. The brief still holds the old goal and the old done-criteria, so the next session asks for the task list again, and your review has nothing written down to tick.' },
+    { text: 'Laisser l’exécution se terminer, la vérifier au regard des critères, puis demander les décisions dans la conversation.', consequence: 'Le résultat passe chaque critère et c’est le mauvais document. La demande suivante porte sur quelque chose que la consigne ne dit toujours pas, donc le résultat suivant mélange les deux, et vous avez vérifié deux fois.' },
+    { text: 'Arrêter l’exécution, réécrire l’objectif et les critères pour demander les décisions de la directrice, et relancer.', correct: true, consequence: 'Une exécution est perdue. Le résultat suivant est vérifié au regard de critères qui décrivent le document qu’a demandé la directrice, et la consigne est juste pour la semaine suivante aussi.' },
+    { text: 'Laisser l’exécution se terminer et corriger vous-même le document, puisque vous savez ce que veut la directrice.', consequence: 'Vous avez le document, et la consigne demande toujours la liste de tâches. La semaine suivante, l’agent produit de nouveau la liste de tâches et vous la corrigez de nouveau.' },
+    { text: 'Arrêter l’exécution et dire à l’agent dans la conversation d’écrire les décisions, puis le laisser continuer.', consequence: 'Cette exécution aboutit au bon document. La consigne garde l’ancien objectif et les anciens critères, donc la session suivante redemande la liste de tâches, et votre vérification n’a rien d’écrit à cocher.' },
   ]}>
-The agent is halfway through the update, and the "Done" section shows you
-the director wanted the decisions she has to take, and the brief asks for
-a list of work done. What do you do?
+L’agent en est à la moitié du point d’étape, et la section « Fait » vous
+montre que la directrice voulait les décisions qu’elle doit prendre, alors
+que la consigne demande une liste du travail fait. Que faites-vous ?
 </Scenario>
 
 <Sort id="chat-or-brief" phase="review" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['task-brief']}
-  context="A learner runs the same written brief with an agent every week to produce a status update, and each run starts a new session from the files."
-  title="Chat or brief?" hint="Will the same gap come back in next week's run?"
-  buckets={['Answer it in the chat', 'Change the brief']}
+  context="Un apprenant lance chaque semaine la même consigne écrite avec un agent pour produire un point d’étape, et chaque exécution démarre une nouvelle session à partir des fichiers."
+  title="Conversation ou consigne ?" hint="Le même manque reviendra-t-il à l’exécution de la semaine prochaine ?"
+  buckets={['Répondre dans la conversation', 'Modifier la consigne']}
   items={[
-    { text: 'This week only, the director wants the update a day early', bucket: 0 },
-    { text: 'You want this week\'s update to mention a colleague\'s leave, which ends on Friday', bucket: 0 },
-    { text: 'The agent asks which of two templates to use, and it will need the same one every week', bucket: 1 },
-    { text: 'The agent guessed a folder, because the brief never names one', bucket: 1 },
-    { text: 'The word limit changed for good, and the brief still has the old one', bucket: 1 },
+    { text: 'Cette semaine seulement, la directrice veut le point d’étape un jour plus tôt', bucket: 0 },
+    { text: 'Vous voulez que le point d’étape de la semaine mentionne le congé d’une collègue, qui se termine vendredi', bucket: 0 },
+    { text: 'L’agent demande lequel de deux gabarits utiliser, et il aura besoin du même chaque semaine', bucket: 1 },
+    { text: 'L’agent a deviné un dossier, parce que la consigne n’en nomme aucun', bucket: 1 },
+    { text: 'La limite de mots a changé pour de bon, et la consigne a toujours l’ancienne', bucket: 1 },
   ]} />
 
 <Match id="steer-or-stop" phase="review" objective="using-agents/delegates-and-checks/adjusts-mid-task"
   concepts={['task-brief', 'checking-results']}
-  context="A learner watches an agent run a written brief for a status update."
-  title="Steer it, or stop it?" hint="Is the problem in this run only, or in the goal or the source the brief gives?"
-  options={['Answer in the chat and let it go on', 'Stop the run, fix the brief, and restart']}
+  context="Un apprenant regarde un agent exécuter une consigne écrite pour un point d’étape."
+  title="Orienter ou arrêter ?" hint="Le problème est-il dans cette seule exécution, ou dans l’objectif ou la source que donne la consigne ?"
+  options={['Répondre dans la conversation et laisser continuer', 'Arrêter l’exécution, corriger la consigne et relancer']}
   rows={[
-    { statement: 'The first section shows that the reader wanted decisions to take, and the brief asks for work done', option: 1, why: 'Does the result go wrong because of the goal the brief states?' },
-    { statement: 'The agent asks whether to spell out one abbreviation in this update', option: 0, why: 'Does the answer matter beyond this run?' },
-    { statement: 'The agent is using last month\'s figures, because the brief names last month\'s file', option: 1, why: 'Where does the wrong source come from?' },
+    { statement: 'La première section montre que la lectrice voulait des décisions à prendre, et la consigne demande le travail fait', option: 1, why: 'Le résultat déraille-t-il à cause de l’objectif que formule la consigne ?' },
+    { statement: 'L’agent demande s’il faut écrire en toutes lettres une abréviation dans ce point d’étape', option: 0, why: 'La réponse compte-t-elle au-delà de cette exécution ?' },
+    { statement: 'L’agent utilise les chiffres du mois dernier, parce que la consigne nomme le fichier du mois dernier', option: 1, why: 'D’où vient la mauvaise source ?' },
   ]}
-  rationale="A wrong goal or source costs the whole run, so the fix goes into the brief before the run goes again. A question for this run gets its answer in the chat.">
-Match each moment to what you do.
+  rationale="Un objectif ou une source faux coûtent toute l’exécution, donc la correction va dans la consigne avant de relancer. Une question propre à cette exécution reçoit sa réponse dans la conversation.">
+Associez chaque moment à ce que vous faites.
 </Match>
 
-## The loop
+## La boucle
 
-Every step in this lesson was the same move. A result came back, you
-read it against the brief, and what you learned went into the brief
-before the next run. The agent's question became a line in the brief, the
-changed limit became a replacement in the template, and the wrong goal
-became a rewrite of the done-criteria before the run went on. A result
-comes back, the brief changes, and the run goes again (@Academy
-introduction-to-claude-cowork). The chat is where you steer this run, and
-the files are where the steering is kept.
+Chaque étape de cette leçon était le même geste. Un résultat est revenu,
+vous l’avez lu au regard de la consigne, et ce que vous avez appris est
+entré dans la consigne avant l’exécution suivante. La question de l’agent
+est devenue une ligne de la consigne, la limite changée est devenue un
+remplacement dans le gabarit, et l’objectif faux est devenu une réécriture
+des critères d’achèvement avant la suite. Un résultat revient, la consigne
+change, et l’exécution repart (@Academy introduction-to-claude-cowork). La
+conversation sert à orienter cette exécution, et les fichiers gardent ces
+orientations.
 
-<Exercise stretch="Run the original brief with 'the template' left ambiguous in three fresh sessions and note whether the agent asks or picks each time, and which template it picks.">
-Make the folder from this lesson and run `brief.md` as written, so the
-agent has to choose between the two templates. Answer its question once
-in the chat and once by editing the brief, and after each answer start a
-fresh session and run the brief again. Write down, in two or three lines,
-what the second run did in each case. It takes ten minutes and shows you
-which of your answers the next run can see, which is what protects next
-week's run from this week's question. A good result is two lines that say
-"asked again" for the chat answer and "no question" for the edited brief.
-If your agent picked a template instead of asking, its pick is the
-question, and you answer it the same two ways. Which other answers have
-you given an agent in the chat this week that belong in a file?
+<Exercise stretch="Lancez la consigne d’origine, avec « le gabarit » laissé ambigu, dans trois nouvelles sessions, et notez à chaque fois si l’agent demande ou choisit, et quel gabarit il choisit.">
+Créez le dossier de cette leçon et lancez `consigne.md` telle quelle, pour
+que l’agent doive choisir entre les deux gabarits. Répondez à sa question une
+fois dans la conversation et une fois en modifiant la consigne, et après
+chaque réponse, ouvrez une nouvelle session et relancez la consigne. Notez
+en deux ou trois lignes ce qu’a fait la deuxième exécution dans chaque cas.
+Cela prend dix minutes et vous montre laquelle de vos réponses l’exécution
+suivante peut voir, ce qui protège l’exécution de la semaine prochaine de la
+question de cette semaine. Un bon résultat tient en deux lignes qui disent
+« a redemandé » pour la réponse dans la conversation et « pas de question »
+pour la consigne modifiée. Si votre agent a choisi un gabarit au lieu de
+demander, son choix est la question, et vous y répondez des deux mêmes
+façons. Quelles autres réponses avez-vous données à un agent dans la
+conversation cette semaine, qui ont leur place dans un fichier ?
 </Exercise>
 
 <Recap>
-1. An agent that asks a question and an agent that guesses are showing you the same gap in the brief.
-2. An answer in the chat fixes this run. An answer in the brief fixes every later run of this brief, because a new session starts from the files and the earlier chat is not among them (@Academy ai-fluency-framework-foundations).
-3. State a changed limit as a replacement, and name the old limit. An agent holds the earlier instruction and tries to satisfy both.
-4. When a first result shows the goal itself was wrong, stop the run and rewrite the goal and the done-criteria. A stopped run costs one run, and a finished wrong result costs the run, the review, and the next run.
-5. A result comes back, the brief changes, and the run goes again. Steer this run in the chat, and keep the steering in the files (@Academy introduction-to-claude-cowork).
+1. Un agent qui pose une question et un agent qui devine vous montrent le même manque dans la consigne.
+2. Une réponse dans la conversation corrige cette exécution. Une réponse dans la consigne corrige toutes les exécutions suivantes de cette consigne, parce qu’une nouvelle session part des fichiers et que la conversation précédente n’en fait pas partie (@Academy ai-fluency-framework-foundations).
+3. Formulez une limite changée comme un remplacement, et nommez l’ancienne limite. Un agent garde l’instruction précédente et essaie de satisfaire les deux.
+4. Quand un premier résultat montre que l’objectif lui-même était faux, arrêtez l’exécution et réécrivez l’objectif et les critères d’achèvement. Une exécution arrêtée coûte une exécution, et un résultat faux mené à terme coûte l’exécution, la vérification et l’exécution suivante.
+5. Un résultat revient, la consigne change, et l’exécution repart. Orientez cette exécution dans la conversation, et gardez les orientations dans les fichiers (@Academy introduction-to-claude-cowork).
 </Recap>

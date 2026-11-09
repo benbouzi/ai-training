@@ -13,7 +13,7 @@ introduces: [decomposition-into-components, dependencies, designing-the-verifica
 assumes:
   - objective: using-agents/delegates-and-checks/adjusts-mid-task
     lesson: using-agents/adjusting-the-brief
-    section: changing-a-limit-between-runs
+    section: changer-une-limite-entre-deux-exécutions
   - objective: coding-with-agents/specifies-work/defines-success
     lesson: coding-with-agents/deciding-what-to-build
     section: writing-down-what-success-requires

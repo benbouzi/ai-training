@@ -15,7 +15,7 @@ assumes:
     section: lancer-la-vérification
   - objective: using-agents/delegates-and-checks/reviews-against-brief
     lesson: using-agents/delegating
-    section: reviewing-against-the-brief
+    section: vérifier-au-regard-de-la-consigne
 extends-to:
   - label: "Get Started with Codex, module 1: accept a change on evidence, and write a handoff that says who checked what (OpenAI Academy, free account)"
     href: https://academy.openai.com/public/courses/get-started-with-codex-jkhsq

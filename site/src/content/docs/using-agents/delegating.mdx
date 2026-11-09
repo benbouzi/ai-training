@@ -1,299 +1,319 @@
 import { Choice, MultiChoice, Sort, Repair, Pitfall, Exercise, Recap, Prompt, Response, Scenario } from '@components/lesson';
 
-In this lesson we delegate one small task to an agent and get a result
-we can check. We write the brief and decide how much the agent may do
-before it comes back to us. Then we review what it produced against the
-brief rather than against a gut feeling. The task is deliberately small so
-you can run it as often as you like and throw the results away.
+Dans cette leçon, nous déléguons une petite tâche à un agent et obtenons un
+résultat que nous pouvons vérifier. Nous écrivons la consigne et décidons ce
+que l’agent peut faire avant de revenir vers nous. Puis nous relisons ce
+qu’il a produit au regard de la consigne, sans nous fier à notre intuition.
+La tâche est volontairement petite, pour que vous puissiez la lancer aussi
+souvent que vous voulez et jeter les résultats.
 
-You need any chat-capable agent you already have access to. The lesson
-works with any product.
+Il vous faut n’importe quel agent conversationnel auquel vous avez déjà
+accès. La leçon fonctionne avec n’importe quel produit.
 
-## The task
+## La tâche
 
-Here is the text you hand over. It is fictional; read it once now so
-that you can judge the agent's work later.
+Voici le texte que vous remettez. Il est fictif ; lisez-le une fois
+maintenant pour pouvoir juger le travail de l’agent ensuite.
 
-> **Memo: office move, second floor to fourth floor**
+> **Note : déménagement des bureaux, du deuxième au quatrième étage**
 >
-> From next month the product team moves from the second floor to the
-> fourth. Desks on the fourth floor are being fitted out over the next three
-> weeks; the move itself is planned for the last Friday of the month, with
-> everyone working from home that day. Facilities will label and transport
-> monitors, chairs, and personal crates. Each person gets one crate and packs
-> it by the Thursday evening before the move. Anything left on a desk after
-> that's recycled. The printer on the second floor stays where it is; the
-> fourth floor gets a new one in the week after the move. Lockers aren't
-> moving, so clear yours before the end of the month. Questions go to the
-> office manager, who will hold a short walk-through of the new floor next
-> Tuesday at ten. Attendance is optional but recommended for anyone who
-> keeps equipment at their desk.
+> À partir du mois prochain, l’équipe produit quitte le deuxième étage pour
+> le quatrième. Les postes du quatrième étage sont aménagés au cours des
+> trois prochaines semaines ; le déménagement lui-même est prévu le dernier
+> vendredi du mois, et tout le monde télétravaille ce jour-là. Les services
+> généraux étiquettent et transportent les écrans, les chaises et les caisses
+> personnelles. Chaque personne reçoit une caisse et la remplit avant le jeudi
+> soir précédant le déménagement. Tout ce qui reste sur un bureau après cela
+> est recyclé. L’imprimante du deuxième étage reste où elle est ; le
+> quatrième étage en reçoit une neuve la semaine qui suit le déménagement.
+> Les casiers ne déménagent pas, donc videz le vôtre avant la fin du mois.
+> Les questions vont à la responsable des locaux, qui fera une courte visite
+> du nouvel étage mardi prochain à dix heures. La présence est facultative
+> mais recommandée pour toute personne qui garde du matériel à son bureau.
 
-The result you want is a one-page summary in this fixed format:
+Le résultat que vous voulez est un résumé d’une page dans ce format fixe :
 
-1. A one-line title.
-2. A bullet each for what's happening, what you must do, and by when.
-3. One closing line naming who to ask.
+1. Un titre d’une ligne.
+2. Une puce pour ce qui se passe, une pour ce que vous devez faire, et une
+   pour l’échéance.
+3. Une ligne de fin qui nomme la personne à qui s’adresser.
 
-Before you write anything, predict: if you paste the memo and type
-"summarize this", what do you get back? Probably a paragraph. Possibly a
-decent one. Unlikely to be in this format, and you have no way to say
-whether it is right except that it reads well. A brief is how you get the format and the check.
+Avant d’écrire quoi que ce soit, prédisez : si vous collez la note et tapez
+« résume ceci », qu’obtenez-vous ? Sans doute un paragraphe, peut-être
+correct. Il a peu de chances d’être dans ce format, et vous n’avez aucun
+moyen de dire s’il est juste, à part le fait qu’il se lit bien. Une consigne
+est la façon d’obtenir le format et la vérification.
 
-## Writing the brief
+## Écrire la consigne
 
-A brief has four parts: the goal, the context the work needs, the limits it
-must stay within, and how you know it is done. The agent fills in
-whatever you leave unsaid with plausible defaults, so what it must not do
-matters as much as what it must do. "Summarize this" is a request but not a
-brief.
+Une consigne a quatre parties : l’objectif, le contexte dont le travail a
+besoin, les limites qu’il doit respecter, et la façon de savoir qu’il est
+terminé. L’agent remplit tout ce que vous ne dites pas avec des valeurs par
+défaut plausibles, donc ce qu’il ne doit pas faire compte autant que ce qu’il
+doit faire. « Résume ceci » est une demande, et il lui manque tout ce qui
+fait une consigne.
 
-Start with the goal and the limits together. The goal is the format above.
-The limits are the things a helpful agent would otherwise do for you. It
-might rephrase the dates or add advice the memo didn't give, or drop the
-printer because it seemed minor. Write the limits as plain prohibitions.
-A limit also has to mean the same thing to a second reader. "Keep the
-printer part short" can mean trim the words or drop the printer, and the
-agent picks one reading without telling you which. Where the two readings
-lead to different work, write out the one you mean (@Academy introduction-to-claude-cowork).
+Commencez par l’objectif et les limites ensemble. L’objectif est le format
+ci-dessus. Les limites sont les choses qu’un agent serviable ferait à votre
+place. Il pourrait reformuler les dates, ajouter des conseils que la note ne
+donnait pas, ou laisser tomber l’imprimante parce qu’elle lui semblait
+secondaire. Écrivez les limites sous forme d’interdictions simples. Une
+limite doit aussi avoir le même sens pour un second lecteur. « Fais court
+sur l’imprimante » peut vouloir dire raccourcir les mots ou supprimer
+l’imprimante, et l’agent choisit une lecture sans vous dire laquelle. Là où
+les deux lectures mènent à un travail différent, écrivez celle que vous
+voulez dire (@Academy introduction-to-claude-cowork).
 
-Now the context. Tell the agent which information to use and where it is.
-Here that's easy: the memo, pasted in full, is the only source. State it
-anyway. An agent that has to guess its sources picks the most available
-one, not the right one, and "the latest information" is an invitation to
-invent.
+Passez ensuite au contexte. Dites à l’agent quelles informations utiliser et
+où elles se trouvent. Ici, c’est facile : la note, collée en entier, est la
+seule source. Dites-le quand même. Un agent qui doit deviner ses sources
+prend la plus accessible, rarement la bonne, et « les dernières
+informations » est une invitation à inventer.
 
-Last, the done-criteria, and write them before you send the task. Without
-them you judge the result by feel and accept a plausible summary as a
-correct one. Good done-criteria are things you can tick: every date in the
-memo appears in the summary; no fact appears that's not in the memo; the
-format has exactly the parts listed.
+Enfin, les critères d’achèvement (done-criteria), à écrire avant d’envoyer la tâche. Sans
+eux, vous jugez le résultat au ressenti et acceptez un résumé plausible comme
+un résumé juste. De bons critères d’achèvement sont des choses que vous
+pouvez cocher : chaque date de la note figure dans le résumé ; aucun fait ne
+figure qui ne soit dans la note ; le format a exactement les parties
+listées.
 
 <MultiChoice id="which-criteria-tick" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-brief']}
-  context="The running example of the lesson is asking an agent to summarize an office-move memo for a team."
-  title="Which of these can you tick?" hint="For each line ask: could two people check it and reach the same yes or no?"
+  context="L’exemple suivi dans la leçon consiste à demander à un agent de résumer pour une équipe une note sur un déménagement de bureaux."
+  title="Lesquels pouvez-vous cocher ?" hint="Pour chaque ligne, demandez-vous : deux personnes pourraient-elles la vérifier et arriver au même oui ou au même non ?"
   options={[
-    { text: 'Every date in the memo appears in the summary.', correct: true },
-    { text: 'The summary is clear and easy to read.', why: 'Clear to whom? Two readers can disagree, so this is a feeling, and a feeling cannot be ticked.' },
-    { text: 'No fact appears that is not in the memo.', correct: true },
-    { text: 'The output has exactly the five parts listed.', correct: true },
-    { text: 'The summary is about the right length.', why: 'Right for whom? Name a number of lines and it becomes a criterion.' },
+    { text: 'Chaque date de la note figure dans le résumé.', correct: true },
+    { text: 'Le résumé de la note est clair et facile à lire.', why: 'Clair pour qui ? Deux lecteurs peuvent être en désaccord, donc c’est un ressenti, et un ressenti ne se coche pas.' },
+    { text: 'Aucun fait ne figure qui ne soit dans la note.', correct: true },
+    { text: 'La sortie a exactement les cinq parties listées.', correct: true },
+    { text: 'Le résumé a à peu près la bonne longueur.', why: 'Bonne pour qui ? Donnez un nombre de lignes et cela devient un critère.' },
   ]}>
-You are writing the done-criteria for the memo summary. Which of these
-lines are criteria you can tick?
+Vous écrivez les critères d’achèvement du résumé de la note. Lesquelles de
+ces lignes sont des critères que vous pouvez cocher ?
 </MultiChoice>
 
-Put together, the brief looks something like this. Send it to your agent
-now, with the memo pasted underneath.
+Une fois assemblée, la consigne ressemble à ceci. Envoyez-la maintenant à
+votre agent, avec la note collée en dessous.
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize the memo below into this exact format: a one-line title; three
-bullets covering what's happening, what I must do, and by when; one closing
-line naming who to ask.
+Résume la note ci-dessous dans ce format exact : un titre d’une ligne ; trois
+puces sur ce qui se passe, ce que je dois faire et l’échéance ; une ligne de
+fin qui nomme la personne à qui s’adresser.
 
-Use only the memo as your source. Don't add advice, don't reword dates,
-and don't leave out any deadline.
+Utilise seulement la note comme source. N’ajoute pas de conseils, ne
+reformule pas les dates, et n’omets aucune échéance.
 
-Done when: every date or deadline in the memo appears in the summary, no
-fact appears that's not in the memo, and the output has exactly the five
-lines described.
+Terminé quand : chaque date ou échéance de la note figure dans le résumé,
+aucun fait ne figure qui ne soit dans la note, et la sortie a exactement les
+cinq lignes décrites.
 
-[memo follows]
+[la note suit]
 </Prompt>
 <Response>
-**Product team moves to the fourth floor next month**
+**L’équipe produit déménage au quatrième étage le mois prochain**
 
-- The product team moves from the second to the fourth floor on the last
-  Friday of the month. Everyone works from home that day.
-- Pack your one crate and clear your locker; anything left on a desk is
-  recycled.
-- Crate packed by the Thursday evening before the move; locker cleared by
-  the end of the month.
+- L’équipe produit passe du deuxième au quatrième étage le dernier vendredi
+  du mois. Tout le monde télétravaille ce jour-là.
+- Remplissez votre caisse et videz votre casier ; tout ce qui reste sur un
+  bureau est recyclé.
+- Caisse remplie avant le jeudi soir précédant le déménagement ; casier vidé
+  avant la fin du mois.
 
-Questions go to the office manager, who holds a walk-through next Tuesday
-at ten.
+Les questions vont à la responsable des locaux, qui fait une visite mardi
+prochain à dix heures.
 </Response>
 
-The response above is illustrative, written to show the structure of a good
-result rather than recorded from one model, and your result differs in
-wording. That's fine, because the brief fixed the structure and the facts
-rather than the wording.
+La réponse ci-dessus est illustrative : elle a été écrite pour montrer la
+structure d’un bon résultat, sans enregistrement d’un modèle précis, et
+votre résultat sera formulé autrement. Cela ne pose pas de problème, parce
+que la consigne fixait la structure et les faits, et laissait la formulation
+libre.
 
 <Repair id="fix-the-brief" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-brief', 'giving-context']}
-  title="Fix the brief" hint="Which of the four parts is missing, and what would the agent fill in on its own?"
-  broken={`Can you make a short summary of the office move memo for the team? Keep it clear.`}
-  model={`Summarize the memo below for the product team in this format: one-line title, three bullets (what is happening, what I must do, by when), one closing line naming who to ask. Use only the memo pasted below as your source. Do not add advice or leave out any deadline. Done when every deadline in the memo appears, nothing appears that is not in the memo, and the output has exactly those five parts.`}>
-A colleague sends this to their agent and gets a friendly paragraph with a
-made-up "see you on the new floor!" at the end. Rewrite the brief so it
-states goal, context, limits and done-criteria.
+  title="Corrigez la consigne" hint="Laquelle des quatre parties manque, et que remplirait l’agent de lui-même ?"
+  broken={`Tu peux faire un court résumé de la note sur le déménagement pour l’équipe ? Fais clair.`}
+  model={`Résume la note ci-dessous pour l’équipe produit dans ce format : titre d’une ligne, trois puces (ce qui se passe, ce que je dois faire, l’échéance), une ligne de fin qui nomme la personne à qui s’adresser. Utilise seulement la note collée ci-dessous comme source. N’ajoute pas de conseils et n’omets aucune échéance. Terminé quand chaque échéance de la note figure, que rien ne figure qui ne soit dans la note, et que la sortie a exactement ces cinq parties.`}>
+Une collègue envoie ceci à son agent et obtient un paragraphe amical qui se
+termine par un « à bientôt au nouvel étage ! » inventé. Réécrivez la consigne
+pour qu’elle énonce l’objectif, le contexte, les limites et les critères
+d’achèvement.
 </Repair>
 
 <Sort id="tick-or-adjective" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['task-brief']}
-  context="A learner writes the done-criteria for a brief that asks an agent to draft a reply to a customer email, using the price list."
-  title="Can you tick it?" hint="Could two people check this line and agree whether it passes?"
-  buckets={['A criterion you can tick', 'An adjective you can\'t tick']}
+  context="Un apprenant écrit les critères d’achèvement d’une consigne qui demande à un agent de rédiger une réponse à l’e-mail d’un client, à partir de la grille tarifaire."
+  title="Pouvez-vous le cocher ?" hint="Deux personnes pourraient-elles vérifier cette ligne et s’accorder sur sa réussite ?"
+  buckets={['Un critère que vous pouvez cocher', 'Un adjectif que vous ne pouvez pas cocher']}
   items={[
-    { text: 'Every date in the email appears in the reply', bucket: 0 },
-    { text: 'The reply has at most five sentences', bucket: 0 },
-    { text: 'No price appears that isn\'t in the price list', bucket: 0 },
-    { text: 'The reply is friendly', bucket: 1 },
-    { text: 'The reply sounds professional', bucket: 1 },
-    { text: 'The reply is the right length', bucket: 1 },
+    { text: 'Chaque date de l’e-mail figure dans la réponse', bucket: 0 },
+    { text: 'La réponse a au plus cinq phrases', bucket: 0 },
+    { text: 'Aucun prix ne figure qui ne soit dans la grille tarifaire', bucket: 0 },
+    { text: 'La réponse est aimable', bucket: 1 },
+    { text: 'La réponse fait professionnelle', bucket: 1 },
+    { text: 'La réponse a la bonne longueur', bucket: 1 },
   ]} />
 
-<Pitfall title="Trusting the agent to know what 'done' means">
-A learner sends "summarize the memo, keep it short" and gets three tidy
-bullets that omit the locker deadline. The summary reads well, so they
-forward it, and half the team loses the contents of their locker. Nothing in
-the brief said every deadline had to survive, so the agent optimized for
-short. The rule: write the done-criteria before you send the task and make them
-things you can tick rather than adjectives.
+<Pitfall title="Compter sur l’agent pour savoir ce que « terminé » veut dire">
+Un apprenant envoie « résume la note, fais court » et obtient trois puces
+bien nettes qui omettent l’échéance des casiers. Le résumé se lit bien, alors
+il le transfère, et la moitié de l’équipe perd le contenu de son casier. Rien
+dans la consigne ne disait que chaque échéance devait survivre, donc l’agent
+a privilégié la brièveté. La règle : écrivez les critères d’achèvement avant
+d’envoyer la tâche, et faites-en des choses que vous pouvez cocher plutôt que
+des adjectifs.
 </Pitfall>
 
-## Choosing autonomy
+## Choisir l’autonomie
 
-A brief says what to do. It doesn't yet say which actions the agent may take
-before it checks in with you. For a summary that's barely a question; the
-agent writes, you read. For anything that touches the world (sending,
-deleting, paying, publishing) it is the main question.
+Une consigne dit quoi faire. Elle ne dit pas encore quelles actions l’agent
+peut faire avant de revenir vers vous. Pour un résumé, la question se pose à
+peine : l’agent écrit, vous lisez. Pour tout ce qui touche le monde (envoyer,
+supprimer, payer, publier), c’est la question principale.
 
-That's the agent's **degree of autonomy**, and three settings cover most
-tasks. At the first, **the human decides**: the agent gathers or drafts,
-and you take every action yourself. At the second, **the agent proposes and
-the human approves**: it prepares the action and waits for a yes before
-taking it. At the third, **the agent acts and the human reviews after**: it
-takes the action and you check the outcome.
+C’est le **degré d’autonomie** (degree of autonomy) de l’agent, et trois réglages couvrent la
+plupart des tâches. Au premier, **la personne décide** : l’agent rassemble ou
+rédige, et vous faites vous-même chaque action. Au deuxième, **l’agent
+propose et la personne approuve** : il prépare l’action et attend un oui
+avant de la faire. Au troisième, **l’agent agit et la personne vérifie
+après** : il fait l’action et vous contrôlez le résultat.
 
-The degree to pick depends on two things: how bad a wrong action is, and
-how easy it is to undo. Drafting the summary is cheap and reversible, so the
-agent acts and you review after. Emailing that summary to the whole team is
-cheap to do but awkward to take back, so the agent proposes and you approve.
-Deciding which desks people get is a judgment about people, so you decide,
-with the agent at most laying out the options.
+Le degré à choisir dépend de deux choses : la gravité d’une mauvaise action,
+et la facilité à l’annuler. Rédiger le résumé coûte peu et se rattrape, donc
+l’agent agit et vous vérifiez après. Envoyer ce résumé par e-mail à toute
+l’équipe coûte peu à faire mais se rattrape mal, donc l’agent propose et
+vous approuvez. Décider qui obtient quel bureau est un jugement sur des
+personnes, donc c’est vous qui décidez, l’agent se contentant au plus de
+présenter les options.
 
-Those two questions set the degree you are working toward. For the first
-runs of a new kind of task, sit one step below it, and move up once a few
-results have passed review without surprises. A run that goes wrong one
-step below costs you one review. The same run at the degree you were aiming
-for costs you the cleanup (@Academy introduction-to-claude-cowork).
+Ces deux questions fixent le degré que vous visez. Pour les premières
+exécutions d’un nouveau type de tâche, placez-vous un cran en dessous, et
+montez une fois que quelques résultats ont passé la relecture sans surprise.
+Une exécution qui tourne mal un cran en dessous vous coûte une relecture. La
+même exécution au degré visé vous coûte le nettoyage
+(@Academy introduction-to-claude-cowork).
 
-Try it: rerun the task, but this time add one line to the brief that sets
-the degree. For example, "Draft the summary, then stop and show it to me
-before doing anything else." Notice that the agent behaves differently even
-though the task didn't change.
+Essayez : relancez la tâche, mais ajoutez cette fois une ligne à la consigne
+qui fixe le degré. Par exemple : « Rédige le résumé, puis arrête-toi et
+montre-le-moi avant de faire quoi que ce soit d’autre. » Remarquez que
+l’agent se comporte autrement alors que la tâche n’a pas changé.
 
 <Sort id="autonomy-levels" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="Each item is a task you could hand to an agent. Place it by how much of the decision stays with you."
-  title="Who decides?" hint="For each item ask two things: how bad is a wrong action, and how easily can you undo it?"
-  buckets={['Human decides', 'Agent proposes, human approves', 'Agent acts, human reviews after']}
+  context="Chaque élément est une tâche que vous pourriez confier à un agent. Placez-le selon la part de la décision qui vous revient."
+  title="Qui décide ?" hint="Pour chaque élément, demandez-vous deux choses : quelle serait la gravité d’une mauvaise action, et avec quelle facilité pourriez-vous l’annuler ?"
+  buckets={['La personne décide', 'L’agent propose, la personne approuve', 'L’agent agit, la personne vérifie après']}
   items={[
-    { text: 'Draft a summary of a memo for you to read', bucket: 2 },
-    { text: 'Send that summary to the whole team by email', bucket: 1 },
-    { text: 'Decide which colleague gets the window desk', bucket: 0 },
-    { text: 'Sort your inbox into folders you can move things out of', bucket: 2 },
-    { text: 'Book a meeting room and invite twelve people', bucket: 1 },
-    { text: 'Delete last year\'s files from the shared drive', bucket: 1 },
-    { text: 'Tell a colleague their request has been turned down', bucket: 0 },
-    { text: 'Rename a folder of your own photos by date', bucket: 2 },
+    { text: 'Rédiger le résumé d’une note pour que vous le lisiez', bucket: 2 },
+    { text: 'Envoyer ce résumé par e-mail à toute l’équipe', bucket: 1 },
+    { text: 'Décider quel collègue obtient le bureau près de la fenêtre', bucket: 0 },
+    { text: 'Trier votre boîte de réception dans des dossiers dont vous pouvez ressortir les messages', bucket: 2 },
+    { text: 'Réserver une salle de réunion et inviter douze personnes', bucket: 1 },
+    { text: 'Supprimer les fichiers de l’an dernier du lecteur partagé', bucket: 1 },
+    { text: 'Annoncer à un collègue que sa demande a été refusée', bucket: 0 },
+    { text: 'Renommer par date un dossier de vos propres photos', bucket: 2 },
   ]} />
 
 <Scenario id="the-first-invoices" phase="review" objective="using-agents/delegates-and-checks/chooses-autonomy"
   concepts={['choosing-a-degree-of-autonomy']}
-  context="The lesson picks a degree of autonomy for a task by how bad a wrong action is and how easily it is undone."
-  title="The first week of invoice filing" hint="How easily is a wrong filing undone, and is this the first run of the task?"
+  context="La leçon choisit le degré d’autonomie d’une tâche selon la gravité d’une mauvaise action et la facilité à l’annuler."
+  title="La première semaine de classement des factures" hint="Avec quelle facilité un mauvais classement se rattrape-t-il, et est-ce la première exécution de la tâche ?"
   options={[
-    { text: 'Let the agent file them and review the folders at the end of each week.', consequence: 'On the first runs you learn about its mistakes a week late, and nobody had seen how it files.' },
-    { text: 'Let the agent file them with nobody reviewing, because a file can be moved back.', consequence: 'A wrong filing sits unnoticed until someone looks for the invoice and can\'t find it.' },
-    { text: 'File every invoice yourself and let the agent watch how you do it.', consequence: 'The agent does nothing useful, and you do all of the work you wanted to hand over.' },
-    { text: 'Let the agent propose each filing and approve it yourself, then move up as they pass.', correct: true, consequence: 'You see how it files in the first week. After two weeks without a wrong proposal, you let it file and review afterwards.' },
+    { text: 'Laisser l’agent les classer et vérifier les dossiers à la fin de chaque semaine.', consequence: 'Sur les premières exécutions, vous découvrez ses erreurs avec une semaine de retard, et personne n’a vu comment il classe.' },
+    { text: 'Laisser l’agent les classer sans que personne ne vérifie, puisqu’un fichier peut être déplacé à nouveau.', consequence: 'Un mauvais classement passe inaperçu jusqu’à ce que quelqu’un cherche la facture sans la trouver.' },
+    { text: 'Classer vous-même chaque facture et laisser l’agent regarder comment vous faites.', consequence: 'L’agent ne fait rien d’utile, et vous faites tout le travail que vous vouliez confier.' },
+    { text: 'Laisser l’agent proposer chaque classement et l’approuver vous-même, puis monter d’un cran à mesure qu’ils passent.', correct: true, consequence: 'Vous voyez comment il classe la première semaine. Après deux semaines sans mauvaise proposition, vous le laissez classer et vous vérifiez après.' },
   ]}>
 
-An agent will file incoming invoices into folders that you can move them
-out of again. It is the first week you use it for this. Which degree of
-autonomy do you give it?
+Un agent va classer les factures reçues dans des dossiers d’où vous pouvez
+les ressortir. C’est la première semaine que vous l’utilisez pour cela. Quel
+degré d’autonomie lui donnez-vous ?
 
 </Scenario>
 
-## Reviewing against the brief
+## Vérifier au regard de la consigne
 
-You now have a summary in front of you. The temptation is to read it, feel
-that it is fine, and move on. Do not review by feel. Review by taking the
-done-criteria you wrote and ticking them one by one.
+Vous avez maintenant un résumé sous les yeux. La tentation est de le lire, de
+sentir qu’il convient, et de passer à autre chose. Ne vérifiez pas au
+ressenti. Vérifiez en reprenant les critères d’achèvement que vous avez
+écrits et en les cochant un par un.
 
-Go back to your agent's output and check it against the brief right now:
-Does it have exactly the five parts? Is the Thursday crate deadline there?
-The end-of-month locker deadline? The move on the last Friday? The
-Tuesday walk-through? Is there any sentence that is not in the memo? Write
-down which criteria fail, if any.
+Revenez à la sortie de votre agent et vérifiez-la tout de suite au regard de
+la consigne : a-t-elle exactement les cinq parties ? L’échéance du jeudi pour
+la caisse y figure-t-elle ? L’échéance de fin de mois pour le casier ? Le
+déménagement du dernier vendredi ? La visite du mardi ? Y a-t-il une phrase
+qui ne figure pas dans la note ? Notez les critères qui échouent, s’il y en
+a.
 
-Most agents will pass most of these on the first try. The ones that fail are
-usually the same ones: a deadline folded into a vaguer phrase, or a helpful
-addition ("bring a box for anything that does not fit") that the memo never
-said. Both read as perfectly reasonable, which is exactly why a review by
-feeling would have missed them.
+La plupart des agents réussiront la plupart de ces critères du premier coup.
+Ceux qui échouent sont en général les mêmes : une échéance fondue dans une
+formule plus vague, ou un ajout serviable (« apportez un carton pour ce qui
+ne rentre pas ») que la note n’a jamais dit. Les deux se lisent comme
+parfaitement raisonnables, et c’est justement pourquoi une relecture au
+ressenti les aurait manqués.
 
-When a criterion fails, the fix is not to rewrite the summary yourself. Send
-the failing criterion back: "The locker deadline is missing; add it and
-change nothing else." Then check again. Reviewing against the brief gives
-you a precise thing to say, and the agent a precise thing to do.
+Quand un critère échoue, la correction consiste à renvoyer ce critère, et
+vous ne réécrivez pas le résumé vous-même : « L’échéance des casiers manque ;
+ajoute-la et ne change rien d’autre. » Puis vérifiez de nouveau. Vérifier au
+regard de la consigne vous donne quelque chose de précis à dire, et à
+l’agent quelque chose de précis à faire.
 
-A failure also tells you something about the brief. If the same criterion
-fails on the second try, the brief left a gap. One agent asks about the gap
-before it starts, and another fills it with a guess, and either way the gap
-is yours to close (@Academy introduction-to-claude-cowork). Close it in the
-brief itself. The next task then starts from a better one. The brief gives the
-review something to check, and the review shows what the next brief has to
-say (@Academy ai-fluency-framework-foundations).
+Un échec vous apprend aussi quelque chose sur la consigne. Si le même
+critère échoue au deuxième essai, la consigne a laissé un vide. Un agent pose
+une question sur ce vide avant de commencer, un autre le comble par une
+supposition, et dans les deux cas c’est à vous de le combler
+(@Academy introduction-to-claude-cowork). Comblez-le dans la consigne
+elle-même. La tâche suivante part alors d’une meilleure consigne. La consigne
+donne à la relecture quelque chose à vérifier, et la relecture montre ce que
+la consigne suivante doit dire (@Academy ai-fluency-framework-foundations).
 
 <Choice id="which-review" objective="using-agents/delegates-and-checks/reviews-against-brief"
   concepts={['checking-results']}
-  context="The running example of the lesson is asking an agent to summarize an office-move memo for a team, with done-criteria in the brief."
-  title="Which review is a review?" hint="Which of these could a second person repeat and reach the same answer?"
+  context="L’exemple suivi dans la leçon consiste à demander à un agent de résumer pour une équipe une note sur un déménagement de bureaux, avec des critères d’achèvement dans la consigne."
+  title="Quelle relecture en est vraiment une ?" hint="Laquelle de ces relectures une deuxième personne pourrait-elle refaire pour arriver à la même réponse ?"
   options={[
-    { text: 'Read it through; it sounds right and the tone is good, so accept it.', why: 'Tone and plausibility are feelings. A summary can sound right and still drop a deadline.' },
-    { text: 'Check each done-criterion from the brief and note which pass and which fail.', correct: true },
-    { text: 'Compare it to a summary you would have written yourself and accept it if they are similar.', why: 'Your own draft is not the brief. It may have the same gaps, and it was never the agreed standard.' },
-    { text: 'Ask the agent whether it met the brief and accept its answer.', why: 'The agent grading its own work is not a check. It will usually say yes.' },
+    { text: 'Le lire en entier ; il sonne juste et le ton est bon, donc l’accepter.', why: 'Le ton et la vraisemblance sont des ressentis. Un résumé peut sonner juste et omettre une échéance.' },
+    { text: 'Vérifier chaque critère d’achèvement de la consigne et noter ceux qui réussissent et ceux qui échouent.', correct: true },
+    { text: 'Le comparer au résumé que vous auriez écrit vous-même et l’accepter s’ils se ressemblent.', why: 'Votre propre brouillon n’est pas la consigne. Il peut avoir les mêmes lacunes, et il n’a jamais été la référence convenue.' },
+    { text: 'Demander à l’agent s’il a respecté la consigne et accepter sa réponse.', why: 'Un agent qui note son propre travail ne vérifie rien. Il répondra en général oui.' },
   ]}>
-The agent returns a summary of the memo. Which of these is a review against
-the brief?
+L’agent rend un résumé de la note. Laquelle de ces façons de faire est une
+relecture au regard de la consigne ?
 </Choice>
 
 <MultiChoice id="review-steps" phase="review" objective="using-agents/delegates-and-checks/reviews-against-brief"
   concepts={['checking-results']}
-  context="An agent returned a summary of a memo. The brief it ran from has done-criteria that can be ticked."
-  title="Reviewing against the brief" hint="Which steps use the done-criteria, and which use only your impression?"
+  context="Un agent a rendu le résumé d’une note. La consigne dont il est parti contient des critères d’achèvement qui peuvent être cochés."
+  title="Vérifier au regard de la consigne" hint="Quelles étapes utilisent les critères d’achèvement, et lesquelles n’utilisent que votre impression ?"
   options={[
-    { text: 'Go through the criteria one by one, and mark the ones that fail.', correct: true },
-    { text: 'Accept the summary once it reads well from top to bottom.', why: 'A result that reads well has told you nothing about the criteria yet.' },
-    { text: 'Send a failed criterion back to the agent to fix.', correct: true },
-    { text: 'Ask the agent whether it met the brief, and accept a yes.', why: 'The agent\'s yes is more text from the same run. The criteria are yours to tick.' },
+    { text: 'Parcourir les critères un par un, et marquer ceux qui échouent.', correct: true },
+    { text: 'Accepter le résumé dès qu’il se lit bien du début à la fin.', why: 'Un résultat qui se lit bien ne vous a encore rien dit sur les critères.' },
+    { text: 'Renvoyer à l’agent un critère échoué pour qu’il le corrige.', correct: true },
+    { text: 'Demander à l’agent s’il a respecté la consigne, et accepter un oui.', why: 'Le oui de l’agent est du texte de plus issu de la même exécution. Les critères sont à vous de les cocher.' },
   ]}>
 
-Which two of these are part of reviewing the summary against the brief?
+Lesquelles de ces étapes font partie de la vérification du résumé au regard
+de la consigne ? Il y en a deux.
 
 </MultiChoice>
 
-<Exercise stretch="Now delegate the same memo with the wrong format on purpose (a paragraph, no bullets) and see whether your done-criteria still catch a missing deadline.">
-Pick a short text of your own that you do not mind sharing with an agent:
-a newsletter, a notice, a set of meeting notes. Write a brief for a
-one-page summary of it with all four parts (goal, context, limits,
-done-criteria), add one line that sets the degree of autonomy, and send it.
-Then review the result by ticking each done-criterion. A good result is
-one where you can name every criterion that passed and every one that
-failed without rereading the whole summary, and where any failure turns
-into a one-sentence follow-up to the agent.
+<Exercise stretch="Déléguez maintenant la même note en demandant exprès le mauvais format (un paragraphe, sans puces) et voyez si vos critères d’achèvement repèrent encore une échéance manquante.">
+Choisissez un court texte à vous que vous acceptez de partager avec un
+agent : une lettre d’information, un avis, un compte rendu de réunion.
+Écrivez une consigne pour en obtenir un résumé d’une page avec les quatre
+parties (objectif, contexte, limites, critères d’achèvement), ajoutez une
+ligne qui fixe le degré d’autonomie, et envoyez-la. Vérifiez ensuite le
+résultat en cochant chaque critère d’achèvement. Un bon résultat est un
+résultat où vous pouvez nommer chaque critère réussi et chaque critère
+échoué sans relire tout le résumé, et où chaque échec se transforme en une
+relance d’une phrase à l’agent.
 </Exercise>
 
 <Recap>
-1. A brief has four parts: goal, context, limits, done-criteria. What the agent must not do matters as much as what it must do.
-2. Name the source the agent should use. An agent that guesses picks the most available source, not the right one.
-3. Write the done-criteria before sending the task, as things you can tick rather than adjectives.
-4. Choose the degree of autonomy by how bad a wrong action is and how easily it is undone: human decides, agent proposes and human approves, or agent acts and human reviews after. For the first runs of a new kind of task, sit one step below that degree and move up as reviewed results pass.
-5. Review against the brief, criterion by criterion. A result that reads well has told you nothing yet.
-6. When a criterion fails, send that criterion back rather than fixing the output yourself, and close the gap in the brief before the next task.
+1. Une consigne a quatre parties : objectif, contexte, limites, critères d’achèvement. Ce que l’agent ne doit pas faire compte autant que ce qu’il doit faire.
+2. Nommez la source que l’agent doit utiliser. Un agent qui devine prend la source la plus accessible, rarement la bonne.
+3. Écrivez les critères d’achèvement avant d’envoyer la tâche, sous forme de choses que vous pouvez cocher.
+4. Choisissez le degré d’autonomie selon la gravité d’une mauvaise action et la facilité à l’annuler : la personne décide, l’agent propose et la personne approuve, ou l’agent agit et la personne vérifie après. Pour les premières exécutions d’un nouveau type de tâche, placez-vous un cran en dessous et montez à mesure que les résultats relus passent.
+5. Vérifiez au regard de la consigne, critère par critère. Un résultat qui se lit bien ne vous a encore rien appris.
+6. Quand un critère échoue, renvoyez ce critère à l’agent, et comblez le vide dans la consigne avant la tâche suivante.
 </Recap>

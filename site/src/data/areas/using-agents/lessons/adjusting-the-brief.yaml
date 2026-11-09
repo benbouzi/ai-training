@@ -1,8 +1,9 @@
 id: using-agents/adjusting-the-brief
-title: Changing the brief while the agent works
+title: Modifier la consigne pendant que l’agent travaille
 description: >-
-  Run a brief with a gap in it, answer the agent's question in the brief instead of the chat, state a
-  changed limit as a replacement, and stop a run whose first result shows the goal was wrong.
+  Lancer une consigne qui comporte un manque, répondre à la question de l’agent en modifiant
+  la consigne, formuler une limite changée comme un remplacement, et arrêter
+  une exécution dont le premier résultat montre que l’objectif était faux.
 mode: tutorial
 covers: using-agents/delegating
 serves: [using-agents/delegates-and-checks/adjusts-mid-task]
@@ -15,17 +16,17 @@ assumes:
     lesson: concepts/how-models-work
     section: un-jeton-à-la-fois
 extends-to:
-  - label: Breaking work into pieces
+  - label: Découper le travail en morceaux
     href: /using-agents/breaking-work-into-pieces/
 after: [using-agents/delegating]
-shorts: [Why an answer in the chat is lost]
+shorts: [Pourquoi une réponse donnée dans la conversation se perd]
 exercise:
   kind: do
   brief: >-
-    Run the lesson's brief, which is written so the agent must ask a question, answer it by editing
-    the brief instead of the chat, restart from the edited brief, and compare the two results. If
-    the agent guesses instead of asking, its pick between the two named templates is the question to
-    answer.
+    Lancer la consigne de la leçon, écrite pour que l’agent doive poser une question, y répondre en
+    modifiant la consigne, relancer depuis la consigne modifiée, et
+    comparer les deux résultats. Si l’agent devine au lieu de demander, son choix entre les deux
+    gabarits nommés est la question à laquelle répondre.
 sources: [Academy ai-fluency-framework-foundations, Academy introduction-to-claude-cowork]
 sources-checked: 2026-09-23
 review-by: 2027-03-23
