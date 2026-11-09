@@ -1,270 +1,292 @@
 import { Choice, MultiChoice, Sort, Scenario, Pitfall, Exercise, Recap } from '@components/lesson';
 
-In this lesson we pick how to apply a model to a task. Chat, agent, and
-automation differ in how much the
-model does between one moment you look and the next, and the lesson gives
-you a way to pick the level for a task and to write down what would change
-the pick. You
-don't run anything here. The tasks are supplied, and the work is reading
-them and deciding.
+Dans cette leçon, nous choisissons comment appliquer un modèle à une tâche.
+La conversation, l’agent et l’automatisation diffèrent par ce que le modèle
+fait entre deux moments où vous regardez, et la leçon vous donne une façon
+de choisir le niveau d’une tâche et d’écrire ce qui changerait ce choix.
+Vous ne lancez rien ici. Les tâches sont fournies, et le travail consiste à
+les lire et à décider.
 
-The concepts course gave you a test for telling an assistant from an
-agent, and the safety course showed where a person has to approve before
-an agent acts. This lesson puts the two together into one decision you
-make before the work starts: how much of it the model does on its own.
+Le cours sur les concepts vous a donné un test pour distinguer un assistant
+d’un agent, et le cours sur la sécurité a montré où une personne doit
+approuver avant qu’un agent agisse. Cette leçon réunit les deux en une seule
+décision, prise avant que le travail commence : quelle part du travail le
+modèle fait seul.
 
-## Chat, agent, and automation
+## Conversation, agent et automatisation
 
-The same model can be used in three ways, and the difference is where you
-are while it works.
+Un même modèle peut s’utiliser de trois façons, et la différence tient à
+l’endroit où vous êtes pendant qu’il travaille.
 
-**Chat.** You type, the model answers, you read the answer and type again.
-Every step is yours, and the model does one step per turn. A difficult
-email is a chat task. You know what you want to say and the words won't
-come. You paste the thread and ask for a first draft. You cut a paragraph
-and ask for a softer second sentence, and you send the version you end up
-with. Every turn is a decision about tone, and you are the one making it.
-Chat fits thinking and one-off drafts, and any other task where you would
-change your mind halfway through.
+**La conversation.** Vous tapez, le modèle répond, vous lisez la réponse et
+vous tapez de nouveau. Chaque étape vous revient, et le modèle fait une
+étape par tour. Un e-mail difficile est une tâche de conversation. Vous savez
+ce que vous voulez dire et les mots ne viennent pas. Vous collez le fil et
+demandez un premier jet. Vous coupez un paragraphe et demandez une deuxième
+phrase plus douce, et vous envoyez la version à laquelle vous aboutissez.
+Chaque tour est une décision sur le ton, et c’est vous qui la prenez. La
+conversation convient à la réflexion, aux brouillons ponctuels, et à toute
+tâche où vous changeriez d’avis en cours de route.
 
-**Agent.** You write a brief, and the agent works through the steps with
-its tools. It checks in with you at the points the brief names. A folder
-of two hundred misnamed scans is an agent task. You say what the names
-should look like and what to do with a file it can't read. You also say
-that it reports back before deleting anything. Then it works, and you read
-the report. The steps are known, but the path through them varies per file,
-and a person doesn't need to see each one. An agent fits a bounded task
-with clear done-criteria, where you want to read the result once instead
-of steering every step.
+**L’agent.** Vous écrivez une consigne, et l’agent avance dans les étapes
+avec ses outils. Il revient vers vous aux points que nomme la consigne. Un
+dossier de deux cents numérisations mal nommées est une tâche d’agent. Vous
+dites à quoi doivent ressembler les noms et quoi faire d’un fichier qu’il ne
+peut pas lire. Vous dites aussi qu’il vous rend compte avant de supprimer
+quoi que ce soit. Puis il travaille, et vous lisez son compte rendu. Les
+étapes sont connues, mais le chemin varie d’un fichier à l’autre, et une
+personne n’a pas besoin de voir chacune. Un agent convient à une tâche
+délimitée, avec des critères d’achèvement (done-criteria) clairs, dont vous voulez lire le
+résultat une fois sans piloter chaque étape.
 
-**Automation.** An event starts the run while nobody is watching, the
-model does its part, and the result goes where it goes. Invoices renamed the moment they arrive
-in a mailbox are an automation task. The steps and the path are both
-fixed, the same thing happens every time, and the work is checked by
-sampling later, or by whoever opens the folder. Automation fits
-repetitive, low-stakes work that has been tested enough that nobody needs
-to watch it.
+**L’automatisation.** Un événement lance l’exécution sans que personne ne
+regarde, le modèle fait sa part, et le résultat va là où il doit aller. Des
+factures renommées dès leur arrivée dans une boîte aux lettres sont une tâche
+d’automatisation. Les étapes et le chemin sont fixes, la même chose se
+produit à chaque fois, et le travail est vérifié plus tard par sondage, ou
+par la personne qui ouvre le dossier. L’automatisation convient à un travail
+répétitif, à faible enjeu, assez testé pour que personne n’ait besoin de le
+surveiller.
 
-The pattern across the three is one variable moving. In chat the model
-does one step and waits. In an agent it does many steps and waits at the
-points you named. In automation it does the whole task and waits for
-nobody. The word for that variable is autonomy, and each level trades your
-attention for the model's independence. A wrong pick either wastes your
-attention, when you steer step by step through work that has one right
-path, or removes your attention from the place where it was needed.
+D’un niveau à l’autre, une seule variable change. En conversation, le modèle
+fait une étape et attend. En agent, il fait de nombreuses étapes et attend
+aux points que vous avez nommés. En automatisation, il fait toute la tâche
+et n’attend personne. Le nom de cette variable est l’autonomie, et chaque
+niveau échange votre attention contre l’indépendance du modèle. Un mauvais
+choix gaspille votre attention, quand vous pilotez étape par étape un
+travail qui n’a qu’un bon chemin, ou retire votre attention de l’endroit où
+elle était nécessaire.
 
 <Sort id="which-level-fits" objective="using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation"
   concepts={['chat-vs-agent-vs-automation']}
-  context="The lesson defines chat as steering every turn, an agent as working through a briefed task with tools and checking in at agreed points, and automation as running unattended on a trigger. The tasks here are everyday office tasks."
-  title="Which level fits each task?" hint="For each task, ask how many steps the model does before a person has to look, and whether a person would want to change course halfway."
-  buckets={['Chat', 'Agent', 'Automation']}
+  context="La leçon définit la conversation comme le pilotage de chaque tour, l’agent comme un travail mené avec des outils sur une tâche décrite dans une consigne, avec des points d’étape convenus, et l’automatisation comme une exécution sans surveillance lancée par un déclencheur. Les tâches ici sont des tâches de bureau courantes."
+  title="Quel niveau pour chaque tâche ?" hint="Pour chaque tâche, demandez-vous combien d’étapes le modèle fait avant qu’une personne doive regarder, et si une personne voudrait changer de cap en cours de route."
+  buckets={['Conversation', 'Agent', 'Automatisation']}
   items={[
-    { text: 'Finding the right tone for a reply to one angry customer, when you are not sure yet what you want to offer', bucket: 0 },
-    { text: 'Renaming two hundred scanned documents to one naming pattern and reporting the ones it could not read', bucket: 1 },
-    { text: 'Adding the amount and the sender of each incoming invoice to a spreadsheet as it arrives', bucket: 2 },
-    { text: 'Deciding how to structure a proposal you have not thought through yet', bucket: 0 },
-    { text: 'Collecting the figures for the monthly report from four shared folders into one draft you will read', bucket: 1 },
+    { text: 'Trouver le bon ton pour répondre à un client en colère, sans savoir encore ce que vous voulez proposer', bucket: 0 },
+    { text: 'Renommer deux cents documents numérisés selon un même modèle de nom et signaler ceux qu’il n’a pas pu lire', bucket: 1 },
+    { text: 'Ajouter à un tableur le montant et l’expéditeur de chaque facture reçue, dès son arrivée', bucket: 2 },
+    { text: 'Décider comment structurer une proposition à laquelle vous n’avez pas encore réfléchi', bucket: 0 },
+    { text: 'Rassembler les chiffres du rapport mensuel depuis quatre dossiers partagés dans un brouillon que vous lirez', bucket: 1 },
   ]} />
 
-## Autonomy rises and the checks rise with it
+## L’autonomie monte, et les vérifications montent avec elle
 
-Moving up a level gives the model more steps between checks. The trade
-only holds when the checks on the other side grow with it. In chat, the
-check is you reading every answer, and you need nothing else. In an
-agent, you read the result once. The brief has to contain the checks you
-won't be there for, such as what the agent must not do and where it stops
-to ask. In automation, you don't read anything at the
-time, and the checks have to exist and be tested before the first run. A
-sample you look at each week is one. An error the system reports instead
-of guessing through is another, and so is a way to undo a batch. A step-up in autonomy without
-the matching step-up in checks is a task that runs unwatched and
-unchecked, and the failures that follow are the ones the safety course
-described: the mistake now has hands
+Monter d’un niveau donne au modèle plus d’étapes entre deux vérifications.
+L’échange ne tient que si les vérifications de l’autre côté grandissent
+aussi. En conversation, la vérification consiste à lire chaque réponse, et
+vous n’avez besoin de rien d’autre. Avec un agent, vous lisez le résultat
+une fois. La consigne doit contenir les vérifications auxquelles vous
+n’assisterez pas, comme ce que l’agent ne doit pas faire et l’endroit où il
+s’arrête pour demander. En automatisation, vous ne lisez rien sur le moment,
+et les vérifications doivent exister et être testées avant la première
+exécution. Un échantillon que vous regardez chaque semaine en est une. Une
+erreur que le système signale au lieu de deviner pour continuer en est une
+autre, tout comme un moyen d’annuler un lot. Une hausse d’autonomie sans la
+hausse correspondante des vérifications donne une tâche qui tourne sans
+surveillance et sans contrôle, et les échecs qui suivent sont ceux qu’a
+décrits le cours sur la sécurité : l’erreur a maintenant des mains
 (@Academy building-effective-human-agent-teams).
 
-The level is also picked for the task's worst case, and this is the part
-people get wrong. A support queue looks like an automation task. Most
-tickets are a password reset, a delivery question, or a refund under the
-limit, and a well-briefed agent answers those correctly all day. One ticket
-in fifty is different. It is a complaint that mentions a lawyer, or a
-customer who was told something wrong by a person last week. The forty-nine routine tickets make the case for
-automation, and the fiftieth decides the level. If a wrong answer on that
-one ticket is expensive, and the system can't tell that ticket from the
-others with certainty, the queue stays at the agent level, with a person
-approving the result. Call that "agent with approval": the agent drafts
-every reply and a person sends it, or the agent sends the routine ones and
-routes anything it isn't sure about to a person. It is the agent level with
-the check that level needs, and the count of levels stays three. The level is
-set by the ticket you can't afford to get wrong, and the routine tickets
-only decide how little attention that level should cost.
+Le niveau se choisit aussi d’après le pire cas de la tâche, et c’est la
+partie où l’on se trompe. Une file de tickets d’assistance ressemble à une
+tâche d’automatisation. La plupart des tickets portent sur un mot de passe à
+réinitialiser, une question de livraison ou un remboursement sous le
+plafond, et un agent avec une bonne consigne y répond correctement toute la
+journée. Un ticket sur cinquante est différent. C’est une réclamation qui
+mentionne un avocat, ou un client à qui quelqu’un a dit quelque chose de
+faux la semaine précédente. Les quarante-neuf tickets ordinaires plaident
+pour l’automatisation, et c’est le cinquantième qui décide du niveau. Si une
+mauvaise réponse à ce ticket coûte cher, et que le système ne peut pas le
+distinguer des autres avec certitude, la file reste au niveau agent, avec une
+personne qui approuve le résultat. Appelons cela « agent avec
+approbation » : l’agent rédige chaque réponse et une personne l’envoie, ou
+l’agent envoie les réponses ordinaires et transmet à une personne tout ce
+dont il n’est pas sûr. C’est le niveau agent avec la vérification dont ce
+niveau a besoin, et il y a toujours trois niveaux. Le niveau est fixé par le
+ticket sur lequel vous ne pouvez pas vous permettre d’erreur, et les tickets
+ordinaires décident seulement du peu d’attention que ce niveau doit coûter.
 
-So the question for a task is never "what does this task need on most
-days?" It is "what does this task need on its worst day, and can the system
-tell that day from the others?" A task with a worst case that's cheap to fix,
-or that the system reliably detects and hands over, can run at the level
-its routine case suggests. A task whose worst case is expensive and looks
-like the routine case from the outside is kept one level down.
+Pour une tâche, la question est donc toujours : « De quoi cette tâche a-t-elle
+besoin le jour où tout va le plus mal, et le système peut-il distinguer ce
+jour des autres ? » Une tâche dont le pire cas se répare à peu de frais, ou
+que le système détecte de façon fiable et transmet, peut tourner au niveau
+que suggère son cas ordinaire. Une tâche dont le pire cas coûte cher et
+ressemble de l’extérieur au cas ordinaire reste un niveau plus bas.
 
 <Choice id="the-fiftieth-ticket" objective="using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation"
   concepts={['chat-vs-agent-vs-automation', 'human-in-the-loop']}
-  context="A team is deciding how to apply a model to a customer support queue. Nearly every ticket is routine and the agent handles those well, but about one ticket in fifty is a legal complaint or a privacy request that the agent cannot reliably tell apart from the rest."
-  title="Which level does the queue get?" hint="Which ticket sets the level, the one that arrives forty-nine times or the one that arrives once, and what does a wrong answer on each cost?"
+  context="Une équipe décide comment appliquer un modèle à une file de tickets d’assistance. Presque tous les tickets sont ordinaires et l’agent les traite bien, mais environ un ticket sur cinquante est une réclamation juridique ou une demande liée aux données personnelles que l’agent ne sait pas distinguer de façon fiable des autres."
+  title="Quel niveau pour la file ?" hint="Quel ticket fixe le niveau, celui qui arrive quarante-neuf fois ou celui qui arrive une fois, et que coûte une mauvaise réponse à chacun ?"
   options={[
-    { text: 'Automation, because the agent answers forty-nine of fifty tickets well and a person can review the complaints when they come up.', why: 'A person can only review the complaint if the system reliably tells it apart from the rest, and this one does not. The forty-nine tickets say how cheap the level should be, and the fiftieth says which level.' },
-    { text: 'Chat, because the fiftieth ticket is too important to hand to an agent, so a person should steer every reply.', why: 'Steering forty-nine routine replies by hand to catch one complaint wastes the attention on the tickets that do not need it. The task goes one level down from automation, to agent, and chat is a level further than the worst case asks for.' },
-    { text: 'Agent with approval, because the worst ticket is expensive to get wrong and the agent cannot tell it apart, so a person sends every reply the agent drafts.', correct: true },
+    { text: 'Automatisation, puisque l’agent répond bien à quarante-neuf tickets sur cinquante et qu’une personne peut relire les réclamations quand elles arrivent.', why: 'Une personne ne peut relire la réclamation que si le système la distingue de façon fiable des autres, et celui-ci n’y arrive pas. Les quarante-neuf tickets disent combien le niveau doit coûter peu, et le cinquantième dit quel niveau.' },
+    { text: 'Conversation, puisque le cinquantième ticket est trop important pour être confié à un agent, donc une personne doit piloter chaque réponse.', why: 'Piloter à la main quarante-neuf réponses ordinaires pour repérer une réclamation gaspille l’attention sur des tickets qui n’en ont pas besoin. La tâche descend d’un niveau depuis l’automatisation, jusqu’à l’agent, et la conversation descend plus bas que ce que demande le pire cas.' },
+    { text: 'Agent avec approbation, puisque le pire ticket coûte cher en cas d’erreur et que l’agent ne sait pas le distinguer, donc une personne envoie chaque réponse que l’agent rédige.', correct: true },
   ]}>
-Which level does the support queue get, and why?
+Quel niveau reçoit la file de tickets d’assistance, et pourquoi ?
 </Choice>
 
-## The moving rule
+## La règle de changement de niveau
 
-A pick made this way has a reason, and a reason can be written down. The
-useful form is two sentences per task, one for what would move the task
-up a level and one for what would move it back down. "The invoice renaming
-goes to automation once a month of agent runs hasn't needed a correction and
-the folder is backed up nightly. It comes back to agent if a run renames a
-file we can't match to an invoice." A rule like that makes the pick
-reviewable by someone who wasn't there when it was made, and it makes the
-next change a decision that someone takes on purpose.
+Un choix fait de cette façon a une raison, et une raison peut s’écrire. La
+forme utile tient en deux phrases par tâche, l’une pour ce qui ferait monter
+la tâche d’un niveau et l’autre pour ce qui la ferait redescendre. « Le
+renommage des factures passe en automatisation quand un mois d’exécutions de
+l’agent n’a demandé aucune correction et que le dossier est sauvegardé
+chaque nuit. Il revient au niveau agent si une exécution renomme un fichier
+que nous ne pouvons rattacher à aucune facture. » Une règle de ce type rend
+le choix vérifiable par quelqu’un qui n’était pas là quand il a été fait, et
+elle fait du changement suivant une décision que quelqu’un prend exprès.
 
-What moves a task up is evidence, and what moves it back is a new worst
-case. Evidence is a run of results without corrections, a test on the
-cases that used to fail, a backup or an undo that turns the worst case into
-a cheap one, or a check that finds the odd case and routes it to a person.
-A new worst case is a task that starts to receive a kind of input it
-didn't before, or a wrong result that got more expensive because the folder
-is now shared with a client. A correction that nobody caught for a week is
-a new worst case too. So is a changed rule, for example a new customer
-contract that says a person answers every message. When the level is written with its moving rules, an
-improvement in the tool is one more piece of evidence and a change in the
-task is a reason to look again, and both are decisions someone made on
-purpose (@Academy ai-fluency-for-builders).
+Ce qui fait monter une tâche, ce sont des preuves, et ce qui la fait
+redescendre, c’est un nouveau pire cas. Une preuve, c’est une série de
+résultats sans correction, un test sur les cas qui échouaient avant, une
+sauvegarde ou une annulation qui rend le pire cas bon marché, ou une
+vérification qui repère le cas inhabituel et le transmet à une personne. Un
+nouveau pire cas, c’est une tâche qui commence à recevoir un type d’entrée
+qu’elle ne recevait pas, ou un résultat faux devenu plus coûteux parce que
+le dossier est maintenant partagé avec un client. Une correction que
+personne n’a repérée pendant une semaine est aussi un nouveau pire cas. Une
+règle qui change en est un aussi, par exemple un nouveau contrat client qui
+prévoit qu’une personne réponde à chaque message. Quand le niveau est écrit
+avec ses règles de changement, une amélioration de l’outil est une preuve de
+plus, un changement de la tâche est une raison de regarder de nouveau, et
+les deux sont des décisions que quelqu’un prend exprès
+(@Academy ai-fluency-for-builders).
 
-Writing the rule also stops the two silent moves. In the slide up, a task
-at the agent level with approval becomes automation because the person
-approving stopped reading and started clicking, and nobody decided
-anything. In the slide down, a task that could safely run unattended stays
-in chat because it always has, and a person spends an hour a week steering
-a task with one right path. A written rule names the
-evidence the first move needs and the worst case that would justify the
-second, and a task with neither stays where it is.
+Écrire la règle empêche aussi les deux glissements silencieux. Dans la
+dérive vers le haut, une tâche au niveau agent avec approbation devient une
+automatisation parce que la personne qui approuve a cessé de lire et clique
+simplement, et personne n’a rien décidé. Dans la dérive vers le bas, une
+tâche qui pourrait tourner sans surveillance reste en conversation parce
+qu’elle l’a toujours été, et une personne passe une heure par semaine à
+piloter une tâche qui n’a qu’un bon chemin. Une règle écrite nomme les
+preuves dont le premier changement a besoin et le pire cas qui justifierait
+le second, et une tâche qui n’a ni l’un ni l’autre reste où elle est.
 
 <Scenario id="the-approver-stopped-reading" objective="using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation"
   concepts={['chat-vs-agent-vs-automation']}
-  context="A team's monthly report is drafted by an agent from figures in shared folders, and the operations lead reads the draft and approves it. The lesson taught that a pick for a level should be written with the evidence that would move it up and the worst case that would move it back."
-  title="Six months of approvals" hint="Has the level changed on paper, or in practice? What would each choice write down?"
+  context="Le rapport mensuel d’une équipe est rédigé par un agent à partir de chiffres rangés dans des dossiers partagés, et le responsable des opérations lit le brouillon et l’approuve. La leçon a enseigné qu’un choix de niveau s’écrit avec les preuves qui le feraient monter et le pire cas qui le ferait redescendre."
+  title="Six mois d’approbations" hint="Le niveau a-t-il changé sur le papier, ou dans les faits ? Que mettrait par écrit chaque choix ?"
   options={[
-    { text: 'Move the report to automation, since six months of approvals with no changes is the evidence the lesson asked for.', consequence: 'The move is made on evidence, and before the first unattended run the team writes the moving rule, adds a check that reports a blank figure instead of guessing one, and keeps last month\'s draft to fall back on. A month later a folder is renamed, the check reports the blank, and the rule brings the report back to agent.', correct: true },
-    { text: 'Keep the approval step as it is, because a person clicking approve each month is a check.', consequence: 'On paper the level is still agent with a person approving. In practice the lead has not read a draft since March, and the report runs unattended with none of the checks automation needs. It is automation by drift.' },
-    { text: 'Bring the report back to chat and have the lead build it turn by turn, because approvals that nobody reads show the task was never safe to delegate.', consequence: 'The lead spends two hours a month steering a task with one right path, and six months of correct drafts said nothing about the task being unsafe. The attention goes back to drafts that were right six months running.' },
+    { text: 'Passer le rapport en automatisation, puisque six mois d’approbations sans modification sont la preuve que demandait la leçon.', consequence: 'Le changement repose sur des preuves, et avant la première exécution sans surveillance, l’équipe écrit la règle de changement de niveau, ajoute une vérification qui signale un chiffre manquant au lieu de le deviner, et garde le brouillon du mois précédent comme solution de repli. Un mois plus tard, un dossier est renommé, la vérification signale le manque, et la règle ramène le rapport au niveau agent.', correct: true },
+    { text: 'Garder l’étape d’approbation telle quelle, puisqu’une personne qui clique sur « approuver » chaque mois est une vérification.', consequence: 'Sur le papier, le niveau est toujours agent avec une personne qui approuve. Dans les faits, le responsable n’a pas lu un brouillon depuis mars, et le rapport tourne sans surveillance sans aucune des vérifications dont l’automatisation a besoin. C’est une automatisation par dérive.' },
+    { text: 'Ramener le rapport en conversation et faire construire le rapport tour par tour au responsable, puisque des approbations que personne ne lit montrent que la tâche n’était pas sûre à déléguer.', consequence: 'Le responsable passe deux heures par mois à piloter une tâche qui n’a qu’un bon chemin, et six mois de brouillons justes ne disaient rien d’une tâche dangereuse. L’attention revient sur des brouillons qui étaient justes six mois d’affilée.' },
   ]}>
-The operations lead has approved the agent's monthly report draft for six
-months, and admits that since about March the approval has been a click
-without a read. Nothing in the drafts has been wrong. What do you do?
+Le responsable des opérations approuve depuis six mois le brouillon du
+rapport mensuel de l’agent, et reconnaît que depuis mars environ,
+l’approbation est un clic sans lecture. Rien n’a été faux dans les
+brouillons. Que faites-vous ?
 </Scenario>
 
 <MultiChoice id="what-sets-the-level" phase="review" objective="using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation"
   concepts={['chat-vs-agent-vs-automation']}
-  context="A team is choosing between chat, agent and automation for a recurring task, and is listing what should decide the level."
-  title="What decides the level?" hint="For each line, ask whether it is about the task's worst day and its checks, or about something else."
+  context="Une équipe choisit entre conversation, agent et automatisation pour une tâche récurrente, et liste ce qui doit décider du niveau."
+  title="Qu’est-ce qui décide du niveau ?" hint="Pour chaque ligne, demandez-vous si elle porte sur le pire jour de la tâche et sur ses vérifications, ou sur autre chose."
   options={[
-    { text: 'What a wrong result costs on the task\'s worst day, and whether the system can tell that day apart.', correct: true },
-    { text: 'How often the task comes up, because a task that runs every day has earned automation on its own.', why: 'Frequency says how much attention a level costs, and nothing about which level the task can carry. A daily task with an expensive worst case stays one level down.' },
-    { text: 'Whether the checks grow with the level, such as stop points in the brief or a tested sample and undo.', correct: true },
-    { text: 'Which level the tool\'s vendor recommends in its documentation for tasks of this kind.', why: 'The vendor knows the tool and not your task\'s worst case, your data, or what a wrong result costs you.' },
-    { text: 'Whether the evidence to move up and the worst case to move back are written down as a rule.', correct: true },
+    { text: 'Ce que coûte un résultat faux le pire jour de la tâche, et si le système sait distinguer ce jour.', correct: true },
+    { text: 'La fréquence de la tâche, puisqu’une tâche quotidienne mérite à elle seule d’être automatisée.', why: 'La fréquence dit combien d’attention un niveau coûte, et rien sur le niveau que la tâche peut supporter. Une tâche quotidienne au pire cas coûteux reste un niveau plus bas.' },
+    { text: 'Le fait que les vérifications grandissent avec le niveau, comme des arrêts dans la consigne ou un échantillon testé et une annulation.', correct: true },
+    { text: 'Le niveau que recommande la documentation du fournisseur de l’outil pour les tâches de ce type.', why: 'Le fournisseur connaît l’outil, et pas le pire cas de votre tâche, vos données ni ce que vous coûte un résultat faux.' },
+    { text: 'Le fait que les preuves pour monter et le pire cas pour redescendre soient écrits sous forme de règle.', correct: true },
   ]}>
-Which of these should decide whether a task runs as chat, agent or
-automation?
+Lesquels de ces éléments doivent décider si une tâche tourne en
+conversation, en agent ou en automatisation ?
 </MultiChoice>
 
 <Choice id="one-level-down" phase="review" objective="using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation"
   concepts={['chat-vs-agent-vs-automation']}
-  context="A team wants to run a recurring task unattended, and one case in the task's input is expensive to get wrong and looks like the routine cases from the outside."
-  title="When does a task stay one level down?" hint="Two things about the worst case together decide it. Which pair?"
+  context="Une équipe veut faire tourner une tâche récurrente sans surveillance, et l’un des cas de l’entrée de la tâche coûte cher en cas d’erreur et ressemble de l’extérieur aux cas ordinaires."
+  title="Quand une tâche reste-t-elle un niveau plus bas ?" hint="Deux propriétés du pire cas, ensemble, en décident. Lesquelles ?"
   options={[
-    { text: 'When the worst case is expensive to get wrong and the system reliably detects it and hands it to a person.', why: 'A detected worst case can go to a person while the routine cases run at the higher level. The detector is what makes the higher level safe.' },
-    { text: 'When the worst case is expensive to get wrong and looks like the routine case from the outside.', correct: true },
-    { text: 'When the worst case is rare enough that the team has not seen it yet in testing.', why: 'Rarity is why the routine cases argue for the higher level. It is the cost and the detectability of the rare case that decide whether they win.' },
+    { text: 'Quand le pire cas coûte cher en cas d’erreur et que le système le détecte de façon fiable et le transmet à une personne.', why: 'Un pire cas détecté peut aller à une personne pendant que les cas ordinaires tournent au niveau supérieur. C’est le détecteur qui rend le niveau supérieur sûr.' },
+    { text: 'Quand le pire cas coûte cher en cas d’erreur et ressemble de l’extérieur au cas ordinaire.', correct: true },
+    { text: 'Quand le pire cas est assez rare pour que l’équipe ne l’ait pas encore vu pendant les tests.', why: 'La rareté explique pourquoi les cas ordinaires plaident pour le niveau supérieur. C’est le coût et la détectabilité du cas rare qui décident s’ils l’emportent.' },
   ]}>
-A team wants to move a task from agent to automation. When does the task
-stay at agent instead?
+Une équipe veut faire passer une tâche du niveau agent à l’automatisation.
+Quand la tâche reste-t-elle plutôt au niveau agent ?
 </Choice>
 
 <Sort id="five-more-tasks" phase="review" objective="using-agents/chooses-tool-and-autonomy/picks-chat-agent-or-automation"
   concepts={['chat-vs-agent-vs-automation']}
-  context="Chat means a person steers every turn, an agent works through a briefed task with tools and checks in at agreed points, and automation runs unattended when an event starts it. The tasks here are everyday office tasks, and each one fits one level for its worst case."
-  title="Which level fits each of these?" hint="For each task, ask whether a person would change course halfway, whether the steps are known but the path varies, or whether the same fixed thing happens every time and a wrong result is cheap."
-  buckets={['Chat', 'Agent', 'Automation']}
+  context="En conversation, une personne pilote chaque tour. Un agent avance dans une tâche décrite par une consigne, avec ses outils, et revient aux points convenus. Une automatisation tourne sans surveillance quand un événement la lance. Les tâches ici sont des tâches de bureau courantes, et chacune convient à un niveau d’après son pire cas."
+  title="Quel niveau pour chacune de ces tâches ?" hint="Pour chaque tâche, demandez-vous si une personne changerait de cap en cours de route, si les étapes sont connues mais le chemin varie, ou si la même chose fixe se produit à chaque fois avec un résultat faux bon marché."
+  buckets={['Conversation', 'Agent', 'Automatisation']}
   items={[
-    { text: 'Working out what to say to a colleague whose work you have to turn down', bucket: 0 },
-    { text: 'Tagging each photo that lands in the shared album with the date and the event name from the calendar', bucket: 2 },
-    { text: 'Reading forty meeting recordings and listing every decision, with a note where the recording is unclear', bucket: 1 },
-    { text: 'Thinking through whether to take on a project you have doubts about', bucket: 0 },
-    { text: 'Moving each finished ticket in the tracker to the archive column overnight', bucket: 2 },
+    { text: 'Trouver quoi dire à un collègue dont vous devez refuser le travail', bucket: 0 },
+    { text: 'Étiqueter chaque photo déposée dans l’album partagé avec la date et le nom de l’événement tirés de l’agenda', bucket: 2 },
+    { text: 'Lire quarante enregistrements de réunions et lister chaque décision, avec une note là où l’enregistrement est peu clair', bucket: 1 },
+    { text: 'Réfléchir à l’opportunité d’accepter un projet sur lequel vous avez des doutes', bucket: 0 },
+    { text: 'Déplacer chaque nuit vers la colonne d’archives chaque ticket terminé du suivi', bucket: 2 },
   ]} />
 
-<Pitfall title="Routine nine times, consequential the tenth">
-A task that goes the same way nine times out of ten is the one most
-likely to be picked for the wrong level, because the nine times are all
-anyone sees when the pick is made. The renaming and the support reply
-both look like a fixed path, and the pick is automation. The tenth time is
-the scan that turns out to be a signed contract, or the ticket that
-mentions a lawyer. Pick the level for the tenth time, and use
-the nine to decide how cheap that level should be. When the tenth time
-can't be told from the others by the system, the level is the one where a
-person still sees each result.
+<Pitfall title="Ordinaire neuf fois, lourd de conséquences la dixième">
+Une tâche qui se déroule de la même façon neuf fois sur dix est celle qui a
+le plus de chances d’être placée au mauvais niveau, parce que ces neuf fois
+sont tout ce que l’on voit au moment du choix. Le renommage et la réponse
+d’assistance ont tous deux l’air d’un chemin fixe, et le choix se porte sur
+l’automatisation. La dixième fois, c’est la numérisation qui se révèle être
+un contrat signé, ou le ticket qui mentionne un avocat. Choisissez le niveau
+pour la dixième fois, et servez-vous des neuf autres pour décider combien ce
+niveau doit coûter peu. Quand le système ne peut pas distinguer la dixième
+fois des autres, le niveau est celui où une personne voit encore chaque
+résultat.
 </Pitfall>
 
-<Exercise stretch="Take a task from your own work that a model already does or could do, write its level with the two moving sentences, and check the pick against the task's worst day of the last year.">
-For each of the five tasks below, pick chat, agent or automation for the
-task's worst case, and write one sentence for what would move the task up
-a level and one for what would move it back. Fifteen lines, and fifteen
-minutes is enough.
+<Exercise stretch="Prenez une tâche de votre propre travail qu’un modèle fait déjà ou pourrait faire, écrivez son niveau avec les deux phrases de changement, et confrontez ce choix au pire jour de cette tâche dans l’année écoulée.">
+Pour chacune des cinq tâches ci-dessous, choisissez conversation, agent ou
+automatisation d’après le pire cas de la tâche, et écrivez une phrase pour ce
+qui ferait monter la tâche d’un niveau et une pour ce qui la ferait
+redescendre. Quinze lignes, et quinze minutes suffisent.
 
 ```text
-1. Answering the questions new colleagues ask in the team channel
-   about where things are and how the tools work.
-2. Turning the notes of a customer meeting into a follow-up email
-   to the customer.
-3. Sorting the receipts that arrive in the expenses mailbox into
-   the month and the category they belong to.
-4. Writing the first version of a project plan for something the
-   team has never done before.
-5. Checking each new supplier contract against the company's
-   standard terms and listing the differences.
+1. Répondre aux questions que posent les nouveaux collègues dans le
+   canal de l’équipe sur l’emplacement des choses et le fonctionnement
+   des outils.
+2. Transformer les notes d’une réunion client en e-mail de suivi
+   adressé au client.
+3. Ranger les justificatifs qui arrivent dans la boîte des notes de
+   frais selon le mois et la catégorie auxquels ils appartiennent.
+4. Écrire la première version d’un plan de projet pour quelque chose
+   que l’équipe n’a jamais fait.
+5. Comparer chaque nouveau contrat fournisseur aux conditions types de
+   l’entreprise et lister les différences.
 ```
 
-A good answer has the plan in chat, because the thinking is the task and
-you would change course halfway. It has no up move while the plan is being
-thought out, and once the plan exists, filling in the sections from notes
-is a different task that an agent can do. It has no down move, because chat
-is the lowest level. The follow-up email is at agent with you sending it,
-because the meeting is in your memory and the customer receives the result.
-It moves up to automation only when the notes are complete enough to draft
-from without you and a wrong email costs little, and it moves back to chat
-when a meeting was difficult and the wording is the work. The receipts are
-at automation with a monthly sample check and a way to move a wrong file.
-They moved up on a month of agent runs without a correction, and they come
-back to agent if a receipt turns out to be a contract or an invoice above a
-set amount. The team-channel questions are at agent. The agent answers from
-the team's own pages and says when it can't find an answer. It moves up to
-automation once a month of answers has been checked and none was about
-access or a password, and it moves back to chat if a wrong answer about
-access or a password shows up. The contract check is at agent with a person
-reading each list, because a missed clause is the tenth time. It moves up
-for the standard contracts only, once a test on last year's contracts has
-found every difference a lawyer found, and it moves back to agent for all
-contracts if a supplier sends a form the test never saw. Where your answer differs, the sentence that matters is the one
-about the worst case, so check that one first. Which of your five picks
-would slide up on its own if nobody wrote the rule?
+Une bonne réponse place le plan en conversation, parce que la réflexion est
+la tâche et que vous changeriez de cap en cours de route. Il n’y a pas de
+montée tant que le plan se réfléchit, et une fois le plan établi, remplir
+les sections à partir de notes est une autre tâche, qu’un agent peut faire.
+Il n’y a pas de descente, parce que la conversation est le niveau le plus
+bas. L’e-mail de suivi est au niveau agent, et c’est vous qui l’envoyez,
+parce que la réunion est dans votre mémoire et que le client reçoit le
+résultat. Il ne monte en automatisation que lorsque les notes sont assez
+complètes pour rédiger sans vous et qu’un e-mail faux coûte peu, et il
+redescend en conversation quand une réunion a été difficile et que la
+formulation est le travail. Les justificatifs sont en automatisation, avec
+une vérification mensuelle par sondage et un moyen de déplacer un fichier
+mal rangé. Ils sont montés après un mois d’exécutions de l’agent sans
+correction, et ils reviennent au niveau agent si un justificatif se révèle
+être un contrat ou une facture au-dessus d’un montant fixé. Les questions du
+canal de l’équipe sont au niveau agent. L’agent répond à partir des propres
+pages de l’équipe et dit quand il ne trouve pas de réponse. Il monte en
+automatisation une fois qu’un mois de réponses a été vérifié et qu’aucune ne
+portait sur des accès ou un mot de passe, et il redescend en conversation si
+une réponse fausse sur des accès ou un mot de passe apparaît. La comparaison
+des contrats est au niveau agent, avec une personne qui lit chaque liste,
+parce qu’une clause manquée est la dixième fois. Elle monte pour les seuls
+contrats types, une fois qu’un test sur les contrats de l’an dernier a
+trouvé chaque différence qu’avait trouvée un juriste, et elle redescend au
+niveau agent pour tous les contrats si un fournisseur envoie un modèle que
+le test n’a jamais vu. Là où votre réponse diffère, la phrase qui compte est
+celle qui porte sur le pire cas, alors vérifiez-la en premier. Lequel de vos
+cinq choix monterait tout seul si personne n’écrivait la règle ?
 </Exercise>
 
 <Recap>
-1. Chat, agent and automation are three ways to apply one model, and the difference is how many steps it does before you look.
-2. Autonomy rises across the three. The checks rise with it, from your reading in chat to the brief's stop points for an agent to a tested sample and undo for automation (@Academy building-effective-human-agent-teams).
-3. The level is picked for the task's worst case. A worst case that is expensive and can't be told from the routine case keeps the task one level down.
-4. Each pick gets a moving rule: the evidence that moves the task up, and the new worst case that moves it back (@Academy ai-fluency-for-builders).
-5. The written rule stops the two silent moves, the approval that becomes a click and the task that stays in chat because it always has.
+1. La conversation, l’agent et l’automatisation sont trois façons d’appliquer un même modèle, et la différence tient au nombre d’étapes qu’il fait avant que vous regardiez.
+2. L’autonomie monte d’un niveau à l’autre. Les vérifications montent avec elle, de votre lecture en conversation aux arrêts prévus dans la consigne pour un agent, puis à un échantillon testé et une annulation pour l’automatisation (@Academy building-effective-human-agent-teams).
+3. Le niveau se choisit d’après le pire cas de la tâche. Un pire cas coûteux, impossible à distinguer du cas ordinaire, garde la tâche un niveau plus bas.
+4. Chaque choix reçoit une règle de changement de niveau : les preuves qui font monter la tâche, et le nouveau pire cas qui la fait redescendre (@Academy ai-fluency-for-builders).
+5. La règle écrite empêche les deux glissements silencieux, l’approbation qui devient un clic et la tâche qui reste en conversation parce qu’elle l’a toujours été.
 </Recap>

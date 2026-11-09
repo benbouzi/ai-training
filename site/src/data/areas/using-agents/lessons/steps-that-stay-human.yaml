@@ -1,8 +1,9 @@
 id: using-agents/steps-that-stay-human
-title: The steps that stay human
+title: Les étapes qui restent humaines
 description: >-
-  Walk an eight-step hiring process twice, once for what an agent could do and once for what stays
-  with a person, and learn the three reasons a step stays human and why the list is decided early.
+  Parcourir deux fois un processus de recrutement en huit étapes, une fois pour ce qu’un agent
+  pourrait faire et une fois pour ce qui reste à une personne, et apprendre les trois raisons pour
+  lesquelles une étape reste humaine et pourquoi la liste se décide tôt.
 mode: explanation
 covers: using-agents/choosing-tools
 serves: [using-agents/chooses-tool-and-autonomy/keeps-the-human-steps]
@@ -15,13 +16,13 @@ assumes:
     lesson: safety/writing-an-ai-policy
     section: le-gabarit-dune-page
 after: [using-agents/chat-agent-or-automation]
-shorts: [A human path when the tool is down]
+shorts: [Une voie humaine quand l’outil est en panne]
 exercise:
   kind: judge
   brief: >-
-    In a supplied eight-step process (hiring a contractor), mark the steps that stay with a person
-    and give the reason per step, accountability, knowledge the agent cannot reach, or keeping your
-    own judgment sharp.
+    Dans un processus donné en huit étapes (recruter un prestataire), marquer les étapes qui restent
+    à une personne et donner la raison pour chacune : la responsabilité, un savoir que l’agent ne
+    peut pas atteindre, ou l’entretien de votre propre jugement.
 sources:
   - Academy building-effective-human-agent-teams
   - Academy ai-fluency-for-builders
