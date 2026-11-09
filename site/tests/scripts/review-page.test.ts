@@ -154,7 +154,9 @@ describe('mountReviewPage', () => {
 		expect(second.dataset.served).toBeUndefined();
 		answerShown();
 		q('.cp-after button', second).click();
-		await vi.waitFor(() => expect(q('[data-status]').textContent).toBe('Terminé : 2 questions revues. Encore 0 à revoir.'));
+		await vi.waitFor(() =>
+			expect(q('[data-status]').textContent).toBe('Terminé : 2 questions revues. Encore 0 à revoir.'),
+		);
 		expect(q<HTMLAnchorElement>('[data-items] a.cp-check').href).toBe(
 			new URL('/ai-training/concepts/', location.href).href,
 		);

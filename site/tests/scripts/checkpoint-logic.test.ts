@@ -148,7 +148,10 @@ describe('multiChoiceVerdict', () => {
 
 describe('matchVerdict', () => {
 	it('blocks on empty rows, counts wrong rows, and shows the rationale on a full pass', () => {
-		expect(matchVerdict(1, 0, 'r')).toEqual({ ok: null, feedback: { kind: 'note', text: 'Encore 1 ligne à remplir.' } });
+		expect(matchVerdict(1, 0, 'r')).toEqual({
+			ok: null,
+			feedback: { kind: 'note', text: 'Encore 1 ligne à remplir.' },
+		});
 		expect(matchVerdict(3, 0, 'r').feedback.text).toBe('Encore 3 lignes à remplir.');
 		expect(matchVerdict(0, 1, 'r')).toEqual({
 			ok: false,

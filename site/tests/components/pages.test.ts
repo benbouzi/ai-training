@@ -222,7 +222,9 @@ describe('ReviewIntro', () => {
 		expect(text).toContain('. Indice donne un coup de pouce. Voir la réponse montre la réponse');
 	});
 	it('says so when the course has nothing to ask', async () => {
-		expect(await intro('using-agents')).toContain('Ce parcours n’a pas encore de question à poser. Indice donne un coup de pouce.');
+		expect(await intro('using-agents')).toContain(
+			'Ce parcours n’a pas encore de question à poser. Indice donne un coup de pouce.',
+		);
 	});
 });
 
