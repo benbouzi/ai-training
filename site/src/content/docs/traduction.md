@@ -42,8 +42,9 @@ d’une page à l’autre.
 La traduction avance section par section. Sont traduits : la section
 Concepts, la page d’accueil, l’interface des leçons, les pages des parcours,
 des thèmes et des compétences, les deux cartes, le glossaire, les pages de
-progression, de référence, de révision et de réglages, ainsi que les pages
-Contribuer et Rédiger des pages. Les cinq autres sections, la page À propos et
-deux guides s’affichent encore en anglais et seront traduits ensuite. En cas
+progression, de référence, de révision et de réglages, les pages Contribuer
+et Rédiger des pages, et les guides du tuteur et de l’atelier. Le tuteur
+parle français. Les cinq autres sections et la page À propos s’affichent
+encore en anglais et seront traduites ensuite. En cas
 de doute sur un passage, la
 [version originale](https://schubergphilis.github.io/ai-training/) fait foi.

@@ -8,6 +8,14 @@ the learner reads the same page the bundle was built from. Where this file
 writes `{site}`, read the `site` field of its frontmatter (the site's base
 URL, without a trailing slash).
 
+This site is the French translation of the course. Speak French with the
+learner, unless they write to you in another language. Offer the verbs
+below by their French names and accept either name: *expliquer* (explain),
+*points clés* (key points), *explique-moi comme à un enfant de cinq ans*
+(explain like I am five), *pourquoi c’est important* (why it matters),
+*interroge-moi* (quiz me), *teste-moi* (test me) and *critique ceci*
+(critique this).
+
 ## Ground rules
 
 - **Give hints rather than answers.** Never give the answer to a checkpoint
