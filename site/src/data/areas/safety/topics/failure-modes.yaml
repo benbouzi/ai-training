@@ -1,48 +1,48 @@
 id: safety/failure-modes
 area: safety
-name: Recognizing failure
+name: Reconnaître les défaillances
 definition: >-
-  Model failures rarely announce themselves; they arrive as fluent, confident
-  text. This topic shows what hallucination looks like in real documents and
-  code, how bias enters and repeats, and how people drift into overreliance
-  and automation complacency once a tool is usually right.
+  Les défaillances d’un modèle s’annoncent rarement : elles arrivent sous forme de texte fluide et
+  assuré. Ce thème montre à quoi ressemble l’hallucination dans de vrais documents et du vrai
+  code, comment un biais entre et se répète, et comment on glisse vers la dépendance excessive
+  (overreliance) et la complaisance envers l’automatisation (automation complacency) quand un
+  outil a en général raison.
 concepts:
   - id: hallucination-in-practice
-    name: Hallucination in practice
+    name: L’hallucination en pratique
     definition: >-
-      What invented output looks like in daily work: a statute with a real
-      number and wrong contents, a library method that almost exists, a quote
-      attributed to the right person from a speech never given, a summary that
-      adds a point the source did not make. The tell is specificity without a
-      checkable source. Treat precise details from a model as claims to
-      verify, not facts.
+      À quoi ressemble une sortie inventée dans le travail quotidien : un texte de loi avec un vrai
+      numéro et un contenu faux, une méthode de bibliothèque qui existe presque, une citation
+      attribuée à la bonne personne et tirée d’un discours jamais prononcé, un résumé qui ajoute un
+      point absent de la source. L’indice est une précision sans source vérifiable. Traitez les
+      détails précis donnés par un modèle comme des affirmations à vérifier.
   - id: bias
-    name: Bias
+    name: Biais
     definition: >-
-      Systematic slant in a model's output inherited from its training data
-      and its tuning: which names it assumes are senior, which dialect it
-      calls professional, which candidates it ranks higher for the same
-      record. Bias is hard to see in a single answer and shows up in patterns
-      across many. Anything a model does that affects people should be
-      sampled and compared across groups.
+      Une inclinaison systématique de la sortie d’un modèle, héritée de ses données d’entraînement et
+      de son réglage : quels noms il suppose être ceux de cadres, quel parler il juge professionnel,
+      quels candidats il classe plus haut à dossier égal. Un biais se voit mal dans une réponse isolée
+      et apparaît dans les tendances sur beaucoup de réponses. Tout ce que fait un modèle et qui
+      touche des personnes doit être échantillonné et comparé entre groupes.
   - id: overreliance
-    name: Overreliance
+    name: Dépendance excessive
     definition: >-
-      Trusting a model's output beyond what you have checked or could check.
-      It starts with tasks you know well and then spreads to ones you do not,
-      where you can no longer tell a good answer from a plausible one. The
-      remedy is to keep verifying in proportion to stakes and to keep enough
-      of your own competence to recognize when the tool is wrong.
+      Faire confiance à la sortie d’un modèle au-delà de ce que vous avez vérifié ou pourriez
+      vérifier. Elle commence avec des tâches que vous connaissez bien, puis s’étend à celles que vous
+      connaissez mal, où vous ne savez plus distinguer une bonne réponse d’une réponse plausible. Le
+      remède est de continuer à vérifier en proportion des enjeux, et de garder assez de compétence
+      propre pour reconnaître quand l’outil se trompe.
   - id: automation-complacency
-    name: Automation complacency
+    name: Complaisance envers l’automatisation
     definition: >-
-      The habit of waving through a tool's output because it has been right
-      many times before. Attention decays fastest when the tool is good, so
-      the rare failure passes unchecked. It is a known effect from aviation
-      and medicine, not a personal weakness, and is countered by process:
-      designed checks, sampling and rotating who reviews.
+      L’habitude de laisser passer la sortie d’un outil parce qu’il a eu raison de nombreuses fois.
+      L’attention baisse le plus vite quand l’outil est bon, si bien que la rare défaillance passe
+      sans contrôle. C’est un effet connu de l’aviation et de la médecine, sans rapport avec une
+      faiblesse personnelle, et on le contre par le processus : des vérifications prévues,
+      l’échantillonnage et la rotation des relecteurs.
 links:
   prerequisites: [concepts/limits]
   related: []
   specializations: []
-sources: [Academy ai-capabilities-and-limitations, Parasuraman 2010, Goddard 2012, Bainbridge 1983, NTSB Asiana 214]
+sources: [Academy ai-capabilities-and-limitations, Parasuraman 2010, Goddard 2012, Bainbridge 1983,
+      NTSB Asiana 214]

@@ -48,7 +48,7 @@ describe('mountLineCompare', () => {
 		press(root);
 		expect(lines.hidden).toBe(false);
 		expect(lines.textContent).toBe(
-			'9 of 10 lines also appear in truncate.py\nlines not in truncate.py:\n  def shorten(text, limit, marker="..."):',
+			'9 lignes sur 10 figurent aussi dans truncate.py\nlignes absentes de truncate.py :\n  def shorten(text, limit, marker="..."):',
 		);
 	});
 	it('clears the report when the text changes, and compares pasted text', async () => {
@@ -59,7 +59,7 @@ describe('mountLineCompare', () => {
 		press(root);
 		const lines = part<HTMLPreElement>(root, '.lc-lines');
 		expect(lines.textContent).toBe(
-			'1 of 2 lines also appear in truncate.py\nlines not in truncate.py:\n  print(words)',
+			'1 ligne sur 2 figure aussi dans truncate.py\nlignes absentes de truncate.py :\n  print(words)',
 		);
 		input.dispatchEvent(new window.Event('input', { bubbles: true }) as unknown as Event);
 		expect(lines.textContent).toBe('');
@@ -94,7 +94,9 @@ describe('mountLineCompares', () => {
 		const [first, second] = [...document.querySelectorAll<HTMLElement>(ROOT_SELECTOR)] as [HTMLElement, HTMLElement];
 		press(second);
 		expect(part(first, '.lc-lines').textContent).toBe('');
-		expect(part(second, '.lc-lines').textContent?.split('\n')[0]).toBe('3 of 6 lines also appear in truncate.py');
+		expect(part(second, '.lc-lines').textContent?.split('\n')[0]).toBe(
+			'3 lignes sur 6 figurent aussi dans truncate.py',
+		);
 		document.body.innerHTML = '<p>no comparer</p>';
 		expect(mountLineCompares(document)).toBe(0);
 	});

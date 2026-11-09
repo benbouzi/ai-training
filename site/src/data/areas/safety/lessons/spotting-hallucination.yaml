@@ -1,8 +1,9 @@
 id: safety/spotting-hallucination
-title: What an invented fact looks like
+title: À quoi ressemble un fait inventé
 description: >-
-  Read a model's fluent summary of a report, predict which of its figures, quotes and references have
-  no source, and check each one against the report with a checker on the page.
+  Lire le résumé fluide qu’un modèle a fait d’un rapport, prédire lesquels de ses chiffres,
+  citations et références n’ont pas de source, et vérifier chacun dans le rapport avec un
+  vérificateur sur la page.
 mode: tutorial
 covers: safety/failure-modes
 serves: [safety/verifies-output/checks-claims]
@@ -12,16 +13,16 @@ assumes:
     lesson: concepts/how-models-work
     section: les-défaillances-nommées
 extends-to:
-  - label: Verifying outputs
+  - label: Vérifier les sorties
     href: /safety/verification/
 after: []
-shorts: [Why specificity is the tell]
+shorts: [Pourquoi la précision est l’indice]
 exercise:
   kind: judge
   brief: >-
-    Read the lesson's second summary before running the check, predict from their specificity which
-    of its claims are invented, then check it in the claim checker on the page and record where the
-    prediction held and where it did not.
+    Lire le second résumé de la leçon avant de lancer la vérification, prédire d’après leur
+    précision lesquelles de ses affirmations sont inventées, puis le vérifier dans le vérificateur
+    d’affirmations de la page et noter où la prédiction a tenu et où elle a échoué.
 sources: [Academy ai-capabilities-and-limitations]
 minutes: 15
 proofs:

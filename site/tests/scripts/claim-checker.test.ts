@@ -52,21 +52,24 @@ describe('mountClaimChecker', () => {
 		press(root);
 		expect(lines.hidden).toBe(false);
 		expect(report(root).filter((r) => r.cls === 'cc-missing')).toEqual([
-			{ cls: 'cc-missing', text: 'NO SOURCE  50 passengers' },
-			{ cls: 'cc-missing', text: 'NO SOURCE  38 percent' },
-			{ cls: 'cc-missing', text: 'NO SOURCE  9,000 passengers' },
-			{ cls: 'cc-missing', text: 'NO SOURCE  "Racks before car parks, every time."' },
+			{ cls: 'cc-missing', text: 'SANS SOURCE  50 voyageurs' },
+			{ cls: 'cc-missing', text: 'SANS SOURCE  38 %' },
+			{ cls: 'cc-missing', text: 'SANS SOURCE  9 000 voyageurs' },
+			{ cls: 'cc-missing', text: 'SANS SOURCE  « Des arceaux avant les parkings, toujours. »' },
 		]);
 		expect(report(root)).toHaveLength(21);
-		expect(lines.textContent?.split('\n').at(-1)).toBe('4 of 12 claims have no source');
+		expect(lines.textContent?.split('\n').at(-1)).toBe('4 affirmations sur 12 n’ont pas de source');
 	});
 	it('clears the report when the summary changes, and checks pasted text', async () => {
 		const root = await show();
 		mountClaimChecker(root);
 		const input = part<HTMLTextAreaElement>(root, '.cc-input');
-		input.value = 'The team counted 891 bicycles.';
+		input.value = 'L’équipe a compté 891 vélos.';
 		press(root);
-		expect(report(root).map((r) => r.text)).toEqual(['NO SOURCE  891 bicycles', '1 of 1 claims have no source']);
+		expect(report(root).map((r) => r.text)).toEqual([
+			'SANS SOURCE  891 vélos',
+			'1 affirmation sur 1 n’a pas de source',
+		]);
 		input.dispatchEvent(new window.Event('input', { bubbles: true }) as unknown as Event);
 		expect(report(root)).toEqual([]);
 		expect(part<HTMLPreElement>(root, '.cc-lines').hidden).toBe(true);
@@ -100,7 +103,7 @@ describe('mountClaimCheckers', () => {
 		const [first, second] = [...document.querySelectorAll<HTMLElement>(ROOT_SELECTOR)] as [HTMLElement, HTMLElement];
 		press(second);
 		expect(report(first)).toEqual([]);
-		expect(report(second).at(-1)?.text).toBe('2 of 12 claims have no source');
+		expect(report(second).at(-1)?.text).toBe('2 affirmations sur 12 n’ont pas de source');
 		document.body.innerHTML = '<p>no checker</p>';
 		expect(mountClaimCheckers(document)).toBe(0);
 	});

@@ -1,9 +1,9 @@
 id: safety/saying-ai-helped
-title: Saying that AI helped, and crediting what it copied
+title: Dire que l’IA a aidé, et créditer ce qu’elle a copié
 description: >-
-  Write the disclosure line in its three parts, what the AI did, what you checked and who is
-  accountable, use a comparer that shows how much of a generated function came from a library,
-  and look up the disclosure rule of the place the work goes to.
+  Écrire la ligne de mention en trois parties, ce que l’IA a fait, ce que vous avez vérifié et qui
+  répond du résultat, utiliser un comparateur qui montre quelle part d’une fonction générée vient
+  d’une bibliothèque, et chercher la règle de mention du lieu où va le travail.
 mode: tutorial
 covers: safety/responsible-use
 serves:
@@ -18,15 +18,16 @@ assumes:
     lesson: safety/responsible-use
     section: doù-vient-la-sortie
 extends-to:
-  - label: Transparency duties in the EU AI Act
+  - label: Les obligations de transparence du règlement européen sur l’IA
     href: /safety/eu-ai-act/
 after: [safety/responsible-use]
-shorts: [Content credentials (C2PA), The license filter question for generated code]
+shorts: ['Certificats de contenu (content credentials, C2PA)', La question du filtre de licences
+      pour le code généré]
 exercise:
   kind: do
   brief: >-
-    Write the disclosure line for three artifacts you produced this month, and for one of them find
-    the rule of the place it went to.
+    Écrivez la ligne de mention de trois travaux produits ce mois-ci, et pour l’un d’eux, cherchez
+    la règle du lieu où il est allé.
 proofs:
   - safety/saying-ai-helped/compare.py
   - safety/saying-ai-helped/compare_rewrite.py

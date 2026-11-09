@@ -1,53 +1,53 @@
 id: safety/agent-risk
 area: safety
-name: Agent risk
+name: Risques des agents
 definition: >-
-  An agent that can act can also do harm, and a model can be talked into
-  acting by text it reads. This topic teaches how to size what an agent can
-  reach, grant it the least it needs, keep a human at the right decision
-  points, and recognize the two classic attacks: prompt injection and data
-  exfiltration.
+  Un agent qui peut agir peut aussi nuire, et un texte qu’il lit peut amener un modèle à agir. Ce
+  thème apprend à mesurer ce qu’un agent peut atteindre, à lui accorder le minimum nécessaire, à
+  placer une personne aux bons points de décision, et à reconnaître les deux attaques classiques :
+  l’injection de prompt (prompt injection) et l’exfiltration de données.
 concepts:
   - id: blast-radius
-    name: Blast radius
+    name: Rayon d’impact
     definition: >-
-      Everything an agent's action can reach and change: the files it can
-      write, the accounts it can act as, the systems its credentials open,
-      the people its messages reach. Blast radius is decided by what the agent
-      is connected to, not by what you asked it to do. Sizing it before a
-      task is the first step in deciding how much autonomy to allow.
+      Tout ce que l’action d’un agent peut atteindre et modifier : les fichiers qu’il peut écrire, les
+      comptes au nom desquels il peut agir, les systèmes que ses identifiants ouvrent, les personnes
+      que ses messages atteignent. Le rayon d’impact (blast radius) dépend de ce à quoi l’agent est
+      connecté, quelle que soit la tâche demandée. Le mesurer avant une tâche est la première étape
+      pour décider du degré d’autonomie à accorder.
   - id: permissions-and-least-privilege
-    name: Permissions and least privilege
+    name: Permissions et moindre privilège
     definition: >-
-      Giving an agent only the access the current task needs: read where it
-      needs to read, write only in the working folder, no network or
-      credentials unless required. Least privilege limits what a mistake or
-      an attack can do. Convenient broad access is the usual failure; a
-      separate account, a sandbox or a scoped token is the usual fix.
+      Ne donner à un agent que l’accès dont la tâche en cours a besoin : lecture là où il doit lire,
+      écriture seulement dans le dossier de travail, ni réseau ni identifiants sauf nécessité. Le
+      moindre privilège (least privilege) limite ce qu’une erreur ou une attaque peut faire. Un accès
+      large par commodité est la défaillance habituelle, et un compte séparé, un bac à sable (sandbox)
+      ou un jeton à portée limitée est la correction habituelle.
   - id: human-in-the-loop
-    name: Human in the loop
+    name: Humain dans la boucle
     definition: >-
-      A required human decision at a chosen point in an agent's work, such as
-      before sending, paying, deleting or deploying. The human sees what the
-      agent proposes and approves, edits or stops it. Placing the checkpoint
-      at the irreversible step, rather than everywhere, keeps the agent
-      useful while keeping accountability with a person.
+      Une décision humaine obligatoire (human in the loop) à un point choisi du travail d’un agent,
+      par exemple avant d’envoyer, de payer, de supprimer ou de déployer. La personne voit ce que
+      l’agent propose, et l’approuve, le modifie ou l’arrête. Placer ce point de contrôle à l’étape
+      irréversible, et seulement là, garde l’agent utile tout en laissant la responsabilité à une
+      personne.
   - id: prompt-injection
-    name: Prompt injection
+    name: Injection de prompt
     definition: >-
-      An attack where text the agent reads, such as a web page, email,
-      document or code comment, contains instructions that the model follows
-      as if they came from its user. The model cannot reliably tell data from
-      commands. Any agent that reads untrusted content and can act is exposed,
-      and the defense is limiting what it can do, not hoping it will refuse.
+      Une attaque dans laquelle un texte que lit l’agent, comme une page web, un e-mail, un document
+      ou un commentaire de code, contient des instructions que le modèle suit comme si elles venaient
+      de son utilisateur. Le modèle ne sait pas distinguer de façon fiable les données des commandes.
+      Tout agent qui lit du contenu non fiable et peut agir est exposé, et la défense consiste à
+      limiter ce qu’il peut faire, sans compter sur un refus de sa part.
   - id: exfiltration
     name: Exfiltration
     definition: >-
-      Data leaving a boundary it should not cross, often as the second half of
-      an injection: the agent is tricked into putting secrets, private files
-      or conversation contents into a URL, a message or a public location.
-      Any tool that can send data outward is an exfiltration path. Review
-      those tools first and restrict where an agent may send anything.
+      Des données qui franchissent une frontière qu’elles ne devraient pas franchir, souvent comme
+      seconde moitié d’une injection : l’agent est amené à mettre des secrets, des fichiers privés ou
+      le contenu d’une conversation dans une URL, un message ou un emplacement public. Tout outil
+      capable d’envoyer des données vers l’extérieur est une voie d’exfiltration. Examinez ces outils
+      en premier et restreignez les destinations vers lesquelles un agent peut envoyer quoi que ce
+      soit.
 links:
   prerequisites: [concepts/what-is-an-agent, safety/verification]
   related: []

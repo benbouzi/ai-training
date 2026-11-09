@@ -1,45 +1,44 @@
 id: safety/verification
 area: safety
-name: Verifying outputs
+name: Vérifier les sorties
 definition: >-
-  Verification is the habit of checking AI output before relying on it, in
-  proportion to the cost of being wrong. This topic covers routine checking
-  habits, following claims back to their sources, treating endorsed answers
-  differently from raw ones, and extending "trust but verify" to actions
-  agents take.
+  La vérification est l’habitude de contrôler une sortie d’IA avant de s’y fier, en proportion du
+  coût d’une erreur. Ce thème couvre les habitudes de vérification courantes, le fait de remonter
+  les affirmations jusqu’à leurs sources, la distinction entre réponses validées et réponses
+  brutes, et l’extension de « faire confiance, mais vérifier » aux actions des agents.
 concepts:
   - id: checking-habits
-    name: Checking habits
+    name: Habitudes de vérification
     definition: >-
-      Small routines that catch model errors before they spread: read the
-      output against the request you made, look for claims you did not
-      supply, run the code, open the link, do one calculation by hand. The
-      depth scales with stakes. A habit is better than a rule because it runs
-      even when you are in a hurry, which is when errors slip through.
+      De petites routines qui attrapent les erreurs d’un modèle avant qu’elles se propagent : relire
+      la sortie en regard de la demande faite, chercher les affirmations que vous n’avez pas fournies,
+      exécuter le code, ouvrir le lien, refaire un calcul à la main. La profondeur suit les enjeux.
+      Une habitude vaut mieux qu’une règle, parce qu’elle fonctionne même quand vous êtes pressé, et
+      c’est là que les erreurs passent.
   - id: source-checking
-    name: Source checking
+    name: Vérification des sources
     definition: >-
-      Following a claim, citation or quote back to where it is supposed to
-      come from and confirming it says what the model reported. Models
-      produce references that look right more easily than references that are
-      right. Anything with a page number, URL, statute, version or study
-      behind it should be opened before it goes to anyone else.
+      Remonter une affirmation, une référence ou une citation jusqu’à l’endroit d’où elle est censée
+      venir, et confirmer que cet endroit dit ce que le modèle a rapporté. Les modèles produisent plus
+      facilement des références qui ont l’air justes que des références justes. Tout ce qui s’appuie
+      sur un numéro de page, une URL, un texte de loi, une version ou une étude doit être ouvert avant
+      d’être transmis à quelqu’un.
   - id: endorsed-answers
-    name: Endorsed answers
+    name: Réponses validées
     definition: >-
-      An answer that a qualified human has reviewed and marked as correct,
-      distinct from raw model output. Some teaching and support systems show
-      the mark so readers know which answers carry human accountability. The
-      idea transfers to teams: separate what the model said from what a
-      person has checked, and make the difference visible in the artifact.
+      Une réponse qu’une personne qualifiée a relue et marquée comme correcte, à distinguer de la
+      sortie brute d’un modèle. Certains systèmes d’enseignement et d’assistance affichent cette
+      marque pour que les lecteurs sachent quelles réponses engagent la responsabilité d’une personne.
+      L’idée vaut pour les équipes : séparez ce qu’a dit le modèle de ce qu’une personne a vérifié, et
+      rendez la différence visible dans le document produit.
   - id: trust-but-verify-for-agents
-    name: '"Trust but verify" for agents'
+    name: '« Faire confiance, mais vérifier » pour les agents'
     definition: >-
-      When an agent acts rather than answers, verification moves from reading
-      text to checking effects: what files changed, what was sent, what was
-      deleted. Let the agent proceed on low-stakes steps, then inspect the
-      result against what you asked for, and require a pause before any step
-      that is hard to reverse. Trust is granted per action, not per tool.
+      Quand un agent agit au lieu de répondre, la vérification passe de la lecture d’un texte au
+      contrôle des effets : quels fichiers ont changé, ce qui a été envoyé, ce qui a été supprimé.
+      Laissez l’agent avancer sur les étapes à faible enjeu, puis comparez le résultat à ce que vous
+      avez demandé, et exigez une pause avant toute étape difficile à annuler. La confiance s’accorde
+      action par action, et chaque nouvelle action la remet en jeu.
 links:
   prerequisites: [safety/failure-modes]
   related: []

@@ -12,7 +12,7 @@ introduces: [reviewing-code-you-did-not-write, verifying-against-the-specificati
 assumes:
   - objective: safety/verifies-output/checks-claims
     lesson: safety/spotting-hallucination
-    section: run-the-check
+    section: lancer-la-vérification
   - objective: using-agents/delegates-and-checks/reviews-against-brief
     lesson: using-agents/delegating
     section: reviewing-against-the-brief

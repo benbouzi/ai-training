@@ -17,27 +17,27 @@ const SOURCES = [source('report.txt', read('sources/report.txt')), source('minut
 
 /** What `check_claims.py sample/summary_1.txt` prints (the proof `all_claims.py`). */
 const SUMMARY_1 = [
-	'found      2025 review',
-	'           minutes.txt:1  Council meeting, 12 June 2025, item 4: station cycle parking.',
-	'found      890 bicycles',
-	'           report.txt:3  On a weekday morning in March the team counted 890 bicycles parked at the station against 640 racks.',
-	'found      640 racks',
-	'           report.txt:3  On a weekday morning in March the team counted 890 bicycles parked at the station against 640 racks.',
-	'found      Article 7(3)',
-	'           report.txt:5  Article 7(3) of the Cycle Parking Ordinance sets a minimum of one rack per 100 boarding passengers.',
-	'NO SOURCE  50 passengers',
-	'NO SOURCE  38 percent',
-	'found      2022',
-	'           report.txt:7  Reported bicycle theft at the station fell by roughly a third between 2022 and 2024, after the covered section was locked at night.',
-	'found      2024',
-	'           report.txt:7  Reported bicycle theft at the station fell by roughly a third between 2022 and 2024, after the covered section was locked at night.',
-	'found      300 racks',
-	'           report.txt:8  The team recommends adding 300 racks, of which 120 covered, on the eastern forecourt.',
-	'found      120 covered',
-	'           report.txt:8  The team recommends adding 300 racks, of which 120 covered, on the eastern forecourt.',
-	'NO SOURCE  9,000 passengers',
-	'NO SOURCE  "Racks before car parks, every time."',
-	'4 of 12 claims have no source',
+	'trouvé       2025',
+	'             minutes.txt:1  Conseil municipal du 12 juin 2025, point 4 : stationnement des vélos à la gare.',
+	'trouvé       890 vélos',
+	'             report.txt:3  Un matin de semaine en mars, l’équipe a compté 890 vélos garés à la gare pour 640 arceaux.',
+	'trouvé       640 arceaux',
+	'             report.txt:3  Un matin de semaine en mars, l’équipe a compté 890 vélos garés à la gare pour 640 arceaux.',
+	'trouvé       article 7(3)',
+	'             report.txt:5  L’article 7(3) du règlement sur le stationnement des vélos fixe un minimum d’un arceau pour 100 voyageurs montants.',
+	'SANS SOURCE  50 voyageurs',
+	'SANS SOURCE  38 %',
+	'trouvé       2022',
+	'             report.txt:7  Les vols de vélos déclarés à la gare ont baissé d’environ un tiers entre 2022 et 2024, après la fermeture nocturne de la partie couverte.',
+	'trouvé       2024',
+	'             report.txt:7  Les vols de vélos déclarés à la gare ont baissé d’environ un tiers entre 2022 et 2024, après la fermeture nocturne de la partie couverte.',
+	'trouvé       300 arceaux',
+	'             report.txt:8  L’équipe recommande d’ajouter 300 arceaux, dont 120 couverts, sur le parvis est.',
+	'trouvé       120 couverts',
+	'             report.txt:8  L’équipe recommande d’ajouter 300 arceaux, dont 120 couverts, sur le parvis est.',
+	'SANS SOURCE  9 000 voyageurs',
+	'SANS SOURCE  « Des arceaux avant les parkings, toujours. »',
+	'4 affirmations sur 12 n’ont pas de source',
 ];
 
 describe('the lesson samples', () => {
@@ -46,21 +46,21 @@ describe('the lesson samples', () => {
 		expect(report.lines).toEqual(SUMMARY_1);
 		expect(report.missing).toBe(4);
 		expect(report.entries.filter((e) => e.hit === null).map((e) => e.claim.label)).toEqual([
-			'50 passengers',
-			'38 percent',
-			'9,000 passengers',
-			'"Racks before car parks, every time."',
+			'50 voyageurs',
+			'38 %',
+			'9 000 voyageurs',
+			'« Des arceaux avant les parkings, toujours. »',
 		]);
 	});
 	it('finds all but two claims of the second summary, the quote among them', () => {
 		const report = check(read('sample/summary_2.txt'), SOURCES);
-		expect(report.lines.filter((l) => l.startsWith('NO SOURCE'))).toEqual([
-			'NO SOURCE  139 percent',
-			'NO SOURCE  410,000',
+		expect(report.lines.filter((l) => l.startsWith('SANS SOURCE'))).toEqual([
+			'SANS SOURCE  139 %',
+			'SANS SOURCE  410 000',
 		]);
-		expect(report.lines).toContain('found      "We need racks before we need another car park."');
-		expect(report.lines).toContain('found      7,200 boarding');
-		expect(report.lines.at(-1)).toBe('2 of 12 claims have no source');
+		expect(report.lines).toContain('trouvé       « Il nous faut des arceaux avant un nouveau parking. »');
+		expect(report.lines).toContain('trouvé       7 200 voyageurs');
+		expect(report.lines.at(-1)).toBe('2 affirmations sur 12 n’ont pas de source');
 	});
 });
 
@@ -69,9 +69,22 @@ describe('findClaims', () => {
 		expect(findClaims('Section 12 says 1,500 cars. "hi 3 there" and article  7(3) in "x".')).toEqual([
 			{ kind: 'reference', label: 'Section 12', needle: 'Section 12' },
 			{ kind: 'figure', label: '1,500 cars', needle: '1,500' },
-			{ kind: 'quote', label: '"hi 3 there"', needle: 'hi 3 there' },
+			{ kind: 'quote', label: '« hi 3 there »', needle: 'hi 3 there' },
 			{ kind: 'reference', label: 'article  7(3)', needle: 'article  7(3)' },
-			{ kind: 'quote', label: '"x"', needle: 'x' },
+			{ kind: 'quote', label: '« x »', needle: 'x' },
+		]);
+	});
+	it('reads French text: « » quotes, thousands grouped with a space, accents and % after a figure', () => {
+		const text =
+			'L’équipe a compté 7 200 voyageurs, soit 38 % de plus. Elle a dit : « bonjour 3 fois ». Puis 12 de plus, 2 à 3 élus et 1 500 000 €.';
+		expect(findClaims(text)).toEqual([
+			{ kind: 'figure', label: '7 200 voyageurs', needle: '7 200' },
+			{ kind: 'figure', label: '38 %', needle: '38' },
+			{ kind: 'quote', label: '« bonjour 3 fois »', needle: 'bonjour 3 fois' },
+			{ kind: 'figure', label: '12', needle: '12' },
+			{ kind: 'figure', label: '2', needle: '2' },
+			{ kind: 'figure', label: '3 élus', needle: '3' },
+			{ kind: 'figure', label: '1 500 000', needle: '1 500 000' },
 		]);
 	});
 	it('shows a figure without the next word when that word is a stop word or not a word', () => {
@@ -87,7 +100,7 @@ describe('findClaims', () => {
 		expect(check('Nothing specific here.', SOURCES)).toEqual({
 			entries: [],
 			missing: 0,
-			lines: ['no quotes, references or figures found in the summary'],
+			lines: ['aucune citation, référence ou chiffre trouvé dans le résumé'],
 		});
 	});
 });
@@ -102,6 +115,17 @@ describe('matcher', () => {
 	});
 	it('copies the Python lookahead, which lets 1,500 match the start of 15000', () => {
 		expect(figure('1,500')('15000')).toBe(true);
+	});
+	it('matches a figure with its thousands grouped by a space, and never the end or start of a longer one', () => {
+		const seven = figure('7 200');
+		expect(
+			['compte 7 200 voyageurs', 'compte 7200', 'compte 7,200', 'compte 17 200', 'compte 7 200 000'].map(seven),
+		).toEqual([true, true, true, false, false]);
+		expect(['compte 7 200 voyageurs', 'compte 200 voyageurs', '200 000'].map(figure('200'))).toEqual([
+			false,
+			true,
+			false,
+		]);
 	});
 	it('matches a reference with any case and any amount of whitespace', () => {
 		expect(matcher({ kind: 'reference', label: '', needle: 'article  7(3)' })('Article 7(3) of')).toBe(true);

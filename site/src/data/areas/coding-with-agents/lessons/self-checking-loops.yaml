@@ -14,7 +14,7 @@ introduces: [bounded-self-checking-loops, deterministic-gates]
 assumes:
   - objective: safety/verifies-output/checks-claims
     lesson: safety/spotting-hallucination
-    section: run-the-check
+    section: lancer-la-vérification
   - objective: coding-with-agents/verifies-agent-work/observes-and-debugs
     lesson: coding-with-agents/observing-and-debugging
     section: reproduce-it-first

@@ -11,8 +11,12 @@
  * nothing more: a found figure may stand for a different thing in the
  * source, so the report shows the sentence for a person to read.
  *
+ * French translation: a quote is in « » or in straight double quotes, a
+ * figure may group its thousands with a space (7 200), and the word after a
+ * figure may have accents or be a percent sign (38 %).
+ *
  * Where JavaScript can't see what Python sees, the result can differ. Each
- * case is text a summary of an English report rarely holds:
+ * case is text a summary of a French report rarely holds:
  *
  * - Python's `\d` and `\b` also match non-ASCII digits and letters, and
  *   JavaScript's match ASCII only, so a figure written in other digits is
@@ -59,13 +63,16 @@ export interface Report {
 	lines: string[];
 }
 
-const QUOTE = /"([^"]+)"/g;
+const QUOTE = /"([^"]+)"|«\s*([^»]+?)\s*»/g;
 const REFERENCE = /\b(?:article|section)\s+\d+(?:\(\d+\))?/gi;
-const NUMBER = /\d[\d,]*(?:\.\d+)?/g;
-const NEXT_WORD = /\s+([A-Za-z]+)/y;
+const NUMBER = /\d{1,3}(?: \d{3})+(?![\d,])|\d[\d,]*(?:\.\d+)?/g;
+const NEXT_WORD = /\s+([A-Za-zÀ-ÿ]+|%)/y;
 
-/** A figure is shown with the word after it ("38 percent"), unless that word says nothing about what the number counts. */
-const STOP_WORDS = new Set(['a', 'an', 'and', 'in', 'of', 'on', 'or', 'the', 'to']);
+/** A figure is shown with the word after it ("38 %"), unless that word says nothing about what the number counts. */
+const STOP_WORDS = new Set([
+	...['a', 'an', 'and', 'in', 'of', 'on', 'or', 'the', 'to'],
+	...['à', 'au', 'aux', 'd', 'de', 'des', 'du', 'en', 'et', 'l', 'la', 'le', 'les', 'ou', 'un', 'une'],
+]);
 
 /** `squash`: lower-case the text and collapse every run of whitespace to one space. */
 export function squash(text: string): string {
@@ -82,8 +89,8 @@ export function findClaims(text: string): Claim[] {
 	const found: { start: number; claim: Claim }[] = [];
 	const taken: [number, number][] = [];
 	for (const m of text.matchAll(QUOTE)) {
-		const quoted = m[1] ?? '';
-		found.push({ start: m.index, claim: { kind: 'quote', label: `"${quoted}"`, needle: quoted } });
+		const quoted = m[1] ?? m[2] ?? '';
+		found.push({ start: m.index, claim: { kind: 'quote', label: `« ${quoted} »`, needle: quoted } });
 		taken.push([m.index, m.index + m[0].length]);
 	}
 	for (const m of text.matchAll(REFERENCE)) {
@@ -99,7 +106,7 @@ export function findClaims(text: string): Claim[] {
 		if (word !== undefined && !STOP_WORDS.has(word.toLowerCase())) label += ` ${word}`;
 		found.push({ start: m.index, claim: { kind: 'figure', label, needle: m[0] } });
 	}
-	// Two claims never start at one position: a quote starts with ", a reference with a letter and a figure with a digit.
+	// Two claims never start at one position: a quote starts with " or «, a reference with a letter and a figure with a digit.
 	found.sort((a, b) => a.start - b.start);
 	return found.map((f) => f.claim);
 }
@@ -114,8 +121,9 @@ export function matcher(claim: Claim): (line: string) => boolean {
 		const pattern = new RegExp(claim.needle.split(/\s+/).filter(Boolean).map(reEscape).join('\\s+'), 'i');
 		return (line) => pattern.test(line);
 	}
-	const digits = claim.needle.replaceAll(',', '');
-	const pattern = new RegExp(`(?<![\\d,.])${[...digits].map(reEscape).join(',?')}(?![\\d,.]\\d)`);
+	const digits = claim.needle.replaceAll(',', '').replaceAll(' ', '');
+	const body = [...digits].map(reEscape).join('[, ]?');
+	const pattern = new RegExp(`(?<![\\d,.])(?<!\\d )${body}(?![\\d,.]\\d)(?! \\d{3})`);
 	return (line) => pattern.test(line);
 }
 
@@ -141,19 +149,22 @@ export function lookUp(claim: Claim, sources: readonly Source[]): Hit | null {
 export function check(summary: string, sources: readonly Source[]): Report {
 	const claims = findClaims(summary);
 	if (claims.length === 0)
-		return { entries: [], missing: 0, lines: ['no quotes, references or figures found in the summary'] };
+		return { entries: [], missing: 0, lines: ['aucune citation, référence ou chiffre trouvé dans le résumé'] };
 	const entries = claims.map((claim) => ({ claim, hit: lookUp(claim, sources) }));
 	const lines: string[] = [];
 	let missing = 0;
 	for (const { claim, hit } of entries) {
 		if (hit === null) {
 			missing += 1;
-			lines.push(`NO SOURCE  ${claim.label}`);
+			lines.push(`SANS SOURCE  ${claim.label}`);
 		} else {
-			lines.push(`found      ${claim.label}`);
-			lines.push(`           ${hit.name}:${hit.number}  ${hit.line}`);
+			lines.push(`trouvé       ${claim.label}`);
+			lines.push(`             ${hit.name}:${hit.number}  ${hit.line}`);
 		}
 	}
-	lines.push(`${missing} of ${claims.length} claims have no source`);
+	const many = missing > 1;
+	lines.push(
+		`${missing} ${many ? 'affirmations' : 'affirmation'} sur ${claims.length} ${many ? 'n’ont' : 'n’a'} pas de source`,
+	);
 	return { entries, missing, lines };
 }

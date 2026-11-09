@@ -4,8 +4,8 @@ A model's summary of a document is fluent whether or not the document says
 what the summary says. This script pulls the specifics out of a summary and
 looks each one up in the sources: every quoted passage, every reference of
 the form `article 7(3)` or `section 12`, and every figure. It prints one
-entry per claim, `found` with the source file, line and sentence, or
-`NO SOURCE`, then a summary line.
+entry per claim, `trouvé` with the source file, line and sentence, or
+`SANS SOURCE`, then a summary line.
 
 The sources are the `.txt` files in the `sources/` directory next to this
 script, written one sentence per line so that an entry can point at a line.
@@ -14,7 +14,7 @@ script, written one sentence per line so that an entry can point at a line.
   the amount of whitespace.
 - A reference is found when the same article or section number appears.
 - A figure is found when the same number appears, with or without a
-  thousands comma, as a whole number and never as part of a longer one.
+  thousands comma or space, as a whole number and never as part of a longer one.
 
 The script checks presence, and nothing more. A number that is found may
 still be used for a different thing in the source, so the entry shows the
@@ -37,14 +37,18 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 SOURCES = os.path.join(HERE, "sources")
 
-QUOTE = re.compile(r'"([^"]+)"')
+# French translation: a quote is in « » or in straight double quotes, a
+# figure may group its thousands with a space (7 200), and the word after a
+# figure may have accents or be a percent sign (38 %).
+QUOTE = re.compile(r'"([^"]+)"|«\s*([^»]+?)\s*»')
 REFERENCE = re.compile(r"\b(?:article|section)\s+\d+(?:\(\d+\))?", re.IGNORECASE)
-NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
-NEXT_WORD = re.compile(r"\s+([A-Za-z]+)")
+NUMBER = re.compile(r"\d{1,3}(?: \d{3})+(?![\d,])|\d[\d,]*(?:\.\d+)?")
+NEXT_WORD = re.compile(r"\s+([A-Za-zÀ-ÿ]+|%)")
 
 # A figure is shown with the word after it ("38 percent"), unless that word
 # says nothing about what the number counts.
 STOP_WORDS = {"a", "an", "and", "in", "of", "on", "or", "the", "to"}
+STOP_WORDS |= {"à", "au", "aux", "d", "de", "des", "du", "en", "et", "l", "la", "le", "les", "ou", "un", "une"}
 
 
 def squash(text):
@@ -61,7 +65,8 @@ def find_claims(text):
     found = []
     taken = []
     for match in QUOTE.finditer(text):
-        found.append((match.start(), "quote", f'"{match.group(1)}"', match.group(1)))
+        quoted = match.group(1) or match.group(2)
+        found.append((match.start(), "quote", f"« {quoted} »", quoted))
         taken.append((match.start(), match.end()))
     for match in REFERENCE.finditer(text):
         found.append((match.start(), "reference", match.group(0), match.group(0)))
@@ -86,8 +91,9 @@ def matcher(kind, needle):
     if kind == "reference":
         pattern = re.compile(r"\s+".join(re.escape(part) for part in needle.split()), re.IGNORECASE)
         return lambda line: pattern.search(line) is not None
-    digits = needle.replace(",", "")
-    pattern = re.compile(r"(?<![\d,.])" + ",?".join(re.escape(d) for d in digits) + r"(?![\d,.]\d)")
+    digits = needle.replace(",", "").replace(" ", "")
+    body = "[, ]?".join(re.escape(d) for d in digits)
+    pattern = re.compile(r"(?<![\d,.])(?<!\d )" + body + r"(?![\d,.]\d)(?! \d{3})")
     return lambda line: pattern.search(line) is not None
 
 
@@ -119,13 +125,15 @@ def report(claims, sources, missing_only):
         hit = look_up(kind, needle, sources)
         if hit is None:
             missing += 1
-            print(label if missing_only else f"NO SOURCE  {label}")
+            print(label if missing_only else f"SANS SOURCE  {label}")
         elif not missing_only:
             name, number, line = hit
-            print(f"found      {label}")
-            print(f"           {name}:{number}  {line}")
+            print(f"trouvé       {label}")
+            print(f"             {name}:{number}  {line}")
     if not missing_only:
-        print(f"{missing} of {len(claims)} claims have no source")
+        claims_word = "affirmations" if missing > 1 else "affirmation"
+        verb = "n’ont" if missing > 1 else "n’a"
+        print(f"{missing} {claims_word} sur {len(claims)} {verb} pas de source")
     return missing
 
 
@@ -133,17 +141,17 @@ def main(argv):
     args = [a for a in argv[1:] if a != "--missing"]
     missing_only = "--missing" in argv[1:]
     if len(args) != 1:
-        print("usage: python3 check_claims.py SUMMARY [--missing]")
+        print("usage : python3 check_claims.py RÉSUMÉ [--missing]")
         return 2
     try:
         with open(args[0], encoding="utf-8") as f:
             text = f.read()
     except OSError as exc:
-        print(f"FAIL: cannot read {args[0]}: {exc.strerror}")
+        print(f"ÉCHEC : impossible de lire {args[0]} : {exc.strerror}")
         return 1
     claims = find_claims(text)
     if not claims:
-        print("no quotes, references or figures found in the summary")
+        print("aucune citation, référence ou chiffre trouvé dans le résumé")
         return 0
     missing = report(claims, read_sources(SOURCES), missing_only)
     return 1 if missing else 0

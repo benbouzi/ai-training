@@ -1,258 +1,271 @@
 import { Choice, MultiChoice, Pitfall, Exercise, Recap, Sort, Scenario } from '@components/lesson';
 import ClaimChecker from '@components/widgets/ClaimChecker.astro';
 
-In this lesson we read a one-paragraph summary that a chat assistant wrote
-from a council report and decide which details in it we would check. A
-checker on the page then looks up every figure, quote and reference from
-the summary in the report and the meeting minutes. Some of the details have no
-source. By the end, the way a detail is written tells you that it is a
-claim to check before the summary leaves your desk.
+Dans cette leçon, nous lisons un résumé d’un paragraphe qu’un assistant
+conversationnel a rédigé à partir d’un rapport municipal, et nous décidons
+quels détails nous vérifierions. Un vérificateur sur la page cherche ensuite
+chaque chiffre, chaque citation et chaque référence du résumé dans le
+rapport et dans le compte rendu de la séance. Certains détails n’ont pas de
+source. À la fin, la façon dont un détail est écrit vous dira qu’il s’agit
+d’une affirmation à vérifier avant que le résumé ne quitte votre bureau.
 
-The report, the meeting minutes and the two summaries are fictional and
-were written for this lesson. The summaries read the way a model's summary
-reads, and the assistant's words are the author's. The checker on this
-page runs in your browser and sends your text nowhere.
+Le rapport, le compte rendu et les deux résumés sont fictifs et ont été
+écrits pour cette leçon. Les résumés se lisent comme le résumé d’un modèle,
+et les mots de l’assistant sont ceux de l’auteur. Le vérificateur de cette
+page fonctionne dans votre navigateur et n’envoie votre texte nulle part.
 
-## A summary that reads well
+## Un résumé qui se lit bien
 
-A colleague pastes a council report into a chat assistant and asks for a
-short summary to put in a briefing. This is the summary.
+Une collègue colle un rapport municipal dans un assistant conversationnel et
+demande un résumé court à mettre dans une note d’information. Voici le
+résumé.
 
-> The council's 2025 review of cycle parking at the station finds it short
-> of racks. On a weekday morning in March the team counted 890 bicycles
-> against 640 racks. Article 7(3) of the Cycle Parking Ordinance requires
-> one rack per 50 passengers, so the station is below the legal minimum.
-> Locking the covered section at night cut theft by 38 percent between 2022
-> and 2024. The report recommends adding 300 racks, of which 120 covered,
-> and notes that the station handles about 9,000 passengers a day. Council
-> chair Rhea Dunmore told the meeting: "Racks before car parks, every time."
+> L’étude 2025 de la commune sur le stationnement des vélos à la gare
+> conclut qu’il manque des arceaux. Un matin de semaine en mars, l’équipe a
+> compté 890 vélos pour 640 arceaux. L’article 7(3) du règlement sur le
+> stationnement des vélos impose un arceau pour 50 voyageurs, donc la gare
+> est sous le minimum légal. La fermeture nocturne de la partie couverte a
+> réduit les vols de 38 % entre 2022 et 2024. Le rapport recommande
+> d’ajouter 300 arceaux, dont 120 couverts, et note que la gare accueille
+> environ 9 000 voyageurs par jour. La présidente du conseil, Rhea Dunmore,
+> a déclaré en séance : « Des arceaux avant les parkings, toujours. »
 
-The paragraph reads well, and it has the kind of detail a briefing wants,
-from an article number to a quote with a name on it. Before reading on, decide which of those details you would check against the report
-before you put the paragraph in a briefing, and write them down.
+Le paragraphe se lit bien, et il contient le genre de détails qu’une note
+d’information demande, d’un numéro d’article à une citation signée d’un nom.
+Avant de poursuivre, décidez lesquels de ces détails vous vérifieriez dans
+le rapport avant de mettre le paragraphe dans une note, et notez-les.
 
-## Run the check
+## Lancer la vérification
 
-The checker below has the council report and the minutes of the meeting,
-one sentence per line, and the summary in its text box. It pulls the
-specifics out of the summary and looks each one up in the sources. It
-looks for quoted passages and for references written like `article 7(3)`
-or `section 12`. It also looks for figures, and shows each one as the
-number with the word after it, as in `890 bicycles`. For a claim it finds, it
-prints `found` with the source file, the line number and the sentence. For
-a claim it can't find, it prints `NO SOURCE`.
+Le vérificateur ci-dessous contient le rapport municipal et le compte rendu
+de la séance, une phrase par ligne, et le résumé dans sa zone de texte. Il
+extrait les détails précis du résumé et cherche chacun dans les sources. Il
+cherche les passages entre guillemets et les références écrites comme
+`article 7(3)` ou `section 12`. Il cherche aussi les chiffres, et affiche
+chacun avec le mot qui le suit, comme `890 vélos`. Pour une affirmation
+qu’il trouve, il affiche `trouvé` avec le fichier source, le numéro de ligne
+et la phrase. Pour une affirmation qu’il ne trouve pas, il affiche
+`SANS SOURCE`.
 
 <ClaimChecker summary="safety/spotting-hallucination/sample/summary_1.txt"
   sources={['safety/spotting-hallucination/sources/report.txt', 'safety/spotting-hallucination/sources/minutes.txt']} />
 
 <MultiChoice id="predict-the-missing-claims" objective="safety/verifies-output/checks-claims"
   concepts={['hallucination-in-practice']} revision={2}
-  context="A chat assistant wrote a one-paragraph summary of a council report on cycle parking at a station, and the learner compares its details with the report and the minutes of the meeting. On the lesson page a checker shows these report and minutes sentences, one per line, and has a Check button that looks up each detail. The report says that on a weekday morning in March the team counted 890 bicycles against 640 racks. It says that Article 7(3) of the Cycle Parking Ordinance sets a minimum of one rack per 100 boarding passengers, and that the rail operator counts 7,200 boarding passengers on an average weekday. It says that reported theft fell by roughly a third between 2022 and 2024, and that the team recommends adding 300 racks, of which 120 covered. The minutes say that the chair, Rhea Dunmore, said: We need racks before we need another car park. The summary says 890 bicycles against 640 racks, one rack per 50 passengers under Article 7(3), a 38 percent fall in theft between 2022 and 2024, 300 racks of which 120 covered, about 9,000 passengers a day, and the chair saying: Racks before car parks, every time."
-  title="Which details have no source?"
-  hint="For each detail, find the sentence in the report or the minutes that gives it. Does that sentence give the same figure or the same words?"
+  context="Un assistant conversationnel a rédigé un résumé d’un paragraphe d’un rapport municipal sur le stationnement des vélos à une gare, et l’apprenant compare ses détails avec le rapport et le compte rendu de la séance. Sur la page de la leçon, un vérificateur affiche ces phrases du rapport et du compte rendu, une par ligne, et a un bouton Vérifier qui cherche chaque détail. Le rapport dit qu’un matin de semaine en mars, l’équipe a compté 890 vélos pour 640 arceaux. Il dit que l’article 7(3) du règlement sur le stationnement des vélos fixe un minimum d’un arceau pour 100 voyageurs montants, et que l’exploitant ferroviaire compte 7 200 voyageurs montants un jour de semaine moyen. Il dit que les vols déclarés ont baissé d’environ un tiers entre 2022 et 2024, et que l’équipe recommande d’ajouter 300 arceaux, dont 120 couverts. Le compte rendu dit que la présidente, Rhea Dunmore, a dit : Il nous faut des arceaux avant un nouveau parking. Le résumé dit 890 vélos pour 640 arceaux, un arceau pour 50 voyageurs selon l’article 7(3), une baisse des vols de 38 % entre 2022 et 2024, 300 arceaux dont 120 couverts, environ 9 000 voyageurs par jour, et la présidente qui dit : Des arceaux avant les parkings, toujours."
+  title="Quels détails n’ont pas de source ?"
+  hint="Pour chaque détail, trouvez la phrase du rapport ou du compte rendu qui le donne. Cette phrase donne-t-elle le même chiffre ou les mêmes mots ?"
   options={[
-    { text: 'The count of 890 bicycles against 640 racks', why: 'The report gives both figures in one sentence: on a weekday morning in March the team counted 890 bicycles parked at the station against 640 racks.' },
-    { text: 'The reference to Article 7(3) of the Cycle Parking Ordinance', why: 'The report names Article 7(3) of the Cycle Parking Ordinance in its sentence on the minimum number of racks. The reference has a source. What the summary says the article requires is a separate detail.' },
-    { text: 'The minimum of one rack per 50 passengers', correct: true },
-    { text: 'The 38 percent fall in theft', correct: true },
-    { text: 'The years 2022 and 2024 for the fall in theft', why: 'The report gives both years in its sentence on theft at the station, which says the fall came after the covered section was locked at night.' },
-    { text: 'The recommendation of 300 racks, of which 120 covered', why: 'The report gives it in the same words: the team recommends adding 300 racks, of which 120 covered, on the eastern forecourt.' },
-    { text: 'About 9,000 passengers a day', correct: true },
-    { text: 'The chair saying "Racks before car parks, every time."', correct: true },
+    { text: 'Le comptage de 890 vélos pour 640 arceaux', why: 'Le rapport donne les deux chiffres dans une même phrase : un matin de semaine en mars, l’équipe a compté 890 vélos garés à la gare pour 640 arceaux.' },
+    { text: 'La référence à l’article 7(3) du règlement sur le stationnement des vélos', why: 'Le rapport cite l’article 7(3) du règlement dans sa phrase sur le nombre minimum d’arceaux. La référence a une source. Ce que le résumé dit que l’article impose est un autre détail.' },
+    { text: 'Le minimum d’un arceau pour 50 voyageurs', correct: true },
+    { text: 'La baisse des vols de 38 %', correct: true },
+    { text: 'Les années 2022 et 2024 pour la baisse des vols', why: 'Le rapport donne les deux années dans sa phrase sur les vols à la gare, qui dit que la baisse a suivi la fermeture nocturne de la partie couverte.' },
+    { text: 'La recommandation de 300 arceaux, dont 120 couverts', why: 'Le rapport la donne dans les mêmes termes : l’équipe recommande d’ajouter 300 arceaux, dont 120 couverts, sur le parvis est.' },
+    { text: 'Environ 9 000 voyageurs par jour', correct: true },
+    { text: 'La présidente qui dit « Des arceaux avant les parkings, toujours. »', correct: true },
   ]}>
-The checker above shows the report and the minutes, one sentence per
-line. Before you press Check in the checker, compare each detail of the summary with
-those sentences. A detail has a source when a sentence gives the same
-figure or the same words. Which of these details appear in neither the
-report nor the minutes?
+Le vérificateur ci-dessus affiche le rapport et le compte rendu, une phrase
+par ligne. Sans appuyer encore sur Vérifier, comparez chaque détail du
+résumé avec ces phrases. Un détail a une source quand une phrase donne le même
+chiffre ou les mêmes mots. Lesquels de ces détails ne figurent ni dans le
+rapport ni dans le compte rendu ?
 </MultiChoice>
 
-These are the four claims with no source, in the order the summary makes
-them.
+Voici les quatre affirmations sans source, dans l’ordre où le résumé les
+avance.
 
 ```text
-50 passengers
-38 percent
-9,000 passengers
-"Racks before car parks, every time."
+50 voyageurs
+38 %
+9 000 voyageurs
+« Des arceaux avant les parkings, toujours. »
 ```
 
-The whole report shows every claim with the source line it was found in.
+Le rapport complet montre chaque affirmation avec la ligne de la source où
+elle a été trouvée.
 
 ```text
-found      2025 review
-           minutes.txt:1  Council meeting, 12 June 2025, item 4: station cycle parking.
-found      890 bicycles
-           report.txt:3  On a weekday morning in March the team counted 890 bicycles parked at the station against 640 racks.
-found      640 racks
-           report.txt:3  On a weekday morning in March the team counted 890 bicycles parked at the station against 640 racks.
-found      Article 7(3)
-           report.txt:5  Article 7(3) of the Cycle Parking Ordinance sets a minimum of one rack per 100 boarding passengers.
-NO SOURCE  50 passengers
-NO SOURCE  38 percent
-found      2022
-           report.txt:7  Reported bicycle theft at the station fell by roughly a third between 2022 and 2024, after the covered section was locked at night.
-found      2024
-           report.txt:7  Reported bicycle theft at the station fell by roughly a third between 2022 and 2024, after the covered section was locked at night.
-found      300 racks
-           report.txt:8  The team recommends adding 300 racks, of which 120 covered, on the eastern forecourt.
-found      120 covered
-           report.txt:8  The team recommends adding 300 racks, of which 120 covered, on the eastern forecourt.
-NO SOURCE  9,000 passengers
-NO SOURCE  "Racks before car parks, every time."
-4 of 12 claims have no source
+trouvé       2025
+             minutes.txt:1  Conseil municipal du 12 juin 2025, point 4 : stationnement des vélos à la gare.
+trouvé       890 vélos
+             report.txt:3  Un matin de semaine en mars, l’équipe a compté 890 vélos garés à la gare pour 640 arceaux.
+trouvé       640 arceaux
+             report.txt:3  Un matin de semaine en mars, l’équipe a compté 890 vélos garés à la gare pour 640 arceaux.
+trouvé       article 7(3)
+             report.txt:5  L’article 7(3) du règlement sur le stationnement des vélos fixe un minimum d’un arceau pour 100 voyageurs montants.
+SANS SOURCE  50 voyageurs
+SANS SOURCE  38 %
+trouvé       2022
+             report.txt:7  Les vols de vélos déclarés à la gare ont baissé d’environ un tiers entre 2022 et 2024, après la fermeture nocturne de la partie couverte.
+trouvé       2024
+             report.txt:7  Les vols de vélos déclarés à la gare ont baissé d’environ un tiers entre 2022 et 2024, après la fermeture nocturne de la partie couverte.
+trouvé       300 arceaux
+             report.txt:8  L’équipe recommande d’ajouter 300 arceaux, dont 120 couverts, sur le parvis est.
+trouvé       120 couverts
+             report.txt:8  L’équipe recommande d’ajouter 300 arceaux, dont 120 couverts, sur le parvis est.
+SANS SOURCE  9 000 voyageurs
+SANS SOURCE  « Des arceaux avant les parkings, toujours. »
+4 affirmations sur 12 n’ont pas de source
 ```
 
-Read the entry for `Article 7(3)`. The checker found the article, and the
-sentence next to it says one rack per 100 boarding passengers. The summary
-says 50. The article number is real, in this fictional town, and the
-contents attached to it are wrong, which turns "the station meets the
-minimum" into "the station is below the legal minimum". `found` means the
-number or the reference appears in a source. Whether the source says what
-the summary says is still a person's reading, and the sentence is printed
-so that you can do it in one glance.
+Lisez l’entrée de `article 7(3)`. Le vérificateur a trouvé l’article, et la
+phrase à côté dit un arceau pour 100 voyageurs montants. Le résumé dit 50.
+Le numéro d’article est réel, dans cette ville fictive, et le contenu qui
+lui est attribué est faux, ce qui change « la gare respecte le minimum » en
+« la gare est sous le minimum légal ». `trouvé` signifie que le nombre ou la
+référence figure dans une source. Savoir si la source dit ce que dit le
+résumé reste une lecture humaine, et la phrase est affichée pour que vous la
+fassiez d’un coup d’œil.
 
-Two of the four missing claims are details the opener asked about, the
-percentage and the quote, and a third is the rule attached to the article
-number the opener also asked about. The report says
-"roughly a third", and the model wrote 38 percent. The minutes have the
-chair saying "We need racks before we need another car park". The line in
-the summary is shorter, she never said it, and it has her name on it. The
-fourth, 9,000 passengers a day, gets its own pitfall.
+Deux des quatre affirmations manquantes sont des détails dont parlait le
+début de la leçon, le pourcentage et la citation, et une troisième est la
+règle attribuée au numéro d’article dont il parlait aussi. Le rapport dit
+« environ un tiers », et le modèle a écrit 38 %. Dans le compte rendu, la
+présidente dit « Il nous faut des arceaux avant un nouveau parking ». La
+phrase du résumé est plus courte, elle ne l’a jamais dite, et elle porte
+son nom. La quatrième, 9 000 voyageurs par jour, a son propre piège.
 
-<Pitfall title="It happens to be true">
-The learner sees `NO SOURCE 9,000 passengers`, looks at the rail
-operator's page, and finds that the station has about 9,000 passengers a
-day, boarding and alighting together. True, so they leave the sentence in.
-The sentence says that the report notes it, and the report says 7,200
-boarding passengers, the number the ordinance counts. The next reader cites
-the report for a figure it never gave. Rule: a claim that isn't in the
-source gets its own source named next to it, or comes out. The check is
-"does the source say this", and "is this true" is a different question
-with a different answer.
+<Pitfall title="Il se trouve que c’est vrai">
+L’apprenant voit `SANS SOURCE  9 000 voyageurs`, consulte la page de
+l’exploitant ferroviaire et trouve que la gare accueille environ 9 000
+voyageurs par jour, montées et descentes comprises. C’est vrai, donc il
+laisse la phrase. Or la phrase dit que le rapport le note, et le rapport dit
+7 200 voyageurs montants, le nombre que compte le règlement. Le lecteur
+suivant cite le rapport pour un chiffre que le rapport n’a jamais donné.
+Règle : une affirmation absente de la source reçoit sa propre source, citée
+à côté, ou elle est retirée. La vérification demande « la source dit-elle
+cela ? », et « est-ce vrai ? » est une autre question, avec une autre
+réponse.
 </Pitfall>
 
-## Specificity is the tell
+## La précision est l’indice
 
-Every claim that came back with no source is a specific the source
-doesn't give: an exact percentage where the report says roughly a third,
-and a quotable line where the minutes have a longer sentence. That is what
-**hallucination in practice** looks like. The model predicts the most
-likely continuation, so a gap in what it knows is filled with something of
-the right form, in the same confident prose as the rest
-(@Academy ai-capabilities-and-limitations). The lesson
-[How a language model works](/concepts/how-models-work/#les-défaillances-nommées) names
-that failure. This lesson is about recognizing it, and the summary of a
-pasted document is where you meet it most: the model has the source in
-front of it and still drifts in the specifics, because the specifics are
-where the prediction is least constrained. The precision is a property of
-the text, and the text is fluent whether or not the detail has a source.
+Chaque affirmation revenue sans source est un détail précis que la source
+ne donne pas : un pourcentage exact là où le rapport dit environ un tiers,
+et une phrase facile à citer là où le compte rendu a une phrase plus longue.
+Voilà à quoi ressemble **l’hallucination en pratique**. Le modèle prédit la
+suite la plus probable, donc une lacune dans ce qu’il sait est comblée par
+quelque chose de la bonne forme, dans la même prose assurée que le reste
+(@Academy ai-capabilities-and-limitations). La leçon
+[Comment fonctionne un modèle de langage](/concepts/how-models-work/#les-défaillances-nommées)
+nomme cette défaillance. Cette leçon apprend à la reconnaître, et le résumé
+d’un document collé est l’endroit où vous la rencontrez le plus : le modèle
+a la source sous les yeux et dérive quand même sur les détails précis, parce
+que c’est là que la prédiction est la moins contrainte. La précision est une
+propriété du texte, et le texte est fluide que le détail ait une source ou
+non.
 
-In daily work the tell shows up in these forms.
+Dans le travail de tous les jours, l’indice prend ces formes.
 
-- **The reference with the wrong contents.** The article number exists, the
-  rule attached to it is different, and a reader who checks that the article
-  exists stops there.
-- **The function that almost exists.** A model asked for a spreadsheet
-  formula answers with `TEXTJOINIF`. `TEXTJOIN` and `SUMIF` are real, so
-  the name reads right, and the spreadsheet rejects it. The form was
-  predicted from two real forms.
-- **The quote from a speech never given.** The right person, the right
-  meeting, a line that sounds like her, shorter and sharper than anything
-  in the minutes.
-- **The summary that adds a point.** The second summary, in the exercise
-  below, prices the 300 racks at 410,000, and the report says no cost estimate was made. The
-  checker catches this one because the added point contains a number. An
-  added point without a number is caught only by reading the source.
+- **La référence au mauvais contenu.** Le numéro d’article existe, la règle
+  qui lui est attribuée est différente, et un lecteur qui vérifie que
+  l’article existe s’arrête là.
+- **La fonction qui existe presque.** Un modèle à qui l’on demande une
+  formule de tableur répond avec `TEXTJOINIF`. `TEXTJOIN` et `SUMIF` existent
+  (`JOINDRE.TEXTE` et `SOMME.SI` dans un tableur en français), donc le nom
+  semble juste, et le tableur le rejette. La forme a été prédite à partir de
+  deux formes réelles.
+- **La citation d’un discours jamais prononcé.** La bonne personne, la bonne
+  séance, une phrase qui lui ressemble, plus courte et plus percutante que
+  tout ce que contient le compte rendu.
+- **Le résumé qui ajoute un point.** Le second résumé, dans l’exercice
+  ci-dessous, chiffre les 300 arceaux à 410 000, et le rapport dit qu’aucune
+  estimation des coûts n’a été faite. Le vérificateur repère celui-ci parce
+  que le point ajouté contient un nombre. Un point ajouté sans nombre n’est
+  repéré qu’en lisant la source.
 
-The checker is a stand-in for a habit. Read a model's output with the
-specifics marked in your head, and for each one ask where it came from. A
-detail with a source you can open is a fact. A detail without one is a
-claim, however precise it reads, and the precision is the reason to check
-it first.
+Le vérificateur remplace une habitude. Lisez la sortie d’un modèle en
+repérant mentalement les détails précis, et demandez pour chacun d’où il
+vient. Un détail dont vous pouvez ouvrir la source est un fait. Un détail
+sans source est une affirmation, si précise qu’elle paraisse, et cette
+précision est la raison de la vérifier en premier.
 
 <Choice id="which-claim-first" objective="safety/verifies-output/checks-claims"
   concepts={['hallucination-in-practice']}
-  context="A colleague asked a chat assistant to summarize a review of a supplier contract, and the summary has four claims in it. The learner has time to check one claim against the contract before the summary goes into a meeting."
-  title="Which claim do you check first?"
-  hint="Which claim is precise enough to act on, and precise enough that the model could have produced its form without the contract?"
+  context="Une collègue a demandé à un assistant conversationnel de résumer l’examen d’un contrat fournisseur, et le résumé contient quatre affirmations. L’apprenant a le temps d’en vérifier une dans le contrat avant que le résumé ne parte en réunion."
+  title="Quelle affirmation vérifiez-vous en premier ?"
+  hint="Quelle affirmation est assez précise pour qu’on agisse dessus, et assez précise pour que le modèle ait pu en produire la forme sans le contrat ?"
   options={[
-    { text: 'The review recommends renewing the contract.', why: 'A general claim that the whole document either supports or does not. A skim of the conclusion settles it, and getting it wrong misleads less than a wrong clause.' },
-    { text: 'Clause 12.4 lets either side end the contract with 30 days notice.', correct: true },
-    { text: 'The supplier has been reliable over the contract period.', why: 'A judgment with no specific in it. It is worth confirming, but a model rarely invents a general impression, and a reader treats it as opinion.' },
-    { text: 'Prices went up in the last contract period.', why: 'A direction without a figure. It is easy to confirm from the price table, and there is no precise number here for a reader to act on.' },
+    { text: 'L’examen recommande de renouveler le contrat.', why: 'Une affirmation générale, que le document entier confirme ou non. Un coup d’œil à la conclusion la tranche, et une erreur ici trompe moins qu’une clause fausse.' },
+    { text: 'La clause 12.4 permet à chaque partie de résilier avec 30 jours de préavis.', correct: true },
+    { text: 'Le fournisseur a été fiable pendant toute la durée du contrat.', why: 'Un jugement sans détail précis. Il mérite d’être confirmé, mais un modèle invente rarement une impression générale, et un lecteur la prend comme une opinion.' },
+    { text: 'Les prix ont augmenté pendant la dernière période du contrat.', why: 'Une tendance sans chiffre. Elle se confirme facilement dans le tableau des prix, et elle ne donne aucun nombre précis sur lequel un lecteur agirait.' },
   ]}>
 
-A colleague's summary of a supplier contract review has these four claims.
-You have time to check one against the contract before the meeting. Which
-one first?
+Le résumé d’une collègue sur l’examen d’un contrat fournisseur contient ces
+quatre affirmations. Vous avez le temps d’en vérifier une dans le contrat
+avant la réunion. Laquelle en premier ?
 
 </Choice>
 
 <Sort id="check-it-first" phase="review" objective="safety/verifies-output/checks-claims"
   concepts={['hallucination-in-practice']}
-  context="A model summarized a council report on parking at a station. The lesson says invented details concentrate in the specifics, and the more precise a detail is, the earlier it is checked against the source."
-  title="Which claims come first?" hint="Is the claim an exact figure, a reference, a quote or a name?"
-  buckets={['Check it first', 'Check it after the specifics']}
+  context="Un modèle a résumé un rapport municipal sur le stationnement à une gare. La leçon dit que les détails inventés se concentrent dans les détails précis, et que plus un détail est précis, plus tôt on le vérifie dans la source."
+  title="Quelles affirmations passent en premier ?" hint="L’affirmation est-elle un chiffre exact, une référence, une citation ou un nom ?"
+  buckets={['À vérifier en premier', 'À vérifier après les détails précis']}
   items={[
-    { text: 'Article 12(2) requires a permit for more than 50 racks.', bucket: 0 },
-    { text: 'Theft fell by 41 percent between 2023 and 2025.', bucket: 0 },
-    { text: 'The mayor said, "Bikes first, cars second."', bucket: 0 },
-    { text: 'The report discusses parking at the station.', bucket: 1 },
-    { text: 'The council wants more people to cycle.', bucket: 1 },
-    { text: 'The station is busy in the morning.', bucket: 1 },
+    { text: 'L’article 12(2) impose un permis au-delà de 50 arceaux.', bucket: 0 },
+    { text: 'Les vols ont baissé de 41 % entre 2023 et 2025.', bucket: 0 },
+    { text: 'Le maire a dit : « Les vélos d’abord, les voitures ensuite. »', bucket: 0 },
+    { text: 'Le rapport traite du stationnement à la gare.', bucket: 1 },
+    { text: 'La commune veut que plus de gens fassent du vélo.', bucket: 1 },
+    { text: 'La gare est très fréquentée le matin.', bucket: 1 },
   ]} />
 
 <Scenario id="the-real-article" phase="review" objective="safety/verifies-output/checks-claims"
   concepts={['hallucination-in-practice']}
-  context="A model's summary of a council report says that Article 9 requires one bicycle rack per 40 passengers. The report has an Article 9, and it is about the opening hours of the bicycle shed."
-  title="The article exists" hint="Did you check that the article exists, or what it says?"
+  context="Le résumé d’un rapport municipal fait par un modèle dit que l’article 9 impose un arceau à vélos pour 40 voyageurs. Le rapport a bien un article 9, et il porte sur les horaires d’ouverture de l’abri à vélos."
+  title="L’article existe" hint="Avez-vous vérifié que l’article existe, ou ce qu’il dit ?"
   options={[
-    { text: 'Keep the claim, because Article 9 is really in the report.', consequence: 'The next reader cites Article 9 for a rule it doesn\'t contain.' },
-    { text: 'Ask the model which article the rule is really in, and use its answer.', consequence: 'The model gives another article number with the same confidence, and you still haven\'t read it.' },
-    { text: 'Take the claim out, or name the source that does give the rule.', correct: true, consequence: 'The summary now says only what its sources say, and the next reader can cite it safely.' },
-    { text: 'Keep the claim and add "see Article 9" so the reader can check it.', consequence: 'The reader who checks finds opening hours. The one who doesn\'t repeats the rule.' },
+    { text: 'Garder l’affirmation, puisque l’article 9 figure bien dans le rapport.', consequence: 'Le lecteur suivant cite l’article 9 pour une règle qu’il ne contient pas.' },
+    { text: 'Demander au modèle dans quel article se trouve vraiment la règle, et utiliser sa réponse.', consequence: 'Le modèle donne un autre numéro d’article avec la même assurance, et vous ne l’avez toujours pas lu.' },
+    { text: 'Retirer l’affirmation, ou citer la source qui donne vraiment la règle.', correct: true, consequence: 'Le résumé ne dit plus que ce que disent ses sources, et le lecteur suivant peut le citer sans risque.' },
+    { text: 'Garder l’affirmation et ajouter « voir l’article 9 » pour que le lecteur vérifie.', consequence: 'Le lecteur qui vérifie trouve des horaires d’ouverture. Celui qui ne vérifie pas répète la règle.' },
   ]}>
 
-The summary cites Article 9 for a rule about racks. Article 9 exists and is
-about opening hours. What do you do with the claim?
+Le résumé cite l’article 9 pour une règle sur les arceaux. L’article 9
+existe et porte sur les horaires d’ouverture. Que faites-vous de
+l’affirmation ?
 
 </Scenario>
 
-<Exercise stretch="Write a third summary of the report yourself, with one invented specific in it, and give it to a colleague. Did they pick the invented one before they pasted it into the checker?">
+<Exercise stretch="Rédigez vous-même un troisième résumé du rapport, avec un détail précis inventé, et donnez-le à un collègue. A-t-il repéré le détail inventé avant de le coller dans le vérificateur ?">
 
-The box below holds a second summary of the same report. Read it before
-you press Check. For each figure, quote and reference in it, write down
-whether you expect the checker to find it in the sources or to print
-`NO SOURCE`, and one word on why. Then press Check and put the checker's
-answer next to yours. Ten minutes is enough. Doing the prediction first is
-what teaches your eye to stop at a specific before a checker does.
+La zone ci-dessous contient un second résumé du même rapport. Lisez-le avant
+d’appuyer sur Vérifier. Pour chaque chiffre, chaque citation et chaque
+référence qu’il contient, notez si vous attendez que le vérificateur le
+trouve dans les sources ou qu’il affiche `SANS SOURCE`, avec un mot pour
+dire pourquoi. Appuyez ensuite sur Vérifier et mettez la réponse du
+vérificateur à côté de la vôtre. Dix minutes suffisent. Faire la prédiction
+d’abord apprend à votre œil à s’arrêter sur un détail précis avant qu’un
+vérificateur ne le fasse.
 
 <ClaimChecker summary="safety/spotting-hallucination/sample/summary_2.txt"
   sources={['safety/spotting-hallucination/sources/report.txt', 'safety/spotting-hallucination/sources/minutes.txt']}
   showSources={false} />
 
-A good result is a two-column list, your prediction and the checker's
-answer, with a note on every row where they differ. Which claim did you
-predict wrong, and was it precise, derived from other numbers, or true
-and still without a source?
+Un bon résultat est une liste sur deux colonnes, votre prédiction et la
+réponse du vérificateur, avec une note sur chaque ligne où elles diffèrent.
+Quelle affirmation avez-vous mal prédite, et était-elle précise, dérivée
+d’autres nombres, ou vraie et pourtant sans source ?
 
 </Exercise>
 
 <Recap>
 
-1. A model's summary is fluent whether or not the source says what the
-   summary says. The precision of a detail is a property of the text, and
-   it says nothing about whether the detail has a source.
-2. Invented details concentrate in the specifics: an exact figure, a
-   reference, a quote, a name on a line. The tell is specificity without a
-   checkable source, and the more precise a detail is, the earlier it is
-   checked.
-3. Finding the reference or the number in the source is the start of the
-   check. Read the sentence around it and compare it with the summary,
-   because a real article number can come with a wrong rule.
-4. A claim that isn't in the source gets its own source named or comes
-   out, even when it happens to be true. The next reader will cite your
-   source for it.
+1. Le résumé d’un modèle est fluide, que la source dise ou non ce que dit le
+   résumé. La précision d’un détail est une propriété du texte, et elle ne
+   dit rien de l’existence d’une source pour ce détail.
+2. Les détails inventés se concentrent dans les détails précis : un chiffre
+   exact, une référence, une citation, un nom sur une phrase. L’indice est
+   une précision sans source vérifiable, et plus un détail est précis, plus
+   tôt on le vérifie.
+3. Trouver la référence ou le nombre dans la source est le début de la
+   vérification. Lisez la phrase autour et comparez-la avec le résumé, car
+   un vrai numéro d’article peut venir avec une règle fausse.
+4. Une affirmation absente de la source reçoit sa propre source, ou elle est
+   retirée, même quand il se trouve qu’elle est vraie. Le lecteur suivant
+   citera votre source pour elle.
 
 </Recap>

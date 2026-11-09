@@ -1,7 +1,7 @@
 /**
  * The claim checker script (`widgets/ClaimChecker.astro`): the Check button
  * checks the summary in the text box against the widget's sources and shows
- * the report, with each `NO SOURCE` line marked. An edit to the summary
+ * the report, with each `SANS SOURCE` line marked. An edit to the summary
  * clears the old report so it can't be read as the result of the new text.
  * The rules are `claim-checker-logic.ts`. Nothing is stored: the widget
  * teaches and never grades. No DOM access at import time, so it runs under
@@ -42,7 +42,7 @@ export function mountClaimChecker(root: HTMLElement): void {
 		lines.replaceChildren(
 			...report.lines.flatMap((line, i) => {
 				const span = root.ownerDocument.createElement('span');
-				span.className = line.startsWith('NO SOURCE') ? 'cc-missing' : 'cc-line';
+				span.className = line.startsWith('SANS SOURCE') ? 'cc-missing' : 'cc-line';
 				span.textContent = line;
 				return i === 0 ? [span] : [root.ownerDocument.createTextNode('\n'), span];
 			}),
