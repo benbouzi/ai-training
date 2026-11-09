@@ -1,337 +1,357 @@
 import { Choice, MultiChoice, Predict, Scenario, Sort, Pitfall, Exercise, MorePractice, Recap, Habit } from '@components/lesson';
 
-In one week, a team lead gets a proposal for an assistant that listens to
-the team's meetings and writes the summary. The next day a second proposal
-arrives, for an assistant that drafts the internal newsletter from the
-updates people send in. On Thursday a third asks for an agent that reads
-the customer mailbox and answers the mail itself. Each proposal comes with
-a demo that went well, and each person asks for a yes by Friday.
+En une semaine, un chef d’équipe reçoit une proposition d’assistant qui
+écoute les réunions de l’équipe et en rédige le résumé. Le lendemain arrive
+une deuxième proposition, pour un assistant qui rédige la lettre interne à
+partir des nouvelles que les gens envoient. Le jeudi, une troisième demande
+un agent qui lit la boîte de réception des clients et répond lui-même au
+courrier. Chaque proposition s’accompagne d’une démonstration réussie, et
+chaque personne demande un oui d’ici vendredi.
 
-The team's [AI policy](/safety/writing-an-ai-policy/) says which tasks an
-agent may do. It doesn't say which new use case is safe to start, and a
-demo doesn't answer that question. In this lesson we answer it with a
-**risk assessment**: a short written method that rates each proposal
-before it starts and says which ones need a decision from someone with the
-authority to take the risk. You need a document or a chat assistant with no
-tools, and about fifteen minutes.
+La [politique d’IA](/safety/writing-an-ai-policy/) de l’équipe dit quelles
+tâches un agent peut faire. Elle ne dit pas quel nouveau cas d’usage peut
+démarrer sans danger, et une démonstration ne répond pas à cette question.
+Dans cette leçon, nous y répondons avec une **évaluation des risques** (risk
+assessment) : une méthode courte et écrite qui note chaque proposition avant
+qu’elle démarre et dit lesquelles demandent la décision d’une personne qui a
+l’autorité d’assumer le risque. Il vous faut un document ou un assistant
+conversationnel sans outils, et environ quinze minutes.
 
-## The method on one page
+## La méthode sur une page
 
-Write down the result of each step.
+Notez le résultat de chaque étape.
 
-1. Name the domains the use case touches. Personal data, money, safety
-   (the physical safety of people) and reputation cover most cases. Next
-   to the domains, name the people who are affected when it goes wrong.
-2. Rate the impact of the worst realistic mistake, and the likelihood that
-   it happens, on scales the organization agreed in advance.
-3. Combine the two ratings into a level.
-4. Compare the level with the agreed threshold. Below it, the team goes
-   ahead under its policy. At or above it, the use case needs extra
-   controls, or a written acceptance from the person who answers for the
-   risk.
+1. Nommez les domaines que touche le cas d’usage. Les données personnelles,
+   l’argent, la sécurité (la sécurité physique des personnes) et la
+   réputation couvrent la plupart des cas. À côté des domaines, nommez les
+   personnes touchées quand les choses tournent mal.
+2. Notez l’impact de la pire erreur réaliste, et la probabilité qu’elle se
+   produise, sur des échelles que l’organisation a convenues à l’avance.
+3. Combinez les deux notes en un niveau.
+4. Comparez le niveau au seuil convenu. En dessous, l’équipe avance dans le
+   cadre de sa politique. Au seuil ou au-dessus, le cas d’usage demande des
+   contrôles supplémentaires, ou une acceptation écrite de la personne qui
+   répond du risque.
 
-Here are the scales this lesson uses. An organization may pick other words
-and other numbers. Everyone must rate on the same scales, so
-two ratings can be compared.
+Voici les échelles qu’utilise cette leçon. Une organisation peut choisir
+d’autres mots et d’autres nombres. Tout le monde doit noter sur les mêmes
+échelles, pour que deux notes puissent être comparées.
 
 ```text
-Impact of the worst realistic mistake
-  1 minor        one person is inconvenienced, and it is fixed within a day
-  2 moderate     a few people are affected, or a small cost, fixed within a week
-  3 major        many people are affected, or personal data reaches people who
-                 should not see it
-  4 severe       customers or the public are harmed, a legal duty is broken,
-                 or the loss can't be undone
+Impact de la pire erreur réaliste
+  1 mineur       une personne est gênée, et c’est réparé dans la journée
+  2 modéré       quelques personnes sont touchées, ou un petit coût, réparé dans la semaine
+  3 majeur       beaucoup de personnes sont touchées, ou des données personnelles
+                 parviennent à des personnes qui ne devraient pas les voir
+  4 grave        des clients ou le public subissent un préjudice, une obligation légale
+                 est enfreinte, ou la perte est irréversible
 
-Likelihood that it happens
-  1 rare             not expected in a year of use
-  2 possible         a few times a year
-  3 likely           about once a month
-  4 almost certain   every week
+Probabilité qu’elle se produise
+  1 rare              pas attendue en un an d’utilisation
+  2 possible          quelques fois par an
+  3 probable          environ une fois par mois
+  4 presque certain   chaque semaine
 
-Level = impact x likelihood
-  1 to 3 low    4 to 6 medium    8 to 9 high    12 to 16 very high
+Niveau = impact x probabilité
+  1 à 3 faible    4 à 6 moyen    8 à 9 élevé    12 à 16 très élevé
 
-Threshold: 8. A level of 8 or more needs extra controls or a written acceptance.
+Seuil : 8. Un niveau de 8 ou plus demande des contrôles supplémentaires ou une acceptation écrite.
 ```
 
-The first step comes first on purpose. A rating made before the domains
-are named is a rating of the demo. The domains and the affected people are
-the blast radius of the use case: what a wrong step can reach, and who
-feels it. They decide how bad the worst realistic mistake is, and so they
-decide the impact rating.
+La première étape vient en premier exprès. Une note donnée avant que les
+domaines soient nommés est une note de la démonstration. Les domaines et
+les personnes touchées sont le rayon d’impact (blast radius) du cas d’usage : ce qu’une
+erreur peut atteindre, et qui la ressent. Ils décident de la gravité de la
+pire erreur réaliste, et donc de la note d’impact.
 
-How easily a mistake can be undone is part of its impact, which is why the
-impact scale says "fixed within a day" and "can't be undone". Sort the work
-by how easily it can be undone (@AEC-10). A sent email or a payment is
-final, and a draft nobody has read yet can still be thrown away.
+La facilité avec laquelle une erreur peut être réparée fait partie de son
+impact, et c’est pourquoi l’échelle d’impact dit « réparé dans la journée »
+et « irréversible ». Triez le travail selon la facilité avec laquelle il peut
+être annulé (@AEC-10). Un e-mail envoyé ou un paiement est définitif, et un
+brouillon que personne n’a encore lu peut toujours être jeté.
 
-The likelihood rating comes from the real volume of work and from how
-quickly the team would notice a mistake. A mistake caught in a
-draft never reaches a customer, and one that nobody notices for a month
-has a month to happen again.
+La note de probabilité vient du volume réel de travail et de la rapidité
+avec laquelle l’équipe remarquerait une erreur. Une erreur repérée dans un
+brouillon n’atteint jamais un client, et une erreur que personne ne remarque
+pendant un mois a un mois pour se reproduire.
 
 <Scenario id="name-the-domains-first" objective="safety/judges-agent-risk/names-blast-radius"
   concepts={['risk-assessment', 'blast-radius']}
-  title="Where does the assessment start?" hint="What does the impact rating depend on, and do you know it yet?"
+  title="Par où commence l’évaluation ?" hint="De quoi dépend la note d’impact, et le savez-vous déjà ?"
   options={[
-    { text: 'Rate the likelihood from the pilot results, since a pilot shows how often the tool gets it wrong.', consequence: 'The pilot ran on last year\'s applications, sorted by the hiring manager who proposed the tool. The rating says nothing about who is harmed by a wrong "no", and the impact rating is left for later.' },
-    { text: 'Write down the domains it touches and the people it affects: the applicants, their personal data, and the hiring managers who act on the sort.', correct: true, consequence: 'The list shows that a wrong "no" harms an applicant who never learns why, and that the applications hold personal data. The impact rating now has a reason, and it is at least major.' },
-    { text: 'Ask the vendor for the accuracy figure, and use it for both the impact and the likelihood ratings.', consequence: 'An accuracy figure is a claim about likelihood on the vendor\'s test set. It says nothing about impact, and the team still doesn\'t know who a mistake reaches.' },
-    { text: 'Start the tool on a few real applications, and rate it once the team has seen what it does in daily use.', consequence: 'The assessment was meant to happen before the tool starts. Real applicants are now sorted by a tool nobody has rated.' },
+    { text: 'Noter la probabilité d’après les résultats du pilote, puisqu’un pilote montre à quelle fréquence l’outil se trompe.', consequence: 'Le pilote a tourné sur les candidatures de l’an dernier, triées par le responsable du recrutement qui propose l’outil. La note ne dit rien de qui subit un « non » erroné, et la note d’impact est remise à plus tard.' },
+    { text: 'Noter les domaines touchés et les personnes concernées : les candidats, leurs données personnelles, et les recruteurs qui agissent sur le tri.', correct: true, consequence: 'La liste montre qu’un « non » erroné nuit à un candidat qui n’apprend jamais pourquoi, et que les candidatures contiennent des données personnelles. La note d’impact a maintenant une raison, et elle est au moins majeure.' },
+    { text: 'Demander au fournisseur son taux de précision, et l’utiliser pour la note d’impact comme pour la note de probabilité.', consequence: 'Un taux de précision est une affirmation sur la probabilité, mesurée sur le jeu de test du fournisseur. Il ne dit rien de l’impact, et l’équipe ne sait toujours pas qui une erreur atteint.' },
+    { text: 'Lancer l’outil sur quelques vraies candidatures, et le noter une fois que l’équipe a vu ce qu’il fait au quotidien.', consequence: 'L’évaluation devait avoir lieu avant le démarrage de l’outil. De vrais candidats sont maintenant triés par un outil que personne n’a noté.' },
   ]}>
-A hiring manager proposes an assistant that sorts incoming job
-applications into "interview" and "no". You are asked to assess it before
-it starts. What do you write down first?
+Un responsable du recrutement propose un assistant qui trie les candidatures
+reçues entre « entretien » et « non ». On vous demande de l’évaluer avant
+qu’il démarre. Que notez-vous en premier ?
 </Scenario>
 
-## Scoring the three proposals
+## Noter les trois propositions
 
-The team lead writes down the domains, the people affected and the two
-ratings for each proposal.
+Le chef d’équipe note les domaines, les personnes touchées et les deux notes
+de chaque proposition.
 
-- **Meeting summarizer.** It runs in team meetings and in one-to-ones,
-  where health and performance come up. The summaries are saved in the
-  shared team folder. Domains: personal data, reputation. Impact 3, because
-  personal data reaches people who should not see it. Likelihood 3, because
-  the one-to-ones are weekly and the folder is shared by default.
-- **Newsletter drafter.** An editor reads every draft before it goes out to
-  the staff. Domain: reputation. Impact 2, likelihood 2.
-- **Customer mail agent.** It reads the customer mailbox and sends its
-  replies without a person reading them. Customers write about orders,
-  refunds and their accounts. Domains: personal data, money, reputation.
-  Impact 4, because a wrong reply can promise a refund or show one
-  customer another customer's details. Likelihood 3, because the mailbox
-  gets thousands of messages a month.
+- **Résumé de réunions.** Il tourne pendant les réunions d’équipe et les
+  entretiens individuels, où il est question de santé et de performance.
+  Les résumés sont enregistrés dans le dossier partagé de l’équipe. Domaines :
+  données personnelles, réputation. Impact 3, parce que des données
+  personnelles parviennent à des personnes qui ne devraient pas les voir.
+  Probabilité 3, parce que les entretiens individuels sont hebdomadaires et
+  que le dossier est partagé par défaut.
+- **Rédaction de la lettre interne.** Une personne chargée de la relecture
+  lit chaque brouillon avant son envoi au personnel. Domaine : réputation.
+  Impact 2, probabilité 2.
+- **Agent de messagerie clients.** Il lit la boîte de réception des clients
+  et envoie ses réponses sans qu’une personne les lise. Les clients écrivent
+  au sujet de commandes, de remboursements et de leurs comptes. Domaines :
+  données personnelles, argent, réputation. Impact 4, parce qu’une mauvaise
+  réponse peut promettre un remboursement ou montrer à un client les
+  informations d’un autre. Probabilité 3, parce que la boîte reçoit des
+  milliers de messages par mois.
 
-The team lead can say yes alone only to a proposal below the threshold.
-A proposal at or above it needs extra controls, or a written acceptance
-from the person who answers for the risk. A small program applies the
-method to these ratings and prints the level of each proposal and whether
-it is at or above the threshold. Before you read its output, work out the
-three answers yourself.
+Le chef d’équipe ne peut dire oui seul qu’à une proposition sous le seuil.
+Une proposition au seuil ou au-dessus demande des contrôles
+supplémentaires, ou une acceptation écrite de la personne qui répond du
+risque. Un petit programme applique la méthode à ces notes et affiche le
+niveau de chaque proposition et s’il est au seuil ou au-dessus. Avant de
+lire sa sortie, trouvez vous-même les trois réponses.
 
 <Predict id="predict-which-cross" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['risk-assessment']}
-  context="A program scores three proposed AI use cases in this order: a meeting summarizer rated impact 3 and likelihood 3, a newsletter drafter rated impact 2 and likelihood 2, and a customer mail agent rated impact 4 and likelihood 3. The level is impact times likelihood, and the threshold is 8. For each use case the program prints whether the level is at or above the threshold, as yes or no. A yes means the team lead cannot approve it alone."
-  title="Which proposals can't the team lead approve alone?" hint="Multiply the two ratings for each proposal, then compare each level with 8."
-  answer="yes no yes">
-Which proposals need extra controls or the risk owner's written acceptance
-before they start? The program prints one `at or above threshold:` line
-per proposal, in the order above, and a `yes` means the team lead can't
-approve that proposal alone. Type the three values, `yes` or `no`,
-separated by spaces.
+  context="Un programme note trois cas d’usage de l’IA proposés, dans cet ordre : un résumé de réunions noté impact 3 et probabilité 3, une rédaction de la lettre interne notée impact 2 et probabilité 2, et un agent de messagerie clients noté impact 4 et probabilité 3. Le niveau est l’impact multiplié par la probabilité, et le seuil est 8. Pour chaque cas d’usage, le programme affiche si le niveau est au seuil ou au-dessus, par oui ou non. Un oui signifie que le chef d’équipe ne peut pas l’approuver seul."
+  title="Quelles propositions le chef d’équipe ne peut-il pas approuver seul ?" hint="Multipliez les deux notes de chaque proposition, puis comparez chaque niveau à 8."
+  answer="oui non oui">
+Quelles propositions demandent des contrôles supplémentaires ou
+l’acceptation écrite du responsable du risque avant de démarrer ? Le
+programme affiche une ligne `au seuil ou au-dessus :` par proposition, dans
+l’ordre ci-dessus, et un `oui` signifie que le chef d’équipe ne peut pas
+approuver cette proposition seul. Tapez les trois valeurs, `oui` ou `non`,
+séparées par des espaces.
 </Predict>
 
-The program's output:
+La sortie du programme :
 
 ```text
-threshold: 8 (high)
+seuil : 8 (élevé)
 
-use case: meeting summarizer
-  domains: personal data, reputation
-  affected: everyone in the meetings, and anyone discussed in a one-to-one
-  impact: 3 (major)
-  likelihood: 3 (likely)
-  level: 9 (high)
-  at or above threshold: yes
+cas d’usage : résumé de réunions
+  domaines : données personnelles, réputation
+  personnes touchées : tous les participants aux réunions, et toute personne évoquée en entretien individuel
+  impact : 3 (majeur)
+  probabilité : 3 (probable)
+  niveau : 9 (élevé)
+  au seuil ou au-dessus : oui
 
-use case: newsletter drafter
-  domains: reputation
-  affected: the staff who read the newsletter
-  impact: 2 (moderate)
-  likelihood: 2 (possible)
-  level: 4 (medium)
-  at or above threshold: no
+cas d’usage : rédaction de la lettre interne
+  domaines : réputation
+  personnes touchées : le personnel qui lit la lettre interne
+  impact : 2 (modéré)
+  probabilité : 2 (possible)
+  niveau : 4 (moyen)
+  au seuil ou au-dessus : non
 
-use case: customer mail agent
-  domains: personal data, money, reputation
-  affected: every customer who writes in, and the support team
-  impact: 4 (severe)
-  likelihood: 3 (likely)
-  level: 12 (very high)
-  at or above threshold: yes
+cas d’usage : agent de messagerie clients
+  domaines : données personnelles, argent, réputation
+  personnes touchées : chaque client qui écrit, et l’équipe d’assistance
+  impact : 4 (grave)
+  probabilité : 3 (probable)
+  niveau : 12 (très élevé)
+  au seuil ou au-dessus : oui
 ```
 
-The customer mail agent was the expected result. The meeting summarizer is
-the one that surprises people, because summarizing a meeting sounds
-harmless. The domains changed the answer. Once the list says "personal
-data" and "anyone discussed in a one-to-one", the summarizer is a tool that
-copies health and performance remarks into a shared folder every week.
+L’agent de messagerie clients était le résultat attendu. Le résumé de
+réunions est celui qui surprend, parce que résumer une réunion semble
+inoffensif. Ce sont les domaines qui ont changé la réponse. Dès que la liste
+dit « données personnelles » et « toute personne évoquée en entretien
+individuel », le résumé de réunions devient un outil qui copie chaque
+semaine des remarques sur la santé et la performance dans un dossier
+partagé.
 
-The newsletter drafter goes ahead under the team's policy. The other two
-wait for the decision in the next section.
+La rédaction de la lettre interne avance dans le cadre de la politique de
+l’équipe. Les deux autres attendent la décision de la section suivante.
 
-<Pitfall title="Rating likelihood from the demo">
-The customer mail agent's demo answered twenty test messages, and every
-reply was right. The person proposing it rates the likelihood 1, rare.
-Rated that way, the level is 4 (medium), and the agent is below the
-threshold.
-The twenty messages were picked for the demo, and the real mailbox gets
-thousands a month, with refunds, complaints and messages in other
-languages among them. A demo shows that the tool can do the task. It
-doesn't show how often it fails on the messages nobody picked. Rate
-likelihood from the volume and the variety of the real work, and from how
-quickly a mistake would be noticed.
+<Pitfall title="Noter la probabilité d’après la démonstration">
+La démonstration de l’agent de messagerie clients a répondu à vingt messages
+de test, et chaque réponse était juste. La personne qui le propose note la
+probabilité 1, rare. Noté ainsi, le niveau est 4 (moyen), et l’agent est
+sous le seuil. Les vingt messages avaient été choisis pour la
+démonstration, et la vraie boîte en reçoit des milliers par mois, dont des
+remboursements, des réclamations et des messages dans d’autres langues. Une
+démonstration montre que l’outil sait faire la tâche. Elle ne montre pas à
+quelle fréquence il échoue sur les messages que personne n’a choisis. Notez
+la probabilité d’après le volume et la variété du travail réel, et d’après
+la rapidité avec laquelle une erreur serait remarquée.
 </Pitfall>
 
-## At or above the threshold
+## Au seuil ou au-dessus
 
-A use case at or above the threshold doesn't stop there. It gets one of two
-decisions, and both are written down.
+Un cas d’usage au seuil ou au-dessus ne s’arrête pas là. Il reçoit l’une de
+deux décisions, et les deux sont écrites.
 
-The first is **extra controls** that bring the level down. The team lead
-changes the customer mail agent so that it drafts each reply and a person
-from the support team reads and sends it. The impact of a wrong reply is
-the same as before, but a wrong draft is now caught before a customer sees
-it. Rated again, the likelihood is 1 (rare) and the level is 4 (medium),
-below the threshold. Rare holds only while a person really reads each
-draft. The support team already read and answered every message by hand,
-so reading a draft is less work than they did before. If the drafts arrive
-faster than people can read them, the approvals stop being read, and the
-rating goes back up. The approval sits right before the step that can't be
-undone, as the [human in the loop](/safety/agent-risk/#lhumain-dans-la-boucle)
-section of the agent risk lesson describes. The rating is only as good as that control,
-so the record names it.
+La première consiste à ajouter des **contrôles supplémentaires** qui font
+baisser le niveau. Le chef d’équipe modifie l’agent de messagerie clients
+pour qu’il rédige chaque réponse et qu’une personne de l’équipe d’assistance
+la lise et l’envoie. L’impact d’une mauvaise réponse reste le même, mais un
+brouillon faux est maintenant repéré avant qu’un client le voie. Noté de
+nouveau, la probabilité est 1 (rare) et le niveau est 4 (moyen), sous le
+seuil. « Rare » ne tient que tant qu’une personne lit vraiment chaque
+brouillon. L’équipe d’assistance lisait déjà chaque message et y répondait à
+la main, donc lire un brouillon lui demande moins de travail qu’avant. Si
+les brouillons arrivent plus vite que les gens ne peuvent les lire, les
+approbations cessent d’être lues, et la note remonte. L’approbation se place
+juste avant l’étape irréversible, comme le décrit la section
+[humain dans la boucle](/safety/agent-risk/#lhumain-dans-la-boucle) de la
+leçon sur les risques des agents. La note ne vaut que par ce contrôle, donc
+le compte rendu le nomme.
 
-The second is **acceptance in writing** by a person with the authority to
-accept the risk. That is the person who answers for the domain when it goes
-wrong: for the customer mailbox, the head of customer service. The person
-who proposed the tool, or the team that wants it, can't accept the risk on
-their own. A person with the authority may accept it for a limited time, or
-with a review date, and signs a record that says so. An organization may
-name a more senior person for the very high band, and the record then
-carries that person's name.
+La seconde est une **acceptation écrite** par une personne qui a l’autorité
+d’accepter le risque. C’est la personne qui répond du domaine quand les
+choses tournent mal : pour la boîte de réception des clients, la
+responsable du service client. La personne qui a proposé l’outil, ou
+l’équipe qui le veut, ne peut pas accepter le risque seule. Une personne qui
+a l’autorité peut l’accepter pour une durée limitée, ou avec une date de
+revue, et signe un compte rendu qui le dit. Une organisation peut désigner
+une personne plus haut placée pour le niveau très élevé, et le compte rendu
+porte alors le nom de cette personne.
 
-For the meeting summarizer the team lead picks a control that shrinks the
-list of affected people. The assistant stays out of one-to-ones, and each
-summary goes only to the people who were in the meeting. The team lead
-rates it again with the smaller list, and the new ratings go in the record.
+Pour le résumé de réunions, le chef d’équipe choisit un contrôle qui réduit
+la liste des personnes touchées. L’assistant ne participe pas aux entretiens
+individuels, et chaque résumé ne va qu’aux personnes présentes à la réunion.
+Le chef d’équipe le note de nouveau avec la liste réduite, et les nouvelles
+notes vont dans le compte rendu.
 
-Whichever decision is made, the record holds the same lines.
+Quelle que soit la décision, le compte rendu contient les mêmes lignes.
 
 ```text
-Risk record: customer mail agent
-Domains        personal data, money, reputation
-Affected       every customer who writes in, and the support team
-Ratings        impact 4 (severe), likelihood 3 (likely), level 12 (very high)
-Decision       extra control: the agent drafts, a person reads and sends each reply
-Rated again    impact 4 (severe), likelihood 1 (rare), level 4 (medium)
-Decided by     head of customer service
-Review         in three months, or after the first incident
+Compte rendu de risque : agent de messagerie clients
+Domaines            données personnelles, argent, réputation
+Personnes touchées  chaque client qui écrit, et l’équipe d’assistance
+Notes               impact 4 (grave), probabilité 3 (probable), niveau 12 (très élevé)
+Décision            contrôle supplémentaire : l’agent rédige, une personne lit et envoie
+                    chaque réponse
+Nouvelle note       impact 4 (grave), probabilité 1 (rare), niveau 4 (moyen)
+Décidé par          la responsable du service client
+Revue               dans trois mois, ou après le premier incident
 ```
 
-The record matters later. When a wrong reply does reach a customer, the
-team can read what was assumed, who decided and which control was supposed
-to catch it, and fix the rating or the control. Without the record the
-same question gets a new answer from whoever is asked. An auditor, or the
-person who takes over the team next year, can review a decision only when
-it is written down. The [EU AI Act lesson](/safety/eu-ai-act/) comes next,
-and it covers the uses that the law itself sorts into risk levels.
+Le compte rendu compte plus tard. Quand une mauvaise réponse finit par
+atteindre un client, l’équipe peut lire ce qui avait été supposé, qui a
+décidé et quel contrôle devait repérer l’erreur, puis corriger la note ou le
+contrôle. Sans compte rendu, la même question reçoit une nouvelle réponse de
+la personne à qui on la pose. Un auditeur, ou la personne qui reprendra
+l’équipe l’an prochain, ne peut réexaminer une décision que si elle est
+écrite. La [leçon sur le règlement européen sur l’IA](/safety/eu-ai-act/)
+vient ensuite, et elle traite des usages que la loi elle-même range par
+niveau de risque.
 
 <Choice id="who-accepts-the-risk" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['risk-assessment']}
-  title="Who signs the acceptance?" hint="Who has to answer for the mailbox when a customer is harmed?"
+  title="Qui signe l’acceptation ?" hint="Qui doit répondre de la boîte de réception quand un client subit un préjudice ?"
   options={[
-    { text: 'The support team member who proposed the agent, since they know best how it works.', why: 'They know the tool, and they want it. Accepting a risk is a decision for the person who answers for the harm, and that isn\'t the person asking.' },
-    { text: 'The vendor of the agent, because the vendor built it and knows its failure rate.', why: 'The vendor doesn\'t answer for your customers or your mailbox. A failure rate from the vendor is an input to the likelihood rating.' },
-    { text: 'The head of customer service, who answers for the mailbox and its customers.', correct: true },
-    { text: 'The whole support team together, by a vote at the next team meeting.', why: 'A vote leaves no single person accountable for the decision. The record needs one name with the authority to accept.' },
+    { text: 'Le membre de l’équipe d’assistance qui a proposé l’agent, puisqu’il sait le mieux comment il fonctionne.', why: 'Il connaît l’outil, et il le veut. Accepter un risque est une décision de la personne qui répond du préjudice, et ce n’est pas celle qui demande.' },
+    { text: 'Le fournisseur de l’agent, puisqu’il l’a construit et connaît son taux d’échec.', why: 'Le fournisseur ne répond ni de vos clients ni de votre boîte de réception. Un taux d’échec donné par le fournisseur est une donnée pour la note de probabilité.' },
+    { text: 'La responsable du service client, qui répond de la boîte de réception et de ses clients.', correct: true },
+    { text: 'Toute l’équipe d’assistance ensemble, par un vote à la prochaine réunion d’équipe.', why: 'Un vote ne rend aucune personne responsable de la décision. Le compte rendu a besoin d’un nom, celui d’une personne qui a l’autorité d’accepter.' },
   ]}>
-The team decides not to add controls to the customer mail agent for now,
-and to ask for a written acceptance of its level instead. In this
-organization, the person who answers for an area signs the acceptances for
-it at every level. Who should sign?
+L’équipe décide de ne pas ajouter de contrôles à l’agent de messagerie
+clients pour l’instant, et de demander à la place une acceptation écrite de
+son niveau. Dans cette organisation, la personne qui répond d’un domaine
+signe les acceptations qui le concernent, à tous les niveaux. Qui doit
+signer ?
 </Choice>
 
 <MultiChoice id="which-domains-and-people" phase="review" objective="safety/judges-agent-risk/names-blast-radius"
   concepts={['risk-assessment', 'blast-radius']}
-  context="The lesson teaches a risk assessment for AI use cases that starts by naming the domains a use case touches (personal data, money, safety and reputation) and the people a mistake affects, before any rating."
-  title="What goes on the list?" hint="What can a wrong reminder reach, and who notices it?"
+  context="La leçon enseigne une évaluation des risques des cas d’usage de l’IA qui commence par nommer les domaines que touche un cas d’usage (données personnelles, argent, sécurité et réputation) et les personnes qu’une erreur touche, avant toute note."
+  title="Qu’est-ce qui va sur la liste ?" hint="Qu’est-ce qu’un mauvais rappel peut atteindre, et qui le remarque ?"
   options={[
-    { text: 'Personal data: the reminders name each patient and their appointment.', correct: true },
-    { text: 'The patients who get a reminder with the wrong time, and the staff who deal with them.', correct: true },
-    { text: 'The model the vendor uses, and the number of test messages in the demo.', why: 'Both are facts about the tool. The list names what a mistake can reach and who it affects.' },
-    { text: 'Safety: a patient told the wrong day misses a treatment they need.', correct: true },
-    { text: 'The time the clinic saves each week once the reminders are automatic.', why: 'The saving is the reason for the proposal. It belongs in the proposal, and it says nothing about who a mistake reaches.' },
+    { text: 'Les données personnelles : les rappels nomment chaque patient et son rendez-vous.', correct: true },
+    { text: 'Les patients qui reçoivent un rappel avec la mauvaise heure, et le personnel qui les accueille.', correct: true },
+    { text: 'Le modèle qu’utilise le fournisseur, et le nombre de messages de test de la démonstration.', why: 'Ce sont deux faits sur l’outil. La liste nomme ce qu’une erreur peut atteindre et qui elle touche.' },
+    { text: 'La sécurité : un patient à qui l’on donne le mauvais jour manque un soin dont il a besoin.', correct: true },
+    { text: 'Le temps que gagne la clinique chaque semaine une fois les rappels automatisés.', why: 'Le gain de temps est la raison de la proposition. Il a sa place dans la proposition, et il ne dit rien de qui une erreur atteint.' },
   ]}>
-A clinic proposes an assistant that writes and sends appointment reminders
-by text message. Before anyone rates it, which of these go on the list of
-domains and affected people?
+Une clinique propose un assistant qui rédige et envoie des rappels de
+rendez-vous par SMS. Avant que quiconque le note, lesquels de ces éléments
+vont sur la liste des domaines et des personnes touchées ?
 </MultiChoice>
 
 <Sort id="goes-ahead-or-decision" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['risk-assessment']}
-  context="The lesson rates AI use cases for impact and likelihood on scales from 1 to 4, multiplies the two into a level, and uses a threshold of 8. Below the threshold the team goes ahead under its policy. At or above it, the use case needs extra controls or a written acceptance from the person who answers for the risk."
-  title="Goes ahead, or needs a decision?" hint="Multiply the two ratings for each use case. Which levels are 8 or more?"
-  buckets={['Goes ahead under the team policy', 'Needs a control or the risk owner\'s written acceptance']}
+  context="La leçon note les cas d’usage de l’IA pour l’impact et la probabilité sur des échelles de 1 à 4, multiplie les deux en un niveau, et utilise un seuil de 8. Sous le seuil, l’équipe avance dans le cadre de sa politique. Au seuil ou au-dessus, le cas d’usage demande des contrôles supplémentaires ou une acceptation écrite de la personne qui répond du risque."
+  title="Il avance, ou il demande une décision ?" hint="Multipliez les deux notes de chaque cas d’usage. Quels niveaux atteignent 8 ou plus ?"
+  buckets={['Avance dans le cadre de la politique de l’équipe', 'Demande un contrôle ou l’acceptation écrite du responsable du risque']}
   items={[
-    { text: 'An assistant suggests titles for internal wiki pages: impact 1, likelihood 3', bucket: 0 },
-    { text: 'An agent changes prices in the web shop: impact 3, likelihood 3', bucket: 1 },
-    { text: 'An assistant translates the staff handbook, and a translator checks it: impact 2, likelihood 2', bucket: 0 },
-    { text: 'An agent books staff travel with the company card: impact 2, likelihood 4', bucket: 1 },
-    { text: 'An assistant answers patients\' questions about their medicines: impact 4, likelihood 2', bucket: 1 },
+    { text: 'Un assistant propose des titres pour les pages du wiki interne : impact 1, probabilité 3', bucket: 0 },
+    { text: 'Un agent modifie les prix de la boutique en ligne : impact 3, probabilité 3', bucket: 1 },
+    { text: 'Un assistant traduit le livret d’accueil du personnel, et un traducteur le vérifie : impact 2, probabilité 2', bucket: 0 },
+    { text: 'Un agent réserve les déplacements du personnel avec la carte de l’entreprise : impact 2, probabilité 4', bucket: 1 },
+    { text: 'Un assistant répond aux questions des patients sur leurs médicaments : impact 4, probabilité 2', bucket: 1 },
   ]} />
 
 <Scenario id="the-proposer-signs" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['risk-assessment']}
-  context="The lesson teaches a risk assessment that multiplies an impact rating and a likelihood rating into a level. At or above a threshold of 8, the use case needs extra controls or a written acceptance from the person who answers for the risk."
-  title="The proposer signs it off" hint="Who answers for the web shop prices when a customer is charged the wrong amount, and did that person decide?"
+  context="La leçon enseigne une évaluation des risques qui multiplie une note d’impact et une note de probabilité en un niveau. Au seuil de 8 ou au-dessus, le cas d’usage demande des contrôles supplémentaires ou une acceptation écrite de la personne qui répond du risque."
+  title="Celui qui propose signe lui-même" hint="Qui répond des prix de la boutique en ligne quand un client paie le mauvais montant, et cette personne a-t-elle décidé ?"
   options={[
-    { text: 'Add a control, such as a person approving each price change, or ask the head of the web shop to accept the level in writing.', correct: true, consequence: 'The head of the web shop asks for the control. Price changes wait for one click from the pricing team, and the agent starts the week after.' },
-    { text: 'Let the agent start, because the project lead has written the acceptance down and signed it.', consequence: 'The record exists, and the name on it is the person who wanted the tool. When a price is wrong for a weekend, nobody who answers for the shop had agreed to the risk.' },
-    { text: 'Let the agent start, and rate it again after the first month, when the team has real results.', consequence: 'The assessment was meant to happen before the start. For a month the agent changes prices at a level nobody with the authority accepted.' },
-    { text: 'Ask the vendor to confirm in writing that the agent is safe for pricing work, and file the letter.', consequence: 'The vendor doesn\'t answer for your prices or your customers. The letter adds nothing to the rating, and nobody in the organization has accepted the level.' },
+    { text: 'Ajouter un contrôle, comme une personne qui approuve chaque changement de prix, ou demander au responsable de la boutique d’accepter le niveau par écrit.', correct: true, consequence: 'Le responsable de la boutique demande le contrôle. Les changements de prix attendent un clic de l’équipe tarification, et l’agent démarre la semaine suivante.' },
+    { text: 'Laisser l’agent démarrer, puisque le chef de projet a écrit l’acceptation et l’a signée.', consequence: 'Le compte rendu existe, et le nom qui y figure est celui de la personne qui voulait l’outil. Quand un prix est faux pendant un week-end, personne qui répond de la boutique n’avait accepté le risque.' },
+    { text: 'Laisser l’agent démarrer, et le noter de nouveau après le premier mois, quand l’équipe aura de vrais résultats.', consequence: 'L’évaluation devait avoir lieu avant le démarrage. Pendant un mois, l’agent modifie les prix à un niveau que personne ayant l’autorité n’a accepté.' },
+    { text: 'Demander au fournisseur de confirmer par écrit que l’agent est sûr pour la tarification, et classer la lettre.', consequence: 'Le fournisseur ne répond ni de vos prix ni de vos clients. La lettre n’ajoute rien à la note, et personne dans l’organisation n’a accepté le niveau.' },
   ]}>
-An agent that changes prices in the web shop is rated impact 3 and
-likelihood 3, a level of 9. The project lead who proposed it writes "risk
-accepted" under the rating and signs it. What should happen before the
-agent starts?
+Un agent qui modifie les prix de la boutique en ligne est noté impact 3 et
+probabilité 3, soit un niveau de 9. Le chef de projet qui l’a proposé écrit
+« risque accepté » sous la note et signe. Que doit-il se passer avant que
+l’agent démarre ?
 </Scenario>
 
-<Exercise stretch="Show your assessment to a colleague and ask them to rate the impact and the likelihood without seeing your ratings. Where your numbers differ, write down which fact explains the gap.">
-Assess one AI use case from your own work, one that is proposed or that
-you already use, in a document or in a chat with an assistant that has no
-tools. Write down the domains it touches and the people a mistake would
-affect, rate the impact and the likelihood on the scales in this lesson,
-work out the level and compare it with the threshold. If the level is 8 or
-more, name one control that would bring it down, and the person who would
-have to accept it in writing if you added none.
+<Exercise stretch="Montrez votre évaluation à un collègue et demandez-lui de noter l’impact et la probabilité sans voir vos notes. Là où vos nombres diffèrent, écrivez quel fait explique l’écart.">
+Évaluez un cas d’usage de l’IA tiré de votre propre travail, proposé ou déjà
+utilisé, dans un document ou dans une conversation avec un assistant sans
+outils. Notez les domaines qu’il touche et les personnes qu’une erreur
+toucherait, notez l’impact et la probabilité sur les échelles de cette
+leçon, calculez le niveau et comparez-le au seuil. Si le niveau atteint 8 ou
+plus, nommez un contrôle qui le ferait baisser, et la personne qui devrait
+l’accepter par écrit si vous n’en ajoutiez aucun.
 
-A good result fits in a record like the one above, and every
-rating has a reason next to it that someone else could check. If a
-likelihood reason mentions a demo or a trial run, rate it again from the
-real volume of work. Which domain did you almost leave off the list?
+Un bon résultat tient dans un compte rendu comme celui ci-dessus, et chaque
+note a à côté d’elle une raison que quelqu’un d’autre pourrait vérifier. Si
+la raison d’une probabilité mentionne une démonstration ou un essai, notez-la
+de nouveau d’après le volume réel de travail. Quel domaine avez-vous failli
+oublier sur la liste ?
 </Exercise>
 
 <MorePractice>
 
 <Scenario id="the-record-is-missing" phase="practice" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['risk-assessment']}
-  title="Six months later" hint="What would the team need to read, after the next incident, to find out which part of the decision was wrong?"
+  title="Six mois plus tard" hint="Que devrait lire l’équipe, après le prochain incident, pour savoir quelle partie de la décision était fausse ?"
   options={[
-    { text: 'Keep writing one line in the meeting notes each time a tool is approved, as the team does now.', consequence: 'The next incident finds another line that says "agent approved". Nobody can tell whether the rating was wrong or a control was missing.' },
-    { text: 'After each incident, rate the use case again from scratch, using what the team knows then.', consequence: 'The new rating is higher, and it is probably right. The team still can\'t say whether the old rating was wrong or the control was never put in place.' },
-    { text: 'Stop approving agents until the team can prove that the assessment method works.', consequence: 'Nothing about the method was written down, so there is nothing to test. The proposals wait, and the next incident is no easier to read.' },
-    { text: 'When each use case starts, write a record with the ratings, the decision, the control, and who decided.', correct: true, consequence: 'After the next incident the team reads the record, sees which control it relied on, and finds that the control was never put in place. It fixes the control and keeps the rating.' },
+    { text: 'Continuer à écrire une ligne dans le compte rendu de réunion chaque fois qu’un outil est approuvé, comme l’équipe le fait aujourd’hui.', consequence: 'Le prochain incident trouve une autre ligne qui dit « agent approuvé ». Personne ne sait dire si la note était fausse ou si un contrôle manquait.' },
+    { text: 'Après chaque incident, noter de nouveau le cas d’usage à partir de zéro, avec ce que l’équipe sait alors.', consequence: 'La nouvelle note est plus élevée, et elle est sans doute juste. L’équipe ne sait toujours pas dire si l’ancienne note était fausse ou si le contrôle n’a jamais été mis en place.' },
+    { text: 'Cesser d’approuver des agents tant que l’équipe ne peut pas prouver que la méthode d’évaluation fonctionne.', consequence: 'Rien de la méthode n’a été écrit, donc il n’y a rien à tester. Les propositions attendent, et le prochain incident n’est pas plus facile à lire.' },
+    { text: 'Au démarrage de chaque cas d’usage, écrire un compte rendu avec les notes, la décision, le contrôle et qui a décidé.', correct: true, consequence: 'Après le prochain incident, l’équipe lit le compte rendu, voit sur quel contrôle il reposait, et découvre que ce contrôle n’a jamais été mis en place. Elle corrige le contrôle et garde la note.' },
   ]}>
-Six months after an agent started, a wrong reply reaches a customer. The
-team looks for the assessment, and finds only a line in the meeting notes:
-"agent approved". Nobody can say whether the rating was wrong or a control
-was missing. Which change lets the team answer that question after the
-next incident?
+Six mois après le démarrage d’un agent, une mauvaise réponse atteint un
+client. L’équipe cherche l’évaluation et ne trouve qu’une ligne dans le
+compte rendu de réunion : « agent approuvé ». Personne ne sait dire si la
+note était fausse ou si un contrôle manquait. Quel changement permet à
+l’équipe de répondre à cette question après le prochain incident ?
 </Scenario>
 
 </MorePractice>
 
 <Recap>
-1. A risk assessment starts with the domains a use case touches (personal data, money, safety and reputation) and the people a mistake affects. That list sets the impact rating.
-2. Rate impact and likelihood on scales everyone agreed, multiply them into a level, and compare the level with the agreed threshold.
-3. Sort the work by how easily a mistake can be undone (@AEC-10), and put that in the impact rating. Rate likelihood from the real volume of work and from how fast a mistake is noticed. A demo shows the tool can do the task, and says little about how often it fails.
-4. At or above the threshold, add a control that brings the level down, or get a written acceptance from the person who answers for the risk.
-5. The record is what makes the decision reviewable. It holds the domains, the ratings, the decision, the control and the name of who decided.
+1. Une évaluation des risques commence par les domaines que touche un cas d’usage (données personnelles, argent, sécurité et réputation) et les personnes qu’une erreur touche. Cette liste fixe la note d’impact.
+2. Notez l’impact et la probabilité sur des échelles convenues par tous, multipliez-les en un niveau, et comparez le niveau au seuil convenu.
+3. Triez le travail selon la facilité avec laquelle une erreur peut être annulée (@AEC-10), et intégrez-la à la note d’impact. Notez la probabilité d’après le volume réel de travail et la rapidité avec laquelle une erreur est remarquée. Une démonstration montre que l’outil sait faire la tâche, et dit peu de chose de la fréquence de ses échecs.
+4. Au seuil ou au-dessus, ajoutez un contrôle qui fait baisser le niveau, ou obtenez une acceptation écrite de la personne qui répond du risque.
+5. Le compte rendu est ce qui permet de réexaminer la décision. Il contient les domaines, les notes, la décision, le contrôle et le nom de la personne qui a décidé.
 </Recap>
 
 <Habit id="domains-before-the-demo">
-The next time someone proposes a new AI tool for your team, ask which domains it touches and who a mistake would affect before anyone talks about how well the demo went.
+La prochaine fois que quelqu’un propose un nouvel outil d’IA pour votre équipe, demandez quels domaines il touche et qui une erreur toucherait, avant que quiconque parle de la réussite de la démonstration.
 </Habit>

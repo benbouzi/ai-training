@@ -1,332 +1,364 @@
 import { Choice, MultiChoice, Sort, Scenario, Repair, Pitfall, Exercise, MorePractice, Recap, Match } from '@components/lesson';
 
-An organization publishes its AI policy. It is one line: "Use AI
-responsibly." The finance team reads it and decides it means "never
-paste anything into a chat tool" and stops using AI at all. The support team
-decides it means "be careful" and connects an agent to the customer mailbox
-the same afternoon. The marketing team decides it means whatever the last
-person to speak decided. All three followed the policy. The policy decided
-nothing, so every team decided for itself, and the organization's exposure is
-now the sum of the most careless choice.
+Une organisation publie sa politique d’IA. Elle tient en une ligne :
+« Utilisez l’IA de façon responsable. » L’équipe financière la lit, décide
+qu’elle veut dire « ne jamais rien coller dans un outil de conversation » et
+cesse complètement d’utiliser l’IA. L’équipe d’assistance décide qu’elle
+veut dire « soyez prudents » et connecte un agent à la boîte de réception
+des clients l’après-midi même. L’équipe marketing décide qu’elle veut dire
+ce qu’a décidé la dernière personne à avoir pris la parole. Les trois
+équipes ont suivi la politique. La politique n’a rien décidé, donc chaque
+équipe a décidé pour elle-même, et l’exposition de l’organisation est
+désormais la somme des choix les plus imprudents.
 
-In this lesson we write the replacement: a one-page **policy** with the
-tasks an agent is allowed to do, the data it is allowed to see, the
-approvals it waits for, and the person to call when it goes wrong. The
-worked example is one invented team, the claims team at a small insurer.
-At the end you fill in the same template for your own team, and you need
-a chat assistant or a blank document and nothing else.
+Dans cette leçon, nous écrivons son remplaçant : une **politique** d’une
+page, avec les tâches qu’un agent a le droit de faire, les données qu’il a
+le droit de voir, les approbations qu’il attend, et la personne à appeler
+quand quelque chose tourne mal. L’exemple suivi est une équipe inventée,
+l’équipe sinistres d’un petit assureur. À la fin, vous remplissez le même
+gabarit pour votre propre équipe, et il vous suffit d’un assistant
+conversationnel ou d’un document vierge.
 
-## What makes a policy line useful
+## Ce qui rend une ligne de politique utile
 
-A policy line is useful when two people on the team, reading it alone, would
-make the same call. "Use AI responsibly" fails that test. So does "no
-sensitive data in AI tools", because each reader decides for themselves what
-counts as sensitive. A line that passes names the task, the tool, and the
-data, and says what happens at the boundary.
+Une ligne de politique est utile quand deux personnes de l’équipe, en la
+lisant chacune de leur côté, prendraient la même décision. « Utilisez l’IA de
+façon responsable » échoue à ce test. « Aucune donnée sensible dans les
+outils d’IA » aussi, parce que chaque lecteur décide lui-même de ce qui
+compte comme sensible. Une ligne qui réussit nomme la tâche, l’outil et les
+données, et dit ce qui se passe à la limite.
 
-Here is the claims team's first attempt, rewritten line by line.
+Voici la première tentative de l’équipe sinistres, réécrite ligne par ligne.
 
 ```text
-Before                              After
---------------------------------    -----------------------------------------------------
-Use AI tools carefully.             The approved assistant may summarize a claim file and
-                                    draft the first reply. It may not decide a claim.
+Avant                               Après
+--------------------------------    --------------------------------------------------------
+Utilisez les outils d’IA avec       L’assistant approuvé peut résumer un dossier de sinistre
+prudence.                           et rédiger la première réponse. Il ne peut pas décider
+                                    d’un sinistre.
 
-No sensitive data in AI tools.      Claim files go in the approved assistant only, with the
-                                    claimant's name and policy number replaced by the claim
-                                    id. Medical reports never go in.
+Aucune donnée sensible dans les     Les dossiers de sinistre ne vont que dans l’assistant
+outils d’IA.                        approuvé, avec le nom de l’assuré et son numéro de
+                                    contrat remplacés par le numéro de sinistre. Les
+                                    rapports médicaux n’y vont jamais.
 
-Check the output.                   A person reads every drafted reply against the claim
-                                    file before it is sent, and puts their name on it.
+Vérifiez la sortie.                 Une personne relit chaque réponse rédigée en regard du
+                                    dossier de sinistre avant l’envoi, et y met son nom.
 ```
 
-Every "After" line answers a question a team member has on a Tuesday
-afternoon, such as "can I paste this?" or "what do I do before I send?".
-The "Before" lines answer none of them.
+Chaque ligne « Après » répond à une question qu’un membre de l’équipe se pose
+un mardi après-midi, comme « puis-je coller ceci ? » ou « que dois-je faire
+avant d’envoyer ? ». Les lignes « Avant » ne répondent à aucune.
 
 <Choice id="a-line-a-team-can-apply" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['policy']}
-  title="Which line can the team apply?" hint="Read each line as two different colleagues would. Do both make the same call?"
+  title="Quelle ligne l’équipe peut-elle appliquer ?" hint="Lisez chaque ligne comme le feraient deux collègues différents. Prennent-ils la même décision ?"
   options={[
-    { text: 'Agents may draft replies to customers and may not send them. A named person sends each one.', correct: true },
-    { text: 'Agents are used only where they add value and never where they add risk.', why: 'Every task adds some value and some risk. Two readers weigh them differently and reach different calls.' },
-    { text: 'Teams should apply good judgment before giving an agent access to customer data.', why: 'Good judgment is the thing the policy was supposed to replace. The line hands the decision back to each reader.' },
-    { text: 'Agents may be used on customer data where the applicable guidelines and best practices allow.', why: 'Which guidelines? A line that points at another document nobody can find decides nothing.' },
+    { text: 'Les agents peuvent rédiger des réponses aux clients et ne peuvent pas les envoyer. Une personne nommée envoie chacune.', correct: true },
+    { text: 'Les agents ne sont utilisés que là où ils apportent de la valeur, et jamais là où ils apportent du risque.', why: 'Chaque tâche apporte un peu de valeur et un peu de risque. Deux lecteurs les pèsent différemment et prennent des décisions différentes.' },
+    { text: 'Les équipes doivent faire preuve de bon sens avant de donner à un agent l’accès aux données clients.', why: 'Le bon sens est justement ce que la politique devait remplacer. La ligne rend la décision à chaque lecteur.' },
+    { text: 'Les agents peuvent être utilisés sur les données clients dans la mesure où les directives et bonnes pratiques applicables le permettent.', why: 'Quelles directives ? Une ligne qui renvoie à un autre document que personne ne trouve ne décide rien.' },
   ]}>
-The claims team is choosing one line for the section on customer contact.
-Which line would two team members apply the same way?
+L’équipe sinistres choisit une ligne pour la section sur le contact avec les
+clients. Quelle ligne deux membres de l’équipe appliqueraient-ils de la même
+façon ?
 </Choice>
 
-## The one-page template
+## Le gabarit d’une page
 
-A policy that fits on one page gets read. The claims team's page has five
-headings, and any team can fill the same five.
+Une politique qui tient sur une page est lue. La page de l’équipe sinistres
+a cinq rubriques, et n’importe quelle équipe peut remplir les mêmes cinq.
 
 ```text
-AI policy: claims team                        Owner: team lead      Reviewed: quarterly
+Politique d’IA : équipe sinistres        Responsable : chef d’équipe   Revue : chaque trimestre
 
-1. Allowed tasks       What the agent may do, and what it may not decide.
-2. Data                What may go in, what is replaced before it goes in, what never goes in.
-3. Approvals           Which actions a person approves first, and who that person is.
-4. Logging             Where the agent's actions are recorded, and who reads the log, how often.
-5. Escalation          What stops the agent, who is told, how fast, what is kept, who restarts it.
+1. Tâches permises       Ce que l’agent peut faire, et ce qu’il ne peut pas décider.
+2. Données               Ce qui peut entrer, ce qui est remplacé avant d’entrer, ce qui n’entre jamais.
+3. Approbations          Quelles actions une personne approuve d’abord, et qui est cette personne.
+4. Journalisation        Où les actions de l’agent sont enregistrées, qui lit le journal, à quelle fréquence.
+5. Remontée              Ce qui arrête l’agent, qui est prévenu, dans quel délai, ce qui est conservé,
+                         qui le relance.
 ```
 
-The owner and the review date are part of the template on purpose. A policy
-without an owner is nobody's job to update, and a policy without a review
-date is still describing last year's tools.
+Le responsable et la date de revue font exprès partie du gabarit. Une
+politique sans responsable n’est le travail de personne quand il faut la
+mettre à jour, et une politique sans date de revue décrit encore les outils
+de l’an dernier.
 
-Sections 1 to 3 are the questions from the [agent risk lesson](/safety/agent-risk/),
-written down once for the whole team. The blast radius of each allowed task sets what
-goes in section 2. Least privilege sets how narrow section 1 is. The
-approval moments go in section 3. Section 4 is new. The agent's actions
-are recorded where a person can read them later, because the first time
-something goes wrong the log is the only record. Recording is only half of
-it. The claims team names the team lead to read a sample every Friday, since
-a log nobody reads doesn't catch anything. A later lesson in this course goes
-into what a log needs to hold.
+Les sections 1 à 3 reprennent les questions de la
+[leçon sur les risques des agents](/safety/agent-risk/), écrites une fois
+pour toute l’équipe. Le rayon d’impact (blast radius) de chaque tâche permise fixe ce qui
+va dans la section 2. Le moindre privilège (least privilege) fixe l’étroitesse de la
+section 1. Les moments d’approbation vont dans la section 3. La section 4 est
+nouvelle. Les actions de l’agent sont enregistrées là où une personne pourra
+les lire plus tard, parce que la première fois que quelque chose tourne mal,
+le journal est le seul compte rendu. L’enregistrement n’est que la moitié du
+travail. L’équipe sinistres désigne le chef d’équipe pour en lire un
+échantillon chaque vendredi, puisqu’un journal que personne ne lit ne repère
+rien. Une leçon suivante de ce cours détaille ce qu’un journal doit
+contenir.
 
-<Pitfall title="A policy without owners or examples">
-A department publishes a careful four-page AI policy. Nobody is named as its
-owner, and no line gives an example of an allowed use or a disallowed one.
-Six months later the tools have changed, three teams have each written their
-own interpretation, and a new hire finds all four documents and follows none.
-The rule: every section that grants or approves something names a person,
-and every rule comes with one example of a use it allows and one it forbids.
+<Pitfall title="Une politique sans responsables ni exemples">
+Un service publie une politique d’IA soignée de quatre pages. Personne n’est
+désigné comme son responsable, et aucune ligne ne donne d’exemple d’usage
+permis ou interdit. Six mois plus tard, les outils ont changé, trois équipes
+ont chacune écrit leur propre interprétation, et une nouvelle recrue trouve
+les quatre documents et n’en suit aucun. La règle : chaque section qui
+accorde ou approuve quelque chose nomme une personne, et chaque règle
+s’accompagne d’un exemple d’usage qu’elle permet et d’un exemple qu’elle
+interdit.
 </Pitfall>
 
 <MultiChoice id="what-the-template-needs" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['policy', 'logging-and-audit']}
-  context="The lesson builds a one-page AI policy from a template with five headings, an owner and a review date."
-  title="What belongs on the page?" hint="Which items would a team member need on a normal working day, or on the day something goes wrong?"
+  context="La leçon construit une politique d’IA d’une page à partir d’un gabarit à cinq rubriques, avec un responsable et une date de revue."
+  title="Qu’est-ce qui a sa place sur la page ?" hint="De quels éléments un membre de l’équipe aurait-il besoin un jour de travail normal, ou le jour où quelque chose tourne mal ?"
   options={[
-    { text: 'The name of the person who owns the policy and the date it is next reviewed.', correct: true },
-    { text: 'A statement that the organization values innovation and trust in equal measure.', why: 'A value statement gives the reader nothing to apply. The line neither allows nor forbids anything.' },
-    { text: 'Who reads the agent log, and how often.', correct: true },
-    { text: 'A verdict on every AI product that might reach the market this year.', why: 'The list is out of date the week it is published, and nobody can write it. Name the approved tools and the rule for asking about a new one.' },
+    { text: 'Le nom de la personne responsable de la politique et la date de sa prochaine revue.', correct: true },
+    { text: 'Une déclaration selon laquelle l’organisation accorde autant de valeur à l’innovation qu’à la confiance.', why: 'Une déclaration de valeurs ne donne rien à appliquer au lecteur. La ligne ne permet ni n’interdit rien.' },
+    { text: 'Qui lit le journal de l’agent, et à quelle fréquence.', correct: true },
+    { text: 'Un avis sur chaque produit d’IA qui pourrait sortir cette année.', why: 'La liste est périmée la semaine de sa publication, et personne ne peut l’écrire. Nommez les outils approuvés et la règle pour poser la question sur un nouvel outil.' },
   ]}>
-Which of these belong on the claims team's one page?
+Lesquels de ces éléments ont leur place sur la page de l’équipe sinistres ?
 </MultiChoice>
 
-## Read first, write later
+## D’abord la lecture, l’écriture ensuite
 
-The approvals section is where most policies get vague, because the
-decision feels like it has to be made per task forever. A framing from
-Anthropic's course "Deploying Claude Enterprise with confidence" turns it
-into a rule, paraphrased here in our own words (@Academy deploying-claude-enterprise-with-confidence).
+La section des approbations est celle où la plupart des politiques
+deviennent floues, parce que la décision semble devoir être prise tâche par
+tâche, indéfiniment. Une approche tirée du cours d’Anthropic « Deploying
+Claude Enterprise with confidence » en fait une règle, reformulée ici avec
+nos propres mots (@Academy deploying-claude-enterprise-with-confidence).
 
-Treat *read* access and *write* access as two separate levels of sign-off.
-An agent that can only read a system can get a fact wrong. An agent that
-can write to it can change a record or send a message under the team's name. So a
-team starts every agent read-only, and grants write access one workflow at
-a time, each grant approved by the person who answers for that
-workflow when it goes wrong. The claims team's agent reads claim files from the first day.
-Writing a reply into the outbox is a separate grant, approved by the
-claims manager, and sending it is a grant the team hasn't made.
+Traitez l’accès en *lecture* et l’accès en *écriture* comme deux niveaux
+d’autorisation distincts. Un agent qui peut seulement lire un système peut
+se tromper sur un fait. Un agent qui peut y écrire peut modifier un
+enregistrement ou envoyer un message au nom de l’équipe. Une équipe démarre
+donc chaque agent en lecture seule, et accorde l’accès en écriture un flux
+de travail à la fois, chaque autorisation étant approuvée par la personne qui
+répond de ce flux de travail quand il tourne mal. L’agent de l’équipe
+sinistres lit les dossiers de sinistre dès le premier jour. Écrire une
+réponse dans la boîte d’envoi est une autorisation distincte, approuvée par
+le responsable des sinistres, et l’envoyer est une autorisation que l’équipe
+n’a pas accordée.
 
-The same course states a fact about connectors that belongs in section 2.
-When an agent reaches a system through a connector, it acts as the person
-who connected it, and it sees what that person can see, no more and no less
-(@Academy deploying-claude-enterprise-with-confidence). The corollary is
-this lesson's own advice. The connecting person's access is the agent's
-ceiling. The claims team connects the agent from an account that has what
-the task needs, and never from the account of the person with the most
-access.
+Le même cours énonce un fait sur les connecteurs qui a sa place dans la
+section 2. Quand un agent atteint un système par un connecteur, il agit en
+tant que la personne qui l’a connecté, et il voit ce que cette personne peut
+voir, ni plus ni moins (@Academy deploying-claude-enterprise-with-confidence).
+Le corollaire est le conseil propre à cette leçon. L’accès de la personne
+qui connecte est le plafond de l’agent. L’équipe sinistres connecte l’agent
+depuis un compte qui a ce dont la tâche a besoin, et jamais depuis le compte
+de la personne qui a le plus d’accès.
 
-The claims team adds one more line under logging, as its rule for choosing
-a tool at all. A tool that doesn't record what the agent did is the
-wrong tool for a workflow a regulator can ask about, because the team
-couldn't answer the question.
+L’équipe sinistres ajoute une ligne de plus sous la journalisation, comme
+règle pour choisir un outil tout court. Un outil qui n’enregistre pas ce
+qu’a fait l’agent est le mauvais outil pour un flux de travail sur lequel un
+régulateur peut poser des questions, parce que l’équipe ne pourrait pas y
+répondre.
 
 <Sort id="read-or-write" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['permissions-and-least-privilege', 'human-in-the-loop', 'policy']}
-  context="The lesson gives a rule for an AI policy: an agent starts with read access, and each kind of write access is a separate grant that the owner of that workflow's risk approves."
-  title="Which grant does each action need?" hint="Does the action change anything outside the agent's own notes? If so, who owns the risk if it changes the wrong thing?"
-  buckets={['Read access: granted from day one', 'Write access: a separate grant, approved by the risk owner']}
+  context="La leçon donne une règle pour une politique d’IA : un agent démarre avec un accès en lecture, et chaque type d’accès en écriture est une autorisation distincte qu’approuve la personne responsable du risque de ce flux de travail."
+  title="Quelle autorisation demande chaque action ?" hint="L’action change-t-elle quelque chose en dehors des notes de l’agent ? Si oui, qui porte le risque si elle change la mauvaise chose ?"
+  buckets={['Accès en lecture : accordé dès le premier jour', 'Accès en écriture : une autorisation distincte, approuvée par le responsable du risque']}
   items={[
-    { text: 'Summarize a claim file', bucket: 0 },
-    { text: 'Put a drafted reply in the outbox', bucket: 1 },
-    { text: 'Look up the policy terms that apply to a claim', bucket: 0 },
-    { text: 'Change the status of a claim to "approved"', bucket: 1 },
-    { text: 'Send the drafted reply to the claimant', bucket: 1 },
+    { text: 'Résumer un dossier de sinistre', bucket: 0 },
+    { text: 'Placer une réponse rédigée dans la boîte d’envoi', bucket: 1 },
+    { text: 'Consulter les conditions du contrat qui s’appliquent à un sinistre', bucket: 0 },
+    { text: 'Passer le statut d’un sinistre à « accepté »', bucket: 1 },
+    { text: 'Envoyer la réponse rédigée à l’assuré', bucket: 1 },
   ]} />
 
-## The escalation route
+## La voie de remontée
 
-The last section of the page is the one teams skip, and the one they need
-first. **Escalation** is the agreed route for the day the agent does
-something wrong: a reply went to the wrong claimant, a file left the
-building, the agent approved a claim it should have flagged. The first
-incident is the wrong time to find out who can revoke the agent's access.
+La dernière section de la page est celle que les équipes sautent, et celle
+dont elles ont besoin en premier. La **remontée des incidents** (escalation)
+est la voie convenue pour le jour où l’agent fait quelque chose de travers :
+une réponse est partie chez le mauvais assuré, un fichier est sorti de
+l’entreprise, l’agent a accepté un sinistre qu’il aurait dû signaler. Le
+premier incident est le mauvais moment pour découvrir qui peut retirer
+l’accès de l’agent.
 
-The claims team's section answers five questions, each with a name, or a
-number.
+La section de l’équipe sinistres répond à cinq questions, chacune avec un nom
+ou un nombre.
 
 ```text
-5. Escalation
+5. Remontée
 
-What stops it     Anyone on the team may stop the agent. The button is in the assistant's
-                  settings, and IT can revoke its account.
-Who is told       The team lead, at once, by phone. Out of hours: the IT on-call.
-How fast          Within the hour of noticing. A report is never too early.
-What is kept      The conversation, the agent log for that day, and the affected record
-                  as it is now. Nobody tidies up first.
-Who restarts it   The claims manager, after the team lead has read the log and written
-                  two lines on what changes.
+Ce qui l’arrête   Tout membre de l’équipe peut arrêter l’agent. Le bouton est dans les
+                  réglages de l’assistant, et l’informatique peut révoquer son compte.
+Qui est prévenu   Le chef d’équipe, immédiatement, par téléphone. Hors des heures de bureau :
+                  la personne d’astreinte informatique.
+Dans quel délai   Dans l’heure qui suit le constat. Un signalement n’est jamais trop tôt.
+Ce qui est gardé  La conversation, le journal de l’agent pour ce jour-là, et l’enregistrement
+                  concerné dans son état actuel. Personne ne fait le ménage avant.
+Qui le relance    Le responsable des sinistres, après que le chef d’équipe a lu le journal et
+                  écrit deux lignes sur ce qui change.
 ```
 
-People report when the route is known, so nobody has to work out who to
-call while worried, and when the route is blameless, so the person who
-noticed is thanked and the fix goes into the policy. An organization with that route
-learns from near-misses. One without it learns only from disasters, and
-late.
+Les gens signalent quand la voie est connue, pour que personne n’ait à
+chercher qui appeler sous le coup de l’inquiétude, et quand la voie est sans
+recherche de coupable, pour que la personne qui a remarqué le problème soit
+remerciée et que la correction entre dans la politique. Une organisation qui
+a cette voie apprend des incidents évités de justesse. Une organisation qui
+ne l’a pas n’apprend que des catastrophes, et tard.
 
-One more line goes under escalation, because it is a change nobody on the
-team makes and everybody feels. The vendor updates the model behind the
-agent, and the same instructions now act differently: a format changes, a
-refusal appears, a shortcut is taken. The claims team treats a model update
-the way it treats any change to a tool it depends on. Before the agent goes
-back on live claims, someone reruns it on last month's files and compares
-(@AEC-11).
+Une ligne de plus va sous la remontée, parce qu’il s’agit d’un changement
+que personne dans l’équipe ne fait et que tout le monde ressent. Le
+fournisseur met à jour le modèle derrière l’agent, et les mêmes instructions
+agissent maintenant autrement : un format change, un refus apparaît, un
+raccourci est pris. L’équipe sinistres traite une mise à jour du modèle comme
+tout changement d’un outil dont elle dépend. Avant que l’agent revienne sur
+les sinistres réels, quelqu’un le relance sur les dossiers du mois précédent
+et compare (@AEC-11).
 
 <Scenario id="the-first-incident" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['escalation', 'logging-and-audit']}
-  title="The first incident" hint="What does the person who noticed need to know in the next five minutes, and what must still exist an hour later?"
+  title="Le premier incident" hint="Que doit savoir la personne qui a remarqué le problème dans les cinq minutes qui suivent, et qu’est-ce qui doit encore exister une heure plus tard ?"
   options={[
-    { text: 'Delete the wrong reply from the sent folder, apologize to the claimant, and mention it at the next team meeting.', consequence: 'The evidence is gone before anyone has read it. Nobody learns why the agent picked the wrong claimant, and it does the same thing next week.' },
-    { text: 'Stop the agent, call the team lead, and leave the sent reply and the log as they are.', correct: true, consequence: 'The team lead reads the log that afternoon and finds two claim files with the same surname. The policy gains a line on matching by claim id, and the agent is back on Monday.' },
-    { text: 'Ask the agent what happened and why, and paste its explanation into a ticket.', consequence: 'The agent produces a plausible paragraph that may have nothing to do with what it did. The log holds the answer, and nobody has looked at it yet.' },
-    { text: 'Keep the agent running so the backlog does not grow, and raise it with IT when they are next in.', consequence: 'The agent sends four more replies before IT is in. Two go to the right people. Nobody knows which two until the claimants reply.' },
+    { text: 'Supprimer la mauvaise réponse des éléments envoyés, s’excuser auprès de l’assuré, et en parler à la prochaine réunion d’équipe.', consequence: 'La preuve a disparu avant que quiconque l’ait lue. Personne n’apprend pourquoi l’agent a choisi le mauvais assuré, et il refait la même chose la semaine suivante.' },
+    { text: 'Arrêter l’agent, appeler le chef d’équipe, et laisser la réponse envoyée et le journal tels quels.', correct: true, consequence: 'Le chef d’équipe lit le journal l’après-midi même et trouve deux dossiers de sinistre portant le même nom de famille. La politique gagne une ligne sur la correspondance par numéro de sinistre, et l’agent reprend lundi.' },
+    { text: 'Demander à l’agent ce qui s’est passé et pourquoi, et coller son explication dans un ticket.', consequence: 'L’agent produit un paragraphe plausible qui n’a peut-être rien à voir avec ce qu’il a fait. Le journal contient la réponse, et personne ne l’a encore regardé.' },
+    { text: 'Laisser l’agent tourner pour que le retard ne s’accumule pas, et en parler à l’informatique à son prochain passage.', consequence: 'L’agent envoie quatre réponses de plus avant que l’informatique soit là. Deux vont aux bonnes personnes. Personne ne sait lesquelles avant que les assurés répondent.' },
   ]}>
-A drafted reply was sent to the wrong claimant, and you noticed. The
-team's policy has no escalation section yet. What do you do in the next
-five minutes?
+Une réponse rédigée a été envoyée au mauvais assuré, et vous l’avez
+remarqué. La politique de l’équipe n’a pas encore de section sur la remontée.
+Que faites-vous dans les cinq minutes qui suivent ?
 </Scenario>
 
 <Scenario id="a-file-left-the-building" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['escalation', 'logging-and-audit']}
-  context="The lesson gives a team's AI policy an escalation section that says what stops the agent, who is told, how fast, what is kept and who decides on a restart."
-  title="A file left the building" hint="Who needs to know in the next few minutes, and what must still be there for them to read?"
+  context="La leçon donne à la politique d’IA d’une équipe une section de remontée qui dit ce qui arrête l’agent, qui est prévenu, dans quel délai, ce qui est conservé et qui décide de la relance."
+  title="Un fichier est sorti de l’entreprise" hint="Qui doit être au courant dans les minutes qui viennent, et qu’est-ce qui doit encore être là pour qu’il le lise ?"
   options={[
-    { text: 'Write to the outside address and ask them to delete the file, then carry on with the day.', consequence: 'Nobody on the team knows it happened. The agent has the same access tomorrow, and the outside address has no reason to comply.' },
-    { text: 'Stop the agent, tell the person the policy names, and leave the log and the sent message untouched.', correct: true, consequence: 'The team lead reads the log the same afternoon and finds which line in a claim file the agent followed. The agent loses its send grant until the policy has a line for it.' },
-    { text: 'Ask the agent to explain itself and paste the reply into the incident ticket.', consequence: 'The explanation is generated by the same model that sent the file, and it has no view of its own log. The ticket holds a plausible story and no facts.' },
-    { text: 'Delete the log entry and the sent message so the file is not copied any further.', consequence: 'The file is already outside. The only record of how it got there is gone, and the next investigation starts from nothing.' },
+    { text: 'Écrire à l’adresse extérieure pour demander de supprimer le fichier, puis poursuivre la journée.', consequence: 'Personne dans l’équipe ne sait que c’est arrivé. L’agent a le même accès le lendemain, et l’adresse extérieure n’a aucune raison d’obtempérer.' },
+    { text: 'Arrêter l’agent, prévenir la personne que nomme la politique, et laisser intacts le journal et le message envoyé.', correct: true, consequence: 'Le chef d’équipe lit le journal l’après-midi même et trouve quelle ligne d’un dossier de sinistre l’agent a suivie. L’agent perd son autorisation d’envoi jusqu’à ce que la politique ait une ligne sur ce cas.' },
+    { text: 'Demander à l’agent de s’expliquer et coller sa réponse dans le ticket d’incident.', consequence: 'L’explication est générée par le même modèle qui a envoyé le fichier, et il n’a aucune vue sur son propre journal. Le ticket contient une histoire plausible et aucun fait.' },
+    { text: 'Supprimer l’entrée du journal et le message envoyé pour que le fichier ne soit plus copié.', consequence: 'Le fichier est déjà dehors. Le seul compte rendu de la façon dont il est sorti a disparu, et la prochaine enquête part de rien.' },
   ]}>
-An agent on your team sent a claim file to an address outside the company,
-and you spotted it in the outbox log. What does the escalation section of a
-usable policy have you do first?
+Un agent de votre équipe a envoyé un dossier de sinistre à une adresse
+extérieure à l’entreprise, et vous l’avez repéré dans le journal des envois.
+Que vous fait faire en premier la section de remontée d’une politique
+utilisable ?
 </Scenario>
 
 <Repair id="fix-the-escalation-line" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['escalation']}
-  title="Fix the escalation line" hint="Who, how fast, what is kept, and who decides? Which of the five answers does the line give?"
-  broken={`If something goes wrong with an AI tool, report it to the appropriate person as soon as possible.`}
-  model={`Anyone may stop the agent from its settings page. Tell the team lead by phone within the hour, or the IT on-call out of hours. Keep the conversation, the day's agent log and the affected record as they are. The claims manager decides when it restarts, after the team lead has read the log.`}>
-This is the escalation section of a policy as drafted. Rewrite it so a
-new team member who notices a problem knows what to do without asking.
+  title="Corrigez la ligne de remontée" hint="Qui, dans quel délai, ce qui est conservé, et qui décide ? Laquelle des cinq réponses la ligne donne-t-elle ?"
+  broken={`En cas de problème avec un outil d’IA, signalez-le à la personne compétente dès que possible.`}
+  model={`Tout le monde peut arrêter l’agent depuis sa page de réglages. Prévenez le chef d’équipe par téléphone dans l’heure, ou la personne d’astreinte informatique hors des heures de bureau. Gardez la conversation, le journal de l’agent du jour et l’enregistrement concerné tels quels. Le responsable des sinistres décide de la relance, après que le chef d’équipe a lu le journal.`}>
+Voici la section de remontée d’une politique telle qu’elle a été rédigée.
+Réécrivez-la pour qu’un nouveau membre de l’équipe qui remarque un problème
+sache quoi faire sans avoir à demander.
 </Repair>
 
 <Match id="which-heading" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['policy']}
-  context="The lesson's one-page AI policy has five headings: allowed tasks, data, approvals, logging and escalation."
-  title="Which heading does it go under?" hint="Is the line about what the agent may do, what goes in, who says yes first, who reads the record, or what happens when it goes wrong?"
-  options={['Allowed tasks', 'Data', 'Approvals', 'Logging', 'Escalation']}
+  context="La politique d’IA d’une page de la leçon a cinq rubriques : tâches permises, données, approbations, journalisation et remontée."
+  title="Sous quelle rubrique va-t-elle ?" hint="La ligne porte-t-elle sur ce que l’agent peut faire, sur ce qui entre, sur qui dit oui d’abord, sur qui lit le compte rendu, ou sur ce qui se passe quand cela tourne mal ?"
+  options={['Tâches permises', 'Données', 'Approbations', 'Journalisation', 'Remontée']}
   rows={[
-    { statement: 'Agents may draft replies to claimants and may not send them.', option: 0, why: 'Does this line say what the agent may do?' },
-    { statement: 'No medical records go into any agent.', option: 1, why: 'Is this about what may go in?' },
-    { statement: 'The claims manager approves each new kind of write access.', option: 2, why: 'Does this name who says yes before an action?' },
-    { statement: 'The team lead reads a sample of the agent log every Friday.', option: 3, why: 'Is this about the record of what the agent did?' },
-    { statement: 'When an agent sends anything to the wrong person, stop it and call the claims manager.', option: 4, why: 'Is this about what happens after something goes wrong?' },
+    { statement: 'Les agents peuvent rédiger des réponses aux assurés et ne peuvent pas les envoyer.', option: 0, why: 'Cette ligne dit-elle ce que l’agent peut faire ?' },
+    { statement: 'Aucun dossier médical n’entre dans un agent.', option: 1, why: 'Cela porte-t-il sur ce qui peut entrer ?' },
+    { statement: 'Le responsable des sinistres approuve chaque nouveau type d’accès en écriture.', option: 2, why: 'Cela nomme-t-il qui dit oui avant une action ?' },
+    { statement: 'Le chef d’équipe lit un échantillon du journal de l’agent chaque vendredi.', option: 3, why: 'Cela porte-t-il sur le compte rendu de ce qu’a fait l’agent ?' },
+    { statement: 'Quand un agent envoie quoi que ce soit à la mauvaise personne, arrêtez-le et appelez le responsable des sinistres.', option: 4, why: 'Cela porte-t-il sur ce qui se passe après que quelque chose a mal tourné ?' },
   ]}
-  rationale="Each heading answers one question, so a reader finds the rule for their situation in one place.">
-Match each policy line to its heading.
+  rationale="Chaque rubrique répond à une question, donc un lecteur trouve la règle pour sa situation à un seul endroit.">
+Associez chaque ligne de politique à sa rubrique.
 </Match>
 
 <Sort id="same-call-or-not" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['policy']}
-  context="The lesson calls a policy line useful when two team members who read it alone make the same call."
-  title="Would two readers agree?" hint="Could two people read this line and make different calls?"
-  buckets={['Two readers make the same call', 'Each reader decides alone']}
+  context="La leçon dit qu’une ligne de politique est utile quand deux membres de l’équipe qui la lisent chacun de leur côté prennent la même décision."
+  title="Deux lecteurs seraient-ils d’accord ?" hint="Deux personnes pourraient-elles lire cette ligne et prendre des décisions différentes ?"
+  buckets={['Deux lecteurs prennent la même décision', 'Chaque lecteur décide seul']}
   items={[
-    { text: 'Agents never send mail to customers. A named person sends each reply.', bucket: 0 },
-    { text: 'Agents start with read access, and the claims manager approves each write access.', bucket: 0 },
-    { text: 'The team lead reads the agent log every Friday.', bucket: 0 },
-    { text: 'Use AI responsibly.', bucket: 1 },
-    { text: 'Apply good judgment with customer data.', bucket: 1 },
-    { text: 'Agents are used where they add value.', bucket: 1 },
+    { text: 'Les agents n’envoient jamais d’e-mail aux clients. Une personne nommée envoie chaque réponse.', bucket: 0 },
+    { text: 'Les agents démarrent avec un accès en lecture, et le responsable des sinistres approuve chaque accès en écriture.', bucket: 0 },
+    { text: 'Le chef d’équipe lit le journal de l’agent chaque vendredi.', bucket: 0 },
+    { text: 'Utilisez l’IA de façon responsable.', bucket: 1 },
+    { text: 'Faites preuve de bon sens avec les données clients.', bucket: 1 },
+    { text: 'Les agents sont utilisés là où ils apportent de la valeur.', bucket: 1 },
   ]} />
 
 <Scenario id="whose-account" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['permissions-and-least-privilege', 'policy']}
-  context="The lesson says an agent that connects through a person's account inherits that person's access, and gives the agent an account with what its task needs."
-  title="The agent's account" hint="What could the agent reach through each account, compared with what the task needs?"
+  context="La leçon dit qu’un agent qui se connecte par le compte d’une personne hérite de l’accès de cette personne, et donne à l’agent un compte qui a ce dont sa tâche a besoin."
+  title="Le compte de l’agent" hint="Qu’est-ce que l’agent pourrait atteindre par chaque compte, comparé à ce dont la tâche a besoin ?"
   options={[
-    { text: 'Let it use the team lead\'s account for the first month, then move it.', consequence: 'For a month the agent can do everything the team lead can, including approving claims.' },
-    { text: 'Give it an account of its own that can only read the claim files.', correct: true, consequence: 'The agent can summarize claims and can\'t change or send anything. A write access is added later, as its own grant.' },
-    { text: 'Let it use the team lead\'s account and tell it to be careful in its instructions.', consequence: 'An instruction is text the agent weighs. The account still allows every action the team lead has.' },
-    { text: 'Let it use the IT administrator\'s account, because that one is monitored.', consequence: 'Monitoring records the damage after it happens. The agent can now reach every system.' },
+    { text: 'Le laisser utiliser le compte du chef d’équipe le premier mois, puis le changer.', consequence: 'Pendant un mois, l’agent peut faire tout ce que peut faire le chef d’équipe, y compris accepter des sinistres.' },
+    { text: 'Lui donner un compte à lui qui peut seulement lire les dossiers de sinistre.', correct: true, consequence: 'L’agent peut résumer les sinistres et ne peut rien modifier ni envoyer. Un accès en écriture s’ajoute plus tard, comme autorisation à part.' },
+    { text: 'Le laisser utiliser le compte du chef d’équipe et lui dire d’être prudent dans ses instructions.', consequence: 'Une instruction est un texte que l’agent pèse. Le compte autorise toujours chaque action dont dispose le chef d’équipe.' },
+    { text: 'Le laisser utiliser le compte de l’administrateur informatique, parce que ce compte est surveillé.', consequence: 'La surveillance enregistre les dégâts après coup. L’agent peut maintenant atteindre chaque système.' },
   ]}>
 
-The team wants the new claims agent to log in with the team lead's account,
-because that account already reaches every claim file. What do you do?
+L’équipe veut que le nouvel agent des sinistres se connecte avec le compte
+du chef d’équipe, parce que ce compte atteint déjà chaque dossier de
+sinistre. Que faites-vous ?
 
 </Scenario>
 
-## Enterprise tiers sell governance
+## Les offres entreprise vendent de la gouvernance
 
-Many vendors sell the same assistant at a consumer tier and at a business or
-enterprise tier. The pitch of the higher tier is often the sections of this
-lesson as product features: central control over which tools and connectors
-are on, an admin's view of the log, and a promise about data handling.
-Those features make sections 2 and 4 of your page easier to enforce,
-but the tier has no way of knowing which tasks your team may hand over or
-who to call at nine on a Friday evening, and it doesn't write the page
-for you. Buy the tier if your organization needs it, and write the page
-either way.
+Beaucoup de fournisseurs vendent le même assistant en offre grand public et
+en offre professionnelle ou entreprise. L’argument de l’offre supérieure
+reprend souvent les sections de cette leçon sous forme de fonctionnalités :
+un contrôle central des outils et des connecteurs activés, une vue
+administrateur du journal, et un engagement sur le traitement des données.
+Ces fonctionnalités rendent les sections 2 et 4 de votre page plus faciles à
+faire respecter. L’offre ne sait pas pour autant quelles tâches votre équipe
+peut confier, ni qui appeler à neuf heures un vendredi soir, et elle n’écrit
+pas la page à votre place. Achetez l’offre si votre organisation en a
+besoin, et écrivez la page dans tous les cas.
 
-The questions to ask a vendor before buying are the ones from the
-[responsible use lesson](/safety/responsible-use/#les-questions-à-poser-à-votre-organisation-ou-à-un-fournisseur).
-Put the answers on the page in the data and logging sections.
+Les questions à poser à un fournisseur avant d’acheter sont celles de la
+[leçon sur l’usage responsable](/safety/responsible-use/#les-questions-à-poser-à-votre-organisation-ou-à-un-fournisseur).
+Mettez les réponses sur la page, dans les sections données et
+journalisation.
 
-<Exercise stretch="Show the page to one colleague on the team and ask them to apply section 1 to a task they did this week. Every question they ask is a line to sharpen.">
-Fill in the five-heading template for your own team, in a document, or in a
-chat with an assistant that has no tools, using the claims team's page as
-the model. Name the allowed tasks and what the agent may not decide, the
-data that goes in and what's replaced first, the approvals with the
-person who gives each one, where the log goes and who reads it, and the
-escalation route with real names and a time. It should fit on one page.
+<Exercise stretch="Montrez la page à un collègue de l’équipe et demandez-lui d’appliquer la section 1 à une tâche qu’il a faite cette semaine. Chaque question qu’il pose est une ligne à préciser.">
+Remplissez le gabarit à cinq rubriques pour votre propre équipe, dans un
+document ou dans une conversation avec un assistant sans outils, en prenant
+la page de l’équipe sinistres pour modèle. Nommez les tâches permises et ce
+que l’agent ne peut pas décider, les données qui entrent et ce qui est
+remplacé d’abord, les approbations avec la personne qui donne chacune,
+l’endroit où va le journal et qui le lit, et la voie de remontée avec de
+vrais noms et un délai. L’ensemble doit tenir sur une page.
 
-A good result has a name in every section that needs one, and each rule
-has one example of a use it allows and one it forbids. If a section reads
-"use good judgment" or "the appropriate person", you have written the old
-policy in more words. Which section was hardest to give a name to, and why
-is that the section you need most?
+Un bon résultat a un nom dans chaque section qui en demande un, et chaque
+règle a un exemple d’usage qu’elle permet et un exemple qu’elle interdit. Si
+une section dit « faites preuve de bon sens » ou « la personne compétente »,
+vous avez réécrit l’ancienne politique avec plus de mots. Quelle section a
+été la plus difficile à associer à un nom, et pourquoi est-ce la section dont
+vous avez le plus besoin ?
 </Exercise>
 
 <MorePractice>
 
 <Scenario id="the-model-changed" phase="practice" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['model-change-risk', 'escalation']}
-  title="The vendor changed the model" hint="Which step finds out whether the agent still behaves the way the policy assumed, before a claimant does?"
+  title="Le fournisseur a changé de modèle" hint="Quelle étape permet de savoir si l’agent se comporte toujours comme la politique le suppose, avant qu’un assuré le découvre ?"
   options={[
-    { text: 'Nothing changes for the team: the vendor tested the new model.', consequence: 'The vendor tested it on their tasks. On yours, the new model starts adding a line about coverage to every reply. Three claimants quote it back.' },
-    { text: 'Ask the agent whether it behaves the same as before.', consequence: 'It says yes. It has no way to know, and the answer is a sentence generated by the model you were checking.' },
-    { text: 'Switch the agent to read-only for a week and see if anyone complains.', consequence: 'Read-only stops the writes, so nobody sees a wrong draft, and nobody learns anything about the new model either. The week ends with the same question.' },
-    { text: 'Rerun the agent on last month\'s claim files and compare the drafts with the ones a person sent.', correct: true, consequence: 'Twelve of the drafts differ. Two of the differences matter, the policy gains a line for them, and live work resumes on Wednesday.' },
+    { text: 'Rien ne change pour l’équipe : le fournisseur a testé le nouveau modèle.', consequence: 'Le fournisseur l’a testé sur ses tâches. Sur les vôtres, le nouveau modèle se met à ajouter une ligne sur la couverture à chaque réponse. Trois assurés la citent en retour.' },
+    { text: 'Demander à l’agent s’il se comporte comme avant.', consequence: 'Il répond oui. Il n’a aucun moyen de le savoir, et la réponse est une phrase générée par le modèle que vous vouliez vérifier.' },
+    { text: 'Passer l’agent en lecture seule pendant une semaine et voir si quelqu’un se plaint.', consequence: 'La lecture seule arrête les écritures, donc personne ne voit de brouillon faux, et personne n’apprend rien non plus sur le nouveau modèle. La semaine se termine sur la même question.' },
+    { text: 'Relancer l’agent sur les dossiers du mois dernier et comparer ses brouillons aux réponses envoyées.', correct: true, consequence: 'Douze brouillons diffèrent. Deux des différences comptent, la politique gagne une ligne à leur sujet, et le travail réel reprend mercredi.' },
   ]}>
-The vendor announces that the assistant behind the claims team's agent now
-runs on a newer model. Nothing else changed. What does the policy say
-happens before the agent goes back on live claims?
+Le fournisseur annonce que l’assistant derrière l’agent de l’équipe
+sinistres tourne maintenant sur un modèle plus récent. Rien d’autre n’a
+changé. Que dit la politique sur ce qui se passe avant que l’agent revienne
+sur les sinistres réels ?
 </Scenario>
 
 </MorePractice>
 
 <Recap>
-1. A policy line is useful when two team members reading it alone make the same call. "Use AI responsibly" leaves every team to decide for itself.
-2. One page with five headings is enough: allowed tasks, data, approvals, logging and escalation, with an owner and a review date at the top.
-3. Start every agent read-only. Each kind of write access is a separate grant, approved by the person who answers for that workflow when it goes wrong (@Academy deploying-claude-enterprise-with-confidence).
-4. An agent that connects through a person's account inherits that person's access. Give it an account with what the task needs.
-5. The escalation section names what stops the agent, who is told, how fast, what's kept and who restarts it. The first incident is the wrong time to find out.
-6. A model update is a change to a tool you depend on. Rerun last month's work before the agent goes back on live work (@AEC-11).
+1. Une ligne de politique est utile quand deux membres de l’équipe qui la lisent chacun de leur côté prennent la même décision. « Utilisez l’IA de façon responsable » laisse chaque équipe décider pour elle-même.
+2. Une page à cinq rubriques suffit : tâches permises, données, approbations, journalisation et remontée, avec un responsable et une date de revue en haut.
+3. Démarrez chaque agent en lecture seule. Chaque type d’accès en écriture est une autorisation distincte, approuvée par la personne qui répond de ce flux de travail quand il tourne mal (@Academy deploying-claude-enterprise-with-confidence).
+4. Un agent qui se connecte par le compte d’une personne hérite de l’accès de cette personne. Donnez-lui un compte qui a ce dont la tâche a besoin.
+5. La section de remontée nomme ce qui arrête l’agent, qui est prévenu, dans quel délai, ce qui est conservé et qui le relance. Le premier incident est le mauvais moment pour le découvrir.
+6. Une mise à jour du modèle est un changement d’un outil dont vous dépendez. Relancez le travail du mois précédent avant que l’agent revienne sur du travail réel (@AEC-11).
 </Recap>

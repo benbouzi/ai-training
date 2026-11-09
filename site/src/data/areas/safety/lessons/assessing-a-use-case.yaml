@@ -1,8 +1,9 @@
 id: safety/assessing-a-use-case
-title: Assessing the risk of a use case before it starts
+title: Évaluer le risque d’un cas d’usage avant qu’il démarre
 description: >-
-  Rate three proposed AI use cases on impact and likelihood, find the ones at or above the threshold,
-  and decide between extra controls and a written acceptance, with a record that can be reviewed.
+  Noter trois cas d’usage de l’IA proposés selon l’impact et la probabilité, trouver ceux qui sont
+  au seuil ou au-dessus, et choisir entre des contrôles supplémentaires et une acceptation écrite,
+  avec un compte rendu qui peut être réexaminé.
 mode: tutorial
 covers: safety/governance
 serves: [safety/judges-agent-risk/sets-oversight, safety/judges-agent-risk/names-blast-radius]
@@ -12,15 +13,17 @@ assumes:
     lesson: safety/agent-risk
     section: lhumain-dans-la-boucle
 extends-to:
-  - label: "AI Leadership, modules 5 and 8: oversight matched to risk, and testing a workflow before others rely on it (OpenAI Academy, free account)"
+  - label: >-
+      AI Leadership, modules 5 et 8 : une supervision proportionnée au risque, et tester un flux de
+      travail avant que d’autres s’y fient (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/ai-leadership-kaf7k
 after: [safety/writing-an-ai-policy]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Assess one AI use case from your own work with the method: domains touched, impact and
-    likelihood on the scales, the level, and who would have to accept it in writing.
+    Évaluer un cas d’usage de l’IA tiré de votre propre travail avec la méthode : domaines touchés,
+    impact et probabilité sur les échelles, niveau, et personne qui devrait l’accepter par écrit.
 sources: [AEC-10]
 issue: 141
 minutes: 15

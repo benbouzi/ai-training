@@ -1,327 +1,355 @@
 import { Choice, Predict, Scenario, Sort, Pitfall, Exercise, Recap } from '@components/lesson';
 
-A support team uses an agent to answer customer emails. On Monday morning a
-customer gets a reply from it: "Your refund for order 8812 has been
-approved." The refund wasn't approved. The customer phones to ask when the
-money arrives, and the team lead asks the team what happened. The agent's
-own summary of the session says it sent two order-status replies and saved
-one refund request as a draft. Nobody on the team can say why a refund
-email got a reply, or whether it happened before.
+Une équipe d’assistance utilise un agent pour répondre aux e-mails des
+clients. Le lundi matin, un client reçoit de lui cette réponse : « Votre
+remboursement pour la commande 8812 a été accepté. » Le remboursement
+n’avait pas été accepté. Le client appelle pour savoir quand l’argent
+arrivera, et le chef d’équipe demande à l’équipe ce qui s’est passé. Le
+résumé que l’agent a fait de sa session dit qu’il a envoyé deux réponses de
+suivi de commande et enregistré une demande de remboursement en brouillon.
+Personne dans l’équipe ne sait dire pourquoi un e-mail de remboursement a
+reçu une réponse, ni si c’était déjà arrivé.
 
-In this lesson we answer the team lead's question from the agent's log,
-and then look at the change that nobody on the team made: the vendor moved
-the agent to a new model version the week before. The team, the emails, the
-orders and the model names are invented for this lesson. This page is all
-you need.
+Dans cette leçon, nous répondons à la question du chef d’équipe à partir du
+journal de l’agent, puis nous regardons le changement que personne dans
+l’équipe n’a fait : le fournisseur a fait passer l’agent à une nouvelle
+version du modèle la semaine précédente. L’équipe, les e-mails, les
+commandes et les noms de modèles sont inventés pour cette leçon. Cette page
+suffit.
 
-## Reconstruct the session from the log
+## Reconstituer la session à partir du journal
 
-**Logging and audit** means recording what an agent was asked, which tools
-it called and what it changed, so that a person can reconstruct the session
-later and judge it. The Agent Engineer Course, in its module on evaluating
-agents, lists the same parts: the user's input and the agent's output, each
-tool call with its result, and the errors (@AEC-09). This is the log of the
-Monday session, one line per event:
+La **journalisation et l’audit** (logging and audit) consistent à
+enregistrer ce qu’on a demandé à un agent, quels outils il a appelés et ce
+qu’il a modifié, pour qu’une personne puisse plus tard reconstituer la
+session et la juger. L’Agent Engineer Course, dans son module sur
+l’évaluation des agents, liste les mêmes éléments : l’entrée de
+l’utilisateur et la sortie de l’agent, chaque appel d’outil (tool call) avec son
+résultat, et les erreurs (@AEC-09). Voici le journal de la session du lundi,
+une ligne par événement :
 
 ```text
-# support agent log, 2026-09-21
-# time | session | model | event | target | text
-09:02:11 | s-418 | assistant-2026-09 | prompt | u-17 | Answer the new emails in the support inbox. Send replies to order-status questions. Leave any email about a refund as a draft for a person.
-09:02:14 | s-418 | assistant-2026-09 | tool read_inbox | - | 3 new: E-201, E-202, E-203
-09:02:15 | s-418 | assistant-2026-09 | tool read_email | E-201 | Where is my order 5531?
-09:02:16 | s-418 | assistant-2026-09 | tool read_email | E-202 | Order 8812: I want my money back
-09:02:17 | s-418 | assistant-2026-09 | tool read_email | E-203 | Order 7730 arrived damaged, refund please
-09:02:20 | s-418 | assistant-2026-09 | tool lookup_order | 5531 | shipped on 2026-09-19
-09:02:25 | s-418 | assistant-2026-09 | tool send_reply | E-201 | Your order 5531 was shipped on 19 September.
-09:02:31 | s-418 | assistant-2026-09 | tool lookup_order | 8812 | refund requested, not approved yet
-09:02:36 | s-418 | assistant-2026-09 | tool send_reply | E-202 | Your refund for order 8812 has been approved.
-09:02:41 | s-418 | assistant-2026-09 | tool lookup_order | 7730 | delivered on 2026-09-18
-09:02:47 | s-418 | assistant-2026-09 | tool save_draft | E-203 | We are sorry your order arrived damaged.
-09:02:50 | s-418 | assistant-2026-09 | summary | - | Answered 3 emails: 2 order-status replies sent, 1 refund request saved as a draft.
+# journal de l’agent d’assistance, 2026-09-21
+# heure | session | modèle | événement | cible | texte
+09:02:11 | s-418 | assistant-2026-09 | prompt | u-17 | Réponds aux nouveaux e-mails de la boîte d’assistance. Envoie les réponses aux questions sur le suivi des commandes. Laisse tout e-mail qui parle d’un remboursement en brouillon pour une personne.
+09:02:14 | s-418 | assistant-2026-09 | tool read_inbox | - | 3 nouveaux : E-201, E-202, E-203
+09:02:15 | s-418 | assistant-2026-09 | tool read_email | E-201 | Où est ma commande 5531 ?
+09:02:16 | s-418 | assistant-2026-09 | tool read_email | E-202 | Commande 8812 : je veux récupérer mon argent
+09:02:17 | s-418 | assistant-2026-09 | tool read_email | E-203 | Commande 7730 arrivée abîmée, remboursement svp
+09:02:20 | s-418 | assistant-2026-09 | tool lookup_order | 5531 | expédiée le 2026-09-19
+09:02:25 | s-418 | assistant-2026-09 | tool send_reply | E-201 | Votre commande 5531 a été expédiée le 19 septembre.
+09:02:31 | s-418 | assistant-2026-09 | tool lookup_order | 8812 | remboursement demandé, pas encore accepté
+09:02:36 | s-418 | assistant-2026-09 | tool send_reply | E-202 | Votre remboursement pour la commande 8812 a été accepté.
+09:02:41 | s-418 | assistant-2026-09 | tool lookup_order | 7730 | livrée le 2026-09-18
+09:02:47 | s-418 | assistant-2026-09 | tool save_draft | E-203 | Nous sommes désolés que votre commande soit arrivée abîmée.
+09:02:50 | s-418 | assistant-2026-09 | summary | - | 3 e-mails traités : 2 réponses de suivi de commande envoyées, 1 demande de remboursement enregistrée en brouillon.
 ```
 
-The first line is what the agent was asked, and by whom. The `tool` lines
-are the calls it made, with the email or order each call was about and what
-came back. The tool `send_reply` sends an email to a customer, and
-`save_draft` leaves one for a person, so those two change something outside
-the session. Before you read on, find the reply that the request said to leave
-as a draft.
+La première ligne dit ce qu’on a demandé à l’agent, et qui l’a demandé. Les
+lignes `tool` sont les appels qu’il a faits, avec l’e-mail ou la commande
+que concernait chaque appel et ce qui est revenu. L’outil `send_reply`
+envoie un e-mail à un client, et `save_draft` en laisse un pour une
+personne, donc ces deux outils modifient quelque chose en dehors de la
+session. Avant de poursuivre, trouvez la réponse que la demande disait de
+laisser en brouillon.
 
 <Predict id="which-reply-broke-the-rule" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['logging-and-audit']}
-  context="A support agent was asked to send replies to order-status questions and to leave any email about a refund as a draft. Its log shows three emails: E-201 'Where is my order 5531?', E-202 'Order 8812: I want my money back' and E-203 'Order 7730 arrived damaged, refund please'. The log shows send_reply for E-201 and E-202, and save_draft for E-203."
-  title="Which reply went against the request?"
-  hint="For each send_reply line, go back to the read_email line for the same email. Is that email about a refund, even if the word refund is not in it?"
+  context="On a demandé à un agent d’assistance d’envoyer les réponses aux questions sur le suivi des commandes et de laisser en brouillon tout e-mail qui parle d’un remboursement. Son journal montre trois e-mails : E-201 « Où est ma commande 5531 ? », E-202 « Commande 8812 : je veux récupérer mon argent » et E-203 « Commande 7730 arrivée abîmée, remboursement svp ». Le journal montre send_reply pour E-201 et E-202, et save_draft pour E-203."
+  title="Quelle réponse est allée contre la demande ?"
+  hint="Pour chaque ligne send_reply, remontez à la ligne read_email du même e-mail. Cet e-mail parle-t-il d’un remboursement, même si le mot remboursement n’y figure pas ?"
   answer="E-202">
-One email got a sent reply although the request said to leave it as a
-draft for a person. Type its id as the log shows it.
+Un e-mail a reçu une réponse envoyée alors que la demande disait de le
+laisser en brouillon pour une personne. Tapez son identifiant tel que le
+journal l’affiche.
 </Predict>
 
-A short program reads the same log, picks out the changes, and checks each
-one against the request. This is its output. The last two lines are the
-agent's own summary and the counts of the changes:
+Un petit programme lit le même journal, en extrait les modifications, et
+compare chacune à la demande. Voici sa sortie. Les deux dernières lignes
+sont le résumé de l’agent et le décompte des modifications :
 
 ```text
-changed, checked against the request:
-  sent   E-201  Where is my order 5531?
-         reply: Your order 5531 was shipped on 19 September.
-         ok
-  sent   E-202  Order 8812: I want my money back
-         reply: Your refund for order 8812 has been approved.
-         AGAINST THE REQUEST (about a refund, so a draft)
-  draft  E-203  Order 7730 arrived damaged, refund please
-         reply: We are sorry your order arrived damaged.
-         ok
+modifications, comparées à la demande :
+  envoyé     E-201  Où est ma commande 5531 ?
+             réponse : Votre commande 5531 a été expédiée le 19 septembre.
+             ok
+  envoyé     E-202  Commande 8812 : je veux récupérer mon argent
+             réponse : Votre remboursement pour la commande 8812 a été accepté.
+             CONTRAIRE À LA DEMANDE (parle d’un remboursement, donc brouillon)
+  brouillon  E-203  Commande 7730 arrivée abîmée, remboursement svp
+             réponse : Nous sommes désolés que votre commande soit arrivée abîmée.
+             ok
 
-agent's summary: "Answered 3 emails: 2 order-status replies sent, 1 refund request saved as a draft."
-changes: 3, sent: 2, drafts: 1, against the request: 1
+résumé de l’agent : « 3 e-mails traités : 2 réponses de suivi de commande envoyées, 1 demande de remboursement enregistrée en brouillon. »
+modifications : 3, envoyées : 2, brouillons : 1, contraires à la demande : 1
 ```
 
-The email with "refund" in its subject was handled correctly. The one that
-went wrong asks for "money back" and starts with an order number, and the
-agent treated it as an order-status question. The summary repeats that
-mistake, since it counts two order-status replies. The log also shows
-something the summary doesn't. At 09:02:31 the order lookup said "refund
-requested, not approved yet", and five seconds later the agent wrote that
-the refund was approved.
+L’e-mail qui contient « remboursement » dans son objet a été traité
+correctement. Celui qui a mal tourné demande à « récupérer mon argent » et
+commence par un numéro de commande, et l’agent l’a traité comme une question
+de suivi de commande. Le résumé répète cette erreur, puisqu’il compte deux
+réponses de suivi de commande. Le journal montre aussi quelque chose que le
+résumé ne montre pas. À 09:02:31, la consultation de la commande disait
+« remboursement demandé, pas encore accepté », et cinq secondes plus tard
+l’agent a écrit que le remboursement était accepté.
 
-A log tells you what happened. It doesn't tell you why the model chose to
-write that sentence, and asking the agent afterwards only gets you another
-summary. The log does narrow the question. Each line of this log names the
-model version that ran the session, and that gives the team its next lead,
-in the second half of this lesson.
+Un journal vous dit ce qui s’est passé. Il ne vous dit pas pourquoi le
+modèle a choisi d’écrire cette phrase, et interroger l’agent après coup ne
+vous donne qu’un autre résumé. Le journal resserre tout de même la question.
+Chaque ligne de ce journal nomme la version du modèle qui a exécuté la
+session, et cela donne à l’équipe sa piste suivante, dans la seconde moitié
+de cette leçon.
 
-## What the log must hold, and who reads it
+## Ce que le journal doit contenir, et qui le lit
 
-A log answers the team lead's question only if it holds the text. If a line
-says "a reply was sent to E-202" without the reply, it can't show what the
-customer was told. Check what your tool records before you rely on it. For
-example, one vendor's coding agent sends its activity to a monitoring
-system only after someone sets that up. Even then, it leaves out the text
-of the prompts and the details of each tool call until a setting turns them
-on (@Claude Code monitoring). The same page lists the model name on each
-recorded request to the model. Leaving text out by default protects
-private data, so turning it on is a decision for the team, with the data
-section of its policy in mind.
+Un journal ne répond à la question du chef d’équipe que s’il contient le
+texte. Si une ligne dit « une réponse a été envoyée à E-202 » sans la
+réponse, elle ne peut pas montrer ce qu’on a dit au client. Vérifiez ce que
+votre outil enregistre avant de vous y fier. Par exemple, l’agent de
+programmation d’un fournisseur n’envoie son activité à un système de
+supervision qu’une fois que quelqu’un l’a configuré. Même alors, il omet le
+texte des prompts et le détail de chaque appel d’outil jusqu’à ce qu’un
+réglage les active (@Claude Code monitoring). La même page indique le nom du
+modèle sur chaque requête enregistrée au modèle. Omettre le texte par défaut
+protège les données privées, donc l’activer est une décision de l’équipe, à
+prendre en pensant à la section données de sa politique.
 
-Then decide where the log is kept and who reads it.
+Décidez ensuite où le journal est conservé et qui le lit.
 
-**Where do you keep it?** Store the log where the agent can't change or
-delete it. An agent that can edit its own record can also erase the line
-that shows its mistake, by accident or because a planted instruction told it
-to. A separate system that the agent writes to and can't edit is enough.
+**Où le conserver ?** Stockez le journal là où l’agent ne peut ni le
+modifier ni le supprimer. Un agent qui peut modifier son propre compte rendu
+peut aussi effacer la ligne qui montre son erreur, par accident ou parce
+qu’une instruction placée le lui a demandé. Un système séparé, où l’agent
+écrit sans pouvoir modifier, suffit.
 
-**Who reads it?** A log nobody reads doesn't catch anything. Name one person who
-reads a sample every week, a few sessions picked at random, even when
-nothing has gone wrong. The Monday refund reply was the first one a
-customer complained about, and a weekly sample is how the team finds the
-second one before the customer does. Once an organization runs many
-agents, the same course, in its module on guardrails, asks for audit trails
-for two uses: finding out why something failed, and showing auditors the
-facts (@AEC-10). For a workflow a regulator can ask about, a tool that
-doesn't keep such a record is the wrong tool.
+**Qui le lit ?** Un journal que personne ne lit ne repère rien. Désignez une
+personne qui lit un échantillon chaque semaine, quelques sessions tirées au
+hasard, même quand rien ne s’est mal passé. La réponse du lundi sur le
+remboursement était la première dont un client s’est plaint, et un
+échantillon hebdomadaire est ce qui permet à l’équipe de trouver la deuxième
+avant le client. Quand une organisation fait tourner de nombreux agents, le
+même cours, dans son module sur les garde-fous (guardrails), demande des pistes d’audit
+pour deux usages : comprendre pourquoi quelque chose a échoué, et montrer
+les faits aux auditeurs (@AEC-10). Pour un flux de travail sur lequel un
+régulateur peut poser des questions, un outil qui ne garde pas un tel compte
+rendu est le mauvais outil.
 
 <Choice id="where-the-log-lives" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['logging-and-audit']}
-  context="A support team's agent answers customer emails. The team wants a log it can use after an incident to reconstruct what the agent was asked, which tools it called and what it sent, and a person is named to read a weekly sample."
-  title="Where should the log go?"
-  hint="After an incident, which copy of the record could still have been changed by the thing you are investigating?"
+  context="L’agent d’une équipe d’assistance répond aux e-mails des clients. L’équipe veut un journal qu’elle peut utiliser après un incident pour reconstituer ce qu’on a demandé à l’agent, quels outils il a appelés et ce qu’il a envoyé, et une personne est désignée pour en lire un échantillon chaque semaine."
+  title="Où le journal doit-il aller ?"
+  hint="Après un incident, quelle copie du compte rendu aurait encore pu être modifiée par ce sur quoi vous enquêtez ?"
   options={[
-    { text: 'A file in the agent\'s own work folder, which it can already edit.', why: 'The agent can edit or delete that file, so after an incident nobody knows whether the record is complete.' },
-    { text: 'The chat history of the session, which the agent writes as it works.', why: 'The history is part of the session the agent controls, and the agent\'s summary already showed that its own account can be wrong.' },
-    { text: 'A separate system the agent can write to and cannot edit or delete.', correct: true },
-    { text: 'The inbox of the team lead, who gets a copy of every agent reply.', why: 'The inbox holds the sent replies and nothing about the prompt, the lookups or the drafts, so it shows what went out without the calls that led to it.' },
+    { text: 'Un fichier dans le dossier de travail de l’agent, qu’il peut déjà modifier.', why: 'L’agent peut modifier ou supprimer ce fichier, donc après un incident personne ne sait si le compte rendu est complet.' },
+    { text: 'L’historique de conversation de la session, que l’agent écrit en travaillant.', why: 'L’historique fait partie de la session que l’agent contrôle, et le résumé de l’agent a déjà montré que son propre récit peut être faux.' },
+    { text: 'Un système séparé où l’agent écrit sans pouvoir modifier ni supprimer.', correct: true },
+    { text: 'La boîte de réception du chef d’équipe, qui reçoit une copie de chaque réponse de l’agent.', why: 'La boîte contient les réponses envoyées et rien sur le prompt, les consultations ou les brouillons, donc elle montre ce qui est parti sans les appels qui y ont mené.' },
   ]}>
-The support team is choosing where the agent's log goes. Which place
-still gives a record the team can trust after the next incident?
+L’équipe d’assistance choisit où va le journal de l’agent. Quel endroit
+donne encore un compte rendu fiable après le prochain incident ?
 </Choice>
 
 <Sort id="asked-called-changed" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['logging-and-audit']}
-  context="The lesson sorts the lines of an agent's log into three parts: what the agent was asked, which tools it called that only read something, and what it changed outside the session, such as a sent email or a saved draft."
-  title="Asked, called or changed?"
-  hint="Did the line come from a person, did the agent only look something up, or is something different in the world after it?"
-  buckets={['Asked', 'Called, and only read', 'Changed something']}
+  context="La leçon range les lignes du journal d’un agent en trois parties : ce qu’on a demandé à l’agent, quels outils il a appelés qui se contentent de lire, et ce qu’il a modifié en dehors de la session, comme un e-mail envoyé ou un brouillon enregistré."
+  title="Demandé, appelé ou modifié ?"
+  hint="La ligne vient-elle d’une personne, l’agent n’a-t-il fait que consulter quelque chose, ou quelque chose est-il différent dans le monde après elle ?"
+  buckets={['Demandé', 'Appelé, en lecture seule', 'A modifié quelque chose']}
   items={[
-    { text: 'prompt | Answer the new emails in the support inbox.', bucket: 0 },
-    { text: 'tool lookup_order | 8812 | refund requested, not approved yet', bucket: 1 },
-    { text: 'tool send_reply | E-202 | Your refund has been approved.', bucket: 2 },
-    { text: 'tool read_email | E-203 | Order 7730 arrived damaged', bucket: 1 },
-    { text: 'tool save_draft | E-203 | We are sorry your order arrived damaged.', bucket: 2 },
+    { text: 'prompt | Réponds aux nouveaux e-mails de la boîte d’assistance.', bucket: 0 },
+    { text: 'tool lookup_order | 8812 | remboursement demandé, pas encore accepté', bucket: 1 },
+    { text: 'tool send_reply | E-202 | Votre remboursement a été accepté.', bucket: 2 },
+    { text: 'tool read_email | E-203 | Commande 7730 arrivée abîmée', bucket: 1 },
+    { text: 'tool save_draft | E-203 | Nous sommes désolés que votre commande soit arrivée abîmée.', bucket: 2 },
   ]} />
 
 <Scenario id="the-log-in-the-work-folder" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['logging-and-audit']}
-  context="A team finds that its agent writes the log to a file in the agent's own work folder."
-  title="The log is in the agent's folder"
-  hint="If the agent makes a mistake next month, which copy of the record could the agent itself have changed?"
+  context="Une équipe découvre que son agent écrit le journal dans un fichier de son propre dossier de travail."
+  title="Le journal est dans le dossier de l’agent"
+  hint="Si l’agent commet une erreur le mois prochain, quelle copie du compte rendu l’agent lui-même aurait-il pu modifier ?"
   options={[
-    { text: 'Leave it there, since the agent has written a complete log so far.', consequence: 'Next month a session goes wrong, and the file has a gap where the send should be. Nobody can tell whether the agent never logged it or removed the line later.' },
-    { text: 'Have the agent write to a separate system it cannot edit or delete.', correct: true, consequence: 'After the next incident the team reads a record the agent could not touch, and the weekly reader has the same record to sample.' },
-    { text: 'Ask the agent to promise in its instructions never to edit the file.', consequence: 'An instruction is text the model may or may not follow, and a planted instruction in an email can override it. The file stays open to the agent.' },
-    { text: 'Delete the log each week after the named person has read a sample.', consequence: 'The sample is read, and the rest of the week is gone. When a customer complains a month later, there is nothing left to reconstruct.' },
+    { text: 'Le laisser là, puisque l’agent a écrit un journal complet jusqu’ici.', consequence: 'Le mois suivant, une session tourne mal, et le fichier a un trou là où devrait figurer l’envoi. Personne ne sait si l’agent ne l’a jamais journalisé ou s’il a retiré la ligne plus tard.' },
+    { text: 'Faire écrire l’agent dans un système séparé qu’il ne peut ni modifier ni supprimer.', correct: true, consequence: 'Après l’incident suivant, l’équipe lit un compte rendu que l’agent ne pouvait pas toucher, et la personne qui lit chaque semaine a le même compte rendu à échantillonner.' },
+    { text: 'Demander à l’agent de promettre dans ses instructions de ne jamais modifier le fichier.', consequence: 'Une instruction est un texte que le modèle suit ou non, et une instruction placée dans un e-mail peut la contredire. Le fichier reste ouvert à l’agent.' },
+    { text: 'Supprimer le journal chaque semaine après que la personne désignée en a lu un échantillon.', consequence: 'L’échantillon est lu, et le reste de la semaine a disparu. Quand un client se plaint un mois plus tard, il ne reste rien à reconstituer.' },
   ]}>
-A team finds that its agent writes its log to a file in its own work
-folder, where it can also edit files. What should the team change?
+Une équipe découvre que son agent écrit son journal dans un fichier de son
+propre dossier de travail, où il peut aussi modifier des fichiers. Que doit
+changer l’équipe ?
 </Scenario>
 
-## Treat a model change like any other upgrade
+## Traiter un changement de modèle comme toute autre mise à jour
 
-The team's logs from the week before show a different model name on every
-line, `assistant-2026-06`. The vendor moved the agent to `assistant-2026-09`
-on the Friday, and nobody on the team noticed. This is **model change
-risk**. The same instructions on a new model version can act differently. A
-reply comes back in a new format, or an email is sorted into the wrong
-group. The model is outside the team's control. The team treats a new
-version like an upgrade of any other part it depends on.
+Les journaux de l’équipe de la semaine précédente montrent un autre nom de
+modèle sur chaque ligne, `assistant-2026-06`. Le fournisseur a fait passer
+l’agent à `assistant-2026-09` le vendredi, et personne dans l’équipe ne l’a
+remarqué. C’est le **risque lié au changement de modèle** (model change
+risk). Les mêmes instructions sur une nouvelle version du modèle peuvent
+agir autrement. Une réponse revient dans un nouveau format, ou un e-mail est
+rangé dans le mauvais groupe. Le modèle échappe au contrôle de l’équipe.
+L’équipe traite une nouvelle version comme la mise à jour de n’importe
+quelle autre pièce dont elle dépend.
 
-**Pin the version where you can.** Some vendors let you name the exact
-version. When a program calls Anthropic's models directly through its API
-(application programming interface), each model ID names a fixed version,
-and the model behind that ID stays the same for as long as the ID exists.
-The shorter aliases for some older models move to the newest snapshot
-(@Claude docs model-ids-and-versions). The same page says that the systems
-around a pinned model, such as its safety filters, can still change, and
-that this now and then shifts its answers a little. A pin doesn't last
-forever either. When a version is retired, requests to it fail. Anthropic
-gives customers who use a publicly released model at least 60 days' notice,
-and advises testing the replacement on your own tasks well before the date
-(@Claude docs model-deprecations). If your team uses a chat product that
-picks the model for you, ask the vendor whether you can choose the version
-and how you hear about a change.
+**Figez la version quand c’est possible.** Certains fournisseurs vous
+laissent nommer la version exacte. Quand un programme appelle directement
+les modèles d’Anthropic par leur API (application programming interface,
+l’interface de programmation), chaque identifiant de modèle nomme une
+version fixe, et le modèle derrière cet identifiant reste le même tant que
+l’identifiant existe. Les alias plus courts de certains modèles plus anciens
+pointent vers l’instantané le plus récent
+(@Claude docs model-ids-and-versions). La même page dit que les systèmes
+autour d’un modèle figé, comme ses filtres de sécurité, peuvent encore
+changer, et que cela modifie parfois un peu ses réponses. Une version figée
+ne dure pas éternellement non plus. Quand une version est retirée, les
+requêtes qui lui sont adressées échouent. Anthropic prévient au moins
+60 jours à l’avance les clients qui utilisent un modèle publié, et conseille
+de tester le remplaçant sur vos propres tâches bien avant la date
+(@Claude docs model-deprecations). Si votre équipe utilise un produit de
+conversation qui choisit le modèle pour vous, demandez au fournisseur si
+vous pouvez choisir la version et comment vous êtes averti d’un changement.
 
-**Keep a task set.** A task set is a short list of real past tasks, each
-with the result a person agreed was right. The support team's set is eight
-past emails, each marked "send" or "draft" by the rule in the request.
+**Gardez un jeu de tâches.** Un jeu de tâches (task set) est une courte
+liste de vraies tâches passées, chacune avec le résultat qu’une personne a
+jugé correct. Le jeu de l’équipe d’assistance compte huit e-mails passés,
+chacun marqué « envoi » ou « brouillon » selon la règle de la demande.
 
-**Rerun it on every change.** When the version changes, run the task set on
-the new version, compare it with the old one, and read every row that
-differs before the agent goes back on live work. The Agent Engineer Course,
-in its module on going to production, gives the same rule for any agent
-change: no new version goes live until it passes the tests, including the
-cases that passed before (@AEC-11).
+**Relancez-le à chaque changement.** Quand la version change, faites passer
+le jeu de tâches sur la nouvelle version, comparez avec l’ancienne, et lisez
+chaque ligne qui diffère avant que l’agent revienne sur le travail réel.
+L’Agent Engineer Course, dans son module sur la mise en production, donne
+la même règle pour tout changement d’agent : aucune nouvelle version ne
+passe en production avant d’avoir réussi les tests, y compris les cas qui
+réussissaient avant (@AEC-11).
 
-After the Monday reply, the team ran its task set on both versions. The table
-shows what the agent did with each email on each version:
+Après la réponse du lundi, l’équipe a fait passer son jeu de tâches sur les
+deux versions. Le tableau montre ce qu’a fait l’agent avec chaque e-mail sur
+chaque version :
 
 ```text
-task  subject                                        agreed  2026-06  2026-09
-T1    Where is my order 5531?                        send    send     send
-T2    Order 3307: I want my money back               draft   draft    send
-T3    Can I change my delivery address?              send    send     send
-T4    Order 7730 arrived damaged, refund please      draft   draft    draft
-T5    Has order 6120 shipped yet?                    send    send     send
-T6    Order 4410: you charged me twice               draft   send     draft
-T7    Do you ship to Norway?                         send    send     send
-T8    Order 9001 is late, cancel it and pay me back  draft   draft    draft
+tâche objet                                                  convenu    2026-06    2026-09
+T1    Où est ma commande 5531 ?                              envoi      envoi      envoi
+T2    Commande 3307 : je veux récupérer mon argent           brouillon  brouillon  envoi
+T3    Puis-je changer mon adresse de livraison ?             envoi      envoi      envoi
+T4    Commande 7730 arrivée abîmée, remboursement svp        brouillon  brouillon  brouillon
+T5    La commande 6120 est-elle partie ?                     envoi      envoi      envoi
+T6    Commande 4410 : vous m’avez débité deux fois           brouillon  envoi      brouillon
+T7    Livrez-vous en Norvège ?                               envoi      envoi      envoi
+T8    Commande 9001 en retard, annulez-la et remboursez-moi  brouillon  brouillon  brouillon
 ```
 
 <Predict id="which-task-got-worse" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['model-change-risk']}
-  context="A support team's task set has eight past emails, each with an agreed action, send or draft. It was run on an old model version and a new one. The old version drafted T2 'Order 3307: I want my money back' and sent T6 'Order 4410: you charged me twice'. The new version sent T2 and drafted T6. Both agreed actions are draft, and every other row is the same on both versions."
-  title="Which task got worse?"
-  hint="First find the rows where the two version columns differ. Then, for each, which version matches the agreed column?"
+  context="Le jeu de tâches d’une équipe d’assistance compte huit e-mails passés, chacun avec une action convenue, envoi ou brouillon. Il a été passé sur une ancienne et une nouvelle version du modèle. L’ancienne version a mis en brouillon T2 « Commande 3307 : je veux récupérer mon argent » et envoyé T6 « Commande 4410 : vous m’avez débité deux fois ». La nouvelle version a envoyé T2 et mis T6 en brouillon. Les deux actions convenues sont brouillon, et toutes les autres lignes sont identiques sur les deux versions."
+  title="Quelle tâche s’est dégradée ?"
+  hint="Trouvez d’abord les lignes où les deux colonnes de version diffèrent. Puis, pour chacune, quelle version correspond à la colonne convenu ?"
   answer="T2">
-A program prints only the rows where the two versions did something
-different. One of those rows is worse on the new version than on the old
-one. Type its task id.
+Un programme n’affiche que les lignes où les deux versions ont fait quelque
+chose de différent. L’une de ces lignes est pire sur la nouvelle version que
+sur l’ancienne. Tapez son identifiant de tâche.
 </Predict>
 
-The program's output:
+La sortie du programme :
 
 ```text
-task set: 8 emails, run on assistant-2026-06 and on assistant-2026-09
+jeu de tâches : 8 e-mails, passés sur assistant-2026-06 et sur assistant-2026-09
 
-rows that differ:
-  task  subject                            agreed  old    new    verdict
-  T2    Order 3307: I want my money back   draft   draft  send   WORSE
-  T6    Order 4410: you charged me twice   draft   send   draft  better
+lignes qui diffèrent :
+  tâche  objet                                         convenu    ancien     nouveau    verdict
+  T2     Commande 3307 : je veux récupérer mon argent  brouillon  brouillon  envoi      PIRE
+  T6     Commande 4410 : vous m’avez débité deux fois  brouillon  envoi      brouillon  meilleur
 
-same on both versions: 6 of 8
-differ: 2, better: 1, worse: 1
+identiques sur les deux versions : 6 sur 8
+différentes : 2, meilleures : 1, pires : 1
 ```
 
-T2 is the same kind of email as the one that went wrong on Monday, and the
-rerun shows the new version sends it. Had anyone run the task set on the
-Friday, the team would have seen that row before a customer did. T6 also
-differs, and there the new version is better: the old one sent a reply to
-an email about a double payment. A row that differs isn't bad by itself.
-Read it against the agreed column, and then decide. The team adds a line to
-the request for emails that ask for money back, and reruns the set before
-the agent goes back on the inbox.
+T2 est le même type d’e-mail que celui qui a mal tourné le lundi, et le
+nouveau passage montre que la nouvelle version l’envoie. Si quelqu’un avait
+fait passer le jeu de tâches le vendredi, l’équipe aurait vu cette ligne
+avant un client. T6 diffère aussi, et là, la nouvelle version est meilleure :
+l’ancienne envoyait une réponse à un e-mail sur un double prélèvement. Une
+ligne qui diffère n’est pas mauvaise en soi. Lisez-la en regard de la
+colonne convenu, puis décidez. L’équipe ajoute une ligne à la demande pour
+les e-mails qui demandent à récupérer de l’argent, et refait passer le jeu
+avant que l’agent revienne sur la boîte de réception.
 
 <Choice id="a-row-that-differs" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['model-change-risk']}
-  context="The lesson runs a task set of past emails, each with an agreed action, send or draft, on an old and a new model version, and prints only the rows where the two versions differ. Each row that differs is read against the agreed action."
-  title="A row that differs"
-  hint="Which column says what the right action is, and which version matches it in this row?"
+  context="La leçon fait passer un jeu de tâches d’e-mails passés, chacun avec une action convenue, envoi ou brouillon, sur une ancienne et une nouvelle version du modèle, et n’affiche que les lignes où les deux versions diffèrent. Chaque ligne qui diffère se lit en regard de l’action convenue."
+  title="Une ligne qui diffère"
+  hint="Quelle colonne dit quelle est la bonne action, et quelle version y correspond sur cette ligne ?"
   options={[
-    { text: 'The new version is worse on this email, because it changed the action.', why: 'A change is not a regression by itself. Compare each version with the agreed column before you call a row worse.' },
-    { text: 'The new version is worse on this email, because it sent the reply.', why: 'Sending is right for an order-status question. The agreed column says send here.' },
-    { text: 'The old version is better on this email, because the team ran it first.', why: 'Both versions ran on the same email in the same task set. The order of the runs says nothing about which action is right.' },
-    { text: 'The new version is better on this email, because it matches the agreed action.', correct: true },
+    { text: 'La nouvelle version est pire sur cet e-mail, parce qu’elle a changé l’action.', why: 'Un changement n’est pas une régression en soi. Comparez chaque version avec la colonne convenu avant de dire qu’une ligne est pire.' },
+    { text: 'La nouvelle version est pire sur cet e-mail, parce qu’elle a envoyé la réponse.', why: 'Envoyer est la bonne action pour une question de suivi de commande. La colonne convenu dit envoi ici.' },
+    { text: 'L’ancienne version est meilleure sur cet e-mail, parce que l’équipe l’a passée en premier.', why: 'Les deux versions ont tourné sur le même e-mail dans le même jeu de tâches. L’ordre des passages ne dit rien de la bonne action.' },
+    { text: 'La nouvelle version est meilleure sur cet e-mail, parce qu’elle correspond à l’action convenue.', correct: true },
   ]}>
-The rerun prints a new row: "Has order 2210 shipped yet?, agreed send,
-old draft, new send". What does the row tell the team?
+Le nouveau passage affiche une nouvelle ligne : « La commande 2210 est-elle
+partie ?, convenu envoi, ancien brouillon, nouveau envoi ». Que dit cette
+ligne à l’équipe ?
 </Choice>
 
-<Pitfall title="The update nobody noticed">
-The vendor announced the new model version in a release note, and nobody on
-the support team reads release notes, so the change reached live work on a
-Friday with no rerun. The first sign was a customer on the phone. Name one
-person who follows the vendor's model announcements and the version name in
-the logs, and make a new version the trigger for the task set, the same way
-a new version of any other tool the team depends on is tested first.
+<Pitfall title="La mise à jour que personne n’a remarquée">
+Le fournisseur a annoncé la nouvelle version du modèle dans une note de
+version, et personne dans l’équipe d’assistance ne lit les notes de
+version, donc le changement a atteint le travail réel un vendredi sans
+nouveau passage. Le premier signe a été un client au téléphone. Désignez une
+personne qui suit les annonces de modèles du fournisseur et le nom de
+version dans les journaux, et faites d’une nouvelle version le déclencheur
+du jeu de tâches, de la même façon qu’une nouvelle version de tout autre
+outil dont l’équipe dépend est d’abord testée.
 </Pitfall>
 
 <Scenario id="the-announcement" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['model-change-risk']}
-  context="A team's agent answers customer emails. The team keeps a task set of past emails with agreed actions. The vendor announces that the agent will move to a new model version next week."
-  title="The vendor announces a new version"
-  hint="Which step tells you how the new version handles your own emails before it answers a customer?"
+  context="L’agent d’une équipe répond aux e-mails des clients. L’équipe garde un jeu de tâches d’e-mails passés avec des actions convenues. Le fournisseur annonce que l’agent passera à une nouvelle version du modèle la semaine prochaine."
+  title="Le fournisseur annonce une nouvelle version"
+  hint="Quelle étape vous dit comment la nouvelle version traite vos propres e-mails avant qu’elle réponde à un client ?"
   options={[
-    { text: 'Rerun the task set on the new version and read every row that differs.', correct: true, consequence: 'One row that used to be a draft is now sent. You add a line to the request, rerun, and the new version starts with all eight rows agreed.' },
-    { text: 'Trust the change, because the vendor tested the new version first.', consequence: 'The vendor tested it on its own tasks. On yours, a refund email now gets a reply, and a customer is the one who finds it.' },
-    { text: 'Ask the agent to confirm that it will behave as before.', consequence: 'The agent says yes. The answer is text from a model that has not seen the new version, and it checks nothing.' },
-    { text: 'Wait a week after the change and read a sample of the log then.', consequence: 'The sample is a good habit, and it finds the wrong reply on day six. By then five customers have been told their refund was approved.' },
+    { text: 'Faire passer le jeu de tâches sur la nouvelle version et lire chaque ligne qui diffère.', correct: true, consequence: 'Une ligne qui était un brouillon est maintenant envoyée. Vous ajoutez une ligne à la demande, refaites le passage, et la nouvelle version démarre avec les huit lignes conformes.' },
+    { text: 'Faire confiance au changement, puisque le fournisseur a d’abord testé la nouvelle version.', consequence: 'Le fournisseur l’a testée sur ses propres tâches. Sur les vôtres, un e-mail de remboursement reçoit maintenant une réponse, et c’est un client qui le découvre.' },
+    { text: 'Demander à l’agent de confirmer qu’il se comportera comme avant.', consequence: 'L’agent répond oui. La réponse est un texte d’un modèle qui n’a pas vu la nouvelle version, et elle ne vérifie rien.' },
+    { text: 'Attendre une semaine après le changement et lire alors un échantillon du journal.', consequence: 'L’échantillon est une bonne habitude, et il trouve la mauvaise réponse le sixième jour. Entre-temps, cinq clients ont appris que leur remboursement était accepté.' },
   ]}>
-The vendor announces that the agent moves to a new model version from
-next Monday. What does the team do this week?
+Le fournisseur annonce que l’agent passe à une nouvelle version du modèle à
+partir de lundi prochain. Que fait l’équipe cette semaine ?
 </Scenario>
 
 <Choice id="pinned-or-not" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['model-change-risk']}
-  context="The lesson says a team treats a new model version like an upgrade of any other part it depends on: pin the version where the vendor allows it, keep a task set of past tasks with agreed results, and rerun it when the version changes. A pinned version is retired at some point, with notice."
-  title="What does the pin buy?"
-  hint="Does a pinned version stay available forever, and what should happen before the team moves off it?"
+  context="La leçon dit qu’une équipe traite une nouvelle version du modèle comme la mise à jour de n’importe quelle autre pièce dont elle dépend : figer la version quand le fournisseur le permet, garder un jeu de tâches passées avec des résultats convenus, et le relancer quand la version change. Une version figée finit par être retirée, avec un préavis."
+  title="Qu’apporte la version figée ?"
+  hint="Une version figée reste-t-elle disponible pour toujours, et que doit-il se passer avant que l’équipe la quitte ?"
   options={[
-    { text: 'The agent never changes, so the team can drop its task set.', why: 'A pinned version is retired at some point, and the team then has to move. Without a task set it moves blind, and small changes around a pinned model can still shift its answers.' },
-    { text: 'The vendor now checks the team\'s own tasks before any change.', why: 'The vendor tests on its own tasks. Nobody but the team knows which emails must stay drafts.' },
-    { text: 'Time to rerun the task set on the next version before moving.', correct: true },
-    { text: 'Nothing, because every model version answers each email the same way.', why: 'The task set above shows two emails handled differently by two versions. The same instructions can act differently on a new version.' },
+    { text: 'L’agent ne change jamais, donc l’équipe peut abandonner son jeu de tâches.', why: 'Une version figée finit par être retirée, et l’équipe doit alors changer. Sans jeu de tâches, elle change à l’aveugle, et de petits changements autour d’un modèle figé peuvent encore modifier ses réponses.' },
+    { text: 'Le fournisseur vérifie désormais les tâches de l’équipe avant tout changement.', why: 'Le fournisseur teste sur ses propres tâches. Personne d’autre que l’équipe ne sait quels e-mails doivent rester en brouillon.' },
+    { text: 'Du temps pour relancer le jeu de tâches sur la version suivante avant de changer.', correct: true },
+    { text: 'Rien, parce que chaque version du modèle répond de la même façon à chaque e-mail.', why: 'Le jeu de tâches ci-dessus montre deux e-mails traités différemment par deux versions. Les mêmes instructions peuvent agir autrement sur une nouvelle version.' },
   ]}>
-The team's agent now runs on a pinned model version. What does that give
-the team?
+L’agent de l’équipe tourne maintenant sur une version figée du modèle.
+Qu’est-ce que cela apporte à l’équipe ?
 </Choice>
 
-<Exercise stretch="Pick five real past tasks for that assistant and write, next to each, the result a person would agree is right. That list is the start of your task set.">
-Take one agent or assistant your team uses. In a note, write down what it
-logs, where the log is kept, and who reads a sample of it and how often. If
-you don't know, write down who you would ask. Then write what you would
-rerun after the vendor's next model update, and who on the team would hear
-about the update first.
+<Exercise stretch="Choisissez cinq vraies tâches passées de cet assistant et notez, à côté de chacune, le résultat qu’une personne jugerait correct. Cette liste est le début de votre jeu de tâches.">
+Prenez un agent ou un assistant que votre équipe utilise. Dans une note,
+écrivez ce qu’il journalise, où le journal est conservé, et qui en lit un
+échantillon et à quelle fréquence. Si vous ne le savez pas, écrivez à qui
+vous le demanderiez. Écrivez ensuite ce que vous relanceriez après la
+prochaine mise à jour du modèle par le fournisseur, et qui dans l’équipe
+apprendrait la mise à jour en premier.
 
-A good result names a place the agent can't edit and one person by name
-for the sample. It also has at least two concrete tasks to rerun, with the
-result you expect from each. "We would test it" is not enough. Which of
-your answers did you have to guess, and who can confirm it this week?
+Un bon résultat nomme un endroit que l’agent ne peut pas modifier et une
+personne, par son nom, pour l’échantillon. Il a aussi au moins deux tâches
+concrètes à relancer, avec le résultat attendu pour chacune. « Nous le
+testerions » ne suffit pas. Lesquelles de vos réponses avez-vous dû deviner,
+et qui peut les confirmer cette semaine ?
 </Exercise>
 
 <Recap>
-1. A log records what the agent was asked, which tools it called and what it changed. Sorted into those three parts, it answers "what happened" when the agent's summary is wrong (@AEC-09).
-2. A log shows what the agent did and which model version did it. It never shows why the model wrote a sentence, but the version narrows the question.
-3. Check that the log holds the text of what was sent. Some tools leave it out until someone turns it on (@Claude Code monitoring).
-4. Keep the log where the agent can't edit it, and name one person who reads a weekly sample. A log nobody reads doesn't catch anything.
-5. Treat a new model version like an upgrade of any other part. Pin the version where you can, keep a task set of past tasks with agreed results, and rerun it before a new version goes live (@Claude docs model-ids-and-versions).
-6. A pinned version is retired with notice, so the rerun is needed later anyway (@Claude docs model-deprecations). Read each row that differs against the agreed result.
+1. Un journal enregistre ce qu’on a demandé à l’agent, quels outils il a appelés et ce qu’il a modifié. Rangé en ces trois parties, il répond à « que s’est-il passé ? » quand le résumé de l’agent est faux (@AEC-09).
+2. Un journal montre ce qu’a fait l’agent et quelle version du modèle l’a fait. Il ne montre jamais pourquoi le modèle a écrit une phrase, mais la version resserre la question.
+3. Vérifiez que le journal contient le texte de ce qui a été envoyé. Certains outils l’omettent tant que quelqu’un ne l’active pas (@Claude Code monitoring).
+4. Conservez le journal là où l’agent ne peut pas le modifier, et désignez une personne qui en lit un échantillon chaque semaine. Un journal que personne ne lit ne repère rien.
+5. Traitez une nouvelle version du modèle comme la mise à jour de n’importe quelle autre pièce. Figez la version quand vous le pouvez, gardez un jeu de tâches passées avec des résultats convenus, et relancez-le avant qu’une nouvelle version passe en production (@Claude docs model-ids-and-versions).
+6. Une version figée est retirée avec un préavis, donc le nouveau passage sera nécessaire plus tard de toute façon (@Claude docs model-deprecations). Lisez chaque ligne qui diffère en regard du résultat convenu.
 </Recap>

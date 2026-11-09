@@ -1,524 +1,551 @@
 import { Choice, Match, Sort, Pitfall, Exercise, Recap, MultiChoice } from '@components/lesson';
 
-The European Union (EU) has one law about artificial intelligence that
-applies to every member state at once: Regulation (EU) 2024/1689, called
-the AI Act. It has applied in steps since February 2025, and it is the main
-example of regulation for AI use at work. In this lesson we read the Act
-the way a knowledge worker needs to. We start from the tool on your desk
-and ask what the Act says about it: the definition of an AI system, the
-risk tiers, the provider and deployer roles, and the duties that reach your
-daily work. Where the Act sets a duty, the lesson links to the article, so
-that you can read the sentence that binds you instead of a paraphrase of
-it.
+L’Union européenne (UE) a une loi sur l’intelligence artificielle qui
+s’applique à tous les États membres à la fois : le règlement (UE) 2024/1689,
+appelé règlement sur l’IA (AI Act). Il s’applique par étapes depuis février
+2025, et c’est le principal exemple de réglementation de l’usage de l’IA au
+travail. Dans cette leçon, nous lisons le règlement comme un travailleur du
+savoir en a besoin. Nous partons de l’outil sur votre bureau et nous nous
+demandons ce que le règlement en dit : la définition d’un système d’IA, les
+niveaux de risque, les rôles de fournisseur et de déployeur, et les
+obligations qui touchent votre travail quotidien. Là où le règlement fixe
+une obligation, la leçon renvoie à l’article, pour que vous puissiez lire la
+phrase qui vous engage au lieu d’une paraphrase.
 
-This lesson is specific to the EU on a site that is otherwise global. If
-your organization is outside the EU, the Act can still apply, because it
-covers providers that sell into the EU and any provider or deployer whose
-system's output is used in the EU
-([Article 2(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_2)).
-It does not apply to a person using AI for a purely personal, non-professional
-activity
-([Article 2(10)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_2)),
-so it is a law about professional and public use.
+Cette leçon est propre à l’UE, sur un site qui est par ailleurs général. Si
+votre organisation est hors de l’UE, le règlement peut quand même
+s’appliquer, parce qu’il couvre les fournisseurs qui vendent dans l’UE et
+tout fournisseur ou déployeur dont la sortie du système est utilisée dans
+l’UE
+([article 2(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_2)).
+Il ne s’applique pas à une personne qui utilise l’IA pour une activité
+purement personnelle et non professionnelle
+([article 2(10)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_2)),
+c’est donc une loi sur l’usage professionnel et public.
 
-The lesson is general information, and it is not legal advice. The Act was
-amended in July 2026, guidance from the Commission keeps coming, and a
-decision about your organization needs a lawyer who knows your member
-state. Every article number and date below comes from the consolidated text
-of the Regulation as of July 27, 2026 (@AI Act), and the page shows a
-review date for that reason.
+Cette leçon est une information générale, et ce n’est pas un conseil
+juridique. Le règlement a été modifié en juillet 2026, les orientations de
+la Commission continuent d’arriver, et une décision concernant votre
+organisation demande un juriste qui connaît votre État membre. Chaque numéro
+d’article et chaque date ci-dessous viennent du texte consolidé du règlement
+au 27 juillet 2026 (@AI Act), et la page affiche une date de revue pour
+cette raison. Les liens mènent à la version anglaise du texte, et le site
+EUR-Lex permet de passer à la version française officielle. Les citations
+entre guillemets sont traduites de l’anglais par cette leçon, et la version
+française officielle peut employer d’autres mots.
 
-One duty explains why this page exists.
-[Article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_4)
-asks providers and
-deployers to "take measures to support the development of AI literacy" of
-their staff and of anyone operating AI systems for them, fitted to their
-role and to the context of use
-([Article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_4)).
-The same article says the duty does not require any specific level of
-literacy from any individual. A course like this one is one way an
-organization meets it.
+Une obligation explique pourquoi cette page existe.
+L’[article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_4)
+demande aux fournisseurs et aux déployeurs de « prendre des mesures pour
+soutenir le développement de la maîtrise de l’IA » (AI literacy) de leur
+personnel et de toute personne qui utilise des systèmes d’IA pour leur
+compte, en fonction de son rôle et du contexte d’utilisation
+([article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_4)).
+Le même article précise que l’obligation n’exige aucun niveau de maîtrise
+particulier de la part d’une personne donnée. Un cours comme celui-ci est
+l’un des moyens pour une organisation de la remplir.
 
-## Is it an AI system at all?
+## Est-ce même un système d’IA ?
 
-The rules in this lesson apply to an AI system, and
-[Article 3(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)
-defines one
-as a machine-based system, designed to operate with some autonomy, that
-"infers, from the input it receives, how to generate outputs such as
-predictions, content, recommendations, or decisions" (@AI Act). The word
-that matters is *infers*. The system works out how to produce
-its output from the input, rather than following a fixed procedure a person
-wrote down. The Act also has rules for general-purpose AI *models*, the
-engines behind chat assistants, in Chapter V. Those fall on the model's
-provider, and this lesson doesn't cover them.
+Les règles de cette leçon s’appliquent à un système d’IA, et
+l’[article 3(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)
+le définit comme un système automatisé, conçu pour fonctionner avec un
+certain degré d’autonomie (degree of autonomy), qui « déduit, à partir des entrées qu’il reçoit,
+la manière de générer des sorties telles que des prédictions, du contenu,
+des recommandations ou des décisions » (@AI Act). Le mot qui compte est
+*déduit*. Le système détermine comment produire sa sortie à partir de
+l’entrée, au lieu de suivre une procédure fixe écrite par une personne. Le
+règlement a aussi des règles pour les *modèles* d’IA à usage général, les
+moteurs des assistants conversationnels, au chapitre V. Elles pèsent sur le
+fournisseur du modèle, et cette leçon ne les traite pas.
 
-Recital 12 of the original text explains what that excludes: systems "based
-on the rules defined solely by natural persons to automatically execute
-operations" (@AI Act OJ). A spreadsheet macro that applies fixed rules is
-not an AI system. A rules engine with two hundred hand-written if-then
-rules is not one either. A model trained on past data that predicts,
-ranks or generates is one, and so is a chat assistant. For the border
-cases,
-[Article 96(1)(f)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_96)
-asks the Commission to publish guidelines on how the
-definition applies (@AI Act). Start from the Commission's AI Act pages when
-you need them (@EC AI Act).
+Le considérant 12 du texte d’origine explique ce que cela exclut : les
+systèmes « fondés sur des règles définies uniquement par des personnes
+physiques pour exécuter automatiquement des opérations » (@AI Act OJ). Une
+macro de tableur qui applique des règles fixes n’est pas un système d’IA. Un
+moteur de règles avec deux cents règles « si… alors » écrites à la main n’en
+est pas un non plus. Un modèle entraîné sur des données passées qui prédit,
+classe ou génère en est un, tout comme un assistant conversationnel. Pour
+les cas limites,
+l’[article 96(1)(f)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_96)
+demande à la Commission de publier des lignes directrices sur l’application
+de la définition (@AI Act). Partez des pages de la Commission sur le
+règlement quand vous en avez besoin (@EC AI Act).
 
 <Choice id="is-it-an-ai-system" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['regulation']}
-  context="The EU AI Act defines an AI system in Article 3(1) as a machine-based system that infers from its input how to generate outputs such as predictions, content, recommendations or decisions."
-  title="Is this an AI system?" hint="Which of these works out how to produce its output from the input, rather than executing rules a person wrote?"
+  context="Le règlement européen sur l’IA définit à l’article 3(1) un système d’IA comme un système automatisé qui déduit de ses entrées la manière de générer des sorties telles que des prédictions, du contenu, des recommandations ou des décisions."
+  title="Est-ce un système d’IA ?" hint="Lequel de ces outils détermine comment produire sa sortie à partir de l’entrée, au lieu d’exécuter des règles écrites par une personne ?"
   options={[
-    { text: 'A thermostat that switches the heating on whenever the room drops below 19 degrees, on a schedule your team set.', why: 'One threshold, set by a person. Does the device work anything out from its input?' },
-    { text: 'A tool that predicts the cost center of each incoming invoice, from the invoices that were coded by hand last year.', correct: true },
-    { text: 'A mail rule that moves every message from a named sender into a folder, set up by hand in the mail client.', why: 'The rule is a condition a person wrote. Which word of the definition is missing here?' },
+    { text: 'Un thermostat qui allume le chauffage dès que la pièce descend sous 19 degrés, selon un horaire fixé par votre équipe.', why: 'Un seul seuil, fixé par une personne. L’appareil déduit-il quoi que ce soit de son entrée ?' },
+    { text: 'Un outil qui prédit le centre de coût de chaque facture reçue, à partir des factures codées à la main l’an dernier.', correct: true },
+    { text: 'Une règle de messagerie qui déplace chaque message d’un expéditeur donné dans un dossier, réglée à la main dans le logiciel.', why: 'La règle est une condition écrite par une personne. Quel mot de la définition manque ici ?' },
   ]}>
-Your team lists the software it uses for a compliance inventory. Which of these
-is an AI system under
-[Article 3(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)?
+Votre équipe liste les logiciels qu’elle utilise pour un inventaire de
+conformité. Lequel de ces logiciels est un système d’IA au sens de
+l’[article 3(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3) ?
 </Choice>
 
-## The risk tiers
+## Les niveaux de risque
 
-The Act regulates uses of AI rather than the technology, and it sorts
-those uses into tiers. To place a use, walk down this list, and stop at the
-first tier that fits.
+Le règlement encadre les usages de l’IA plutôt que la technologie, et il
+range ces usages par niveaux. Pour placer un usage, parcourez cette liste et
+arrêtez-vous au premier niveau qui convient.
 
-1. **Prohibited.**
-   [Article 5](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_5)
-   lists practices no one may put on the market or use.
-   - Manipulation or deception that causes "significant harm".
-   - Exploiting people's vulnerabilities due to age, disability, or social or
-     economic situation, causing "significant harm".
-   - Social scoring that leads to unfair treatment.
-   - Predicting a crime from a person's profile or personality traits alone.
-   - Building face-recognition databases by scraping images from the
-     internet or closed-circuit television (CCTV).
-   - Inferring the emotions of people at work or in education, except for
-     medical or safety reasons.
-   - Sorting people by their biometric data into categories such as race,
-     religion, or sexual orientation.
-   - Added in July 2026: sexual deep fakes made without consent, and
-     material showing sexual abuse of children.
-2. **High-risk.**
-   [Article 6](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_6)
-   gives a product route and a use-case route.
-   The product route: the AI is a safety component of a product, or is
-   itself a product, that EU product law in
-   [Annex I](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_I)
-   already requires a
-   third party to certify. Toys, lifts, and medical devices are on that
-   list. The use-case route:
-   [Annex III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III)
-   names areas where AI decisions touch people's lives. Its headings are
-   biometrics, critical infrastructure, education, employment and workers'
-   management, access to essential services such as credit and insurance,
-   law enforcement, migration and border control, and justice and
-   democratic processes. Ranking job applicants and scoring a consumer's
-   creditworthiness are both on the list.
-   [Article 6(3)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_6)
-   lets a provider
-   argue that an
-   [Annex III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III)
-   system isn't high-risk when it only does a
-   narrow procedural task or prepares a human assessment, but a system that
-   profiles people is always high-risk.
-3. **Transparency duty.**
-   [Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
-   puts a duty to inform on systems that
-   talk to people, generate content, recognize emotions, or produce deep
-   fakes, whatever their tier. The section below on everyday work is about
-   this tier.
-4. **Everything else.** Most AI in use falls here, and the Act doesn't
-   set a specific duty for it. The Commission gives spam filters and AI in video
-   games as examples (@EC AI Act). The AI literacy duty of
-   [Article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_4)
-   still
-   applies to the organization, because it attaches to the provider and
-   the deployer rather than to the tier.
+1. **Interdit.**
+   L’[article 5](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_5)
+   liste les pratiques que personne ne peut mettre sur le marché ni
+   utiliser.
+   - La manipulation ou la tromperie qui cause un « préjudice important ».
+   - L’exploitation des vulnérabilités des personnes liées à l’âge, au
+     handicap ou à la situation sociale ou économique, qui cause un
+     « préjudice important ».
+   - La notation sociale qui mène à un traitement injuste.
+   - La prédiction d’une infraction à partir du seul profil ou des seuls
+     traits de personnalité d’une personne.
+   - La constitution de bases de données de reconnaissance faciale en
+     moissonnant des images sur internet ou dans la vidéosurveillance.
+   - La déduction des émotions des personnes au travail ou dans
+     l’enseignement, sauf pour des raisons médicales ou de sécurité.
+   - Le classement des personnes selon leurs données biométriques dans des
+     catégories comme l’origine raciale, la religion ou l’orientation
+     sexuelle.
+   - Ajouté en juillet 2026 : les hypertrucages (deep fakes) sexuels réalisés
+     sans consentement, et les contenus montrant des abus sexuels sur des
+     enfants.
+2. **À haut risque.**
+   L’[article 6](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_6)
+   prévoit une voie par le produit et une voie par le cas d’usage. La voie
+   par le produit : l’IA est un composant de sécurité d’un produit, ou est
+   elle-même un produit, que la législation européenne sur les produits de
+   l’[annexe I](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_I)
+   soumet déjà à la certification d’un tiers. Les jouets, les ascenseurs et
+   les dispositifs médicaux figurent sur cette liste. La voie par le cas
+   d’usage :
+   l’[annexe III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III)
+   nomme des domaines où les décisions de l’IA touchent la vie des
+   personnes. Ses rubriques sont la biométrie, les infrastructures
+   critiques, l’éducation, l’emploi et la gestion des travailleurs, l’accès
+   aux services essentiels comme le crédit et l’assurance, les activités
+   répressives, la migration et le contrôle des frontières, et la justice et
+   les processus démocratiques. Classer des candidats à un emploi et évaluer
+   la solvabilité d’un consommateur figurent tous deux sur la liste.
+   L’[article 6(3)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_6)
+   permet à un fournisseur de soutenir qu’un système de
+   l’[annexe III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III)
+   n’est pas à haut risque quand il n’accomplit qu’une tâche procédurale
+   étroite ou prépare une évaluation humaine, mais un système qui fait du
+   profilage de personnes est toujours à haut risque.
+3. **Obligation de transparence.**
+   L’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
+   impose une obligation d’information aux systèmes qui dialoguent avec des
+   personnes, génèrent du contenu, reconnaissent des émotions ou produisent
+   des hypertrucages, quel que soit leur niveau. La section ci-dessous sur
+   le travail quotidien porte sur ce niveau.
+4. **Tout le reste.** La plupart des IA en usage se trouvent ici, et le
+   règlement ne leur fixe pas d’obligation particulière. La Commission cite
+   en exemple les filtres anti-spam et l’IA dans les jeux vidéo
+   (@EC AI Act). L’obligation de maîtrise de l’IA de
+   l’[article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_4)
+   s’applique quand même à l’organisation, parce qu’elle s’attache au
+   fournisseur et au déployeur, et non au niveau.
 
-A tier is a property of a use, so the same model can be in more than one
-tier at once. A general-purpose chat assistant is a transparency-tier system
-when it answers customers, a high-risk system when it ranks candidates, and
-an everything-else system when it drafts your meeting notes.
+Un niveau est une propriété d’un usage, donc le même modèle peut relever de
+plusieurs niveaux à la fois. Un assistant conversationnel généraliste relève
+du niveau transparence quand il répond à des clients, du haut risque quand
+il classe des candidats, et du reste quand il rédige vos notes de réunion.
 
 <Sort id="sort-the-tiers" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['regulation', 'risk-assessment']}
-  context="The EU AI Act sorts AI uses into prohibited practices (Article 5), high-risk systems (Article 6 with Annex I and Annex III), systems with a transparency duty (Article 50), and everything else, for which the Act sets no specific duty."
-  title="Which tier?" hint="Walk the list from the top. Is the practice banned outright? Is the area in Annex III? Does the system talk to people or generate content? Otherwise it is in the last tier."
-  buckets={['Prohibited', 'High-risk', 'Transparency duty', 'No specific duty in the Act']}
+  context="Le règlement européen sur l’IA range les usages de l’IA en pratiques interdites (article 5), systèmes à haut risque (article 6 avec l’annexe I et l’annexe III), systèmes soumis à une obligation de transparence (article 50), et tout le reste, pour lequel le règlement ne fixe pas d’obligation particulière."
+  title="Quel niveau ?" hint="Parcourez la liste depuis le haut. La pratique est-elle interdite purement et simplement ? Le domaine figure-t-il à l’annexe III ? Le système dialogue-t-il avec des personnes ou génère-t-il du contenu ? Sinon, il est au dernier niveau."
+  buckets={['Interdit', 'À haut risque', 'Obligation de transparence', 'Aucune obligation particulière dans le règlement']}
   items={[
-    { text: 'A school\'s camera system that infers whether students are bored or frustrated during lessons', bucket: 0 },
-    { text: 'A city that scores residents on their online behavior and denies the low scorers a place in housing programs', bucket: 0 },
-    { text: 'An insurer\'s model that sets the price of a life insurance policy from the applicant\'s health data', bucket: 1 },
-    { text: 'A university\'s tool that flags students who may be cheating during an online exam', bucket: 1 },
-    { text: 'A city council\'s website assistant that answers residents\' questions about waste collection', bucket: 2 },
-    { text: 'A warehouse system that predicts how many boxes each product sells next week', bucket: 3 },
+    { text: 'Le système de caméras d’une école qui déduit si les élèves s’ennuient ou sont frustrés pendant les cours', bucket: 0 },
+    { text: 'Une ville qui note ses habitants sur leur comportement en ligne et refuse aux moins bien notés une place dans les programmes de logement', bucket: 0 },
+    { text: 'Le modèle d’un assureur qui fixe le prix d’une assurance vie à partir des données de santé du demandeur', bucket: 1 },
+    { text: 'L’outil d’une université qui signale les étudiants susceptibles de tricher pendant un examen en ligne', bucket: 1 },
+    { text: 'L’assistant du site web d’une mairie qui répond aux questions des habitants sur la collecte des déchets', bucket: 2 },
+    { text: 'Un système d’entrepôt qui prédit combien de cartons de chaque produit seront vendus la semaine prochaine', bucket: 3 },
   ]} />
 
-## The provider and the deployer
+## Le fournisseur et le déployeur
 
-The Act puts duties on roles, and the two that matter for most
-organizations are defined in
-[Article 3](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3).
-A **provider** develops an AI
-system, or has one developed, and places it on the market or puts it into
-service "under its own name or trademark, whether for payment or free of
-charge"
-([Article 3(3)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)).
-A **deployer** uses an AI system "under its
-authority", outside a personal non-professional activity
-([Article 3(4)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3))
-(@AI Act). Ask: did we build this, or sell it as ours? Then we're the
-provider. Do we use it in our work? Then we're the deployer. A vendor that sells
-a chatbot is its provider, and the hospital
-that books appointments with it is a deployer.
+Le règlement attache les obligations à des rôles, et les deux qui comptent
+pour la plupart des organisations sont définis à
+l’[article 3](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3).
+Un **fournisseur** (provider) développe un système d’IA, ou le fait
+développer, et le met sur le marché ou en service « sous son propre nom ou
+sa propre marque, à titre onéreux ou gratuit »
+([article 3(3)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)).
+Un **déployeur** (deployer) utilise un système d’IA « sous sa propre
+autorité », en dehors d’une activité personnelle non professionnelle
+([article 3(4)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3))
+(@AI Act). Demandez-vous : l’avons-nous construit, ou le vendons-nous comme
+le nôtre ? Alors nous sommes le fournisseur. L’utilisons-nous dans notre
+travail ? Alors nous sommes le déployeur. Un éditeur qui vend un agent
+conversationnel en est le fournisseur, et l’hôpital qui prend des
+rendez-vous avec lui en est un déployeur.
 
-One organization can hold both roles, and a deployer can turn into a
-provider without noticing.
-[Article 25(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_25)
-names the moments. You put your own name or brand on a high-risk system
-someone else built. You make a substantial modification to a high-risk
-system. You change the intended purpose of a system so that it becomes
-high-risk. That last one is the everyday case. A team that buys a
-general-purpose
-chat tool for drafting and then wires it into hiring decisions has changed
-its purpose into an
-[Annex III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III)
-use, and the team's organization now owes
-the provider duties for it.
+Une même organisation peut tenir les deux rôles, et un déployeur peut
+devenir fournisseur sans s’en apercevoir.
+L’[article 25(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_25)
+nomme les moments où cela arrive. Vous mettez votre propre nom ou votre
+marque sur un système à haut risque construit par quelqu’un d’autre. Vous
+apportez une modification substantielle à un système à haut risque. Vous
+changez la destination d’un système de sorte qu’il devient à haut risque.
+Ce dernier cas est le cas courant. Une équipe qui achète un outil de
+conversation généraliste pour rédiger, puis le branche sur des décisions de
+recrutement, a changé sa destination pour en faire un usage de
+l’[annexe III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III),
+et l’organisation de l’équipe doit désormais pour lui les obligations du
+fournisseur.
 
-<Pitfall title="Renaming a vendor's tool">
-A company licenses a CV screening service, which ranks job applicants and
-so is an
-[Annex III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III)
-use, gives it its own product name, and offers it to
-customers as its own. When a customer asks who certified the system, the
-company points at the vendor. Under
-[Article 25(1)(a)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_25),
-a party that puts its
-own name or trademark on a high-risk system already on the market is
-treated as its provider, unless the contract allocates the duties
-otherwise, and the original vendor stops being one for that system. Before
-you brand a tool as yours, check which role the branding gives you.
+<Pitfall title="Renommer l’outil d’un éditeur">
+Une entreprise prend sous licence un service de tri de CV, qui classe des
+candidats à un emploi et relève donc de
+l’[annexe III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III),
+lui donne son propre nom de produit, et le propose à ses clients comme le
+sien. Quand un client demande qui a certifié le système, l’entreprise
+renvoie vers l’éditeur. Selon
+l’[article 25(1)(a)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_25),
+une partie qui met son propre nom ou sa marque sur un système à haut risque
+déjà sur le marché est traitée comme son fournisseur, sauf si le contrat
+répartit les obligations autrement, et l’éditeur d’origine cesse d’être
+fournisseur pour ce système. Avant de présenter un outil comme le vôtre,
+vérifiez quel rôle cette présentation vous donne.
 </Pitfall>
 
 <Match id="provider-or-deployer" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['regulation', 'policy']}
-  context="Under the EU AI Act a provider develops an AI system or has it developed and puts it on the market under its own name, and a deployer uses an AI system under its authority. Article 25 treats a deployer as a provider when it changes the intended purpose of a system so that it becomes high-risk."
-  title="Which role?" hint="Who built the system or put their name on it, and who uses it? Did anyone change what the system is for?"
-  options={['Provider', 'Deployer', 'Both']}
+  context="Selon le règlement européen sur l’IA, un fournisseur développe un système d’IA ou le fait développer et le met sur le marché sous son propre nom, et un déployeur utilise un système d’IA sous sa propre autorité. L’article 25 traite un déployeur comme un fournisseur quand il change la destination d’un système de sorte qu’il devient à haut risque."
+  title="Quel rôle ?" hint="Qui a construit le système ou y a mis son nom, et qui l’utilise ? Quelqu’un a-t-il changé la destination du système ?"
+  options={['Fournisseur', 'Déployeur', 'Les deux']}
   rows={[
-    { statement: 'A startup tunes an open model into a contract-review assistant and sells it to law firms under its own name', option: 0, why: 'Who developed the system and placed it on the market under their name?' },
-    { statement: 'A clinic uses a vendor\'s triage model exactly as delivered to sort incoming patient messages by urgency', option: 1, why: 'Who uses the system under their own authority, without changing what it does?' },
-    { statement: 'A city council buys a general chat assistant for drafting letters and later uses it to rank applications for social housing', option: 2, why: 'The council uses the system, and it also changed what the system is for. What does Article 25 say about a changed purpose that makes a system high-risk?' },
+    { statement: 'Une jeune entreprise adapte un modèle ouvert en assistant de relecture de contrats et le vend à des cabinets d’avocats sous son propre nom', option: 0, why: 'Qui a développé le système et l’a mis sur le marché sous son nom ?' },
+    { statement: 'Une clinique utilise tel quel le modèle de tri d’un éditeur pour classer par urgence les messages des patients', option: 1, why: 'Qui utilise le système sous sa propre autorité, sans changer ce qu’il fait ?' },
+    { statement: 'Une mairie achète un assistant conversationnel généraliste pour rédiger des courriers, puis l’utilise pour classer les demandes de logement social', option: 2, why: 'La mairie utilise le système, et elle a aussi changé sa destination. Que dit l’article 25 d’un changement de destination qui rend un système à haut risque ?' },
   ]}
-  rationale="Roles follow what you do with the system, and one organization can hold both roles for the same tool.">
-Match each organization to its role under the Act.
+  rationale="Les rôles suivent ce que vous faites du système, et une même organisation peut tenir les deux rôles pour le même outil.">
+Associez chaque organisation à son rôle au sens du règlement.
 </Match>
 
 <MultiChoice id="which-ones-infer" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['regulation']}
-  context="The EU AI Act defines an AI system in Article 3(1) as a machine-based system that infers from its input how to generate outputs such as predictions, content, recommendations or decisions."
-  title="Which are AI systems?" hint="Does the tool work out its output from what it learned, or follow a rule a person wrote?"
+  context="Le règlement européen sur l’IA définit à l’article 3(1) un système d’IA comme un système automatisé qui déduit de ses entrées la manière de générer des sorties telles que des prédictions, du contenu, des recommandations ou des décisions."
+  title="Lesquels sont des systèmes d’IA ?" hint="L’outil déduit-il sa sortie de ce qu’il a appris, ou suit-il une règle écrite par une personne ?"
   options={[
-    { text: 'A spam filter that learned from the messages people marked as spam.', correct: true },
-    { text: 'A spreadsheet formula that adds 21 percent tax to each price.', why: 'The formula runs a rule a person wrote. It infers nothing from its input.' },
-    { text: 'A tool trained on past replies that suggests a reply to each new support email.', correct: true },
-    { text: 'A door lock that opens at 8:00 on weekdays, set on a timer.', why: 'A timer follows a schedule a person set. Nothing is inferred.' },
+    { text: 'Un filtre anti-spam qui a appris des messages que les gens ont marqués comme spam.', correct: true },
+    { text: 'Une formule de tableur qui ajoute 21 % de taxe à chaque prix de la liste.', why: 'La formule exécute une règle écrite par une personne. Elle ne déduit rien de son entrée.' },
+    { text: 'Un outil entraîné sur d’anciennes réponses qui suggère une réponse à chaque e-mail reçu.', correct: true },
+    { text: 'Une serrure qui s’ouvre à 8 h en semaine, réglée sur une minuterie.', why: 'Une minuterie suit un horaire fixé par une personne. Rien n’est déduit.' },
   ]}>
 
-Which two of these are AI systems under Article 3(1)?
+Quels sont les deux systèmes d’IA de cette liste, au sens de l’article 3(1) ?
 
 </MultiChoice>
 
 <Match id="match-the-tier" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['regulation', 'risk-assessment']}
-  context="The EU AI Act sorts AI uses into prohibited practices (Article 5), high-risk systems (Article 6 with Annex I and Annex III), systems with a transparency duty (Article 50), and everything else, for which the Act sets no specific duty."
-  title="Which tier?" hint="Is the use banned, does it decide about people in an area the annexes list, does it talk to the public, or none of these?"
-  options={['Prohibited', 'High-risk', 'Transparency duty', 'No specific duty in the Act']}
+  context="Le règlement européen sur l’IA range les usages de l’IA en pratiques interdites (article 5), systèmes à haut risque (article 6 avec l’annexe I et l’annexe III), systèmes soumis à une obligation de transparence (article 50), et tout le reste, pour lequel le règlement ne fixe pas d’obligation particulière."
+  title="Quel niveau ?" hint="L’usage est-il interdit, décide-t-il à propos de personnes dans un domaine que listent les annexes, dialogue-t-il avec le public, ou rien de tout cela ?"
+  options={['Interdit', 'À haut risque', 'Obligation de transparence', 'Aucune obligation particulière dans le règlement']}
   rows={[
-    { statement: 'A shop\'s website chatbot that answers questions about opening hours', option: 2, why: 'Does it interact with members of the public?' },
-    { statement: 'A system that scores citizens on their social behavior and cuts benefits for low scorers', option: 0, why: 'Is this a practice the Act bans outright?' },
-    { statement: 'A tool that ranks job applicants for interviews', option: 1, why: 'Is employment one of the areas in Annex III?' },
-    { statement: 'A tool that suggests which products a shop should reorder', option: 3, why: 'Does it decide about people or talk to them?' },
+    { statement: 'L’agent conversationnel du site d’un magasin qui répond aux questions sur les horaires d’ouverture', option: 2, why: 'Dialogue-t-il avec des membres du public ?' },
+    { statement: 'Un système qui note les citoyens sur leur comportement social et réduit les prestations des moins bien notés', option: 0, why: 'Est-ce une pratique que le règlement interdit purement et simplement ?' },
+    { statement: 'Un outil qui classe les candidats à un emploi pour les entretiens', option: 1, why: 'L’emploi fait-il partie des domaines de l’annexe III ?' },
+    { statement: 'Un outil qui suggère quels produits un magasin devrait réapprovisionner', option: 3, why: 'Décide-t-il à propos de personnes ou dialogue-t-il avec elles ?' },
   ]}
-  rationale="The tier follows the use: what the system decides, about whom, and whether it deals with the public.">
-Match each use to its tier under the Act.
+  rationale="Le niveau suit l’usage : ce que le système décide, à propos de qui, et s’il a affaire au public.">
+Associez chaque usage à son niveau au sens du règlement.
 </Match>
 
 <Choice id="the-hr-team-role" phase="review" objective="safety/judges-agent-risk/sets-oversight"
   concepts={['regulation', 'policy']}
-  context="The EU AI Act gives different duties to the provider of an AI system and to its deployer, and names the role of each organization by what it does with the system."
-  title="What is the HR team's company?" hint="Did the company build or brand the service, or does it use one that someone else supplied?"
+  context="Le règlement européen sur l’IA donne des obligations différentes au fournisseur d’un système d’IA et à son déployeur, et désigne le rôle de chaque organisation d’après ce qu’elle fait du système."
+  title="Qu’est l’entreprise de l’équipe RH ?" hint="L’entreprise a-t-elle construit le service ou y a-t-elle mis sa marque, ou utilise-t-elle un service fourni par quelqu’un d’autre ?"
   options={[
-    { text: 'A provider, because the service runs on the company\'s own servers.', why: 'Where a system runs doesn\'t make an organization its provider. Who built it and whose name it carries does.' },
-    { text: 'Both, because the applicants the service ranks apply to this company.', why: 'Affected people don\'t change the role. The company would become a provider only by branding the service, modifying it substantially, or changing its purpose into a high-risk use.' },
-    { text: 'A deployer, because it uses the vendor\'s service under its own authority.', correct: true },
-    { text: 'Neither, because the vendor carries every duty for the service.', why: 'A deployer has duties of its own under the Act. For a high-risk system they include human oversight and keeping the logs.' },
+    { text: 'Un fournisseur, parce que le service tourne sur les propres serveurs de l’entreprise.', why: 'L’endroit où tourne un système ne fait pas d’une organisation son fournisseur. Ce qui compte est qui l’a construit et quel nom il porte.' },
+    { text: 'Les deux, parce que les candidats que classe le service postulent dans cette entreprise.', why: 'Les personnes concernées ne changent pas le rôle. L’entreprise ne deviendrait fournisseur qu’en mettant sa marque sur le service, en le modifiant substantiellement, ou en changeant sa destination pour un usage à haut risque.' },
+    { text: 'Un déployeur, parce qu’elle utilise le service de l’éditeur sous sa propre autorité.', correct: true },
+    { text: 'Ni l’un ni l’autre, parce que l’éditeur porte toutes les obligations liées au service.', why: 'Un déployeur a ses propres obligations au titre du règlement. Pour un système à haut risque, elles comprennent le contrôle humain et la conservation des journaux.' },
   ]}>
 
-A company's HR team runs a vendor's service that ranks job applications,
-unchanged and under the vendor's name. What is the company under the Act?
+L’équipe RH d’une entreprise utilise le service d’un éditeur qui classe les
+candidatures, sans le modifier et sous le nom de l’éditeur. Qu’est
+l’entreprise au sens du règlement ?
 
 </Choice>
 
-## What each role owes
+## Ce que doit chaque rôle
 
-For a high-risk system the duties are substantial, and this lesson only
-gives their headings. Each one links to its article. Engineers who build
-such a system read the articles themselves.
+Pour un système à haut risque, les obligations sont importantes, et cette
+leçon n’en donne que les intitulés. Chacun renvoie à son article. Les
+ingénieurs qui construisent un tel système lisent les articles eux-mêmes.
 
-A **provider** of a high-risk system must run a risk management system
-([Article 9](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_9)),
-govern its training data
-([Article 10](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_10)),
-write technical documentation
-([Article 11](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_11)),
-make the system keep logs
-([Article 12](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_12)),
-give deployers instructions for use
-([Article 13](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_13)),
-design for human oversight
-([Article 14](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_14)),
-reach an appropriate level of accuracy, robustness, and cybersecurity
-([Article 15](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_15)),
-pass a conformity assessment
-([Article 43](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_43)),
-register the system in the EU database
-([Article 49](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_49)),
-monitor it after release
-([Article 72](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_72)),
-and report serious incidents to the authorities
-([Article 73](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_73)).
-[Article 16](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_16)
-collects the list.
+Le **fournisseur** d’un système à haut risque doit mettre en place un
+système de gestion des risques
+([article 9](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_9)),
+gouverner ses données d’entraînement
+([article 10](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_10)),
+rédiger une documentation technique
+([article 11](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_11)),
+faire en sorte que le système tienne des journaux
+([article 12](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_12)),
+donner aux déployeurs une notice d’utilisation
+([article 13](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_13)),
+concevoir le système pour un contrôle humain
+([article 14](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_14)),
+atteindre un niveau approprié d’exactitude, de robustesse et de
+cybersécurité
+([article 15](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_15)),
+passer une évaluation de la conformité
+([article 43](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_43)),
+enregistrer le système dans la base de données de l’UE
+([article 49](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_49)),
+le surveiller après sa mise sur le marché
+([article 72](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_72)),
+et signaler les incidents graves aux autorités
+([article 73](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_73)).
+L’[article 16](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_16)
+rassemble la liste.
 
-A **deployer** of a high-risk system has a shorter list, in
-[Article 26](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_26).
-Use the system as the instructions for use say. Assign human oversight to
-people who have "the necessary competence, training and authority". Keep
-the logs the system generates for at least six months. Monitor the system,
-suspend its use when it presents a risk, and tell the provider and the
-authority about serious incidents. Tell workers and their representatives
-before a high-risk system is used on them at work, and tell any person
-that a decision about them involved the system. A deployer that is a
-public body, or that provides a public service, or that scores credit or
-prices life and health insurance, also carries out a fundamental rights
-impact assessment before first use
-([Article 27](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_27)).
+Le **déployeur** d’un système à haut risque a une liste plus courte, à
+l’[article 26](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_26).
+Utiliser le système conformément à la notice d’utilisation. Confier le
+contrôle humain à des personnes qui ont « les compétences, la formation et
+l’autorité nécessaires ». Conserver au moins six mois les journaux que
+génère le système. Surveiller le système, en suspendre l’usage quand il
+présente un risque, et informer le fournisseur et l’autorité des incidents
+graves. Informer les travailleurs et leurs représentants avant qu’un système
+à haut risque soit utilisé à leur égard au travail, et informer toute
+personne qu’une décision la concernant a fait intervenir le système. Un
+déployeur qui est un organisme public, qui fournit un service public, ou qui
+évalue la solvabilité ou tarifie des assurances vie et santé, réalise aussi
+une analyse d’impact sur les droits fondamentaux avant la première
+utilisation
+([article 27](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_27)).
 
-Read that deployer list again with the earlier safety lessons in mind. Human
-oversight by competent people is the human in the loop from
-[Why agent safety is different](/safety/agent-risk/). Log retention is
-logging and audit. Suspending use and informing the provider is
-escalation. The Act turns the habits of this course into duties, for the
-high-risk tier, and a written policy is how an organization shows it
-meets them.
+Relisez cette liste du déployeur en pensant aux leçons précédentes sur la
+sécurité. Le contrôle humain par des personnes compétentes est l’humain dans
+la boucle de [Pourquoi la sécurité des agents est différente](/safety/agent-risk/).
+La conservation des journaux, c’est la journalisation et l’audit. Suspendre
+l’usage et informer le fournisseur, c’est la remontée des incidents. Le
+règlement transforme les habitudes de ce cours en obligations, pour le
+niveau à haut risque, et une politique écrite est la façon dont une
+organisation montre qu’elle les respecte.
 
-## Transparency duties in everyday work
+## Les obligations de transparence au quotidien
 
-[Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
-is the part of the Act that most people meet, because it
-applies whatever the tier and its duties are simple.
+L’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
+est la partie du règlement que la plupart des gens rencontrent, parce
+qu’elle s’applique quel que soit le niveau et que ses obligations sont
+simples.
 
-- A provider of a system that interacts with people must design it so that
-  people know they are dealing with an AI system, unless that is obvious to
-  a reasonably observant person
-  ([Article 50(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
-  A customer-service chatbot
-  says that it is one.
-- A provider of a system that generates text, images, audio, or video must
-  mark the output "in a machine-readable format and detectable as
-  artificially generated or manipulated"
-  ([Article 50(2)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
-  Content
-  credentials are one technical answer to this duty.
-- A deployer of an emotion-recognition or biometric-categorization system
-  must tell the people exposed to it
-  ([Article 50(3)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
-- A deployer who publishes a deep fake, which
-  [Article 3(60)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)
-  defines as
-  generated or manipulated content that resembles real people, places or
-  events and "would falsely appear to a person to be authentic", must
-  disclose that the content is generated or manipulated
-  ([Article 50(4)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
-  For
-  a work that is clearly artistic or satirical, a disclosure that doesn't
-  spoil the work is enough.
-- A deployer who publishes AI-generated text "with the purpose of informing
-  the public on matters of public interest" must disclose that, unless a
-  person reviewed the text and holds editorial responsibility for it
-  ([Article 50(4)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
+- Le fournisseur d’un système qui dialogue avec des personnes doit le
+  concevoir pour que les personnes sachent qu’elles ont affaire à un système
+  d’IA, sauf si c’est évident pour une personne raisonnablement attentive
+  ([article 50(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
+  Un agent conversationnel de service client dit qu’il en est un.
+- Le fournisseur d’un système qui génère du texte, des images, du son ou de
+  la vidéo doit marquer la sortie « dans un format lisible par machine et
+  identifiable comme générée ou manipulée artificiellement »
+  ([article 50(2)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
+  Les identifiants de contenu (content credentials) sont une réponse
+  technique à cette obligation.
+- Le déployeur d’un système de reconnaissance des émotions ou de
+  catégorisation biométrique doit en informer les personnes qui y sont
+  exposées
+  ([article 50(3)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
+- Le déployeur qui publie un hypertrucage, que
+  l’[article 3(60)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)
+  définit comme un contenu généré ou manipulé qui ressemble à des personnes,
+  des lieux ou des événements réels et « semblerait faussement authentique à
+  une personne », doit indiquer que le contenu est généré ou manipulé
+  ([article 50(4)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
+  Pour une œuvre manifestement artistique ou satirique, une mention qui ne
+  gâche pas l’œuvre suffit.
+- Le déployeur qui publie un texte généré par l’IA « dans le but
+  d’informer le public sur des questions d’intérêt public » doit l’indiquer,
+  sauf si une personne a relu le texte et en assume la responsabilité
+  éditoriale
+  ([article 50(4)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)).
 
-The information goes to the people concerned "in a clear and
-distinguishable manner at the latest at the time of the first interaction
-or exposure"
-([Article 50(5)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50))
-(@AI Act). Most everyday use at work falls
-under none of these. Drafting a memo with an assistant is neither a deep
-fake nor a publication on a matter of public interest, so the disclosure
-habit from [What may go into an AI tool](/safety/responsible-use/) stays a
-matter of what your audience expects rather than of law. The moment the
-output is a chatbot for the public, a realistic image of a real person, or
-a public article,
-[Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
-applies.
+L’information est donnée aux personnes concernées « de manière claire et
+reconnaissable, au plus tard lors de la première interaction ou
+exposition »
+([article 50(5)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50))
+(@AI Act). La plupart des usages quotidiens au travail ne relèvent d’aucun
+de ces cas. Rédiger une note avec un assistant n’est ni un hypertrucage ni
+une publication sur une question d’intérêt public, donc l’habitude de
+mention de
+[Ce qui peut entrer dans un outil d’IA](/safety/responsible-use/) reste une
+question de ce qu’attend votre public, et non de droit. Dès que la sortie
+est un agent conversationnel pour le public, une image réaliste d’une
+personne réelle ou un article public,
+l’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
+s’applique.
 
 <Match id="which-transparency-duty" objective="safety/handles-data-safely/discloses-ai-use"
   concepts={['regulation']}
-  context="Article 50 of the EU AI Act puts transparency duties on systems that interact with people, on generated content, on deep fakes, and on AI-generated text published to inform the public, with an exception where a person holds editorial responsibility."
-  title="Which transparency duty applies?" hint="Who is talking to whom, and what is being published? Is anyone a real person shown doing something they did not do?"
+  context="L’article 50 du règlement européen sur l’IA impose des obligations de transparence aux systèmes qui dialoguent avec des personnes, aux contenus générés, aux hypertrucages et aux textes générés par l’IA publiés pour informer le public, avec une exception quand une personne assume la responsabilité éditoriale."
+  title="Quelle obligation de transparence s’applique ?" hint="Qui parle à qui, et qu’est-ce qui est publié ? Une personne réelle est-elle montrée en train de faire ce qu’elle n’a pas fait ?"
   options={[
-    'People must be told they are dealing with an AI system',
-    'The output must carry a machine-readable mark that it was generated',
-    'The content must be disclosed as a deep fake',
-    'The text must be disclosed as AI-generated',
-    'No Article 50 duty',
+    'Les personnes doivent savoir qu’elles ont affaire à un système d’IA',
+    'La sortie doit porter une marque lisible par machine indiquant qu’elle a été générée',
+    'Le contenu doit être signalé comme un hypertrucage',
+    'Le texte doit être signalé comme généré par l’IA',
+    'Aucune obligation de l’article 50',
   ]}
   rows={[
-    { statement: 'Your company puts a chatbot on its public website to answer customer questions', option: 0, why: 'Who is the chatbot talking to, and do they know what it is?' },
-    { statement: 'A vendor sells an image generator to design agencies', option: 1, why: 'The vendor is the provider of a system that generates content. What must the provider do to the output?' },
-    { statement: 'Marketing publishes a realistic AI-made video of a real actor for an advertisement', option: 2, why: 'The video shows a real person. What does Article 3(60) call such content, and what does Article 50(4) ask of its deployer?' },
-    { statement: 'A news site publishes an AI-drafted article about a local election after an editor reviewed it and takes responsibility for it', option: 4, why: 'Article 50(4) names an exception for published text. What is it?' },
-    { statement: 'You use an AI assistant to draft a memo for your own team', option: 4, why: 'Is the memo a deep fake, or a publication to inform the public?' },
+    { statement: 'Votre entreprise place un agent conversationnel sur son site public pour répondre aux questions des clients', option: 0, why: 'À qui parle l’agent conversationnel, et ces personnes savent-elles ce qu’il est ?' },
+    { statement: 'Un éditeur vend un générateur d’images à des agences de design', option: 1, why: 'L’éditeur est le fournisseur d’un système qui génère du contenu. Que doit faire le fournisseur de la sortie ?' },
+    { statement: 'Le marketing publie une vidéo réaliste faite par l’IA d’un vrai acteur pour une publicité', option: 2, why: 'La vidéo montre une personne réelle. Comment l’article 3(60) appelle-t-il un tel contenu, et que demande l’article 50(4) à son déployeur ?' },
+    { statement: 'Un site d’information publie un article rédigé par l’IA sur une élection locale après qu’un rédacteur l’a relu et en assume la responsabilité', option: 4, why: 'L’article 50(4) prévoit une exception pour les textes publiés. Laquelle ?' },
+    { statement: 'Vous utilisez un assistant d’IA pour rédiger une note destinée à votre propre équipe', option: 4, why: 'La note est-elle un hypertrucage, ou une publication pour informer le public ?' },
   ]}
-  rationale="Article 50 reaches public-facing chat, generated media and public-interest text. It does not reach ordinary drafting, where disclosure is a matter of what your audience expects.">
-For each situation, pick the
-[Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
-duty that applies.
+  rationale="L’article 50 atteint les conversations ouvertes au public, les médias générés et les textes d’intérêt public. Il n’atteint pas la rédaction ordinaire, où la mention dépend de ce qu’attend votre public.">
+Pour chaque situation, choisissez l’obligation de
+l’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
+qui s’applique.
 </Match>
 
 <Sort id="duty-or-none" phase="review" objective="safety/handles-data-safely/discloses-ai-use"
   concepts={['regulation']}
-  context="Article 50 of the EU AI Act puts transparency duties on systems that interact with people, on generated content, on deep fakes, and on AI-generated text published to inform the public, with an exception where a person holds editorial responsibility."
-  title="Does Article 50 apply?" hint="Is it a chatbot, a deep fake or published text, and did an editor take responsibility for the text?"
-  buckets={['An Article 50 duty applies', 'No Article 50 duty']}
+  context="L’article 50 du règlement européen sur l’IA impose des obligations de transparence aux systèmes qui dialoguent avec des personnes, aux contenus générés, aux hypertrucages et aux textes générés par l’IA publiés pour informer le public, avec une exception quand une personne assume la responsabilité éditoriale."
+  title="L’article 50 s’applique-t-il ?" hint="Est-ce un agent conversationnel, un hypertrucage ou un texte publié, et un rédacteur a-t-il assumé la responsabilité du texte ?"
+  buckets={['Une obligation de l’article 50 s’applique', 'Aucune obligation de l’article 50']}
   items={[
-    { text: 'A chatbot on a public website that answers customers', bucket: 0 },
-    { text: 'A realistic AI-made video of a real politician in an advertisement', bucket: 0 },
-    { text: 'An AI-written article about a local election, published with no human review', bucket: 0 },
-    { text: 'An internal memo you drafted with an assistant for your own team', bucket: 1 },
-    { text: 'An AI-drafted news article that an editor reviewed and takes responsibility for', bucket: 1 },
+    { text: 'Un agent conversationnel sur un site public qui répond aux clients', bucket: 0 },
+    { text: 'Une vidéo réaliste faite par l’IA d’un vrai responsable politique dans une publicité', bucket: 0 },
+    { text: 'Un article écrit par l’IA sur une élection locale, publié sans relecture humaine', bucket: 0 },
+    { text: 'Une note interne rédigée avec un assistant pour votre propre équipe', bucket: 1 },
+    { text: 'Un article d’information rédigé par l’IA qu’un rédacteur a relu et dont il assume la responsabilité', bucket: 1 },
   ]} />
 
-## The timeline
+## Le calendrier
 
-The Act applies in steps, set out in
-[Article 113](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_113)
-and changed by the July 2026 amendment, Regulation (EU) 2026/1744, which
-moved the high-risk dates back (@AI Act). Today is after the general
-application date, so most of the table is already in force.
+Le règlement s’applique par étapes, fixées à
+l’[article 113](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_113)
+et modifiées par l’amendement de juillet 2026, le règlement (UE) 2026/1744,
+qui a repoussé les dates du haut risque (@AI Act). Nous sommes après la date
+d’application générale, donc la plus grande partie du tableau est déjà en
+vigueur.
 
-| From             | What applies                                                                                                                                                  |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| August 1, 2024   | The Act entered into force, twenty days after publication on July 12, 2024 (@EC AI Act)                                                                       |
-| February 2, 2025 | Definitions, the AI literacy duty, and the prohibited practices (Chapters I and II)                                                                           |
-| August 2, 2025   | Rules for general-purpose AI models, the governance bodies, and the chapter on penalties                                                                      |
-| August 2, 2026   | The Act as a whole, including the transparency duties of [Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)                                                                                           |
-| December 2, 2026 | The prohibitions added in 2026 on sexual deep fakes and child abuse material ([Article 5(1)(ba)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_5) and (bb)). Generators already on the market before August 2, 2026 must meet [Article 50(2)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50) by this date too ([Article 111(4)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_111)) |
-| December 2, 2027 | The high-risk duties for [Annex III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III) systems                                                                                                                    |
-| August 2, 2028   | The high-risk duties for AI in [Annex I](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_I) products                                                                                                               |
+| À partir du      | Ce qui s’applique |
+| ---------------- | ----------------- |
+| 1er août 2024    | Le règlement entre en vigueur, vingt jours après sa publication le 12 juillet 2024 (@EC AI Act) |
+| 2 février 2025   | Les définitions, l’obligation de maîtrise de l’IA et les pratiques interdites (chapitres I et II) |
+| 2 août 2025      | Les règles sur les modèles d’IA à usage général, les organes de gouvernance et le chapitre sur les sanctions |
+| 2 août 2026      | Le règlement dans son ensemble, y compris les obligations de transparence de l’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50) |
+| 2 décembre 2026  | Les interdictions ajoutées en 2026 sur les hypertrucages sexuels et les contenus d’abus sur des enfants ([article 5(1)(ba)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_5) et (bb)). Les générateurs déjà sur le marché avant le 2 août 2026 doivent aussi respecter l’[article 50(2)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50) à cette date ([article 111(4)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_111)) |
+| 2 décembre 2027  | Les obligations du haut risque pour les systèmes de l’[annexe III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III) |
+| 2 août 2028      | Les obligations du haut risque pour l’IA dans les produits de l’[annexe I](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_I) |
 
-[Article 111](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_111)
-gives transition periods to systems that were already in use, and the
-Commission keeps a page with the current state of application (@EC AI Act).
-Dates have moved once already, which is why this page has a review date.
+L’[article 111](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_111)
+accorde des périodes de transition aux systèmes déjà en usage, et la
+Commission tient une page sur l’état actuel de l’application (@EC AI Act).
+Les dates ont déjà changé une fois, et c’est pourquoi cette page a une date
+de revue.
 
-## Penalties
+## Les sanctions
 
-[Article 99](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_99)
-sets the ceilings, and each member state writes the rules for
-applying them.
-A prohibited practice can cost up to 35 million euros or 7% of worldwide
-annual turnover, whichever is higher. Breaking the provider duties, the
-deployer duties of
-[Article 26](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_26)
-or the transparency duties of
-[Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
-can cost up to 15 million euros or 3%. Giving authorities wrong or
-incomplete information can cost up to 7.5 million euros or 1%. For small and
-medium-sized enterprises the lower of the amount and the percentage
-applies (@AI Act). The order tells you what the legislator considers
-worst: the banned practices are at the top, and the everyday transparency
-duties are in the same band as the high-risk duties.
+L’[article 99](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_99)
+fixe les plafonds, et chaque État membre écrit les règles pour les
+appliquer. Une pratique interdite peut coûter jusqu’à 35 millions d’euros ou
+7 % du chiffre d’affaires annuel mondial, le montant le plus élevé étant
+retenu. Le manquement aux obligations du fournisseur, aux obligations du
+déployeur de
+l’[article 26](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_26)
+ou aux obligations de transparence de
+l’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
+peut coûter jusqu’à 15 millions d’euros ou 3 %. Fournir aux autorités des
+informations fausses ou incomplètes peut coûter jusqu’à 7,5 millions d’euros
+ou 1 %. Pour les petites et moyennes entreprises, c’est le plus bas du
+montant et du pourcentage qui s’applique (@AI Act). L’ordre vous dit ce que
+le législateur juge le plus grave : les pratiques interdites sont en haut,
+et les obligations de transparence du quotidien sont dans la même tranche
+que les obligations du haut risque.
 
-## Who enforces it
+## Qui le fait appliquer
 
-Each member state designates at least one notifying authority and at least
-one market surveillance authority for the Act
-([Article 70](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_70)).
-Those national authorities are who a deployer reports a serious incident
-to, and who can fine an organization in that state. At the EU level the
-Commission builds expertise through its AI Office
-([Article 64](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_64)),
-and it has the exclusive power to enforce the rules for general-purpose AI
-models, a task it entrusts to the AI Office
-([Article 88(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_88)).
-The European Artificial
-Intelligence Board, with one representative per member state, coordinates
-the national authorities
-([Article 65](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_65))
-(@AI Act). The Commission describes
-the AI Office's powers over general-purpose models: requesting
-documentation, evaluating models, requiring corrective action and issuing
-fines (@EC AI Office). For your own country, look up which market
-surveillance authority your member state designated.
-[Article 70(2)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_70)
-asks each member state to publish how its authorities can be contacted and
-to name one point of contact (@AI Act).
+Chaque État membre désigne au moins une autorité notifiante et au moins une
+autorité de surveillance du marché pour le règlement
+([article 70](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_70)).
+Ces autorités nationales sont celles auxquelles un déployeur signale un
+incident grave, et celles qui peuvent infliger une amende à une organisation
+dans cet État. Au niveau de l’UE, la Commission développe son expertise par
+son Bureau de l’IA
+([article 64](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_64)),
+et elle a le pouvoir exclusif de faire appliquer les règles sur les modèles
+d’IA à usage général, une tâche qu’elle confie au Bureau de l’IA
+([article 88(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_88)).
+Le Comité européen de l’intelligence artificielle, avec un représentant par
+État membre, coordonne les autorités nationales
+([article 65](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_65))
+(@AI Act). La Commission décrit les pouvoirs du Bureau de l’IA sur les
+modèles à usage général : demander de la documentation, évaluer les modèles,
+exiger des mesures correctives et infliger des amendes (@EC AI Office). Pour
+votre propre pays, cherchez quelle autorité de surveillance du marché votre
+État membre a désignée.
+L’[article 70(2)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_70)
+demande à chaque État membre de publier comment joindre ses autorités et de
+désigner un point de contact unique (@AI Act).
 
-<Exercise stretch="Check whether the tool's use appears in Annex III. If it does, write down which of the deployer duties of Article 26 your organization already meets and which it does not.">
-Pick one AI tool used at your work. In two lines, decide whether your
-organization is its provider or its deployer, and name the one
-[Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
-transparency duty that applies to your use of it, or write that none applies.
-Ten minutes at most. Those lines are the first entry of an inventory your
-organization needs for the AI literacy and deployer duties, and writing one
-shows you how quickly the roles become clear. A good result gives the reason
-with the role ("deployer: we bought the tool unchanged") and the paragraph with
-the duty
-("[Article 50(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50):
-a chatbot for customers"). Which of the Act's duties touch your own daily work,
-and which only your organization's?
+<Exercise stretch="Vérifiez si l’usage de l’outil figure à l’annexe III. Si c’est le cas, notez lesquelles des obligations du déployeur de l’article 26 votre organisation respecte déjà et lesquelles elle ne respecte pas.">
+Choisissez un outil d’IA utilisé dans votre travail. En deux lignes,
+décidez si votre organisation en est le fournisseur ou le déployeur, et
+nommez la seule obligation de transparence de
+l’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
+qui s’applique à votre usage, ou écrivez qu’aucune ne s’applique. Dix minutes
+au plus. Ces lignes sont la première entrée d’un inventaire dont votre
+organisation a besoin pour les obligations de maîtrise de l’IA et du
+déployeur, et en écrire une vous montre à quelle vitesse les rôles se
+clarifient. Un bon résultat donne la raison avec le rôle (« déployeur : nous
+avons acheté l’outil sans le modifier ») et le paragraphe avec l’obligation
+(« [article 50(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50) : un agent conversationnel pour les
+clients »). Lesquelles des obligations du règlement touchent votre propre
+travail quotidien, et lesquelles ne touchent que votre organisation ?
 </Exercise>
 
 <Recap>
-1. The Act applies to AI systems, which
-   [Article 3(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)
-   defines by their ability to infer outputs from input. A tool that only
-   executes rules a person wrote is outside it (@AI Act).
-2. Uses fall into tiers: prohibited practices
-   ([Article 5](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_5)),
-   high-risk systems
-   ([Article 6](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_6)
-   with
-   [Annex I](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_I)
-   and
-   [Annex III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III)),
-   systems with a transparency duty
-   ([Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)),
-   and everything else, for which the Act doesn't set a specific duty (@AI Act).
-3. Providers build or brand a system and deployers use one. Changing a system's
-   purpose into a high-risk use, or putting your name on it, makes you its
-   provider
-   ([Article 25](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_25))
+1. Le règlement s’applique aux systèmes d’IA, que
+   l’[article 3(1)](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_3)
+   définit par leur capacité à déduire des sorties à partir d’entrées. Un
+   outil qui ne fait qu’exécuter des règles écrites par une personne en est
+   exclu (@AI Act).
+2. Les usages se rangent par niveaux : pratiques interdites
+   ([article 5](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_5)),
+   systèmes à haut risque
+   ([article 6](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_6)
+   avec
+   l’[annexe I](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_I)
+   et
+   l’[annexe III](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#anx_III)),
+   systèmes soumis à une obligation de transparence
+   ([article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)),
+   et tout le reste, pour lequel le règlement ne fixe pas d’obligation
+   particulière (@AI Act).
+3. Les fournisseurs construisent un système ou y mettent leur marque, et les
+   déployeurs en utilisent un. Changer la destination d’un système pour un
+   usage à haut risque, ou y mettre votre nom, fait de vous son fournisseur
+   ([article 25](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_25))
    (@AI Act).
-4. A deployer of a high-risk system follows the instructions for use and assigns
-   competent human oversight. It also keeps the logs for at least six months and
-   reports incidents, and it tells the people affected
-   ([Article 26](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_26))
+4. Le déployeur d’un système à haut risque suit la notice d’utilisation et
+   confie le contrôle humain à des personnes compétentes. Il conserve aussi
+   les journaux au moins six mois, signale les incidents et informe les
+   personnes concernées
+   ([article 26](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_26))
    (@AI Act).
-5. [Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
-   reaches everyday work through public-facing chatbots, generated media, deep
-   fakes and public-interest text. Ordinary drafting has no
-   [Article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
-   duty (@AI Act).
-6. The AI literacy duty of
-   [Article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_4)
-   has applied since February 2, 2025. High-risk duties start on December 2,
-   2027 and August 2, 2028, and dates have moved once, so check the review date
-   on this page (@AI Act).
+5. L’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
+   atteint le travail quotidien par les agents conversationnels ouverts au
+   public, les médias générés, les hypertrucages et les textes d’intérêt
+   public. La rédaction ordinaire n’a pas d’obligation au titre de
+   l’[article 50](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_50)
+   (@AI Act).
+6. L’obligation de maîtrise de l’IA de
+   l’[article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727#art_4)
+   s’applique depuis le 2 février 2025. Les obligations du haut risque
+   commencent le 2 décembre 2027 et le 2 août 2028, et les dates ont déjà
+   changé une fois, alors vérifiez la date de revue de cette page (@AI Act).
 </Recap>

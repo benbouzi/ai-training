@@ -22,11 +22,11 @@ from pathlib import Path
 LOG = Path(__file__).with_name("session.log")
 
 # Words that make an email "about a refund" for the request's rule.
-REFUND_WORDS = ("refund", "money back")
+REFUND_WORDS = ("rembours", "récupérer mon argent")
 
 # The tools that change something outside the session, and the word the
 # reconstruction uses for each change. Every other tool only reads.
-CHANGES = {"send_reply": "sent", "save_draft": "draft"}
+CHANGES = {"send_reply": "envoyé", "save_draft": "brouillon"}
 
 
 def read_log(path: Path) -> "list[dict[str, str]]":
@@ -65,26 +65,29 @@ def main() -> None:
     records = read_log(LOG)
     subjects = {r["target"]: r["text"] for r in records if tool_name(r) == "read_email"}
 
-    print("changed, checked against the request:")
+    print("modifications, comparées à la demande :")
     changes = [r for r in records if tool_name(r) in CHANGES]
     breaks = 0
     for r in changes:
         subject = subjects.get(r["target"], "?")
         verdict = "ok"
         change = CHANGES[tool_name(r)]
-        if change == "sent" and about_refund(subject):
-            verdict = "AGAINST THE REQUEST (about a refund, so a draft)"
+        if change == "envoyé" and about_refund(subject):
+            verdict = "CONTRAIRE À LA DEMANDE (parle d’un remboursement, donc brouillon)"
             breaks += 1
-        print(f"  {change:<5}  {r['target']}  {subject}")
-        print(f"         reply: {r['text']}")
-        print(f"         {verdict}")
+        print(f"  {change:<9}  {r['target']}  {subject}")
+        print(f"             réponse : {r['text']}")
+        print(f"             {verdict}")
     print()
 
     summary = [r["text"] for r in records if r["event"] == "summary"]
-    sent = sum(1 for r in changes if CHANGES[tool_name(r)] == "sent")
-    drafts = sum(1 for r in changes if CHANGES[tool_name(r)] == "draft")
-    print(f'agent\'s summary: "{summary[0]}"')
-    print(f"changes: {len(changes)}, sent: {sent}, drafts: {drafts}, against the request: {breaks}")
+    sent = sum(1 for r in changes if CHANGES[tool_name(r)] == "envoyé")
+    drafts = sum(1 for r in changes if CHANGES[tool_name(r)] == "brouillon")
+    print(f"résumé de l’agent : « {summary[0]} »")
+    print(
+        f"modifications : {len(changes)}, envoyées : {sent}, brouillons : {drafts}, "
+        f"contraires à la demande : {breaks}"
+    )
 
 
 if __name__ == "__main__":

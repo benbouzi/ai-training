@@ -13,7 +13,7 @@ assumes:
     section: lhumain-dans-la-boucle
   - objective: safety/judges-agent-risk/sets-oversight
     lesson: safety/writing-an-ai-policy
-    section: the-one-page-template
+    section: le-gabarit-dune-page
 after: [using-agents/chat-agent-or-automation]
 shorts: [A human path when the tool is down]
 exercise:

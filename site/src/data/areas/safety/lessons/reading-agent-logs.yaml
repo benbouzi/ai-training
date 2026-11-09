@@ -1,21 +1,24 @@
 id: safety/reading-agent-logs
-title: Reading agent logs and rerunning after a model change
+title: Lire les journaux d’un agent et relancer après un changement de modèle
 description: >-
-  Reconstruct what an agent was asked, called and changed from its log, keep the log where the agent
-  can't edit it with a named reader, and rerun a task set when the vendor changes the model.
+  Reconstituer à partir de son journal ce qu’on a demandé à un agent, ce qu’il a appelé et ce
+  qu’il a modifié, conserver le journal là où l’agent ne peut pas le modifier avec un lecteur
+  désigné, et relancer un jeu de tâches quand le fournisseur change de modèle.
 mode: tutorial
 covers: safety/governance
 serves: [safety/judges-agent-risk/sets-oversight]
 introduces: [logging-and-audit, model-change-risk]
 assumes: []
 after: [safety/writing-an-ai-policy]
-shorts: [A model update as a dependency upgrade]
+shorts: [Une mise à jour du modèle vue comme une mise à jour de dépendance]
 exercise:
   kind: do
   brief: >-
-    Take one agent or assistant your team uses and write down what it logs, where, who reads a
-    sample, and what you would rerun after the vendor's next model update.
-sources: [AEC-09, AEC-10, AEC-11, Claude Code monitoring, Claude docs model-ids-and-versions, Claude docs model-deprecations]
+    Prendre un agent ou un assistant que votre équipe utilise et noter ce qu’il journalise, où, qui
+    en lit un échantillon, et ce que vous relanceriez après la prochaine mise à jour du modèle par
+    le fournisseur.
+sources: [AEC-09, AEC-10, AEC-11, Claude Code monitoring, Claude docs model-ids-and-versions, Claude
+      docs model-deprecations]
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 issue: 138
@@ -26,7 +29,8 @@ notes: >-
   change against the request) and compare_versions.py (one task set on two model versions,
   printing the rows that differ) are CI proof only. The page shows their output in text fences and
   carries no Predict run, because safety is a foundations area. Both are listed in proofs, and
-  `mise run examples` fails when one prints a line no text fence on the page shows (#497, #311). The support team, emails, orders and model names are invented, and the page
+  `mise run examples` fails when one prints a line no text fence on the page shows (#497, #311). The support
+  team, emails, orders and model names are invented, and the page
   holds no person names. The planned Academy deploying-claude-enterprise-with-confidence framing
   (no audit trail means the wrong tool for a regulated workflow) is not attributed to the course,
   after the review note on issue #138 found the course does not state it. The page states it as the

@@ -247,3 +247,40 @@ ensemble :
 | redaction map             | table de correspondance                   |
 | pseudonymized / anonymous | pseudonymisé / anonyme                    |
 | access token              | jeton d’accès                             |
+
+## Sécurité : vérification, agents et gouvernance
+
+| Anglais                              | Français                                     |
+| ------------------------------------ | -------------------------------------------- |
+| hallucination in practice            | l’hallucination en pratique                  |
+| claim                                | affirmation                                  |
+| the tell                             | l’indice                                     |
+| shortlist / shortlisted              | présélection / retenu                        |
+| slant                                | inclinaison                                  |
+| checking habits                      | habitudes de vérification                    |
+| source checking                      | vérification des sources                     |
+| endorsed answer                      | réponse validée                              |
+| template                             | gabarit (jamais « modèle », réservé à l’IA)  |
+| discernment                          | discernement                                 |
+| task set                             | jeu de tâches                                |
+| logging and audit                    | journalisation et audit                      |
+| log                                  | journal                                      |
+| model change risk                    | risque lié au changement de modèle           |
+| pin (a model version)                | figer (une version)                          |
+| escalation                           | remontée des incidents                       |
+| risk assessment                      | évaluation des risques                       |
+| impact / likelihood / level          | impact / probabilité / niveau                |
+| threshold                            | seuil                                        |
+| written acceptance                   | acceptation écrite                           |
+| AI Act                               | règlement sur l’IA                           |
+| AI system                            | système d’IA                                 |
+| provider / deployer                  | fournisseur / déployeur                      |
+| deep fake                            | hypertrucage                                 |
+| AI literacy                          | maîtrise de l’IA                             |
+| high-risk / prohibited practice      | à haut risque / pratique interdite           |
+| fundamental rights impact assessment | analyse d’impact sur les droits fondamentaux |
+| content credentials                  | identifiants de contenu                      |
+
+Les termes du règlement européen sur l’IA suivent sa version française
+officielle. Les citations du règlement dans la leçon sont traduites de la
+version anglaise consolidée, et la leçon le dit.
