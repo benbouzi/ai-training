@@ -1,9 +1,9 @@
 id: safety/asking-a-model-to-disagree
-title: Asking a model to disagree
+title: Demander à un modèle d’être en désaccord
 description: >-
-  Why a model's yes to your plan is not a check, how to ask for the strongest counter-argument
-  before asking for confirmation, and how to strip your own opinion out of the question when you
-  want an assessment.
+  Pourquoi le oui d’un modèle à votre projet ne vérifie rien, comment demander le contre-argument
+  le plus fort avant de demander une confirmation, et comment retirer votre propre opinion de la
+  question quand vous voulez une évaluation.
 mode: tutorial
 covers: safety/verification
 serves: [safety/verifies-output/spots-sycophancy]
@@ -17,9 +17,9 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    Ask a model for the strongest counter-argument to a plan of yours twice: once after it has
-    already said yes to a leading question in the same chat, and once as the first message of a
-    fresh chat. Compare the two counter-arguments.
+    Demander deux fois à un modèle le contre-argument le plus fort à l’un de vos projets : une fois
+    après qu’il a déjà dit oui à une question orientée dans la même conversation, et une fois comme
+    premier message d’une nouvelle conversation. Comparer les deux contre-arguments.
 sources: [Sharma 2023, Academy ai-fluency-framework-foundations]
 issue: 124
 minutes: 15
