@@ -60,6 +60,10 @@ TERMES = [
     ("garde-fous", "guardrails"),
     ("jeu de référence", "golden set"),
     ("grille d’évaluation", "rubric"),
+    ("critères d’achèvement", "done-criteria"),
+    ("partenaire de réflexion", "thought partner"),
+    ("décomposition des tâches", "task decomposition"),
+    ("consigne de la tâche", "task brief"),
 ]
 
 PROSE = re.compile(r"^(\*\*|«|\(|\d+\. |- |[A-Za-zÀ-ÿ’])")

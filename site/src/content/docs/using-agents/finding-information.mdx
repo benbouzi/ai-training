@@ -1,301 +1,331 @@
 import { Choice, Repair, Pitfall, Exercise, Recap, Prompt, Response, MultiChoice, Scenario } from '@components/lesson';
 
-In this lesson we use a chat assistant to find our way around a text we
-have never read. We paste it and ask the question a newcomer would ask,
-first as a plain request and then as a brief that names the source and
-asks for a quote behind each claim. Then we ask the same question with no
-text at all and watch what comes back. By the end you have a rule for
-finding information with an assistant that you can apply to any document
-someone hands you.
+Dans cette leçon, nous utilisons un assistant conversationnel pour nous
+repérer dans un texte que nous n’avons jamais lu. Nous le collons et posons
+la question qu’un nouveau venu poserait, d’abord sous forme de demande
+simple, puis sous forme de consigne qui nomme la source et demande une
+citation derrière chaque affirmation. Puis nous posons la même question sans
+aucun texte et regardons ce qui revient. À la fin, vous avez une règle pour
+trouver de l’information avec un assistant, applicable à n’importe quel
+document qu’on vous remet.
 
-You need any chat assistant you already have access to. Every response
-shown here is illustrative. The author wrote it to show the pattern, and
-your model gives a different text.
+Il vous faut n’importe quel assistant conversationnel auquel vous avez déjà
+accès. Chaque réponse montrée ici est illustrative. L’auteur l’a écrite pour
+montrer le schéma, et votre modèle donnera un autre texte.
 
-## The text
+## Le texte
 
-Here is the material. It is a fictional guideline from a fictional company,
-kept short on purpose so that you can check every answer against it. Read
-it once now, so that you can judge the answers later.
+Voici le contenu. C’est un guide fictif d’une entreprise fictive, volontairement
+court pour que vous puissiez vérifier chaque réponse à partir de lui.
+Lisez-le une fois maintenant, pour pouvoir juger les réponses ensuite.
 
-> **Brindlewick Instruments: expenses and travel guideline**
+> **Brindlewick Instruments : guide des notes de frais et des déplacements**
 >
-> This guideline applies to everyone who spends their own money on behalf of
-> Brindlewick Instruments and claims it back. It replaces the 2024 version.
+> Ce guide s’applique à toute personne qui dépense son propre argent pour le
+> compte de Brindlewick Instruments et en demande le remboursement. Il
+> remplace la version de 2024.
 >
-> **Claiming.** Submit a claim through the expense form on the intranet
-> within 14 days of the date on the receipt. Each claim needs a receipt for
-> every amount above 10 euros. For smaller amounts a one-line note of what
-> was bought and why is enough. Claims older than 90 days are not paid.
-> Approved claims are paid with the next salary run. A claim approved after
-> the 20th of the month is paid with the salary of the month after.
+> **Demandes de remboursement.** Soumettez une demande de remboursement via le
+> formulaire de frais de l’intranet dans les 14 jours suivant la date du
+> justificatif. Chaque demande exige un justificatif pour tout montant
+> supérieur à 10 euros. Pour les montants plus faibles, une ligne indiquant
+> ce qui a été acheté et pourquoi suffit. Les demandes de plus de 90 jours ne
+> sont pas payées. Les demandes approuvées sont payées avec la paie suivante.
+> Une demande approuvée après le 20 du mois est payée avec le salaire du mois
+> suivant.
 >
-> **Company cards.** Team leads hold a company card for team costs. Everyone
-> else pays first and claims afterwards. Do not ask a team lead to put a
-> personal travel cost on their card.
+> **Cartes de l’entreprise.** Les chefs d’équipe détiennent une carte de
+> l’entreprise pour les dépenses de l’équipe. Toutes les autres personnes
+> paient d’abord et demandent le remboursement ensuite. Ne demandez pas à un
+> chef d’équipe de mettre une dépense de déplacement personnelle sur sa
+> carte.
 >
-> **Meals when traveling.** Brindlewick doesn't pay a daily allowance. Meals on
-> a business trip are reimbursed against receipts up to 35 euros per day.
-> Alcohol is not reimbursed. Meals with a client are booked as client
-> entertainment and need the client's company name on the claim.
+> **Repas en déplacement.** Brindlewick ne verse pas d’indemnité journalière.
+> Les repas lors d’un déplacement professionnel sont remboursés sur
+> justificatifs jusqu’à 35 euros par jour. L’alcool n’est pas remboursé. Les
+> repas avec un client sont comptés comme frais de réception et exigent le
+> nom de l’entreprise cliente sur la demande.
 >
-> **Travel.** Take the train for any trip under four hours door to door.
-> Flights need written approval from your manager before booking, and only
-> economy fares are reimbursed. Book through the travel desk where you can,
-> so that the cost never touches your own account. Taxis are reimbursed
-> when there is no public transport option at that hour, and the claim
-> says so.
+> **Déplacements.** Prenez le train pour tout trajet de moins de quatre
+> heures de porte à porte. Les vols nécessitent l’accord écrit de votre
+> responsable avant la réservation, et seuls les tarifs en classe économique
+> sont remboursés. Réservez par le service voyages quand c’est possible, pour
+> que la dépense ne passe jamais par votre propre compte. Les taxis sont
+> remboursés quand il n’existe aucun transport en commun à cette heure-là, et
+> que la demande le précise.
 >
-> **Own car.** Use your own car only when no train option exists for the
-> trip. Mileage is reimbursed at 23 cents per kilometer, plus parking
-> against receipts. Fines and damage are never reimbursed.
+> **Voiture personnelle.** N’utilisez votre propre voiture que lorsqu’il
+> n’existe aucune option en train pour le trajet. Les kilomètres sont
+> remboursés à 23 centimes par kilomètre, plus le stationnement sur
+> justificatifs. Les amendes et les dégâts ne sont jamais remboursés.
 >
-> **Home office.** In your first three months you may claim up to 250 euros
-> once for a desk or chair for working from home, with the receipt attached
-> to the claim. Monitors, keyboards and headsets come from the IT desk, so
-> do not buy your own.
+> **Télétravail.** Pendant vos trois premiers mois, vous pouvez demander une
+> fois jusqu’à 250 euros pour un bureau ou une chaise pour travailler à
+> domicile, avec le justificatif joint à la demande. Les écrans, claviers et
+> casques sont fournis par le service informatique, donc n’achetez pas les
+> vôtres.
 >
-> **Questions.** The finance team answers expense questions in their office
-> hours on Tuesday and Thursday mornings. For anything this guideline does
-> not cover, ask before you spend.
+> **Questions.** L’équipe financière répond aux questions sur les frais pendant
+> ses permanences du mardi et du jeudi matin. Pour tout ce que ce guide ne
+> couvre pas, demandez avant de dépenser.
 
-The question we work with is the one a new hire asks in their first week:
-"What do I need to know about expenses before my first trip?" You don't
-know this text, so you can't judge an answer to it by feel. That's the
-normal situation when you ask an assistant to find information. The point
-of this lesson is to ask in a way that lets you check the answer anyway.
+La question sur laquelle nous travaillons est celle qu’une nouvelle recrue
+pose dans sa première semaine : « Que dois-je savoir sur les frais avant mon
+premier déplacement ? » Vous ne connaissez pas ce texte, donc vous ne pouvez
+pas juger une réponse au ressenti. C’est la situation normale quand vous
+demandez à un assistant de trouver de l’information. L’objet de cette leçon
+est de demander d’une façon qui vous permet malgré tout de vérifier la
+réponse.
 
-## Ask for a summary
+## Demander un résumé
 
-Before you read on, predict what you get back when you paste the guideline
-and type one line above it. How long is the answer, and how do you tell
-whether it is right?
+Avant de poursuivre, prédisez ce que vous obtenez quand vous collez le guide
+et tapez une ligne au-dessus. Quelle est la longueur de la réponse, et
+comment savez-vous si elle est juste ?
 
 <Prompt model="illustrative" recorded="illustrative">
-Summarize this.
+Résume ceci.
 
-[the guideline, pasted in full]
+[le guide, collé en entier]
 </Prompt>
 <Response>
-This guideline explains how employees of Brindlewick Instruments claim
-back expenses. Claims go through the intranet form within 14 days and need
-receipts, and claims older than 90 days are not paid. Payment comes with
-the next salary run. Only team leads have company cards. Meals on business
-trips are reimbursed against receipts up to a daily limit, and alcohol is
-excluded. Train is the default for shorter trips, flights require manager
-approval and must be economy, and taxis are only allowed when there is no
-public transport. Mileage in your own car is reimbursed at a fixed rate
-when no train is available. New hires can claim a one-off amount for a home
-office desk or chair within their first three months. Questions go to the
-finance team during their office hours on Tuesdays and Thursdays.
+Ce guide explique comment les salariés de Brindlewick Instruments se font
+rembourser leurs frais. Les demandes passent par le formulaire de l’intranet
+dans les 14 jours et exigent des justificatifs, et les demandes de plus de
+90 jours ne sont pas payées. Le paiement arrive avec la paie suivante. Seuls
+les chefs d’équipe ont une carte de l’entreprise. Les repas en déplacement
+professionnel sont remboursés sur justificatifs jusqu’à un plafond
+journalier, et l’alcool est exclu. Le train est la règle pour les trajets
+courts, les vols demandent l’accord du responsable et doivent être en
+classe économique, et les taxis ne sont autorisés qu’en l’absence de
+transport en commun. Les kilomètres en voiture personnelle sont remboursés à
+un taux fixe quand aucun train n’est disponible. Les nouvelles recrues
+peuvent demander une somme unique pour un bureau ou une chaise de
+télétravail pendant leurs trois premiers mois. Les questions vont à l’équipe
+financière pendant ses permanences du mardi et du jeudi.
 </Response>
 
-You probably got something like this. It is a fair paragraph. "Need
-receipts" drops the 10-euro line, and "a daily limit" and "a fixed rate"
-leave out the numbers, which are what a newcomer asks about next. The
-bigger problem is how you found that out. You had to read the whole
-guideline again and hold it against the paragraph. The summary saved you
-nothing.
+Vous avez sans doute obtenu quelque chose de ce genre. C’est un paragraphe
+correct. « Exigent des justificatifs » fait disparaître la règle des
+10 euros, et « un plafond journalier » et « un taux fixe » omettent les
+nombres, qui sont justement ce qu’un nouveau venu demande ensuite. Le plus
+gros problème est la façon dont vous l’avez découvert. Vous avez dû relire
+tout le guide et le confronter au paragraphe. Le résumé ne vous a rien fait
+gagner.
 
-That result is the model's default when the prompt leaves everything unsaid,
-as you saw when you rebuilt a one-line request into a prompt. "Summarize
-this" doesn't say who is asking, what they need, or how you plan to check
-the answer. The model produces the average summary and leaves the
-checking to you.
+Ce résultat est ce que le modèle produit par défaut quand le prompt ne dit
+rien, comme vous l’avez vu en transformant une demande d’une ligne en
+véritable prompt. « Résume ceci » ne dit pas qui demande, de quoi la
+personne a besoin, ni comment vous comptez vérifier la réponse. Le modèle
+produit le résumé moyen et vous laisse la vérification.
 
-## Ask for the three things and where they come from
+## Demander les trois choses et leur provenance
 
-Now write the same question as a brief. The goal is the newcomer's
-question. The context is the guideline, pasted below a marked boundary, and
-the brief says that the guideline is the only source. The format is three
-items, each with the sentence from the text it comes from, quoted word for
-word. The last line tells the model what to do when the text has no answer. A
-missing answer is the first place a guess appears when you leave that
-line out.
+Écrivez maintenant la même question sous forme de consigne. L’objectif est
+la question du nouveau venu. Le contexte est le guide, collé sous une limite
+marquée, et la consigne dit que le guide est la seule source. Le format est
+trois éléments, chacun accompagné de la phrase du texte dont il vient, citée
+mot pour mot. La dernière ligne dit au modèle quoi faire quand le texte n’a
+pas de réponse. Une réponse manquante est le premier endroit où apparaît une
+supposition quand vous omettez cette ligne.
 
 <Prompt model="illustrative" recorded="illustrative">
-I am new at Brindlewick Instruments and about to make my first business
-trip. Using only the guideline below the line, give me the three things I
-must know about expenses before I travel. Below each one, put the
-sentence from the guideline it comes from, quoted word for word. Where the
-guideline has no answer, tell me that instead of guessing.
+Je viens d’arriver chez Brindlewick Instruments et je vais faire mon premier
+déplacement professionnel. En t’appuyant uniquement sur le guide sous la
+ligne, donne-moi les trois choses que je dois savoir sur les frais avant de
+partir. Sous chacune, mets la phrase du guide dont elle vient, citée mot
+pour mot. Là où le guide n’a pas de réponse, dis-le au lieu de deviner.
 
 ---
 
-[the guideline, pasted in full]
+[le guide, collé en entier]
 </Prompt>
 <Response>
-1. **Pay first, claim within two weeks, with receipts.** "Submit a claim
-   through the expense form on the intranet within 14 days of the date on
-   the receipt."
-2. **Take the train unless the trip is long, and get flights approved
-   first.** "Flights need written approval from your manager before
-   booking, and only economy fares are reimbursed."
-3. **Meals are covered against receipts, up to a limit, and no alcohol.**
-   "Meals on a business trip are reimbursed against receipts up to 35 euros
-   per day, and alcohol is not reimbursed."
+1. **Payez d’abord, demandez le remboursement sous deux semaines, avec les
+   justificatifs.** « Soumettez une demande de remboursement via le
+   formulaire de frais de l’intranet dans les 14 jours suivant la date du
+   justificatif. »
+2. **Prenez le train sauf pour un long trajet, et faites approuver les vols
+   d’abord.** « Les vols nécessitent l’accord écrit de votre responsable
+   avant la réservation, et seuls les tarifs en classe économique sont
+   remboursés. »
+3. **Les repas sont pris en charge sur justificatifs, jusqu’à un plafond, et
+   sans alcool.** « Les repas lors d’un déplacement professionnel sont
+   remboursés sur justificatifs jusqu’à 35 euros par jour, et l’alcool n’est
+   pas remboursé. »
 </Response>
 
-Compare this with the paragraph. Each claim now comes with the place in the
-text it rests on, and checking it is a search for one sentence. Try it on
-your own result: search the guideline for each quoted sentence.
+Comparez avec le paragraphe. Chaque affirmation est maintenant accompagnée
+de l’endroit du texte sur lequel elle repose, et la vérifier revient à
+chercher une phrase. Essayez sur votre propre résultat : cherchez chaque
+phrase citée dans le guide.
 
-Do the same on the illustrative answer and the third quote fails. The
-guideline has "Meals on a business trip are reimbursed against receipts up
-to 35 euros per day" and then, as a separate sentence, "Alcohol is not
-reimbursed". The model joined two sentences into one and presented the
-result as a quote. The fact is right, and the quote isn't in the text.
-Without the brief you would never have seen the join, and next time the
-join could be between a rule and something the model added. Asking for the
-source of each claim makes the answer checkable, and the check takes a
-minute.
+Faites de même sur la réponse illustrative, et la troisième citation échoue.
+Le guide contient « Les repas lors d’un déplacement professionnel sont
+remboursés sur justificatifs jusqu’à 35 euros par jour », puis, dans une
+phrase séparée, « L’alcool n’est pas remboursé ». Le modèle a fusionné deux
+phrases en une et a présenté le résultat comme une citation. Le fait est
+juste, et la citation ne figure pas dans le texte. Sans la consigne, vous
+n’auriez jamais vu la fusion, et la prochaine fois elle pourrait relier une
+règle à quelque chose que le modèle a ajouté. Demander la source de chaque
+affirmation rend la réponse vérifiable, et la vérification prend une minute.
 
 <Choice id="which-ask-is-checkable" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['finding-information']}
-  context="The lesson pastes a fictional company expense guideline into a chat assistant and asks what a new hire must know before a first business trip."
-  title="Which ask can you check?" hint="For each ask, how would you tell a right answer from a confident wrong one without reading the whole guideline again?"
+  context="La leçon colle dans un assistant conversationnel le guide des frais fictif d’une entreprise et demande ce qu’une nouvelle recrue doit savoir avant un premier déplacement professionnel."
+  title="Quelle demande pouvez-vous vérifier ?" hint="Pour chaque demande, comment distingueriez-vous une réponse juste d’une réponse fausse énoncée avec assurance, sans relire tout le guide ?"
   options={[
-    { text: 'What do I need to know about expenses before my first trip? I am flying to Lisbon on Monday.', why: 'Nothing here says where the answer should come from, so you cannot tell whether it came from the guideline or from the model\'s memory.' },
-    { text: 'Summarize the guideline below in three bullet points that a new hire can read on the way to the airport.', why: 'The format is fixed, but each bullet is still a claim with no place in the text you can look up.' },
-    { text: 'Using only the guideline below, list the three things a new hire must know before a first trip, and quote the sentence for each.', correct: true },
-    { text: 'Read the guideline below carefully and make sure your answer is accurate and complete.', why: 'Asking for accuracy changes nothing you can check. The model was already trying to be accurate.' },
+    { text: 'Que dois-je savoir sur les frais avant mon premier déplacement ? Je prends l’avion pour Lisbonne lundi.', why: 'Rien ici ne dit d’où doit venir la réponse, donc vous ne pouvez pas savoir si elle vient du guide ou de la mémoire du modèle.' },
+    { text: 'Résume le guide ci-dessous en trois puces qu’une nouvelle recrue peut lire en allant à l’aéroport.', why: 'Le format est fixé, mais chaque puce reste une affirmation sans endroit du texte que vous pourriez consulter.' },
+    { text: 'En t’appuyant uniquement sur le guide ci-dessous, liste les trois choses à savoir avant un premier déplacement, et cite la phrase de chacune.', correct: true },
+    { text: 'Lis attentivement le guide ci-dessous et assure-toi que ta réponse est exacte et complète.', why: 'Demander de l’exactitude ne change rien que vous puissiez vérifier. Le modèle essayait déjà d’être exact.' },
   ]}>
-You are about to paste the expense guideline into an assistant. Which ask
-gives you an answer you can check against the text in a minute?
+Vous allez coller le guide des frais dans un assistant. Quelle demande vous
+donne une réponse que vous pouvez vérifier à partir du texte en une minute ?
 </Choice>
 
 <Repair id="fix-the-ask" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['finding-information', 'giving-context']}
-  title="Fix the ask" hint="How would the colleague have caught the two invented rules before relying on them?"
-  broken={`I attached our travel policy. What are the rules for booking flights?`}
-  model={`Using only the attached travel policy, list the rules for booking a flight. Quote the sentence from the policy that each rule comes from, word for word. If the policy does not say something, say that it does not, and do not fill it in from general knowledge.`}>
-A colleague sends this to their assistant, gets a confident list of six
-rules, and later finds that two of them are not in the policy. Rewrite the
-ask so that every rule in the answer can be checked against the policy.
+  title="Corrigez la demande" hint="Comment la collègue aurait-elle repéré les deux règles inventées avant de s’y fier ?"
+  broken={`J’ai joint notre politique de déplacements. Quelles sont les règles pour réserver un vol ?`}
+  model={`En t’appuyant uniquement sur la politique de déplacements jointe, liste les règles pour réserver un vol. Cite mot pour mot la phrase de la politique dont vient chaque règle. Si la politique ne dit pas quelque chose, dis qu’elle ne le dit pas, et ne complète pas avec des connaissances générales.`}>
+Une collègue envoie ceci à son assistant, obtient une liste assurée de six
+règles, et découvre plus tard que deux d’entre elles ne figurent pas dans la
+politique. Réécrivez la demande pour que chaque règle de la réponse puisse
+être vérifiée dans la politique.
 </Repair>
 
-## The same question from memory
+## La même question de mémoire
 
-Now ask the newcomer's question without the guideline. Open a fresh chat
-and type only the question, with a specific detail in it that you already
-know the answer to.
+Posez maintenant la question du nouveau venu sans le guide. Ouvrez une
+nouvelle conversation et tapez seulement la question, avec un détail précis
+dont vous connaissez déjà la réponse.
 
 <Prompt model="illustrative" recorded="illustrative">
-I am starting a new job and about to make my first business trip. What is
-the deadline for submitting expense claims, and how much can I spend on
-meals per day?
+Je commence un nouveau travail et je vais faire mon premier déplacement
+professionnel. Quel est le délai pour soumettre les notes de frais, et
+combien puis-je dépenser par jour pour les repas ?
 </Prompt>
 <Response>
-Policies vary between companies, but the common rules are these. Expense
-claims are usually due within 30 days of the expense, and many companies
-allow up to 60 days. For meals, most companies set a per diem of around 50
-to 75 euros per day for domestic travel, and you normally do not need to
-submit receipts for meals under the per diem. Check your employee handbook
-to confirm the exact figures.
+Les politiques varient selon les entreprises, mais les règles courantes sont
+les suivantes. Les notes de frais doivent en général être soumises dans les
+30 jours suivant la dépense, et beaucoup d’entreprises acceptent jusqu’à
+60 jours. Pour les repas, la plupart des entreprises fixent une indemnité
+journalière d’environ 50 à 75 euros par jour pour les déplacements
+nationaux, et vous n’avez normalement pas besoin de justificatifs pour les
+repas sous ce montant. Vérifiez dans votre livret d’accueil pour confirmer
+les chiffres exacts.
 </Response>
 
-Read that answer as the newcomer would. It has a hedge at the start and a
-hedge at the end, and between them it gives four specific numbers and a
-rule about receipts. Every one of them is wrong for Brindlewick, where the
-deadline is 14 days, there is no per diem, the meal limit is 35 euros, and
-a meal above 10 euros needs a receipt. The prose is as confident as the
-answer that came with quotes. In the lesson on how models work you saw why. The
-specifics are where a model has the fewest examples behind its prediction,
-so it fills the gap with something of the right form. The model has never
-seen the guideline, and a general answer about companies is the most likely
-text for a question that names none.
+Lisez cette réponse comme le ferait le nouveau venu. Elle commence par une
+précaution et se termine par une autre, et entre les deux elle donne quatre
+nombres précis et une règle sur les justificatifs. Chacun d’eux est faux pour
+Brindlewick, où le délai est de 14 jours, où il n’y a pas d’indemnité
+journalière, où le plafond des repas est de 35 euros, et où un repas de plus
+de 10 euros exige un justificatif. La prose est aussi assurée que celle de
+la réponse accompagnée de citations. Dans la leçon sur le fonctionnement des
+modèles, vous avez vu pourquoi. Les détails précis sont l’endroit où un
+modèle a le moins d’exemples derrière sa prédiction, donc il comble le vide
+avec quelque chose de la bonne forme. Le modèle n’a jamais vu le guide, et
+une réponse générale sur les entreprises est le texte le plus probable pour
+une question qui n’en nomme aucune.
 
-<Pitfall title="Repeating a detail the model remembered">
-A new hire asks an assistant, without the guideline, whether they can
-expense a taxi from the airport, and gets "yes, taxis to and from airports
-are normally reimbursed". They take the taxi and claim it. Finance rejects
-the claim, because the guideline pays for a taxi only when there was no
-public transport at that hour and the claim says so. The answer was general
-knowledge dressed as a company rule. Supply the material and ask for the
-source of each claim, and check anything you will repeat or act on.
+<Pitfall title="Répéter un détail dont le modèle s’est souvenu">
+Une nouvelle recrue demande à un assistant, sans le guide, si elle peut se
+faire rembourser un taxi depuis l’aéroport, et obtient « oui, les taxis vers
+et depuis les aéroports sont normalement remboursés ». Elle prend le taxi et
+demande le remboursement. L’équipe financière le refuse, parce que le guide
+ne paie un taxi que s’il n’y avait aucun transport en commun à cette heure-là
+et que la demande le précise. La réponse était une connaissance générale
+déguisée en règle de l’entreprise. Fournissez le contenu, demandez la source
+de chaque affirmation, et vérifiez tout ce que vous allez répéter ou sur
+quoi vous allez agir.
 </Pitfall>
 
 <Choice id="colleague-from-memory" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['finding-information', 'hallucination']}
-  context="A colleague asked a chat assistant a factual question about the company's expense rules without giving it the company's guideline, and got a confident specific answer."
-  title="A confident answer with no source" hint="What did the assistant have in front of it when it answered, and what would change that?"
+  context="Un collègue a posé à un assistant conversationnel une question factuelle sur les règles de frais de l’entreprise sans lui donner le guide de l’entreprise, et a obtenu une réponse précise et assurée."
+  title="Une réponse assurée sans source" hint="Qu’est-ce que l’assistant avait sous les yeux quand il a répondu, et qu’est-ce qui changerait cela ?"
   options={[
-    { text: 'Trust it. The answer was specific and did not hedge, so the model was sure of the number.', why: 'Confidence in the prose is a property of the text, and it says nothing about whether the fact is right.' },
-    { text: 'Ask the assistant whether it is sure about the 30 days, and trust the answer if it says yes.', why: 'A model that agrees when pushed is showing sycophancy. Asking it to check itself adds no new information.' },
-    { text: 'Paste the guideline, ask again with "using only the text below", and ask for the sentence the answer comes from.', correct: true },
-    { text: 'Ask the same question in a second chat, and trust the answer if both chats say 30 days.', why: 'Two answers from memory can agree on the same general rule and both be wrong for this company.' },
+    { text: 'S’y fier. La réponse était précise et sans précaution, donc le modèle était sûr du nombre.', why: 'L’assurance de la prose est une propriété du texte, et elle ne dit rien de l’exactitude du fait.' },
+    { text: 'Demander à l’assistant s’il est sûr des 30 jours, et s’y fier s’il répond oui.', why: 'Un modèle qui acquiesce quand on insiste fait preuve de flagornerie. Lui demander de se vérifier n’apporte aucune information nouvelle.' },
+    { text: 'Coller le guide, reposer la question avec « appuie-toi uniquement sur ce texte », et demander la phrase dont vient la réponse.', correct: true },
+    { text: 'Poser la même question dans une deuxième conversation, et s’y fier si les deux disent 30 jours.', why: 'Deux réponses de mémoire peuvent s’accorder sur la même règle générale et être toutes deux fausses pour cette entreprise.' },
   ]}>
-A colleague asks an assistant "how many days do I have to submit an
-expense claim?" without pasting anything, and gets "30 days". What do you
-tell them to do before they rely on it?
+Un collègue demande à un assistant « combien de jours ai-je pour soumettre
+une note de frais ? » sans rien coller, et obtient « 30 jours ». Que lui
+dites-vous de faire avant de s’y fier ?
 </Choice>
 
 <MultiChoice id="lines-that-make-it-checkable" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['finding-information']}
-  context="A learner pastes a company's travel guideline into a chat assistant and asks what a new hire must know before booking a train."
-  title="Which lines make it checkable?" hint="Which lines tie the answer to the pasted text, so that you can check it there?"
+  context="Un apprenant colle le guide des déplacements d’une entreprise dans un assistant conversationnel et demande ce qu’une nouvelle recrue doit savoir avant de réserver un train."
+  title="Quelles lignes rendent la réponse vérifiable ?" hint="Quelles lignes rattachent la réponse au texte collé, pour que vous puissiez la vérifier dedans ?"
   options={[
-    { text: 'Use only the guideline below.', correct: true },
-    { text: 'Read the guideline carefully and be accurate.', why: 'Asking for care doesn\'t change where the answer comes from, and it gives you nothing to check.' },
-    { text: 'Quote the sentence each point comes from.', correct: true },
-    { text: 'Keep your answer as short as you can.', why: 'A short answer is quicker to read. It is no easier to check against the guideline.' },
+    { text: 'Appuie-toi uniquement sur le guide ci-dessous.', correct: true },
+    { text: 'Lis attentivement le guide et sois exact.', why: 'Demander de l’attention ne change pas l’origine de la réponse, et ne vous donne rien à vérifier.' },
+    { text: 'Cite la phrase dont vient chaque point.', correct: true },
+    { text: 'Fais une réponse aussi courte que possible.', why: 'Une réponse courte se lit plus vite. Elle n’est pas plus facile à vérifier dans le guide.' },
   ]}>
 
-Which two lines in the ask give you an answer you can check against the
-guideline in a minute?
+Quelles sont les deux lignes de la demande qui vous donnent une réponse
+vérifiable dans le guide en une minute ?
 
 </MultiChoice>
 
 <Scenario id="the-quote-not-in-the-text" phase="review" objective="using-agents/delegates-and-checks/writes-a-brief"
   concepts={['finding-information', 'hallucination']}
-  context="A learner asked an assistant to answer from a pasted expense guideline and to quote the sentence behind each point. One quoted sentence isn't in the guideline, though the point it supports is right."
-  title="One quote isn't in the text" hint="What does a quote that isn't in the text tell you about how the answer was made?"
+  context="Un apprenant a demandé à un assistant de répondre à partir d’un guide des frais collé et de citer la phrase derrière chaque point. Une phrase citée ne figure pas dans le guide, alors que le point qu’elle appuie est juste."
+  title="Une citation absente du texte" hint="Que vous dit une citation absente du texte sur la façon dont la réponse a été produite ?"
   options={[
-    { text: 'Keep the point, because the fact is right whatever the quote says.', consequence: 'This time the fact holds. The next invented quote supports a wrong fact, and you keep that one too.' },
-    { text: 'Ask the assistant whether the quote is really in the guideline.', consequence: 'It says yes, and adds another sentence that isn\'t in the guideline either.' },
-    { text: 'Delete the quote and keep the point without a source.', consequence: 'The point now looks like the others, and nobody can see that it had no sentence behind it.' },
-    { text: 'Search the guideline for the point, and treat it as added by the model until you find the sentence.', correct: true, consequence: 'You find the real sentence in another section. You replace the quote, and you now check every quote the same way.' },
+    { text: 'Garder le point, puisque le fait est juste quoi que dise la citation.', consequence: 'Cette fois, le fait tient. La prochaine citation inventée appuie un fait faux, et vous la gardez aussi.' },
+    { text: 'Demander à l’assistant si la citation figure vraiment dans le guide.', consequence: 'Il répond oui, et ajoute une autre phrase qui ne figure pas non plus dans le guide.' },
+    { text: 'Supprimer la citation et garder le point sans source.', consequence: 'Le point ressemble maintenant aux autres, et personne ne peut voir qu’il n’avait aucune phrase derrière lui.' },
+    { text: 'Chercher le point dans le guide, et le traiter comme un ajout du modèle tant que vous n’avez pas trouvé la phrase.', correct: true, consequence: 'Vous trouvez la vraie phrase dans une autre section. Vous remplacez la citation, et vous vérifiez désormais chaque citation de la même façon.' },
   ]}
-  guessable="longest: the key names both the search and the rule for the meantime">
+  guessable="longest: la bonne réponse nomme à la fois la recherche et la règle à suivre en attendant">
 
-One of the quotes in the answer isn't in the guideline, and the point it
-supports is right. What do you do?
+L’une des citations de la réponse ne figure pas dans le guide, et le point
+qu’elle appuie est juste. Que faites-vous ?
 
 </Scenario>
 
-## The rule
+## La règle
 
-Finding information with an assistant is fast when you give it the
-material and slow when you don't, because without the material the time
-moves to checking. The brief you wrote in this lesson has one line for
-each part of that: the source and that it is the only one, the sentence
-behind each claim, and what to do when the text is silent. With the quotes
-in hand, checking what you will repeat takes a minute.
+Trouver de l’information avec un assistant est rapide quand vous lui donnez
+le contenu et lent quand vous ne le donnez pas, parce que sans le contenu le
+temps passe dans la vérification. La consigne que vous avez écrite dans
+cette leçon a une ligne pour chaque élément : la source et le fait qu’elle
+est la seule, la phrase derrière chaque affirmation, et quoi faire quand le
+texte ne dit rien. Avec les citations en main, vérifier ce que vous allez
+répéter prend une minute.
 
-The same brief works for a contract, a set of meeting notes, a long email
-thread or a product manual. When the assistant searches the web, the
-quote becomes a link, and the check is opening it. Claude, for example,
-adds a citation to each answer it builds from a web search
-(@Claude support enabling-and-using-web-search).
-With pasted text or with a link, before you repeat an answer you should
-be able to name where it came from.
+La même consigne fonctionne pour un contrat, un compte rendu de réunion, un
+long fil d’e-mails ou un manuel de produit. Quand l’assistant fait une
+recherche sur le web, la citation devient un lien, et la vérification
+consiste à l’ouvrir. Claude, par exemple, ajoute une référence à chaque
+réponse qu’il construit à partir d’une recherche sur le web
+(@Claude support enabling-and-using-web-search). Avec un texte collé ou avec
+un lien, avant de répéter une réponse, vous devriez pouvoir dire d’où elle
+vient.
 
-<Exercise stretch="Ask a fourth question that the guideline does not answer, such as whether a hotel breakfast counts as a meal, and see whether the assistant says so or fills it in.">
-Open a fresh chat and paste the Brindlewick guideline from this page. Send
-the brief from the second section, asking for the three things a newcomer
-must know with a quote for each. Then search the guideline for every quote
-and write down, for each of the three, whether it is there word for word,
-there in different words, or not there at all. This takes about five
-minutes and leaves you with a three-line table. Doing it once by hand is
-what turns the check into a habit. A good result is a table
-where every row has a verdict you could show to someone else. What would
-you have done with the answer if you hadn't asked for the quotes?
+<Exercise stretch="Posez une quatrième question à laquelle le guide ne répond pas, par exemple si un petit-déjeuner à l’hôtel compte comme un repas, et voyez si l’assistant le dit ou comble le vide.">
+Ouvrez une nouvelle conversation et collez le guide de Brindlewick de cette
+page. Envoyez la consigne de la deuxième section, qui demande les trois
+choses qu’un nouveau venu doit savoir avec une citation pour chacune.
+Cherchez ensuite chaque citation dans le guide et notez, pour chacune des
+trois, si elle y figure mot pour mot, en d’autres termes, ou pas du tout.
+Cela prend environ cinq minutes et vous laisse un tableau de trois lignes.
+Faire cette vérification une fois à la main est ce qui la transforme en
+habitude. Un bon résultat est un tableau où chaque ligne porte un verdict que
+vous pourriez montrer à quelqu’un d’autre. Qu’auriez-vous fait de la réponse
+si vous n’aviez pas demandé les citations ?
 </Exercise>
 
 <Recap>
-1. An assistant is fast at orientation in a text you supply, and unreliable on specifics from memory alone.
-2. "Summarize this" gives you a paragraph you can only check by reading the source again.
-3. A brief for finding information gives the assistant the material, marks it as the only source, and asks for the sentence behind each claim and for a plain "the text doesn't say" where there is none.
-4. Check the quotes. A quote that is not in the text, even when the fact is right, shows where the model joined or added something.
-5. A confident detail from memory is the most likely text for the question, and the model didn't look it up. Confidence in the prose says nothing about the fact (@Academy ai-capabilities-and-limitations).
+1. Un assistant est rapide pour s’orienter dans un texte que vous fournissez, et peu fiable sur les détails précis tirés de sa seule mémoire.
+2. « Résume ceci » vous donne un paragraphe que vous ne pouvez vérifier qu’en relisant la source.
+3. Une consigne pour trouver de l’information donne le contenu à l’assistant, le désigne comme seule source, et demande la phrase derrière chaque affirmation ainsi qu’un simple « le texte ne le dit pas » quand il n’y en a pas.
+4. Vérifiez les citations. Une citation absente du texte, même quand le fait est juste, montre où le modèle a fusionné ou ajouté quelque chose.
+5. Un détail assuré tiré de la mémoire est le texte le plus probable pour la question, et le modèle ne l’a pas vérifié. L’assurance de la prose ne dit rien du fait (@Academy ai-capabilities-and-limitations).
 </Recap>
