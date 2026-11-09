@@ -1,9 +1,10 @@
 id: safety/eu-ai-act
-title: Introduction to the EU AI Act
+title: Introduction au règlement européen sur l’IA
 description: >-
-  What the European Union's AI Act asks of people who build and use AI at work. Whether a tool is an
-  AI system, which risk tier a use falls in, whether you are provider or deployer, and which
-  transparency duties touch everyday work.
+  Ce que le règlement de l’Union européenne sur l’IA demande à ceux qui construisent et utilisent
+  l’IA au travail. Savoir si un outil est un système d’IA, à quel niveau de risque appartient un
+  usage, si vous êtes fournisseur ou déployeur, et quelles obligations de transparence touchent le
+  travail quotidien.
 mode: explanation
 covers: safety/governance
 serves: [safety/judges-agent-risk/sets-oversight, safety/handles-data-safely/discloses-ai-use]
@@ -13,18 +14,18 @@ assumes:
     lesson: safety/agent-risk
     section: lhumain-dans-la-boucle
 extends-to:
-  - label: Governance and oversight
+  - label: Gouvernance et supervision
     href: /topics/safety/governance/
 sources-checked: 2026-09-20
 review-by: 2027-03-20
 after: [safety/agent-risk]
-shorts: [Content credentials (C2PA), Where the AI literacy duty comes from]
+shorts: [Les identifiants de contenu (C2PA), D’où vient l’obligation de maîtrise de l’IA]
 exercise:
   kind: judge
   brief: >-
-    For one AI tool used at your work, decide whether your organization is provider or deployer and
-    name the one transparency duty that applies. Reflection: which of the Act's duties touch your
-    own daily work?
+    Pour un outil d’IA utilisé dans votre travail, décider si votre organisation en est le
+    fournisseur ou le déployeur et nommer la seule obligation de transparence qui s’applique.
+    Réflexion : lesquelles des obligations du règlement touchent votre propre travail quotidien ?
 sources: [AI Act, AI Act OJ, EC AI Act, EC AI Office]
 minutes: 15
 notes: >-
