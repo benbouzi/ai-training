@@ -1,293 +1,316 @@
 import { Choice, MultiChoice, Match, Scenario, Pitfall, Exercise, Recap } from '@components/lesson';
 
-In this lesson we look at what happens to your checks when a tool takes
-over a level of your work. Two before-and-after pairs run through the
-lesson: a summary you wrote and one an agent wrote, and a folder you filed
-and one an automation filed. For each pair we find the check that stopped
-working when the tool took over, and the check that replaces it. You don't
-run anything in this lesson. The pairs are supplied, and the work is
-reading them and naming the checks.
+Dans cette leçon, nous regardons ce que deviennent vos vérifications quand un
+outil prend en charge un niveau de votre travail. Deux paires avant-après
+traversent la leçon : un résumé que vous avez écrit et un autre écrit par un
+agent, et un dossier que vous avez classé et un autre classé par une
+automatisation. Pour chaque paire, nous trouvons la vérification qui a cessé
+de fonctionner quand l’outil a pris la main, et celle qui la remplace. Vous
+ne lancez rien dans cette leçon. Les paires sont fournies, et le travail
+consiste à les lire et à nommer les vérifications.
 
-This part of the course asks four questions about picking a tool. Does
-the model fit the task, what do the cost and the speed buy, is this a job
-for a chat or an agent or an automation, and which steps stay human. This
-lesson is about what happens to those questions afterwards. Tools keep
-getting more capable, so a task you delegate today to an agent may run
-unattended next year. The same four questions still need an answer then,
-from a different place.
+Cette partie du cours pose quatre questions sur le choix d’un outil. Le
+modèle convient-il à la tâche, qu’achètent le coût et la vitesse, est-ce un
+travail pour une conversation, un agent ou une automatisation, et quelles
+étapes restent humaines. Cette leçon porte sur ce que deviennent ces
+questions ensuite. Les outils gagnent sans cesse en capacités, donc une tâche
+que vous déléguez aujourd’hui à un agent tournera peut-être sans surveillance
+l’an prochain. Les quatre mêmes questions demanderont encore une réponse,
+posée depuis un autre endroit.
 
-## The ladder of tools
+## L’échelle des outils
 
-Tools for working with a model form a ladder, and each rung hides more
-of what happens below it (@Brilliant ABS).
+Les outils de travail avec un modèle forment une échelle, et chaque barreau
+cache davantage de ce qui se passe en dessous (@Brilliant ABS).
 
-**Autocomplete** suggests the next few words. You see every suggestion and
-accept or reject each one, so you watched everything that happened.
+**L’autocomplétion** (autocomplete) propose les quelques mots suivants. Vous voyez chaque
+proposition et vous acceptez ou refusez chacune, donc vous avez vu tout ce
+qui s’est passé.
 
-**Chat** produces a whole answer from one message. You no longer see the
-answer forming word by word, and you read it as a piece.
+**La conversation** produit une réponse entière à partir d’un message. Vous
+ne voyez plus la réponse se former mot à mot, et vous la lisez d’un bloc.
 
-**An agent** takes a brief and works through steps with tools. It reads
-the files, drafts the result and checks its own work, and then it shows you
-the result. You see the result and a log, and you didn't watch the steps.
+**Un agent** reçoit une consigne et avance dans les étapes avec des outils.
+Il lit les fichiers, rédige le résultat et vérifie son propre travail, puis
+il vous montre le résultat. Vous voyez le résultat et un journal, et vous
+n’avez pas vu les étapes.
 
-**A system of agents**, or an automation, runs on a trigger without you
-present. One agent may hand pieces to others. You see a dashboard or a
-report afterwards, and often only when something goes wrong.
+**Un système d’agents** (system of agents), ou une automatisation, tourne
+sur un déclencheur (trigger) sans que vous soyez là. Un agent peut confier des morceaux à d’autres. Vous
+voyez un tableau de bord ou un rapport après coup, et souvent seulement
+quand quelque chose tourne mal.
 
-At every rung the tool does what the rung below it did, and you stop
-looking there. That's the point of moving up: the work you stopped doing
-is work you no longer spend time on. The easy thing to miss is that the
-checks you did at the lower rung stop with the work. When you wrote the
-summary yourself, each sentence got compared with the source as you typed
-it. You never thought of that as a check. When an agent writes the
-summary, that check is gone unless you put something in its place.
+À chaque barreau, l’outil fait ce que faisait le barreau d’en dessous, et
+vous cessez d’y regarder. C’est l’intérêt de monter : le travail que vous
+avez cessé de faire est du travail auquel vous ne consacrez plus de temps.
+Ce qui échappe facilement, c’est que les vérifications faites au barreau du
+dessous s’arrêtent avec le travail. Quand vous écriviez le résumé vous-même,
+chaque phrase était comparée à la source pendant que vous la tapiez. Vous
+n’y avez jamais pensé comme à une vérification. Quand un agent écrit le
+résumé, cette vérification disparaît, sauf si vous mettez quelque chose à sa
+place.
 
-Here is the first pair. Both summaries are of the same two-page memo about
-moving the calibration team's weekly review from Thursday to Tuesday.
+Voici la première paire. Les deux résumés portent sur la même note de deux
+pages, qui annonce le déplacement de la revue hebdomadaire de l’équipe
+d’étalonnage du jeudi au mardi.
 
 ```text
-Summary you wrote
+Le résumé que vous avez écrit
 
-The weekly review moves from Thursday 10:00 to Tuesday 10:00 from
-6 October. The reason is the supplier's delivery day, which is now
-Wednesday, so a Thursday review saw orders that were a day old. The
-room stays the same. Anyone who cannot make Tuesdays should tell the
-team lead by 30 September.
+La revue hebdomadaire passe du jeudi 10 h au mardi 10 h à partir du
+6 octobre. La raison est le jour de livraison du fournisseur, désormais
+le mercredi, si bien qu’une revue le jeudi voyait des commandes vieilles
+d’un jour. La salle ne change pas. Toute personne qui ne peut pas venir
+le mardi le signale au chef d’équipe avant le 30 septembre.
 ```
 
 ```text
-Summary the agent wrote
+Le résumé que l’agent a écrit
 
-The memo announces that the weekly review will move to Tuesday at 10:00
-starting 6 October, to align the review with the supplier's new
-Wednesday delivery schedule. The meeting location is unchanged. Team
-members with a conflict are asked to contact the team lead by
-30 September.
+La note annonce que la revue hebdomadaire aura lieu le mardi à 10 h à
+partir du 6 octobre, pour l’aligner sur le nouveau calendrier de
+livraison du fournisseur, le mercredi. Le lieu de la réunion ne change
+pas. Les membres de l’équipe qui ont un empêchement sont invités à
+contacter le chef d’équipe avant le 30 septembre.
 ```
 
-Both summaries are accurate. Read them once, and then read the next section
-with the question in mind: what did you do while writing the first one that
-nobody did for the second?
+Les deux résumés sont exacts. Lisez-les une fois, puis lisez la section
+suivante avec cette question en tête : qu’avez-vous fait en écrivant le
+premier que personne n’a fait pour le second ?
 
-## The questions move up
+## Les questions montent d’un niveau
 
-When you wrote the summary, every sentence passed through your hands, and
-each one got compared with the memo as you typed it. That comparison was
-your check on the facts. It was cheap because it was part of the writing,
-and it is gone now, because the writing happened somewhere you weren't
-looking.
+Quand vous écriviez le résumé, chaque phrase passait entre vos mains, et
+chacune était comparée à la note pendant que vous la tapiez. Cette
+comparaison était votre vérification des faits. Elle coûtait peu parce
+qu’elle faisait partie de l’écriture, et elle a disparu, parce que l’écriture
+s’est faite là où vous ne regardiez pas.
 
-The check that replaces it sits one level up. You stop checking sentences
-and start checking whether the summary answers the question its reader
-has. The people who read this summary want to know when the review is, why
-it moved and what they have to do. Read the agent's summary against those
-three questions, and read the memo once for anything the summary dropped
-or added. That one read is also where an invented fact shows: a sentence
-in the summary with no line in the memo behind it. Comparing sentence by
-sentence would find the same thing at a much higher cost. It would still
-miss what the summary left out, because a missing point has no sentence
-to compare. That's a different check from the one you did
-before. It is also a check you could have done on your own summary and
-probably didn't, because you trusted the sentences you had written. The
-agent's summary has one such gap: it says the review moves to Tuesday, and
-it doesn't say it moved from Thursday. A reader who had Thursday in their
-calendar has to work that out.
+La vérification qui la remplace se situe un niveau plus haut. Vous cessez de
+vérifier des phrases et vous vérifiez si le résumé répond à la question de
+son lecteur. Les personnes qui lisent ce résumé veulent savoir quand a lieu
+la revue, pourquoi elle a changé et ce qu’elles doivent faire. Lisez le
+résumé de l’agent au regard de ces trois questions, et lisez la note une fois
+pour repérer ce que le résumé a omis ou ajouté. Cette lecture unique est
+aussi l’endroit où un fait inventé se voit : une phrase du résumé qu’aucune
+ligne de la note ne soutient. Comparer phrase par phrase trouverait la même
+chose pour un coût bien plus élevé. Cela manquerait quand même ce que le
+résumé a omis, parce qu’un point manquant n’a pas de phrase à comparer.
+C’est une autre vérification que celle d’avant. C’est aussi une
+vérification que vous auriez pu faire sur votre propre résumé et que vous
+n’avez sans doute pas faite, parce que vous faisiez confiance aux phrases
+que vous aviez écrites. Le résumé de l’agent a un manque de ce type : il dit
+que la revue passe au mardi, et il ne dit pas qu’elle quitte le jeudi. Un
+lecteur qui avait le jeudi dans son agenda doit le déduire.
 
-The questions about fit, cost, risk and what to keep human work the same
-way. Picking an agent over a chat for a task meant asking whether it fit
-the task, what it cost, and which files and accounts it could touch. When
-that agent becomes an automation that runs every Monday, the same
-questions apply to the automation, and the answers change. The agent you
-briefed cost one session and could touch what you gave it. The weekly
-automation costs fifty-two sessions a year, on a morning when nobody is
-watching, and it can touch every account it is connected to. The step you
-kept human at the agent level, say the send button on an email, needs a
-new place in the automation, or it is gone
+Les questions d’adéquation, de coût, de risque et de ce qui reste humain
+fonctionnent de la même façon. Quand vous confiiez une tâche à un agent,
+vous vous demandiez s’il convenait à la tâche, ce qu’il coûtait, et quels
+fichiers et comptes il pouvait toucher. Quand cet agent
+devient une automatisation qui tourne chaque lundi, les mêmes questions
+s’appliquent à l’automatisation, et les réponses changent. L’agent à qui
+vous donniez une consigne coûtait une session et pouvait toucher ce que vous
+lui donniez. L’automatisation hebdomadaire coûte cinquante-deux sessions par
+an, un matin où personne ne regarde, et elle peut toucher chaque compte
+auquel elle est connectée. L’étape que vous gardiez humaine au niveau agent,
+par exemple le bouton d’envoi d’un e-mail, a besoin d’une nouvelle place
+dans l’automatisation, ou elle disparaît
 (@Academy building-effective-human-agent-teams).
 
-Here is the second pair. Both are the state of a shared folder after the
-week's incoming documents were filed.
+Voici la seconde paire. Les deux montrent l’état d’un dossier partagé après
+le classement des documents reçus dans la semaine.
 
 ```text
-Folder you filed
+Le dossier que vous avez classé
 
   2026-09/
-    invoices/         14 files
-    delivery-notes/    9 files
-    certificates/      3 files
-    unsorted/          1 file   (a scanned letter, unreadable)
+    factures/            14 fichiers
+    bons-de-livraison/    9 fichiers
+    certificats/          3 fichiers
+    non-classes/          1 fichier   (une lettre numérisée, illisible)
 ```
 
 ```text
-Folder the automation filed
+Le dossier que l’automatisation a classé
 
   2026-09/
-    invoices/         15 files
-    delivery-notes/    9 files
-    certificates/      3 files
-    unsorted/          0 files
+    factures/            15 fichiers
+    bons-de-livraison/    9 fichiers
+    certificats/          3 fichiers
+    non-classes/          0 fichier
 ```
 
-When you filed the folder, the check was the act of filing. You opened
-every document to decide where it went, so a document that didn't belong
-anywhere ended up in `unsorted` with your eyes on it. The automation filed
-one document more, and its unsorted folder is empty. That could mean it read the
-scanned letter better than you did. It could also mean it put the letter in
-`invoices` because the letter had an amount on it. The new check is at the
-level of the outcome: does every folder contain only what its name says,
-and does an item that fits nowhere end up somewhere a person sees it?
-Opening the one extra invoice is the whole of that check this week.
+Quand vous classiez le dossier, la vérification était l’acte de classer.
+Vous ouvriez chaque document pour décider où il allait, donc un document qui
+n’avait sa place nulle part finissait dans `non-classes` sous vos yeux.
+L’automatisation a classé un document de plus, et son dossier des non-classés
+est vide. Cela peut vouloir dire qu’elle a mieux lu la lettre numérisée que
+vous. Cela peut aussi vouloir dire qu’elle a mis la lettre dans `factures`
+parce qu’elle contenait un montant. La nouvelle vérification se situe au
+niveau du résultat : chaque dossier ne contient-il que ce que dit son nom, et
+un élément qui ne va nulle part finit-il quelque part où une personne le
+voit ? Ouvrir la facture en plus constitue toute cette vérification cette
+semaine.
 
 <Match id="check-that-moved" objective="using-agents/chooses-tool-and-autonomy/reasons-across-levels"
   concepts={['reasoning-across-tool-levels', 'checking-results']}
-  context="The lesson shows two before-and-after pairs: a summary of a memo written by the learner and one written by an agent, and a folder of the week's documents filed by the learner and one filed by an automation. In each pair, a check the learner did without noticing stopped when the tool took over the work."
-  title="Which check replaces which?" hint="For each pair, what did the person do as part of the work that nobody does now, and what question about the result can still be asked?"
-  options={['Comparing each sentence with the source as it is written', 'Opening each document to decide where it goes', 'Reading the result against the questions its reader has', 'Checking that each folder holds only what its name says']}
+  context="La leçon montre deux paires avant-après : le résumé d’une note écrit par l’apprenant et un autre écrit par un agent, et un dossier des documents de la semaine classé par l’apprenant et un autre classé par une automatisation. Dans chaque paire, une vérification que l’apprenant faisait sans s’en rendre compte s’est arrêtée quand l’outil a pris en charge le travail."
+  title="Quelle vérification remplace laquelle ?" hint="Pour chaque paire, qu’est-ce que la personne faisait dans le cadre du travail et que personne ne fait plus, et quelle question peut-on encore poser sur le résultat ?"
+  options={['Comparer chaque phrase à la source pendant qu’on l’écrit', 'Ouvrir chaque document pour décider où il va', 'Lire le résultat au regard des questions de son lecteur', 'Vérifier que chaque dossier ne contient que ce que dit son nom']}
   rows={[
-    { statement: 'The check that stopped when the agent wrote the summary', option: 0, why: 'What happened to each sentence while you were writing, and where did the agent\'s sentences come from?' },
-    { statement: 'The check that replaces it for the agent\'s summary', option: 2, why: 'You can no longer watch sentences being written. What can you still ask about the finished summary?' },
-    { statement: 'The check that stopped when the automation filed the folder', option: 1, why: 'What did you do with every document before it landed in a folder?' },
-    { statement: 'The check that replaces it for the automation\'s folder', option: 3, why: 'You did not see the documents go in. What can you still look at afterwards?' },
+    { statement: 'La vérification qui s’est arrêtée quand l’agent a écrit le résumé', option: 0, why: 'Qu’arrivait-il à chaque phrase pendant que vous écriviez, et d’où venaient les phrases de l’agent ?' },
+    { statement: 'La vérification qui la remplace pour le résumé de l’agent', option: 2, why: 'Vous ne pouvez plus voir les phrases s’écrire. Que pouvez-vous encore demander au résumé terminé ?' },
+    { statement: 'La vérification qui s’est arrêtée quand l’automatisation a classé le dossier', option: 1, why: 'Que faisiez-vous de chaque document avant qu’il arrive dans un dossier ?' },
+    { statement: 'La vérification qui la remplace pour le dossier de l’automatisation', option: 3, why: 'Vous n’avez pas vu les documents entrer. Que pouvez-vous encore regarder après coup ?' },
   ]}
-  rationale="Each tool took over the level where the old check lived, so the check that remains is one about the result, asked from the level above.">
-Match each line to the check it names.
+  rationale="Chaque outil a pris en charge le niveau où vivait l’ancienne vérification, donc la vérification qui reste porte sur le résultat, posée depuis le niveau du dessus.">
+Associez chaque ligne à la vérification qu’elle désigne.
 </Match>
 
 <Choice id="where-the-question-goes" phase="review" objective="using-agents/chooses-tool-and-autonomy/reasons-across-levels"
   concepts={['reasoning-across-tool-levels']}
-  context="A learner used to write a weekly status update by hand and now has an agent draft it from the team's notes. They are deciding what to check in the draft."
-  title="What does the learner check now?" hint="Which check was part of writing by hand, and which one can still be asked of a finished draft?"
+  context="Un apprenant écrivait à la main le point d’étape hebdomadaire et le fait maintenant rédiger par un agent à partir des notes de l’équipe. Il décide de ce qu’il vérifie dans le brouillon."
+  title="Que vérifie maintenant l’apprenant ?" hint="Quelle vérification faisait partie de l’écriture à la main, et laquelle peut encore se poser à un brouillon terminé ?"
   options={[
-    { text: 'Every sentence of the draft, one by one, against the line in the notes it came from, as they did when writing by hand.', why: 'That check lived at the level the agent took over. Done on the finished draft, it costs a full second writing, and a point the draft left out has no sentence to compare, so it passes.' },
-    { text: 'Whether the draft tells its readers what they need to know this week, and whether anything in the notes is missing from it or added to it.', correct: true },
-    { text: 'Nothing beyond a quick read for typos, because the agent works from the same notes the learner used to write from.', why: 'The notes are the same. The reading of them happened where the learner was not looking, and the questions about the result did not go away.' },
+    { text: 'Chaque phrase du brouillon, une par une, au regard de la ligne des notes d’où elle vient, comme lorsqu’il écrivait à la main.', why: 'Cette vérification vivait au niveau que l’agent a pris en charge. Faite sur le brouillon terminé, elle coûte une deuxième écriture complète, et un point omis par le brouillon n’a pas de phrase à comparer, donc il passe.' },
+    { text: 'Si le brouillon dit à ses lecteurs ce qu’ils doivent savoir cette semaine, et si un élément des notes y manque ou y a été ajouté.', correct: true },
+    { text: 'Rien au-delà d’une lecture rapide pour les fautes de frappe, puisque l’agent part des mêmes notes que l’apprenant.', why: 'Les notes sont les mêmes. Leur lecture s’est faite là où l’apprenant ne regardait pas, et les questions sur le résultat n’ont pas disparu.' },
   ]}>
-A learner who used to write the weekly status update by hand now has an
-agent draft it from the team's notes. Which check belongs at the new
-level?
+Un apprenant qui écrivait à la main le point d’étape hebdomadaire le fait
+maintenant rédiger par un agent à partir des notes de l’équipe. Quelle
+vérification a sa place au nouveau niveau ?
 </Choice>
 
-## Going back down
+## Redescendre
 
-The higher-level check works because the lower level is sound. A summary
-that answers the reader's questions is only useful when the facts in it
-are right. A folder that looks tidy is only tidy when the documents are
-where the names say. Most weeks you check at the higher level and stop
-there, and that is what makes moving up worth it. Some weeks the
-higher-level signal doesn't add up, and then you go back down and look.
+La vérification de niveau supérieur fonctionne parce que le niveau du
+dessous est sain. Un résumé qui répond aux questions du lecteur n’est utile
+que si ses faits sont justes. Un dossier qui a l’air rangé n’est rangé que si
+les documents sont là où le disent les noms. La plupart des semaines, vous
+vérifiez au niveau supérieur et vous vous arrêtez là, et c’est ce qui rend
+la montée rentable. Certaines semaines, le signal de niveau supérieur ne
+tient pas, et vous redescendez alors pour regarder.
 
-The classic sign is a number that looks too neat. A dashboard reports that
-the automation processed exactly 1,000 documents this month. That may be
-true. It is also what a counter shows when it stops at a page size, or when
-a step failed and the report shows the number that was planned rather than
-the number that was done. A round number on a dashboard is a reason to open
-the folder and count, and so is a run that finished much faster than usual,
-or an "all clear" from a check that has never once found anything. Going
-down a level doesn't undo the move up. You still don't file the documents
-yourself. You look, once, at the level where the truth is, and then you go
-back to reading the dashboard, with a better idea of when to trust it.
+Le signe classique est un nombre qui a l’air trop net. Un tableau de bord
+indique que l’automatisation a traité exactement 1 000 documents ce mois-ci.
+C’est peut-être vrai. C’est aussi ce qu’affiche un compteur qui s’arrête à une
+taille de page (page size), ou quand une étape a échoué et que le rapport montre le
+nombre prévu au lieu du nombre traité. Un nombre rond sur un tableau de bord
+est une raison d’ouvrir le dossier et de compter, tout comme une exécution
+terminée bien plus vite que d’habitude, ou un « tout va bien » venu d’une
+vérification qui n’a jamais rien trouvé. Redescendre d’un niveau n’annule
+pas la montée. Vous ne classez toujours pas les documents vous-même. Vous
+regardez, une fois, au niveau où se trouve la vérité, puis vous revenez au
+tableau de bord, en sachant mieux quand lui faire confiance.
 
-A more capable tool also changes what a mistake looks like. When you wrote
-summaries by hand, the mistakes were typos and a wrong date, and the fix
-was a second read. An agent rarely makes a typo. Its mistakes are a fact
-that reads well and isn't in the memo, or a point left out because it
-looked minor, and a second read for typos finds neither of those. When you
-filed by hand, the mistake was a document in the wrong folder because you
-were tired. An automation isn't tired, and it will file every document that
-mentions an amount under `invoices` on a rule it never questions, so its
-mistakes come in batches. The checks that catch a tired person catch
-neither. The check changes with the tool, and the new check comes from
-asking what this tool gets wrong.
+Un outil plus capable change aussi l’allure d’une erreur. Quand vous
+écriviez les résumés à la main, les erreurs étaient des fautes de frappe et
+une mauvaise date, et la correction était une seconde lecture. Un agent fait
+rarement une faute de frappe. Ses erreurs sont un fait qui se lit bien et ne
+figure pas dans la note, ou un point omis parce qu’il semblait mineur, et une
+seconde lecture à la recherche de fautes de frappe ne trouve ni l’un ni
+l’autre. Quand vous classiez à la main, l’erreur était un document dans le
+mauvais dossier parce que vous étiez fatigué. Une automatisation n’est pas
+fatiguée, et elle classera sous `factures` chaque document qui mentionne un
+montant, selon une règle qu’elle ne remet jamais en question, donc ses
+erreurs arrivent par lots. Les vérifications qui attrapent une personne
+fatiguée n’attrapent ni l’une ni l’autre. La vérification change avec
+l’outil, et la nouvelle vérification vient de la question : sur quoi cet
+outil se trompe-t-il ?
 
 <Scenario id="round-number" objective="using-agents/chooses-tool-and-autonomy/reasons-across-levels"
   concepts={['reasoning-across-tool-levels', 'trust-but-verify-for-agents']}
-  context="A learner's monthly filing automation reports its results on a dashboard. This month it shows exactly 500 documents processed, 0 unsorted, and a run time of two minutes where past months took about fifteen."
-  title="The dashboard says 500" hint="Which parts of this report depend on the lower level being sound, and what is the cheapest way to look there once?"
+  context="L’automatisation de classement mensuel d’un apprenant présente ses résultats sur un tableau de bord. Ce mois-ci, il affiche exactement 500 documents traités, 0 non classé, et une durée d’exécution de deux minutes là où les mois précédents prenaient environ quinze minutes."
+  title="Le tableau de bord dit 500" hint="Quelles parties de ce rapport dépendent de la solidité du niveau inférieur, et quel est le moyen le moins coûteux d’y regarder une fois ?"
   options={[
-    { text: 'Accept the report. Zero unsorted and a fast run are both good news.', consequence: 'You find out in November that the run stopped after the first 500 of 1,400 documents, and the other 900 were never filed.' },
-    { text: 'Open the incoming folder and the filed folders, count what came in and what was filed, and compare with 500.', correct: true, consequence: 'The incoming folder had 1,400 documents and the filed folders hold 500. The run stopped early, and the dashboard reported the batch size it reached.' },
-    { text: 'Turn the automation off and go back to filing by hand until the vendor explains the number.', consequence: 'You spend the month filing the 900 documents the run left behind by hand, plus everything that arrives. A ten-minute count would have told you what went wrong, and the automation, once fixed, would file the rest.' },
-    { text: 'Ask the automation, in its chat window, whether the number is right.', consequence: 'It says the run completed successfully, because from where it sits, the run did. The count it reports is the count it reached.' },
+    { text: 'Accepter le rapport. Zéro non classé et une exécution rapide sont deux bonnes nouvelles.', consequence: 'Vous découvrez en novembre que l’exécution s’est arrêtée après les 500 premiers documents sur 1 400, et que les 900 autres n’ont jamais été classés.' },
+    { text: 'Ouvrir le dossier d’arrivée et les dossiers classés, compter ce qui est arrivé et ce qui a été classé, et comparer avec 500.', correct: true, consequence: 'Le dossier d’arrivée contenait 1 400 documents et les dossiers classés en contiennent 500. L’exécution s’est arrêtée tôt, et le tableau de bord a affiché la taille du lot atteint.' },
+    { text: 'Arrêter l’automatisation et revenir au classement à la main jusqu’à ce que le fournisseur explique le nombre.', consequence: 'Vous passez le mois à classer à la main les 900 documents laissés de côté, plus tout ce qui arrive. Un comptage de dix minutes vous aurait dit ce qui n’allait pas, et l’automatisation, une fois corrigée, aurait classé le reste.' },
+    { text: 'Demander à l’automatisation, dans sa fenêtre de conversation, si le nombre est juste.', consequence: 'Elle répond que l’exécution s’est bien terminée, parce que de son point de vue, c’est le cas. Le nombre qu’elle affiche est celui qu’elle a atteint.' },
   ]}>
-Your filing automation's dashboard shows exactly 500 documents processed,
-0 unsorted, and a two-minute run where past months took about fifteen.
-What do you do?
+Le tableau de bord de votre automatisation de classement affiche exactement
+500 documents traités, 0 non classé, et une exécution de deux minutes là où
+les mois précédents prenaient environ quinze minutes. Que faites-vous ?
 </Scenario>
 
-<Pitfall title="Carrying the old check up a level">
-A learner who used to check summaries for typos and wrong dates keeps doing
-that on the agent's summaries, and the agent's summaries pass every time.
-The learner reads the pass as proof that the summaries are good. The check
-was written for a tired person's mistakes, and the agent doesn't make
-those. What it does get wrong, a plausible fact that isn't in the memo,
-goes past a typo check untouched. A check that always passes is a sign to
-ask what it is looking for, and whether the tool you now use can even make
-that kind of mistake.
+<Pitfall title="Emporter l’ancienne vérification au niveau du dessus">
+Un apprenant qui vérifiait les résumés pour les fautes de frappe et les
+mauvaises dates continue de le faire sur les résumés de l’agent, et les
+résumés de l’agent passent à chaque fois. L’apprenant prend cette réussite
+pour la preuve que les résumés sont bons. La vérification était conçue pour
+les erreurs d’une personne fatiguée, et l’agent ne fait pas celles-là. Ce sur
+quoi il se trompe, un fait plausible absent de la note, passe une
+vérification des fautes de frappe sans encombre. Une vérification qui réussit
+toujours est un signe qu’il faut se demander ce qu’elle cherche, et si
+l’outil que vous utilisez maintenant peut seulement faire ce type d’erreur.
 </Pitfall>
 
 <MultiChoice id="new-mistakes" phase="review" objective="using-agents/chooses-tool-and-autonomy/reasons-across-levels"
   concepts={['reasoning-across-tool-levels']}
-  context="A learner has moved from writing meeting summaries by hand to having an agent write them, and is deciding which checks to keep and which to change."
-  title="Which mistakes belong to the new level?" hint="For each line, ask whether this is a mistake a person makes when tired or a mistake a tool makes when it reads well and knows nothing about the meeting."
+  context="Un apprenant est passé de l’écriture à la main des comptes rendus de réunion à leur rédaction par un agent, et décide quelles vérifications garder et lesquelles changer."
+  title="Quelles erreurs appartiennent au nouveau niveau ?" hint="Pour chaque ligne, demandez-vous s’il s’agit d’une erreur que fait une personne fatiguée, ou d’une erreur que fait un outil quand il écrit bien et ne sait rien de la réunion."
   options={[
-    { text: 'A sentence that reads well and says something nobody said.', correct: true },
-    { text: 'A typo in the name of the room where the meeting was held, on the first line of the summary.', why: 'That is a mistake of a tired hand. An agent rarely makes it, and a check for it passes without telling you much.' },
-    { text: 'A decision dropped because the notes gave it one line.', correct: true },
-    { text: 'A date typed with the digits of the day and the month swapped, because the writer was hurrying to finish before leaving.', why: 'That is a slip of a hurried hand. An agent working from the notes it was given copies the date as it is written there.' },
-    { text: 'The same point listed under the wrong heading in every summary this quarter.', correct: true },
+    { text: 'Une phrase qui se lit bien et dit quelque chose que personne n’a dit.', correct: true },
+    { text: 'Une faute de frappe dans le nom de la salle où s’est tenue la réunion, sur la première ligne du compte rendu.', why: 'C’est une erreur de main fatiguée. Un agent la fait rarement, et une vérification qui la cherche réussit sans vous apprendre grand-chose.' },
+    { text: 'Une décision omise parce que les notes lui consacraient une ligne.', correct: true },
+    { text: 'Une date tapée avec le jour et le mois inversés, parce que l’auteur se dépêchait de finir avant de partir.', why: 'C’est l’erreur d’une main pressée. Un agent qui part des notes qu’on lui a données recopie la date telle qu’elle y figure.' },
+    { text: 'Le même point rangé sous le mauvais titre dans chaque compte rendu de ce trimestre.', correct: true },
   ]}>
-Which of these are mistakes that an agent's summaries make and a hand-written
-summary rarely did, so the checks have to change to catch them?
+Lesquelles de ces erreurs sont des erreurs que font les comptes rendus d’un
+agent et que faisait rarement un compte rendu écrit à la main, si bien que
+les vérifications doivent changer pour les attraper ?
 </MultiChoice>
 
-<Exercise stretch="Take one piece of your own work that a tool took over in the past year, from any rung of the ladder. Write down the check you stopped doing, the check you do now, and one signal that would send you back down a level.">
-Two more before-and-after pairs from the same fictional team follow.
-For each pair, write down the check that stopped working when the tool
-took over, the check that replaces it at the new level, and one signal in
-the result that would make you go back down and look. Ten minutes is
-enough.
+<Exercise stretch="Prenez un élément de votre propre travail qu’un outil a pris en charge dans l’année écoulée, à n’importe quel barreau de l’échelle. Notez la vérification que vous avez cessé de faire, celle que vous faites maintenant, et un signal qui vous ferait redescendre d’un niveau.">
+Voici deux autres paires avant-après de la même équipe fictive. Pour chaque
+paire, notez la vérification qui a cessé de fonctionner quand l’outil a pris
+la main, celle qui la remplace au nouveau niveau, et un signal dans le
+résultat qui vous ferait redescendre pour regarder. Dix minutes suffisent.
 
 ```text
-Pair 1: the action list
+Paire 1 : la liste d’actions
 
-Before: after each meeting you typed the action list from your own notes,
-  one line per action with an owner and a date.
-After: an agent listens to the meeting recording and produces the action
-  list. This week's list has six actions. Every one has an owner and a
-  date. Two are worded almost the same.
+Avant : après chaque réunion, vous tapiez la liste d’actions à partir de
+  vos propres notes, une ligne par action avec un responsable et une date.
+Après : un agent écoute l’enregistrement de la réunion et produit la liste
+  d’actions. La liste de cette semaine compte six actions. Chacune a un
+  responsable et une date. Deux sont formulées presque de la même façon.
 ```
 
 ```text
-Pair 2: the supplier check
+Paire 2 : la vérification des fournisseurs
 
-Before: each new supplier's registration number was looked up by a person
-  in the public register before the first order.
-After: an automation looks up each new supplier on the day it is added
-  and marks it "verified" in the supplier list. This month it marked all
-  eleven new suppliers verified, on the same day, within one minute of
-  each other.
+Avant : le numéro d’immatriculation de chaque nouveau fournisseur était
+  recherché par une personne dans le registre public avant la première
+  commande.
+Après : une automatisation recherche chaque nouveau fournisseur le jour de
+  son ajout et le marque « vérifié » dans la liste des fournisseurs. Ce
+  mois-ci, elle a marqué vérifiés les onze nouveaux fournisseurs, le même
+  jour, à moins d’une minute d’intervalle.
 ```
 
-A good answer for Pair 1 says the old check was writing each line from
-your own memory of who agreed to what, and the new check is reading the
-list against the decisions you remember from the meeting and asking whether
-two near-identical lines are one action or two. The signal to go down is
-the two near-identical lines, and going down means playing that part of
-the recording. A good answer for Pair 2 says the old check was a person
-reading the register entry, and the new check is asking whether "verified"
-means the number was found and matched the supplier's name, and looking at
-what the automation does when a number isn't found. The signal is eleven
-verifications in one minute, which is the speed of a lookup that runs and
-also the speed of one that fails and marks the row anyway. Going down means
-opening the register for one or two of the eleven. Where your answer
-differs, write down which level you looked at instead. Which tool in your
-own work has climbed a rung since you last changed its checks?
+Une bonne réponse pour la paire 1 dit que l’ancienne vérification consistait
+à écrire chaque ligne à partir de votre propre souvenir de qui s’était
+engagé à quoi, et que la nouvelle consiste à lire la liste au regard des
+décisions dont vous vous souvenez et à vous demander si deux lignes presque
+identiques sont une action ou deux. Le signal pour redescendre est la paire
+de lignes presque identiques, et redescendre veut dire écouter ce passage de
+l’enregistrement. Une bonne réponse pour la paire 2 dit que l’ancienne
+vérification était une personne qui lisait la fiche du registre, et que la
+nouvelle consiste à se demander si « vérifié » veut dire que le numéro a été
+trouvé et correspond au nom du fournisseur, et à regarder ce que fait
+l’automatisation quand un numéro est introuvable. Le signal est onze
+vérifications en une minute, ce qui est la vitesse d’une recherche qui
+fonctionne et aussi celle d’une recherche qui échoue et marque quand même la
+ligne. Redescendre veut dire ouvrir le registre pour un ou deux des onze. Là
+où votre réponse diffère, notez à quel niveau vous avez regardé à la place.
+Quel outil de votre propre travail a monté d’un barreau depuis la dernière
+fois que vous avez changé ses vérifications ?
 </Exercise>
 
 <Recap>
-1. Tools sit on a ladder, from autocomplete to chat to agents to systems of agents, and each rung hides more of what happens below it (@Brilliant ABS).
-2. The checks you did at the lower rung were part of the work, and they stop when the tool takes the work over. The questions about fit, cost and risk move to the level above, and you ask them there. A step you kept human needs a new place at that level, or it is gone (@Academy building-effective-human-agent-teams).
-3. The higher-level check is only as good as the lower level under it, so a signal that doesn't add up (a round number, a fast run, a check that never fails) is the cue to go down one level and look once.
-4. A more capable tool makes different mistakes, and a check built for the old mistakes passes without telling you anything. Find the new check by asking what this tool gets wrong.
+1. Les outils se rangent sur une échelle, de l’autocomplétion à la conversation, puis aux agents et aux systèmes d’agents, et chaque barreau cache davantage de ce qui se passe en dessous (@Brilliant ABS).
+2. Les vérifications faites au barreau du dessous faisaient partie du travail, et elles s’arrêtent quand l’outil prend ce travail en charge. Les questions d’adéquation, de coût et de risque montent au niveau du dessus, et vous les posez là. Une étape que vous gardiez humaine a besoin d’une nouvelle place à ce niveau, ou elle disparaît (@Academy building-effective-human-agent-teams).
+3. La vérification de niveau supérieur ne vaut que par le niveau inférieur qui la porte, donc un signal qui ne tient pas (un nombre rond, une exécution rapide, une vérification qui n’échoue jamais) est le moment de redescendre d’un niveau et de regarder une fois.
+4. Un outil plus capable fait d’autres erreurs, et une vérification conçue pour les anciennes erreurs réussit sans rien vous apprendre. Trouvez la nouvelle vérification en vous demandant sur quoi cet outil se trompe.
 </Recap>
