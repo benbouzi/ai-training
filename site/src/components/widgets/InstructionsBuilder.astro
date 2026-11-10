@@ -8,60 +8,60 @@
 <div class="not-content instructions-builder">
   <form class="ib-form" autocomplete="off">
     <p class="ib-intro">
-      Tick what is true for your project and fill in the short fields. The
-      file on the right updates as you type.
+      Cochez ce qui est vrai pour votre projet et remplissez les champs courts.
+      Le fichier de droite se met à jour pendant que vous tapez.
     </p>
 
     <label class="ib-field">
-      <span>Project name</span>
+      <span>Nom du projet</span>
       <input type="text" class="ib-name" placeholder="invoice-mailer" />
     </label>
 
     <label class="ib-field">
-      <span>One line: what it is</span>
-      <input type="text" class="ib-purpose" placeholder="Sends monthly invoices as PDF over SMTP." />
+      <span>En une ligne : ce que c’est</span>
+      <input type="text" class="ib-purpose" placeholder="Envoie les factures mensuelles en PDF par SMTP." />
     </label>
 
     <fieldset class="ib-group">
-      <legend>Commands</legend>
+      <legend>Commandes</legend>
       <label class="ib-check">
         <input type="checkbox" class="ib-has-runtime" checked />
-        <span>Language and runtime</span>
+        <span>Langage et environnement d’exécution</span>
       </label>
-      <input type="text" class="ib-runtime" placeholder="Python 3.13, dependencies via uv" />
+      <input type="text" class="ib-runtime" placeholder="Python 3.13, dépendances avec uv" />
 
       <label class="ib-check">
         <input type="checkbox" class="ib-has-test" checked />
-        <span>Test command</span>
+        <span>Commande de test</span>
       </label>
       <input type="text" class="ib-test" placeholder="uv run pytest" />
 
       <label class="ib-check">
         <input type="checkbox" class="ib-has-lint" checked />
-        <span>Lint and format command</span>
+        <span>Commande de style et de mise en forme</span>
       </label>
       <input type="text" class="ib-lint" placeholder="uv run ruff check . && uv run ruff format ." />
     </fieldset>
 
     <fieldset class="ib-group">
-      <legend>Rules</legend>
+      <legend>Règles</legend>
       <label class="ib-check">
         <input type="checkbox" class="ib-has-branch" />
-        <span>Branch rule</span>
+        <span>Règle de branche</span>
       </label>
-      <input type="text" class="ib-branch" placeholder="Never commit to main; branch as feat/… or fix/…" />
+      <input type="text" class="ib-branch" placeholder="Ne jamais committer sur main, créer des branches feat/… ou fix/…" />
 
       <label class="ib-check">
         <input type="checkbox" class="ib-has-notouch" />
-        <span>Files never to touch</span>
+        <span>Fichiers à ne jamais modifier</span>
       </label>
-      <input type="text" class="ib-notouch" placeholder="migrations/, uv.lock, anything under vendor/" />
+      <input type="text" class="ib-notouch" placeholder="migrations/, uv.lock, tout ce qui est sous vendor/" />
 
       <label class="ib-check">
         <input type="checkbox" class="ib-has-mistake" />
-        <span>A recurring mistake to stop</span>
+        <span>Une erreur récurrente à arrêter</span>
       </label>
-      <input type="text" class="ib-mistake" placeholder="Do not add retries around SMTP calls; the queue already retries." />
+      <input type="text" class="ib-mistake" placeholder="Ne pas ajouter de nouvelles tentatives autour des appels SMTP : la file d’attente réessaie déjà." />
     </fieldset>
   </form>
 
@@ -69,7 +69,7 @@
     <div class="ib-output-head">
       <span class="ib-filename">AGENTS.md</span>
       <span class="ib-count" aria-live="polite"></span>
-      <button type="button" class="ib-copy">Copy</button>
+      <button type="button" class="ib-copy">Copier</button>
     </div>
     <pre class="ib-pre" tabindex="0"><code class="ib-code"></code></pre>
   </div>

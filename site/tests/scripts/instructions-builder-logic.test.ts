@@ -16,7 +16,7 @@ function form(on: OptionalLine[] = [], texts: Partial<Record<OptionalLine, strin
 
 describe('buildInstructions', () => {
 	it('writes only the default heading when nothing is filled in or ticked', () => {
-		expect(buildInstructions(form())).toBe('# my-project\n');
+		expect(buildInstructions(form())).toBe('# mon-projet\n');
 	});
 	it('writes the name and the purpose paragraph', () => {
 		expect(buildInstructions({ ...form(), name: 'invoice-mailer', purpose: 'Sends invoices.' })).toBe(
@@ -26,19 +26,19 @@ describe('buildInstructions', () => {
 	it('writes a placeholder for each ticked line with an empty field', () => {
 		expect(buildInstructions(form([...OPTIONAL_LINES]))).toBe(
 			[
-				'# my-project',
+				'# mon-projet',
 				'',
-				'## Commands',
+				'## Commandes',
 				'',
-				'- Runtime: <language and version>',
-				'- Test: `<test command>`',
-				'- Lint and format: `<lint command>`',
+				'- Environnement : <langage et version>',
+				'- Tests : `<commande de test>`',
+				'- Style et mise en forme : `<commande de style>`',
 				'',
-				'## Rules',
+				'## Règles',
 				'',
-				'- <branch rule>',
-				'- Never edit: <paths>',
-				'- <the mistake to stop, and what to do instead>',
+				'- <règle de branche>',
+				'- Ne jamais modifier : <chemins>',
+				'- <l’erreur à arrêter, et quoi faire à la place>',
 				'',
 			].join('\n'),
 		);
@@ -47,30 +47,32 @@ describe('buildInstructions', () => {
 		const out = buildInstructions(
 			form(['test', 'notouch'], { test: 'uv run pytest', notouch: 'uv.lock', runtime: 'Python 3.13' }),
 		);
-		expect(out).toBe('# my-project\n\n## Commands\n\n- Test: `uv run pytest`\n\n## Rules\n\n- Never edit: uv.lock\n');
+		expect(out).toBe(
+			'# mon-projet\n\n## Commandes\n\n- Tests : `uv run pytest`\n\n## Règles\n\n- Ne jamais modifier : uv.lock\n',
+		);
 		expect(out).not.toContain('Python');
 	});
 	it('leaves out the Commands section when only rules are ticked, and the Rules section when only commands are', () => {
 		expect(buildInstructions(form(['branch'], { branch: 'Never commit to main' }))).toBe(
-			'# my-project\n\n## Rules\n\n- Never commit to main\n',
+			'# mon-projet\n\n## Règles\n\n- Never commit to main\n',
 		);
 		expect(buildInstructions(form(['lint', 'runtime'], { lint: 'ruff check .' }))).toBe(
-			'# my-project\n\n## Commands\n\n- Runtime: <language and version>\n- Lint and format: `ruff check .`\n',
+			'# mon-projet\n\n## Commandes\n\n- Environnement : <langage et version>\n- Style et mise en forme : `ruff check .`\n',
 		);
 	});
 	it('writes the mistake line as given', () => {
 		expect(buildInstructions(form(['mistake'], { mistake: 'Do not add retries.' }))).toContain(
-			'## Rules\n\n- Do not add retries.\n',
+			'## Règles\n\n- Do not add retries.\n',
 		);
 	});
 });
 
 describe('lineCountText', () => {
 	it('counts only lines with text', () => {
-		expect(lineCountText('# a\n\n  \nb\n')).toBe('2 non-empty lines');
+		expect(lineCountText('# a\n\n  \nb\n')).toBe('2 lignes non vides');
 	});
-	it('uses the singular for one line and the plural for none', () => {
-		expect(lineCountText('# my-project\n')).toBe('1 non-empty line');
-		expect(lineCountText('\n')).toBe('0 non-empty lines');
+	it('uses the singular for one line or none, as French does', () => {
+		expect(lineCountText('# mon-projet\n')).toBe('1 ligne non vide');
+		expect(lineCountText('\n')).toBe('0 ligne non vide');
 	});
 });
