@@ -14,7 +14,7 @@ assumes:
     section: demander-lentretien
   - objective: coding-with-agents/specifies-work/decomposes-into-components
     lesson: coding-with-agents/decomposing-the-work
-    section: one-responsibility-per-component
+    section: une-responsabilité-par-composant
 extends-to: []
 after: [coding-with-agents/decomposing-the-work, coding-with-agents/agent-interviews-you]
 shorts: []
