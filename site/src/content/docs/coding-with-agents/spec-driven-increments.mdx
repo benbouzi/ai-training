@@ -1,79 +1,86 @@
 import { Choice, MultiChoice, Predict, Order, Sort, Scenario, Pitfall, Exercise, Recap, Prompt, Response, Match } from '@components/lesson';
 
-In this lesson we add a feature to a small program with a coding agent,
-and the agent works from a written specification instead of from a chat
-message. The spec comes first: one page with the commands, the limits and
-a numbered list of success criteria. Then the agent splits the work into
-increments that each leave the program working. The increment we're
-least sure about goes first, and we land it. While the agent works, the
-spec stays the document it reads and the one we check the result against.
-When code and spec disagree, we decide which one changes.
+Dans cette leçon, nous ajoutons une fonctionnalité à un petit programme avec un
+agent de code, et l’agent travaille à partir d’une spécification écrite au
+lieu d’un message de conversation. La spécification vient en premier : une page
+avec les commandes, les limites et une liste numérotée de critères de
+réussite. L’agent découpe ensuite le travail en incréments qui laissent chacun
+le programme fonctionnel. L’incrément dont nous sommes le moins sûrs passe en
+premier, et nous le livrons. Pendant que l’agent travaille, la spécification
+reste le document qu’il lit et celui auquel nous comparons le résultat. Quand
+le code et la spécification divergent, nous décidons lequel change.
 
-Where a bug fix has one assertion that says what "fixed" means, a feature
-has decisions in it: a new command, a new field in the data file, a new
-line in the output. The spec holds those decisions in one place, where
-the agent can read them and you can check against them. The playbook
-Anthropic publishes for engineering teams describes the same order of
-work, the intent and the requirements written down before the build
-starts (@Academy ai-native-sdlc-playbook).
+Une correction de bug a une assertion qui dit ce que veut dire « corrigé ».
+Une fonctionnalité contient des décisions : une nouvelle commande, un nouveau
+champ dans le fichier de données, une nouvelle ligne dans la sortie. La
+spécification réunit ces décisions en un seul endroit, où l’agent peut les
+lire et où vous pouvez vérifier le résultat. Le guide qu’Anthropic publie pour
+les équipes d’ingénierie décrit le même ordre de travail, avec l’intention et
+les exigences écrites avant le début de la construction
+(@Academy ai-native-sdlc-playbook).
 
-## The fixture
+## L’exemple
 
-The fixture is the to-do program from the previous lessons, after its
-`clear` bug was fixed. It has three modules, `todo.py` with the commands,
-`store.py` for the JSON file, and `render.py` for the output, and its
-tests pass. It is in the course repository under
+L’exemple est le programme de liste de tâches des leçons précédentes, après la
+correction de son bug de `clear`. Il a trois modules, `todo.py` avec les
+commandes, `store.py` pour le fichier JSON, et `render.py` pour la sortie, et
+ses tests passent. Il se trouve dans le dépôt du cours, sous
 `site/examples/coding-with-agents/spec-driven-increments/fixture-repo/`.
-Copy that directory to a place of its own and change into it. A copy has
-no git history, so the reset is to delete the copy and copy again.
+Copiez ce dossier à un endroit à part et placez-vous dedans. Une copie n’a pas
+d’historique git, donc pour réinitialiser, supprimez la copie et copiez de
+nouveau.
 
-Run the program once before you change anything, so you know what the
-output looks like today.
+Lancez le programme une fois avant de modifier quoi que ce soit, pour savoir à
+quoi ressemble la sortie aujourd’hui.
 
-<Predict id="run-list" title="Show the list"
+<Predict id="run-list" title="Afficher la liste"
   answer={`1. [ ] Buy milk
 2. [x] Call the plumber
 3. [x] Renew the passport
 4. [ ] Water the plants
 2 open, 2 done`} run="coding-with-agents/spec-driven-increments/list.py">
-Run this, and compare what you see with the output below.
+Lancez cette commande et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 todo.py list
 ```
 </Predict>
 
-<Predict id="run-tests" title="Run the tests"
+<Predict id="run-tests" title="Lancer les tests"
   answer="OK" run="coding-with-agents/spec-driven-increments/tests.py">
-Run the tests and keep only the last line of the output.
+Lancez les tests et gardez seulement la dernière ligne de la sortie.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-The examples in this lesson aren't graded. Each one is a command you run
-in the fixture, with the output the course itself checks on every build.
-The checkpoints ask about the spec and the increments, because writing
-those is what this lesson teaches.
+Les exemples de cette leçon ne sont pas notés. Chacun est une commande que
+vous lancez dans l’exemple, avec la sortie que le cours vérifie lui-même à
+chaque build. Les questions de contrôle portent sur la spécification et les
+incréments, parce que c’est leur rédaction que cette leçon enseigne.
 
-## Write the spec
+## Écrire la spécification
 
-The feature is due dates. An item gets an optional date, `list` shows it,
-and a new `overdue` command lists the items whose date has passed. In
-*Deciding what to build* you wrote success criteria for a smaller version
-of this feature, with the date given on `add` and "any notion of overdue"
-out of scope. This spec takes that feature up again and changes two
-decisions on purpose. The date is set by its own `due` command, so an
-existing item can get one. `overdue` is back in, because it is the reason
-to store a date at all. Changing the decision in the spec, before
-any code, is what the spec is for. Before the agent sees any of that,
-write it down. A spec for a change this size fits
-on one page: a goal in one or two sentences, the commands with what each
-one prints, the limits, and success criteria you can check one by one.
-The limits say what must keep working and what the change may not do. Save it as
-`SPEC.md` in the fixture. The course keeps its copy next to the fixture
-scripts as `SPEC.md`, and this is the whole of it.
+La fonctionnalité porte sur les dates d’échéance. Un élément reçoit une date
+facultative, `list` l’affiche, et une nouvelle commande `overdue` liste les
+éléments dont la date est passée. Dans *Décider s’il faut construire, avant
+tout*, vous avez écrit des critères de réussite pour une version plus petite
+de cette fonctionnalité, avec la date donnée à `add` et « toute notion de
+retard » hors périmètre. Cette spécification reprend la fonctionnalité et
+change volontairement deux décisions. La date est fixée par sa propre commande
+`due`, pour qu’un élément existant puisse en recevoir une. `overdue` revient,
+parce que c’est la raison même d’enregistrer une date. Changer la décision dans
+la spécification, avant tout code, est exactement ce à quoi sert la
+spécification. Avant que l’agent voie quoi que ce soit, écrivez-la. Une
+spécification pour une modification de cette taille tient sur une page : un
+objectif en une ou deux phrases, les commandes avec ce que chacune affiche, les
+limites, et des critères de réussite que vous pouvez vérifier un par un. Les
+limites disent ce qui doit continuer de fonctionner et ce que la modification
+n’a pas le droit de faire. Enregistrez-la sous le nom `SPEC.md` dans
+l’exemple. Le cours garde sa copie à côté des scripts de l’exemple sous le
+nom `SPEC.md`, et la voici en entier. Comme les autres fichiers de l’exemple,
+elle est en anglais.
 
 ```md
 # Due dates
@@ -112,204 +119,218 @@ date has passed.
 5. `python3 -m unittest -q` passes after every increment.
 ```
 
-Every line under success criteria is something you can run and tick. The
-line about `TODO_TODAY` is there because "before today" depends on the
-day you run it, and a criterion you can only check on one date isn't a
-criterion. Writing the spec made that decision visible before any code
-existed.
+En résumé, la spécification fixe l’objectif (une date d’échéance par élément
+et une commande qui liste les retards), trois commandes (`due`, `list` avec la
+date après le texte, `overdue` avec `TODO_TODAY` pour choisir le jour), quatre
+limites (les commandes existantes continuent de fonctionner, un élément sans
+champ `due` reste valide sans migration, une date mal formée est refusée sans
+rien changer, la bibliothèque standard seulement) et cinq critères de réussite
+numérotés.
 
-The spec is the source of truth for the change while the agent works. The
-agent reads it and you review against it, and the agent's opinion of what
-the feature should do doesn't change it by itself. Code and
-spec disagree at some point, because the agent has a good idea, or
-because the spec turns out to be wrong. When that happens, one of the two
-is updated on purpose. Either you change the spec first and then the code
-follows, or the code is brought back to the spec. What never happens is
-that the code drifts and the spec stays as a record of what you once
-meant.
+Chaque ligne sous les critères de réussite est une chose que vous pouvez
+lancer et cocher. La ligne sur `TODO_TODAY` est là parce que « avant
+aujourd’hui » dépend du jour où vous lancez la commande, et un critère qu’on ne
+peut vérifier qu’à une seule date n’est pas un critère. L’écriture de la
+spécification a rendu cette décision visible avant que le code existe.
+
+La spécification est la référence de la modification pendant que l’agent
+travaille. L’agent la lit et vous relisez au regard d’elle, et l’avis de
+l’agent sur ce que devrait faire la fonctionnalité ne la change pas à lui
+seul. Le code et la spécification finissent par diverger à un moment, parce
+que l’agent a une bonne idée, ou parce que la spécification se révèle fausse.
+Quand cela arrive, l’un des deux est mis à jour délibérément. Soit vous
+modifiez d’abord la spécification et le code suit, soit le code est ramené à la
+spécification. Ce qui n’arrive jamais, c’est que le code dérive pendant que la
+spécification reste comme la trace de ce que vous vouliez dire autrefois.
 
 <Choice id="code-and-spec-disagree" objective="coding-with-agents/ships-with-agent/works-in-increments"
   concepts={['spec-driven-change']}
-  context="A learner has written a one-page spec with success criteria for a feature, and a coding agent is implementing it. The spec is meant to stay the document the agent works from and the reviewer checks against."
-  title="The diff and the spec disagree" hint="Which document does the reviewer check the next increment against, and does it still say what you want?"
+  context="Un apprenant a écrit une spécification d’une page avec des critères de réussite pour une fonctionnalité, et un agent de code l’implémente. La spécification doit rester le document à partir duquel l’agent travaille et auquel le relecteur compare le résultat."
+  title="Le diff et la spécification divergent" hint="À quel document le relecteur compare-t-il l’incrément suivant, et ce document dit-il toujours ce que vous voulez ?"
   options={[
-    { text: 'Accept the diff. The agent read the code more closely than you did when you wrote the spec.', why: 'The spec now says one thing and the program does another, and the next increment is checked against a document that is already wrong.' },
-    { text: 'Accept the diff and add a comment in the code that explains the difference.', why: 'A comment in the code is where nobody checking the criteria will look. The spec is the document you review against.' },
-    { text: 'Reject the diff without comment, because the spec is fixed once the work starts.', why: 'A spec that can never change turns every good idea into a workaround. It changes on purpose, and it can change.' },
-    { text: 'Decide which one is right. Then either change the spec first, or have the agent bring the code back to it.', correct: true },
+    { text: 'Accepter le diff. L’agent a lu le code plus attentivement que vous quand vous avez écrit la spécification.', why: 'La spécification dit maintenant une chose et le programme en fait une autre, et l’incrément suivant est vérifié au regard d’un document déjà faux.' },
+    { text: 'Accepter le diff et ajouter dans le code un commentaire qui explique la différence.', why: 'Un commentaire dans le code est un endroit où personne qui vérifie les critères ne regardera. La spécification est le document au regard duquel vous relisez.' },
+    { text: 'Rejeter le diff sans commentaire, parce que la spécification est figée une fois le travail commencé.', why: 'Une spécification qui ne peut jamais changer transforme chaque bonne idée en contournement. Elle change délibérément, et elle peut changer.' },
+    { text: 'Décider lequel a raison. Puis modifier d’abord la spécification, ou faire ramener le code à elle par l’agent.', correct: true },
   ]}>
-The agent's diff prints the date before the text, and the spec says
-after. Both would work. What do you do?
+Le diff de l’agent affiche la date avant le texte, et la spécification dit
+après. Les deux fonctionneraient. Que faites-vous ?
 </Choice>
 
-## Ask for increments in the brief
+## Demander des incréments dans la consigne
 
-An agent given the whole spec at once builds the whole spec at once, and
-hands you one diff with two new commands, a changed output line, input
-validation and their tests. Reviewing that diff means holding every one
-of those changes in your head while you read. So
-the brief asks for increments, and it says what an increment is: a step
-that leaves the program working and its tests passing, and that adds one
-thing you can show. Asking for increments is part of the brief, because
-the agent's default is the big diff (@Brilliant INC).
+Un agent à qui l’on donne toute la spécification d’un coup construit toute la
+spécification d’un coup, et vous remet un seul diff avec deux nouvelles
+commandes, une ligne de sortie modifiée, une validation des entrées et leurs
+tests. Relire ce diff veut dire garder en tête chacune de ces modifications
+pendant la lecture. La consigne demande donc des incréments, et elle dit ce
+qu’est un incrément : une étape qui laisse le programme fonctionnel et ses
+tests au vert, et qui ajoute une chose que vous pouvez montrer. Demander des
+incréments fait partie de la consigne, parce que l’agent, par défaut, produit
+le gros diff (@Brilliant INC).
 
-Start your coding agent from inside the fixture copy and brief it. The
-brief points at the spec instead of repeating it.
+Lancez votre agent de code depuis la copie de l’exemple et donnez-lui la
+consigne. La consigne renvoie à la spécification au lieu de la répéter.
 
 <Prompt model="illustrative" recorded="illustrative">
-Read `SPEC.md`, `AGENTS.md` and the three modules. I want to land the
-due-dates feature in increments. Each increment must leave every existing
-command working and the tests passing, and add one thing I can run and
-see. Propose the increments and say which success criteria each one
-ticks. Don't change anything yet.
+Lis `SPEC.md`, `AGENTS.md` et les trois modules. Je veux livrer la
+fonctionnalité des dates d’échéance par incréments. Chaque incrément doit
+laisser chaque commande existante fonctionnelle et les tests au vert, et
+ajouter une chose que je peux lancer et voir. Propose les incréments et dis
+quels critères de réussite chacun coche. Ne modifie encore rien.
 </Prompt>
 <Response>
-I read the spec and the code. The spec already lists three increments,
-and I would keep them, with one note on each.
+J’ai lu la spécification et le code. La spécification se découpe déjà en trois
+incréments, et je les garderais, avec une remarque pour chacun.
 
 ```text
-1. `due` sets the field and `list` shows it. Touches todo.py and render.py,
-   adds test_due.py. Ticks criteria 1, 2 and 5. store.py needs no change,
-   because json.dump writes whatever keys an item has.
-2. `overdue`, reading today from TODO_TODAY or the clock. Touches todo.py,
-   adds a test with the two dates from criterion 3. Ticks criterion 3.
-3. Refuse a malformed date with the standard library's date parser. Touches the
-   `due` function, adds a test. Ticks criterion 4.
+1. `due` enregistre le champ et `list` l’affiche. Touche todo.py et render.py,
+   ajoute test_due.py. Coche les critères 1, 2 et 5. store.py n’a pas besoin
+   de changer, parce que json.dump écrit toutes les clés qu’un élément a.
+2. `overdue`, qui lit la date du jour dans TODO_TODAY ou sur l’horloge. Touche
+   todo.py, ajoute un test avec les deux dates du critère 3. Coche le critère 3.
+3. Refuser une date mal formée avec l’analyseur de dates de la bibliothèque
+   standard. Touche la fonction `due`, ajoute un test. Coche le critère 4.
 ```
 
-One question before I start. In `list`, would you like items with a date
-sorted to the top? The spec doesn't say.
+Une question avant de commencer. Dans `list`, voulez-vous que les éléments qui
+ont une date soient triés en haut ? La spécification ne le dit pas.
 </Response>
 
-The transcripts in this lesson are illustrative. They show what a good
-exchange looks like and don't record a specific model's words. Your
-agent's list may put the details differently.
+Les transcriptions de cette leçon sont des illustrations. Elles montrent à quoi
+ressemble un bon échange, sans reproduire les mots d’un modèle précis. La liste
+de votre agent présentera peut-être les détails autrement.
 
-The agent's question is a spec question, and the spec answers it: the
-`overdue` line says "numbered as in `list`", the `list` line says nothing
-about sorting, and the limits say `list` keeps working as it does. The
-answer is no, and if you did want sorting, you would add it to the spec
-before anyone wrote it.
+La question de l’agent est une question de spécification, et la spécification y
+répond : la ligne d’`overdue` dit « numbered as in `list` » (numérotés comme
+dans `list`), la ligne de `list` ne dit rien d’un tri, et les limites disent
+que `list` continue de fonctionner comme avant. La réponse est non, et si vous
+vouliez un tri, vous l’ajouteriez à la spécification avant que quiconque
+l’écrive.
 
-<Pitfall title="The review that never finished">
-An engineer briefs the agent with the whole spec and no word about
-increments. Forty minutes later the agent reports done: two new commands,
-a changed output format, date validation, four new tests, and every
-criterion ticked. The diff is long, and the review starts on a Friday
-afternoon. On Monday it is still open. Nobody wanted to approve a change they
-hadn't read to the end, and the two people who started reading each got
-halfway. When a bug turns up in `overdue` the following week,
-the only way back is to revert the whole feature. Ask for the work in
-steps that each leave the program working, and review each one while it
-is small.
+<Pitfall title="La revue qui ne s’est jamais terminée">
+Un ingénieur donne à l’agent toute la spécification sans un mot sur les
+incréments. Quarante minutes plus tard, l’agent annonce qu’il a terminé : deux
+nouvelles commandes, un format de sortie modifié, une validation des dates,
+quatre nouveaux tests, et chaque critère coché. Le diff est long, et la revue
+commence un vendredi après-midi. Le lundi, elle est toujours ouverte. Personne
+ne voulait approuver une modification sans l’avoir lue jusqu’au bout, et les
+deux personnes qui avaient commencé à lire s’étaient arrêtées à mi-chemin.
+Quand un bug apparaît dans `overdue` la semaine suivante, le seul retour en
+arrière possible est l’annulation de toute la fonctionnalité. Demandez le
+travail par étapes qui laissent chacune le programme fonctionnel, et relisez
+chacune tant qu’elle est petite.
 </Pitfall>
 
 <MultiChoice id="what-is-an-increment" objective="coding-with-agents/ships-with-agent/works-in-increments"
   concepts={['working-increments']}
-  context="A learner is asking a coding agent to land a feature as increments, where each increment leaves the program working and tested and adds one thing that can be shown."
-  title="Which of these are working increments?" hint="After each step, can you run the program and the tests, and see one new thing?"
+  context="Un apprenant demande à un agent de code de livrer une fonctionnalité par incréments, chaque incrément laissant le programme fonctionnel et testé et ajoutant une chose qu’on peut montrer."
+  title="Lesquels sont des incréments fonctionnels ?" hint="Après chaque étape, pouvez-vous lancer le programme et les tests, et voir une chose nouvelle ?"
   options={[
-    { text: 'The `due` command stores the date, and `list` shows it. Tests pass.', correct: true },
-    { text: 'A `due` function with no command wired to it, so nothing new can be run yet. Tests pass.', why: 'Nothing can be shown after this step. The tests pass, and you have to take the agent\'s word that the function is right.' },
-    { text: 'The `overdue` command works, but `list` is broken until the next step fixes the output.', why: 'A step that leaves a command broken isn\'t a working state. The next step has to fix it before anything can be reviewed.' },
-    { text: 'The `overdue` command reads today from `TODO_TODAY` and the clock, with a test for each date in the spec. Tests pass.', correct: true },
+    { text: 'La commande `due` enregistre la date, et `list` l’affiche. Les tests passent.', correct: true },
+    { text: 'Une fonction `due` sans commande reliée, donc rien de nouveau ne peut encore être lancé. Les tests passent.', why: 'Rien ne peut être montré après cette étape. Les tests passent, et vous devez croire l’agent sur parole quand il dit que la fonction est juste.' },
+    { text: 'La commande `overdue` fonctionne, mais `list` est cassée jusqu’à ce que l’étape suivante corrige la sortie.', why: 'Une étape qui laisse une commande cassée n’est pas un état fonctionnel. L’étape suivante doit la réparer avant que quoi que ce soit puisse être relu.' },
+    { text: 'La commande `overdue` lit la date du jour dans `TODO_TODAY` ou sur l’horloge, avec un test pour chaque date de la spécification. Les tests passent.', correct: true },
   ]}>
-Which of these steps are increments in the sense the brief asked for?
+Lesquelles de ces étapes sont des incréments au sens où la consigne les a
+demandés ?
 </MultiChoice>
 
-## The increment you are least sure of goes first
+## L’incrément dont vous êtes le moins sûr passe en premier
 
-The spec lists three increments, and the order matters. Put first the one
-whose assumption you are least sure of, so that if it is wrong you find
-out while the change is small. Here the uncertain part is the data: every
-module today assumes an item has exactly a text and a done flag, and the
-first increment adds a field that some items have and some don't, and
-carries it through all three modules and the existing tests. If that
-assumption fails, the data format and every module change, and you would
-rather know before `overdue` is written on top of it. The `overdue`
-command is arithmetic on a format that already works by then. Date
-validation waits until after it, even though a bad date could be stored
-meanwhile. The committed list has no dates and the test from increment 1
-pins the format, so the only bad date is one you type yourself before
-increment 3 is done. Validation guards against input, and the question
-`overdue` answers first is whether the stored format is right.
-Wording changes to the messages come last of all, because nothing depends
-on them.
+La spécification se découpe en trois incréments, et l’ordre compte. Mettez en
+premier celui dont l’hypothèse est la moins sûre, pour découvrir qu’elle est
+fausse pendant que la modification est petite. Ici, la partie incertaine est
+la donnée : chaque module suppose aujourd’hui qu’un élément a exactement un
+texte et un indicateur « fait », et le premier incrément ajoute un champ que
+certains éléments ont et d’autres non, et le fait traverser les trois modules
+et les tests existants. Si cette hypothèse tombe, le format des données et
+chaque module changent, et vous préférez le savoir avant que `overdue` soit
+écrit dessus. La commande `overdue` est un calcul sur un format qui fonctionne
+déjà à ce moment-là. La validation des dates attend après elle, même si une
+mauvaise date pourrait être enregistrée entre-temps. La liste committée n’a
+pas de dates et le test de l’incrément 1 fixe le format, donc la seule
+mauvaise date possible est celle que vous tapez vous-même avant la fin de
+l’incrément 3. La validation protège contre les entrées, et la question à
+laquelle `overdue` répond d’abord est de savoir si le format enregistré est le
+bon. Les changements de formulation des messages viennent tout à la fin, parce
+que rien n’en dépend.
 
-That first increment is also the thin end-to-end path: one command in and
-one line out, through every module the feature touches and nothing more. It proves that the modules pass the new field to each other before any
-detail is built on them. Early feedback turns a possible rewrite into a
-small correction (@Brilliant INC).
+Ce premier incrément est aussi le chemin mince de bout en bout : une commande
+en entrée et une ligne en sortie, à travers chaque module que touche la
+fonctionnalité et rien de plus. Il prouve que les modules se transmettent le
+nouveau champ avant qu’un détail soit construit dessus. Un retour rapide
+transforme une réécriture possible en petite correction (@Brilliant INC).
 
 <Order id="order-the-increments" objective="coding-with-agents/ships-with-agent/works-in-increments"
   concepts={['sequencing-for-early-feedback']}
-  context="A team is adding a feature to a program with a coding agent, in increments. The ordering rule is that the increment whose assumption is least certain comes first, and the thin end-to-end path comes before the details."
-  title="Order the increments" hint="Which step would force a rewrite of the others if its assumption turned out wrong? Which step depends on nothing, so nothing waits for it?"
+  context="Une équipe ajoute une fonctionnalité à un programme avec un agent de code, par incréments. La règle d’ordre veut que l’incrément dont l’hypothèse est la moins sûre passe en premier, et que le chemin mince de bout en bout vienne avant les détails."
+  title="Ordonner les incréments" hint="Quelle étape forcerait la réécriture des autres si son hypothèse se révélait fausse ? Quelle étape ne dépend de rien, si bien que rien ne l’attend ?"
   steps={[
-    'Store the new field and show it in the output, through every module',
-    'Add the command that computes something from the new field',
-    'Refuse malformed input to the command that sets the field',
-    'Reword the messages the new commands print',
+    'Enregistrer le nouveau champ et l’afficher dans la sortie, à travers chaque module',
+    'Ajouter la commande qui calcule quelque chose à partir du nouveau champ',
+    'Refuser les entrées mal formées de la commande qui fixe le champ',
+    'Reformuler les messages qu’affichent les nouvelles commandes',
   ]} />
 
 <Scenario id="riskiest-first" objective="coding-with-agents/ships-with-agent/works-in-increments"
   concepts={['sequencing-for-early-feedback']}
-  context="A learner is ordering the increments of a feature for a coding agent. One increment depends on an outside service whose response format the team has never seen. The others are changes inside the program."
-  title="An increment nobody is sure about" hint="On which day is it cheapest to learn that the outside service doesn't return what you expected?"
+  context="Un apprenant ordonne les incréments d’une fonctionnalité pour un agent de code. Un incrément dépend d’un service externe dont l’équipe n’a jamais vu le format de réponse. Les autres sont des modifications internes au programme."
+  title="Un incrément dont personne n’est sûr" hint="Quel jour est-il le moins coûteux d’apprendre que le service externe ne renvoie pas ce que vous attendiez ?"
   options={[
-    { text: 'Put the outside-service increment last, so the rest of the feature is done and reviewed before the hard part.', consequence: 'Four increments land on top of a guess about the response format. When the guess is wrong, the field names and the tests of every one of them change.' },
-    { text: 'Put the outside-service increment first, as the thin path from a real response to one line of output.', correct: true, consequence: 'The first increment shows what the service returns. Two field names in the spec were wrong, and the fix is a line in the spec and a line in the code.' },
-    { text: 'Build the outside-service increment in a separate branch alongside the others, and merge it when both are done.', consequence: 'Both branches are done in a week. The merge shows that the other branch assumed a response format the service doesn\'t have, and half of it is rewritten.' },
-    { text: 'Skip the outside service for now and hard-code its response, so the ordering question goes away.', consequence: 'Every increment passes against the hard-coded response. The first real call, after the review, returns something else.' },
+    { text: 'Mettre l’incrément du service externe en dernier, pour que le reste de la fonctionnalité soit fait et relu avant la partie difficile.', consequence: 'Quatre incréments sont livrés par-dessus une supposition sur le format de réponse. Quand la supposition est fausse, les noms de champs et les tests de chacun d’eux changent.' },
+    { text: 'Mettre l’incrément du service externe en premier, comme chemin mince d’une vraie réponse jusqu’à une ligne de sortie.', correct: true, consequence: 'Le premier incrément montre ce que renvoie le service. Deux noms de champs de la spécification étaient faux, et la correction tient en une ligne de la spécification et une ligne de code.' },
+    { text: 'Construire l’incrément du service externe sur une branche séparée en parallèle des autres, et fusionner quand les deux sont terminées.', consequence: 'Les deux branches sont terminées en une semaine. La fusion montre que l’autre branche supposait un format de réponse que le service n’a pas, et la moitié en est réécrite.' },
+    { text: 'Laisser de côté le service externe pour l’instant et coder sa réponse en dur, pour que la question de l’ordre disparaisse.', consequence: 'Chaque incrément passe avec la réponse codée en dur. Le premier vrai appel, après la revue, renvoie autre chose.' },
   ]}>
-Suppose a different feature, with five increments, and one of them talks
-to a service nobody on the team has called before. Where does it go in
-the order?
+Imaginez une autre fonctionnalité, avec cinq incréments, dont l’un dialogue avec
+un service que personne dans l’équipe n’a jamais appelé. Où va-t-il dans
+l’ordre ?
 </Scenario>
 
-## Land the first increment
+## Livrer le premier incrément
 
-Ask the agent for the first increment and nothing else. Its own list said
-which files it touches and which criteria it ticks, so the brief can hold
-it to that.
+Demandez à l’agent le premier incrément et rien d’autre. Sa propre liste
+disait quels fichiers il touche et quels critères il coche, donc la consigne
+peut le tenir à cela.
 
 <Prompt model="illustrative" recorded="illustrative">
-No sorting. `list` keeps its order, as the spec says. Land increment 1
-only: `due` and the date in `list`, with `test_due.py`. Touch `todo.py`,
-`render.py` and the new test file, and stop when criteria 1, 2 and 5 pass.
-Report which criteria you checked.
+Pas de tri. `list` garde son ordre, comme le dit la spécification. Livre
+seulement l’incrément 1 : `due` et la date dans `list`, avec `test_due.py`.
+Touche `todo.py`, `render.py` et le nouveau fichier de test, et arrête-toi
+quand les critères 1, 2 et 5 passent. Dis-moi quels critères tu as vérifiés.
 </Prompt>
 <Response>
-Done. `todo.py` has a `due` function and a `due` branch in `main`, and
-`render.list_items` appends ` (due DATE)` when an item has the field. I
-ran the suite, then `due 1 2026-10-01` and `list` on a copy of the list,
-and checked criteria 1, 2 and 5. Criteria 3 and 4 wait for increments 2
-and 3. `store.py` and `todos.json` are unchanged.
+Terminé. `todo.py` a une fonction `due` et une branche `due` dans `main`, et
+`render.list_items` ajoute ` (due DATE)` quand un élément a le champ. J’ai
+lancé la suite, puis `due 1 2026-10-01` et `list` sur une copie de la liste, et
+j’ai vérifié les critères 1, 2 et 5. Les critères 3 et 4 attendent les
+incréments 2 et 3. `store.py` et `todos.json` n’ont pas changé.
 </Response>
 
-The report is a claim. Run the suite yourself.
+Le rapport est une affirmation. Lancez la suite vous-même.
 
-<Predict id="run-tests-after-increment" title="Run the suite after the first increment"
+<Predict id="run-tests-after-increment" title="Lancer la suite après le premier incrément"
   answer="OK" run="coding-with-agents/spec-driven-increments/increment_one_tests.py">
-Run the tests and keep the last line. The course applies the same
-increment to its own copy and checks this output against it.
+Lancez les tests et gardez la dernière ligne. Le cours applique le même
+incrément à sa propre copie et vérifie cette sortie avec elle.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-Then run the one thing this increment lets you show, against a copy of
-the list so the committed file doesn't change.
+Lancez ensuite la seule chose que cet incrément vous permet de montrer, sur une
+copie de la liste pour que le fichier committé ne change pas.
 
-<Predict id="run-due-then-list" title="Set a date and list"
+<Predict id="run-due-then-list" title="Fixer une date et afficher la liste"
   answer={`due #1: Buy milk by 2026-10-01
 1. [ ] Buy milk (due 2026-10-01)
 2. [x] Call the plumber
 3. [x] Renew the passport
 4. [ ] Water the plants
 2 open, 2 done`} run="coding-with-agents/spec-driven-increments/increment_one_due.py">
-Set a date on the first item and show the list.
+Fixez une date sur le premier élément et affichez la liste.
 
 ```sh
 cp todos.json /tmp/todos.json
@@ -318,11 +339,11 @@ TODO_FILE=/tmp/todos.json python3 todo.py list
 ```
 </Predict>
 
-The first `list` line is criterion 1 word for word, and the three items
-without a date print as they did before, which is the second sentence of
-criterion 1. The agent's diff is one new function and one new branch in
-`main` in `todo.py`, one `if` in `render.py`, and a test file. The change
-to `render.py`:
+La première ligne de `list` est le critère 1 mot pour mot, et les trois
+éléments sans date s’affichent comme avant, ce qui est la seconde moitié du
+critère 1. Le diff de l’agent se compose d’une nouvelle fonction et d’une
+nouvelle branche dans `main` de `todo.py`, d’un `if` dans `render.py`, et d’un
+fichier de test. La modification de `render.py` :
 
 ```python
         line = f"{number}. [{mark}] {item['text']}"
@@ -331,116 +352,120 @@ to `render.py`:
         lines.append(line)
 ```
 
-`item.get("due")` is the whole answer to the question the increment was
-placed first to ask. An item without the field prints as before, and no
-migration of `todos.json` is needed. Had the answer been different, you
-would know now, with one increment landed instead of three.
+`item.get("due")` est toute la réponse à la question que l’incrément devait
+poser en passant en premier. Un élément sans le champ s’affiche comme avant, et
+aucune migration de `todos.json` n’est nécessaire. Si la réponse avait été
+différente, vous le sauriez maintenant, avec un incrément livré au lieu de
+trois.
 
-The last check is the spec itself. The course keeps a script that runs
-every success criterion against its copy after the first increment and
-prints one line per criterion.
+Le dernier contrôle est la spécification elle-même. Le cours garde un script
+qui lance chaque critère de réussite sur sa copie après le premier incrément et
+affiche une ligne par critère.
 
-<Predict id="run-criteria" title="Check the criteria"
+<Predict id="run-criteria" title="Vérifier les critères"
   answer={`criterion 1: pass
 criterion 2: pass
 criterion 3: not yet
 criterion 4: not yet
 criterion 5: pass
 3 of 5 criteria pass`} run="coding-with-agents/spec-driven-increments/criteria.py">
-In a clone of the course repository, from
-`site/examples/coding-with-agents/spec-driven-increments/`, run the
-criteria check. It copies the fixture, lands the first increment and runs
-each criterion of `SPEC.md`.
+Dans un clone du dépôt du cours, depuis
+`site/examples/coding-with-agents/spec-driven-increments/`, lancez le contrôle
+des critères. Il copie l’exemple, livre le premier incrément et lance chaque
+critère de `SPEC.md`.
 
 ```sh
 python3 criteria.py
 ```
 </Predict>
 
-Three criteria pass and two say not yet, and those two are the ones the
-agent said belong to increments 2 and 3. That line is what an increment
-looks like from the spec's side: the criteria it claimed, and no others.
-Commit the increment now, before the next one starts, so there is a
-point to return to and a diff a reviewer can read in one sitting. Then
-brief the agent for increment 2 the same way, one increment, its files
-and its criterion.
+Trois critères passent et deux disent « not yet » (pas encore), et ce sont
+ceux que l’agent attribuait aux incréments 2 et 3. Cette ligne montre à quoi
+ressemble un incrément du point de vue de la spécification : les critères
+qu’il revendiquait, et aucun autre. Committez l’incrément maintenant, avant
+que le suivant commence, pour avoir un point de retour et un diff qu’un
+relecteur peut lire d’une traite. Donnez ensuite à l’agent la consigne de
+l’incrément 2 de la même façon : un incrément, ses fichiers et son critère.
 
 <Sort id="spec-or-code-changes" phase="review" objective="coding-with-agents/ships-with-agent/works-in-increments"
   concepts={['spec-driven-change']}
-  context="A learner works with a coding agent from a one-page spec with success criteria. The spec is the source of truth: when the code and the spec disagree, one of them is updated deliberately, and the code never drifts from the spec without a decision."
-  title="Which document changes?" hint="Is the disagreement a better idea about what the feature should do, or a mistake in doing what it says?"
-  buckets={['Change the spec first, then the code', 'Bring the code back to the spec']}
+  context="Un apprenant travaille avec un agent de code à partir d’une spécification d’une page avec des critères de réussite. La spécification est la référence : quand le code et la spécification divergent, l’un des deux est mis à jour délibérément, et le code ne s’écarte jamais de la spécification sans décision."
+  title="Quel document change ?" hint="L’écart vient-il d’une meilleure idée de ce que doit faire la fonctionnalité, ou d’une erreur dans l’exécution de ce qu’elle dit ?"
+  buckets={['Modifier d’abord la spécification, puis le code', 'Ramener le code à la spécification']}
   items={[
-    { text: 'The agent prints the date before the text, and the spec says after. Either would do, and the spec was written first.', bucket: 1 },
-    { text: 'While writing the overdue test you find the spec never says what happens to a done item with a past date, and you want it left out.', bucket: 0 },
-    { text: 'The agent adds a sort by date to list, which the spec\'s limits rule out.', bucket: 1 },
-    { text: 'A user of the program asks for the date in a different format, and you agree.', bucket: 0 },
+    { text: 'L’agent affiche la date avant le texte, et la spécification dit après. Les deux conviendraient, et la spécification a été écrite en premier.', bucket: 1 },
+    { text: 'En écrivant le test d’overdue, vous découvrez que la spécification ne dit jamais ce que devient un élément fait avec une date passée, et vous voulez qu’il soit exclu.', bucket: 0 },
+    { text: 'L’agent ajoute à list un tri par date, que les limites de la spécification excluent.', bucket: 1 },
+    { text: 'Un utilisateur du programme demande la date dans un autre format, et vous êtes d’accord.', bucket: 0 },
   ]} />
 
 <Choice id="what-first-increment-proves" phase="review" objective="coding-with-agents/ships-with-agent/works-in-increments"
   concepts={['sequencing-for-early-feedback', 'working-increments']}
-  context="A team lands a feature with a coding agent in increments. The ordering rule is that the increment with the least certain assumption goes first, as a thin path through every module the feature touches."
-  title="Why this one first?" hint="What would the team have to redo if the first increment's assumption turned out wrong after the others were built?"
+  context="Une équipe livre une fonctionnalité avec un agent de code, par incréments. La règle d’ordre veut que l’incrément dont l’hypothèse est la moins sûre passe en premier, comme chemin mince à travers chaque module que touche la fonctionnalité."
+  title="Pourquoi celui-là en premier ?" hint="Qu’est-ce que l’équipe devrait refaire si l’hypothèse du premier incrément se révélait fausse une fois les autres construits ?"
   options={[
-    { text: 'If its assumption is wrong, every later increment changes with it.', correct: true },
-    { text: 'It is the smallest increment, so it gives the fastest sense of progress.', why: 'Size is a side effect. A small increment that tests nothing uncertain teaches you nothing about the rest.' },
-    { text: 'It is the one users will notice first, so it is the most valuable to ship.', why: 'Visible value is a fine second rule. The first rule is the assumption that could force a rewrite.' },
-    { text: 'It touches the fewest files, so its diff is the easiest to review.', why: 'The thin path often touches every module the feature does. It is thin in depth, and it is wide across the seams.' },
+    { text: 'Si son hypothèse est fausse, chaque incrément suivant change avec elle.', correct: true },
+    { text: 'C’est le plus petit incrément, donc il donne le sentiment de progrès le plus rapide.', why: 'La taille est un effet secondaire. Un petit incrément qui ne teste rien d’incertain ne vous apprend rien sur le reste.' },
+    { text: 'C’est celui que les utilisateurs remarqueront en premier, donc le plus utile à livrer.', why: 'La valeur visible est une bonne règle secondaire. La première règle porte sur l’hypothèse qui pourrait forcer une réécriture.' },
+    { text: 'Il touche le moins de fichiers, donc son diff est le plus facile à relire.', why: 'Le chemin mince touche souvent chaque module que touche la fonctionnalité. Il est mince en profondeur, et large à travers les jonctions.' },
   ]}>
-A team puts the increment that stores a new field and shows it in the
-output first, before the command that computes from the field. Why?
+Une équipe place en premier l’incrément qui enregistre un nouveau champ et
+l’affiche dans la sortie, avant la commande qui calcule à partir de ce champ.
+Pourquoi ?
 </Choice>
 
 <Match id="increment-or-not" phase="review" objective="coding-with-agents/ships-with-agent/works-in-increments"
   concepts={['working-increments']}
-  context="A learner asks a coding agent to land a tags feature as increments. The lesson counts a step as an increment when it leaves the program working and tested and adds one thing you can run."
-  title="Is it an increment?" hint="After this step, is the program working, tested, and does it do one new thing you can run?"
-  options={['An increment', 'Not an increment yet']}
+  context="Un apprenant demande à un agent de code de livrer une fonctionnalité d’étiquettes par incréments. La leçon compte une étape comme un incrément quand elle laisse le programme fonctionnel et testé et ajoute une chose qu’on peut lancer."
+  title="Est-ce un incrément ?" hint="Après cette étape, le programme fonctionne-t-il, est-il testé, et fait-il une chose nouvelle que vous pouvez lancer ?"
+  options={['Un incrément', 'Pas encore un incrément']}
   rows={[
-    { statement: 'The `tag` command stores a tag, and `list` shows it. Tests pass.', option: 0, why: 'Can you run something new, and does everything else still work?' },
-    { statement: 'A tag parser with no command wired to it. Tests pass.', option: 1, why: 'What can you run after this step that you couldn\'t before?' },
-    { statement: '`list --tag` works, and plain `list` fails until the next step.', option: 1, why: 'Does the program still work after this step?' },
+    { statement: 'La commande `tag` enregistre une étiquette, et `list` l’affiche. Les tests passent.', option: 0, why: 'Pouvez-vous lancer quelque chose de nouveau, et tout le reste fonctionne-t-il encore ?' },
+    { statement: 'Un analyseur d’étiquettes sans commande reliée. Les tests passent.', option: 1, why: 'Que pouvez-vous lancer après cette étape que vous ne pouviez pas lancer avant ?' },
+    { statement: '`list --tag` fonctionne, et `list` tout court échoue jusqu’à l’étape suivante.', option: 1, why: 'Le programme fonctionne-t-il encore après cette étape ?' },
   ]}
-  rationale="Each increment leaves the program working and adds one thing you can run, so you can stop after any of them.">
-Match each step to whether it is an increment.
+  rationale="Chaque incrément laisse le programme fonctionnel et ajoute une chose qu’on peut lancer, donc vous pouvez vous arrêter après n’importe lequel.">
+Indiquez pour chaque étape si c’est un incrément.
 </Match>
 
 <Scenario id="between-increments" phase="review" objective="coding-with-agents/ships-with-agent/works-in-increments"
   concepts={['working-increments', 'spec-driven-change']}
-  context="A coding agent is building a feature from a spec, one increment at a time. It reports that the first increment is done, that the tests pass, and asks whether to go on with the second."
-  title="The first increment is done" hint="Whose check counts before the next increment starts?"
+  context="Un agent de code construit une fonctionnalité à partir d’une spécification, un incrément à la fois. Il annonce que le premier incrément est terminé, que les tests passent, et demande s’il doit continuer avec le deuxième."
+  title="Le premier incrément est terminé" hint="Le contrôle de qui compte avant que l’incrément suivant commence ?"
   options={[
-    { text: 'Say yes, because the tests pass and the work keeps moving.', consequence: 'The second increment builds on the first. When a criterion fails later, you can\'t tell which increment broke it.' },
-    { text: 'Let it do all of the remaining increments, and review them at the end.', consequence: 'You get one large diff after all, which is what the increments were meant to avoid.' },
-    { text: 'Run the tests and the criteria yourself, commit, and then brief the next one.', correct: true, consequence: 'A criterion fails, and you fix it in the first increment while it is small. The second starts from a working commit.' },
-    { text: 'Ask it to keep the increments uncommitted until the feature is finished.', consequence: 'No increment can be reverted on its own, and a mistake in one reaches all of them.' },
+    { text: 'Dire oui, parce que les tests passent et que le travail avance.', consequence: 'Le deuxième incrément s’appuie sur le premier. Quand un critère échoue plus tard, vous ne savez pas quel incrément l’a cassé.' },
+    { text: 'Lui laisser faire tous les incréments restants, et les relire à la fin.', consequence: 'Vous obtenez finalement un gros diff, ce que les incréments devaient éviter.' },
+    { text: 'Lancer vous-même les tests et les critères, committer, puis donner la consigne du suivant.', correct: true, consequence: 'Un critère échoue, et vous le corrigez dans le premier incrément tant qu’il est petit. Le deuxième part d’un commit fonctionnel.' },
+    { text: 'Lui demander de ne pas committer les incréments avant la fin de la fonctionnalité.', consequence: 'Aucun incrément ne peut être annulé seul, et une erreur dans l’un les atteint tous.' },
   ]}>
 
-The agent says the first increment is done and the tests pass, and asks
-whether to continue. What do you do?
+L’agent dit que le premier incrément est terminé et que les tests passent, et
+demande s’il doit continuer. Que faites-vous ?
 
 </Scenario>
 
-<Exercise stretch="Now do the same for a feature you choose, for example tags on items with a `tag` command and a `list` filter. Write the spec first, and say in one line which increment is the least certain and why.">
-In a fresh copy of the fixture, land increment 2 from the spec with your
-coding agent: write nothing new in the spec, brief the agent for `overdue`
-only, with its files and criterion 3, and let it write the test with the
-two `TODO_TODAY` dates before the code. Run `python3 -m unittest -q`
-yourself and then the two `overdue` commands from criterion 3 on a copy of
-the list. Plan on ten minutes. This is the loop you use for any change
-whose design has more than one decision in it.
+<Exercise stretch="Faites maintenant la même chose pour une fonctionnalité de votre choix, par exemple des étiquettes sur les éléments avec une commande `tag` et un filtre dans `list`. Écrivez d’abord la spécification, et dites en une ligne quel incrément est le moins sûr et pourquoi.">
+Dans une nouvelle copie de l’exemple, livrez l’incrément 2 de la spécification
+avec votre agent de code : n’écrivez rien de nouveau dans la spécification,
+donnez à l’agent la consigne d’`overdue` seulement, avec ses fichiers et le
+critère 3, et laissez-le écrire le test avec les deux dates `TODO_TODAY` avant
+le code. Lancez vous-même `python3 -m unittest -q`, puis les deux commandes
+`overdue` du critère 3 sur une copie de la liste. Comptez dix minutes. C’est la
+boucle à suivre pour toute modification dont la conception contient plus
+d’une décision.
 
-A good result: the suite passes, `TODO_TODAY=2026-10-02` shows item 1 and
-nothing else, `TODO_TODAY=2026-09-30` prints `nothing overdue`, and the
-diff touches `todo.py` and one new test file. Criterion 4 is still not
-yet, and that is right. Finish by deleting your copy and copying the
-fixture again. Then answer one question: did the agent ask a question
-the spec should have answered, and what line would you add to it?
+Un bon résultat : la suite passe, `TODO_TODAY=2026-10-02` affiche l’élément 1
+et rien d’autre, `TODO_TODAY=2026-09-30` affiche `nothing overdue`, et le diff
+touche `todo.py` et un nouveau fichier de test. Le critère 4 est toujours « pas
+encore », et c’est normal. Terminez en supprimant votre copie et en copiant de
+nouveau l’exemple. Répondez ensuite à une question : l’agent a-t-il posé une
+question à laquelle la spécification aurait dû répondre, et quelle ligne y
+ajouteriez-vous ?
 </Exercise>
 
 <Recap>
-1. A feature starts from a one-page spec with a goal, the commands, the limits and success criteria you can tick one by one. The spec is the source of truth while the agent works (@Academy ai-native-sdlc-playbook). When code and spec disagree, one of them changes on purpose.
-2. Ask for increments in the brief. Each one leaves the program working and tested and adds one thing you can run, and the agent's default without that ask is one large diff (@Brilliant INC).
-3. Order the increments with the least certain assumption first, as the thin end-to-end path through every module before any detail is built on it.
-4. After each increment, run the tests and the criteria yourself, commit, and only then brief the next one.
+1. Une fonctionnalité part d’une spécification d’une page avec un objectif, les commandes, les limites et des critères de réussite que vous pouvez cocher un par un. La spécification est la référence pendant que l’agent travaille (@Academy ai-native-sdlc-playbook). Quand le code et la spécification divergent, l’un des deux change délibérément.
+2. Demandez des incréments dans la consigne. Chacun laisse le programme fonctionnel et testé et ajoute une chose que vous pouvez lancer, et sans cette demande, l’agent produit par défaut un gros diff (@Brilliant INC).
+3. Ordonnez les incréments en commençant par l’hypothèse la moins sûre, comme chemin mince de bout en bout à travers chaque module, avant qu’un détail soit construit dessus.
+4. Après chaque incrément, lancez vous-même les tests et les critères, committez, et seulement ensuite donnez la consigne du suivant.
 </Recap>
