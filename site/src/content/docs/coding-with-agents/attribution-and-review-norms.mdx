@@ -1,135 +1,137 @@
 import { Choice, MultiChoice, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-An agent fixed a bug in the nightly sales import, the tests pass, and you
-are about to open a pull request. A reviewer reads what you send this
-week and decides how closely to look. Someone who reads the history a
-year from now wants to know who made the change and who checked it. In
-this lesson we write the commit message and the pull request for both
-readers. The first half covers the team's review agreements, and the
-second half covers how the commit says that an agent helped, and what
-only a person may add to it.
+Un agent a corrigé un bug dans l’import nocturne des ventes, les tests passent,
+et vous êtes sur le point d’ouvrir une pull request. Un relecteur lit ce que
+vous envoyez cette semaine et décide de l’attention à y porter. Quelqu’un qui
+lira l’historique dans un an voudra savoir qui a fait la modification et qui
+l’a vérifiée. Dans cette leçon, nous écrivons le message de commit et la pull
+request pour ces deux lecteurs. La première moitié porte sur les accords de
+revue de l’équipe, et la seconde sur la façon dont le commit dit qu’un agent a
+aidé, et sur ce que seule une personne peut y ajouter.
 
-The [lesson on saying that AI helped](/safety/saying-ai-helped/) gave a
-disclosure line three parts: what the AI did, what the person checked, and
-who is accountable. A pull request needs the same three parts, and a
-commit holds them in a form that tools can read.
+La [leçon sur la mention de l’aide de l’IA](/safety/saying-ai-helped/) donnait
+trois parties à une ligne de mention : ce qu’a fait l’IA, ce que la personne a
+vérifié, et qui en répond. Une pull request a besoin des trois mêmes parties,
+et un commit les contient sous une forme que les outils peuvent lire.
 
-## Before you ask for a review
+## Avant de demander une revue
 
-Review norms are the agreements a team makes on how agent-assisted
-changes are reviewed. Teams write them down in different words. These
-are the points most of them share.
+Les règles de revue sont les accords qu’une équipe passe sur la façon de relire
+les modifications faites avec un agent. Les équipes les écrivent avec des mots
+différents. Voici les points que la plupart partagent.
 
-**The author reads every line first.** You asked for the change, and you
-are its first reviewer. The steps are the ones from
-[reviewing the diff](/coding-with-agents/reviewing-the-diff/). When you
-request a review, you tell the reviewer that you understand the change
-and think it is right. If they find a line you never read, they learn
-that your request meant less than that.
+**L’auteur lit d’abord chaque ligne.** C’est vous qui avez demandé la
+modification, et vous en êtes le premier relecteur. Les étapes sont celles de
+[la relecture du diff](/coding-with-agents/reviewing-the-diff/). Quand vous
+demandez une revue, vous dites au relecteur que vous comprenez la modification
+et que vous la pensez juste. S’il trouve une ligne que vous n’avez jamais lue,
+il apprend que votre demande voulait dire moins que cela.
 
-**The description says what the agent did and what you verified.** Name
-the part the agent wrote, the checks you ran yourself, and what you
-didn't check. "The agent ran the tests" reports what the agent said. "I ran
-the tests, and the new one fails on `main` and passes here" reports what
-you saw.
+**La description dit ce qu’a fait l’agent et ce que vous avez vérifié.** Nommez
+la partie que l’agent a écrite, les contrôles que vous avez lancés vous-même, et
+ce que vous n’avez pas vérifié. « L’agent a lancé les tests » rapporte ce qu’a
+dit l’agent. « J’ai lancé les tests, et le nouveau échoue sur `main` et passe
+ici » rapporte ce que vous avez vu.
 
-**The reviewer reads the diff.** The description tells the reviewer where
-to look, and the diff is what gets merged. A description written by an
-agent can describe the change it meant to make and not the one it made.
-An agent's change goes through the same gates as any other change: the
-CI run and a reviewer's approval. "The agent tested it" doesn't replace
-either, because the agent's tests are part of the change under review.
+**Le relecteur lit le diff.** La description dit au relecteur où regarder, et
+c’est le diff qui est fusionné. Une description écrite par un agent peut décrire
+la modification qu’il voulait faire, et non celle qu’il a faite. La
+modification d’un agent passe par les mêmes barrières que toute autre
+modification : l’exécution de la CI et l’approbation d’un relecteur. « L’agent
+l’a testé » ne remplace ni l’une ni l’autre, parce que les tests de l’agent
+font partie de la modification relue.
 
-**The change is small enough to read.** An agent writes code much faster
-than a person can review it. A diff that's too large to read gets
-skimmed or blocked. Split it before you ask. Put a mechanical rename in
-its own pull request, and keep each change to one purpose. A tidy-up the
-agent made on the side belongs in a separate pull request, or at least
-in the description.
+**La modification est assez petite pour être lue.** Un agent écrit du code bien
+plus vite qu’une personne ne peut le relire. Un diff trop gros pour être lu est
+survolé ou bloqué. Découpez-le avant de demander. Mettez un renommage mécanique
+dans sa propre pull request, et limitez chaque modification à un seul but. Un
+rangement que l’agent a fait au passage va dans une pull request à part, ou au
+moins dans la description.
 
-Your team may have its own list, often in the project's agent
-instructions file or in `CONTRIBUTING`. Where the two differ, follow the
-team's list. When you disagree with one of its rules, propose a change
-to the file and keep to the rule until the team agrees.
+Votre équipe a peut-être sa propre liste, souvent dans le fichier d’instructions
+pour agents du projet ou dans `CONTRIBUTING`. Là où les deux diffèrent, suivez
+la liste de l’équipe. Quand vous n’êtes pas d’accord avec l’une de ses règles,
+proposez une modification du fichier et respectez la règle jusqu’à ce que
+l’équipe soit d’accord.
 
 <Scenario id="the-3000-line-diff" objective="coding-with-agents/works-in-team/follows-team-norms"
   concepts={['review-norms']}
-  context="An agent was asked to add one report to a service. Its branch also renames the logging calls in forty files. The diff has about 3000 changed lines and CI passes."
-  title="A 3000-line agent diff" hint="What can a reviewer do with 3000 lines, and which part of the work is yours to do before you ask?"
+  context="On a demandé à un agent d’ajouter un rapport à un service. Sa branche renomme aussi les appels de journalisation dans quarante fichiers. Le diff compte environ 3 000 lignes modifiées et la CI passe."
+  title="Un diff d’agent de 3 000 lignes" hint="Que peut faire un relecteur avec 3 000 lignes, et quelle part du travail vous revient avant de demander ?"
   options={[
-    { text: 'Open the pull request as it is, with the note "agent-generated, CI is green" so the reviewer knows what to expect.', consequence: 'The reviewer scrolls through the rename, approves the part they could follow, and misses a changed default in the report code. The note said who wrote it and nothing about what anyone checked.' },
-    { text: 'Merge it yourself. CI passed, the agent ran the tests, and a review of 3000 lines would take a colleague a whole day.', consequence: 'The change skips the one gate that a person holds. The team finds the changed default in production, and the next rule it writes is that you may no longer merge.' },
-    { text: 'Split it into a rename pull request and a report pull request, read both, and say in each what the agent did and what you checked.', correct: true, consequence: 'The rename is quick to review because it is only a rename. The report change is 200 lines, and the reviewer reads every one. They ask about the changed default, and you fix it before the merge.' },
-    { text: 'Ask two reviewers to take half of the files each, so the review of the 3000 lines is shared and goes faster.', consequence: 'Each reviewer sees half of each part and neither sees the whole report change. The review takes longer than two small pull requests would, and the changed default is in the half that got skimmed.' },
+    { text: 'Ouvrir la pull request telle quelle, avec la note « généré par l’agent, CI au vert » pour que le relecteur sache à quoi s’attendre.', consequence: 'Le relecteur fait défiler le renommage, approuve la partie qu’il a pu suivre, et manque un réglage par défaut modifié dans le code du rapport. La note disait qui l’avait écrit et rien de ce que quiconque avait vérifié.' },
+    { text: 'La fusionner vous-même. La CI a passé, l’agent a lancé les tests, et une revue de 3 000 lignes prendrait une journée entière à un collègue.', consequence: 'La modification saute la seule barrière que tient une personne. L’équipe découvre le réglage par défaut modifié en production, et la règle suivante qu’elle écrit dit que vous ne pouvez plus fusionner.' },
+    { text: 'La découper en une pull request de renommage et une de rapport, lire les deux, et dire dans chacune ce qu’a fait l’agent et ce que vous avez vérifié.', correct: true, consequence: 'Le renommage se relit vite, parce que ce n’est qu’un renommage. La modification du rapport fait 200 lignes, et le relecteur les lit toutes. Il pose une question sur le réglage par défaut modifié, et vous le corrigez avant la fusion.' },
+    { text: 'Demander à deux relecteurs de prendre chacun la moitié des fichiers, pour que la revue des 3 000 lignes soit partagée et aille plus vite.', consequence: 'Chaque relecteur voit la moitié de chaque partie et aucun ne voit toute la modification du rapport. La revue prend plus de temps que deux petites pull requests, et le réglage par défaut modifié est dans la moitié survolée.' },
   ]}>
-You asked an agent to add a monthly report to a service. The branch it
-produced also renames the logging calls in forty files, "for
-consistency". The diff has about 3000 changed lines and CI passes. What
-do you do before anyone reviews it?
+Vous avez demandé à un agent d’ajouter un rapport mensuel à un service. La
+branche qu’il a produite renomme aussi les appels de journalisation dans
+quarante fichiers, « par cohérence ». Le diff compte environ 3 000 lignes
+modifiées et la CI passe. Que faites-vous avant que quiconque le relise ?
 </Scenario>
 
 <MultiChoice id="before-you-request-review" phase="review" objective="coding-with-agents/works-in-team/follows-team-norms"
   concepts={['review-norms']}
-  context="You are about to request a review of a pull request in which a coding agent wrote most of the change. The agent also tidied up an unrelated file on the side."
-  title="Ready for review?" hint="Which of these did you do yourself, and which only repeat what the agent reported?"
+  context="Vous êtes sur le point de demander la revue d’une pull request dans laquelle un agent de code a écrit la plus grande partie de la modification. L’agent a aussi rangé au passage un fichier sans rapport."
+  title="Prête pour la revue ?" hint="Lesquelles de ces choses avez-vous faites vous-même, et lesquelles répètent seulement ce que l’agent a rapporté ?"
   options={[
-    { text: 'You read every changed line and can explain each one.', correct: true },
-    { text: 'The pull request description quotes the agent\'s summary that all tests pass.', why: 'That is what the agent said. The description should say what you ran and what you saw.' },
-    { text: 'The description names what the agent wrote and what you checked.', correct: true },
-    { text: 'You skipped the CI run because the agent ran the full suite locally.', why: 'The agent\'s run is part of the change under review. CI is the gate for every change, whoever wrote it.' },
-    { text: 'You moved the agent\'s side tidy-up into its own pull request.', correct: true },
+    { text: 'Vous avez lu chaque ligne modifiée et vous savez expliquer chacune.', correct: true },
+    { text: 'La description de la pull request cite le résumé de l’agent selon lequel tous les tests passent.', why: 'C’est ce qu’a dit l’agent. La description devrait dire ce que vous avez lancé et ce que vous avez vu.' },
+    { text: 'La description nomme ce que l’agent a écrit et ce que vous avez vérifié.', correct: true },
+    { text: 'Vous avez sauté l’exécution de la CI parce que l’agent a lancé toute la suite en local.', why: 'L’exécution de l’agent fait partie de la modification relue. La CI est la barrière de chaque modification, quel qu’en soit l’auteur.' },
+    { text: 'Vous avez déplacé le rangement fait au passage par l’agent dans sa propre pull request.', correct: true },
   ]}>
-Which of these belong to a pull request that is ready for review?
+Lesquelles de ces choses correspondent à une pull request prête pour la revue ?
 </MultiChoice>
 
-<Pitfall title="The agent wrote that part">
-A reviewer asked why a new function caught every exception and returned
-an empty list. The author replied: "The agent wrote that, I didn't touch
-it." The reply tells the reviewer that nobody read the function, and it
-leaves the question open. The tool can't answer for the change, so the
-person who opened the pull request answers for all of it. Reply as the
-author: "I missed that. It should fail loudly, and I'll fix it and add a
-test."
+<Pitfall title="C’est l’agent qui a écrit cette partie">
+Un relecteur a demandé pourquoi une nouvelle fonction interceptait toutes les
+exceptions et renvoyait une liste vide. L’auteur a répondu : « C’est l’agent qui
+a écrit ça, je n’y ai pas touché. » La réponse dit au relecteur que personne n’a
+lu la fonction, et elle laisse la question ouverte. L’outil ne peut pas répondre
+de la modification, donc la personne qui a ouvert la pull request répond de tout.
+Répondez en auteur : « Je l’ai manqué. Ça devrait échouer clairement, je le
+corrige et j’ajoute un test. »
 </Pitfall>
 
-## Saying it in the commit
+## Le dire dans le commit
 
-Attribution means recording in the change itself that an agent
-contributed, next to the person who directed and checked the work. In a
-commit it goes in a **trailer**. Git reads trailers from the last
-paragraph of a commit message, after a blank line, as lines in the form
-`Key: value` (@Git docs git-interpret-trailers). Tools read them from
-there, so a line in the middle of the body that looks like a trailer is
-only text.
+L’attribution consiste à indiquer dans la modification elle-même qu’un agent y a
+contribué, à côté de la personne qui a dirigé et vérifié le travail. Dans un
+commit, elle va dans une **ligne de fin** (trailer). Git lit les lignes de fin
+dans le dernier paragraphe d’un message de commit, après une ligne vide, sous la
+forme `Key: value` (@Git docs git-interpret-trailers). Les outils les lisent à
+cet endroit, donc une ligne au milieu du corps qui ressemble à une ligne de fin
+n’est que du texte.
 
-Several forms are in use. GitHub shows a commit as written by more than
-one person when the message ends with a `Co-authored-by: name <email>`
-line for each of them (@GitHub docs creating-a-commit-with-multiple-authors).
-The Linux kernel asks for an `Assisted-by` tag that names the AI help, in
-a format its guideline gives (@Linux coding assistants). Claude Code adds
-a `Co-Authored-By` trailer to its commits by default. Its
-`attribution.commit` setting changes that trailer to the one the project
-asks for, and an empty value removes it (@Claude Code all settings).
-Whichever agent you use, check the form the project asks for, and read the
-trailer block of each commit before you push it.
+Plusieurs formes sont en usage. GitHub affiche un commit comme écrit par
+plusieurs personnes quand le message se termine par une ligne
+`Co-authored-by: name <email>` pour chacune (@GitHub docs creating-a-commit-with-multiple-authors).
+Le noyau Linux demande une étiquette `Assisted-by` qui nomme l’aide de l’IA,
+dans un format que donne sa règle (@Linux coding assistants). Claude Code ajoute
+par défaut une ligne de fin `Co-Authored-By` à ses commits. Son réglage
+`attribution.commit` remplace cette ligne par celle que demande le projet, et
+une valeur vide la retire (@Claude Code all settings). Quel que soit l’agent que
+vous utilisez, vérifiez la forme que demande le projet, et lisez le bloc de
+lignes de fin de chaque commit avant de le pousser.
 
-The commit's author is still you. Git records an author for every commit,
-the identity of the person who made it unless someone sets another one
-(@Git docs git-commit). The trailer adds the agent. It doesn't take your
-name off.
+L’auteur du commit reste vous. Git enregistre un auteur pour chaque commit,
+l’identité de la personne qui l’a fait sauf si quelqu’un en définit une autre
+(@Git docs git-commit). La ligne de fin ajoute l’agent. Elle ne retire pas votre
+nom.
 
-The fixture for this lesson is in the course repository under
-`site/examples/coding-with-agents/attribution-and-review-norms/`. The
-agent wrote `commit-message.txt`, and `trailers.py` runs
-`git interpret-trailers --parse` on it, which prints only the lines git
-reads as trailers.
+L’exemple de cette leçon se trouve dans le dépôt du cours, sous
+`site/examples/coding-with-agents/attribution-and-review-norms/`. L’agent a
+écrit `commit-message.txt`, et `trailers.py` lance
+`git interpret-trailers --parse` dessus, ce qui n’affiche que les lignes que git
+lit comme lignes de fin.
 
 <Predict id="predict-the-trailers" objective="coding-with-agents/works-in-team/attributes-honestly"
   concepts={['attribution']}
-  context="A script runs git interpret-trailers --parse on a commit message an agent wrote, and prints only the lines git reads as trailers."
-  title="Which lines are trailers?" hint="Which paragraph does git look at, and what is in that one?"
+  context="Un script lance git interpret-trailers --parse sur un message de commit écrit par un agent, et n’affiche que les lignes que git lit comme lignes de fin."
+  title="Quelles lignes sont des lignes de fin ?" hint="Quel paragraphe git regarde-t-il, et que contient-il ?"
   answer="Signed-off-by: Coding Agent <agent@example.com>" run="coding-with-agents/attribution-and-review-norms/trailers.py">
-This is the agent's commit message:
+Voici le message de commit de l’agent, en anglais comme dans l’exemple :
 
 ```text
 fix: read quoted amounts in the nightly import
@@ -142,8 +144,12 @@ I also tidied up the date parsing while I was in the file.
 Signed-off-by: Coding Agent <agent@example.com>
 ```
 
-Before you run it, write down what the script prints for this message.
-Then copy the directory and run it to check.
+Le corps explique que l’import découpait « 1,250.00 » en deux champs et qu’il
+lit maintenant chaque ligne avec le module csv. Une ligne `Assisted-by` se
+trouve au milieu de ce paragraphe, suivie d’une phrase sur un rangement de
+l’analyse des dates. Le dernier paragraphe contient une signature au nom de
+l’agent. Avant de lancer le script, notez ce qu’il affiche pour ce message.
+Copiez ensuite le dossier et lancez-le pour vérifier.
 
 ```sh
 python3 trailers.py
@@ -151,119 +157,121 @@ python3 trailers.py
 
 </Predict>
 
-The only trailer git finds is the one line the agent must not write. The
-`Assisted-by` line is in the body, so a tool that counts agent-assisted
-commits misses this one.
+La seule ligne de fin que git trouve est la seule ligne que l’agent ne doit pas
+écrire. La ligne `Assisted-by` est dans le corps, donc un outil qui compte les
+commits faits avec un agent manque celui-ci.
 
-## The sign-off only a person gives
+## La signature que seule une personne donne
 
-The `Signed-off-by` trailer is older than coding agents. `git commit -s`
-adds one with the committer's name, and the git documentation says that
-what it means depends on the project. In the Linux kernel and Git
-projects, and in others that adopted it, it certifies the Developer
-Certificate of Origin (DCO) (@Git docs git-commit). The DCO is a short
-statement in four parts. In our words: I made the contribution, in whole
-or in part, and have the right to submit it under the project's license,
-or it is based on earlier open-source work I may submit, or someone who
-certified one of these gave it to me and I didn't change it. And I agree
-that the contribution and my sign-off are kept on public record (@DCO).
+La ligne de fin `Signed-off-by` est plus ancienne que les agents de code.
+`git commit -s` en ajoute une avec le nom de la personne qui committe, et la
+documentation de git dit que son sens dépend du projet. Dans les projets du
+noyau Linux et de Git, et dans d’autres qui l’ont adoptée, elle certifie le
+Developer Certificate of Origin (DCO, certificat d’origine du développeur)
+(@Git docs git-commit). Le DCO est une courte déclaration en quatre parties. Avec
+nos mots : j’ai fait la contribution, en tout ou en partie, et j’ai le droit de
+la soumettre sous la licence du projet, ou elle repose sur un travail open source
+antérieur que je peux soumettre, ou une personne qui a certifié l’une de ces
+choses me l’a donnée et je ne l’ai pas modifiée. Et j’accepte que la
+contribution et ma signature restent dans un registre public (@DCO).
 
-Each part is a statement about a person's rights and knowledge, and an
-agent has neither. The Linux kernel guideline says it directly: an AI
-agent must not add a `Signed-off-by` tag. The person who submits the
-change reads the code, makes sure its license fits the project, signs off in
-their own name and answers for the result (@Linux coding assistants).
-Sign off yourself only after you have read the change, because the
-sign-off says you know where the code came from.
+Chaque partie est une déclaration sur les droits et les connaissances d’une
+personne, et un agent n’a ni les uns ni les autres. La règle du noyau Linux le
+dit directement : un agent d’IA ne doit pas ajouter d’étiquette
+`Signed-off-by`. La personne qui soumet la modification lit le code, s’assure que
+sa licence convient au projet, signe en son propre nom et répond du résultat
+(@Linux coding assistants). Ne signez vous-même qu’après avoir lu la
+modification, parce que la signature dit que vous savez d’où vient le code.
 
-This course's own repository is a worked example. The last commit on
-`main` when this lesson was written ended like this:
+Le dépôt d’origine de ce cours est un exemple concret. Le dernier commit sur
+`main` au moment de la rédaction de cette leçon se terminait ainsi :
 
 ```text
 Co-Authored-By: lsimons-bot <bot@leosimons.com>
 Assisted-by: Claude:claude-opus-5-5
 ```
 
-The `Co-Authored-By` line names a bot account, and the `Assisted-by`
-line names the agent and the model. The commit's author is the
-maintainer, and the message has no sign-off.
+La ligne `Co-Authored-By` nomme un compte de robot, et la ligne `Assisted-by`
+nomme l’agent et le modèle. L’auteur du commit est le mainteneur, et le message
+n’a aucune signature.
 
 <Choice id="honest-attribution" objective="coding-with-agents/works-in-team/attributes-honestly"
   concepts={['attribution']}
-  context="A project requires a DCO sign-off on every commit and asks for an Assisted-by trailer when AI helped. An agent wrote a change, and the developer, Ana Costa, read the whole diff and ran the tests."
-  title="Which trailer block?" hint="Which of these lines can the agent truthfully certify, and which only a person can?"
+  context="Un projet exige une signature DCO sur chaque commit et demande une ligne de fin Assisted-by quand l’IA a aidé. Un agent a écrit une modification, et la développeuse, Ana Costa, a lu tout le diff et lancé les tests."
+  title="Quel bloc de lignes de fin ?" hint="Laquelle de ces lignes l’agent peut-il certifier sans mentir, et laquelle seule une personne le peut ?"
   options={[
-    { text: '`Signed-off-by: Ana Costa <ana@example.com>` and nothing else, since she read the diff and is the author of record.', why: 'The sign-off is right, and the project also asked for the Assisted-by trailer. Leaving it out hides the agent from the reviewer and from the history.' },
-    { text: '`Assisted-by: Claude:claude-sonnet-4-6` and `Signed-off-by: Claude <agent@example.com>`, since the agent wrote the code.', why: 'Writing the code does not give the agent the rights and knowledge the DCO asks about. A tool cannot certify it.' },
-    { text: '`Assisted-by: Claude:claude-sonnet-4-6` and `Signed-off-by: Ana Costa <ana@example.com>`, added after she read it.', correct: true },
-    { text: '`Assisted-by: Claude:claude-sonnet-4-6` alone, since a person signing off on code she did not type would be dishonest.', why: 'The project requires a sign-off, and a person may give one for code she read and may submit. Without it the commit is refused.' },
+    { text: '`Signed-off-by: Ana Costa <ana@example.com>` et rien d’autre, puisqu’elle a lu le diff et qu’elle est l’autrice officielle.', why: 'La signature est juste, et le projet demandait aussi la ligne Assisted-by. L’omettre cache l’agent au relecteur et à l’historique.' },
+    { text: '`Assisted-by: Claude:claude-sonnet-4-6` et `Signed-off-by: Claude <agent@example.com>`, puisque l’agent a écrit le code.', why: 'Écrire le code ne donne pas à l’agent les droits et les connaissances dont parle le DCO. Un outil ne peut pas le certifier.' },
+    { text: '`Assisted-by: Claude:claude-sonnet-4-6` et `Signed-off-by: Ana Costa <ana@example.com>`, ajoutée après sa lecture.', correct: true },
+    { text: '`Assisted-by: Claude:claude-sonnet-4-6` seule, puisqu’une personne qui signe un code qu’elle n’a pas tapé serait malhonnête.', why: 'Le projet exige une signature, et une personne peut en donner une pour un code qu’elle a lu et qu’elle peut soumettre. Sans elle, le commit est refusé.' },
   ]}>
-Ana's project requires a DCO sign-off on every commit and asks for an
-`Assisted-by` trailer when AI helped. An agent wrote the change, and Ana
-read every line and ran the tests. Which trailer block does the commit
-end with?
+Le projet d’Ana exige une signature DCO sur chaque commit et demande une ligne
+de fin `Assisted-by` quand l’IA a aidé. Un agent a écrit la modification, et Ana
+a lu chaque ligne et lancé les tests. Par quel bloc de lignes de fin le commit
+se termine-t-il ?
 </Choice>
 
 <Sort id="sort-the-trailer-blocks" phase="review" objective="coding-with-agents/works-in-team/attributes-honestly"
   concepts={['attribution']}
-  context="A project requires a DCO sign-off from the person who submits a change and asks for an Assisted-by trailer when AI helped. Each item describes how an agent-assisted commit message ends. You read the diff before you signed off."
-  title="Push it or fix it?" hint="For each ending, does git read the Assisted-by line as a trailer, and could the person named in the sign-off truthfully give it, and is every line the project asks for there?"
-  buckets={['Ready to push', 'Fix it first']}
+  context="Un projet exige une signature DCO de la personne qui soumet une modification et demande une ligne de fin Assisted-by quand l’IA a aidé. Chaque élément décrit comment se termine un message de commit fait avec un agent. Vous avez lu le diff avant de signer."
+  title="Le pousser ou le corriger ?" hint="Pour chaque fin, git lit-il la ligne Assisted-by comme ligne de fin, la personne nommée dans la signature pouvait-elle la donner sans mentir, et chaque ligne que demande le projet est-elle là ?"
+  buckets={['Prêt à pousser', 'À corriger d’abord']}
   items={[
-    { text: 'A last paragraph with Assisted-by for the agent and your own Signed-off-by', bucket: 0 },
-    { text: 'Assisted-by in the middle of the body, and your own Signed-off-by as the last paragraph', bucket: 1 },
-    { text: 'A last paragraph with Assisted-by for the agent and a Signed-off-by in the agent\'s name', bucket: 1 },
-    { text: 'A last paragraph with only your own Signed-off-by', bucket: 1 },
-    { text: 'A last paragraph with Assisted-by and the Signed-off-by of the colleague who wrote the brief', bucket: 1 },
+    { text: 'Un dernier paragraphe avec Assisted-by pour l’agent et votre propre Signed-off-by', bucket: 0 },
+    { text: 'Assisted-by au milieu du corps, et votre propre Signed-off-by comme dernier paragraphe', bucket: 1 },
+    { text: 'Un dernier paragraphe avec Assisted-by pour l’agent et un Signed-off-by au nom de l’agent', bucket: 1 },
+    { text: 'Un dernier paragraphe avec seulement votre propre Signed-off-by', bucket: 1 },
+    { text: 'Un dernier paragraphe avec Assisted-by et le Signed-off-by du collègue qui a écrit la consigne', bucket: 1 },
   ]} />
 
 <Choice id="which-ending" phase="review" objective="coding-with-agents/works-in-team/attributes-honestly"
   concepts={['attribution']}
-  context="A project requires a DCO sign-off from the person who submits a change and asks for an Assisted-by trailer when AI helped. An agent wrote the change, and you read the diff and ran the tests."
-  title="Which ending?" hint="Where does git look for trailers, and who can truthfully give a sign-off?"
+  context="Un projet exige une signature DCO de la personne qui soumet une modification et demande une ligne de fin Assisted-by quand l’IA a aidé. Un agent a écrit la modification, et vous avez lu le diff et lancé les tests."
+  title="Quelle fin ?" hint="Où git cherche-t-il les lignes de fin, et qui peut donner une signature sans mentir ?"
   options={[
-    { text: 'An `Assisted-by` line in the body paragraph, and your own `Signed-off-by` as the last paragraph.', why: 'The sign-off is right, and the Assisted-by line is only text there. Git reads trailers from the last paragraph, so tools miss the agent.' },
-    { text: 'A subject line that ends in "(AI-assisted)", and your own `Signed-off-by` as the last paragraph.', why: 'A one-line log shows the note, and a tool that reads trailers does not. The project asked for an Assisted-by trailer.' },
-    { text: 'A last paragraph with `Assisted-by` for the agent and a `Signed-off-by` in the agent\'s name.', why: 'The Assisted-by trailer is in the right place, and the agent cannot certify the DCO. Only a person can sign off.' },
-    { text: 'A last paragraph with `Assisted-by` for the agent and your own `Signed-off-by`.', correct: true },
+    { text: 'Une ligne `Assisted-by` dans le paragraphe du corps, et votre propre `Signed-off-by` comme dernier paragraphe.', why: 'La signature est juste, et la ligne Assisted-by n’est là que du texte. Git lit les lignes de fin dans le dernier paragraphe, donc les outils manquent l’agent.' },
+    { text: 'Une ligne de titre qui se termine par « (AI-assisted) », et votre propre `Signed-off-by` comme dernier paragraphe.', why: 'Un journal d’une ligne montre la mention, et un outil qui lit les lignes de fin ne la voit pas. Le projet demandait une ligne de fin Assisted-by.' },
+    { text: 'Un dernier paragraphe avec `Assisted-by` pour l’agent et un `Signed-off-by` au nom de l’agent.', why: 'La ligne Assisted-by est au bon endroit, et l’agent ne peut pas certifier le DCO. Seule une personne peut signer.' },
+    { text: 'Un dernier paragraphe avec `Assisted-by` pour l’agent et votre propre `Signed-off-by`.', correct: true },
   ]}>
-How does the commit message end?
+Comment se termine le message de commit ?
 </Choice>
 
-<Exercise stretch="Look at the last ten commits in a repository your team uses with agents. Count how many name the agent in a trailer, and how many say so only in the body or not at all.">
-Rewrite the agent's commit message and pull request description from the
-fixture directory, `commit-message.txt` and `pr-description.md`. The
-pull request says only that "the agent fixed the bug" and that the agent
-ran the tests. Write both as you would send them, in a copy of the
-directory. Then run `python3 trailers.py` with your message file as its
-argument to see which trailers git finds.
+<Exercise stretch="Regardez les dix derniers commits d’un dépôt que votre équipe utilise avec des agents. Comptez combien nomment l’agent dans une ligne de fin, et combien le disent seulement dans le corps ou pas du tout.">
+Réécrivez le message de commit et la description de pull request de l’agent
+tirés du dossier de l’exemple, `commit-message.txt` et `pr-description.md`. La
+pull request dit seulement que « l’agent a corrigé le bug » et que l’agent a
+lancé les tests. Écrivez les deux comme vous les enverriez, dans une copie du
+dossier. Lancez ensuite `python3 trailers.py` avec votre fichier de message
+comme argument pour voir quelles lignes de fin git trouve.
 
-Take out the agent's sign-off. If your project asks for a sign-off, write
-your own `Signed-off-by` line in the file, the line `git commit -s` would
-add. In real work, add it only once you have read the change.
-Decide what to do with the date-parsing tidy-up: take it out of this
-change, or name it in both texts.
+Retirez la signature de l’agent. Si votre projet demande une signature, écrivez
+votre propre ligne `Signed-off-by` dans le fichier, celle que `git commit -s`
+ajouterait. Dans un vrai travail, ne l’ajoutez qu’une fois la modification lue.
+Décidez quoi faire du rangement de l’analyse des dates : le retirer de cette
+modification, ou le nommer dans les deux textes.
 
-A good result: the message says what changed and why, and ends with one
-trailer paragraph that `trailers.py` prints in full, `Assisted-by` in the
-form this lesson used or the form your team uses. The pull request says
-what the agent wrote, what you ran yourself and what you saw, and what
-you didn't check. A reviewer could tell from it where to look hardest.
+Un bon résultat : le message dit ce qui a changé et pourquoi, et se termine par
+un paragraphe de lignes de fin que `trailers.py` affiche en entier, avec
+`Assisted-by` sous la forme utilisée dans cette leçon ou sous la forme qu’utilise
+votre équipe. La pull request dit ce que l’agent a écrit, ce que vous avez lancé
+vous-même et ce que vous avez vu, et ce que vous n’avez pas vérifié. Un relecteur
+pourrait y voir où regarder avec le plus d’attention.
 
-Reflect: which sentence in your pull request would you have left out if
-this exercise had not asked for it, and what would the reviewer have
-assumed without it?
+Prenez un moment de recul : quelle phrase de votre pull request auriez-vous omise
+si cet exercice ne l’avait pas demandée, et qu’aurait supposé le relecteur sans
+elle ?
 </Exercise>
 
 <Recap>
-1. Before you ask for review, read every line yourself and split a change that's too large to read. The pull request says what the agent did and what you checked, and the change goes through the same review and CI gates as any other.
-2. Reviewers read the diff, and the description tells them where to look. Answer for the whole change as its author, including the parts the agent wrote.
-3. Put the attribution in a trailer in the last paragraph of the commit message (@Git docs git-interpret-trailers), in the form the project asks for, such as `Assisted-by` or `Co-authored-by`.
-4. In a project that uses the Developer Certificate of Origin, a `Signed-off-by` line certifies it, and only a person can give that. An agent never signs off, and you sign off only after you have read the change (@Linux coding assistants).
+1. Avant de demander une revue, lisez vous-même chaque ligne et découpez une modification trop grosse pour être lue. La pull request dit ce qu’a fait l’agent et ce que vous avez vérifié, et la modification passe par les mêmes barrières de revue et de CI que toute autre.
+2. Les relecteurs lisent le diff, et la description leur dit où regarder. Répondez de toute la modification en tant qu’auteur, y compris des parties que l’agent a écrites.
+3. Mettez l’attribution dans une ligne de fin du dernier paragraphe du message de commit (@Git docs git-interpret-trailers), sous la forme que demande le projet, comme `Assisted-by` ou `Co-authored-by`.
+4. Dans un projet qui utilise le Developer Certificate of Origin, une ligne `Signed-off-by` le certifie, et seule une personne peut la donner. Un agent ne signe jamais, et vous ne signez qu’après avoir lu la modification (@Linux coding assistants).
 </Recap>
 
 <Habit id="read-the-trailer-block">
-Before you push a commit that an agent wrote, read the last paragraph of
-its message. It should name the agent the way your team asks, and it
-shouldn't contain a sign-off that you didn't give.
+Avant de pousser un commit écrit par un agent, lisez le dernier paragraphe de son
+message. Il doit nommer l’agent comme le demande votre équipe, et ne doit pas
+contenir de signature que vous n’avez pas donnée.
 </Habit>

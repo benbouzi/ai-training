@@ -13,7 +13,7 @@ introduces: [agent-reachable-backlog, standards-file]
 assumes:
   - objective: coding-with-agents/works-in-team/follows-team-norms
     lesson: coding-with-agents/attribution-and-review-norms
-    section: before-you-ask-for-a-review
+    section: avant-de-demander-une-revue
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
     section: what-belongs-in-it
