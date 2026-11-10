@@ -1,270 +1,287 @@
 import { Choice, MultiChoice, Sort, Scenario, Pitfall, Exercise, Recap, Match } from '@components/lesson';
 
-A feature request arrives for the to-do program from the first lesson:
-"Add due dates. I want to type `todo add "Renew the domain" due friday`
-and see what is late." The agent could have it working in twenty minutes,
-tests included. In this lesson we decide whether it should. We ask who has
-the problem before we propose a change, and we weigh what the change costs
-to keep against what it costs to write. The request that passes both
-questions gets criteria a stranger could check. The lesson has no code to
-run. The to-do program is a fixture, so treat it as a small internal tool
-that a team of four uses every day.
+Une demande de fonctionnalité arrive pour le programme de liste de tâches de
+la première leçon : « Ajoutez des dates d’échéance. Je veux taper
+`todo add "Renew the domain" due friday` et voir ce qui est en retard. »
+L’agent pourrait la faire fonctionner en vingt minutes, tests compris. Dans
+cette leçon, nous décidons s’il le faut. Nous demandons qui a le problème
+avant de proposer une modification, et nous mettons en balance ce que la
+modification coûte à entretenir et ce qu’elle coûte à écrire. La demande qui
+passe ces deux questions reçoit des critères qu’un inconnu pourrait vérifier.
+La leçon n’a pas de code à lancer. Le programme de liste de tâches est un
+exemple, donc traitez-le comme un petit outil interne qu’une équipe de quatre
+personnes utilise chaque jour.
 
-Cheap implementation moves the engineer's work earlier. When writing the
-code took a week, a bad idea died of its own cost before it shipped. When
-the agent writes it in an hour, the idea ships. The team then finds out
-what it costs over the years of keeping it. Brilliant's skills map for
-coding with AI files this judgment under taste and treats it as a skill
-of its own, separate from getting the agent to produce code (@Brilliant TAS).
-Claude Academy's fluency course for builders makes the same split between
-deciding what to hand over and judging what comes back
-(@Academy ai-fluency-for-builders). The decision is yours, and it comes
-before the brief.
+Une implémentation peu coûteuse avance le travail de l’ingénieur. Quand
+écrire le code prenait une semaine, une mauvaise idée mourait de son propre
+coût avant d’être livrée. Quand l’agent l’écrit en une heure, l’idée est
+livrée. L’équipe découvre ensuite ce qu’elle coûte au fil des années
+d’entretien. La carte des compétences de Brilliant pour le code avec l’IA
+range le jugement sur ce qui vaut la peine d’être construit sous le goût (taste) et en fait une compétence à part,
+distincte de l’art de faire produire du code à l’agent (@Brilliant TAS). Le
+cours de Claude Academy sur la maîtrise de l’IA pour ceux qui construisent
+fait la même séparation entre décider de ce qu’on confie et juger ce qui
+revient (@Academy ai-fluency-for-builders). La décision vous appartient, et
+elle vient avant la consigne.
 
-## Who has the problem
+## Qui a le problème
 
-A request names a solution. Your first job is to find the problem behind
-it and the person who has it. "Add due dates" came from one colleague.
-Ask what happened last week. The answer might be "I forgot to renew the
-domain and the site went down for an hour". That problem costs the team
-an hour of downtime a year, so it deserves a fix. A calendar reminder
-solves it for that one colleague today. So does a line in the team's
-weekly checklist, or a note in the item text (`Renew the domain before
-Oct 1`).
+Une demande nomme une solution. Votre premier travail est de trouver le
+problème qu’elle cache et la personne qui l’a. « Ajoutez des dates
+d’échéance » vient d’un seul collègue. Demandez-lui ce qui s’est passé la
+semaine dernière. La réponse pourrait être : « J’ai oublié de renouveler le
+nom de domaine et le site a été coupé pendant une heure. » Ce problème coûte
+à l’équipe une heure de coupure par an, donc il mérite une solution. Un
+rappel dans l’agenda le résout aujourd’hui pour ce collègue. Une ligne dans
+la liste de contrôle hebdomadaire de l’équipe aussi, ou une note dans le
+texte de l’élément (`Renew the domain before Oct 1`).
 
-Write the alternatives down before you choose, and always include doing
-nothing. Doing nothing has a cost too, and naming it is what makes the
-comparison fair. If the domain lapses once a year and takes an hour to fix,
-the cost of not building is an hour a year and some embarrassment. If four
-people each miss a deadline a week, it is a different decision.
+Écrivez les options avant de choisir, et incluez toujours celle de ne rien
+faire. Ne rien faire a aussi un coût, et c’est en le nommant que la
+comparaison devient juste. Si le nom de domaine expire une fois par an et que
+la réparation prend une heure, le coût de ne pas construire est d’une heure
+par an et d’un peu d’embarras. Si quatre personnes ratent chacune une
+échéance par semaine, la décision est différente.
 
-The comparison turns a wish into a decision. "We could add due dates,
-put the date in the item text, or use the shared calendar. The calendar
-already sends reminders, and the item text works with no change to the
-program, so we start with the item text and revisit when a second person
-asks." Anyone reading that sentence in six months knows what was
-considered and why the team chose as it did. A second request is then
-evidence, and the decision is reopened on evidence instead of on
-enthusiasm.
+La comparaison transforme un souhait en décision. « Nous pourrions ajouter
+des dates d’échéance, mettre la date dans le texte de l’élément ou utiliser
+l’agenda partagé. L’agenda envoie déjà des rappels, et le texte de l’élément
+fonctionne sans modifier le programme, donc nous commençons par le texte de
+l’élément et nous y reviendrons quand une deuxième personne le demandera. »
+Quiconque lit cette phrase dans six mois sait ce qui a été envisagé et
+pourquoi l’équipe a choisi ainsi. Une deuxième demande est alors une preuve,
+et la décision est rouverte sur des preuves, sans céder à l’enthousiasme.
 
-## The cost of keeping the change
+## Le coût de conservation de la modification
 
-The build cost is the part the agent removes. The team still pays the
-cost of keeping the change: every change you accept is code the team reads,
-tests, patches and explains for as long as the program exists. For due dates in the
-to-do program that means a date format to document, a parser to keep
-working, a `list` output that got longer, a test file that grew, and a
-question every new user asks about what `friday` means on a Saturday.
-None of that shows up in the diff the agent hands you. All of it shows
-up in the next year.
+Le coût de construction est la part que l’agent supprime. L’équipe paie
+toujours le coût de conservation de la modification : chaque modification
+acceptée est du code que l’équipe lit, teste, corrige et explique aussi
+longtemps que le programme existe. Pour des dates d’échéance dans le
+programme de liste de tâches, cela veut dire un format de date à documenter,
+un analyseur à maintenir en état de marche, une sortie de `list` plus longue,
+un fichier de tests qui a grossi, et une question que chaque nouvel
+utilisateur pose sur le sens de `friday` un samedi. Rien de tout cela
+n’apparaît dans le diff que l’agent vous remet. Tout cela apparaît l’année
+suivante.
 
-Two more questions belong in the same weighing. What does the change
-displace? A program with `add`, `list` and `done` fits in one screen, and
-its README fits in ten lines. Each feature makes the next one a little
-harder to add and the whole a little harder to hand to a new colleague.
-And what happens if it is never built? Say it out loud. Often the
-answer is "nothing much", and that answer ends the discussion.
+Deux autres questions entrent dans la même pesée. Que remplace la
+modification ? Un programme avec `add`, `list` et `done` tient sur un écran,
+et son README tient en dix lignes. Chaque fonctionnalité rend la suivante un
+peu plus difficile à ajouter, et l’ensemble un peu plus difficile à confier à
+un nouveau collègue. Et que se passe-t-il si elle n’est jamais construite ?
+Dites-le à voix haute. Souvent, la réponse est « pas grand-chose », et cette
+réponse clôt la discussion.
 
-<Pitfall title="A package for one date format">
-An agent was asked for due dates and added `dueparse`, a small package
-that turns phrases like `friday` and `in 3 days` into dates. It worked on
-the first try, and the request was closed the same afternoon. The
-package pulled in two others. The next year, one of them changed its
-license, and the year after that a security advisory named the parser,
-and its single maintainer had stopped answering. The team patched around
-it four times and finally replaced it with a twelve-line function that
-accepts one format, `YYYY-MM-DD`. The rule: a change that takes an hour
-to write and years to own is priced by the years. Ask what the team
-keeps before you accept what the agent wrote.
+<Pitfall title="Un paquet pour un seul format de date">
+On a demandé des dates d’échéance à un agent, et il a ajouté `dueparse`, un
+petit paquet qui transforme des expressions comme `friday` et `in 3 days` en
+dates. Cela a marché du premier coup, et la demande a été close le même
+après-midi. Le paquet en a entraîné deux autres. L’année suivante, l’un d’eux
+a changé de licence, et l’année d’après, un avis de sécurité a cité
+l’analyseur, dont l’unique mainteneur ne répondait plus. L’équipe l’a
+contourné par des correctifs quatre fois, puis l’a remplacé par une fonction
+de douze lignes qui accepte un seul format, `YYYY-MM-DD`. La règle : une
+modification qui prend une heure à écrire et des années à entretenir se
+chiffre en années. Demandez-vous ce que l’équipe garde avant d’accepter ce
+que l’agent a écrit.
 </Pitfall>
 
 <Sort id="once-or-forever" objective="coding-with-agents/specifies-work/judges-worth-building"
   concepts={['what-is-worth-building']}
-  context="A team of four uses a small command-line to-do program, and a coding agent has been asked to add due dates to it, including a package that parses phrases like friday into dates."
-  title="Which costs stay?" hint="For each cost, ask whether it is paid once or paid again in every month the feature exists."
-  buckets={['Paid once, while building', 'Paid for as long as the feature exists']}
+  context="Une équipe de quatre personnes utilise un petit programme de liste de tâches en ligne de commande, et on a demandé à un agent de code d’y ajouter des dates d’échéance, avec un paquet qui transforme des expressions comme friday en dates."
+  title="Quels coûts restent ?" hint="Pour chaque coût, demandez-vous s’il est payé une fois ou payé de nouveau chaque mois où la fonctionnalité existe."
+  buckets={['Payé une fois, pendant la construction', 'Payé tant que la fonctionnalité existe']}
   items={[
-    { text: 'The hour the agent spends writing the date parser and its tests', bucket: 0 },
-    { text: 'Reading the diff before merging it', bucket: 0 },
-    { text: 'Patching the date package when a security advisory names it', bucket: 1 },
-    { text: 'Explaining to each new colleague what "due friday" means on a Saturday', bucket: 1 },
-    { text: 'Writing the first version of the README section on due dates', bucket: 0 },
-    { text: 'Keeping the date tests passing when the operating system updates its time zone data', bucket: 1 },
+    { text: 'L’heure que l’agent passe à écrire l’analyseur de dates et ses tests', bucket: 0 },
+    { text: 'La lecture du diff avant la fusion', bucket: 0 },
+    { text: 'La correction du paquet de dates quand un avis de sécurité le cite', bucket: 1 },
+    { text: 'L’explication à chaque nouveau collègue de ce que veut dire « due friday » un samedi', bucket: 1 },
+    { text: 'La rédaction de la première version de la section du README sur les dates d’échéance', bucket: 0 },
+    { text: 'Le maintien au vert des tests de dates quand le système d’exploitation met à jour ses données de fuseaux horaires', bucket: 1 },
   ]} />
 
-Building as asked is one outcome. The request can also be shrunk to the
-part that solves the stated problem. Or it can be answered without code,
-with a line in the README, a change to a default, or a pointer to a tool
-the team already has. Shrinking is the outcome that gets missed most. The
-colleague who asked for `due friday` and a late list may be served by a
-date that is stored and shown. That version skips weekday parsing
-and leaves out any rule for what late means. It is a dozen lines with one format,
-and it can grow later if the second request ever comes.
+Construire comme demandé est une issue possible. La demande peut aussi être
+réduite à la partie qui résout le problème énoncé. Elle peut encore recevoir
+une réponse sans code : une ligne dans le README, un changement de réglage par
+défaut, ou un renvoi vers un outil que l’équipe a déjà. La réduction est
+l’issue la plus souvent oubliée. Le collègue qui a demandé `due friday` et une
+liste des retards sera peut-être servi par une date enregistrée et affichée.
+Cette version se passe de l’analyse des jours de la semaine et laisse de côté
+toute règle sur ce que veut dire « en retard ». Elle tient en une douzaine de
+lignes avec un seul format, et elle pourra grandir plus tard si la deuxième
+demande arrive un jour.
 
 <Scenario id="undo-request" objective="coding-with-agents/specifies-work/judges-worth-building"
   concepts={['what-is-worth-building']}
-  context="A team of four uses a small command-line to-do program with add, list and done commands, and one colleague sends a feature request for a new command."
-  title="The undo request" hint="Which of the four options gives you a fact you do not have yet, and which ones spend the agent's hour on a guess?"
+  context="Une équipe de quatre personnes utilise un petit programme de liste de tâches en ligne de commande avec les commandes add, list et done, et un collègue envoie une demande de fonctionnalité pour une nouvelle commande."
+  title="La demande d’annulation" hint="Laquelle des quatre options vous donne un fait que vous n’avez pas encore, et lesquelles dépensent l’heure de l’agent sur une supposition ?"
   options={[
-    { text: 'Build it as asked: an `undo` command that reverses the last change, with a history file.', consequence: 'The agent adds a history file, a new command and eleven tests in an hour. The team now owns a history format, a second file next to the list, and a question about what undo does after two changes. The colleague keeps marking the wrong items done, and now undoes them.' },
-    { text: 'Shrink it: a `reopen` command that flips one item back to not done.', consequence: 'The agent writes twelve lines and one test, and there is no history file to keep. The colleague has a way out of the mistake. Nobody has asked yet why the mistake happens twice a week.' },
-    { text: 'Ask which item they typed and which one got marked, before proposing anything.', correct: true, consequence: 'They typed `done 1` and item 2 was marked. That is the bug the first lesson found. Fixing it costs a one-line change and makes the request go away. The colleague did not need undo. They needed `done` to work.' },
-    { text: 'Decline: they can edit `todos.json` by hand, and the README says where it is.', consequence: 'True, and it leaves the colleague hand-editing a file twice a week without anyone asking why. The problem stays and the request comes back from the next person.' },
+    { text: 'La construire comme demandé : une commande `undo` qui annule la dernière modification, avec un fichier d’historique.', consequence: 'L’agent ajoute en une heure un fichier d’historique, une nouvelle commande et onze tests. L’équipe possède maintenant un format d’historique, un second fichier à côté de la liste, et une question sur ce que fait undo après deux modifications. Le collègue continue de marquer le mauvais élément comme fait, et maintenant il annule.' },
+    { text: 'La réduire : une commande `reopen` qui remet un élément à « non fait ».', consequence: 'L’agent écrit douze lignes et un test, et il n’y a pas de fichier d’historique à entretenir. Le collègue a un moyen de réparer l’erreur. Personne n’a encore demandé pourquoi l’erreur arrive deux fois par semaine.' },
+    { text: 'Demander quel élément il a tapé et lequel a été marqué, avant de proposer quoi que ce soit.', correct: true, consequence: 'Il a tapé `done 1` et c’est l’élément 2 qui a été marqué. C’est le bug que la première leçon a trouvé. Le corriger coûte une modification d’une ligne et fait disparaître la demande. Le collègue n’avait pas besoin d’undo. Il avait besoin que `done` fonctionne.' },
+    { text: 'Refuser : il peut modifier `todos.json` à la main, et le README dit où il se trouve.', consequence: 'C’est vrai, et le collègue continue de modifier un fichier à la main deux fois par semaine sans que personne demande pourquoi. Le problème reste, et la demande revient avec la personne suivante.' },
   ]}>
-A colleague who uses their own copy of the to-do program writes: "Please
-add an `undo` command. I keep marking the wrong item done." What do you
-do first?
+Un collègue qui utilise sa propre copie du programme de liste de tâches
+écrit : « Ajoutez une commande `undo`, s’il vous plaît. Je marque sans arrêt
+le mauvais élément comme fait. » Que faites-vous d’abord ?
 </Scenario>
 
 <Choice id="the-export-request" phase="review" objective="coding-with-agents/specifies-work/judges-worth-building"
   concepts={['what-is-worth-building']}
-  context="A team of four uses a small command-line to-do program. The lesson finds the problem behind a request, and the person who has it, before it proposes a change."
-  title="A request for an export" hint="What does the request name: the problem, or one solution to it?"
+  context="Une équipe de quatre personnes utilise un petit programme de liste de tâches en ligne de commande. La leçon cherche le problème derrière une demande, et la personne qui l’a, avant de proposer une modification."
+  title="Une demande d’export" hint="Que nomme la demande : le problème, ou une solution à ce problème ?"
   options={[
-    { text: 'Ask the agent to add a CSV export with every field, so any chart is possible.', why: 'That builds the named solution. You still don\'t know which chart they need, or whether a file is the way to get it.' },
-    { text: 'Add a charting library, so the program can draw the chart itself.', why: 'That adds a dependency the team owns for years, for a problem you haven\'t heard yet.' },
-    { text: 'Decline, because the data is already in a JSON file they can open.', why: 'Declining is one outcome, and you can\'t pick it before you know the problem behind the request.' },
-    { text: 'Ask which chart they want to make, and who reads it, before proposing anything.', correct: true },
+    { text: 'Demander à l’agent un export CSV avec tous les champs, pour que n’importe quel graphique soit possible.', why: 'Cela construit la solution nommée. Vous ne savez toujours pas de quel graphique il a besoin, ni si un fichier est le bon moyen de l’obtenir.' },
+    { text: 'Ajouter une bibliothèque de graphiques, pour que le programme dessine lui-même le graphique.', why: 'Cela ajoute une dépendance que l’équipe entretient pendant des années, pour un problème que vous n’avez pas encore entendu.' },
+    { text: 'Refuser, parce que les données sont déjà dans un fichier JSON qu’il peut ouvrir.', why: 'Le refus est une issue possible, et vous ne pouvez pas la choisir avant de connaître le problème derrière la demande.' },
+    { text: 'Demander quel graphique il veut faire, et qui le lit, avant de proposer quoi que ce soit.', correct: true },
   ]}>
 
-A colleague writes: "Please add a CSV export, so I can make a chart." What
-do you do first?
+Un collègue écrit : « Ajoutez un export CSV, s’il vous plaît, pour que je
+puisse faire un graphique. » Que faites-vous d’abord ?
 
 </Choice>
 
 <Match id="three-outcomes" phase="review" objective="coding-with-agents/specifies-work/judges-worth-building"
   concepts={['what-is-worth-building']}
-  context="The lesson says that building as asked is one outcome of a request. A request can also be shrunk to the part that solves the stated problem, or answered without code."
-  title="Build, shrink or answer?" hint="Does the problem need all of what was asked for, some of it, or none of it?"
-  options={['Build it as asked', 'Shrink it to the part that solves the problem', 'Answer it without code']}
+  context="La leçon dit que construire comme demandé est une issue possible d’une demande. Une demande peut aussi être réduite à la partie qui résout le problème énoncé, ou recevoir une réponse sans code."
+  title="Construire, réduire ou répondre ?" hint="Le problème a-t-il besoin de tout ce qui a été demandé, d’une partie, ou de rien ?"
+  options={['La construire comme demandé', 'La réduire à la partie qui résout le problème', 'Y répondre sans code']}
   rows={[
-    { statement: 'All four colleagues lose track of deadlines, and the request is a stored due date shown in the list.', option: 0, why: 'Does the request match the problem as it is?' },
-    { statement: 'A colleague asks for a full undo history, and the only problem is marking the wrong item done now and then.', option: 1, why: 'Which part of the request solves the problem that was stated?' },
-    { statement: 'A colleague asks how to see only open items, and `todo list --open` already does that but the README never mentions it.', option: 2, why: 'Is anything missing from the program itself?' },
+    { statement: 'Les quatre collègues perdent le fil de leurs échéances, et la demande porte sur une date d’échéance enregistrée et affichée dans la liste.', option: 0, why: 'La demande correspond-elle au problème tel qu’il est ?' },
+    { statement: 'Un collègue demande un historique d’annulation complet, et le seul problème est qu’il marque de temps en temps le mauvais élément comme fait.', option: 1, why: 'Quelle partie de la demande résout le problème énoncé ?' },
+    { statement: 'Un collègue demande comment voir seulement les éléments ouverts, et `todo list --open` le fait déjà, mais le README n’en parle jamais.', option: 2, why: 'Manque-t-il quelque chose dans le programme lui-même ?' },
   ]}
-  rationale="A request names a solution. The problem behind it decides how much of that solution the team builds and owns.">
-Match each request to the outcome that fits its problem.
+  rationale="Une demande nomme une solution. Le problème qu’elle cache décide de la part de cette solution que l’équipe construit et entretient.">
+Associez chaque demande à l’issue qui convient à son problème.
 </Match>
 
-## Writing down what success requires
+## Écrire ce qu’exige la réussite
 
-Suppose due dates pass both questions, in the shrunk form: a date is
-stored with an item and shown in the list. The next job is to write what
-a finished result must do, before the agent starts. These success
-criteria become the agent's target while it works and your checklist when
-it hands back, and they are what stops a plausible result from being
-accepted as a correct one. The brief you learned to write in the
-delegating lesson had done-criteria you could tick. The same rule
-applies here, and code makes it easier to follow, because behavior can be
-observed and stated.
+Supposons que les dates d’échéance passent les deux questions, sous la forme
+réduite : une date est enregistrée avec un élément et affichée dans la liste.
+Le travail suivant consiste à écrire ce qu’un résultat terminé doit faire,
+avant que l’agent commence. Ces critères de réussite deviennent la cible de
+l’agent pendant qu’il travaille et votre liste de contrôle quand il rend la
+main, et ce sont eux qui empêchent d’accepter un résultat plausible comme un
+résultat correct. La consigne que vous avez appris à écrire dans la leçon sur
+la délégation avait des critères d’achèvement (done-criteria) que vous pouviez cocher. La même
+règle s’applique ici, et le code la rend plus facile à suivre, parce qu’un
+comportement peut s’observer et s’énoncer.
 
-A criterion is observable when a person who was not in the conversation
-could check it and get the same yes or no as you. "Due dates work" fails
-that test. `todo add "Pay rent" due 2026-10-01` stores the date, and
-`todo list` shows the item as `1. [ ] Pay rent (due 2026-10-01)` passes
-it. Add the edge cases that matter here: an item added without a date
-shows exactly as before, and `due tomorrow` is rejected with a message
-that names the one accepted format.
+Un critère est observable quand une personne absente de la conversation
+pourrait le vérifier et obtenir le même oui ou le même non que vous. « Les
+dates d’échéance fonctionnent » échoue à ce test. « `todo add "Pay rent" due
+2026-10-01` enregistre la date, et `todo list` affiche l’élément sous la forme
+`1. [ ] Pay rent (due 2026-10-01)` » le réussit. Ajoutez les cas limites qui
+comptent ici : un élément ajouté sans date s’affiche exactement comme avant,
+et `due tomorrow` est refusé avec un message qui nomme le seul format
+accepté.
 
-The criteria also say what must keep working. An agent that optimizes
-for the new behavior trades away anything you did not list. For the
-to-do program that means the existing tests still pass, the `add`,
-`list` and `done` commands still take the same arguments, and a
-`todos.json` written by the old version still loads. The `AGENTS.md`
-in the fixture already fixes some of these, and repeating the ones that
-matter for this change costs one line each.
+Les critères disent aussi ce qui doit continuer de fonctionner. Un agent qui
+optimise le nouveau comportement sacrifie tout ce que vous n’avez pas listé.
+Pour le programme de liste de tâches, cela veut dire que les tests existants
+passent toujours, que les commandes `add`, `list` et `done` prennent toujours
+les mêmes arguments, et qu’un `todos.json` écrit par l’ancienne version se
+charge toujours. Le fichier `AGENTS.md` de l’exemple fixe déjà certaines de
+ces règles, et répéter celles qui comptent pour cette modification coûte une
+ligne chacune.
 
-Last, write the out-of-scope line. The gap between "done" and
-"everything the program could do better" is where the agent makes its
-own choices, and one line closes it. "Not in scope: weekday names,
-relative dates, any notion of overdue, color in the output." The agent
-that would have added `dueparse` reads that line and doesn't.
+Enfin, écrivez la ligne « hors périmètre ». L’écart entre « terminé » et
+« tout ce que le programme pourrait mieux faire » est l’endroit où l’agent
+fait ses propres choix, et une ligne suffit à le fermer. « Hors périmètre :
+noms de jours, dates relatives, toute notion de retard, couleur dans la
+sortie. » L’agent qui aurait ajouté `dueparse` lit cette ligne et s’en
+abstient.
 
 <Choice id="checkable-criterion" objective="coding-with-agents/specifies-work/defines-success"
   concepts={['success-criteria']}
-  context="A coding agent is about to add a stored due date to a small command-line to-do program, and the author is writing the success criteria before the work starts."
-  title="Which criterion can a reviewer check alone?" hint="Could two reviewers who never spoke to the author check this line and reach the same yes or no?"
+  context="Un agent de code s’apprête à ajouter une date d’échéance enregistrée à un petit programme de liste de tâches en ligne de commande, et l’auteur écrit les critères de réussite avant le début du travail."
+  title="Quel critère un relecteur peut-il vérifier seul ?" hint="Deux relecteurs qui n’ont jamais parlé à l’auteur pourraient-ils vérifier cette ligne et arriver au même oui ou au même non ?"
   options={[
-    { text: 'Due dates work well for the team, and the team lead agrees with that when asked.', why: 'Which team member checks what, and how would two of them agree?' },
-    { text: 'A bad date such as `2026-13-45` is handled gracefully by the date parser.', why: 'Handled how? One reviewer expects an error message and another expects the date to be ignored, and both call their reading graceful.' },
-    { text: 'After `todo add "Pay rent" due 2026-10-01`, `todo list` prints `1. [ ] Pay rent (due 2026-10-01)`.', correct: true },
-    { text: 'The date handling code is clean, well commented, and easy to extend when reminders come later.', why: 'Clean is a taste, and easy to extend is a prediction. A reviewer can hold an opinion on either and cannot tick it.' },
+    { text: 'Les dates d’échéance fonctionnent bien pour l’équipe, et le chef d’équipe le confirme quand on le lui demande.', why: 'Quel membre de l’équipe vérifie quoi, et comment deux d’entre eux tomberaient-ils d’accord ?' },
+    { text: 'Une date invalide comme `2026-13-45` est traitée proprement par l’analyseur de dates.', why: 'Traitée comment ? Un relecteur attend un message d’erreur et un autre attend que la date soit ignorée, et tous deux appellent leur lecture « propre ».' },
+    { text: 'Après `todo add "Pay rent" due 2026-10-01`, `todo list` affiche `1. [ ] Pay rent (due 2026-10-01)`.', correct: true },
+    { text: 'Le code de gestion des dates est propre, bien commenté, et facile à étendre quand les rappels viendront.', why: 'Propre est une affaire de goût, et facile à étendre est une prédiction. Un relecteur peut avoir un avis sur l’un comme sur l’autre, sans pouvoir le cocher.' },
   ]}>
-Four lines were proposed as success criteria for the due-date change.
-Which one could a reviewer check without asking the author what it
-means?
+Quatre lignes ont été proposées comme critères de réussite pour la
+modification des dates d’échéance. Laquelle un relecteur pourrait-il
+vérifier sans demander à l’auteur ce qu’elle veut dire ?
 </Choice>
 
 <MultiChoice id="which-lines-belong" objective="coding-with-agents/specifies-work/defines-success"
   concepts={['success-criteria']}
-  context="A coding agent is about to add a stored due date to a small command-line to-do program that has add, list and done commands and a small unittest suite. The author is writing the success criteria."
-  title="Which lines belong in the criteria?" hint="A criterion states what a checker observes when the work is done. Does the line say what to observe, or how to build it, or how to feel about it?"
+  context="Un agent de code s’apprête à ajouter une date d’échéance enregistrée à un petit programme de liste de tâches en ligne de commande, qui a les commandes add, list et done et une petite suite unittest. L’auteur écrit les critères de réussite."
+  title="Quelles lignes ont leur place dans les critères ?" hint="Un critère énonce ce qu’un vérificateur observe quand le travail est terminé. La ligne dit-elle quoi observer, comment construire, ou quoi en penser ?"
   options={[
-    { text: '`todo add "Pay rent" due 2026-10-01` stores the date, and `todo list` shows it after the item text.', correct: true },
-    { text: '`python3 -m unittest -q` passes, and `todo list` prints an item without a due date exactly as it did before.', correct: true },
-    { text: 'Not in scope: weekday names, relative dates, overdue marking, color.', correct: true },
-    { text: 'The agent should make the date handling as flexible as it reasonably can.', why: 'Flexible is a direction, and reasonably is a judgment the agent makes alone. Where does it stop, and how would you know it stopped there?' },
-    { text: 'Store the date as a Unix timestamp in `todos.json` and format it with `strftime` in `list`.', why: 'That describes how to build it. A checker who runs `todo list` sees the same output whichever way the date was stored, so this line is a design choice for the brief and cannot be ticked as a result.' },
+    { text: '`todo add "Pay rent" due 2026-10-01` enregistre la date, et `todo list` l’affiche après le texte de l’élément.', correct: true },
+    { text: '`python3 -m unittest -q` passe, et `todo list` affiche un élément sans date d’échéance exactement comme avant.', correct: true },
+    { text: 'Hors périmètre : noms de jours, dates relatives, marque de retard, couleur.', correct: true },
+    { text: 'L’agent doit rendre la gestion des dates aussi souple que raisonnablement possible.', why: 'Souple est une direction, et raisonnablement est un jugement que l’agent porte seul. Où s’arrête-t-il, et comment sauriez-vous qu’il s’est arrêté là ?' },
+    { text: 'Enregistrer la date sous forme d’horodatage Unix dans `todos.json` et la formater avec `strftime` dans `list`.', why: 'Cela décrit comment construire. Un vérificateur qui lance `todo list` voit la même sortie quelle que soit la façon d’enregistrer la date, donc cette ligne est un choix de conception pour la consigne et ne peut pas être cochée comme résultat.' },
   ]}>
-Which of these lines belong in the success criteria for the due-date
-change?
+Lesquelles de ces lignes ont leur place dans les critères de réussite de la
+modification des dates d’échéance ?
 </MultiChoice>
 
 <Sort id="in-the-criteria-or-not" phase="review" objective="coding-with-agents/specifies-work/defines-success"
   concepts={['success-criteria']}
-  context="An author writes success criteria for a coding agent that will add tags to a small command-line to-do program. The lesson's criteria are observable outcomes that a person other than the author could check, including what must keep working, and they end with an out-of-scope line."
-  title="Does it belong in the criteria?" hint="Could someone other than the author check this line, and is it an outcome or a way to build it?"
-  buckets={['Belongs in the success criteria', 'Leave it out']}
+  context="Un auteur écrit des critères de réussite pour un agent de code qui va ajouter des étiquettes à un petit programme de liste de tâches en ligne de commande. Les critères de la leçon sont des résultats observables qu’une autre personne que l’auteur pourrait vérifier, y compris ce qui doit continuer de fonctionner, et ils se terminent par une ligne « hors périmètre »."
+  title="Cela a-t-il sa place dans les critères ?" hint="Une autre personne que l’auteur pourrait-elle vérifier cette ligne, et s’agit-il d’un résultat ou d’une façon de construire ?"
+  buckets={['A sa place dans les critères de réussite', 'À laisser de côté']}
   items={[
-    { text: 'After `todo tag 2 home`, `todo list` shows `#home` after item 2', bucket: 0 },
-    { text: '`python3 -m unittest -q` passes, and an item without tags prints as it did before', bucket: 0 },
-    { text: 'Not in scope: tag colors, nested tags, renaming a tag', bucket: 0 },
-    { text: 'The tag code is clean and easy to extend', bucket: 1 },
-    { text: 'Store the tags as a comma-separated string in `todos.json`', bucket: 1 },
-    { text: 'Odd tag names are handled gracefully', bucket: 1 },
+    { text: 'Après `todo tag 2 home`, `todo list` affiche `#home` après l’élément 2', bucket: 0 },
+    { text: '`python3 -m unittest -q` passe, et un élément sans étiquette s’affiche comme avant', bucket: 0 },
+    { text: 'Hors périmètre : couleurs d’étiquettes, étiquettes imbriquées, renommage d’une étiquette', bucket: 0 },
+    { text: 'Le code des étiquettes est propre et facile à étendre', bucket: 1 },
+    { text: 'Enregistrer les étiquettes sous forme de chaîne séparée par des virgules dans `todos.json`', bucket: 1 },
+    { text: 'Les noms d’étiquettes bizarres sont traités proprement', bucket: 1 },
   ]} />
 
 <Scenario id="the-extras" phase="review" objective="coding-with-agents/specifies-work/defines-success"
   concepts={['success-criteria']}
-  context="An author gave a coding agent success criteria for due dates in a to-do program, with no out-of-scope line. The branch meets every criterion and also adds weekday names, relative dates and colored output."
-  title="More than was asked for" hint="What filled the gap between done and everything the agent could improve?"
+  context="Un auteur a donné à un agent de code des critères de réussite pour des dates d’échéance dans un programme de liste de tâches, sans ligne « hors périmètre ». La branche satisfait chaque critère et ajoute aussi les noms de jours, les dates relatives et une sortie en couleur."
+  title="Plus que ce qui était demandé" hint="Qu’est-ce qui a rempli l’écart entre « terminé » et tout ce que l’agent pouvait améliorer ?"
   options={[
-    { text: 'Merge it all, because every criterion passes and the extras work.', consequence: 'The team now maintains three features nobody asked for, and the colors break the output a script reads.' },
-    { text: 'Add an out-of-scope line to the criteria, and ask the agent to take the extras out.', correct: true, consequence: 'The branch shrinks to the due dates. The next brief starts with the out-of-scope line, and the agent stops at done.' },
-    { text: 'Revert the whole branch and write the feature by hand instead.', consequence: 'The due dates that met every criterion are lost, and the gap in the criteria is still there for the next task.' },
-    { text: 'Keep the extras and describe them in the README so that people know they exist.', consequence: 'The README documents features nobody decided to own, and the criteria still leave the same gap.' },
+    { text: 'Tout fusionner, puisque chaque critère passe et que les ajouts fonctionnent.', consequence: 'L’équipe entretient maintenant trois fonctionnalités que personne n’a demandées, et les couleurs cassent la sortie qu’un script lit.' },
+    { text: 'Ajouter une ligne « hors périmètre » aux critères, et demander à l’agent de retirer les ajouts.', correct: true, consequence: 'La branche se réduit aux dates d’échéance. La consigne suivante commence par la ligne « hors périmètre », et l’agent s’arrête à « terminé ».' },
+    { text: 'Annuler toute la branche et écrire la fonctionnalité à la main.', consequence: 'Les dates d’échéance qui satisfaisaient chaque critère sont perdues, et l’écart dans les critères est toujours là pour la tâche suivante.' },
+    { text: 'Garder les ajouts et les décrire dans le README pour que les gens sachent qu’ils existent.', consequence: 'Le README documente des fonctionnalités que personne n’a décidé d’entretenir, et les critères laissent toujours le même écart.' },
   ]}>
 
-The agent's branch meets every criterion and adds three features nobody
-asked for. What do you do?
+La branche de l’agent satisfait chaque critère et ajoute trois
+fonctionnalités que personne n’a demandées. Que faites-vous ?
 
 </Scenario>
 
-<Exercise stretch="For the request you shrank, write the one-paragraph note to the person who asked, saying what you are building instead and why.">
-Three requests have come in for the to-do program from the first lesson.
-The first asks for due dates with phrases like `next friday` and `in 3 days`.
-The second asks for done items to be shown in green. The third asks for the list to
-be shared between a laptop and a desktop. For each, write the problem
-behind it and who has it. Name at least one alternative, including doing
-nothing, and then decide: build, shrink or answer without code. Reject or
-shrink at least one. For each request you keep, write the success
-criteria as a short list a stranger could check, including what must
-keep working and a final out-of-scope line. Ten to fifteen lines per
-request is enough. You do this so that the agent's speed never decides
-what your team owns.
+<Exercise stretch="Pour la demande que vous avez réduite, écrivez la note d’un paragraphe à la personne qui l’a faite, pour dire ce que vous construisez à la place et pourquoi.">
+Trois demandes sont arrivées pour le programme de liste de tâches de la
+première leçon. La première demande des dates d’échéance avec des expressions
+comme `next friday` et `in 3 days`. La deuxième demande que les éléments faits
+s’affichent en vert. La troisième demande que la liste soit partagée entre un
+ordinateur portable et un ordinateur de bureau. Pour chacune, écrivez le
+problème qu’elle cache et qui l’a. Nommez au moins une autre option, y compris
+ne rien faire, puis décidez : construire, réduire ou répondre sans code.
+Rejetez ou réduisez-en au moins une. Pour chaque demande que vous gardez,
+écrivez les critères de réussite sous forme d’une courte liste qu’un inconnu
+pourrait vérifier, avec ce qui doit continuer de fonctionner et une ligne
+finale « hors périmètre ». Dix à quinze lignes par demande suffisent. Vous
+faites cela pour que la vitesse de l’agent ne décide jamais de ce que votre
+équipe entretient.
 
-A good result names a concrete problem for each request or says that
-none was found, has a decision with a reason that a colleague could
-disagree with on the facts, and has criteria where every line is a yes
-or no that does not need you in the room. Reflect: for the request that
-cost the most to keep, how much of that cost would have shown in the
-agent's diff?
+Un bon résultat nomme un problème concret pour chaque demande ou dit
+qu’aucun n’a été trouvé, prend une décision avec une raison sur laquelle un
+collègue pourrait être en désaccord sur les faits, et contient des critères
+dont chaque ligne est un oui ou un non qui ne demande pas votre présence.
+Prenez un moment de recul : pour la demande qui coûtait le plus à entretenir,
+quelle part de ce coût se serait vue dans le diff de l’agent ?
 </Exercise>
 
 <Recap>
-1. A request names a solution. Find the problem behind it and the person who has it before you propose a change. Then write the alternatives down, including doing nothing (@Brilliant TAS).
-2. Price a change by what the team owns after it ships, and the hour the agent spends writing it is the smaller part. A dependency for one format is patched for years.
-3. Building as asked is one outcome. A request can also be shrunk to the part that solves the stated problem, or answered without code.
-4. Success criteria are observable outcomes a person other than the author could check, and they include what must keep working (@Academy ai-fluency-for-builders).
-5. End the criteria with an out-of-scope line, because the agent fills the gap between done and everything it could improve with its own choices.
+1. Une demande nomme une solution. Trouvez le problème qu’elle cache et la personne qui l’a avant de proposer une modification. Écrivez ensuite les options, y compris celle de ne rien faire (@Brilliant TAS).
+2. Chiffrez une modification par ce que l’équipe entretient après sa livraison, et l’heure que l’agent passe à l’écrire en est la plus petite partie. Une dépendance pour un seul format se corrige pendant des années.
+3. Construire comme demandé est une issue possible. Une demande peut aussi être réduite à la partie qui résout le problème énoncé, ou recevoir une réponse sans code.
+4. Les critères de réussite sont des résultats observables qu’une autre personne que l’auteur pourrait vérifier, et ils incluent ce qui doit continuer de fonctionner (@Academy ai-fluency-for-builders).
+5. Terminez les critères par une ligne « hors périmètre », parce que l’agent remplit avec ses propres choix l’écart entre « terminé » et tout ce qu’il pourrait améliorer.
 </Recap>

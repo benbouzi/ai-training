@@ -16,7 +16,7 @@ assumes:
     section: changer-une-limite-entre-deux-exécutions
   - objective: coding-with-agents/specifies-work/defines-success
     lesson: coding-with-agents/deciding-what-to-build
-    section: writing-down-what-success-requires
+    section: écrire-ce-quexige-la-réussite
 extends-to:
   - label: Tracer bullets (AI Hero, en anglais)
     href: https://www.aihero.dev/tracer-bullets
