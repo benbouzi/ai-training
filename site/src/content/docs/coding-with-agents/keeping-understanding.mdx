@@ -1,185 +1,199 @@
 import { Choice, MultiChoice, Sort, Scenario, Pitfall, Exercise, Recap, Prompt, Response, Match } from '@components/lesson';
 
-In this lesson we look at what happens to your own understanding of a
-system when an agent writes most of the code. The earlier lessons in this
-course gave the agent a plan to follow, a spec to work from, and small
-increments to land. Each of those keeps the agent's output checkable. This
-lesson is about the other side: the engineer who does the checking has to
-understand the system, and that understanding is easy to lose when
-someone else types every line. We name where it leaks away, and the habits
-that keep it. The page has no code to run. The examples refer to the
-to-do fixture from *Working from a spec in small increments*, and the
-exercise uses that fixture after its increments are merged.
+Dans cette leçon, nous regardons ce que devient votre propre compréhension d’un
+système quand un agent écrit la plus grande partie du code. Les leçons
+précédentes de ce cours ont donné à l’agent un plan à suivre, une
+spécification à partir de laquelle travailler, et de petits incréments à
+livrer. Chacun de ces outils garde le travail de l’agent vérifiable. Cette
+leçon porte sur l’autre côté : l’ingénieur qui vérifie doit comprendre le
+système, et cette compréhension se perd facilement quand quelqu’un d’autre
+tape chaque ligne. Nous nommons les endroits par où elle s’échappe, et les
+habitudes qui la gardent. La page n’a pas de code à lancer. Les exemples
+renvoient à l’exemple de liste de tâches de *Travailler à partir d’une
+spécification, par petits incréments*, et l’exercice utilise cet exemple
+après la fusion de ses incréments.
 
-The claim behind the lesson is plain. You can only review a change to a
-system you understand, and every agent change gets reviewed by you. An
-agent that produces more code than you can hold in your head has moved
-the review from you to nobody. Brilliant's skills map for coding with AI
-lists keeping your understanding and the coherence of the system as a
-skill of its own within incremental development, separate from getting
-the increments to land (@Brilliant INC).
+L’idée de la leçon est simple. Vous ne pouvez relire une modification que dans
+un système que vous comprenez, et chaque modification d’un agent est relue
+par vous. Un agent qui produit plus de code que vous ne pouvez en garder en
+tête a déplacé la revue de vous vers personne. La carte des compétences de
+Brilliant pour le code avec l’IA range le maintien de votre compréhension et de
+la cohérence du système parmi les compétences du développement incrémental, à
+part de la livraison des incréments elle-même (@Brilliant INC).
 
-## Where understanding leaks
+## Par où la compréhension s’échappe
 
-Reading code and writing code build understanding in different ways, and
-an agent removes the second one entirely. Suppose you had written the
-`overdue` command yourself instead of briefing the agent for it. You would
-have decided where today's date comes from, seen a first try fail the test
-with the two `TODO_TODAY` dates, and fixed it. The decision would stay
-with you because you made it. When the agent merges the same increment,
-the code arrives finished. The tests pass. The diff is small and the
-report is confident. Every reason to slow down and read it
-is gone, and so is the moment where the decision would have become yours.
+Lire du code et écrire du code construisent la compréhension de façons
+différentes, et un agent supprime entièrement la seconde. Supposons que vous
+ayez écrit vous-même la commande `overdue` au lieu d’en donner la consigne à
+l’agent. Vous auriez décidé d’où vient la date du jour, vu un premier essai
+échouer au test avec les deux dates `TODO_TODAY`, et vous l’auriez corrigé. La
+décision resterait en vous parce que c’est vous qui l’avez prise. Quand
+l’agent fusionne le même incrément, le code arrive terminé. Les tests passent.
+Le diff est petit et le rapport est sûr de lui. Toutes les raisons de
+ralentir pour le lire ont disparu, et avec elles le moment où la décision
+serait devenue la vôtre.
 
-The leak is slow. After one increment you still know the program, because
-you wrote the spec. After ten, you know the spec and the agent knows the
-code. After a hundred, a colleague asks in a design review why the date is
-stored as a string and you open the transcript to find out. That's the
-point where the objective of this lesson has been missed: you can no
-longer explain how the parts fit or why they were built that way, and the
-agent's next change goes into a system nobody on the team can vouch for.
+La fuite est lente. Après un incrément, vous connaissez encore le programme,
+parce que vous avez écrit la spécification. Après dix, vous connaissez la
+spécification et l’agent connaît le code. Après cent, un collègue vous demande
+en revue de conception pourquoi la date est enregistrée sous forme de chaîne,
+et vous ouvrez la transcription pour le savoir. C’est le moment où l’objectif
+de cette leçon est manqué : vous ne savez plus expliquer comment les parties
+s’assemblent ni pourquoi elles ont été construites ainsi, et la modification
+suivante de l’agent entre dans un système dont personne dans l’équipe ne peut
+se porter garant.
 
 <Choice id="who-reviews-now" objective="coding-with-agents/ships-with-agent/keeps-understanding"
   concepts={['working-increments']}
-  context="An engineer has been landing a feature with a coding agent in small increments over several weeks. Each increment passed its tests and was merged after a quick look at the diff."
-  title="What did the small diffs cost?" hint="Who on the team can say why the code is the way it is, and what does a reviewer need for the next change?"
+  context="Un ingénieur livre une fonctionnalité avec un agent de code par petits incréments depuis plusieurs semaines. Chaque incrément a passé ses tests et a été fusionné après un rapide coup d’œil au diff."
+  title="Qu’ont coûté les petits diffs ?" hint="Qui, dans l’équipe, peut dire pourquoi le code est ainsi, et de quoi un relecteur a-t-il besoin pour la modification suivante ?"
   options={[
-    { text: 'Nothing. Small increments with passing tests are the point, and the engineer can read any part when needed.', why: 'Reading when needed finds what the code does today. It doesn\'t recover why it was built that way, and that\'s what the next review depends on.' },
-    { text: 'Some speed, because increments take longer than one large change would have.', why: 'Increments made each step checkable, and the time went into landing them. The cost here is elsewhere, in what the engineer skipped while landing them.' },
-    { text: 'The engineer\'s own model of the system, because passing tests replaced reading and the reasons stayed with the agent.', correct: true },
-    { text: 'The agent\'s context, which has to be rebuilt each session because the increments were small.', why: 'The agent starts every session from the files on disk in any case. Small increments don\'t change what it has to rebuild.' },
+    { text: 'Rien. De petits incréments avec des tests au vert, c’est le but, et l’ingénieur peut lire n’importe quelle partie au besoin.', why: 'Lire au besoin montre ce que fait le code aujourd’hui. Cela ne retrouve pas pourquoi il a été construit ainsi, et c’est de cela que dépend la revue suivante.' },
+    { text: 'Un peu de vitesse, parce que des incréments prennent plus de temps qu’une seule grosse modification.', why: 'Les incréments ont rendu chaque étape vérifiable, et le temps est allé à leur livraison. Le coût est ailleurs ici, dans ce que l’ingénieur a sauté en les livrant.' },
+    { text: 'La représentation que l’ingénieur se fait du système, parce que les tests ont remplacé la lecture et que les raisons sont restées chez l’agent.', correct: true },
+    { text: 'Le contexte de l’agent, qu’il faut reconstruire à chaque session parce que les incréments étaient petits.', why: 'L’agent part de toute façon des fichiers sur le disque à chaque session. Des incréments petits ne changent pas ce qu’il doit reconstruire.' },
   ]}>
-An engineer merged twenty increments with an agent over a month, each one
-tested and merged after a glance at the diff. Asked in a design review why
-the queue is in-process, the engineer has to look it up. What did the
-small, green diffs cost?
+Un ingénieur a fusionné vingt incréments avec un agent en un mois, chacun
+testé et fusionné après un coup d’œil au diff. Quand on lui demande en revue de
+conception pourquoi la file d’attente tourne dans le processus, l’ingénieur
+doit chercher. Qu’ont coûté les petits diffs au vert ?
 </Choice>
 
-## Read it like a colleague wrote it
+## Le lire comme si un collègue l’avait écrit
 
-The first habit is to read agent-written code with the attention you give
-a colleague's pull request. That's a lower bar than it sounds, because
-you already read colleagues' code for a living. It is also a higher bar
-than most engineers hold agent output to. A colleague's PR doesn't arrive
-with its tests already green and a paragraph saying it is done.
+La première habitude consiste à lire le code écrit par un agent avec
+l’attention que vous accordez à la pull request d’un collègue. L’exigence est
+moins élevée qu’elle n’en a l’air, parce que lire le code de vos collègues fait
+déjà partie de votre métier. Elle est aussi plus élevée que celle que la plupart
+des ingénieurs appliquent au travail d’un agent. La pull request d’un collègue
+n’arrive pas avec ses tests déjà au vert et un paragraphe qui dit qu’elle est
+terminée.
 
-Reading means the whole diff, at the speed it takes to follow it. You stop
-at anything you can't explain, such as a regular expression you can't
-parse or a helper whose name doesn't say what it does. At each stop, you
-have two moves. Ask the agent to explain the line in plain language, and
-ask it for a test that documents the behavior you couldn't see. The test
-stays in the suite after the explanation is forgotten, and it turns a line
-you took on faith into one the suite checks.
+Lire veut dire lire tout le diff, à la vitesse qu’il faut pour le suivre. Vous
+vous arrêtez sur tout ce que vous ne savez pas expliquer, comme une expression
+régulière que vous n’arrivez pas à lire ou une fonction auxiliaire dont le nom
+ne dit pas ce qu’elle fait. À chaque arrêt, vous avez deux gestes. Demandez à
+l’agent d’expliquer la ligne en langage courant, et demandez-lui un test qui
+documente le comportement que vous ne voyiez pas. Le test reste dans la suite
+après que l’explication a été oubliée, et il transforme une ligne acceptée sur
+parole en une ligne que la suite vérifie.
 
 <Prompt model="illustrative" recorded="illustrative">
-In `todo.py`, the `due` command validates the date with
-`datetime.date.fromisoformat(text)`. Explain in plain language which
-inputs that accepts and which it refuses, and add a test that documents
-one accepted and two refused inputs.
+Dans `todo.py`, la commande `due` valide la date avec
+`datetime.date.fromisoformat(text)`. Explique en langage courant quelles
+entrées cela accepte et lesquelles cela refuse, et ajoute un test qui
+documente une entrée acceptée et deux entrées refusées.
 </Prompt>
 <Response>
-`fromisoformat` accepts a date written as four digits, a dash, two digits,
-a dash and two digits, such as `2026-10-01`, and raises `ValueError` for
-`tomorrow` and for `2026-10-1`, where the day has one digit. Which other
-forms it accepts depends on the Python version. On 3.9 and 3.10 the
-dashed form is the only one. From 3.11 it also accepts other ISO 8601
-forms, such as `20261001` without dashes and the week form `2026-W40-4`.
-The spec's `bad date` criterion names `tomorrow`, and the `due` command
-catches the error and prints `bad date: <input>` for it on every version.
-I added `test_due_date_formats` in `test_due.py` with `2026-10-01`
-accepted and `tomorrow` and `2026-10-1` refused, which holds on 3.9 and
-on 3.11. If you want `20261001` refused too, the check needs to be
-stricter than `fromisoformat` alone, and that is a spec decision.
+`fromisoformat` accepte une date écrite sous la forme de quatre chiffres, un
+tiret, deux chiffres, un tiret et deux chiffres, comme `2026-10-01`, et lève
+`ValueError` pour `tomorrow` et pour `2026-10-1`, où le jour n’a qu’un chiffre.
+Les autres formes qu’elle accepte dépendent de la version de Python. En 3.9 et
+3.10, la forme avec tirets est la seule. À partir de 3.11, elle accepte aussi
+d’autres formes ISO 8601, comme `20261001` sans tirets et la forme semaine
+`2026-W40-4`. Le critère `bad date` de la spécification nomme `tomorrow`, et la
+commande `due` intercepte l’erreur et affiche `bad date: <input>` pour cette
+entrée sur toutes les versions. J’ai ajouté `test_due_date_formats` dans
+`test_due.py` avec `2026-10-01` accepté et `tomorrow` et `2026-10-1` refusés,
+ce qui tient en 3.9 comme en 3.11. Si vous voulez que `20261001` soit refusé
+aussi, le contrôle doit être plus strict que `fromisoformat` seul, et c’est une
+décision de spécification.
 </Response>
 
-This exchange is illustrative and shows the form of the question. The
-version difference is the kind of fact you only learn by asking. Had you
-skimmed past the line, the program would accept `20261001` on a
-colleague's newer Python and refuse it on your own older one, and nobody
-would know why. The answer also surfaced a spec question, which forms
-count as a bad date, and that question goes back to the spec before
-anyone writes more code.
+Cet échange est une illustration et montre la forme de la question. La
+différence entre versions est le genre de fait qu’on n’apprend qu’en
+demandant. Si vous aviez survolé la ligne, le programme accepterait `20261001`
+sur le Python plus récent d’un collègue et le refuserait sur votre version plus
+ancienne, et personne ne saurait pourquoi. La réponse a aussi fait apparaître
+une question de spécification, quelles formes comptent comme une mauvaise
+date, et cette question retourne à la spécification avant que quiconque écrive
+davantage de code.
 
-The habit costs minutes per increment, and small increments are what
-make it possible. A diff you can read in one sitting is a diff you can
-understand. The brief that asks for small increments is the same brief
-that keeps your reading possible.
+L’habitude coûte quelques minutes par incrément, et ce sont les petits
+incréments qui la rendent possible. Un diff que vous pouvez lire d’une traite
+est un diff que vous pouvez comprendre. La consigne qui demande de petits
+incréments est la même qui garde votre lecture possible.
 
 <Scenario id="the-line-you-cannot-parse" objective="coding-with-agents/ships-with-agent/keeps-understanding"
   concepts={['working-increments', 'test-driven-change']}
-  context="An engineer reviews an increment a coding agent merged. The tests pass. One line in the diff is a regular expression the engineer cannot read."
-  title="A line you can't read" hint="After each option, could you explain that line in a design review next month, and would the suite catch a change to it?"
+  context="Un ingénieur relit un incrément qu’un agent de code a fusionné. Les tests passent. Une ligne du diff est une expression régulière que l’ingénieur ne sait pas lire."
+  title="Une ligne que vous ne savez pas lire" hint="Après chaque option, pourriez-vous expliquer cette ligne en revue de conception le mois prochain, et la suite détecterait-elle une modification de cette ligne ?"
   options={[
-    { text: 'Approve it. The tests pass, and the agent reads regular expressions better than you do.', consequence: 'The line is in the system and nobody on the team can say what it matches. When a user reports an input it refuses, the fix starts from zero.' },
-    { text: 'Ask the agent to explain the expression in plain language, and to add a test with inputs it accepts and refuses.', correct: true, consequence: 'You can now say what the line does, and a test pins it. The next agent that touches it breaks the test before it breaks a user.' },
-    { text: 'Ask the agent to rewrite it without a regular expression, since you can\'t read those.', consequence: 'The new version is longer and you still haven\'t asked what the input rule is. The rewrite may accept something the old line refused, and no test says which.' },
-    { text: 'Leave a comment above the line that says the agent wrote it.', consequence: 'The comment records authorship, which the commit already did. It says nothing about what the line matches or why.' },
+    { text: 'L’approuver. Les tests passent, et l’agent lit les expressions régulières mieux que vous.', consequence: 'La ligne est dans le système et personne dans l’équipe ne sait dire ce qu’elle reconnaît. Quand un utilisateur signale une entrée qu’elle refuse, la correction part de zéro.' },
+    { text: 'Demander à l’agent d’expliquer l’expression simplement et d’ajouter un test d’entrées acceptées et refusées.', correct: true, consequence: 'Vous savez maintenant dire ce que fait la ligne, et un test la fixe. Le prochain agent qui y touche casse le test avant de gêner un utilisateur.' },
+    { text: 'Demander à l’agent de la réécrire sans expression régulière, puisque vous ne savez pas les lire.', consequence: 'La nouvelle version est plus longue, et vous n’avez toujours pas demandé quelle est la règle d’entrée. La réécriture accepte peut-être ce que l’ancienne ligne refusait, et aucun test ne dit quoi.' },
+    { text: 'Laisser au-dessus de la ligne un commentaire qui dit que l’agent l’a écrite.', consequence: 'Le commentaire indique l’auteur, ce que le commit faisait déjà. Il ne dit rien de ce que reconnaît la ligne ni de sa raison.' },
   ]}>
-The agent's increment for date validation includes a regular expression
-you can't parse. The suite is green. What do you do?
+L’incrément de l’agent pour la validation des dates contient une expression
+régulière que vous ne savez pas lire. La suite est au vert. Que faites-vous ?
 </Scenario>
 
-## Explain it without looking
+## L’expliquer sans regarder
 
-Reading builds understanding, and the check that it worked is whether you
-can explain the system without looking at it. After an increment is merged,
-close the editor and say how the parts fit and why they were built that
-way. For the due-dates feature that's a few sentences: the date is a
-field on the item that some items have and some don't, `render.py` shows
-it when it is present, `store.py` didn't change because the JSON file
-takes whatever keys an item has, and `overdue` reads today from
-`TODO_TODAY` so a test can pick the day. Each of those sentences has a
-"because" in it, and the "because" is the part you lose first.
+La lecture construit la compréhension, et la vérification qu’elle a fonctionné
+consiste à savoir expliquer le système sans le regarder. Après la fusion d’un
+incrément, fermez l’éditeur et dites comment les parties s’assemblent et
+pourquoi elles ont été construites ainsi. Pour la fonctionnalité des dates
+d’échéance, cela tient en quelques phrases : la date est un champ de l’élément
+que certains éléments ont et d’autres non, `render.py` l’affiche quand il est
+présent, `store.py` n’a pas changé parce que le fichier JSON accepte toutes
+les clés qu’un élément a, et `overdue` lit la date du jour dans `TODO_TODAY`
+pour qu’un test puisse choisir le jour. Chacune de ces phrases contient un
+« parce que », et le « parce que » est la partie qu’on perd en premier.
 
-Then open the code and check your explanation against it. Where the code
-does something your explanation didn't predict, you have found a gap in
-your model, and the increment isn't done until you close it. Either the
-code is right and you ask the agent why, or the code is wrong and it
-comes back to the spec. Either way, the review did its job.
+Ouvrez ensuite le code et comparez-y votre explication. Là où le code fait une
+chose que votre explication ne prévoyait pas, vous avez trouvé un trou dans
+votre représentation, et l’incrément n’est pas terminé tant que vous ne l’avez
+pas comblé. Soit le code a raison et vous demandez pourquoi à l’agent, soit le
+code a tort et il retourne à la spécification. Dans les deux cas, la revue a
+fait son travail.
 
-This is also the point to notice when the answer to "why" is a guess.
-"The date is a string because that's what JSON has" is an explanation.
-"The date is a string, I think because the agent chose it" is a decision
-nobody made. A decision nobody made is a decision the next session can
-contradict, and that's the subject of the last section.
+C’est aussi le moment de remarquer quand la réponse à « pourquoi » est une
+supposition. « La date est une chaîne parce que c’est ce que JSON propose » est
+une explication. « La date est une chaîne, je crois parce que l’agent l’a
+choisie » est une décision que personne n’a prise. Une décision que personne
+n’a prise est une décision que la session suivante peut contredire, et c’est le
+sujet de la dernière partie.
 
 <MultiChoice id="explanation-or-recall" objective="coding-with-agents/ships-with-agent/keeps-understanding"
   concepts={['working-increments', 'spec-driven-change']}
-  context="After a coding agent merged an increment, an engineer closes the editor and tries to explain how the new code fits into the program and why it was built that way, before checking the explanation against the code."
-  title="Which of these show understanding?" hint="Does the sentence say why the part is the way it is, in a way you could defend to a colleague who asks a follow-up question?"
+  context="Après la fusion d’un incrément par un agent de code, un ingénieur ferme l’éditeur et essaie d’expliquer comment le nouveau code s’insère dans le programme et pourquoi il a été construit ainsi, avant de comparer l’explication au code."
+  title="Lesquelles montrent une compréhension ?" hint="La phrase dit-elle pourquoi la partie est ainsi, d’une façon que vous pourriez défendre face à un collègue qui pose une question de suivi ?"
   options={[
-    { text: 'The store module didn\'t change, because the JSON writer saves whatever keys an item has.', correct: true },
-    { text: 'The agent said the store module didn\'t need to change, and the tests passed after the increment was merged.', why: 'This repeats the agent\'s report. It says nothing about why the module could stay as it was, so a follow-up question sends you back to the transcript.' },
-    { text: 'Today\'s date comes from an environment variable when it is set, so the overdue test can pick the day.', correct: true },
-    { text: 'The diff for the overdue command touched one file and one test file, as the agent\'s increment list predicted it would.', why: 'The size of the diff is a fact about the change. It doesn\'t say what the command does or why today is read the way it is.' },
+    { text: 'Le module de stockage n’a pas changé, parce que l’écriture JSON enregistre toutes les clés qu’un élément a.', correct: true },
+    { text: 'L’agent a dit que le module de stockage n’avait pas besoin de changer, et les tests passaient après la fusion de l’incrément.', why: 'Cela répète le rapport de l’agent. Cela ne dit rien de la raison pour laquelle le module pouvait rester tel quel, donc une question de suivi vous renvoie à la transcription.' },
+    { text: 'La date du jour vient d’une variable d’environnement quand elle est définie, pour que le test d’overdue puisse choisir le jour.', correct: true },
+    { text: 'Le diff de la commande overdue a touché un fichier et un fichier de test, comme le prévoyait la liste d’incréments de l’agent.', why: 'La taille du diff est un fait sur la modification. Elle ne dit pas ce que fait la commande ni pourquoi la date du jour est lue ainsi.' },
   ]}>
-An engineer explains the due-dates feature from memory. Which of these
-sentences show the understanding this lesson asks for?
+Un ingénieur explique de mémoire la fonctionnalité des dates d’échéance.
+Lesquelles de ces phrases montrent la compréhension que demande cette leçon ?
 </MultiChoice>
 
-## Keep the reasons where the agent reads them
+## Garder les raisons là où l’agent les lit
 
-The third habit is about the team, and about the next session. An
-architecture decision that lives in your head is safe until the next
-person, or the next agent session, makes a different one. A fresh agent
-session starts from the files in the repository and, for some tools, a
-private memory the agent keeps for itself. Claude Code, for example, loads
-`CLAUDE.md` and its auto memory at the start of every conversation
-(@Claude Code memory). The chat transcript of the last session is in
-neither. A decision the session doesn't find in what it loads is one it
-doesn't know about, and one it will reverse when the decision gets in the
-way of the task in front of it.
+La troisième habitude concerne l’équipe, et la session suivante. Une décision
+d’architecture qui n’existe que dans votre tête est en sécurité jusqu’à ce que
+la personne suivante, ou la session d’agent suivante, en prenne une autre. Une
+nouvelle session d’agent part des fichiers du dépôt et, pour certains outils,
+d’une mémoire privée que l’agent garde pour lui-même. Claude Code, par
+exemple, charge `CLAUDE.md` et sa mémoire automatique au début de chaque
+conversation (@Claude Code memory). La transcription de la dernière session
+n’est dans aucun des deux. Une décision que la session ne trouve pas dans ce
+qu’elle charge est une décision qu’elle ignore, et qu’elle renversera quand la
+décision gênera la tâche en cours.
 
-So the reasons go in the repository, in two places that point at each
-other. A decisions folder, often `docs/decisions/`, holds one short file
-per decision: what was decided, why, and what was considered and
-rejected. The project instructions point the agent at it, the way
-[Writing project instructions the agent reads every session](/coding-with-agents/project-instructions/)
-showed. The to-do fixture has an instructions file, and its lines say
-which commands must keep working and that `SPEC.md` is the source of
-truth while a change is in progress.
+Les raisons vont donc dans le dépôt, à deux endroits qui renvoient l’un à
+l’autre. Un dossier de décisions, souvent `docs/decisions/`, contient un court
+fichier par décision : ce qui a été décidé, pourquoi, et ce qui a été envisagé
+puis rejeté. Les instructions du projet y renvoient l’agent, comme l’a montré
+[Écrire les instructions de projet que l’agent lit à chaque session](/coding-with-agents/project-instructions/).
+L’exemple de liste de tâches a un fichier d’instructions, et ses lignes disent
+quelles commandes doivent continuer de fonctionner et que `SPEC.md` est la
+référence pendant qu’une modification est en cours.
 
-A decision file for the fixture is short.
+Un fichier de décision pour l’exemple est court. Le voici, en anglais comme
+les autres fichiers de l’exemple.
 
 ```md
 # Due dates are stored as ISO strings
@@ -204,132 +218,145 @@ A Unix timestamp: harder to read in the file, and the spec shows the date
 in `list` as written. A separate dates file: two files to keep in step.
 ```
 
-And one line in the instructions:
+Le fichier dit que le champ `due` d’un élément est une chaîne `YYYY-MM-DD`,
+analysée au moment de la comparaison et jamais au chargement. La raison : le
+fichier JSON n’a pas de type date, une analyse au chargement rendrait
+impossible le chargement d’un élément avec une mauvaise date, et la
+spécification dit qu’un élément sans champ `due` reste valide. Les options
+envisagées puis rejetées sont un horodatage Unix, plus difficile à lire, et un
+fichier de dates séparé, qu’il faudrait garder synchronisé.
+
+Et une ligne dans les instructions :
 
 ```md
 - Architecture decisions are in `docs/decisions/`. Read the ones that
   touch the files you change, and add one when you make a new decision.
 ```
 
-The instructions line does two jobs. It tells the agent where the reasons
-are, so the next session that touches dates reads why they're strings
-before proposing timestamps. And it tells the agent to write a decision
-down when it makes one, which is how the folder stays current when the
-agent merges most of the increments. You still read every new decision
-file as part of the diff, because a decision the agent wrote and you
-didn't read is back in nobody's head.
+La ligne d’instructions, qui dit où sont les décisions d’architecture, de lire
+celles qui touchent les fichiers modifiés et d’en ajouter une à chaque
+nouvelle décision, fait deux travaux. Elle dit à l’agent où sont les raisons,
+donc la prochaine session qui touche aux dates lit pourquoi ce sont des
+chaînes avant de proposer des horodatages. Et elle dit à l’agent d’écrire une
+décision quand il en prend une, c’est ainsi que le dossier reste à jour quand
+l’agent fusionne la plupart des incréments. Vous lisez quand même chaque
+nouveau fichier de décision dans le diff, parce qu’une décision écrite par
+l’agent et que vous n’avez pas lue n’est de nouveau dans la tête de personne.
 
-<Pitfall title="The decision that only lived in the transcript">
-A team merges a feature over three weeks of agent sessions. In the first
-week the engineer and the agent decide, after some back and forth, to keep
-the job queue in-process, because the deployment has one machine and a
-broker would be a second thing to run. The reasoning is in the transcript
-and nowhere else. In week three a fresh session, asked to make the queue
-survive a restart, adds a broker, its client library, and a configuration
-file, all correctly. The reviewer approves it because it works. The
-decision was reversed by an agent that never knew it had been made. A
-file in `docs/decisions/` and a line in the instructions pointing at it
-would have put the reason in front of that session before it typed a
-line.
+<Pitfall title="La décision qui n’existait que dans la transcription">
+Une équipe fusionne une fonctionnalité au fil de trois semaines de sessions
+d’agent. La première semaine, l’ingénieur et l’agent décident, après quelques
+échanges, de garder la file de tâches dans le processus, parce que le
+déploiement tient sur une seule machine et qu’un courtier de messages
+(broker) serait une seconde chose à faire tourner. Le raisonnement est dans la
+transcription et nulle part ailleurs. La troisième semaine, une nouvelle
+session, à qui l’on demande de faire survivre la file à un redémarrage, ajoute
+un courtier, sa bibliothèque cliente et un fichier de configuration, le tout
+correctement. Le relecteur approuve parce que cela fonctionne. La décision a
+été renversée par un agent qui n’a jamais su qu’elle avait été prise. Un
+fichier dans `docs/decisions/` et une ligne des instructions qui y renvoie
+auraient mis la raison sous les yeux de cette session avant qu’elle tape une
+seule ligne.
 </Pitfall>
 
 <Sort id="where-the-reason-lives" objective="coding-with-agents/ships-with-agent/keeps-understanding"
   concepts={['project-instructions', 'commits-and-prs']}
-  context="A team records why its system is built the way it is. A fresh coding agent session reads the files in the repository, the project instructions file and, for some tools, a private memory the agent keeps, and it never reads the transcript of an earlier session."
-  title="Will the next session see it?" hint="At the start of a fresh session, which of these does the agent read without being told?"
-  buckets={['The next agent session reads it', 'The next agent session never sees it']}
+  context="Une équipe consigne pourquoi son système est construit ainsi. Une nouvelle session d’agent de code lit les fichiers du dépôt, le fichier d’instructions du projet et, pour certains outils, une mémoire privée que l’agent garde, et elle ne lit jamais la transcription d’une session précédente."
+  title="La session suivante le verra-t-elle ?" hint="Au début d’une nouvelle session, lesquels de ces éléments l’agent lit-il sans qu’on le lui dise ?"
+  buckets={['La session d’agent suivante le lit', 'La session d’agent suivante ne le voit jamais']}
   items={[
-    { text: 'A file under docs/decisions/, with the folder named in the project instructions', bucket: 0 },
-    { text: 'The transcript of the session where the decision was made', bucket: 1 },
-    { text: 'A message in the team chat explaining the choice', bucket: 1 },
-    { text: 'The project instructions file itself', bucket: 0 },
-    { text: 'The engineer\'s memory of the discussion', bucket: 1 },
+    { text: 'Un fichier sous docs/decisions/, avec le dossier nommé dans les instructions du projet', bucket: 0 },
+    { text: 'La transcription de la session où la décision a été prise', bucket: 1 },
+    { text: 'Un message dans la messagerie de l’équipe qui explique le choix', bucket: 1 },
+    { text: 'Le fichier d’instructions du projet lui-même', bucket: 0 },
+    { text: 'Le souvenir que l’ingénieur garde de la discussion', bucket: 1 },
   ]} />
 
 <Choice id="passing-tests-and-understanding" phase="review" objective="coding-with-agents/ships-with-agent/keeps-understanding"
   concepts={['working-increments']}
-  context="An engineer works with a coding agent that merges increments with passing tests. The lesson holds that the engineer must keep their own understanding of the code as the agent produces more of it."
-  title="What do passing tests prove?" hint="Do the tests say why the code is built as it is, and who has to answer that question later?"
+  context="Un ingénieur travaille avec un agent de code qui fusionne des incréments dont les tests passent. La leçon soutient que l’ingénieur doit garder sa propre compréhension du code à mesure que l’agent en produit davantage."
+  title="Que prouvent des tests qui passent ?" hint="Les tests disent-ils pourquoi le code est construit ainsi, et qui devra répondre à cette question plus tard ?"
   options={[
-    { text: 'That the increment does what its tests describe, and nothing about whether you understand it.', correct: true },
-    { text: 'That the increment is understood, because the agent could only make it pass by understanding it.', why: 'The agent\'s understanding ends with the session. Yours is what the next review runs on, and a green suite doesn\'t transfer it.' },
-    { text: 'That the increment can be merged without reading the diff, as long as the tests cover the criteria.', why: 'The tests check the criteria. Reading is where you learn how the parts fit, and skipping it skips that.' },
-    { text: 'That the design is sound, because a bad design would have made the tests hard to write.', why: 'Tests pass against many designs, including ones the team would never have chosen. The suite doesn\'t hold an opinion about the design.' },
+    { text: 'Que l’incrément fait ce que décrivent ses tests, et rien sur le fait que vous le compreniez.', correct: true },
+    { text: 'Que l’incrément est compris, parce que l’agent n’a pu le faire passer qu’en le comprenant.', why: 'La compréhension de l’agent s’arrête avec la session. La vôtre est celle sur laquelle tourne la revue suivante, et une suite au vert ne la transmet pas.' },
+    { text: 'Que l’incrément peut être fusionné sans lire le diff, tant que les tests couvrent les critères.', why: 'Les tests vérifient les critères. C’est en lisant que vous apprenez comment les parties s’assemblent, et sauter la lecture fait sauter cet apprentissage.' },
+    { text: 'Que la conception est saine, parce qu’une mauvaise conception aurait rendu les tests difficiles à écrire.', why: 'Des tests passent avec de nombreuses conceptions, y compris celles que l’équipe n’aurait jamais choisies. La suite n’a pas d’avis sur la conception.' },
   ]}>
-An increment is merged and its tests pass. What does the green suite prove
-about your understanding of the system?
+Un incrément est fusionné et ses tests passent. Que prouve la suite au vert
+sur votre compréhension du système ?
 </Choice>
 
 <Scenario id="fresh-session-contradicts" phase="review" objective="coding-with-agents/ships-with-agent/keeps-understanding"
   concepts={['project-instructions']}
-  context="A team keeps architecture decisions and their reasons in the repository. A coding agent proposes a change in a fresh session that reverses one of those decisions."
-  title="The agent proposes to reverse a decision" hint="Where did the team put the reason, and did this session have any way to read it?"
+  context="Une équipe garde ses décisions d’architecture et leurs raisons dans le dépôt. Un agent de code propose, dans une nouvelle session, une modification qui renverse l’une de ces décisions."
+  title="L’agent propose de renverser une décision" hint="Où l’équipe a-t-elle mis la raison, et cette session avait-elle un moyen de la lire ?"
   options={[
-    { text: 'Tell the agent no and move on to the task. It read the repository, so it should know better.', consequence: 'The session backs off. The next session proposes the same change, because nothing in the repository says why it is wrong.' },
-    { text: 'Check whether the decision is in the decisions folder the instructions name. If it isn\'t, write it there now, then answer.', correct: true, consequence: 'The decision file exists from this day on. Later sessions read the reason before they propose a change to it, and when the reason stops holding, the file is where the team revisits it.' },
-    { text: 'Accept the proposal. A fresh look from the agent counts for more than a decision the team made months ago.', consequence: 'The reason the team chose the old design was never weighed, because this session never saw it. The change ships and the old problem comes back.' },
-    { text: 'Paste the old transcript into the session so the agent can read the discussion the team had back then.', consequence: 'This session knows. The next one starts from the files again, and the transcript isn\'t one of them.' },
+    { text: 'Dire non à l’agent et passer à la tâche. Il a lu le dépôt, donc il devrait savoir.', consequence: 'La session recule. La suivante propose la même modification, parce que rien dans le dépôt ne dit pourquoi elle est mauvaise.' },
+    { text: 'Vérifier si la décision est dans le dossier que nomment les instructions. Sinon, l’y écrire maintenant, puis répondre.', correct: true, consequence: 'Le fichier de décision existe à partir de ce jour. Les sessions suivantes lisent la raison avant de proposer de la changer, et quand la raison ne tient plus, le fichier est l’endroit où l’équipe la réexamine.' },
+    { text: 'Accepter la proposition. Un regard neuf de l’agent compte plus qu’une décision prise par l’équipe il y a des mois.', consequence: 'La raison pour laquelle l’équipe avait choisi l’ancienne conception n’a jamais été pesée, parce que cette session ne l’a jamais vue. La modification est livrée et l’ancien problème revient.' },
+    { text: 'Coller l’ancienne transcription dans la session pour que l’agent lise la discussion que l’équipe avait eue.', consequence: 'Cette session sait. La suivante repart des fichiers, et la transcription n’en fait pas partie.' },
   ]}>
-A fresh agent session proposes replacing the in-process queue with a
-broker. You remember the team deciding against a broker months ago. What
-do you do?
+Une nouvelle session d’agent propose de remplacer la file de tâches interne au
+processus par un courtier de messages. Vous vous souvenez que l’équipe a
+décidé contre un courtier il y a des mois. Que faites-vous ?
 </Scenario>
 
 <Match id="what-to-do-when" phase="review" objective="coding-with-agents/ships-with-agent/keeps-understanding"
   concepts={['working-increments', 'project-instructions']}
-  context="An engineer builds a feature with a coding agent in merged increments and wants to keep their own understanding of the system as the agent writes more of it."
-  title="What do you do at this moment?" hint="Is it a line you can't explain, a merged increment, or a decision the next session must know about?"
-  options={['Ask for a plain-language explanation and a test', 'Explain from memory how it fits, then check the code', 'Write the decision and its reason in the decisions folder']}
+  context="Un ingénieur construit une fonctionnalité avec un agent de code par incréments fusionnés et veut garder sa propre compréhension du système à mesure que l’agent en écrit davantage."
+  title="Que faites-vous à ce moment-là ?" hint="S’agit-il d’une ligne que vous ne savez pas expliquer, d’un incrément fusionné, ou d’une décision que la session suivante doit connaître ?"
+  options={['Demander une explication en langage courant et un test', 'Expliquer de mémoire comment cela s’assemble, puis vérifier le code', 'Écrire la décision et sa raison dans le dossier des décisions']}
   rows={[
-    { statement: 'A line in the diff that you can\'t explain', option: 0, why: 'What would let you read this line next time?' },
-    { statement: 'An increment has just been merged', option: 1, why: 'How do you find out whether you can still explain the system?' },
-    { statement: 'The team chose an in-process queue over a broker', option: 2, why: 'Where does the next agent session look before it proposes to change this?' },
+    { statement: 'Une ligne du diff que vous ne savez pas expliquer', option: 0, why: 'Qu’est-ce qui vous permettrait de lire cette ligne la prochaine fois ?' },
+    { statement: 'Un incrément vient d’être fusionné', option: 1, why: 'Comment savoir si vous savez encore expliquer le système ?' },
+    { statement: 'L’équipe a choisi une file de tâches interne au processus, sans courtier', option: 2, why: 'Où la prochaine session d’agent regarde-t-elle avant de proposer de changer cela ?' },
   ]}
-  rationale="Each habit closes one leak: a line you can't read, a system you can no longer explain, or a reason the next session never sees.">
-Match each moment to the habit it calls for.
+  rationale="Chaque habitude ferme une fuite : une ligne que vous ne savez pas lire, un système que vous ne savez plus expliquer, ou une raison que la session suivante ne voit jamais.">
+Associez chaque moment à l’habitude qu’il appelle.
 </Match>
 
 <MultiChoice id="signs-of-a-leak" phase="review" objective="coding-with-agents/ships-with-agent/keeps-understanding"
   concepts={['working-increments']}
-  context="The lesson says understanding leaks when the agent writes the code and the engineer only runs the tests."
-  title="Signs your understanding leaked" hint="Which of these show that the reading stopped, and which are the habits that keep it going?"
+  context="La leçon dit que la compréhension s’échappe quand l’agent écrit le code et que l’ingénieur se contente de lancer les tests."
+  title="Les signes d’une compréhension qui s’échappe" hint="Lesquels montrent que la lecture s’est arrêtée, et lesquels sont les habitudes qui la maintiennent ?"
   options={[
-    { text: 'You have to look up why a module is built the way it is.', correct: true },
-    { text: 'You asked the agent to explain one regular expression.', why: 'Asking for an explanation of a line you can\'t read is the habit that keeps understanding.' },
-    { text: 'You merged the last increments after a glance at the green diff.', correct: true },
-    { text: 'You wrote the reason for a design choice in the decisions folder.', why: 'Writing the reason down keeps it for you and for the next session.' },
+    { text: 'Vous devez chercher pourquoi un module est construit ainsi.', correct: true },
+    { text: 'Vous avez demandé à l’agent d’expliquer une expression régulière.', why: 'Demander l’explication d’une ligne que vous ne savez pas lire est l’habitude qui garde la compréhension.' },
+    { text: 'Vous avez fusionné les derniers incréments après un coup d’œil au diff au vert.', correct: true },
+    { text: 'Vous avez écrit la raison d’un choix de conception dans le dossier des décisions.', why: 'Écrire la raison la garde pour vous et pour la session suivante.' },
   ]}>
 
-Which two of these are signs that your own understanding of the code has
-leaked?
+Lesquels de ces faits, au nombre de deux, sont des signes que votre propre
+compréhension du code s’est échappée ?
 
 </MultiChoice>
 
-<Exercise stretch="Do the same after the third increment, date validation. Then compare your two decision files: does the second one contradict anything in the first, and if so, which of the two changes?">
-Take a copy of the to-do fixture from *Working from a spec in small
-increments* with its first two increments merged, as that lesson and its
-exercise leave it. Close your editor and write down, from memory, how the
-due date flows from the `due` command through the modules to `list` and
-`overdue`, and why the field is optional. Then open the code and mark
-every sentence right or wrong. For each wrong one, ask the agent to
-explain the line you misread. Finish by adding `docs/decisions/` with one
-file recording why dates are stored as strings and parsed late, and a
-line in the fixture's `AGENTS.md` that points the agent at the folder.
-Plan on ten minutes. This is the check you run after any increment you
-didn't type yourself.
+<Exercise stretch="Faites la même chose après le troisième incrément, la validation des dates. Comparez ensuite vos deux fichiers de décision : le second contredit-il quelque chose dans le premier, et si oui, lequel des deux change ?">
+Prenez une copie de l’exemple de liste de tâches de *Travailler à partir d’une
+spécification, par petits incréments* avec ses deux premiers incréments
+fusionnés, comme cette leçon et son exercice le laissent. Fermez votre éditeur
+et écrivez de mémoire comment la date d’échéance circule depuis la commande
+`due`, à travers les modules, jusqu’à `list` et `overdue`, et pourquoi le
+champ est facultatif. Ouvrez ensuite le code et marquez chaque phrase juste ou
+fausse. Pour chaque phrase fausse, demandez à l’agent d’expliquer la ligne que
+vous avez mal lue. Terminez en ajoutant `docs/decisions/` avec un fichier qui
+consigne pourquoi les dates sont enregistrées sous forme de chaînes et
+analysées tard, et une ligne dans le `AGENTS.md` de l’exemple qui renvoie
+l’agent vers ce dossier. Comptez dix minutes. C’est le contrôle à faire après
+tout incrément que vous n’avez pas tapé vous-même.
 
-A good result: your explanation names the field, the three modules and
-which of them changed, and says why an old item without a date still
-loads. At most one sentence needed correcting after you read the code.
-The decision file says what was decided, why, and what was rejected, and
-the `AGENTS.md` line names the folder. Then answer one question: which
-sentence of your explanation would you have got wrong a week from now,
-and is the reason for it written down anywhere the agent reads?
+Un bon résultat : votre explication nomme le champ, les trois modules et ceux
+qui ont changé, et dit pourquoi un ancien élément sans date se charge toujours.
+Au plus une phrase a dû être corrigée après la lecture du code. Le fichier de
+décision dit ce qui a été décidé, pourquoi, et ce qui a été rejeté, et la ligne
+de `AGENTS.md` nomme le dossier. Répondez ensuite à une question : quelle
+phrase de votre explication auriez-vous ratée dans une semaine, et sa raison
+est-elle écrite quelque part où l’agent la lit ?
 </Exercise>
 
 <Recap>
-1. Understanding leaks when the agent writes and you only run the tests. Passing tests check the change and say nothing about whether you can still explain the system (@Brilliant INC).
-2. Read agent code with the attention you give a colleague's pull request. Stop at every line you can't explain, and ask for a plain-language explanation and a test that documents it.
-3. After an increment is merged, explain from memory how the parts fit and why, then check the explanation against the code. A gap is a review finding.
-4. Architecture decisions and their reasons go in a decisions folder in the repository, and the project instructions point the agent at it, so the next session reads the reason before it proposes to reverse the decision.
+1. La compréhension s’échappe quand l’agent écrit et que vous vous contentez de lancer les tests. Des tests qui passent vérifient la modification et ne disent rien du fait que vous sachiez encore expliquer le système (@Brilliant INC).
+2. Lisez le code d’un agent avec l’attention que vous accordez à la pull request d’un collègue. Arrêtez-vous sur chaque ligne que vous ne savez pas expliquer, et demandez une explication en langage courant et un test qui la documente.
+3. Après la fusion d’un incrément, expliquez de mémoire comment les parties s’assemblent et pourquoi, puis comparez l’explication au code. Un trou est une remarque de revue.
+4. Les décisions d’architecture et leurs raisons vont dans un dossier de décisions du dépôt, et les instructions du projet y renvoient l’agent, pour que la session suivante lise la raison avant de proposer de renverser la décision.
 </Recap>
