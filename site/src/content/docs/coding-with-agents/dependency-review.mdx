@@ -1,49 +1,51 @@
 import { Choice, Predict, Sort, Scenario, Pitfall, Exercise, Recap, MultiChoice, Match } from '@components/lesson';
 
-An agent spent an afternoon on a feature and the pull request is green.
-Somewhere in the diff the lockfile grew, because the agent added a package
-for date formatting and a forty-line one for zero-padding numbers, the
-first of which brought in a third it never mentioned, and it bumped the
-router the project already used. The tests pass. In this lesson we decide what to do
-with those four changes. We work out which questions each one gets and how
-much time it deserves, and we end with a written verdict that the next
-person can reuse.
+Un agent a passé un après-midi sur une fonctionnalité, et la pull request est
+au vert. Quelque part dans le diff, le fichier de verrouillage (lockfile) a
+grossi : l’agent a ajouté un paquet pour formater des dates et un autre de
+quarante lignes pour compléter des nombres par des zéros à gauche, le premier a
+entraîné un troisième dont il n’a jamais parlé, et il a fait monter de version
+le routeur que le projet utilisait déjà. Les tests passent. Dans cette leçon,
+nous décidons quoi faire de ces quatre modifications. Nous déterminons quelles
+questions chacune reçoit et combien de temps elle mérite, et nous terminons
+par un verdict écrit que la personne suivante peut réutiliser.
 
-The method here follows the public review guideline for external code that
-the Fuchsia project publishes (@Fuchsia review). It adds a separate
-governance dimension and uses the OpenSSF Scorecard checks as the security
-step. The Fuchsia guideline covers a large codebase with many reviewers.
-Yours covers one pull request, and the agent that wrote it adds another
-package tomorrow if you let it.
+La méthode suit les règles publiques de revue du code externe que publie le
+projet Fuchsia (@Fuchsia review). Elle ajoute une dimension de gouvernance à
+part et utilise les contrôles d’OpenSSF Scorecard comme étape de sécurité. Les
+règles de Fuchsia couvrent un grand code avec de nombreux relecteurs. Les
+vôtres couvrent une pull request, et l’agent qui l’a écrite ajoutera un autre
+paquet demain si vous le laissez faire.
 
-## The lockfile knows what changed
+## Le fichier de verrouillage sait ce qui a changé
 
-Start from the lockfile. The summary says "added `date-fmt` for the due
-dates", and the lockfile says what was installed. In npm,
-`package-lock.json` records every package in the installed tree at its
-exact version, so a later install can build the same tree again, and its
-root entry lists the direct dependencies (@npm package-lock). Everything
-else under `node_modules/` is transitive: a package your code never
-imports, pulled in by one that it does.
+Partez du fichier de verrouillage. Le résumé dit « ajout de `date-fmt` pour les
+dates d’échéance », et le fichier de verrouillage dit ce qui a été installé.
+Dans npm, `package-lock.json` enregistre chaque paquet de l’arbre installé à sa
+version exacte, pour qu’une installation ultérieure puisse reconstruire le même
+arbre, et son entrée racine liste les dépendances directes (@npm package-lock).
+Tout le reste sous `node_modules/` est transitif : un paquet que votre code
+n’importe jamais, entraîné par un paquet qu’il importe.
 
-The fixture for this lesson is a pair of lockfiles under
-`site/examples/coding-with-agents/dependency-review/fixture/` with
-invented package names, so nothing here is a claim about a real project.
-`classify.py` diffs them and labels every change with one of three kinds.
+L’exemple de cette leçon est une paire de fichiers de verrouillage sous
+`site/examples/coding-with-agents/dependency-review/fixture/`, avec des noms de
+paquets inventés, donc rien ici n’affirme quoi que ce soit sur un vrai projet.
+`classify.py` compare les deux fichiers et étiquette chaque modification avec
+l’un de trois types.
 
 <Predict id="predict-classify" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene']}
-  context="The lesson compares two npm lockfiles with a small script that classifies each changed package as a version bump, a new direct dependency or a new transitive one, and prints them sorted by name."
-  title="Predict the classification" hint="Which packages are in the root entry's dependencies and which is not? What happened to the router? The script sorts by name."
+  context="La leçon compare deux fichiers de verrouillage npm avec un petit script qui classe chaque paquet modifié comme montée de version (version bump), nouvelle dépendance directe (new direct) ou nouvelle dépendance transitive (new transitive), et les affiche triés par nom."
+  title="Prévoir la classification" hint="Quels paquets figurent dans les dépendances de l’entrée racine, et lequel n’y figure pas ? Qu’est-il arrivé au routeur ? Le script trie par nom."
   answer={`date-fmt 2.4.0: new direct
 microroute-js 4.19.2 -> 4.21.2: version bump
 week-of-year-iso 1.0.3: new transitive
 zero-pad-left-lite 0.2.1: new direct`} run="coding-with-agents/dependency-review/classify.py">
-The root entry of `package-lock.after.json` lists `date-fmt`,
-`microroute-js` and `zero-pad-left-lite`. `week-of-year-iso` appears only
-as a dependency of `date-fmt`, and `microroute-js` moved from 4.19.2 to
-4.21.2. What does the script print? Type all four lines in the format
-`name version: kind`.
+L’entrée racine de `package-lock.after.json` liste `date-fmt`, `microroute-js`
+et `zero-pad-left-lite`. `week-of-year-iso` n’apparaît que comme dépendance de
+`date-fmt`, et `microroute-js` est passé de 4.19.2 à 4.21.2. Qu’affiche le
+script ? Tapez les quatre lignes au format `name version: kind`, avec les types
+en anglais tels que le script les écrit.
 
 ```python
 for name, version, kind in classify(before, after):
@@ -52,193 +54,200 @@ for name, version, kind in classify(before, after):
 
 </Predict>
 
-Each kind gets a different review. A new direct dependency is an
-architecture decision, while somebody upstream decided the transitive one
-for you, and a version bump changes code you already accepted once.
+Chaque type reçoit une revue différente. Une nouvelle dépendance directe est une
+décision d’architecture, quelqu’un en amont a choisi la dépendance transitive à
+votre place, et une montée de version modifie du code que vous avez déjà
+accepté une fois.
 
-The agent can draw up the list for you. Start a new session, one that
-never saw the feature being built, and ask it to name every package the
-lockfile diff added or bumped and what each one is for. A session that
-didn't make the choices has nothing to defend, so it describes the diff as
-it is (@Claude Code best practices). The list is where the review starts,
-and you write the verdict at the end.
+L’agent peut dresser la liste pour vous. Ouvrez une nouvelle session, qui n’a
+jamais vu la fonctionnalité se construire, et demandez-lui de nommer chaque
+paquet que le diff du fichier de verrouillage a ajouté ou fait monter de
+version, et à quoi sert chacun. Une session qui n’a pas fait les choix n’a rien
+à défendre, donc elle décrit le diff tel qu’il est
+(@Claude Code best practices). La liste est le point de départ de la revue, et
+c’est vous qui écrivez le verdict à la fin.
 
-## Principles that keep the review affordable
+## Des principes qui gardent la revue abordable
 
-A full review of every package would take longer than writing the feature.
-The guideline this method follows starts with principles that decide where
-the time goes.
+Une revue complète de chaque paquet prendrait plus de temps que l’écriture de
+la fonctionnalité. Les règles que suit cette méthode commencent par des
+principes qui décident où va le temps.
 
-**Effort in proportion to risk.** Find the biggest risks the external code
-brings in, and spend the review there. Compare with the risk of writing the
-same thing yourselves. A date formatter on an internal dashboard and a
-token parser on the login path are different reviews, even at the same
-line count.
+**Un effort proportionné au risque.** Trouvez les plus grands risques
+qu’apporte le code externe, et consacrez-y la revue. Comparez avec le risque
+d’écrire la même chose vous-mêmes. Un formateur de dates sur un tableau de bord
+interne et un analyseur de jetons (tokens) sur le chemin de connexion sont des revues
+différentes, même à nombre de lignes égal.
 
-**Count the future cost.** A convenient package today is an upgrade,
-a security advisory, and a maintainer question next year. When a dependency
-solves a general class of problems well, it repays its upkeep every time you
-meet another problem in that class. One that saves you eleven lines does
-not.
+**Compter le coût futur.** Un paquet pratique aujourd’hui, c’est une mise à
+jour, un avis de sécurité et une question au mainteneur l’an prochain. Quand
+une dépendance résout bien toute une classe de problèmes, elle rembourse son
+entretien chaque fois que vous rencontrez un autre problème de cette classe.
+Une dépendance qui vous épargne onze lignes ne le fait pas.
 
-**Be wary of surprises.** Code or an API that confuses you at review time
-confuses every reader after you. Confusion is a cost you pay many times.
+**Se méfier des surprises.** Du code ou une API qui vous déroute au moment de la
+revue déroutera chaque lecteur après vous. La confusion est un coût que vous
+payez de nombreuses fois.
 
-**No default outcome.** The same principles govern "use the library" and
-"write it ourselves". Writing it yourself is also a decision that needs the
-same questions, because your own code needs tests and a maintainer too.
+**Aucune issue par défaut.** Les mêmes principes régissent « utiliser la
+bibliothèque » et « l’écrire nous-mêmes ». L’écrire soi-même est aussi une
+décision qui demande les mêmes questions, parce que votre propre code a lui
+aussi besoin de tests et d’un mainteneur.
 
-**Give back, and share.** Report real findings upstream for the parts you
-use. Write the assessment down where the next team can find it, so that
-nobody reviews the same package twice.
+**Rendre, et partager.** Signalez en amont les vrais problèmes trouvés dans les
+parties que vous utilisez. Écrivez l’évaluation là où l’équipe suivante pourra
+la trouver, pour que personne ne relise deux fois le même paquet.
 
-## Six dimensions, and which of them apply
+## Six dimensions, et celles qui s’appliquent
 
-The review has six dimensions. A change of each kind gets a different
-subset.
+La revue a six dimensions. Chaque type de modification en reçoit un
+sous-ensemble différent.
 
-| Change                    | Architecture | Quality | Governance and support | Security | Code | License            |
-| ------------------------- | ------------ | ------- | ---------------------- | -------- | ---- | ------------------ |
-| New direct dependency     | yes          | yes     | yes                    | yes      | yes  | yes                |
-| New transitive dependency | no           | yes     | yes                    | yes      | yes  | yes                |
-| Version bump              | no           | no      | no                     | yes      | yes  | if license changed |
+| Modification                  | Architecture | Qualité | Gouvernance et support | Sécurité | Code | Licence                  |
+| ----------------------------- | ------------ | ------- | ---------------------- | -------- | ---- | ------------------------ |
+| Nouvelle dépendance directe   | oui          | oui     | oui                    | oui      | oui  | oui                      |
+| Nouvelle dépendance transitive | non         | oui     | oui                    | oui      | oui  | oui                      |
+| Montée de version             | non          | non     | non                    | oui      | oui  | si la licence a changé   |
 
-Architecture applies only to a direct dependency, because that's the one
-you chose. You can't answer whether `week-of-year-iso` fits your
-architecture, and the question you can answer is whether you accept
-`date-fmt` with `week-of-year-iso` attached.
-A version bump skips the questions that were answered when the package
-came in and keeps the two that a new release can change: what the new
-code does, and whether it has a known vulnerability.
+L’architecture ne s’applique qu’à une dépendance directe, parce que c’est celle
+que vous avez choisie. Vous ne pouvez pas répondre à la question de savoir si
+`week-of-year-iso` convient à votre architecture, et la question à laquelle vous
+pouvez répondre est de savoir si vous acceptez `date-fmt` avec `week-of-year-iso`
+attaché. Une montée de version saute les questions auxquelles on a répondu à
+l’arrivée du paquet et garde les deux qu’une nouvelle version peut changer : ce
+que fait le nouveau code, et s’il a une vulnérabilité connue.
 
 <Choice id="bump-dimensions" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene']}
-  context="The lesson reviews a new dependency on six dimensions: architecture, quality, governance and support, security, code, and license."
-  title="Which dimensions for a bump?" hint="Which of the six can change between two releases of the same package?"
+  context="La leçon relit une nouvelle dépendance selon six dimensions : architecture, qualité, gouvernance et support, sécurité, code et licence."
+  title="Quelles dimensions pour une montée de version ?" hint="Lesquelles des six peuvent changer entre deux versions du même paquet ?"
   options={[
-    { text: 'All six. A new version is a new package.', why: 'The project, its maintainers and its place in your architecture did not change between 4.19.2 and 4.21.2. Reviewing them again is repeated work.' },
-    { text: 'Security and code, plus license if it changed.', correct: true },
-    { text: 'None. The agent bumped it to fix a vulnerability, so it is an improvement.', why: 'A fix is the reason for the bump, and the reason is not the review. Read what else changed between the two versions.' },
-    { text: 'Architecture only, because the version constraint in the manifest is an architecture decision.', why: 'The constraint did not change. The installed code did.' },
+    { text: 'Les six. Une nouvelle version est un nouveau paquet.', why: 'Le projet, ses mainteneurs et sa place dans votre architecture n’ont pas changé entre 4.19.2 et 4.21.2. Les relire est un travail répété.' },
+    { text: 'La sécurité et le code, plus la licence si elle a changé.', correct: true },
+    { text: 'Aucune. L’agent l’a fait monter pour corriger une vulnérabilité, donc c’est une amélioration.', why: 'Une correction est la raison de la montée, et la raison n’est pas la revue. Lisez ce qui a changé d’autre entre les deux versions.' },
+    { text: 'L’architecture seulement, parce que la contrainte de version du manifeste est une décision d’architecture.', why: 'La contrainte n’a pas changé. C’est le code installé qui a changé.' },
   ]}>
-The agent bumped `microroute-js` from 4.19.2 to 4.21.2 while it was working
-on something else. Which dimensions do you review?
+L’agent a fait passer `microroute-js` de 4.19.2 à 4.21.2 pendant qu’il
+travaillait sur autre chose. Quelles dimensions relisez-vous ?
 </Choice>
 
-## The questions, per dimension
+## Les questions, par dimension
 
-Each dimension is a short list of questions. Write the answers down, in
-one line each, in the pull request or in an assessment file in the
-repository.
+Chaque dimension est une courte liste de questions. Écrivez les réponses, en une
+ligne chacune, dans la pull request ou dans un fichier d’évaluation du dépôt.
 
-**Architecture.** Check whether the codebase already has something
-similar. Count the sub-dependencies it brings and their size, and compare
-the cost of reviewing and updating them with the benefit. The API has to
-make sense where you call it (from async code, say) on the platform you
-run. Its docs, or the lack of them, tell you about undocumented invariants
-and unsafe code.
+**Architecture.** Vérifiez si le code a déjà quelque chose de semblable. Comptez
+les sous-dépendances qu’elle apporte et leur taille, et comparez le coût de leur
+relecture et de leur mise à jour avec le bénéfice. L’API doit avoir du sens là
+où vous l’appelez (depuis du code asynchrone, par exemple) sur la plateforme où
+vous tournez. Sa documentation, ou son absence, vous renseigne sur les
+invariants non documentés et le code non sûr.
 
-**Quality.** If the maintainer walked away, would we fork it and maintain
-it ourselves? Are there real tests, and do they pass in CI? Duplicated code
-and needless complexity are the two warning signs to look for.
+**Qualité.** Si le mainteneur abandonnait, la forkerions-nous pour la maintenir
+nous-mêmes ? Y a-t-il de vrais tests, et passent-ils dans la CI ? Le code
+dupliqué et la complexité inutile sont les deux signaux d’alerte à chercher.
 
-**Governance and support.** More than one maintainer, or one? Authors with a
-track record? Many packages that depend on it? Recent activity? A
-foundation behind it, or one vendor? A project has **open
-governance** when it is clear how its decisions are made. A project can be
-led by one company and still have open governance, if the decision process
-is written down and followed. A project can have many contributors and no
-open governance, if decisions happen in a room nobody can see into.
+**Gouvernance et support.** Plus d’un mainteneur, ou un seul ? Des auteurs qui
+ont fait leurs preuves ? Beaucoup de paquets qui en dépendent ? Une activité
+récente ? Une fondation derrière, ou un seul éditeur ? Un projet a une
+**gouvernance ouverte** quand on voit clairement comment ses décisions sont
+prises. Un projet peut être dirigé par une seule entreprise et avoir quand même
+une gouvernance ouverte, si le processus de décision est écrit et suivi. Un
+projet peut avoir de nombreux contributeurs sans gouvernance ouverte, si les
+décisions se prennent dans une pièce où personne ne voit.
 
 <Choice id="open-governance" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene']}
-  context="The lesson defines open governance as: it is clear how the project decides what gets merged, and that process is visible to outsiders."
-  title="Which project has open governance?" hint="The definition is about how decisions are made, and whether that is visible."
+  context="La leçon définit la gouvernance ouverte ainsi : on voit clairement comment le projet décide de ce qui est fusionné, et ce processus est visible de l’extérieur."
+  title="Quel projet a une gouvernance ouverte ?" hint="La définition porte sur la façon dont les décisions sont prises, et sur leur visibilité."
   options={[
-    { text: 'A project with two hundred contributors, where the founder merges what they like and there is no written process.', why: 'Contributor count is a support signal. Governance is about how decisions are made, and here that is invisible.' },
-    { text: 'A project where every contributor signs their copyright over to the lead company.', why: 'A copyright assignment is a license question. It says nothing about how the project decides what to merge.' },
-    { text: 'A project under a foundation, which is enough on its own.', why: 'Foundation backing is a support signal and often comes with governance rules, but the definition asks whether the decision process is clear, and a badge does not answer that.' },
-    { text: 'A project led by one company, with a published process for proposals, a named group that decides, and a public record of each decision.', correct: true },
+    { text: 'Un projet avec deux cents contributeurs, où le fondateur fusionne ce qui lui plaît, sans processus écrit.', why: 'Le nombre de contributeurs est un signal de support. La gouvernance porte sur la façon dont les décisions sont prises, et ici, elle est invisible.' },
+    { text: 'Un projet où chaque contributeur cède ses droits d’auteur à l’entreprise qui le dirige.', why: 'Une cession de droits d’auteur est une question de licence. Elle ne dit rien de la façon dont le projet décide de ce qu’il fusionne.' },
+    { text: 'Un projet sous l’égide d’une fondation, ce qui suffit à lui seul.', why: 'Le soutien d’une fondation est un signal de support et s’accompagne souvent de règles de gouvernance, mais la définition demande si le processus de décision est clair, et un label n’y répond pas.' },
+    { text: 'Un projet dirigé par une entreprise, avec un processus de décision publié et une trace publique de chaque décision.', correct: true },
   ]}>
-Which of these projects has open governance, as defined above?
+Lequel de ces projets a une gouvernance ouverte, au sens défini ci-dessus ?
 </Choice>
 
-**Security.** Run the OpenSSF Scorecard checks, covered in the next
-section. Ask the human questions too: does the package run code at install
-or build time, and does it need network access to do its job? In the Rust
-ecosystem, for example, Cargo compiles a `build.rs` file into a program and
-runs that program before it builds the package (@Cargo build scripts).
-That's a normal place for legitimate work and a place a reviewer reads.
+**Sécurité.** Lancez les contrôles d’OpenSSF Scorecard, présentés dans la partie
+suivante. Posez aussi les questions humaines : le paquet exécute-t-il du code à
+l’installation ou au build, et a-t-il besoin d’un accès réseau pour faire son
+travail ? Dans l’écosystème Rust, par exemple, Cargo compile un fichier
+`build.rs` en programme et lance ce programme avant de construire le paquet
+(@Cargo build scripts). C’est un endroit normal pour du travail légitime, et un
+endroit qu’un relecteur lit.
 
-**Code.** Find the risks. Code that needs a specialist to read
-(concurrency, cryptography, network protocols, unsafe blocks), code on your
-critical path, and code that's too complicated to follow all get read.
-The rest gets skipped, and the skip list is below.
+**Code.** Trouvez les risques. Le code qui demande un spécialiste pour être lu
+(concurrence, cryptographie, protocoles réseau, blocs non sûrs), le code sur
+votre chemin critique et le code trop compliqué à suivre sont tous lus. Le reste
+est sauté, et la liste de ce qui est sauté vient plus bas.
 
-**License.** What does it require: attribution, reproducing a notice file,
-sharing changes under the same terms? Does that fit your project's policy?
-A version bump gets this question only if the license changed.
+**Licence.** Qu’exige-t-elle : une attribution, la reproduction d’un fichier de
+mentions, le partage des modifications aux mêmes conditions ? Cela
+convient-il à la politique de votre projet ? Une montée de version ne reçoit
+cette question que si la licence a changé.
 
 <Sort id="question-to-dimension" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene']}
-  context="The lesson reviews a new dependency on six dimensions, each with its own list of questions. Each question here comes from exactly one list."
-  title="Which dimension asks this?" hint="Each question comes from exactly one of the six lists above."
-  buckets={['Architecture', 'Quality', 'Governance and support', 'Security', 'Code', 'License']}
+  context="La leçon relit une nouvelle dépendance selon six dimensions, chacune avec sa propre liste de questions. Chaque question ici vient d’une seule liste."
+  title="Quelle dimension pose cette question ?" hint="Chaque question vient d’une seule des six listes ci-dessus."
+  buckets={['Architecture', 'Qualité', 'Gouvernance et support', 'Sécurité', 'Code', 'Licence']}
   items={[
-    { text: 'Do we already have a library in the codebase that does this?', bucket: 0 },
-    { text: 'Would we fork and maintain it if the maintainer walked away?', bucket: 1 },
-    { text: 'Is it clear how the project decides what gets merged?', bucket: 2 },
-    { text: 'Are release artifacts signed, and are there open vulnerabilities?', bucket: 3 },
-    { text: 'Can we follow the function our request handler calls on every request?', bucket: 4 },
-    { text: 'Must we reproduce a notice file when we ship?', bucket: 5 },
+    { text: 'Avons-nous déjà dans le code une bibliothèque qui fait cela ?', bucket: 0 },
+    { text: 'La forkerions-nous et la maintiendrions-nous si le mainteneur abandonnait ?', bucket: 1 },
+    { text: 'Voit-on clairement comment le projet décide de ce qui est fusionné ?', bucket: 2 },
+    { text: 'Les livrables de version sont-ils signés, et y a-t-il des vulnérabilités ouvertes ?', bucket: 3 },
+    { text: 'Pouvons-nous suivre la fonction que notre gestionnaire de requêtes appelle à chaque requête ?', bucket: 4 },
+    { text: 'Devons-nous reproduire un fichier de mentions quand nous livrons ?', bucket: 5 },
   ]} />
 
-## The security checks
+## Les contrôles de sécurité
 
-OpenSSF Scorecard is an open-source tool that runs a set of automated
-checks against a public repository and scores each check from 0 to 10
-(@OpenSSF Scorecard). It also publishes precomputed results for many
-public projects, so for a well-known package you can look up the result at
-`https://scorecard.dev/viewer/?uri=github.com/<owner>/<repo>` and skip
-running anything. For a package it hasn't scored, install the `scorecard`
-command, export a GitHub token as `GITHUB_AUTH_TOKEN` so the API doesn't
-rate-limit you, and run it against the repository.
+OpenSSF Scorecard est un outil open source qui lance une série de contrôles
+automatiques sur un dépôt public et note chaque contrôle de 0 à 10
+(@OpenSSF Scorecard). Il publie aussi des résultats précalculés pour de
+nombreux projets publics, donc pour un paquet connu, vous pouvez consulter le
+résultat à `https://scorecard.dev/viewer/?uri=github.com/<owner>/<repo>` sans
+rien lancer. Pour un paquet qu’il n’a pas noté, installez la commande
+`scorecard`, exportez un jeton GitHub dans `GITHUB_AUTH_TOKEN` pour que l’API ne
+vous limite pas, et lancez-la sur le dépôt.
 
 ```sh
 scorecard --repo=github.com/<owner>/<repo> --format=json
 ```
 
-The check names below are Scorecard's, as documented at the time of
-writing. The list changes between releases, so read the current docs
-before you quote a name in a review.
+Les noms de contrôles ci-dessous sont ceux de Scorecard, tels que documentés au
+moment de la rédaction. La liste change d’une version à l’autre, donc lisez la
+documentation actuelle avant de citer un nom dans une revue.
 
-| Check                    | What it asks                                                                              |
+| Contrôle                 | Ce qu’il demande                                                                          |
 | ------------------------ | ----------------------------------------------------------------------------------------- |
-| `Vulnerabilities`        | Are there open, unfixed vulnerabilities in the project or its dependencies, in the Open Source Vulnerabilities (OSV) database? |
-| `Dependency-Update-Tool` | Is a tool such as Dependabot or Renovate configured to keep dependencies current?         |
-| `Maintained`             | Has there been commit or issue activity in the last 90 days, and is the repo not archived? |
-| `Binary-Artifacts`       | Does the source repository contain executable binaries nobody can review?                 |
-| `Branch-Protection`      | Are the default and release branches protected?                                           |
-| `Dangerous-Workflow`     | Do the CI workflows contain dangerous patterns, such as checking out untrusted pull-request code or passing untrusted input to a script? |
-| `Code-Review`            | Is human review required before a change is merged?                                       |
-| `Token-Permissions`      | Do workflow tokens follow least privilege?                                                |
-| `Signed-Releases`        | Are release artifacts cryptographically signed, or published with provenance?             |
+| `Vulnerabilities`        | Y a-t-il des vulnérabilités ouvertes et non corrigées dans le projet ou ses dépendances, dans la base Open Source Vulnerabilities (OSV) ? |
+| `Dependency-Update-Tool` | Un outil comme Dependabot ou Renovate est-il configuré pour garder les dépendances à jour ? |
+| `Maintained`             | Y a-t-il eu une activité de commits ou de tickets dans les 90 derniers jours, et le dépôt n’est-il pas archivé ? |
+| `Binary-Artifacts`       | Le dépôt source contient-il des binaires exécutables que personne ne peut relire ?        |
+| `Branch-Protection`      | Les branches par défaut et de publication sont-elles protégées ?                          |
+| `Dangerous-Workflow`     | Les workflows de CI contiennent-ils des motifs dangereux, comme l’extraction de code de pull request non fiable ou le passage d’une entrée non fiable à un script ? |
+| `Code-Review`            | Une revue humaine est-elle exigée avant la fusion d’une modification ?                    |
+| `Token-Permissions`      | Les jetons des workflows suivent-ils le moindre privilège ?                               |
+| `Signed-Releases`        | Les livrables de version sont-ils signés cryptographiquement, ou publiés avec leur provenance ? |
 
-The JSON output has a top-level `score` and a `checks` list. Each check
-has a `name`, a `score` and a one-line `reason`. `triage.py` in the fixture
-directory reads a hand-written result file in that format, for an invented
-project, and prints every check that scored below 5, then a summary line.
+La sortie JSON a un `score` de premier niveau et une liste `checks`. Chaque
+contrôle a un `name`, un `score` et une `reason` d’une ligne. `triage.py`, dans
+le dossier de l’exemple, lit un fichier de résultats écrit à la main dans ce
+format, pour un projet inventé, et affiche chaque contrôle noté en dessous de
+5, puis une ligne de synthèse.
 
 <Predict id="predict-triage" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['supply-chain-risk']}
-  context="The lesson reads an OpenSSF Scorecard result with a script that lists every check scoring under THRESHOLD, which is 5, and then prints a summary line."
-  title="Predict the summary line" hint="Count the checks in the fixture with a score under 5. A score of exactly 5 is not under 5."
+  context="La leçon lit un résultat d’OpenSSF Scorecard avec un script qui liste chaque contrôle noté en dessous de THRESHOLD, qui vaut 5, puis affiche une ligne de synthèse."
+  title="Prévoir la ligne de synthèse" hint="Comptez les contrôles de l’exemple notés en dessous de 5. Une note d’exactement 5 n’est pas en dessous de 5."
   answer="5 of 10 checks below 5" run="coding-with-agents/dependency-review/triage_summary.py">
-The fixture has ten checks. `Binary-Artifacts`, `Dangerous-Workflow`,
-`Token-Permissions` and `Vulnerabilities` score 10. `Pinned-Dependencies`
-scores 5. `Branch-Protection` scores 3, `Code-Review` 2, and
-`Dependency-Update-Tool`, `Maintained` and `Signed-Releases` 0. What's the
-last line the script prints?
+L’exemple a dix contrôles. `Binary-Artifacts`, `Dangerous-Workflow`,
+`Token-Permissions` et `Vulnerabilities` sont notés 10. `Pinned-Dependencies`
+est noté 5. `Branch-Protection` est noté 3, `Code-Review` 2, et
+`Dependency-Update-Tool`, `Maintained` et `Signed-Releases` 0. Quelle est la
+dernière ligne qu’affiche le script, en anglais comme dans le code ci-dessous ?
 
 ```python
 findings = [c for c in result["checks"] if c["score"] < THRESHOLD]
@@ -247,255 +256,263 @@ print(f"{len(findings)} of {len(result['checks'])} checks below {THRESHOLD}")
 
 </Predict>
 
-A low score is a finding, and a finding is a question for you to answer
-before you reach a verdict.
-`Maintained` at 0 for a package that's complete and has had nothing to fix
-means something different from `Maintained` at 0 for a parser that
-handles untrusted input. `Signed-Releases` at 0 tells you to pin the
-version you reviewed and to read how the project publishes a release.
-Write the finding, write what you concluded from it, and move on.
+Une note basse est une remarque, et une remarque est une question à laquelle
+vous répondez avant d’arriver à un verdict. `Maintained` à 0 pour un paquet
+complet qui n’a rien eu à corriger veut dire autre chose que `Maintained` à 0
+pour un analyseur qui traite des entrées non fiables. `Signed-Releases` à 0 vous
+dit de figer la version que vous avez relue et de lire comment le projet publie
+une version. Écrivez la remarque, écrivez ce que vous en avez conclu, et passez
+à la suite.
 
-## Code: what to skip
+## Code : ce qu’on saute
 
-The code dimension is where a review becomes expensive, so it is also
-where the skip list does the most work. Read the risky parts named above.
-Skip everything on this list, and write in the review that you skipped it:
+La dimension du code est celle où une revue devient coûteuse, donc c’est aussi
+là que la liste de ce qu’on saute fait le plus de travail. Lisez les parties
+risquées nommées plus haut. Sautez tout ce qui figure dans cette liste, et
+écrivez dans la revue que vous l’avez sauté :
 
-- Code style. The project's style is the project's business.
-- Code that hasn't changed since somebody on your team reviewed it.
-- Individual test cases. Check that tests exist and run. Don't read them.
-- Platform-specific code for platforms you never build for.
-- Docs that aren't about the API or about how the implementation
-  works.
+- Le style du code. Le style du projet est l’affaire du projet.
+- Le code qui n’a pas changé depuis que quelqu’un de votre équipe l’a relu.
+- Les cas de test un par un. Vérifiez que les tests existent et tournent. Ne
+  les lisez pas.
+- Le code propre à des plateformes pour lesquelles vous ne construisez jamais.
+- La documentation qui ne porte ni sur l’API ni sur le fonctionnement de
+  l’implémentation.
 
-Skipping is a decision, and it is recorded. "Skipped the Windows path
-handling, we build for Linux only" is a line the next reviewer can trust,
-and silence about it is not.
+Sauter est une décision, et elle est consignée. « Gestion des chemins Windows
+sautée, nous ne construisons que pour Linux » est une ligne à laquelle le
+relecteur suivant peut se fier, et le silence sur ce point ne l’est pas.
 
-<Pitfall title="Reading the whole package">
-A reviewer opened the `date-fmt` repository, started at the top of
-`src/`, and after two hours had read the locale tables, the plural rules
-and the test suite for time zones, and had run out of time before reaching
-`format()`, the one function the code calls. The rule: start from the
-function your code calls, follow it as far as your critical path goes,
-and skip the rest on purpose. A reviewer who reads everything doesn't
-reach the part that matters.
+<Pitfall title="Lire tout le paquet">
+Un relecteur a ouvert le dépôt de `date-fmt`, a commencé en haut de `src/`, et
+au bout de deux heures avait lu les tables de paramètres régionaux, les règles
+de pluriel et la suite de tests des fuseaux horaires, et avait manqué de temps
+avant d’arriver à `format()`, la seule fonction qu’appelle le code. La règle :
+partez de la fonction qu’appelle votre code, suivez-la aussi loin que va votre
+chemin critique, et sautez le reste délibérément. Un relecteur qui lit tout
+n’arrive pas jusqu’à la partie qui compte.
 </Pitfall>
 
-## Writing the verdict
+## Écrire le verdict
 
-The output of the review is a verdict with reasons: accept, accept with
-conditions, or reject and write it ourselves. "No default outcome"
-applies to both outcomes here. Rejecting a small package and writing the eleven lines
-yourself is a fine outcome, and so is accepting a large one because it
-solves a class of problems you have more of. A verdict without the reasons
-fails the next person, who can't reuse it.
+Le résultat de la revue est un verdict avec ses raisons : accepter, accepter
+sous conditions, ou rejeter et l’écrire nous-mêmes. « Aucune issue par défaut »
+s’applique ici aux deux issues. Rejeter un petit paquet et écrire soi-même les
+onze lignes est une bonne issue, tout comme accepter un gros paquet parce qu’il
+résout une classe de problèmes que vous rencontrez souvent. Un verdict sans
+raisons fait défaut à la personne suivante, qui ne peut pas le réutiliser.
 
 <Scenario id="one-function-package" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene', 'supply-chain-risk']}
-  context="An agent opened a pull request with four dependency changes, and you are writing a verdict for each change."
-  title="One function, one maintainer" hint="Weigh the future cost against what the package saves you, and remember that writing it yourself is also an outcome."
+  context="Un agent a ouvert une pull request avec quatre modifications de dépendances, et vous écrivez un verdict pour chacune."
+  title="Une fonction, un mainteneur" hint="Mettez en balance le coût futur et ce que le paquet vous épargne, et rappelez-vous que l’écrire vous-même est aussi une issue."
   options={[
-    { text: 'Accept. The tests pass and the function works.', consequence: 'The package stays. In a year an advisory names it, nobody upstream responds, and your team forks a project it never read to fix a function it could have written.' },
-    { text: 'Reject, and ask the agent to replace the import with the same function written in your codebase, with a test.', correct: true, consequence: 'The agent writes fifteen lines and a test. The lockfile shrinks by one entry, and the verdict says why, so the next agent that reaches for the package finds the reason.' },
-    { text: 'Accept with a condition: pin the exact version so nothing changes without a review.', consequence: 'Pinning stops surprise upgrades and does nothing about the unmaintained code you now own. The advisory still arrives, and the pin means you cannot take a fix either.' },
-    { text: 'Reject the whole pull request until the agent removes every dependency it added.', consequence: 'The feature stalls. The other three changes had good answers on every dimension and the rejection throws that review away.' },
+    { text: 'Accepter. Les tests passent et la fonction marche.', consequence: 'Le paquet reste. Dans un an, un avis de sécurité le cite, personne en amont ne répond, et votre équipe forke un projet qu’elle n’a jamais lu pour corriger une fonction qu’elle aurait pu écrire.' },
+    { text: 'Rejeter, et demander à l’agent de remplacer l’import par la même fonction écrite dans votre code, avec un test.', correct: true, consequence: 'L’agent écrit quinze lignes et un test. Le fichier de verrouillage perd une entrée, et le verdict dit pourquoi, donc le prochain agent qui pense à ce paquet trouve la raison.' },
+    { text: 'Accepter sous condition : figer la version exacte pour que rien ne change sans revue.', consequence: 'Figer empêche les mises à jour surprises et ne fait rien contre le code non maintenu dont vous êtes désormais propriétaire. L’avis de sécurité arrive quand même, et le gel vous empêche aussi de prendre une correction.' },
+    { text: 'Rejeter toute la pull request jusqu’à ce que l’agent retire chaque dépendance qu’il a ajoutée.', consequence: 'La fonctionnalité est bloquée. Les trois autres modifications avaient de bonnes réponses sur chaque dimension, et le rejet jette cette revue.' },
   ]}>
-Of the four changes, one is a small package, `zero-pad-left-lite`: about
-forty lines, one maintainer, no tests, last commit three years ago,
-`Maintained` at 0. The agent imported it for one function, which pads a
-number with leading zeros. The function
-works. What's your verdict?
+Des quatre modifications, l’une est un petit paquet, `zero-pad-left-lite` :
+environ quarante lignes, un mainteneur, aucun test, dernier commit il y a trois
+ans, `Maintained` à 0. L’agent l’a importé pour une seule fonction, qui complète
+un nombre par des zéros à gauche. La fonction marche. Quel est votre verdict ?
 </Scenario>
 
 <Match id="classify-the-change" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene']}
-  context="The lesson starts a dependency review from the lockfile diff and classifies each changed package as a new direct dependency, a new transitive dependency or a version bump."
-  title="What kind of change?" hint="Is the package in the root entry, only under another package, or there before with another version?"
-  options={['New direct dependency', 'New transitive dependency', 'Version bump']}
+  context="La leçon commence une revue de dépendances par le diff du fichier de verrouillage et classe chaque paquet modifié comme nouvelle dépendance directe, nouvelle dépendance transitive ou montée de version."
+  title="Quel type de modification ?" hint="Le paquet est-il dans l’entrée racine, seulement sous un autre paquet, ou était-il déjà là avec une autre version ?"
+  options={['Nouvelle dépendance directe', 'Nouvelle dépendance transitive', 'Montée de version']}
   rows={[
-    { statement: 'A package appears in the root entry of the new lockfile, and not in the old one', option: 0, why: 'Who asked for this package: your project, or another package?' },
-    { statement: 'A package appears only as a dependency of a new direct dependency', option: 1, why: 'Which package pulled this one in?' },
-    { statement: 'A package in both lockfiles goes from 3.2.0 to 3.4.1', option: 2, why: 'Was the package there before?' },
+    { statement: 'Un paquet apparaît dans l’entrée racine du nouveau fichier de verrouillage, et pas dans l’ancien', option: 0, why: 'Qui a demandé ce paquet : votre projet, ou un autre paquet ?' },
+    { statement: 'Un paquet n’apparaît que comme dépendance d’une nouvelle dépendance directe', option: 1, why: 'Quel paquet a entraîné celui-ci ?' },
+    { statement: 'Un paquet présent dans les deux fichiers de verrouillage passe de 3.2.0 à 3.4.1', option: 2, why: 'Le paquet était-il déjà là ?' },
   ]}
-  rationale="Each kind of change gets its own review, so the classification comes first.">
-Match each lockfile change to its kind.
+  rationale="Chaque type de modification reçoit sa propre revue, donc la classification vient en premier.">
+Associez chaque modification du fichier de verrouillage à son type.
 </Match>
 
 <Sort id="dimensions-for-a-bump" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene']}
-  context="The lesson reviews a new dependency on six dimensions: architecture, quality, governance and support, security, code, and license. A version bump of a package you already use keeps only some of them."
-  title="Which dimensions does a bump get?" hint="Which dimensions change when only the installed code changes?"
-  buckets={['Review it for a version bump', 'Skip it for a version bump']}
+  context="La leçon relit une nouvelle dépendance selon six dimensions : architecture, qualité, gouvernance et support, sécurité, code et licence. Une montée de version d’un paquet que vous utilisez déjà n’en garde que certaines."
+  title="Quelles dimensions reçoit une montée de version ?" hint="Quelles dimensions changent quand seul le code installé change ?"
+  buckets={['La relire pour une montée de version', 'La sauter pour une montée de version']}
   items={[
-    { text: 'Security', bucket: 0 },
+    { text: 'Sécurité', bucket: 0 },
     { text: 'Code', bucket: 0 },
-    { text: 'License, when the license changed', bucket: 0 },
+    { text: 'Licence, quand la licence a changé', bucket: 0 },
     { text: 'Architecture', bucket: 1 },
-    { text: 'Quality', bucket: 1 },
-    { text: 'Governance and support', bucket: 1 },
+    { text: 'Qualité', bucket: 1 },
+    { text: 'Gouvernance et support', bucket: 1 },
   ]} />
 
 <MultiChoice id="signs-of-open-governance" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene']}
-  context="The lesson says a project has open governance when it is clear how the project decides what gets merged, and that process is visible to outsiders."
-  title="Which signs show open governance?" hint="Which of these show how decisions are made, and which only show size or backing?"
+  context="La leçon dit qu’un projet a une gouvernance ouverte quand on voit clairement comment il décide de ce qui est fusionné, et que ce processus est visible de l’extérieur."
+  title="Quels signes montrent une gouvernance ouverte ?" hint="Lesquels montrent comment les décisions sont prises, et lesquels montrent seulement une taille ou un soutien ?"
   options={[
-    { text: 'A published process for proposing a change.', correct: true },
-    { text: 'More than two hundred contributors.', why: 'Contributor count is a support signal. Many people can contribute to a project whose decisions nobody can see.' },
-    { text: 'A public record of who decided each change, and why.', correct: true },
-    { text: 'A foundation\'s name on the project page.', why: 'A foundation is a support signal, and on its own it doesn\'t show how the project decides.' },
+    { text: 'Un processus publié pour proposer une modification.', correct: true },
+    { text: 'Plus de deux cents contributeurs actifs sur le dépôt principal.', why: 'Le nombre de contributeurs est un signal de support. Beaucoup de gens peuvent contribuer à un projet dont personne ne voit les décisions.' },
+    { text: 'Une trace publique de qui a décidé chaque modification, et pourquoi.', correct: true },
+    { text: 'Le nom d’une grande fondation affiché sur la page d’accueil du projet.', why: 'Une fondation est un signal de support, et à elle seule, elle ne montre pas comment le projet décide.' },
   ]}>
 
-Which two of these are signs of open governance?
+Lesquels de ces éléments, au nombre de deux, sont des signes de gouvernance
+ouverte ?
 
 </MultiChoice>
 
 <Match id="question-and-dimension" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene']}
-  context="The lesson reviews a new dependency on six dimensions, each with its own short list of questions. Each question here comes from exactly one list."
-  title="Which dimension asks it?" hint="Is the question about fit, maintainability, who runs the project, attack surface, what to read, or legal terms?"
-  options={['Architecture', 'Quality', 'Governance and support', 'Security', 'Code', 'License']}
+  context="La leçon relit une nouvelle dépendance selon six dimensions, chacune avec sa propre courte liste de questions. Chaque question ici vient d’une seule liste."
+  title="Quelle dimension la pose ?" hint="La question porte-t-elle sur l’adéquation, la maintenabilité, qui dirige le projet, la surface d’attaque, ce qu’il faut lire, ou les conditions juridiques ?"
+  options={['Architecture', 'Qualité', 'Gouvernance et support', 'Sécurité', 'Code', 'Licence']}
   rows={[
-    { statement: 'How many sub-dependencies does it bring, and how large are they?', option: 0, why: 'Is this about how the package fits into your codebase?' },
-    { statement: 'Are there real tests, and do they pass in CI?', option: 1, why: 'Is this about whether you could maintain it yourselves?' },
-    { statement: 'Is there more than one maintainer?', option: 2, why: 'Is this about who runs the project?' },
-    { statement: 'Does the package run code when it is installed?', option: 3, why: 'Is this about what an attacker could do through it?' },
-    { statement: 'Is there cryptography in it that needs a specialist to read?', option: 4, why: 'Is this about which parts you must read?' },
-    { statement: 'Must we share our changes under the same terms?', option: 5, why: 'Is this about the terms you ship under?' },
+    { statement: 'Combien de sous-dépendances apporte-t-elle, et quelle est leur taille ?', option: 0, why: 'Est-ce une question sur la façon dont le paquet s’insère dans votre code ?' },
+    { statement: 'Y a-t-il de vrais tests, et passent-ils dans la CI ?', option: 1, why: 'Est-ce une question sur votre capacité à la maintenir vous-mêmes ?' },
+    { statement: 'Y a-t-il plus d’un mainteneur ?', option: 2, why: 'Est-ce une question sur qui dirige le projet ?' },
+    { statement: 'Le paquet exécute-t-il du code quand il est installé ?', option: 3, why: 'Est-ce une question sur ce qu’un attaquant pourrait faire à travers lui ?' },
+    { statement: 'Contient-il de la cryptographie qui demande un spécialiste pour être lue ?', option: 4, why: 'Est-ce une question sur les parties que vous devez lire ?' },
+    { statement: 'Devons-nous partager nos modifications aux mêmes conditions ?', option: 5, why: 'Est-ce une question sur les conditions sous lesquelles vous livrez ?' },
   ]}
-  rationale="Each question belongs to one dimension, so the written answers add up to one line per dimension.">
-Match each question to its dimension.
+  rationale="Chaque question appartient à une dimension, donc les réponses écrites font une ligne par dimension.">
+Associez chaque question à sa dimension.
 </Match>
 
 <Choice id="a-low-score" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['supply-chain-risk']}
-  context="The lesson runs or looks up the OpenSSF Scorecard checks for a new dependency before a verdict."
-  title="A zero on one check" hint="Is a low score a verdict, or a question for the review?"
+  context="La leçon lance ou consulte les contrôles d’OpenSSF Scorecard pour une nouvelle dépendance avant un verdict."
+  title="Un zéro sur un contrôle" hint="Une note basse est-elle un verdict, ou une question pour la revue ?"
   options={[
-    { text: 'Reject the package, because a zero on any check fails the review.', why: 'A low score is a question to answer. Some zeros matter for your use and some don\'t.' },
-    { text: 'Write down what unsigned releases mean for you, and how you will check a release instead.', correct: true },
-    { text: 'Ignore it, because the other checks score high enough to make up for it.', why: 'An average hides the one gap. The review answers each low score on its own.' },
-    { text: 'Make no decision until the maintainer signs the releases.', why: 'The pull request needs a verdict now, and the maintainer may never add signing.' },
+    { text: 'Rejeter le paquet, parce qu’un zéro sur n’importe quel contrôle fait échouer la revue.', why: 'Une note basse est une question à laquelle répondre. Certains zéros comptent pour votre usage, d’autres non.' },
+    { text: 'Écrire ce que des versions non signées veulent dire pour vous, et comment vous vérifierez une version à la place.', correct: true },
+    { text: 'L’ignorer, parce que les autres contrôles ont des notes assez hautes pour compenser.', why: 'Une moyenne cache le seul manque. La revue répond à chaque note basse pour elle-même.' },
+    { text: 'Ne prendre aucune décision tant que le mainteneur ne signe pas les versions.', why: 'La pull request a besoin d’un verdict maintenant, et le mainteneur n’ajoutera peut-être jamais de signature.' },
   ]}>
 
-A new dependency scores 0 on `Signed-Releases` and high on the other
-checks. What do you do with the zero?
+Une nouvelle dépendance est notée 0 sur `Signed-Releases` et haut sur les
+autres contrôles. Que faites-vous du zéro ?
 
 </Choice>
 
 <Scenario id="the-trim-package" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['dependency-hygiene', 'supply-chain-risk']}
-  context="A coding agent imported a small package with one maintainer and no tests, for one function that removes spaces from both ends of a string. The language's standard library already has a function that does this."
-  title="A package for one function" hint="What does the team own after this merge, and what does the language already give you?"
+  context="Un agent de code a importé un petit paquet, avec un mainteneur et sans tests, pour une seule fonction qui retire les espaces aux deux extrémités d’une chaîne. La bibliothèque standard du langage a déjà une fonction qui fait cela."
+  title="Un paquet pour une fonction" hint="Que possède l’équipe après cette fusion, et que vous donne déjà le langage ?"
   options={[
-    { text: 'Accept it, because the function works and the tests pass.', consequence: 'The team now patches and reviews a package with one maintainer, for a function it already had.' },
-    { text: 'Accept it, and pin the exact version so that nothing changes without a review.', consequence: 'The pin stops surprise updates. The package with one maintainer is still part of the supply chain.' },
-    { text: 'Reject the whole pull request until every new dependency is gone.', consequence: 'The other changes in the pull request wait for a reason that has nothing to do with them.' },
-    { text: 'Reject the import, and ask for the standard library function with a test.', correct: true, consequence: 'The dependency disappears from the lockfile, and one test covers the behavior.' },
+    { text: 'L’accepter, parce que la fonction marche et que les tests passent.', consequence: 'L’équipe corrige et relit maintenant un paquet à un seul mainteneur, pour une fonction qu’elle avait déjà.' },
+    { text: 'L’accepter, et figer la version exacte pour que rien ne change sans revue.', consequence: 'Le gel empêche les mises à jour surprises. Le paquet à un seul mainteneur fait toujours partie de la chaîne d’approvisionnement.' },
+    { text: 'Rejeter toute la pull request jusqu’à ce que chaque nouvelle dépendance ait disparu.', consequence: 'Les autres modifications de la pull request attendent pour une raison qui ne les concerne pas.' },
+    { text: 'Rejeter l’import, et demander la fonction de la bibliothèque standard avec un test.', correct: true, consequence: 'La dépendance disparaît du fichier de verrouillage, et un test couvre le comportement.' },
   ]}>
 
-The agent imported a package for one function that trims spaces from a
-string. What is your verdict on that change?
+L’agent a importé un paquet pour une fonction qui retire les espaces d’une
+chaîne. Quel est votre verdict sur cette modification ?
 
 </Scenario>
 
-## Automation, and giving back
+## L’automatisation, et rendre la pareille
 
-Automation takes some of this off the reviewer's desk.
+L’automatisation retire une partie de ce travail au relecteur.
 
-Commit the lockfile and install from it in CI. The lockfile is the record
-of what was reviewed, and an install that ignores it can bring in a version
-nobody looked at. A new package in the diff of the lockfile is then the
-event that starts a review, and nothing gets in without one.
+Committez le fichier de verrouillage et installez à partir de lui dans la CI.
+Le fichier de verrouillage est la trace de ce qui a été relu, et une
+installation qui l’ignore peut faire entrer une version que personne n’a
+regardée. Un nouveau paquet dans le diff du fichier de verrouillage est alors
+l’événement qui déclenche une revue, et rien n’entre sans revue.
 
-Set a release age floor. Some package managers can refuse to install a
-version published less than a set time ago. pnpm has a `minimumReleaseAge`
-setting in minutes, applied to direct dependencies and to transitive ones
-alike (@pnpm settings). Its docs give the reason, which is to lower the
-chance of installing a compromised or broken package before anyone has
-noticed. Since pnpm 11 the setting defaults to 1440 minutes, one day
-(@pnpm supply chain) (@pnpm settings). Left at that default, pnpm still
-installs a version younger than the floor when no older one fits the
-requested range. Setting `minimumReleaseAge` yourself makes that install
-fail instead (@pnpm settings). A project that waits a day before
-installing a new version gets the benefit of everyone else's attention
-during that day.
+Fixez un âge minimal de publication. Certains gestionnaires de paquets peuvent
+refuser d’installer une version publiée depuis moins d’une durée donnée. pnpm a
+un réglage `minimumReleaseAge` en minutes, appliqué aux dépendances directes
+comme aux transitives (@pnpm settings). Sa documentation en donne la raison :
+réduire le risque d’installer un paquet compromis ou cassé avant que quelqu’un
+l’ait remarqué. Depuis pnpm 11, le réglage vaut par défaut 1440 minutes, un jour
+(@pnpm supply chain) (@pnpm settings). Laissé à cette valeur par défaut, pnpm
+installe quand même une version plus jeune que le minimum quand aucune version
+plus ancienne ne correspond à l’intervalle demandé. Définir vous-même
+`minimumReleaseAge` fait échouer cette installation à la place (@pnpm settings).
+Un projet qui attend un jour avant d’installer une nouvelle version profite de
+l’attention de tous les autres pendant cette journée.
 
-Record a rejection where the next agent reads it. A verdict in a pull
-request is found by the person who searches for it. A line in the project
-instructions ("pad numbers with `str.zfill`, don't add a package for it")
-is read at the start of every session (@Claude Code memory). The second
-time an agent proposes the same package is the moment to add the line
-(@Academy ai-native-sdlc-playbook). A check that fails the build when the
-lockfile changed and the assessment file didn't turns the review from a
-habit into a gate.
+Consignez un rejet là où le prochain agent le lit. Un verdict dans une pull
+request est trouvé par la personne qui le cherche. Une ligne dans les
+instructions du projet (« complète les nombres avec `str.zfill`, n’ajoute pas de
+paquet pour cela ») est lue au début de chaque session (@Claude Code memory). La
+deuxième fois qu’un agent propose le même paquet est le moment d’ajouter la
+ligne (@Academy ai-native-sdlc-playbook). Un contrôle qui fait échouer le build
+quand le fichier de verrouillage a changé sans que le fichier d’évaluation
+change transforme la revue d’une habitude en barrière.
 
-Giving back is the last principle, and the easiest one to skip. If you
-read the critical path and found a real bug, file it upstream. If you
-found nothing, share your written assessment anyway, in the repository or
-with the project, because it saves the next reviewer the same hour.
+Rendre la pareille est le dernier principe, et le plus facile à oublier. Si
+vous avez lu le chemin critique et trouvé un vrai bug, signalez-le en amont. Si
+vous n’avez rien trouvé, partagez quand même votre évaluation écrite, dans le
+dépôt ou avec le projet, parce qu’elle épargne la même heure au relecteur
+suivant.
 
-<Exercise stretch="Run Scorecard on the same package, read the function your code calls on its critical path, and add a security section and a one-line verdict to the assessment.">
-Pick one dependency a coding agent added to a project you work on, or the
-first direct dependency of any open-source project you use. Write a
-one-page assessment as a Markdown file: the package name and version at the
-top, then one short table per dimension from this lesson, each with the
-questions that apply and a one-line answer to each. End with a verdict:
-accept, accept with conditions, or reject, and the reasons. Writing it once
-makes the next review a diff against this one instead of a fresh start.
+<Exercise stretch="Lancez Scorecard sur le même paquet, lisez la fonction que votre code appelle sur son chemin critique, et ajoutez à l’évaluation une partie sécurité et un verdict d’une ligne.">
+Choisissez une dépendance qu’un agent de code a ajoutée à un projet sur lequel
+vous travaillez, ou la première dépendance directe de n’importe quel projet
+open source que vous utilisez. Écrivez une évaluation d’une page dans un fichier
+Markdown : le nom et la version du paquet en haut, puis un court tableau par
+dimension de cette leçon, chacun avec les questions qui s’appliquent et une
+réponse d’une ligne à chacune. Terminez par un verdict : accepter, accepter sous
+conditions, ou rejeter, avec les raisons. L’écrire une fois fait de la revue
+suivante un diff par rapport à celle-ci au lieu d’un nouveau départ.
 
-A good result fits on one page, answers every question that applies to a
-new direct dependency, names what you skipped and why, and has a verdict
-that a colleague could act on without asking you.
+Un bon résultat tient sur une page, répond à chaque question qui s’applique à
+une nouvelle dépendance directe, nomme ce que vous avez sauté et pourquoi, et a
+un verdict sur lequel un collègue pourrait agir sans vous demander.
 
-Then get a second opinion from an agent. A **skill** is a packaged
-procedure, a Markdown file of instructions that the agent loads when a
-task matches its description. The
-[Customizing agents](/customizing-agents/) course explains how skills
-work, in a later lesson, and you need none of that to install one. The
-`sbp-dependency-audit` skill in the public
+Obtenez ensuite un second avis d’un agent. Une **skill** est une procédure
+empaquetée, un fichier Markdown d’instructions que l’agent charge quand une
+tâche correspond à sa description. Le parcours
+[Personnaliser des agents](/customizing-agents/) explique le fonctionnement des
+skills dans une leçon ultérieure, et vous n’avez besoin de rien de cela pour en
+installer une. La skill `sbp-dependency-audit` du dépôt public
 [`schubergphilis/agents.md`](https://github.com/schubergphilis/agents.md/blob/main/skills/sbp-dependency-audit/SKILL.md)
-repository on GitHub walks an agent through a dependency audit
-(@sbp-dependency-audit). Its first step is an inventory: what the project
-declares, what the code imports, and how many transitive packages the
-lockfile adds. It then sorts each direct dependency into keep, inline,
-replace with something native (the language's standard library or a
-library already in the tree), vendor, or remove. Only a package it decides
-to keep gets a supply-chain risk rating, from maintenance activity, known
-vulnerabilities, trust signals, and what the package does at install or
-run time. Expect an empty risk section for a package it wants to inline.
-The procedure skips that step on purpose. Its last step is an action plan,
-and the skill as written also executes the plan, from removing packages to
-committing the result. Copy the `skills/sbp-dependency-audit/` directory
-into the place your coding agent reads skills from (for Claude Code,
-`.claude/skills/` in the project (@Claude Code skills), and other agents
-document their own directory), start a new session in the project, and ask
-the agent to audit the dependency you reviewed, using that skill. In a
-project you work on, the request is for the report only, with the
-instruction that the agent may not change any file. Running it on a copy
-of the repository is the other safe option.
+sur GitHub guide un agent dans un audit de dépendances (@sbp-dependency-audit).
+Sa première étape est un inventaire : ce que le projet déclare, ce que le code
+importe, et combien de paquets transitifs ajoute le fichier de verrouillage.
+Elle range ensuite chaque dépendance directe entre garder, intégrer au code
+(inline), remplacer par quelque chose de natif (la bibliothèque standard du
+langage ou une bibliothèque déjà dans l’arbre), recopier dans le dépôt (vendor)
+ou retirer. Seul un paquet qu’elle décide de garder reçoit une évaluation du
+risque de chaîne d’approvisionnement, à partir de l’activité de maintenance, des
+vulnérabilités connues, des signaux de confiance, et de ce que fait le paquet à
+l’installation ou à l’exécution. Attendez-vous à une partie risque vide pour un
+paquet qu’elle veut intégrer au code. La procédure saute cette étape
+délibérément. Sa dernière étape est un plan d’action, et la skill telle qu’elle
+est écrite exécute aussi ce plan, de la suppression de paquets jusqu’au commit
+du résultat. Copiez le dossier `skills/sbp-dependency-audit/` à l’endroit où
+votre agent de code lit ses skills (pour Claude Code, `.claude/skills/` dans le
+projet (@Claude Code skills), et les autres agents documentent leur propre
+dossier), ouvrez une nouvelle session dans le projet, et demandez à l’agent
+d’auditer la dépendance que vous avez relue avec cette skill. Dans un projet sur
+lequel vous travaillez, demandez seulement le rapport, avec l’instruction que
+l’agent ne doit modifier aucun fichier. Le lancer sur une copie du dépôt est
+l’autre option sûre.
 
-Compare its report with your page, and write the comparison under your
-verdict. Note which dimension took you the longest to answer, and whether
-the time matched the risk. Which of the six dimensions did the agent cover,
-and which did it skip or fold into another? Which questions did it answer
-differently from you, and which of you was right? A claim about the last
-release or the number of maintainers is a fact you can check at the source.
-The agent's five categories and your three verdicts are different lists, so
-first translate its category into accept, accept with conditions, or
-reject. Then, where that differs from your verdict, write down why. Last,
-name what you would still check by hand after reading the agent's report.
+Comparez son rapport avec votre page, et écrivez la comparaison sous votre
+verdict. Notez quelle dimension vous a pris le plus de temps, et si ce temps
+correspondait au risque. Lesquelles des six dimensions l’agent a-t-il couvertes,
+et lesquelles a-t-il sautées ou fondues dans une autre ? À quelles questions
+a-t-il répondu autrement que vous, et qui de vous deux avait raison ? Une
+affirmation sur la dernière version ou le nombre de mainteneurs est un fait que
+vous pouvez vérifier à la source. Les cinq catégories de l’agent et vos trois
+verdicts sont des listes différentes, donc traduisez d’abord sa catégorie en
+accepter, accepter sous conditions ou rejeter. Puis, là où cela diffère de votre
+verdict, écrivez pourquoi. Enfin, nommez ce que vous vérifieriez encore à la
+main après avoir lu le rapport de l’agent.
 
-Reflect: which parts of a dependency review can you hand to an agent from
-now on, and which parts stay with you?
+Prenez un moment de recul : quelles parties d’une revue de dépendances
+pouvez-vous désormais confier à un agent, et lesquelles restent les vôtres ?
 </Exercise>
 
 <Recap>
-1. Start from the lockfile diff, and classify each change as a new direct dependency, a new transitive dependency, or a version bump. Each kind gets a different review.
-2. Spend review effort in proportion to risk, count the future cost, be wary of surprises, and apply the same principles to writing it yourself, because the review has no default outcome.
-3. The dimensions are architecture (direct dependencies only), quality, governance and support, security, code, and license. A version bump keeps only security, code, and license if it changed.
-4. Run or look up the OpenSSF Scorecard checks, and treat a low score as a question to answer in writing.
-5. Read the code on your critical path and the parts that need a specialist. Skip style, unchanged reviewed code, individual tests, foreign platforms and non-API documentation, and say that you skipped them.
-6. Commit the lockfile, consider a release age floor, write the verdict with reasons, record a rejection in the project instructions, and give real findings back upstream.
+1. Partez du diff du fichier de verrouillage, et classez chaque modification comme nouvelle dépendance directe, nouvelle dépendance transitive ou montée de version. Chaque type reçoit une revue différente.
+2. Consacrez à la revue un effort proportionné au risque, comptez le coût futur, méfiez-vous des surprises, et appliquez les mêmes principes au fait de l’écrire vous-même, parce que la revue n’a aucune issue par défaut.
+3. Les dimensions sont l’architecture (dépendances directes seulement), la qualité, la gouvernance et le support, la sécurité, le code et la licence. Une montée de version ne garde que la sécurité, le code, et la licence si elle a changé.
+4. Lancez ou consultez les contrôles d’OpenSSF Scorecard, et traitez une note basse comme une question à laquelle répondre par écrit.
+5. Lisez le code de votre chemin critique et les parties qui demandent un spécialiste. Sautez le style, le code déjà relu et inchangé, les tests un par un, les plateformes étrangères et la documentation qui ne porte pas sur l’API, et dites que vous les avez sautés.
+6. Committez le fichier de verrouillage, envisagez un âge minimal de publication, écrivez le verdict avec ses raisons, consignez un rejet dans les instructions du projet, et signalez en amont les vrais problèmes trouvés.
 </Recap>
