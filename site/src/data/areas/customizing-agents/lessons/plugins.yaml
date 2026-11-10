@@ -14,7 +14,7 @@ assumes:
     section: des-principes-qui-gardent-la-revue-abordable
   - objective: customizing-agents/writes-skill/discloses-progressively
     lesson: customizing-agents/progressive-disclosure
-    section: what-the-agent-reads-and-when
+    section: ce-que-lit-lagent-et-quand
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 after: [customizing-agents/first-skill]

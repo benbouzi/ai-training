@@ -15,7 +15,7 @@ assumes:
     section: install-it-copy-one-skill-or-leave-it
   - objective: customizing-agents/writes-skill/discloses-progressively
     lesson: customizing-agents/progressive-disclosure
-    section: what-the-agent-reads-and-when
+    section: ce-que-lit-lagent-et-quand
 extends-to: []
 sources-checked: 2026-10-07
 review-by: 2027-04-07
