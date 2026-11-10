@@ -1,85 +1,90 @@
 import { Choice, MultiChoice, Match, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Prompt, Response, Habit } from '@components/lesson';
 
-In [the lesson on hooks and CI](/coding-with-agents/ci-and-hooks/) two
-team rules moved out of a brief and into the project, where every session
-runs them. The plan for the next change is often still in one person's
-notes or in a chat thread, and the review comments that keep coming back
-are in old pull requests. A new agent session starts without them. In this
-lesson we move both to
-a place the agent reads by itself: the spec into the team's issue tracker,
-and a repeated review finding into a standards file or a check.
+Dans [la leçon sur les hooks et la CI](/coding-with-agents/ci-and-hooks/), deux
+règles d’équipe sont sorties d’une consigne pour entrer dans le projet, où
+chaque session les applique. Le plan de la prochaine modification se trouve
+souvent encore dans les notes d’une personne ou dans un fil de discussion, et
+les remarques de revue qui reviennent sans cesse sont dans d’anciennes pull
+requests. Une nouvelle session d’agent démarre sans elles. Dans cette leçon,
+nous déplaçons les deux vers un endroit que l’agent lit de lui-même : la
+spécification dans l’outil de suivi des tickets de l’équipe, et une remarque de
+revue répétée dans un fichier de normes ou dans un contrôle.
 
-The project is the nightly sales import from the earlier lessons:
-`importer.py` adds up the exports of one night and converts every amount
-to euros with the rates in `rates.json`. The team wants to import a past
-night again with the rates of that night, and has a short spec for it.
+Le projet est l’import nocturne des ventes des leçons précédentes :
+`importer.py` additionne les exports d’une nuit et convertit chaque montant en
+euros avec les taux de `rates.json`. L’équipe veut réimporter une nuit passée
+avec les taux de cette nuit-là, et elle a une courte spécification pour cela.
 
-## Put the spec in the tracker
+## Mettre la spécification dans l’outil de suivi
 
-An agent-reachable backlog is the team's specs and tickets, kept in its
-tracker, where people and agents can both read and update them. The tracker
-also records which ticket blocks which. A spec in a private note helps one
-person. The same spec as an issue helps every person on the team and every
-agent session, because each of them can find it, read it in full, and
-report on it there.
+Un backlog accessible à l’agent rassemble les spécifications et les tickets de
+l’équipe dans son outil de suivi, où les personnes comme les agents peuvent les
+lire et les mettre à jour. L’outil de suivi enregistre aussi quel ticket en
+bloque un autre. Une spécification dans une note privée aide une personne. La
+même spécification sous forme de ticket aide chaque personne de l’équipe et
+chaque session d’agent, parce que chacune peut la trouver, la lire en entier et
+y rendre compte de son travail.
 
-The spec for the past nights has two parts, and the second needs the
-first. The importer has to keep the rates of each night before it can
-import a past night with them. So the spec becomes two issues, each with
-its own "done when" list, and a link between them. GitHub calls the link
-"blocked by" on one issue and "blocking" on the other, and it marks a
-blocked issue with an icon in the issue list and on project boards
-(@GitHub docs creating-issue-dependencies). The order is then in the
-tracker, where the next reader sees it, and not only in the head of the
-person who wrote the spec.
+La spécification des nuits passées a deux parties, et la seconde a besoin de la
+première. L’import doit garder les taux de chaque nuit avant de pouvoir
+réimporter une nuit passée avec ces taux. La spécification devient donc deux
+tickets, chacun avec sa propre liste « terminé quand », et un lien entre eux.
+GitHub appelle ce lien « blocked by » (bloqué par) sur un ticket et
+« blocking » (bloque) sur l’autre, et il marque un ticket bloqué d’une icône
+dans la liste des tickets et sur les tableaux de projet
+(@GitHub docs creating-issue-dependencies). L’ordre se trouve alors dans
+l’outil de suivi, où le lecteur suivant le voit. Il ne dépend plus de la mémoire
+de la personne qui a écrit la spécification.
 
-With the GitHub command-line tool, `gh`, the two issues are two commands.
-The bodies are the two files `issue-rates.md` and `issue-rerun.md` in
-`site/examples/coding-with-agents/backlog-and-standards/` of the course
-repository. `--blocked-by` takes the number of the issue that must be
-done first (@GitHub docs creating-issue-dependencies). The second command
-below assumes the first issue got number 1. Put the number of your first
-issue in its place if it differs.
+Avec l’outil en ligne de commande de GitHub, `gh`, les deux tickets
+correspondent à deux commandes. Les corps des tickets sont les deux fichiers
+`issue-rates.md` et `issue-rerun.md` dans
+`site/examples/coding-with-agents/backlog-and-standards/` du dépôt du cours.
+`--blocked-by` prend le numéro du ticket à terminer en premier
+(@GitHub docs creating-issue-dependencies). La seconde commande ci-dessous
+suppose que le premier ticket a reçu le numéro 1. Mettez le numéro de votre
+premier ticket à la place s’il est différent. Les titres restent en anglais,
+comme dans l’exemple : « garder les taux de chaque nuit » et « importer une
+nuit passée avec ses propres taux ».
 
 ```sh
 gh issue create --title "Keep the rates of each night" --body-file issue-rates.md
 gh issue create --title "Import a past night with its own rates" --body-file issue-rerun.md --blocked-by 1
 ```
 
-If `gh issue create --help` doesn't list `--blocked-by`, your `gh` is
-older than the feature. Update it, or set the link on the issue page in
-the browser, under **Relationships** in the sidebar.
+Si `gh issue create --help` ne liste pas `--blocked-by`, votre `gh` est plus
+ancien que la fonctionnalité. Mettez-le à jour, ou créez le lien sur la page du
+ticket dans le navigateur, sous **Relationships** dans la barre latérale.
 
-In another tracker, look for the same two parts, perhaps under other
-names: a ticket with a body, and a link type for "this one waits for that
-one".
-Use the link type. A person reads a sentence in the body such as "do this
-after the rates one", but only a link lets the tracker mark the issue as
-blocked.
+Dans un autre outil de suivi, cherchez les deux mêmes éléments, peut-être sous
+d’autres noms : un ticket avec un corps, et un type de lien pour « celui-ci
+attend celui-là ». Utilisez le type de lien. Une personne lit une phrase du
+corps comme « à faire après celui des taux », mais seul un lien permet à l’outil
+de suivi de marquer le ticket comme bloqué.
 
 <MultiChoice id="what-a-new-session-can-read" objective="coding-with-agents/works-in-team/keeps-the-backlog-reachable"
   concepts={['agent-reachable-backlog']}
-  context="A team plans the next change to its nightly import. The agent works in the repository and can run the tracker's command-line tool, and it starts every session with no memory of earlier chats."
-  title="What can a new session find on its own?" hint="Which of these are stored somewhere the agent can reach with a command, and which are only in a person's head, notes or an old conversation?"
+  context="Une équipe prépare la prochaine modification de son import nocturne. L’agent travaille dans le dépôt et peut lancer l’outil en ligne de commande de l’outil de suivi, et il démarre chaque session sans aucune mémoire des discussions précédentes."
+  title="Que peut trouver seule une nouvelle session ?" hint="Lesquels de ces éléments sont enregistrés à un endroit que l’agent atteint avec une commande, et lesquels ne sont que dans la tête d’une personne, dans ses notes ou dans une ancienne conversation ?"
   options={[
-    { text: 'The spec, written as an issue in the team\'s tracker', correct: true },
-    { text: 'The spec, kept in the notes app on the lead\'s laptop', why: 'The agent and the rest of the team can\'t reach a private note. Someone has to paste it in, every time.' },
-    { text: 'A "blocked by" link from the second issue to the first', correct: true },
-    { text: 'The order of the two parts, agreed in last week\'s call', why: 'A decision made in a call is only in the memory of the people who were there. Nothing records it for the next session.' },
-    { text: 'The spec you pasted in full into last week\'s session', why: 'That text was in the context of last week\'s session. A new session starts without it.' },
+    { text: 'La spécification, écrite sous forme de ticket dans l’outil de suivi de l’équipe', correct: true },
+    { text: 'La spécification, gardée dans l’application de notes du portable de la responsable', why: 'L’agent et le reste de l’équipe ne peuvent pas atteindre une note privée. Quelqu’un doit la coller, à chaque fois.' },
+    { text: 'Un lien « blocked by » du second ticket vers le premier', correct: true },
+    { text: 'L’ordre des deux parties, convenu lors de l’appel de la semaine dernière', why: 'Une décision prise lors d’un appel n’est que dans la mémoire des personnes présentes. Rien ne l’enregistre pour la session suivante.' },
+    { text: 'La spécification que vous avez collée en entier dans la session de la semaine dernière', why: 'Ce texte était dans le contexte de la session de la semaine dernière. Une nouvelle session démarre sans lui.' },
   ]}>
-Which of these can a new agent session in the project use without anyone
-pasting text into it? Select two.
+Lesquels de ces éléments une nouvelle session d’agent du projet peut-elle
+utiliser sans que personne y colle de texte ? Choisissez-en deux.
 </MultiChoice>
 
-## Let the agent read it from the command line
+## Laisser l’agent la lire en ligne de commande
 
-The agent reaches the tracker through the same command-line tool. The
-vendor guide for Claude Code recommends command-line tools as the way to
-work with outside services that costs the least context, names `gh` for
-GitHub, and suggests that the agent read the `--help` of a tool it doesn't
-know yet (@Claude Code best practices). These are the commands the agent
-needs here:
+L’agent atteint l’outil de suivi avec le même outil en ligne de commande. Le
+guide de l’éditeur pour Claude Code recommande les outils en ligne de commande
+comme la façon de travailler avec des services extérieurs qui coûte le moins de
+contexte, cite `gh` pour GitHub, et suggère que l’agent lise le `--help` d’un
+outil qu’il ne connaît pas encore (@Claude Code best practices). Voici les
+commandes dont l’agent a besoin ici :
 
 ```sh
 gh issue list
@@ -87,68 +92,73 @@ gh issue view 2
 gh issue view 2 --json blockedBy,blocking
 ```
 
-`gh issue list` shows the open issues. `gh issue view` shows one issue in
-full, and its output has a "Blocked by" row and a "Blocking" row when a
-link is set. With `--json` and the fields `blockedBy` and `blocking`, the
-same links come back as JSON (@GitHub docs creating-issue-dependencies).
+`gh issue list` affiche les tickets ouverts. `gh issue view` affiche un ticket
+en entier, et sa sortie a une ligne « Blocked by » et une ligne « Blocking »
+quand un lien existe. Avec `--json` et les champs `blockedBy` et `blocking`,
+les mêmes liens reviennent en JSON (@GitHub docs creating-issue-dependencies).
 
-The brief then names the tracker as the source of the work, and nobody
-pastes the spec. The transcript below is illustrative and doesn't record a
-specific model's words.
+La consigne désigne alors l’outil de suivi comme la source du travail, et
+personne ne colle la spécification. La transcription ci-dessous est une
+illustration et ne reproduit pas les mots d’un modèle précis.
 
 <Prompt model="illustrative" recorded="illustrative">
-The open issues in this repository are the backlog. Use `gh issue list`
-and `gh issue view` to find the open issue that can start now, because
-its blockers are closed or it has none. Tell me its number, its title,
-and what it blocks. Don't change any issue yet.
+Les tickets ouverts de ce dépôt forment le backlog. Utilise `gh issue list` et
+`gh issue view` pour trouver le ticket ouvert qui peut commencer maintenant,
+parce que les tickets qui le bloquent sont fermés ou qu’il n’en a aucun.
+Donne-moi son numéro, son titre, et ce qu’il bloque. Ne modifie encore aucun
+ticket.
 </Prompt>
 <Response>
-The repository has two open issues. Issue 2, "Import a past night with its own
-rates", is blocked by issue 1. Issue 1, "Keep the rates of each night",
-has no blocker and blocks issue 2. So issue 1 is the one to start. Its
-"done when" list asks for `rates/2026-09-14.json` to be read for that
-night, and for a night without a rates file to be rejected.
+Le dépôt a deux tickets ouverts. Le ticket 2, « Import a past night with its own
+rates », est bloqué par le ticket 1. Le ticket 1, « Keep the rates of each
+night », n’est bloqué par rien et bloque le ticket 2. C’est donc le ticket 1 qu’il
+faut commencer. Sa liste « terminé quand » demande que `rates/2026-09-14.json`
+soit lu pour cette nuit-là, et qu’une nuit sans fichier de taux soit rejetée.
 </Response>
 
-The commands run with the credentials you give the tool. If those are your
-own login, the agent has your rights in every repository you can reach. It
-can close issues and change labels there. Give the agent only the rights
-it needs. Reading issues and adding comments is enough for most work. If
-your tracker lets you make a token with fewer rights, use one for the
-agent. In Claude Code you can also run the session in Manual mode. Claude
-Code then asks you before most shell commands, and you read each `gh`
-command before it runs. From version 2.1.283, a session started in a
-terminal starts in auto mode by default, so you choose Manual mode on
-purpose with `claude --permission-mode default`
-(@Claude Code permission modes).
+Les commandes s’exécutent avec les identifiants que vous donnez à l’outil. Si
+ce sont vos propres identifiants, l’agent a vos droits dans chaque dépôt que
+vous pouvez atteindre. Il peut y fermer des tickets et changer des étiquettes.
+Donnez à l’agent seulement les droits dont il a besoin. Lire les tickets et
+ajouter des commentaires suffit pour la plupart des travaux. Si votre outil de
+suivi vous permet de créer un jeton (token) avec moins de droits, utilisez-en un pour
+l’agent. Dans Claude Code, vous pouvez aussi lancer la session en mode Manual.
+Claude Code vous demande alors votre accord avant la plupart des commandes
+shell, et vous lisez chaque commande `gh` avant qu’elle s’exécute. Depuis la
+version 2.1.283, une session lancée dans un terminal démarre par défaut en mode
+automatique, donc vous choisissez le mode Manual délibérément avec
+`claude --permission-mode default` (@Claude Code permission modes).
 
 <Scenario id="the-agent-took-the-blocked-issue" objective="coding-with-agents/works-in-team/keeps-the-backlog-reachable"
   concepts={['agent-reachable-backlog']}
-  context="A team keeps its work as issues in a tracker. A colleague wrote in the team chat that the rerun issue must wait for the rates issue, and set no link between the two issues. An agent asked for the next open issue that nothing blocks picks the rerun issue."
-  title="The agent started the issue that has to wait" hint="Where did the order of the two issues get written down, and which place does the agent read?"
+  context="Une équipe garde son travail sous forme de tickets dans un outil de suivi. Une collègue a écrit dans la discussion de l’équipe que le ticket de réimport doit attendre le ticket des taux, et n’a créé aucun lien entre les deux tickets. Un agent à qui l’on demande le prochain ticket ouvert que rien ne bloque choisit le ticket de réimport."
+  title="L’agent a commencé le ticket qui doit attendre" hint="Où l’ordre des deux tickets a-t-il été écrit, et quel endroit l’agent lit-il ?"
   options={[
-    { text: 'Tell the agent in this session that the rerun waits for the rates issue, and let it start again.', consequence: 'This session takes the rates issue. Tomorrow\'s session, or a colleague\'s, picks the rerun issue again, because the order is still only in the chat.' },
-    { text: 'Write the order of the two issues in your own notes, so that you can correct the agent next time.', consequence: 'You now correct every session by hand, and your colleagues\' sessions still make the same choice.' },
-    { text: 'Set a "blocked by" link from the rerun issue to the rates issue, then ask the agent again.', correct: true, consequence: 'The tracker marks the rerun issue as blocked. This session and every later one sees the link and starts with the rates issue.' },
-    { text: 'Tell the agent to always take the open issue with the lowest number, since it is usually the first.', consequence: 'The numbers follow the order in which issues were written, and that isn\'t the order of the work. The next spec breaks the rule.' },
+    { text: 'Dire à l’agent dans cette session que le réimport attend le ticket des taux, et le laisser recommencer.', consequence: 'Cette session prend le ticket des taux. La session de demain, ou celle d’un collègue, choisit à nouveau le ticket de réimport, parce que l’ordre n’est toujours que dans la discussion.' },
+    { text: 'Écrire l’ordre des deux tickets dans vos propres notes, pour pouvoir corriger l’agent la prochaine fois.', consequence: 'Vous corrigez maintenant chaque session à la main, et les sessions de vos collègues font toujours le même choix.' },
+    { text: 'Créer un lien « blocked by » du ticket de réimport vers le ticket des taux, puis redemander à l’agent.', correct: true, consequence: 'L’outil de suivi marque le ticket de réimport comme bloqué. Cette session et toutes les suivantes voient le lien et commencent par le ticket des taux.' },
+    { text: 'Dire à l’agent de toujours prendre le ticket ouvert au plus petit numéro, puisque c’est en général le premier.', consequence: 'Les numéros suivent l’ordre dans lequel les tickets ont été écrits, qui n’est pas l’ordre du travail. La prochaine spécification casse la règle.' },
   ]}>
-The agent says: "Issue 2 is open and nothing blocks it, so I am starting
-there." You know issue 2 needs issue 1 first. What do you do?
+L’agent dit : « Le ticket 2 est ouvert et rien ne le bloque, donc je commence
+par lui. » Vous savez que le ticket 2 a d’abord besoin du ticket 1. Que
+faites-vous ?
 </Scenario>
 
-## Write a repeated finding down once
+## Écrire une fois une remarque répétée
 
-Review comments have a second problem. A reviewer writes "use `Decimal` for
-money, not `float`" on one pull request, and two weeks later writes the
-same comment on the next one, for a change another session wrote. The
-comment is in the old pull request, where no new session reads it. The
-memory page for Claude Code names two moments to write a rule down that fit
-here: the agent repeats a mistake, or a code review turns up a fact about
-the project that the agent was missing (@Claude Code memory).
+Les remarques de revue posent un second problème. Une relectrice écrit
+« utilisez `Decimal` pour l’argent, pas `float` » sur une pull request, et deux
+semaines plus tard elle écrit la même remarque sur la suivante, pour une
+modification qu’une autre session a écrite. La remarque est dans l’ancienne pull
+request, où aucune nouvelle session ne la lit. La page de Claude Code sur la
+mémoire cite deux moments où écrire une règle, qui conviennent ici : l’agent
+répète une erreur, ou une revue de code révèle un fait sur le projet qui
+manquait à l’agent (@Claude Code memory).
 
-A standards file is the team's list of coding rules that no tool checks.
-Human reviewers and agent reviewers read the same file, and check a change
-against it. A short `STANDARDS.md` for the import could start like this:
+Un fichier de normes est la liste des règles de code de l’équipe qu’aucun outil
+ne vérifie. Les relecteurs humains et les agents relecteurs lisent le même
+fichier, et vérifient une modification par rapport à lui. Un court
+`STANDARDS.md` pour l’import pourrait commencer ainsi :
 
 ```markdown
 # Standards
@@ -162,30 +172,37 @@ of these, and mark every other style point as a suggestion.
   For example: "nights/2026-09-15/store-03.csv, row 12: 5 fields, expected 4".
 ```
 
-For an agent to read the file in every session, the project instructions
-point at it. A line `@STANDARDS.md` in `CLAUDE.md` imports the file, and
-Claude Code loads it at launch together with `CLAUDE.md` (@Claude Code memory).
-A reviewer gets the same file through a link in the pull request template
-or the review checklist.
+Le fichier, en anglais comme le reste du projet, dit ceci : ce sont des règles
+qu’aucun contrôle n’impose, les relecteurs bloquent une modification qui en
+enfreint une et marquent tout autre point de style comme une suggestion. Sa
+première règle demande qu’un message d’erreur nomme le fichier concerné, et la
+ligne quand il y en a une.
 
-Some findings don't need a line, because a script can find them. The
-`float` comment is one. The [hooks and CI lesson](/coding-with-agents/ci-and-hooks/)
-showed how a rule that must hold every time becomes a hook or a CI step,
-and a repeated finding can take the same path. This check flags every call
-to `float(` in the files it is given. It is crude on purpose. When the code
-one day needs a float for something other than money, make the check
-narrower then.
+Pour qu’un agent lise le fichier dans chaque session, les instructions du projet
+y renvoient. Une ligne `@STANDARDS.md` dans `CLAUDE.md` importe le fichier, et
+Claude Code le charge au lancement avec `CLAUDE.md` (@Claude Code memory). Un
+relecteur reçoit le même fichier par un lien dans le modèle de pull request ou
+dans la liste de vérification de la revue.
 
-<Predict id="run-the-money-check" title="The finding as a check"
+Certaines remarques n’ont pas besoin d’une ligne, parce qu’un script peut les
+trouver. La remarque sur `float` en fait partie. La
+[leçon sur les hooks et la CI](/coding-with-agents/ci-and-hooks/) a montré
+comment une règle qui doit tenir à chaque fois devient un hook ou une étape de
+CI, et une remarque répétée peut suivre le même chemin. Ce contrôle signale
+chaque appel à `float(` dans les fichiers qu’on lui donne. Il est grossier
+exprès. Le jour où le code aura besoin d’un float pour autre chose que de
+l’argent, rendez le contrôle plus précis à ce moment-là.
+
+<Predict id="run-the-money-check" title="La remarque devenue contrôle"
   answer={`$ python3 check_money.py importer.py
   importer.py:60: money as float, use decimal.Decimal: total = sum(float(amount) * rates[currency] for _, _, currency, amount in rows)
   1 finding(s)
   exit status 1`} run="coding-with-agents/backlog-and-standards/run_check.py">
-The course's script copies the nightly import and `check_money.py` to a
-temporary directory, runs the check the way a CI step would, and prints
-its exit status. Run it from `site/examples/coding-with-agents/backlog-and-standards/`
-in your clone of the course repository, and compare what you see with the
-output below.
+Le script du cours copie l’import nocturne et `check_money.py` dans un dossier
+temporaire, lance le contrôle comme le ferait une étape de CI, et affiche son
+code de sortie. Lancez-le depuis
+`site/examples/coding-with-agents/backlog-and-standards/` dans votre clone du
+dépôt du cours, et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 run_check.py
@@ -193,133 +210,140 @@ python3 run_check.py
 
 </Predict>
 
-This example isn't graded. It is a command you run, with output the
-course checks on every build.
+Cet exemple n’est pas noté. C’est une commande que vous lancez, avec une sortie
+que le cours vérifie à chaque construction du site.
 
-The check exits with status 1, so as a step in the CI job it fails the
-pull request until the amount goes through `Decimal`. Once the check is in
-CI, delete the `float` line from the standards file if you wrote one there.
-The check runs on every change, and the file stays a short list of the
-rules that only a reader can check. That length matters for the agent too:
-the memory page advises keeping `CLAUDE.md` under 200 lines, and an
-imported file loads at launch and takes context the same way
+Le contrôle se termine avec le code 1, donc en tant qu’étape de la tâche de CI,
+il fait échouer la pull request jusqu’à ce que le montant passe par `Decimal`.
+Une fois le contrôle dans la CI, supprimez la ligne sur `float` du fichier de
+normes si vous en aviez écrit une. Le contrôle s’exécute sur chaque
+modification, et le fichier reste une courte liste des règles que seul un
+lecteur peut vérifier. Cette longueur compte aussi pour l’agent : la page sur
+la mémoire conseille de garder `CLAUDE.md` sous les 200 lignes, et un fichier
+importé est chargé au lancement et occupe du contexte de la même façon
 (@Claude Code memory).
 
 <Match id="where-each-finding-goes" objective="coding-with-agents/works-in-team/turns-findings-into-rules"
   concepts={['standards-file']}
-  context="A team keeps a standards file of rules that no tool checks, and a CI job that runs its checks on every pull request. Four review comments are on the table."
-  title="Where does each finding go?" hint="Is the finding a defect or a style point, has it come up before, and could a script find it on its own?"
-  options={['Fix it in this change only', 'A line in the standards file', 'A check in the CI job', 'A suggestion that doesn\'t block']}
+  context="Une équipe garde un fichier de normes avec les règles qu’aucun outil ne vérifie, et une tâche de CI qui lance ses contrôles sur chaque pull request. Quatre remarques de revue sont sur la table."
+  title="Où va chaque remarque ?" hint="La remarque porte-t-elle sur un défaut ou sur le style, est-elle déjà apparue, et un script pourrait-il la trouver seul ?"
+  options={['La corriger dans cette modification seulement', 'Une ligne dans le fichier de normes', 'Un contrôle dans la tâche de CI', 'Une suggestion qui ne bloque pas']}
   rows={[
-    { statement: 'A total that counts one row twice, found for the first time', option: 0, why: 'A wrong total is a defect. Has this one come up in any earlier review?' },
-    { statement: 'Error messages that don\'t name the file, found in a second review', option: 1, why: 'It came back, and can a script tell whether a message names the right file?' },
-    { statement: 'An amount converted with float(), found in a second review', option: 2, why: 'Could a short script find every case without a person reading the code?' },
-    { statement: 'A reviewer would name a function differently, and no rule covers names', option: 3, why: 'Which rule in the file does the change break?' },
+    { statement: 'Un total qui compte une ligne deux fois, trouvé pour la première fois', option: 0, why: 'Un total faux est un défaut. Celui-ci est-il apparu dans une revue précédente ?' },
+    { statement: 'Des messages d’erreur qui ne nomment pas le fichier, trouvés dans une deuxième revue', option: 1, why: 'La remarque est revenue, et un script peut-il dire si un message nomme le bon fichier ?' },
+    { statement: 'Un montant converti avec float(), trouvé dans une deuxième revue', option: 2, why: 'Un court script pourrait-il trouver chaque cas sans qu’une personne lise le code ?' },
+    { statement: 'Un relecteur nommerait une fonction autrement, et aucune règle ne couvre les noms', option: 3, why: 'Quelle règle du fichier la modification enfreint-elle ?' },
   ]}
-  rationale="A defect seen for the first time is fixed in the change. When it comes back, it goes into the standards file, or into a check when a script can find it. A point no rule covers is a suggestion.">
-Match each review finding to what the team does with it.
+  rationale="Un défaut vu pour la première fois se corrige dans la modification. Quand il revient, il va dans le fichier de normes, ou dans un contrôle quand un script peut le trouver. Un point qu’aucune règle ne couvre est une suggestion.">
+Associez chaque remarque de revue à ce que l’équipe en fait.
 </Match>
 
-## Block on the file, suggest the rest
+## Bloquer sur le fichier, suggérer le reste
 
-The file also changes what a reviewer may block on. Google's code review
-guide for reviewers says that on questions of style, the team's style
-guide decides, and a style point the guide doesn't cover is the reviewer's
-personal preference. It suggests a prefix such as "Nit:" for a small
-improvement that the author doesn't have to make (@Google eng-practices).
-The guide treats design as more than taste, and a bug or a design problem
-can still block a change. For the conventions of the code, the standards
-file is the team's style guide. A broken rule from the file, or a failed
-check, blocks the change. Every other style point is a suggestion.
+Le fichier change aussi ce sur quoi un relecteur peut bloquer. Le guide de revue
+de code de Google pour les relecteurs dit que, sur les questions de style, c’est
+le guide de style de l’équipe qui décide, et qu’un point de style que le guide ne
+couvre pas relève de la préférence personnelle du relecteur. Il propose un
+préfixe comme « Nit: » (détail) pour une petite amélioration que l’auteur n’est
+pas obligé de faire (@Google eng-practices). Le guide considère que la
+conception va au-delà du goût, et un bug ou un problème de conception peut
+toujours bloquer une modification. Pour les conventions du code, le fichier de
+normes est le guide de style de l’équipe. Une règle du fichier enfreinte, ou un
+contrôle en échec, bloque la modification. Tout autre point de style est une
+suggestion.
 
-That gives an agent reviewer a clear brief. Ask it to review the diff
-against `STANDARDS.md` and to mark a style finding as blocking only when
-it names the rule it breaks. Ask it to write every other style point as a
-"Nit:", and to block on a bug as usual.
-When a reviewer, human or agent, blocks on taste, the author can no longer
-tell the rules in the file from the preferences, and starts to treat both
-as optional.
+Cela donne une consigne claire à un agent relecteur. Demandez-lui de relire le
+diff par rapport à `STANDARDS.md` et de ne marquer une remarque de style comme
+bloquante que si elle nomme la règle enfreinte. Demandez-lui d’écrire tout autre
+point de style sous la forme « Nit: », et de bloquer sur un bug comme
+d’habitude. Quand un relecteur, humain ou agent, bloque sur une question de
+goût, l’auteur ne distingue plus les règles du fichier des préférences, et
+commence à traiter les deux comme facultatives.
 
 <Choice id="the-reviewer-blocks-on-a-name" objective="coding-with-agents/works-in-team/turns-findings-into-rules"
   concepts={['standards-file']}
-  context="A team's standards file says nothing about how functions are named, and the CI job passes. An agent reviewer was briefed to review against the standards file and marks a finding as blocking."
-  title="A blocking finding with no rule behind it" hint="Which rule does the blocking finding point to, and what does the brief say a finding without a rule is?"
+  context="Le fichier de normes d’une équipe ne dit rien sur la façon de nommer les fonctions, et la tâche de CI passe. Un agent relecteur a reçu la consigne de relire par rapport au fichier de normes, et il marque une remarque comme bloquante."
+  title="Une remarque bloquante sans règle derrière" hint="À quelle règle renvoie la remarque bloquante, et que dit la consigne d’une remarque sans règle ?"
   options={[
-    { text: 'Rename the function as the reviewer asks, because the change shouldn\'t merge while a finding blocks it.', why: 'That treats a preference as a rule. The next author can\'t tell from the file which names are allowed.' },
-    { text: 'Add a naming rule to the standards file now, so that the finding has a rule behind it and can block.', why: 'One reviewer\'s preference on one change isn\'t a recurring finding yet. A rule written for it is a guess.' },
-    { text: 'Delete the finding from the review, because a point without a rule behind it isn\'t useful to the author.', why: 'The point may still help the author. It can stay as a suggestion that the author is free to take or leave.' },
-    { text: 'Treat it as a "Nit:" that the author can take or leave, and remind the reviewer to block on style only for a rule or a check.', correct: true },
+    { text: 'Renommer la fonction comme le demande le relecteur, parce que la modification ne doit pas être fusionnée tant qu’une remarque la bloque.', why: 'Cela traite une préférence comme une règle. L’auteur suivant ne peut pas savoir, d’après le fichier, quels noms sont permis.' },
+    { text: 'Ajouter dès maintenant une règle de nommage au fichier de normes, pour que la remarque ait une règle derrière elle et puisse bloquer.', why: 'La préférence d’un relecteur sur une modification n’est pas encore une remarque récurrente. Une règle écrite pour elle est une supposition.' },
+    { text: 'Supprimer la remarque de la revue, parce qu’un point sans règle derrière lui n’est pas utile à l’auteur.', why: 'Le point peut quand même aider l’auteur. Il peut rester une suggestion que l’auteur est libre de suivre ou non.' },
+    { text: 'La traiter comme un « Nit: » que l’auteur suit ou non, et rappeler au relecteur de ne bloquer sur le style que pour une règle ou un contrôle.', correct: true },
   ]}>
-The agent reviewer writes: "Blocking: rename `read_rows` to `parse_rows`."
-No rule in the file covers names, and nothing else is wrong with the
-change. What do you do?
+L’agent relecteur écrit : « Blocking: rename `read_rows` to `parse_rows`. »
+(bloquant : renommer `read_rows` en `parse_rows`). Aucune règle du fichier ne
+couvre les noms, et rien d’autre ne pose problème dans la modification. Que
+faites-vous ?
 </Choice>
 
-<Pitfall title="The token that could do everything">
-A team gave its agent the lead's own login for the tracker, because it was
-already set up on the machine. One afternoon someone asked the agent to
-"tidy up the backlog". It closed thirty issues it judged to be stale,
-including four that waited on a decision from a customer, and nobody saw
-it happen until the next planning meeting. The agent needed to read issues
-and add comments, and the login could close and delete them. Give the
-agent credentials for what the task needs, and read every command that
-changes the tracker before it runs.
+<Pitfall title="Le jeton qui pouvait tout faire">
+Une équipe a donné à son agent les identifiants personnels de la responsable
+pour l’outil de suivi, parce qu’ils étaient déjà configurés sur la machine. Un
+après-midi, quelqu’un a demandé à l’agent de « faire le ménage dans le
+backlog ». Il a fermé trente tickets qu’il jugeait périmés, dont quatre qui
+attendaient une décision d’un client, et personne ne l’a vu avant la réunion de
+planification suivante. L’agent avait besoin de lire des tickets et d’ajouter
+des commentaires, et les identifiants permettaient de les fermer et de les
+supprimer. Donnez à l’agent des identifiants limités à ce dont la tâche a
+besoin, et lisez chaque commande qui modifie l’outil de suivi avant qu’elle
+s’exécute.
 </Pitfall>
 
 <Sort id="reachable-or-not" phase="review" objective="coding-with-agents/works-in-team/keeps-the-backlog-reachable"
   concepts={['agent-reachable-backlog']}
-  context="An agent works in a team's repository and can run the issue tracker's command-line tool. It starts each session with no memory of earlier sessions."
-  title="Can the agent find it?" hint="Is the item stored in the tracker or the repository, or only in a person's notes or an earlier conversation?"
-  buckets={['The agent can find it', 'Someone has to paste it in']}
+  context="Un agent travaille dans le dépôt d’une équipe et peut lancer l’outil en ligne de commande de l’outil de suivi. Il démarre chaque session sans aucune mémoire des sessions précédentes."
+  title="L’agent peut-il le trouver ?" hint="L’élément est-il enregistré dans l’outil de suivi ou dans le dépôt, ou seulement dans les notes d’une personne ou dans une conversation précédente ?"
+  buckets={['L’agent peut le trouver', 'Quelqu’un doit le coller']}
   items={[
-    { text: 'An issue with the spec and its done-when list', bucket: 0 },
-    { text: 'A "blocked by" link between two issues', bucket: 0 },
-    { text: 'The plan the lead wrote in a private note', bucket: 1 },
-    { text: 'A decision on the order, made in a call', bucket: 1 },
-    { text: 'The full spec, as it was pasted into yesterday\'s session', bucket: 1 },
+    { text: 'Un ticket avec la spécification et sa liste « terminé quand »', bucket: 0 },
+    { text: 'Un lien « blocked by » entre deux tickets', bucket: 0 },
+    { text: 'Le plan que la responsable a écrit dans une note privée', bucket: 1 },
+    { text: 'Une décision sur l’ordre, prise lors d’un appel', bucket: 1 },
+    { text: 'La spécification complète, telle qu’elle a été collée dans la session d’hier', bucket: 1 },
   ]} />
 
 <Choice id="how-the-order-is-kept" phase="review" objective="coding-with-agents/works-in-team/keeps-the-backlog-reachable"
   concepts={['agent-reachable-backlog']}
-  context="A spec has two parts, and the second needs the first. The team writes each part as an issue in its tracker. Agents on the team pick the next issue that nothing blocks."
-  title="Keeping the order of two issues" hint="Which of these can the tracker itself show to a person or an agent who looks at the second issue?"
+  context="Une spécification a deux parties, et la seconde a besoin de la première. L’équipe écrit chaque partie sous forme de ticket dans son outil de suivi. Les agents de l’équipe choisissent le prochain ticket que rien ne bloque."
+  title="Garder l’ordre de deux tickets" hint="Lequel de ces éléments l’outil de suivi peut-il lui-même montrer à une personne ou à un agent qui regarde le second ticket ?"
   options={[
-    { text: 'A "blocked by" link on the second issue, pointing at the first one.', correct: true },
-    { text: 'A sentence at the end of the second issue: "do this after the first one".', why: 'A careful reader sees it, but the tracker doesn\'t mark the issue as blocked, and an agent that checks the links misses it.' },
-    { text: 'A message in the team chat, saying which of the two issues comes first.', why: 'The chat isn\'t where the agent looks for work, and the message scrolls away.' },
-    { text: 'A lower issue number on the first part, by creating it before the second.', why: 'Numbers record when an issue was written. They say nothing about which issue waits for which.' },
+    { text: 'Un lien « blocked by » sur le second ticket, qui pointe vers le premier.', correct: true },
+    { text: 'Une phrase à la fin du second ticket : « à faire après le premier ».', why: 'Un lecteur attentif la voit, mais l’outil de suivi ne marque pas le ticket comme bloqué, et un agent qui vérifie les liens la manque.' },
+    { text: 'Un message dans la discussion de l’équipe, qui dit lequel des deux passe en premier.', why: 'La discussion n’est pas l’endroit où l’agent cherche du travail, et le message disparaît vite dans le fil.' },
+    { text: 'Un numéro plus petit pour la première partie, en la créant avant la seconde.', why: 'Les numéros enregistrent le moment où un ticket a été écrit. Ils ne disent rien de quel ticket attend lequel.' },
   ]}>
-How does the team record that the second issue waits for the first?
+Comment l’équipe enregistre-t-elle que le second ticket attend le premier ?
 </Choice>
 
 <Sort id="block-or-suggest" phase="review" objective="coding-with-agents/works-in-team/turns-findings-into-rules"
   concepts={['standards-file']}
-  context="A team's standards file lists the coding rules that no tool checks, and its CI job runs the checks. On style, reviewers block only on a rule in the file or a failed check, and write other style points as suggestions."
-  title="Blocking or a suggestion?" hint="For each review comment, can the reviewer point to a line in the file or a failed step in the job?"
-  buckets={['Blocks the change', 'A suggestion']}
+  context="Le fichier de normes d’une équipe liste les règles de code qu’aucun outil ne vérifie, et sa tâche de CI lance les contrôles. Sur le style, les relecteurs ne bloquent que sur une règle du fichier ou un contrôle en échec, et écrivent les autres points de style comme des suggestions."
+  title="Bloquant ou suggestion ?" hint="Pour chaque remarque de revue, le relecteur peut-il montrer une ligne du fichier ou une étape en échec de la tâche ?"
+  buckets={['Bloque la modification', 'Une suggestion']}
   items={[
-    { text: 'The CI step that checks money for float() failed', bucket: 0 },
-    { text: 'An error message leaves out the export\'s name, which a rule asks for', bucket: 0 },
-    { text: 'The reviewer prefers a different name for a function', bucket: 1 },
-    { text: 'The reviewer would split a long line in two', bucket: 1 },
+    { text: 'L’étape de CI qui cherche les montants en float() a échoué', bucket: 0 },
+    { text: 'Un message d’erreur omet le nom de l’export, qu’une règle demande', bucket: 0 },
+    { text: 'Le relecteur préfère un autre nom pour une fonction', bucket: 1 },
+    { text: 'Le relecteur couperait une longue ligne en deux', bucket: 1 },
   ]} />
 
 <Choice id="the-line-after-the-check" phase="review" objective="coding-with-agents/works-in-team/turns-findings-into-rules"
   concepts={['standards-file']}
-  context="A team's standards file had a line saying that money must never be a float. The team then added a CI step that fails on every float() call, and it runs on every pull request."
-  title="The line the check replaced" hint="What does the line in the file still add once a step checks the same rule on every change?"
+  context="Le fichier de normes d’une équipe avait une ligne disant que l’argent ne doit jamais être un float. L’équipe a ensuite ajouté une étape de CI qui échoue sur chaque appel à float(), et elle s’exécute sur chaque pull request."
+  title="La ligne que le contrôle a remplacée" hint="Qu’apporte encore la ligne du fichier une fois qu’une étape vérifie la même règle sur chaque modification ?"
   options={[
-    { text: 'Keep the line in the file as well, so that a reviewer still checks every change for it by hand.', why: 'The step already checks every change. A reviewer who checks it again spends attention the check has made free.' },
-    { text: 'Move the line to the top of the file, so that the agent reads the most important rule first.', why: 'The rule is now in the check, and the check runs whether or not the agent reads the file.' },
-    { text: 'Delete the line from the file, so the file keeps only the rules that a person has to check.', correct: true },
-    { text: 'Copy the line into the CI step\'s comment, and keep both, so that they never drift apart.', why: 'Two copies of a rule are two places to change. The file is for the rules that no check covers.' },
+    { text: 'Garder aussi la ligne dans le fichier, pour qu’un relecteur vérifie encore chaque modification à la main.', why: 'L’étape vérifie déjà chaque modification. Un relecteur qui la vérifie à nouveau dépense une attention que le contrôle a libérée.' },
+    { text: 'Déplacer la ligne en haut du fichier, pour que l’agent lise la règle la plus importante en premier.', why: 'La règle est maintenant dans le contrôle, et le contrôle s’exécute que l’agent lise le fichier ou non.' },
+    { text: 'Supprimer la ligne du fichier, pour que le fichier ne garde que les règles qu’une personne doit vérifier.', correct: true },
+    { text: 'Copier la ligne dans le commentaire de l’étape de CI, et garder les deux, pour qu’elles ne divergent jamais.', why: 'Deux copies d’une règle font deux endroits à modifier. Le fichier sert aux règles qu’aucun contrôle ne couvre.' },
   ]}>
-What does the team do with the line in the standards file?
+Que fait l’équipe de la ligne du fichier de normes ?
 </Choice>
 
-<Exercise stretch='Then brief the agent to review its own next change against STANDARDS.md, to mark a style finding as blocking only when it names a line of the file, to write every other style point as a "Nit:", and to block on a bug as usual. Check that it does.'>
-Make a project from the course files and push it to a repository you can
-delete. From the root of your clone of the course repository, run:
+<Exercise stretch='Donnez ensuite à l’agent la consigne de relire sa propre modification suivante par rapport à STANDARDS.md, de ne marquer une remarque de style comme bloquante que si elle nomme une ligne du fichier, d’écrire tout autre point de style sous la forme « Nit: », et de bloquer sur un bug comme d’habitude. Vérifiez qu’il le fait.'>
+Faites un projet à partir des fichiers du cours et poussez-le dans un dépôt que
+vous pourrez supprimer. Depuis la racine de votre clone du dépôt du cours,
+lancez :
 
 ```sh
 cp -R site/examples/coding-with-agents/observing-and-debugging/nightly ~/backlog-me
@@ -330,10 +354,9 @@ git add .
 git commit -m "Nightly import with two issue bodies"
 ```
 
-Create an empty private repository on GitHub that you can delete
-afterwards, and push the copy to it, with the address GitHub shows for the
-new repository in place of `<url>`. `gh auth status` tells you whether
-`gh` is logged in.
+Créez sur GitHub un dépôt privé vide que vous pourrez supprimer ensuite, et
+poussez-y la copie, en remplaçant `<url>` par l’adresse que GitHub affiche pour
+le nouveau dépôt. `gh auth status` vous dit si `gh` est connecté.
 
 ```sh
 cd ~/backlog-me
@@ -341,40 +364,41 @@ git remote add origin <url>
 git push -u origin main
 ```
 
-Create the two issues with the two `gh issue create` commands from this
-lesson, the second one blocked by the first. Then start Claude Code inside
-`~/backlog-me` in Manual mode with `claude --permission-mode default`, and
-give it the brief from the transcript. Read each `gh` command before you
-approve it. The brief asks for a report only, and `gh` runs with your own
-login, which reaches every repository you can reach. So approve only
-`gh issue list` and `gh issue view`, and refuse every other `gh` command
-and any `git push`.
+Créez les deux tickets avec les deux commandes `gh issue create` de cette leçon,
+le second bloqué par le premier. Lancez ensuite Claude Code dans `~/backlog-me`
+en mode Manual avec `claude --permission-mode default`, et donnez-lui la
+consigne de la transcription. Lisez chaque commande `gh` avant de l’approuver.
+La consigne ne demande qu’un rapport, et `gh` s’exécute avec vos propres
+identifiants, qui atteignent chaque dépôt auquel vous avez accès. N’approuvez
+donc que `gh issue list` et `gh issue view`, et refusez toute autre commande
+`gh` et tout `git push`.
 
-Then turn one finding into a rule. Take a finding that came up in two
-reviews in your own team, or use the `float` finding from this lesson. If
-no script can find it, write it as a line in a `STANDARDS.md` and add
-`@STANDARDS.md` to a `CLAUDE.md`. If a script can find it, make it a check,
-such as `python3 check_money.py importer.py` as a step in a CI job like the
-one in the hooks and CI lesson. Commit the result on a branch and open a
-pull request for it. Twenty minutes is enough for the issues and a line in
-the standards file. The CI step takes longer, and it is extra.
+Transformez ensuite une remarque en règle. Prenez une remarque apparue dans deux
+revues de votre propre équipe, ou utilisez la remarque sur `float` de cette
+leçon. Si aucun script ne peut la trouver, écrivez-la comme une ligne d’un
+`STANDARDS.md` et ajoutez `@STANDARDS.md` à un `CLAUDE.md`. Si un script peut la
+trouver, faites-en un contrôle, comme `python3 check_money.py importer.py` en
+tant qu’étape d’une tâche de CI semblable à celle de la leçon sur les hooks et
+la CI. Committez le résultat sur une branche et ouvrez une pull request. Vingt
+minutes suffisent pour les tickets et une ligne dans le fichier de normes.
+L’étape de CI prend plus de temps, et elle est facultative.
 
-A good result has two issues with a "blocked by" link between them, an
-agent that named the rates issue as the one to start without anyone
-pasting the spec, and one finding that is now a line in the standards
-file or a check that fails on the mistake. Delete the repository when you
-are done. Then answer one question: which review comment have you written
-more than once this month, and where would it go?
+Un bon résultat : deux tickets reliés par un lien « blocked by », un agent qui a
+désigné le ticket des taux comme celui à commencer sans que personne colle la
+spécification, et une remarque devenue une ligne du fichier de normes ou un
+contrôle qui échoue sur l’erreur. Supprimez le dépôt quand vous avez terminé.
+Répondez ensuite à une question : quelle remarque de revue avez-vous écrite plus
+d’une fois ce mois-ci, et où irait-elle ?
 </Exercise>
 
 <Recap>
-1. An agent-reachable backlog keeps specs and tickets in the team's tracker, where people and agents both read them. A spec in a private note or a chat reaches nobody else.
-2. Record the order of the work with the tracker's own links. GitHub marks an issue that is blocked by another, and `gh issue view` shows the links (@GitHub docs creating-issue-dependencies).
-3. The agent reads the tracker through a command-line tool, which costs little context (@Claude Code best practices). Give it the rights the task needs, and read each command that changes the tracker before it runs.
-4. When a review finding comes back, write it in the standards file that human and agent reviewers both read, and import that file into the project instructions (@Claude Code memory). When a script can find the mistake, make it a check and delete the line.
-5. Reviewers block on a rule in the file, a failed check or a real defect, and mark other style points as suggestions (@Google eng-practices).
+1. Un backlog accessible à l’agent garde les spécifications et les tickets dans l’outil de suivi de l’équipe, où les personnes comme les agents les lisent. Une spécification dans une note privée ou dans une discussion n’atteint personne d’autre.
+2. Enregistrez l’ordre du travail avec les liens de l’outil de suivi lui-même. GitHub marque un ticket bloqué par un autre, et `gh issue view` affiche les liens (@GitHub docs creating-issue-dependencies).
+3. L’agent lit l’outil de suivi avec un outil en ligne de commande, qui coûte peu de contexte (@Claude Code best practices). Donnez-lui les droits dont la tâche a besoin, et lisez chaque commande qui modifie l’outil de suivi avant qu’elle s’exécute.
+4. Quand une remarque de revue revient, écrivez-la dans le fichier de normes que lisent les relecteurs humains et les agents relecteurs, et importez ce fichier dans les instructions du projet (@Claude Code memory). Quand un script peut trouver l’erreur, faites-en un contrôle et supprimez la ligne.
+5. Les relecteurs bloquent sur une règle du fichier, un contrôle en échec ou un vrai défaut, et marquent les autres points de style comme des suggestions (@Google eng-practices).
 </Recap>
 
 <Habit id="second-time-write-it-down">
-The next time you write a review comment you have written before, stop and add it to the standards file, or to a check, before you send the review.
+La prochaine fois que vous écrivez une remarque de revue que vous avez déjà écrite, arrêtez-vous et ajoutez-la au fichier de normes, ou à un contrôle, avant d’envoyer la revue.
 </Habit>
