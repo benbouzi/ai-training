@@ -11,7 +11,7 @@ introduces: [observability, trajectory-evaluation]
 assumes:
   - objective: coding-with-agents/verifies-agent-work/observes-and-debugs
     lesson: coding-with-agents/observing-and-debugging
-    section: read-what-the-system-recorded
+    section: lire-ce-que-le-système-a-enregistré
 after: [building-agents/golden-sets]
 shorts: [Trace formats and tracing tools]
 exercise:
