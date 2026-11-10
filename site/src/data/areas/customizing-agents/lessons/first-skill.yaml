@@ -1,9 +1,9 @@
 id: customizing-agents/first-skill
-title: Writing your first skill
+title: Écrire votre première skill
 description: >-
-  Build a release skill for a small package step by step, in the open skill format: the description
-  that triggers it, the steps in order with exact commands, the check that says the result is right,
-  and what to do when a step fails.
+  Construisez pas à pas une skill de publication pour un petit paquet, au format ouvert des
+  skills : la description qui la déclenche, les étapes dans l’ordre avec les commandes exactes, le
+  contrôle qui dit que le résultat est juste, et quoi faire quand une étape échoue.
 mode: tutorial
 covers: customizing-agents/skills
 serves: [customizing-agents/writes-skill/packages-a-procedure]
@@ -15,17 +15,19 @@ assumes:
 sources-checked: 2026-09-24
 review-by: 2027-03-24
 extends-to:
-  - label: "Extend Codex Workflows, the lab: make a Codex skill from a run that worked (OpenAI Academy, free account)"
+  - label: >-
+      Extend Codex Workflows, l’atelier : faire une skill Codex à partir d’une exécution qui a marché
+      (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/extend-codex-workflows-4e61p
 after: [customizing-agents/skill-or-tool-or-instruction]
 shorts:
-  - The skill specification, field by field (Academy introduction-to-agent-skills)
+  - La spécification des skills, champ par champ (Academy introduction-to-agent-skills)
 exercise:
   kind: do
   brief: >-
-    Write a skill that cuts a release of the fixture package, with the trigger in the description,
-    the commands in order and the check that says the result is right, and run it on a copy of the
-    package.
+    Écrivez une skill qui publie une version du paquet de l’exemple, avec le déclencheur dans la
+    description, les commandes dans l’ordre et le contrôle qui dit que le résultat est juste, et
+    lancez-la sur une copie du paquet.
 sources:
   - AEC-17
   - Agent Skills spec

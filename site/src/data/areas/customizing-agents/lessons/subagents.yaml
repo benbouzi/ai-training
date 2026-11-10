@@ -1,8 +1,9 @@
 id: customizing-agents/subagents
-title: Delegating to a subagent with narrower permissions
+title: Déléguer à un sous-agent avec des permissions plus étroites
 description: >-
-  Define a read-only reviewer subagent with its own instructions and tool list, have a coding agent
-  delegate a review of a small diff to it, and compare what the main context holds before and after.
+  Définissez un sous-agent relecteur en lecture seule avec ses propres instructions et sa liste
+  d’outils, faites-lui déléguer par un agent de code la revue d’un petit diff, et comparez ce que
+  contient le contexte principal avant et après.
 mode: tutorial
 covers: customizing-agents/hooks-permissions
 serves: [customizing-agents/configures-agent/sets-permissions]
@@ -15,12 +16,15 @@ sources-checked: 2026-09-24
 review-by: 2027-03-24
 after: [customizing-agents/allowlists]
 shorts:
-  - Parallel subagents and what the parent sees of their work (Academy introduction-to-subagents)
+  - >-
+    Les sous-agents en parallèle, et ce que le parent voit de leur travail (Academy
+    introduction-to-subagents)
 exercise:
   kind: do
   brief: >-
-    Define a read-only reviewer subagent with its own instructions and tool set, have the main agent
-    delegate a review of the fixture diff to it, and compare the main context before and after.
+    Définissez un sous-agent relecteur en lecture seule avec ses propres instructions et son jeu
+    d’outils, faites-lui déléguer par l’agent principal la revue du diff de l’exemple, et comparez
+    le contexte principal avant et après.
 sources:
   - Claude Code subagents
   - Claude Code context window

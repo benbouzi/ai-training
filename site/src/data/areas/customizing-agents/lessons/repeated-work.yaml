@@ -1,9 +1,9 @@
 id: customizing-agents/repeated-work
-title: Turning repeated work into something the agent keeps
+title: Transformer le travail répété en quelque chose que l’agent garde
 description: >-
-  Read three coding sessions that each work out how to regenerate an API client, place each
-  repeated explanation in the instructions, a skill, a hook or a context file, and cut the
-  instruction lines that a hook and a skill now cover.
+  Lisez trois sessions de code qui cherchent chacune comment régénérer un client d’API, placez
+  chaque explication répétée dans les instructions, une skill, un hook ou un fichier de contexte,
+  et coupez les lignes d’instructions qu’un hook et une skill couvrent désormais.
 mode: explanation
 covers: customizing-agents/memory
 serves:
@@ -16,14 +16,16 @@ assumes:
     section: lhumain-dans-la-boucle
 after: [customizing-agents/session-handoff, customizing-agents/first-hook]
 shorts:
-  - Hooks as approval gates in a team's delivery pipeline (Academy ai-native-sdlc-playbook)
+  - >-
+    Les hooks comme points d’approbation dans la chaîne de livraison d’une équipe (Academy
+    ai-native-sdlc-playbook)
 exercise:
   kind: judge
   brief: >-
-    Read three session transcripts that each work out how to regenerate the API client and repeat
-    two corrections, decide for each repeated step whether it becomes an instruction, a skill, a
-    hook or a context file entry, and delete or shorten the instruction lines that a hook and a
-    skill now cover.
+    Lisez trois transcriptions de session qui cherchent chacune comment régénérer le client de l’API
+    et répètent deux corrections, décidez pour chaque étape répétée si elle devient une instruction,
+    une skill, un hook ou une entrée d’un fichier de contexte, et supprimez ou raccourcissez les
+    lignes d’instructions qu’un hook et une skill couvrent désormais.
 sources:
   - AEC-05
   - Claude Code features

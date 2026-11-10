@@ -1,9 +1,10 @@
 id: customizing-agents/logging-from-a-stdio-server
-title: Logging from a stdio server
+title: Journaliser depuis un serveur stdio
 description: >-
-  Break a stdio tool server with one debug line on standard output, watch the client fail to parse the
-  first line, move the line to standard error, and read the reference file-system server's log while an
-  agent calls it.
+  Cassez un serveur d’outils stdio avec une seule ligne de débogage sur la sortie standard,
+  regardez le client échouer à analyser la première ligne, déplacez la ligne vers la sortie
+  d’erreur standard, et lisez le journal du serveur de fichiers de référence pendant qu’un agent
+  l’appelle.
 mode: tutorial
 covers: customizing-agents/mcp
 serves: [customizing-agents/connects-tools-safely/adds-a-tool]
@@ -20,8 +21,9 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    Find why a stdio server breaks when it prints a debug line, move its logging to standard error,
-    and read the log while the agent calls it.
+    Trouvez pourquoi un serveur stdio casse quand il affiche une ligne de débogage, déplacez sa
+    journalisation vers la sortie d’erreur standard, et lisez le journal pendant que l’agent
+    l’appelle.
 sources: [MCP specification, MCP deprecated features, MCP filesystem server, Claude Code mcp]
 issue: 687
 minutes: 10

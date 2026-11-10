@@ -1,8 +1,8 @@
 id: customizing-agents/skill-or-tool-or-instruction
-title: Instruction, skill or tool?
+title: Instruction, skill ou outil ?
 description: >-
-  Three ways to change what an agent does, the question to ask before choosing one, and what each
-  costs in context and access.
+  Trois façons de changer ce que fait un agent, la question à se poser avant d’en choisir une, et
+  ce que chacune coûte en contexte et en accès.
 mode: explanation
 covers: customizing-agents/skills
 serves: [customizing-agents/writes-skill/chooses-skill-over-tool]
@@ -16,12 +16,14 @@ assumes:
     section: what-belongs-in-it
 after: [customizing-agents/instructions]
 shorts:
-  - A skill that wraps a CLI as the middle way between a CLI and a server (Academy claude-code-101)
+  - >-
+    Une skill qui enveloppe une CLI, comme voie intermédiaire entre une CLI et un serveur (Academy
+    claude-code-101)
 exercise:
   kind: judge
   brief: >-
-    Sort eight team needs into instruction, skill, tool or "the agent can already do it", and write
-    the one-line reason next to each.
+    Classez huit besoins d’équipe entre instruction, skill, outil ou « l’agent sait déjà le faire »,
+    et écrivez la raison en une ligne à côté de chacun.
 sources:
   - AEC-17
   - AEC-03

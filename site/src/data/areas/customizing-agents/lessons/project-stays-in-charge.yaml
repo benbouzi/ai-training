@@ -1,9 +1,10 @@
 id: customizing-agents/project-stays-in-charge
-title: Keeping the project in charge
+title: Garder le projet aux commandes
 description: >-
-  When an installed skill asks for a push the project forbids, remove the conflict from your copy of
-  the skill, refuse the push with a PreToolUse hook whose reason names the open route, and see why
-  a bare refusal leaves other spellings of the same command open.
+  Quand une skill installée demande un push que le projet interdit, retirez la contradiction de
+  votre copie de la skill, refusez le push avec un hook PreToolUse dont la raison nomme le chemin
+  permis, et voyez pourquoi un refus sans explication laisse ouvertes d’autres écritures de la
+  même commande.
 mode: tutorial
 covers: customizing-agents/hooks-permissions
 serves: [customizing-agents/adopts-a-skill-set/keeps-the-project-in-charge]
@@ -23,8 +24,8 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    When an installed skill asks for something the project forbids, write a hook or permission rule
-    that refuses it with a reason, and check that the agent changes its approach.
+    Quand une skill installée demande quelque chose que le projet interdit, écrivez un hook ou une
+    règle de permission qui le refuse avec une raison, et vérifiez que l’agent change d’approche.
 sources: [Claude Code hooks, Claude Code permissions, Claude Code skills, Claude Code memory]
 issue: 689
 minutes: 15

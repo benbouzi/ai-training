@@ -1,8 +1,9 @@
 id: customizing-agents/plugins
-title: Reading a plugin before you install it
+title: Lire un plugin avant de l’installer
 description: >-
-  Read an invented release plugin part by part, name what each skill, hook, subagent and server does
-  in your sessions, and decide whether to install it, copy one skill out of it, or leave it.
+  Lisez élément par élément un plugin de publication inventé, nommez ce que fait chaque skill,
+  chaque hook, chaque sous-agent et chaque serveur dans vos sessions, et décidez de l’installer,
+  d’en copier une skill ou d’y renoncer.
 mode: explanation
 covers: customizing-agents/skills
 serves: [customizing-agents/writes-skill/evaluates-a-plugin]
@@ -17,13 +18,13 @@ assumes:
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 after: [customizing-agents/first-skill]
-shorts: [Marketplaces and version pins for plugins (Academy claude-code-in-action)]
+shorts: [Les places de marché et les versions figées des plugins (Academy claude-code-in-action)]
 exercise:
   kind: judge
   brief: >-
-    Read the contents of one public plugin and list what it adds to the session: skills, hooks that
-    will run, subagents, and servers with the access they ask for, then say whether to install it or
-    copy one skill out of it.
+    Lisez le contenu d’un plugin public et listez ce qu’il ajoute à la session : des skills, des
+    hooks qui vont s’exécuter, des sous-agents, et des serveurs avec les accès qu’ils demandent,
+    puis dites s’il faut l’installer ou en copier une skill.
 sources:
   - Claude Code plugins
   - Claude Code plugin security

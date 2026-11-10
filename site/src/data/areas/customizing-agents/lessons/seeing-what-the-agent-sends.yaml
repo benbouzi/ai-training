@@ -1,8 +1,9 @@
 id: customizing-agents/seeing-what-the-agent-sends
-title: Seeing what the agent sends
+title: Voir ce que l’agent envoie
 description: >-
-  Watch the context meter while you connect one more tool, find the session in its record on disk,
-  and log the requests on your own machine to see what the tool definitions add to each one.
+  Surveillez la jauge de contexte pendant que vous connectez un outil de plus, retrouvez la
+  session dans son journal sur le disque, et journalisez les requêtes sur votre propre machine
+  pour voir ce que les définitions d’outils ajoutent à chacune.
 mode: tutorial
 covers: customizing-agents/inspecting-the-agent
 serves: [customizing-agents/connects-tools-safely/inspects-requests]
@@ -22,9 +23,12 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    Watch the context meter while you connect one more tool, find the same session in its record on
-    disk, and log the requests locally to see what the tool definitions add to each one.
-sources: [Claude Code context window, Claude Code statusline, Claude Code claude directory, Claude Code monitoring, Claude Code llm gateway, Claude Code mcp, Claude docs tool-search-tool, Claude Code permissions, MCP filesystem server]
+    Surveillez la jauge de contexte pendant que vous connectez un outil de plus, retrouvez la même
+    session dans son journal sur le disque, et journalisez les requêtes en local pour voir ce que
+    les définitions d’outils ajoutent à chacune.
+sources: [Claude Code context window, Claude Code statusline, Claude Code claude directory, Claude
+      Code monitoring, Claude Code llm gateway, Claude Code mcp, Claude docs tool-search-tool,
+      Claude Code permissions, MCP filesystem server]
 issue: 690
 minutes: 20
 notes: >-

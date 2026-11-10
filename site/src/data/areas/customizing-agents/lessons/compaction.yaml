@@ -1,8 +1,9 @@
 id: customizing-agents/compaction
-title: Directing the summary before compaction
+title: Diriger le résumé avant le compactage
 description: >-
-  Load a session log with three planted facts, compact it on command with instructions that name
-  decisions, open items and rules, and check which facts the summary kept.
+  Chargez un journal de session qui contient trois faits plantés, compactez-le à la demande avec
+  des instructions qui nomment les décisions, les points ouverts et les règles, et vérifiez quels
+  faits le résumé a gardés.
 mode: tutorial
 covers: customizing-agents/memory
 serves: [customizing-agents/configures-agent/manages-memory]
@@ -13,12 +14,15 @@ assumes:
     section: quand-la-fenêtre-contient-trop-de-choses
 after: [customizing-agents/memory-review]
 shorts:
-  - Context rot in a long session, and what a compaction summary drops (Academy claude-code-101)
+  - >-
+    La dégradation du contexte dans une longue session, et ce que laisse tomber un résumé de
+    compactage (Academy claude-code-101)
 exercise:
   kind: do
   brief: >-
-    Load the fixture transcript that holds three planted facts, ask for a summary that names open
-    items and decisions, compact on command, and check which of the three facts survived.
+    Chargez la transcription de l’exemple qui contient trois faits plantés, demandez un résumé qui
+    nomme les points ouverts et les décisions, compactez à la demande, et vérifiez lesquels des
+    trois faits ont survécu.
 sources:
   - AEC-05
   - Claude Code context window
@@ -40,11 +44,13 @@ notes: >-
   `summary.md` and says the samples are not model output. The learner pastes the log instead of
   having the agent read the file, because Claude Code re-reads recently used files after a
   compaction, and starts Claude Code with CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 so a memory note can't
-  carry a planted fact past the summary. Vendor facts to re-check by review-by: `/compact [instructions]` (commands page),
+  carry a planted fact past the summary. Vendor facts to re-check by review-by: `/compact [instructions]`
+  (commands page),
   automatic compaction near the limit and the focus instructions (context-window page), what is
   re-injected after compaction (context-window table and memory troubleshooting), `Not enough
   messages to compact.` in a fresh session (costs page), and compaction instructions in CLAUDE.md
   (best-practices and costs pages), what the automatic pass keeps (how-claude-code-works and
-  best-practices pages), and the auto-memory switch (memory page). Minutes raised from 10 to 15 for the hands-on session. The
+  best-practices pages), and the auto-memory switch (memory page). Minutes raised from 10 to 15 for the
+  hands-on session. The
   Academy course named in the short is not cited, and none of its text is used. The opener
   doesn't refer to memory-review, so the page doesn't depend on the merge order with it.

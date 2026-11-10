@@ -1,8 +1,9 @@
 id: customizing-agents/memory-review
-title: Reading what the agent remembers
+title: Lire ce dont l’agent se souvient
 description: >-
-  Read the auto-memory notes a coding agent keeps for a project, delete the two that have gone
-  stale, and move a team fact into a context file that the instruction file imports.
+  Lisez les notes de mémoire automatique qu’un agent de code garde pour un projet, supprimez les
+  deux qui sont devenues périmées, et déplacez un fait d’équipe dans un fichier de contexte que le
+  fichier d’instructions importe.
 mode: tutorial
 covers: customizing-agents/memory
 serves: [customizing-agents/configures-agent/manages-memory]
@@ -15,12 +16,15 @@ sources-checked: 2026-09-25
 review-by: 2027-03-25
 after: [customizing-agents/first-skill]
 shorts:
-  - The instruction file's import syntax for pulling context files in (Academy claude-code-101)
+  - >-
+    La syntaxe d’importation du fichier d’instructions pour inclure des fichiers de contexte
+    (Academy claude-code-101)
 exercise:
   kind: do
   brief: >-
-    Open the agent's memory notes for the fixture project, delete the two planted stale facts, and
-    move the one fact the team should share into a context file the agent reads.
+    Ouvrez les notes de mémoire de l’agent pour le projet de l’exemple, supprimez les deux faits
+    périmés plantés, et déplacez le fait que l’équipe devrait partager dans un fichier de contexte
+    que l’agent lit.
 sources:
   - Claude Code memory
   - Claude Code context window

@@ -1,12 +1,13 @@
 id: customizing-agents/adopting-a-skill-set
-title: Adopting a published skill set
+title: Adopter un jeu de skills publié
 description: >-
-  Vet an invented skill set skill by skill for license, maintenance, scripts and pre-approved tools,
-  take two of its skills, and check what they change in a session against what they add to the
-  context.
+  Examinez un jeu de skills inventé, skill par skill, pour sa licence, sa maintenance, ses scripts
+  et ses outils préapprouvés, prenez deux de ses skills, et comparez ce qu’elles changent dans une
+  session avec ce qu’elles ajoutent au contexte.
 mode: tutorial
 covers: customizing-agents/skills
-serves: [customizing-agents/adopts-a-skill-set/vets-a-skill-set, customizing-agents/adopts-a-skill-set/adopts-skills-gradually]
+serves: [customizing-agents/adopts-a-skill-set/vets-a-skill-set,
+      customizing-agents/adopts-a-skill-set/adopts-skills-gradually]
 introduces: [published-skill-sets]
 assumes:
   - objective: customizing-agents/writes-skill/evaluates-a-plugin
@@ -23,8 +24,9 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    Vet one public skill set as you would a library, install two of its skills, and compare what
-    they change in a session against what they add to the context.
+    Examinez un jeu de skills public comme vous le feriez pour une bibliothèque, installez deux de
+    ses skills, et comparez ce qu’elles changent dans une session avec ce qu’elles ajoutent au
+    contexte.
 sources:
   - Claude Code skills
   - Claude Code plugins

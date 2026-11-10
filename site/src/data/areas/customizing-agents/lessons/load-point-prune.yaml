@@ -1,27 +1,29 @@
 id: customizing-agents/load-point-prune
-title: Load it, point at it, or cut it
+title: Le charger, y renvoyer ou le couper
 description: >-
-  Take a long instruction file and make it short: keep what nearly every task needs, move what only
-  some tasks need behind a one-line pointer, and delete the lines the agent would not miss.
+  Prenez un long fichier d’instructions et raccourcissez-le : gardez ce dont presque chaque tâche
+  a besoin, placez ce dont seules certaines tâches ont besoin derrière un renvoi d’une ligne, et
+  supprimez les lignes qui ne manqueraient pas à l’agent.
 mode: tutorial
 covers: customizing-agents/instructions
-serves: [customizing-agents/configures-agent/chooses-load-or-point, customizing-agents/configures-agent/prunes-instructions]
+serves: [customizing-agents/configures-agent/chooses-load-or-point,
+      customizing-agents/configures-agent/prunes-instructions]
 introduces: [loading-versus-pointing, pruning-instructions]
 assumes:
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
     section: what-doesnt-belong
 extends-to:
-  - label: Path-scoped rules in Claude Code
+  - label: Les règles limitées à certains chemins dans Claude Code
     href: https://code.claude.com/docs/en/memory#path-specific-rules
 after: [customizing-agents/instructions]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Go through a long instruction file line by line, keep what the agent needs in every session,
-    move the rest into files the instructions point at, and delete what the agent can work out from
-    the code.
+    Parcourez un long fichier d’instructions ligne par ligne, gardez ce dont l’agent a besoin à
+    chaque session, déplacez le reste dans des fichiers vers lesquels les instructions renvoient, et
+    supprimez ce que l’agent peut déduire du code.
 sources: [Claude Code memory, Claude Code best practices, Anthropic context engineering]
 sources-checked: 2026-10-07
 review-by: 2027-04-07

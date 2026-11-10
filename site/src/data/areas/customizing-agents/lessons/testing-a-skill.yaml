@@ -1,9 +1,10 @@
 id: customizing-agents/testing-a-skill
-title: Testing a skill from a fresh session
+title: Tester une skill depuis une session neuve
 description: >-
-  Run the release skill from the first-skill lesson in a clean clone and a new session, read the transcript
-  for where the agent hesitated, asked or guessed, turn each place into a check, a failure step or a
-  sharper success test, and run it again.
+  Lancez la skill de publication de la leçon sur la première skill dans un clone propre et une
+  nouvelle session, lisez dans la transcription les endroits où l’agent a hésité, demandé ou
+  deviné, transformez chacun en contrôle, en étape d’échec ou en test de réussite plus précis, et
+  relancez-la.
 mode: tutorial
 covers: customizing-agents/skills
 serves: [customizing-agents/writes-skill/packages-a-procedure]
@@ -18,15 +19,17 @@ assumes:
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 extends-to:
-  - label: "Extend Codex Workflows, the lab: test that a skill runs on the right request and not on the wrong one (OpenAI Academy, free account)"
+  - label: >-
+      Extend Codex Workflows, l’atelier : tester qu’une skill se lance sur la bonne demande et pas sur
+      la mauvaise (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/extend-codex-workflows-4e61p
 after: [customizing-agents/first-skill]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Run the release skill from a fresh session in a clean clone, note where the agent hesitated or
-    asked, and add the missing check or failure step.
+    Lancez la skill de publication depuis une session neuve dans un clone propre, notez où l’agent a
+    hésité ou demandé, et ajoutez le contrôle ou l’étape d’échec qui manquait.
 sources:
   - Claude docs best-practices
   - Claude Code skills

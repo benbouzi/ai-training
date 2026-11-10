@@ -1,8 +1,9 @@
 id: customizing-agents/session-handoff
-title: Handing work to the next session
+title: Écrire une passation avant la fin d’une session
 description: >-
-  End a session that stopped halfway with a handoff file that names the state, the decisions and
-  what was ruled out, and count the turns a fresh session needs with and without it.
+  Terminez une session arrêtée à mi-chemin par un fichier de passation qui nomme l’état, les
+  décisions et ce qui a été écarté, et comptez les tours dont une session neuve a besoin avec et
+  sans lui.
 mode: tutorial
 covers: customizing-agents/memory
 serves: [customizing-agents/configures-agent/manages-memory]
@@ -16,8 +17,9 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    End a session with a handoff file naming state, decisions, the failing test and what was ruled
-    out, then start a fresh session from it and count the turns until useful work resumes.
+    Terminez une session par un fichier de passation qui nomme l’état, les décisions, le test en
+    échec et ce qui a été écarté, puis démarrez une session neuve à partir de lui et comptez les
+    tours jusqu’à la reprise d’un travail utile.
 sources:
   - AEC-05
   - Claude Code how it works

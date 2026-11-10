@@ -1,102 +1,166 @@
 id: customizing-agents/writes-skill
 area: customizing-agents
-statement: Writes a reusable agent skill
+statement: Écrit une skill d’agent réutilisable
 topics: [customizing-agents/skills, customizing-agents/instructions]
 objectives:
   - id: customizing-agents/writes-skill/chooses-skill-over-tool
-    statement: Chooses between a skill, a tool and an instruction for a need
+    statement: Choisit entre une skill, un outil et une instruction pour un besoin
     level: base
     behaviors:
-      - claim: The learner picks an instruction for a rule, a skill for a procedure, and a tool for an
-          ability the agent does not have.
-        why: Each does one thing, and a rule written as a skill or a procedure written as an instruction
-          fails in a predictable way.
-        example: '"Always use `bun`, never `npm`" is an instruction. "How to cut a release" is a skill, and
-          "query the issue tracker" is a tool.'
-      - claim: The learner asks whether the agent can already do the task with what it has before adding
-          anything.
-        why: A skill that wraps a command the agent already knows adds context and no ability.
-        example: The agent can run `gh pr create` unaided, so the skill only records the team's PR template
-          and review steps.
-      - claim: The learner weighs what each option costs the context window and the permission set.
-        why: Every tool and every loaded skill takes tokens on every turn, and a tool adds to what the agent
-          can do wrong.
-        example: A read-only MCP server with forty tools is replaced by a CLI the agent calls when needed.
+      - claim: >-
+          L’apprenant choisit une instruction pour une règle, une skill pour une procédure, et un outil
+          pour une capacité que l’agent n’a pas.
+        why: >-
+          Chacun fait une seule chose, et une règle écrite comme une skill ou une procédure écrite comme
+          une instruction échoue d’une façon prévisible.
+        example: >-
+          « Toujours utiliser `bun`, jamais `npm` » est une instruction. « Comment publier une version
+          »
+          est une skill, et « interroger le suivi des tickets » est un outil.
+      - claim: >-
+          L’apprenant se demande si l’agent sait déjà faire la tâche avec ce qu’il a, avant d’ajouter
+          quoi
+          que ce soit.
+        why: >-
+          Une skill qui enveloppe une commande que l’agent connaît déjà ajoute du contexte sans ajouter
+          de
+          capacité.
+        example: >-
+          L’agent sait lancer `gh pr create` sans aide, donc la skill n’enregistre que le modèle de pull
+          request de l’équipe et ses étapes de revue.
+      - claim: L’apprenant pèse ce que chaque option coûte en fenêtre de contexte et en permissions.
+        why: >-
+          Chaque outil et chaque skill chargée prennent des jetons à chaque tour, et un outil élargit
+          ce
+          que l’agent peut mal faire.
+        example: >-
+          Un serveur MCP en lecture seule à quarante outils est remplacé par une CLI que l’agent appelle
+          quand il en a besoin.
   - id: customizing-agents/writes-skill/packages-a-procedure
-    statement: Packages a repeatable procedure as a skill another person's agent can use
+    statement: >-
+      Regroupe une procédure répétable dans une skill que l’agent d’une autre personne peut utiliser
     level: base
     behaviors:
-      - claim: The skill states when to use it, the steps, and how to tell the result is right.
-        why: Another person's agent has none of the author's context and needs all three to run the
-          procedure without asking.
-        example: A release skill says "use when asked to cut a release", lists the six commands in order,
-          and ends with "the tag exists and CI on the tag is green".
-      - claim: The skill is tested by running it from a fresh session on someone else's machine.
-        why: A procedure that only works with the author's setup is not reusable.
-        example: A colleague's agent runs the skill and stops at a missing environment variable, so the
-          skill gains a check for it.
-      - claim: The skill names the commands and files exactly, and says what to do when a step fails.
-        why: A procedure that assumes success stops at the first surprise.
-        example: '"If `mise run ci` fails, fix the reported task and rerun; do not skip the task" is part of
-          the skill.'
+      - claim: >-
+          La skill dit quand l’utiliser, quelles sont les étapes, et comment savoir que le résultat est
+          juste.
+        why: >-
+          L’agent d’une autre personne n’a rien du contexte de l’auteur, et il a besoin des trois pour
+          suivre la procédure sans demander.
+        example: >-
+          Une skill de publication dit « à utiliser quand on demande de publier une version », liste les
+          six commandes dans l’ordre, et se termine par « l’étiquette existe et la CI sur l’étiquette
+          est
+          au vert ».
+      - claim: >-
+          La skill est testée en la lançant depuis une session neuve sur la machine de quelqu’un d’autre.
+        why: Une procédure qui ne fonctionne qu’avec l’installation de l’auteur n’est pas
+          réutilisable.
+        example: >-
+          L’agent d’un collègue lance la skill et s’arrête sur une variable d’environnement manquante,
+          donc la skill reçoit une vérification pour elle.
+      - claim: >-
+          La skill nomme exactement les commandes et les fichiers, et dit quoi faire quand une étape
+          échoue.
+        why: Une procédure qui suppose que tout réussit s’arrête à la première surprise.
+        example: >-
+          « Si `mise run ci` échoue, corriger la tâche signalée et relancer, sans sauter la tâche » fait
+          partie de la skill.
   - id: customizing-agents/writes-skill/discloses-progressively
-    statement: Structures a skill so the agent loads only what it needs
+    statement: Organise une skill pour que l’agent ne charge que ce dont il a besoin
     level: base
     behaviors:
-      - claim: The skill's front matter says in one or two lines what it is for, so the agent can decide
-          whether to load it without reading it.
-        why: Every skill's description is in context on every turn, and a long one is paid for on every turn
-          (@Academy introduction-to-agent-skills).
-        example: The description is "Cut and publish a release of this package" and nothing more.
-      - claim: The main skill file holds the common path, and rare cases, long references and templates go
-          into files the skill points to.
-        why: A skill that loads everything up front costs the context of the rare case on every run.
-        example: The release skill's body is forty lines, and the rollback procedure is in `rollback.md`,
-          loaded only when needed.
-      - claim: The learner measures what the skill costs when loaded and trims it when it grows.
-        why: Skills grow by accretion, and no single addition looks expensive.
-        example: The learner counts the tokens of the skill directory after each change and moves a bloated
-          table into a script.
+      - claim: >-
+          L’en-tête de la skill dit en une ou deux lignes à quoi elle sert, pour que l’agent puisse
+          décider de la charger sans la lire.
+        why: >-
+          La description de chaque skill est dans le contexte à chaque tour, et une description longue
+          se
+          paie à chaque tour (@Academy introduction-to-agent-skills).
+        example: >-
+          La description est « Cut and publish a release of this package » (préparer et publier une
+          version de ce paquet), et rien de plus.
+      - claim: >-
+          Le fichier principal de la skill contient le chemin courant, et les cas rares, les longues
+          références et les modèles vont dans des fichiers vers lesquels la skill renvoie.
+        why: >-
+          Une skill qui charge tout dès le départ fait payer le contexte du cas rare à chaque exécution.
+        example: >-
+          Le corps de la skill de publication fait quarante lignes, et la procédure de retour en arrière
+          est dans `rollback.md`, chargé seulement quand il le faut.
+      - claim: L’apprenant mesure ce que coûte la skill une fois chargée et la réduit quand elle
+          grossit.
+        why: Les skills grossissent par accumulation, et aucun ajout ne semble coûteux à lui seul.
+        example: >-
+          L’apprenant compte les jetons du dossier de la skill après chaque modification, et déplace un
+          tableau trop gros dans un script.
   - id: customizing-agents/writes-skill/evaluates-a-plugin
-    statement: Reads a plugin's parts before installing it and takes only what is needed
+    statement: Lit les éléments d’un plugin avant de l’installer et ne prend que ce qui est
+      nécessaire
     level: base
     behaviors:
-      - claim: Before an install, the learner opens the plugin's hook file and the scripts it names, its
-          server list, its `bin/` directory and each subagent's tool list.
-        why: Claude Code's install screen names each hook but doesn't show the command behind it
-          (@Claude Code plugin security), and a subagent without a tool list may use every tool that
-          subagents are allowed (@Claude Code subagents).
-        example: The learner opens `hooks/hooks.json`, sees a `PreToolUse` hook on `Bash`, and reads the
-          script to learn that it blocks every commit without a staged changelog.
-      - claim: The learner names the parts that act in every session where the plugin is enabled, and the
-          parts that no permission rule checks.
-        why: Hooks and server processes run with the user's own rights, outside the permission rules and
-          the sandbox (@Claude Code plugin security).
-        example: For a plugin wanted for one skill, the learner notes that its hook and its tracker connection
-          are active in sessions that never use that skill.
-      - claim: The learner decides between installing the plugin at the narrowest scope that fits, copying
-          one skill out of it when the license allows, and leaving it.
-        why: A plugin installed for one part brings all of its parts into every session where it is
-          enabled.
-        example: The team wants only the release skill, so the learner copies it into the project's
-          `.claude/skills/` and doesn't install the plugin.
+      - claim: >-
+          Avant une installation, l’apprenant ouvre le fichier de hooks du plugin et les scripts qu’il
+          nomme, sa liste de serveurs, son dossier `bin/` et la liste d’outils de chaque sous-agent.
+        why: >-
+          L’écran d’installation de Claude Code nomme chaque hook sans montrer la commande qu’il lance
+          (@Claude Code plugin security), et un sous-agent sans liste d’outils peut utiliser tous les
+          outils permis aux sous-agents (@Claude Code subagents).
+        example: >-
+          L’apprenant ouvre `hooks/hooks.json`, voit un hook `PreToolUse` sur `Bash`, et lit le script
+          pour apprendre qu’il bloque chaque commit sans journal des modifications indexé.
+      - claim: >-
+          L’apprenant nomme les éléments qui agissent dans chaque session où le plugin est activé, et
+          ceux
+          qu’aucune règle de permission ne vérifie.
+        why: >-
+          Les hooks et les processus des serveurs s’exécutent avec les droits de l’utilisateur, hors des
+          règles de permission et du bac à sable (@Claude Code plugin security).
+        example: >-
+          Pour un plugin voulu pour une seule skill, l’apprenant note que son hook et sa connexion au
+          suivi des tickets sont actifs dans des sessions qui n’utilisent jamais cette skill.
+      - claim: >-
+          L’apprenant choisit entre installer le plugin dans la portée la plus étroite qui convient, en
+          copier une seule skill quand la licence le permet, ou y renoncer.
+        why: >-
+          Un plugin installé pour un seul de ses éléments apporte tous ses éléments dans chaque session
+          où
+          il est activé.
+        example: >-
+          L’équipe ne veut que la skill de publication, donc l’apprenant la copie dans le dossier
+          `.claude/skills/` du projet et n’installe pas le plugin.
   - id: customizing-agents/writes-skill/chooses-invocation-and-scope
-    statement: Chooses who invokes a skill and where it is installed
+    statement: Choisit qui invoque une skill et où elle est installée
     level: base
     behaviors:
-      - claim: The learner makes a skill with side effects invocable by the user only.
-        why: A deploy or a message to other people should run when a person decides, and a skill the model
-          may start can run when its description happens to match (@Claude Code skills).
-        example: 'The deploy skill sets `disable-model-invocation: true`, and the coding-conventions skill
-          stays available to the model.'
-      - claim: The learner weighs the context a model-invoked skill costs against how often it helps.
-        why: The description of every model-invoked skill is in context in every session (@Claude Code
-          skills).
-        example: The learner makes a rarely used report skill user-invoked, so its description no longer
-          loads in every session.
-      - claim: The learner installs a skill the team needs in the project and keeps a personal skill in
-          their own configuration.
-        why: A project skill is shared and reviewed with the code, and a personal one follows only its
-          owner.
-        example: The release skill is committed to `.claude/skills/`, and the learner's own note-taking
-          skill stays in their home directory.
+      - claim: L’apprenant rend une skill qui a des effets de bord invocable par l’utilisateur
+          seulement.
+        why: >-
+          Un déploiement ou un message à d’autres personnes doit partir quand une personne le décide,
+          et
+          une skill que le modèle peut lancer peut s’exécuter dès que sa description correspond par hasard
+          (@Claude Code skills).
+        example: >-
+          La skill de déploiement règle `disable-model-invocation: true`, et la skill des conventions
+          de
+          code reste disponible pour le modèle.
+      - claim: >-
+          L’apprenant met en balance le contexte que coûte une skill invoquée par le modèle et la
+          fréquence à laquelle elle aide.
+        why: >-
+          La description de chaque skill invoquée par le modèle est dans le contexte de chaque session
+          (@Claude Code skills).
+        example: >-
+          L’apprenant rend une skill de rapport rarement utilisée invocable par l’utilisateur seulement,
+          pour que sa description ne soit plus chargée à chaque session.
+      - claim: >-
+          L’apprenant installe dans le projet une skill dont l’équipe a besoin, et garde une skill
+          personnelle dans sa propre configuration.
+        why: >-
+          Une skill de projet est partagée et relue avec le code, et une skill personnelle ne suit que
+          son
+          propriétaire.
+        example: >-
+          La skill de publication est committée dans `.claude/skills/`, et la skill de prise de notes
+          de
+          l’apprenant reste dans son dossier personnel.

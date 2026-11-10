@@ -1,66 +1,66 @@
 id: customizing-agents/hooks-permissions
 area: customizing-agents
-name: Hooks, permissions, settings
+name: Hooks, permissions et réglages
 definition: >-
-  The mechanical controls around a coding agent: permission modes that decide
-  what it may do unasked, allowlists that widen or narrow that per command,
-  hooks that run your own scripts at fixed points, subagents that isolate
-  work, and the layering of settings between user, project and session.
+  Les contrôles mécaniques autour d’un agent de code : les modes de permission qui décident de ce
+  qu’il peut faire sans demander, les listes d’autorisation qui élargissent ou restreignent ce
+  choix commande par commande, les hooks qui lancent vos propres scripts à des moments fixes, les
+  sous-agents qui isolent du travail, et la superposition des réglages entre l’utilisateur, le
+  projet et la session.
 concepts:
   - id: permission-modes
-    name: Permission modes
+    name: Modes de permission
     definition: >-
-      Preset levels of how much an agent may do without asking, from
-      approving every edit and command, through auto-accepting edits but
-      asking for commands, to running everything unattended. The mode sets
-      the default; allowlists refine it. Choose per task by what a mistake
-      would cost, and step up only inside a sandbox or a disposable worktree.
+      Des niveaux prédéfinis de ce qu’un agent peut faire sans demander, de l’approbation de chaque
+      modification et de chaque commande à l’exécution de tout sans surveillance, en passant par
+      l’acceptation automatique des modifications avec une demande pour les commandes. Le mode fixe le
+      comportement par défaut, et les listes d’autorisation l’affinent. Choisissez le mode pour chaque
+      tâche selon ce que coûterait une erreur, et ne montez d’un niveau qu’à l’intérieur d’un bac à
+      sable ou d’un worktree jetable.
   - id: allowlists
-    name: Allowlists
+    name: Listes d’autorisation
     definition: >-
-      Explicit lists of tools, commands or paths the agent may use without a
-      prompt, and denylists it may never use. They turn a stream of approval
-      prompts into a one-off decision and make that decision reviewable in
-      configuration. Keep them narrow and specific; a broad wildcard grants
-      much more than the command that prompted it.
+      Des listes explicites d’outils, de commandes ou de chemins que l’agent peut utiliser sans
+      demande d’autorisation, et des listes d’interdiction qu’il ne peut jamais utiliser. Elles
+      transforment une suite de demandes d’approbation en une décision prise une fois, et rendent
+      cette décision relisible dans la configuration. Gardez-les étroites et précises, car un joker
+      large accorde bien plus que la commande qui a provoqué la demande.
   - id: hooks
     name: Hooks
     definition: >-
-      User-defined scripts the agent runs at lifecycle events: before or
-      after a tool call, when a session starts, when the agent finishes. A
-      hook can block an action, transform it, or run a check such as
-      formatting or a secret scan. Hooks enforce rules deterministically
-      where instructions only ask, and their output goes back to the agent
-      so it can react.
+      Des scripts définis par l’utilisateur que l’agent lance à des moments de son cycle de vie :
+      avant ou après un appel d’outil, au début d’une session, quand l’agent termine. Un hook peut
+      bloquer une action, la transformer, ou lancer un contrôle comme une mise en forme ou une
+      recherche de secrets. Les hooks imposent des règles de façon déterministe là où les instructions
+      ne font que demander, et leur sortie revient à l’agent pour qu’il puisse réagir.
   - id: subagents
-    name: Subagents
+    name: Sous-agents
     definition: >-
-      Separate agent instances the main agent delegates to, each with its own
-      context window, tool set and often its own instructions. They keep bulky
-      work such as searching or reviewing out of the main context, allow
-      parallel work and let a task run with narrower permissions than the
-      parent. The parent sees only the subagent's report.
+      Des instances d’agent séparées auxquelles l’agent principal délègue du travail, chacune avec sa
+      propre fenêtre de contexte, son propre jeu d’outils et souvent ses propres instructions. Ils
+      gardent hors du contexte principal le travail volumineux comme la recherche ou la revue,
+      permettent de travailler en parallèle et laissent une tâche tourner avec des permissions plus
+      étroites que celles de l’agent parent. Le parent ne voit que le rapport du sous-agent.
   - id: settings-layering
-    name: Settings layering
+    name: Superposition des réglages
     definition: >-
-      Configuration comes from several places that override each other in a
-      fixed order: the user's own defaults, the project's shared settings
-      committed to the repository, local project overrides that are not
-      committed, and flags for one session. Knowing the order explains why a
-      setting seems ignored and lets a team ship safe defaults while people
-      keep personal preferences.
+      La configuration vient de plusieurs endroits qui se remplacent dans un ordre fixe : les réglages
+      par défaut de l’utilisateur, les réglages partagés du projet committés dans le dépôt, les
+      réglages locaux du projet qui ne sont pas committés, et les options d’une session. Connaître cet
+      ordre explique pourquoi un réglage semble ignoré, et permet à une équipe de fournir des réglages
+      par défaut sûrs pendant que chacun garde ses préférences personnelles.
   - id: steering-by-rejection
-    name: Steering by rejection
+    name: Guider par le refus
     definition: >-
-      Using a refusal to change what the agent does next. When a hook or a
-      person blocks an action and gives a reason, the reason goes back to the
-      model, which can adjust and continue. A reason that names the allowed
-      alternative, such as "run the test task", points it at the right path.
-      A bare refusal leaves it guessing, and since a rule on one command does
-      not cover other commands with the same effect, a guess can reach the
-      blocked result another way.
+      Se servir d’un refus pour changer ce que l’agent fait ensuite. Quand un hook ou une personne
+      bloque une action et donne une raison, la raison revient au modèle, qui peut s’adapter et
+      continuer. Une raison qui nomme l’alternative permise, comme « lance la tâche de test »,
+      l’oriente vers le bon chemin. Un refus sans explication le laisse deviner, et comme une règle
+      sur une commande ne couvre pas les autres commandes qui ont le même effet, une supposition peut
+      atteindre le résultat bloqué par un autre chemin.
 links:
   prerequisites: [customizing-agents/instructions, safety/agent-risk]
   related: []
   specializations: []
-sources: [Academy claude-code-101, Academy claude-code-in-action, Academy introduction-to-subagents, Academy ai-native-sdlc-playbook, Claude Code hooks, Claude Code permissions]
+sources: [Academy claude-code-101, Academy claude-code-in-action, Academy introduction-to-subagents,
+      Academy ai-native-sdlc-playbook, Claude Code hooks, Claude Code permissions]

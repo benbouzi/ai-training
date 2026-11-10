@@ -1,8 +1,9 @@
 id: customizing-agents/permission-modes
-title: Choosing a permission mode per task
+title: Choisir un mode de permission pour chaque tâche
 description: >-
-  Run one small task with a coding agent in a mode that asks before everything and in one that
-  accepts edits, count the prompts, and choose the mode by what a mistake would cost.
+  Faites une petite tâche avec un agent de code dans un mode qui demande avant tout et dans un
+  mode qui accepte les modifications, comptez les demandes, et choisissez le mode selon ce que
+  coûterait une erreur.
 mode: tutorial
 covers: customizing-agents/hooks-permissions
 serves: [customizing-agents/configures-agent/sets-permissions]
@@ -18,18 +19,21 @@ sources-checked: 2026-09-21
 review-by: 2027-03-21
 after: [customizing-agents/instructions]
 shorts:
-  - Running unattended inside a sandbox or a container (Academy claude-code-in-action)
+  - >-
+    Tourner sans surveillance dans un bac à sable ou un conteneur (Academy claude-code-in-action)
 exercise:
   kind: do
   brief: >-
-    Run the same small fixture task in an ask-everything mode and in an accept-edits mode, count the
-    prompts, and write one line on which mode fits the task and why.
+    Faites la même petite tâche de l’exemple dans un mode qui demande tout et dans un mode qui
+    accepte les modifications, comptez les demandes, et écrivez une ligne sur le mode qui convient à
+    la tâche et pourquoi.
 sources:
   - Claude Code permission modes
   - Academy claude-code-in-action
 minutes: 15
 notes: >-
   The fixture task reuses the first-session to-do directory, copied and given its own first commit
-  so git checkout resets it, with the brief telling the agent to leave the known failing test alone. The modes.py fixture is a three-mode model of the vendor's
+  so git checkout resets it, with the brief telling the agent to leave the known failing test alone. The
+  modes.py fixture is a three-mode model of the vendor's
   table; the page says the real counts may differ by one or two. Mode names, flags and behavior
   come from code.claude.com/docs/en/permission-modes and must be re-checked by review-by.

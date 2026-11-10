@@ -1,44 +1,42 @@
 id: customizing-agents/inspecting-the-agent
 area: customizing-agents
-name: Inspecting what the agent sends
+name: Voir ce que l’agent envoie
 definition: >-
-  What an agent sends to the model is hidden by default. This topic covers
-  watching how full the context is while working, reading the record a
-  harness keeps of each session, and logging the exact requests the agent
-  sends to the model provider, along with why each of these records holds
-  sensitive data.
+  Ce qu’un agent envoie au modèle est caché par défaut. Ce thème couvre la surveillance du
+  remplissage du contexte pendant le travail, la lecture du journal qu’un harnais garde de chaque
+  session, et la journalisation des requêtes exactes que l’agent envoie au fournisseur du modèle,
+  ainsi que la raison pour laquelle chacun de ces enregistrements contient des données sensibles.
 concepts:
   - id: context-meter
-    name: Context meter
+    name: Jauge de contexte
     definition: >-
-      A live view of how much of the context window a session uses. A status
-      line can show the share in use and the tokens so far as the session
-      runs, and a context command breaks the use down by category, such as
-      instructions, tools, memory and messages. Watching it shows when a
-      session is getting full and which tools or files are expensive, so the
-      learner can compact or start fresh before the agent starts dropping
-      instructions.
+      Une vue en direct de la part de la fenêtre de contexte qu’utilise une session. Une ligne d’état
+      peut afficher la part utilisée et les jetons consommés au fil de la session, et une commande de
+      contexte détaille l’usage par catégorie, comme les instructions, les outils, la mémoire et les
+      messages. La surveiller montre quand une session se remplit et quels outils ou fichiers coûtent
+      cher, pour que l’apprenant compacte ou recommence à neuf avant que l’agent commence à laisser
+      tomber des instructions.
   - id: session-record
-    name: Session record
+    name: Journal de session
     definition: >-
-      The file in which a harness saves a session, with every message, tool
-      call and tool result, so the session can be resumed later. It is the
-      most complete account of what the agent saw and did, and the place to
-      find where a run went wrong. It is also plain text on disk, kept for a
-      set number of days, and it holds whatever passed through a tool,
-      including file contents and any secret the agent printed.
+      Le fichier dans lequel un harnais enregistre une session, avec chaque message, chaque appel
+      d’outil et chaque résultat d’outil, pour que la session puisse être reprise plus tard. C’est le
+      compte rendu le plus complet de ce que l’agent a vu et fait, et l’endroit où trouver le moment
+      où une exécution a mal tourné. C’est aussi du texte brut sur le disque, gardé pendant un nombre
+      de jours fixé, et il contient tout ce qui est passé par un outil, y compris le contenu des
+      fichiers et tout secret que l’agent a affiché.
   - id: request-logging
-    name: Request logging
+    name: Journalisation des requêtes
     definition: >-
-      Recording the exact requests an agent sends to the model provider and
-      the responses it gets back. The agent can be pointed at a gateway
-      between it and the provider that logs every request, or a monitoring
-      export can be set to include full request bodies, which it leaves out
-      by default. The log shows what each tool description, file and
-      instruction costs. It holds everything the agent read, so it stays on
-      systems the team controls.
+      Enregistrer les requêtes exactes qu’un agent envoie au fournisseur du modèle et les réponses
+      qu’il reçoit. On peut diriger l’agent vers une passerelle placée entre lui et le fournisseur,
+      qui journalise chaque requête, ou régler un export de supervision pour qu’il inclue le corps
+      complet des requêtes, qu’il omet par défaut. Le journal montre ce que coûte chaque description
+      d’outil, chaque fichier et chaque instruction. Il contient tout ce que l’agent a lu, donc il
+      reste sur des systèmes que l’équipe contrôle.
 links:
   prerequisites: [concepts/what-is-an-agent, coding-with-agents/first-session]
   related: [customizing-agents/mcp, coding-with-agents/context]
   specializations: []
-sources: [Claude Code context window, Claude Code statusline, Claude Code claude directory, Claude Code monitoring, Claude Code llm gateway]
+sources: [Claude Code context window, Claude Code statusline, Claude Code claude directory, Claude
+      Code monitoring, Claude Code llm gateway]
