@@ -1,37 +1,40 @@
 import { Choice, MultiChoice, Order, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-In *Splitting the work into components the agent can build one at a
-time* you wrote the acceptance test for the import parser, and that test
-treats a line that starts with `x ` as a done item. The rule came from the
-colleague who asked for the feature. They remember their old app writing
-`x `, and nobody has looked at the file. In this lesson we check that
-rule before the parser is built. We write down the one question, have
-the agent build the smallest program that answers it, put the answer in
-the spec and delete the program.
+Dans *Découper le travail en composants que l’agent construit un par un*, vous
+avez écrit le test d’acceptation de l’analyseur d’import, et ce test traite
+une ligne qui commence par `x ` comme un élément fait. La règle vient du
+collègue qui a demandé la fonctionnalité. Il se souvient que son ancienne
+application écrivait `x `, et personne n’a regardé le fichier. Dans cette
+leçon, nous vérifions cette règle avant de construire l’analyseur. Nous
+écrivons la question unique, nous faisons construire par l’agent le plus
+petit programme qui y répond, nous mettons la réponse dans la spécification et
+nous supprimons le programme.
 
-*Let the agent interview you* ended with open questions in the spec, and
-some of them can't be settled by talking. Whether a file uses one done
-mark or two is a fact about the file, and a short program finds it out
-faster than a meeting does. Thomas and Hunt call this a prototype built
-to learn: it answers a question, it can leave out completeness and
-robustness, and it is thrown away when the question is answered
-(@Thomas 2019). With a coding agent, such a program takes little time
-to write, so trying the idea often costs less than discussing it.
+*Se faire interroger par l’agent* se terminait par des questions ouvertes dans
+la spécification, et certaines ne peuvent pas être tranchées par la
+discussion. Savoir si un fichier utilise une marque « fait » ou deux est un
+fait sur le fichier, et un petit programme le découvre plus vite qu’une
+réunion. Thomas et Hunt appellent cela un prototype construit pour apprendre :
+il répond à une question, il peut se passer d’exhaustivité et de robustesse,
+et on le jette une fois la question tranchée (@Thomas 2019). Avec un agent de
+code, un tel programme s’écrit vite, donc essayer l’idée coûte souvent moins
+cher que d’en discuter.
 
-## The fixture
+## L’exemple
 
-The fixture is in the course repository under
-`site/examples/coding-with-agents/prototype-to-throw-away/`. Copy that
-whole directory to a place of its own. The copy holds `fixture-repo/`,
-where the agent works, and a `sample/` directory with a script that the
-second half of the lesson uses. `fixture-repo/` holds `SPEC.md`, the spec
-for the `import` command of the to-do program, and `old-list.txt`, a copy
-of the colleague's old file. The other files are for the course's own
-checks. Change into `fixture-repo` for every step until the Exercise,
-except the test change, which is in your copy of an earlier fixture. The
-reset is to delete the copy and copy again.
+L’exemple se trouve dans le dépôt du cours, sous
+`site/examples/coding-with-agents/prototype-to-throw-away/`. Copiez tout ce
+dossier à un endroit à part. La copie contient `fixture-repo/`, où l’agent
+travaille, et un dossier `sample/` avec un script que la seconde moitié de la
+leçon utilise. `fixture-repo/` contient `SPEC.md`, la spécification de la
+commande `import` du programme de liste de tâches, et `old-list.txt`, une copie
+de l’ancien fichier du collègue. Les autres fichiers servent aux contrôles du
+cours. Placez-vous dans `fixture-repo` pour chaque étape jusqu’à l’exercice,
+sauf pour la modification du test, qui se fait dans votre copie d’un exemple
+précédent. Pour réinitialiser, supprimez la copie et copiez de nouveau.
 
-The spec ends with this section:
+La spécification, en anglais comme les autres fichiers de l’exemple, se
+termine par cette section :
 
 ```md
 ## Open questions
@@ -40,64 +43,69 @@ The spec ends with this section:
   space, but nobody has looked. `old-list.txt` is a copy of the file.
 ```
 
-If the answer is "only `x `", the parser and its test don't need a
-change. A second mark in the file would make the parser import those
-items as open. The test would still pass, because none of its input lines
-has that mark.
+Elle dit que la question ouverte porte sur les marques « fait » qu’utilise
+l’ancien fichier : le collègue pense que c’est `x` suivi d’une espace, mais
+personne n’a regardé. Si la réponse est « seulement `x ` », l’analyseur et son
+test n’ont pas besoin de changer. Une deuxième marque dans le fichier ferait
+importer ces éléments comme ouverts par l’analyseur. Le test passerait quand
+même, parce qu’aucune de ses lignes d’entrée n’a cette marque.
 
-## One question before any code
+## Une question avant tout code
 
-A throwaway prototype is a small program built only to answer one design
-question, and deleted once it has. The question comes first, written in
-one sentence, before you ask for any code. Without it, the agent builds
-whatever seems useful: a parser, then a test for the parser, then a
-command that calls it. That's a first version of the import, built
-without the components and checks that you designed in *Splitting the
-work into components the agent can build one at a time*.
+Un prototype jetable est un petit programme construit seulement pour répondre
+à une question de conception, et supprimé une fois qu’il y a répondu. La
+question vient en premier, écrite en une phrase, avant de demander le moindre
+code. Sans elle, l’agent construit ce qui lui semble utile : un analyseur, puis
+un test pour l’analyseur, puis une commande qui l’appelle. C’est une première
+version de l’import, construite sans les composants et les contrôles que vous
+avez conçus dans *Découper le travail en composants que l’agent construit un
+par un*.
 
-A prototype can answer a question when the program prints the answer,
-such as a count or two outputs side by side.
-"Which done marks does `old-list.txt` use?" is such a question. "Should
-we build the import at all?" isn't, because no program prints the answer.
-"How should the import work?" isn't either, because it asks for the whole
-design.
+Un prototype peut répondre à une question quand le programme affiche la
+réponse, par exemple un décompte ou deux sorties côte à côte. « Quelles
+marques “fait” utilise `old-list.txt` ? » est une telle question. « Faut-il
+construire l’import ? » n’en est pas une, parce qu’aucun programme n’affiche la
+réponse. « Comment l’import doit-il fonctionner ? » non plus, parce qu’elle
+demande toute la conception.
 
 <Choice id="question-for-a-prototype" objective="coding-with-agents/specifies-work/settles-with-a-prototype"
   concepts={['throwaway-prototype']}
-  context="An engineer is specifying an import command for a small to-do program. It reads a text file that the colleague who asked for it exported from an old app. The spec has open questions, and the engineer wants a coding agent to build a throwaway prototype for one of them."
-  title="Which question fits a prototype?"
-  hint="For which question can a short program print something that settles it?"
+  context="Un ingénieur spécifie une commande d’import pour un petit programme de liste de tâches. Elle lit un fichier texte que le collègue qui l’a demandée a exporté d’une ancienne application. La spécification a des questions ouvertes, et l’ingénieur veut qu’un agent de code construise un prototype jetable pour l’une d’elles."
+  title="Quelle question convient à un prototype ?"
+  hint="Pour quelle question un petit programme peut-il afficher quelque chose qui la tranche ?"
   options={[
-    { text: 'Whether the import should be built at all, or the colleague could type the items by hand.', why: 'That is a judgment about cost and value. No program prints it, so the agent would build something and the question would still be open.' },
-    { text: 'How the import should be designed, from the parser to the report it prints at the end.', why: 'That asks for the whole design, and the program that answers it is a first version of the feature, built without its components and checks.' },
-    { text: 'Whether the old file marks done items in any other way than with an x and a space.', correct: true },
-    { text: 'Whether the old file will cause any kind of problem for the import once it is built.', why: 'No short program prints that answer. To find every problem, the agent has to build the import, and the question is still not named.' },
+    { text: 'Faut-il construire l’import, ou le collègue pourrait-il taper les éléments à la main ?', why: 'C’est un jugement de coût et de valeur. Aucun programme ne l’affiche, donc l’agent construirait quelque chose et la question resterait ouverte.' },
+    { text: 'Comment l’import doit-il être conçu, de l’analyseur jusqu’au compte rendu qu’il affiche à la fin ?', why: 'Cela demande toute la conception, et le programme qui y répond est une première version de la fonctionnalité, construite sans ses composants ni ses contrôles.' },
+    { text: 'L’ancien fichier marque-t-il les éléments faits autrement que par un x suivi d’une espace ?', correct: true },
+    { text: 'L’ancien fichier posera-t-il un problème quelconque à l’import une fois celui-ci construit ?', why: 'Aucun petit programme n’affiche cette réponse. Pour trouver chaque problème, l’agent doit construire l’import, et la question n’est toujours pas nommée.' },
   ]}>
-Which of these questions should the engineer give the agent as the one
-question for a throwaway prototype?
+Laquelle de ces questions l’ingénieur doit-il donner à l’agent comme question
+unique d’un prototype jetable ?
 </Choice>
 
-## The smallest program that answers it
+## Le plus petit programme qui y répond
 
-Start your coding agent in `fixture-repo` and give it the question, and
-say what the program reads and prints. Say what to leave out, too. Tests,
-error handling and structure are effort spent on code that you delete,
-and a brief that doesn't mention them leaves that choice to the agent.
-Say also that it may create one file and change nothing else.
+Lancez votre agent de code dans `fixture-repo` et donnez-lui la question, en
+disant ce que le programme lit et affiche. Dites aussi ce qu’il faut laisser
+de côté. Des tests, une gestion d’erreurs et une structure sont des efforts
+dépensés sur du code que vous supprimez, et une consigne qui n’en parle pas
+laisse ce choix à l’agent. Dites aussi qu’il peut créer un seul fichier et ne
+rien modifier d’autre.
 
 ```text
-Read SPEC.md. Its open question is which done marks old-list.txt uses.
-Write a throwaway script, count_forms.py, that answers only that. It reads
-old-list.txt (hard-code the name) and prints how many lines start with
-each first word, most common first, the top five.
-No tests, no error handling, no command-line options. Create only
-count_forms.py, and don't start on the import.
+Lis SPEC.md. Sa question ouverte porte sur les marques "fait" qu’utilise
+old-list.txt. Écris un script jetable, count_forms.py, qui répond
+seulement à cette question. Il lit old-list.txt (code le nom en dur) et
+affiche combien de lignes commencent par chaque premier mot, du plus
+fréquent au moins fréquent, les cinq premiers. Pas de tests, pas de
+gestion d’erreurs, pas d’options de ligne de commande. Ne crée que
+count_forms.py, et ne commence pas l’import.
 ```
 
-Counting first words is enough. A done mark is the first word of its
-line, and a mark that the colleague forgot shows up near the top of the
-list. The course ships one version of such a script in
-`sample/count_forms.py`, so the output below is checked on every build:
+Compter les premiers mots suffit. Une marque « fait » est le premier mot de sa
+ligne, et une marque que le collègue a oubliée apparaît en haut de la liste.
+Le cours fournit une version d’un tel script dans `sample/count_forms.py`,
+donc la sortie ci-dessous est vérifiée à chaque build :
 
 ```python
 # Throwaway: answers which done marks old-list.txt uses. Delete after.
@@ -110,18 +118,18 @@ for word, count in words.most_common(5):
     print(f"{word}: {count}")
 ```
 
-The file name is hard-coded, and the whole file is read at once. It has
-no functions or tests. In the parser each of those would be a defect, and
-for one run on a short file none of them matters.
+Le nom du fichier est codé en dur, et tout le fichier est lu d’un coup. Il n’a
+ni fonctions ni tests. Dans l’analyseur, chacun de ces choix serait un défaut,
+et pour une seule exécution sur un fichier court, aucun ne compte.
 
-<Predict id="run-the-prototype" title="Run the course's prototype"
+<Predict id="run-the-prototype" title="Lancer le prototype du cours"
   answer={`x: 10
   [x]: 4
   Buy: 3
   Book: 2
   Call: 2`} run="coding-with-agents/prototype-to-throw-away/sample_run.py">
-Run this in `fixture-repo`, and compare what you see with the output
-below.
+Lancez cette commande dans `fixture-repo` et comparez ce que vous voyez avec
+la sortie ci-dessous.
 
 ```sh
 python3 ../sample/count_forms.py
@@ -129,34 +137,36 @@ python3 ../sample/count_forms.py
 
 </Predict>
 
-Run the script your agent wrote in the same directory, with
-`python3 count_forms.py`. Its format may differ, and the counts for `x`
-and `[x]` should be the same. If they differ, one of the two scripts is
-wrong, and reading both against `old-list.txt` tells you which.
+Lancez dans le même dossier le script écrit par votre agent, avec
+`python3 count_forms.py`. Son format peut différer, et les décomptes de `x`
+et de `[x]` doivent être les mêmes. S’ils diffèrent, l’un des deux scripts est
+faux, et les comparer tous deux à `old-list.txt` vous dit lequel.
 
 <MultiChoice id="what-the-brief-leaves-out" objective="coding-with-agents/specifies-work/settles-with-a-prototype"
   concepts={['throwaway-prototype']}
-  context="An engineer briefs a coding agent for a throwaway script that counts how the lines of one text file start, to find out which done marks the file uses. The script runs once and is then deleted."
-  title="What does the prototype brief ask for?"
-  hint="Which parts of the brief serve the one answer, and which serve code that someone keeps?"
+  context="Un ingénieur donne à un agent de code la consigne d’un script jetable qui compte comment commencent les lignes d’un fichier texte, pour savoir quelles marques « fait » le fichier utilise. Le script tourne une fois, puis il est supprimé."
+  title="Que demande la consigne du prototype ?"
+  hint="Quelles parties de la consigne servent la réponse unique, et lesquelles servent du code que quelqu’un garde ?"
   options={[
-    { text: 'Hard-code the name of the one file the script reads.', correct: true },
-    { text: 'Add unit tests for the counting in the script, so the numbers can be trusted.', why: 'The counts are checked by reading a few lines of the file. Tests are effort spent on code that is deleted after one run.' },
-    { text: 'Print the counts and nothing that the question doesn\'t need.', correct: true },
-    { text: 'Put the counting in importer.py, so the parser can reuse it.', why: 'Then the prototype is part of the system, with its shortcuts, and nobody deletes it.' },
-    { text: 'Catch a missing or unreadable file and print a clear message.', why: 'The file is there, and the engineer runs the script once. Handling errors is work for code that other people run.' },
+    { text: 'Coder en dur le nom du seul fichier que le script lit.', correct: true },
+    { text: 'Ajouter des tests unitaires du décompte dans le script, pour qu’on puisse se fier aux nombres.', why: 'On vérifie les décomptes en lisant quelques lignes du fichier. Des tests sont un effort dépensé sur du code supprimé après une seule exécution.' },
+    { text: 'Afficher les décomptes, et rien dont la question n’a pas besoin.', correct: true },
+    { text: 'Mettre le décompte dans importer.py, pour que l’analyseur puisse le réutiliser.', why: 'Le prototype fait alors partie du système, avec ses raccourcis, et personne ne le supprime.' },
+    { text: 'Intercepter un fichier absent ou illisible et afficher un message clair.', why: 'Le fichier est là, et l’ingénieur lance le script une fois. La gestion d’erreurs est un travail pour du code que d’autres personnes lancent.' },
   ]}>
-Which two of these belong in the brief for the throwaway script?
+Lesquels de ces points, au nombre de deux, ont leur place dans la consigne du
+script jetable ?
 </MultiChoice>
 
-## Write the answer down, then delete the program
+## Écrire la réponse, puis supprimer le programme
 
-The output answers the question. The file has two done marks: `x`
-starts ten lines and `[x]` starts four. A parser built from the spec as
-it stands would import four done items as open. The prototype found the
-fact, and the decision is still yours. Here the decision is that `[x] `
-marks a done item too. Write it into the behavior and take the question
-out of the open questions:
+La sortie répond à la question. Le fichier a deux marques « fait » : `x`
+commence dix lignes et `[x]` en commence quatre. Un analyseur construit à
+partir de la spécification telle quelle importerait quatre éléments faits
+comme ouverts. Le prototype a trouvé le fait, et la décision vous appartient
+toujours. Ici, la décision est que `[x] ` marque aussi un élément fait.
+Écrivez-la dans le comportement, en anglais comme le reste de la
+spécification, et retirez la question des questions ouvertes :
 
 ```md
 2. A line that starts with `x` or `[x]` and a space is a done item, and
@@ -164,10 +174,14 @@ out of the open questions:
    lines).
 ```
 
-The acceptance test changes with the spec. It is the `test_importer.py`
-that you wrote in your copy of the fixture of *Splitting the work into
-components the agent can build one at a time*. Give it one more input
-line and its expected item:
+Cette ligne dit qu’une ligne qui commence par `x` ou `[x]` suivi d’une espace
+est un élément fait, que la marque ne fait pas partie de son texte, et que
+l’ancien fichier utilise les deux (10 et 4 lignes).
+
+Le test d’acceptation change avec la spécification. C’est le
+`test_importer.py` que vous avez écrit dans votre copie de l’exemple de
+*Découper le travail en composants que l’agent construit un par un*.
+Donnez-lui une ligne d’entrée de plus et l’élément attendu correspondant :
 
 ```python
     def test_parse_lines_keeps_text_and_done_mark_and_skips_blank_lines(self):
@@ -189,135 +203,141 @@ line and its expected item:
         )
 ```
 
-A parser that knows only `x ` returns the last line as an open item with
-the text `[x] Pay the bill`, so the test fails on it. You change the test
-before the parser is briefed, and the brief's "Do not change the test"
-still holds for the agent. Then delete both scripts, from `fixture-repo`:
+Un analyseur qui ne connaît que `x ` renvoie la dernière ligne comme un
+élément ouvert avec le texte `[x] Pay the bill`, donc le test échoue dessus.
+Vous modifiez le test avant que l’analyseur reçoive sa consigne, et le « Ne
+modifie pas le test » de la consigne reste valable pour l’agent. Supprimez
+ensuite les deux scripts, depuis `fixture-repo` :
 
 ```sh
 rm count_forms.py ../sample/count_forms.py
 ```
 
-The answer is in the spec, where a fresh session and a reviewer read it.
-The code that found the answer is gone, so nobody can build on it. In
-an interview with Venners, Hunt and Thomas compare a prototype to the
-front of a film set, with no building behind it. They say it is made to
-be thrown away, and that the code a system keeps is a different kind,
-which they call tracer code (@Artima tracer bullets).
+La réponse est dans la spécification, où une nouvelle session et un relecteur
+la lisent. Le code qui a trouvé la réponse a disparu, donc personne ne peut
+construire dessus. Dans un entretien avec Venners, Hunt et Thomas comparent
+un prototype à une façade de décor de cinéma, sans bâtiment derrière. Ils
+disent qu’il est fait pour être jeté, et que le code qu’un système garde est
+d’une autre nature, qu’ils appellent du code traceur (tracer code)
+(@Artima tracer bullets).
 
-<Pitfall title="The prototype that became the parser">
-An engineer had an agent write a quick script to see how an old file
-marked its done items. The script worked, so the engineer asked the agent
-to add the import command around it. The script had a hard-coded path and
-no tests, and it was now the parser. A month later a colleague ran the
-import on their own laptop, and it stopped with an error about a path
-that existed only on the engineer's laptop. The rule: a prototype
-answers its question and is deleted, and the parser is built from the
-spec, with its own test.
+<Pitfall title="Le prototype devenu l’analyseur">
+Un ingénieur a fait écrire par un agent un script rapide pour voir comment un
+ancien fichier marquait ses éléments faits. Le script marchait, alors
+l’ingénieur a demandé à l’agent d’ajouter la commande d’import autour. Le
+script avait un chemin codé en dur et aucun test, et il était désormais
+l’analyseur. Un mois plus tard, un collègue a lancé l’import sur son propre
+ordinateur portable, et il s’est arrêté sur une erreur à propos d’un chemin
+qui n’existait que sur l’ordinateur de l’ingénieur. La règle : un prototype
+répond à sa question et il est supprimé, et l’analyseur est construit à partir
+de la spécification, avec son propre test.
 </Pitfall>
 
 <Scenario id="keep-the-script" objective="coding-with-agents/specifies-work/settles-with-a-prototype"
   concepts={['throwaway-prototype']}
-  context="A coding agent wrote a throwaway script that showed which done marks an old to-do file uses: ten lines start with x and four with [x]. The spec for the import command says only x. The parser hasn't been built yet."
-  title="The script works. Now what?"
-  hint="Where must the answer be for a fresh session to build the parser, and what should happen to code written without tests?"
+  context="Un agent de code a écrit un script jetable qui a montré quelles marques « fait » utilise un ancien fichier de liste de tâches : dix lignes commencent par x et quatre par [x]. La spécification de la commande d’import ne parle que de x. L’analyseur n’est pas encore construit."
+  title="Le script marche. Et ensuite ?"
+  hint="Où la réponse doit-elle se trouver pour qu’une nouvelle session construise l’analyseur, et que doit devenir du code écrit sans tests ?"
   options={[
-    { text: 'Ask the agent to add tests to the script and grow it into the parser.', consequence: 'The parser starts from code written to be deleted, with a hard-coded path and a whole-file read, and the tests are written to fit it.' },
-    { text: 'Delete the script and tell the agent about [x] at the start of the next session.', consequence: 'The answer is in one chat. The spec still says x only, and the next session that reads the spec builds the old rule.' },
-    { text: 'Move the script to a prototypes folder in the repository, in case it is useful later.', consequence: 'The script stays in the code base, nobody remembers which question it answered, and someone imports from it a month later.' },
-    { text: 'Write the [x] rule into the spec, add an [x] case to the test, and delete the script.', correct: true, consequence: 'The spec and the test carry the answer. The parser is built from them in a fresh session, and the script is gone.' },
+    { text: 'Demander à l’agent d’ajouter des tests au script et de le faire grandir jusqu’à devenir l’analyseur.', consequence: 'L’analyseur part de code écrit pour être supprimé, avec un chemin codé en dur et une lecture du fichier entier, et les tests sont écrits pour lui correspondre.' },
+    { text: 'Supprimer le script et parler de [x] à l’agent au début de la prochaine session.', consequence: 'La réponse est dans une seule conversation. La spécification dit toujours « x seulement », et la prochaine session qui lit la spécification construit l’ancienne règle.' },
+    { text: 'Ranger le script dans un dossier de prototypes du dépôt, au cas où il servirait plus tard.', consequence: 'Le script reste dans le code, personne ne se souvient de la question à laquelle il répondait, et quelqu’un l’importe un mois plus tard.' },
+    { text: 'Écrire la règle [x] dans la spécification, ajouter un cas [x] au test, et supprimer le script.', correct: true, consequence: 'La spécification et le test portent la réponse. L’analyseur est construit à partir d’eux dans une nouvelle session, et le script a disparu.' },
   ]}>
-The script printed `x: 10` and `[x]: 4`. The colleague says: "It works.
-Keep it and turn it into the parser." What do you do?
+Le script a affiché `x: 10` et `[x]: 4`. Le collègue dit : « Ça marche.
+Gardez-le et transformez-le en analyseur. » Que faites-vous ?
 </Scenario>
 
-## Small on purpose
+## Petit, et c’est voulu
 
-In 1975, Fred Brooks advised teams to plan to throw away the first
-version of a whole system, because they would anyway. In the 1995
-anniversary edition he took that advice back. He wrote that it assumed a
-system is designed, built and tested in one pass, and that he now
-preferred to grow a system step by step (@Brooks 1995). A throwaway
-prototype in this lesson is a different thing from a first version of
-the system. It is a few lines that answer one question that you wrote
-down before it existed. The system itself grows one checked component at
-a time, as *Splitting the work into components the agent can build one
-at a time* planned it.
+En 1975, Fred Brooks conseillait aux équipes de prévoir de jeter la première
+version d’un système entier, parce qu’elles le feraient de toute façon. Dans
+l’édition anniversaire de 1995, il est revenu sur ce conseil. Il a écrit que
+ce conseil supposait qu’un système est conçu, construit et testé en une seule
+passe, et qu’il préférait désormais faire grandir un système pas à pas
+(@Brooks 1995). Un prototype jetable, dans cette leçon, est autre chose qu’une
+première version du système. C’est quelques lignes qui répondent à une
+question que vous avez écrite avant qu’elles existent. Le système lui-même
+grandit un composant vérifié à la fois, comme l’a prévu *Découper le travail
+en composants que l’agent construit un par un*.
 
 <Choice id="throw-the-whole-thing-away" phase="review"
   objective="coding-with-agents/specifies-work/settles-with-a-prototype"
   concepts={['throwaway-prototype']}
-  context="A team is about to build an import command for a small to-do program with a coding agent. One design question is open: which done marks the old file uses. The work is planned as three components, each checked before the next."
-  title="Throw the first version away?"
-  hint="What did Brooks later say about throwing away a whole first version, and how big is a prototype for one question?"
+  context="Une équipe s’apprête à construire avec un agent de code une commande d’import pour un petit programme de liste de tâches. Une question de conception est ouverte : quelles marques « fait » utilise l’ancien fichier. Le travail est prévu en trois composants, chacun vérifié avant le suivant."
+  title="Jeter la première version ?"
+  hint="Qu’a dit Brooks plus tard sur le fait de jeter toute une première version, et quelle taille fait un prototype pour une seule question ?"
   options={[
-    { text: 'Build the whole import once, quickly, and throw it away, since agents make a first version cheap.', why: 'Brooks later took back the advice for whole systems. A whole first version answers no question that was written down.' },
-    { text: 'Build a short script for the open question, write its answer into the spec, and delete it.', correct: true },
-    { text: 'Skip the prototype, since each component is checked before the next one and the checks find the problem.', why: 'The checks test what the spec says. If the spec has the wrong done mark, the checks pass on the wrong parser.' },
+    { text: 'Construire tout l’import une fois, vite, et le jeter, puisque les agents rendent une première version peu coûteuse.', why: 'Brooks est revenu plus tard sur ce conseil pour les systèmes entiers. Une première version entière ne répond à aucune question écrite.' },
+    { text: 'Construire un court script pour la question ouverte, écrire sa réponse dans la spécification, et le supprimer.', correct: true },
+    { text: 'Se passer du prototype, puisque chaque composant est vérifié avant le suivant et que les contrôles trouveront le problème.', why: 'Les contrôles testent ce que dit la spécification. Si la spécification a la mauvaise marque « fait », les contrôles passent sur le mauvais analyseur.' },
   ]}>
-A teammate quotes "plan to throw one away" and proposes building the whole
-import twice. What does this lesson do instead?
+Un coéquipier cite « prévoyez d’en jeter un » et propose de construire l’import
+entier deux fois. Que fait cette leçon à la place ?
 </Choice>
 
 <Sort id="prototype-or-not" phase="review"
   objective="coding-with-agents/specifies-work/settles-with-a-prototype"
   concepts={['throwaway-prototype']}
-  context="An engineer is specifying an import command for a small to-do program and sorts the open points: some a short throwaway program can settle, and some no program can."
-  title="Can a prototype settle it?"
-  hint="Does a short program print or show something that settles the point?"
-  buckets={['A short program can find it out', 'Only a decision settles it']}
+  context="Un ingénieur spécifie une commande d’import pour un petit programme de liste de tâches et trie les points ouverts : certains peuvent être tranchés par un petit programme jetable, d’autres par aucun programme."
+  title="Un prototype peut-il le trancher ?"
+  hint="Un petit programme affiche-t-il ou montre-t-il quelque chose qui tranche le point ?"
+  buckets={['Un petit programme peut le découvrir', 'Seule une décision le tranche']}
   items={[
-    { text: 'Whether the old file has done marks other than x', bucket: 0 },
-    { text: 'Whether the import is worth a new command', bucket: 1 },
-    { text: 'Whether reading a 50,000-line file takes under a second', bucket: 0 },
-    { text: 'Whether the colleague may import a second file later', bucket: 1 },
-    { text: 'How many lines of the old file are already in the list', bucket: 0 },
+    { text: 'L’ancien fichier a-t-il d’autres marques « fait » que x ?', bucket: 0 },
+    { text: 'L’import mérite-t-il une nouvelle commande ?', bucket: 1 },
+    { text: 'La lecture d’un fichier de 50 000 lignes prend-elle moins d’une seconde ?', bucket: 0 },
+    { text: 'Le collègue aura-t-il le droit d’importer un second fichier plus tard ?', bucket: 1 },
+    { text: 'Combien de lignes de l’ancien fichier sont déjà dans la liste ?', bucket: 0 },
   ]} />
 
 <Order id="prototype-steps" phase="review"
   objective="coding-with-agents/specifies-work/settles-with-a-prototype"
   concepts={['throwaway-prototype']}
-  context="The steps of settling one open question in a spec with a throwaway program that a coding agent writes, before the real component is built."
-  title="From open question to spec"
-  hint="What must exist before the agent writes anything, and what has to be in the spec before the code is gone?"
+  context="Les étapes pour trancher une question ouverte d’une spécification avec un programme jetable écrit par un agent de code, avant de construire le vrai composant."
+  title="De la question ouverte à la spécification"
+  hint="Qu’est-ce qui doit exister avant que l’agent écrive quoi que ce soit, et qu’est-ce qui doit être dans la spécification avant que le code disparaisse ?"
   steps={[
-    'Write the open question down in one sentence',
-    'Brief the agent for the smallest program that answers it',
-    'Run the program and read what it prints',
-    'Write the answer into the spec and add a case to the test',
-    'Delete the program',
+    'Écrire la question ouverte en une phrase',
+    'Donner à l’agent la consigne du plus petit programme qui y répond',
+    'Lancer le programme et lire ce qu’il affiche',
+    'Écrire la réponse dans la spécification et ajouter un cas au test',
+    'Supprimer le programme',
   ]} />
 
-<Exercise stretch="Take a second open question that only a person can decide, and write down why no program answers it.">
-Take the spec you wrote in the exercise of *Let the agent interview you*,
-and pick one open question from it that a program can answer. Write the
-question in one sentence. If your spec has none, use the open question of
-`sample/SPEC.md` in your copy of that lesson's fixture: whether
-`archive list` shows the date. A program that prints five archived items
-both ways shows you the two forms. The answer is then your decision,
-which you write into the spec. Start your coding agent in a scratch directory outside
-the fixture, so the prototype can't touch the real code, and brief it for
-the smallest program that answers the question, with what to leave out
-and the one file it may create. Run the program, write the answer and
-your decision into the spec, and delete the program. Fifteen minutes is
-enough. You do this so that a design question is settled by what a
-program shows, and the code that showed it never reaches the system.
+<Exercise stretch="Prenez une deuxième question ouverte que seule une personne peut trancher, et écrivez pourquoi aucun programme n’y répond.">
+Prenez la spécification que vous avez écrite dans l’exercice de *Se faire
+interroger par l’agent*, et choisissez-y une question ouverte à laquelle un
+programme peut répondre. Écrivez la question en une phrase. Si votre
+spécification n’en a aucune, utilisez la question ouverte de `sample/SPEC.md`
+dans votre copie de l’exemple de cette leçon-là : `archive list`
+affiche-t-il la date ? Un programme qui affiche cinq éléments archivés des deux façons vous
+montre les deux formes. La réponse est alors votre décision, que vous écrivez
+dans la spécification. Lancez votre agent de code dans un dossier de travail
+hors de l’exemple, pour que le prototype ne puisse pas toucher au vrai code,
+et donnez-lui la consigne du plus petit programme qui répond à la question,
+avec ce qu’il faut laisser de côté et le seul fichier qu’il peut créer.
+Lancez le programme, écrivez la réponse et votre décision dans la
+spécification, et supprimez le programme. Quinze minutes suffisent. Vous
+faites cela pour qu’une question de conception soit tranchée par ce que montre
+un programme, et que le code qui l’a montré n’atteigne jamais le système.
 
-A good result: the question fits in one sentence and was written before
-the brief. The program is one file with no tests, and it is gone. The
-spec states the answer, and the question is no longer under the open
-questions. Reflect: how long would a discussion of the same question
-have taken, and would it have ended with the same answer?
+Un bon résultat : la question tient en une phrase et a été écrite avant la
+consigne. Le programme est un seul fichier sans tests, et il a disparu. La
+spécification énonce la réponse, et la question n’est plus parmi les questions
+ouvertes. Prenez un moment de recul : combien de temps aurait pris une
+discussion de la même question, et se serait-elle terminée par la même
+réponse ?
 </Exercise>
 
 <Recap>
-1. A throwaway prototype is a small program built to learn, and it is thrown away once it has answered its question (@Thomas 2019).
-2. Write the question down in one sentence before you ask for code. A program that answers no named question grows into a first version of the system.
-3. Brief the agent to leave out tests, error handling and structure, and to create one file. They are effort spent on code that you delete.
-4. Write the answer and your decision into the spec, and add a case for it to the acceptance test, before the program is deleted. A fresh session reads only the spec.
-5. Keep the prototype small. Brooks later took back his advice to throw away a whole first version (@Brooks 1995), and the system grows one checked component at a time.
+1. Un prototype jetable est un petit programme construit pour apprendre, et on le jette une fois qu’il a répondu à sa question (@Thomas 2019).
+2. Écrivez la question en une phrase avant de demander du code. Un programme qui ne répond à aucune question nommée grandit jusqu’à devenir une première version du système.
+3. Demandez à l’agent de laisser de côté les tests, la gestion d’erreurs et la structure, et de créer un seul fichier. Ce sont des efforts dépensés sur du code que vous supprimez.
+4. Écrivez la réponse et votre décision dans la spécification, et ajoutez un cas correspondant au test d’acceptation, avant de supprimer le programme. Une nouvelle session ne lit que la spécification.
+5. Gardez le prototype petit. Brooks est revenu plus tard sur son conseil de jeter toute une première version (@Brooks 1995), et le système grandit un composant vérifié à la fois.
 </Recap>
 
 <Habit id="name-the-question-first">
-The next time you are about to argue about a design point with a colleague, ask whether a short program could settle it, and write the question down before anyone writes the program.
+La prochaine fois que vous êtes sur le point de débattre d’un point de conception avec un collègue, demandez-vous si un court programme pourrait le trancher, et écrivez la question avant que quiconque écrive le programme.
 </Habit>
