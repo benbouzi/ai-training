@@ -1,204 +1,218 @@
 import { Choice, MultiChoice, Order, Predict, Sort, Pitfall, Exercise, Recap } from '@components/lesson';
 
-The to-do program gets a feature: "Let me import my old list. I have a
-text file with one task per line, and I don't want to type forty `add`
-commands." *Deciding whether to build it at all* taught how to write success criteria a stranger
-could check, and this feature has them. In this lesson we take the feature apart before any
-agent sees it. We split it into components with one responsibility each,
-we draw the dependencies between them and put them in order, and we write
-the check for the first component before it exists. Then we run that
-check and watch it fail, which is the state the agent starts from.
+Le programme de liste de tâches reçoit une fonctionnalité : « Laissez-moi
+importer mon ancienne liste. J’ai un fichier texte avec une tâche par ligne,
+et je ne veux pas taper quarante commandes `add`. » *Décider s’il faut
+construire, avant tout* a montré comment écrire des critères de réussite
+qu’un inconnu pourrait vérifier, et cette fonctionnalité en a. Dans cette
+leçon, nous démontons la fonctionnalité avant qu’un agent la voie. Nous la
+découpons en composants qui ont chacun une responsabilité, nous dessinons les
+dépendances entre eux et nous les mettons dans l’ordre, et nous écrivons le
+contrôle du premier composant avant qu’il existe. Nous lançons ensuite ce
+contrôle et nous le regardons échouer, ce qui est l’état dont l’agent part.
 
-An agent given a whole feature makes the split itself, and it makes a
-different one every session. It also builds the parts together and
-tests them at the end, so a mistake in the first part is hidden by the
-parts built on it. Brilliant's skills map for coding with AI
-lists decomposition, dependency analysis, and designing the verification as
-skills of the engineer (@Brilliant SPC), and Claude Academy's playbook for
-an AI-native development process writes the intent down in a file before
-the code and keeps the checks running throughout (@Academy ai-native-sdlc-playbook). Both put the split in
-your hands. The agent gets one component at a time, with its check.
+Un agent à qui l’on donne une fonctionnalité entière fait le découpage
+lui-même, et il en fait un différent à chaque session. Il construit aussi les
+parties ensemble et les teste à la fin, donc une erreur dans la première
+partie est cachée par les parties construites dessus. La carte des
+compétences de Brilliant pour le code avec l’IA range la décomposition,
+l’analyse des dépendances et la conception de la vérification parmi les
+compétences de l’ingénieur (@Brilliant SPC), et le guide de Claude Academy
+pour un processus de développement fondé sur l’IA écrit l’intention dans un
+fichier avant le code et garde les contrôles actifs tout au long du travail
+(@Academy ai-native-sdlc-playbook). Tous deux vous confient le découpage.
+L’agent reçoit un composant à la fois, avec son contrôle.
 
-## The fixture
+## L’exemple
 
-The fixture is the to-do program from *Your first session with a coding
-agent*, some weeks later. It has grown a `clear` command and been split
-into three modules: `todo.py` holds the commands, `store.py` reads and
-writes the list, and `render.py` formats it. It is in the course repository
-under `site/examples/coding-with-agents/decomposing-the-work/fixture-repo/`.
-Copy that directory to a place of its own and change into it. A copy has
-no git history, so the reset is to delete the copy and copy again. Working
-inside a clone of the course repository also works, and there
-`git checkout -- .` is the reset, but the agent then reads the course's own
-instruction files from the directories above the fixture. Claude Code, for
-example, loads the instruction files in every directory above the one it
-starts in (@Claude Code memory). The copy is the better default.
+L’exemple est le programme de liste de tâches de *Votre première session avec
+un agent de code*, quelques semaines plus tard. Il a gagné une commande
+`clear` et il a été découpé en trois modules : `todo.py` contient les
+commandes, `store.py` lit et écrit la liste, et `render.py` la met en forme.
+Il se trouve dans le dépôt du cours, sous
+`site/examples/coding-with-agents/decomposing-the-work/fixture-repo/`. Copiez
+ce dossier à un endroit à part et placez-vous dedans. Une copie n’a pas
+d’historique git, donc pour réinitialiser, supprimez la copie et copiez de
+nouveau. Travailler dans un clone du dépôt du cours fonctionne aussi, et là,
+`git checkout -- .` réinitialise, mais l’agent lit alors les fichiers
+d’instructions du cours dans les dossiers au-dessus de l’exemple. Claude Code,
+par exemple, charge les fichiers d’instructions de chaque dossier au-dessus de
+celui où il démarre (@Claude Code memory). La copie est le meilleur choix par
+défaut.
 
-Run the program before you plan anything, so you know what the list looks
-like now.
+Lancez le programme avant de planifier quoi que ce soit, pour savoir à quoi
+ressemble la liste maintenant.
 
-<Predict id="run-list" title="Show the list"
+<Predict id="run-list" title="Afficher la liste"
   answer={`1. [ ] Buy milk
   2. [x] Call the plumber
   3. [x] Renew the passport
   4. [ ] Water the plants
   2 open, 2 done`} run="coding-with-agents/decomposing-the-work/list.py">
-Run this, and compare what you see with the output below.
+Lancez cette commande et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 todo.py list
 ```
 </Predict>
 
-The suite passes, and nothing in it changes until you add the first test of
-this lesson.
+La suite de tests passe, et rien n’y change jusqu’à ce que vous ajoutiez le
+premier test de cette leçon.
 
-<Predict id="run-tests" title="Run the tests"
+<Predict id="run-tests" title="Lancer les tests"
   answer="OK" run="coding-with-agents/decomposing-the-work/tests.py">
-Run the tests and keep only the last line of the output.
+Lancez les tests et gardez seulement la dernière ligne de la sortie.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-The examples in this lesson aren't graded. Each one is a command you run
-in the fixture, with the output the course itself checks on every build.
-The checkpoints ask about the split and the check, because making those is
-what this lesson teaches.
+Les exemples de cette leçon ne sont pas notés. Chacun est une commande que
+vous lancez dans l’exemple, avec la sortie que le cours vérifie lui-même à
+chaque build. Les questions de contrôle portent sur le découpage et sur le
+contrôle, parce que c’est leur fabrication que cette leçon enseigne.
 
-## One responsibility per component
+## Une responsabilité par composant
 
-The success criteria for the import feature: `todo import tasks.txt` reads
-a text file with one task per line. Spaces before and after a line are
-dropped, a line that starts with `x ` is a done item, and blank lines are
-skipped. A task already in the list isn't added twice, and the command
-prints how many items it imported and how many it skipped. `add`, `list`,
-`done` and `clear` keep working.
+Les critères de réussite de la fonctionnalité d’import : `todo import tasks.txt`
+lit un fichier texte avec une tâche par ligne. Les espaces avant et après une
+ligne sont retirés, une ligne qui commence par `x ` est un élément fait, et
+les lignes vides sont sautées. Une tâche déjà dans la liste n’est pas ajoutée
+deux fois, et la commande affiche combien d’éléments elle a importés et
+combien elle en a sautés. `add`, `list`, `done` et `clear` continuent de
+fonctionner.
 
-The request names one feature, and the work in it is three components. A component has one
-responsibility, an interface you can state in a sentence, and a size that
-fits one agent session and one change you can review in a few minutes. Cut
-the feature where the data changes form: text lines become items, items
-are merged into the list, and the list is shown to the user.
+La demande nomme une seule fonctionnalité, et le travail qu’elle contient
+représente trois composants. Un composant a une responsabilité, une interface
+qu’on peut énoncer en une phrase, et une taille qui tient dans une session
+d’agent et dans une modification qu’on peut relire en quelques minutes.
+Coupez la fonctionnalité là où les données changent de forme : des lignes de
+texte deviennent des éléments, les éléments sont fusionnés dans la liste, et
+la liste est montrée à l’utilisateur.
 
-| Component | Responsibility | Interface |
+| Composant | Responsabilité | Interface |
 | --------- | -------------- | --------- |
-| Parser | Turns text lines into items | `importer.parse_lines(lines)` returns a list of items, each `{"text": ..., "done": ...}` |
-| Merge | Adds new items to the list and leaves duplicates out | `importer.merge(items, new_items)` appends the items whose text isn't in `items` and returns the count added |
-| Command | Wires `todo import <file>` to the two above and reports | `todo.py` reads the file, calls the parser and the merge, prints `imported N items, skipped M` |
+| Analyseur | Transforme des lignes de texte en éléments | `importer.parse_lines(lines)` renvoie une liste d’éléments, chacun `{"text": ..., "done": ...}` |
+| Fusion | Ajoute les nouveaux éléments à la liste et laisse de côté les doublons | `importer.merge(items, new_items)` ajoute à la fin les éléments dont le texte n’est pas dans `items` et renvoie le nombre ajouté |
+| Commande | Relie `todo import <file>` aux deux composants ci-dessus et fait le compte rendu | `todo.py` lit le fichier, appelle l’analyseur et la fusion, affiche `imported N items, skipped M` |
 
-Each row answers three questions with one sentence each. If a row needs
-two sentences for its responsibility, it is two components. If the interface
-sentence has to describe the code inside, the boundary is in the wrong
-place. Trailing spaces and the `x ` mark are the parser's
-problem and nobody else's, and "already in the list" is the merge's
-problem, so the command has nothing to decide.
+Chaque ligne répond à trois questions, par une phrase chacune. Si une ligne a
+besoin de deux phrases pour sa responsabilité, ce sont deux composants. Si la
+phrase d’interface doit décrire le code à l’intérieur, la frontière est au
+mauvais endroit. Les espaces en fin de ligne et la marque `x ` sont le
+problème de l’analyseur et de personne d’autre, et « déjà dans la liste » est
+le problème de la fusion, donc la commande n’a rien à décider.
 
-Write the list before the brief, and put it in the brief. The agent builds
-the parser to the interface you named, and the brief for the merge names
-the same interface, whether the same agent writes it or not.
+Écrivez la liste avant la consigne, et mettez-la dans la consigne. L’agent
+construit l’analyseur selon l’interface que vous avez nommée, et la consigne
+de la fusion nomme la même interface, que ce soit le même agent qui l’écrive
+ou non.
 
 <MultiChoice id="one-responsibility" objective="coding-with-agents/specifies-work/decomposes-into-components"
   concepts={['decomposition-into-components']}
-  context="A coding agent is going to add an import command to a small command-line to-do program. The feature reads a text file with one task per line, drops the spaces around a line, skips blank lines, treats a leading x as a done mark, leaves out tasks already in the list, and prints how many it imported and skipped. The learner is splitting it into components."
-  title="Which of these are components with one responsibility?" hint="Can you state what the component does, and what it takes and returns, in one sentence each?"
+  context="Un agent de code va ajouter une commande d’import à un petit programme de liste de tâches en ligne de commande. La fonctionnalité lit un fichier texte avec une tâche par ligne, retire les espaces autour d’une ligne, saute les lignes vides, traite un x en début de ligne comme une marque « fait », laisse de côté les tâches déjà dans la liste, et affiche combien elle en a importé et sauté. L’apprenant la découpe en composants."
+  title="Lesquels sont des composants à une seule responsabilité ?" hint="Pouvez-vous énoncer ce que fait le composant, et ce qu’il reçoit et renvoie, en une phrase chacun ?"
   options={[
-    { text: 'A function that turns a list of text lines into a list of items, handling the done mark and the blank lines.', correct: true },
-    { text: 'A function that reads the file, parses the lines, skips duplicates and prints the report.', why: 'That is the whole feature with a function name on it. Its interface needs a paragraph, and a mistake in the parsing is hidden by the reporting.' },
-    { text: 'A function that appends the items not yet in the list and returns how many it added.', correct: true },
-    { text: 'A function that parses the lines and also prints how many were blank.', why: 'Two responsibilities: turning lines into items, and reporting to the user. The report belongs to the command, and the parser then has a reason to change when the output format does.' },
+    { text: 'Une fonction qui transforme une liste de lignes de texte en une liste d’éléments, en traitant la marque « fait » et les lignes vides.', correct: true },
+    { text: 'Une fonction qui lit le fichier, analyse les lignes, saute les doublons et affiche le compte rendu.', why: 'C’est toute la fonctionnalité avec un nom de fonction dessus. Son interface demande un paragraphe, et une erreur d’analyse est cachée par le compte rendu.' },
+    { text: 'Une fonction qui ajoute les éléments pas encore dans la liste et renvoie combien elle en a ajouté.', correct: true },
+    { text: 'Une fonction qui analyse les lignes et affiche aussi combien elles étaient vides.', why: 'Deux responsabilités : transformer des lignes en éléments, et faire un compte rendu à l’utilisateur. Le compte rendu appartient à la commande, et l’analyseur aurait alors une raison de changer quand le format de sortie change.' },
   ]}>
-Which of these are components with one responsibility each?
+Lesquelles de ces fonctions sont des composants à une seule responsabilité ?
 </MultiChoice>
 
 <Sort id="whose-problem" phase="review" objective="coding-with-agents/specifies-work/decomposes-into-components"
   concepts={['decomposition-into-components']}
-  context="A coding agent is going to add an import command to a small command-line to-do program in three components: a parser that turns text lines into items, a merge that adds new items to the list and leaves duplicates out, and the command that reads the file, calls both and prints a report."
-  title="Whose problem is it?" hint="Which component sees this detail first, and which one never needs to know it?"
-  buckets={['Parser', 'Merge', 'Command']}
+  context="Un agent de code va ajouter une commande d’import à un petit programme de liste de tâches en ligne de commande, en trois composants : un analyseur qui transforme des lignes de texte en éléments, une fusion qui ajoute les nouveaux éléments à la liste et laisse de côté les doublons, et la commande qui lit le fichier, appelle les deux et affiche un compte rendu."
+  title="Le problème de qui ?" hint="Quel composant voit ce détail en premier, et lequel n’a jamais besoin de le connaître ?"
+  buckets={['Analyseur', 'Fusion', 'Commande']}
   items={[
-    { text: 'A line that ends in three spaces', bucket: 0 },
-    { text: 'A task text that is already in the list', bucket: 1 },
-    { text: 'The file named on the command line does not exist', bucket: 2 },
-    { text: 'The wording of the imported-and-skipped report', bucket: 2 },
-    { text: 'A line that starts with x and a space', bucket: 0 },
+    { text: 'Une ligne qui se termine par trois espaces', bucket: 0 },
+    { text: 'Un texte de tâche déjà présent dans la liste', bucket: 1 },
+    { text: 'Le fichier nommé sur la ligne de commande n’existe pas', bucket: 2 },
+    { text: 'La formulation du compte rendu des éléments importés et sautés', bucket: 2 },
+    { text: 'Une ligne qui commence par un x suivi d’une espace', bucket: 0 },
   ]} />
 
-## Order the work by dependency
+## Ordonner le travail selon les dépendances
 
-Three components, and they can't be built in any order. The table fixes
-the item format, so the merge could be written against it today. Its
-check couldn't. The merge's test has to run on items the real parser
-produced, or it proves the merge works on items you typed by hand and
-says nothing about the imported ones. So the dependency runs from a
-component to the checked output of the one before it. Draw the arrows.
-The parser has no dependency. The merge depends on a checked parser, and
-the command depends on both. That order is the plan, and each step is
-checked before the next one starts.
+Trois composants, et ils ne peuvent pas être construits dans n’importe quel
+ordre. Le tableau fixe le format des éléments, donc la fusion pourrait être
+écrite dès aujourd’hui selon ce format. Son contrôle, non. Le test de la
+fusion doit tourner sur des éléments produits par le vrai analyseur, sinon il
+prouve que la fusion fonctionne sur des éléments tapés à la main et ne dit
+rien des éléments importés. La dépendance va donc d’un composant à la sortie
+vérifiée de celui qui le précède. Dessinez les flèches. L’analyseur n’a pas de
+dépendance. La fusion dépend d’un analyseur vérifié, et la commande dépend des
+deux. Cet ordre est le plan, et chaque étape est vérifiée avant que la
+suivante commence.
 
-The order also names the assumption everything rests on: the item format
-the parser produces. The parser goes first and is checked alone with its
-own test, and only then is the merge briefed. A component that passes its
-own check is a fixed point the next brief can name.
+L’ordre nomme aussi l’hypothèse sur laquelle tout repose : le format des
+éléments que produit l’analyseur. L’analyseur passe en premier et il est
+vérifié seul avec son propre test, et c’est seulement ensuite que la fusion
+reçoit sa consigne. Un composant qui passe son propre contrôle est un point
+fixe que la consigne suivante peut nommer.
 
-The dependency drawing also shows which components have no arrow between
-them. If the feature had a fourth component, a `render` change that shows
-how many items came from an import, its arrow would point at the command
-and not at the parser. A second agent session could build it once the
-command was checked, while the merge was still in progress. Naming the
-dependencies is what tells you what can run side by side and what has to
-wait.
+Le dessin des dépendances montre aussi quels composants n’ont pas de flèche
+entre eux. Si la fonctionnalité avait un quatrième composant, une
+modification de `render` qui affiche combien d’éléments viennent d’un import,
+sa flèche pointerait vers la commande, sans lien avec l’analyseur. Une
+deuxième session d’agent pourrait le construire une fois la commande vérifiée,
+pendant que la fusion serait encore en cours. Nommer les dépendances est ce
+qui vous dit ce qui peut avancer en parallèle et ce qui doit attendre.
 
-<Pitfall title="The merge inherited the parser's mistake">
-An engineer briefed the parser and the merge together. The agent built
-both, tested the merge by feeding it items it had typed by hand, and
-reported green. The parser kept the trailing spaces on each line, so an
-imported `Buy milk ` and the existing `Buy milk` were two different texts,
-and the merge added the duplicate. The merge's tests never saw a parsed
-item, so they passed, and the bug showed up as a doubled list in the
-command a week later, where nobody was looking at the parser. The rule:
-check each component alone before the next one is built on it, and
-feed the second component's test what the first one produces.
+<Pitfall title="La fusion a hérité de l’erreur de l’analyseur">
+Un ingénieur a donné ensemble les consignes de l’analyseur et de la fusion.
+L’agent a construit les deux, a testé la fusion en lui donnant des éléments
+tapés à la main, et a annoncé un résultat au vert. L’analyseur gardait les
+espaces en fin de ligne, donc un `Buy milk ` importé et le `Buy milk`
+existant étaient deux textes différents, et la fusion a ajouté le doublon. Les
+tests de la fusion n’avaient jamais vu un élément analysé, donc ils passaient,
+et le bug est apparu une semaine plus tard sous forme de liste en double dans
+la commande, là où personne ne regardait l’analyseur. La règle : vérifiez
+chaque composant seul avant de construire le suivant dessus, et donnez au
+test du second composant ce que le premier produit.
 </Pitfall>
 
 <Order id="dependency-order" objective="coding-with-agents/specifies-work/decomposes-into-components"
   concepts={['dependencies']}
-  context="A coding agent is adding an import command to a small command-line to-do program in three components: a parser that turns text lines into items, a merge that adds new items to the list and leaves duplicates out, and the command that reads the file, calls both and prints a report. Each component is checked before the next is briefed."
-  title="Put the steps in dependency order" hint="Which component's test needs the output of another component to run on?"
+  context="Un agent de code ajoute une commande d’import à un petit programme de liste de tâches en ligne de commande, en trois composants : un analyseur qui transforme des lignes de texte en éléments, une fusion qui ajoute les nouveaux éléments à la liste et laisse de côté les doublons, et la commande qui lit le fichier, appelle les deux et affiche un compte rendu. Chaque composant est vérifié avant que le suivant reçoive sa consigne."
+  title="Mettre les étapes dans l’ordre des dépendances" hint="Le test de quel composant a besoin de la sortie d’un autre composant pour tourner ?"
   steps={[
-    'Brief the parser and check that its test passes',
-    'Brief the merge and check its test on items the parser produced',
-    'Brief the command that reads the file and calls both',
-    'Run the whole import against a copy of the list',
+    'Donner la consigne de l’analyseur et vérifier que son test passe',
+    'Donner la consigne de la fusion et vérifier son test sur des éléments produits par l’analyseur',
+    'Donner la consigne de la commande qui lit le fichier et appelle les deux',
+    'Lancer l’import complet sur une copie de la liste',
   ]} />
 
 <Choice id="what-rests-on-what" phase="review" objective="coding-with-agents/specifies-work/decomposes-into-components"
   concepts={['dependencies']}
-  context="A coding agent is adding an import command to a small command-line to-do program in three components: a parser that turns text lines into items, a merge that adds new items to the list and leaves duplicates out, and the command that reads the file, calls both and prints a report."
-  title="Which component is built first?" hint="Which component's test can run on nothing but its own input, and which tests need another component's output?"
+  context="Un agent de code ajoute une commande d’import à un petit programme de liste de tâches en ligne de commande, en trois composants : un analyseur qui transforme des lignes de texte en éléments, une fusion qui ajoute les nouveaux éléments à la liste et laisse de côté les doublons, et la commande qui lit le fichier, appelle les deux et affiche un compte rendu."
+  title="Quel composant est construit en premier ?" hint="Le test de quel composant peut tourner sur sa seule entrée, et quels tests ont besoin de la sortie d’un autre composant ?"
   options={[
-    { text: 'The command, because it is what the user sees, and the parser and merge can be filled in behind it.', why: 'The command calls both of the others. Built first, it has nothing to call, and its check can only pass against stubs.' },
-    { text: 'The merge, because duplicates are the part most likely to go wrong.', why: 'The merge takes the parser\'s items as input. Built first, its test runs on items typed by hand, and a parser mistake reaches it later unseen.' },
-    { text: 'The parser, because the other two are checked on its output.', correct: true },
-    { text: 'Any of them, because the agent runs the whole suite at the end anyway.', why: 'A suite run at the end tells you something failed, and three components built together give it three places to look. The order is what makes each failure point at one component.' },
+    { text: 'La commande, parce que c’est ce que voit l’utilisateur, et l’analyseur et la fusion peuvent être remplis derrière.', why: 'La commande appelle les deux autres. Construite en premier, elle n’a rien à appeler, et son contrôle ne peut passer que sur des coquilles vides.' },
+    { text: 'La fusion, parce que les doublons sont la partie la plus susceptible de mal tourner.', why: 'La fusion prend en entrée les éléments de l’analyseur. Construite en premier, son test tourne sur des éléments tapés à la main, et une erreur de l’analyseur l’atteint plus tard sans être vue.' },
+    { text: 'L’analyseur, parce que les deux autres sont vérifiés sur sa sortie.', correct: true },
+    { text: 'N’importe lequel, puisque l’agent lance de toute façon toute la suite à la fin.', why: 'Une suite lancée à la fin vous dit que quelque chose a échoué, et trois composants construits ensemble lui donnent trois endroits où chercher. C’est l’ordre qui fait pointer chaque échec vers un seul composant.' },
   ]}>
-Which component do you brief first, and why?
+Quel composant reçoit sa consigne en premier, et pourquoi ?
 </Choice>
 
-## Design the check before the code
+## Concevoir le contrôle avant le code
 
-The parser doesn't exist yet, and this is the moment to decide how you
-know it is right. Write the acceptance test now, put it in the suite,
-and name it in the brief as the command that means done. The agent then
-has a target it can run itself, and "done" means the line reads `OK`
-instead of the agent saying so.
+L’analyseur n’existe pas encore, et c’est le moment de décider comment vous
+saurez qu’il est juste. Écrivez maintenant le test d’acceptation, mettez-le
+dans la suite, et nommez-le dans la consigne comme la commande qui veut dire
+« terminé ». L’agent a alors une cible qu’il peut exécuter lui-même, et
+« terminé » veut dire que la ligne affiche `OK`, quoi que dise l’agent.
 
-The test has to do one more thing: it has to fail on a stub. A parser that
-returns an empty list, or that returns every line as an open item, is the
-kind of first draft an agent writes when the target is vague. One input
-with a blank line, a done mark and a line with spaces around it is enough
-to reject each of those. Create `test_importer.py` with this content.
+Le test doit faire une chose de plus : il doit échouer sur une coquille vide
+(stub). Un analyseur qui renvoie une liste vide, ou qui renvoie chaque ligne
+comme un élément ouvert, est le genre de premier jet qu’écrit un agent quand
+la cible est vague. Une entrée avec une ligne vide, une marque « fait » et une
+ligne entourée d’espaces suffit à rejeter chacun de ces brouillons. Créez
+`test_importer.py` avec ce contenu.
 
 ```python
 import unittest
@@ -219,105 +233,108 @@ class ImporterTests(unittest.TestCase):
         )
 ```
 
-Run the suite. `importer.py` doesn't exist, so the test can't even import
-it, and the suite reports an error.
+Lancez la suite. `importer.py` n’existe pas, donc le test ne peut même pas
+l’importer, et la suite signale une erreur.
 
-<Predict id="run-failing-test" title="Run the suite before the parser exists"
+<Predict id="run-failing-test" title="Lancer la suite avant que l’analyseur existe"
   answer="FAILED (errors=1)" run="coding-with-agents/decomposing-the-work/failing_test.py">
-With `test_importer.py` in place, run the tests and keep the last line. The
-course checks this against its own copy of the test, which is the one
-shown above.
+Avec `test_importer.py` en place, lancez les tests et gardez la dernière
+ligne. Le cours vérifie ce résultat avec sa propre copie du test, celle qui
+est montrée ci-dessus.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-Now prove the test does its job. Create `importer.py` with a stub that
-has the right name and does nothing, and run the suite again.
+Prouvez maintenant que le test fait son travail. Créez `importer.py` avec une
+coquille vide qui porte le bon nom et ne fait rien, et relancez la suite.
 
 ```python
 def parse_lines(lines):
     return []
 ```
 
-<Predict id="run-stub-test" title="Run the suite against a stub"
+<Predict id="run-stub-test" title="Lancer la suite sur une coquille vide"
   answer="FAILED (failures=1)" run="coding-with-agents/decomposing-the-work/stub_test.py">
-With the stub in place, run the tests and keep the last line. The course
-checks this against its own copy of the stub.
+Avec la coquille vide en place, lancez les tests et gardez la dernière ligne.
+Le cours vérifie ce résultat avec sa propre copie de la coquille vide.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-An error became a failure: the module imports, and the assertion rejects
-what it returns. Delete `importer.py` again. The agent writes the real one. Your
-brief for the first component now fits in a few lines: the parser's
-responsibility and interface from the table, the file it may create, and
-the command that means done.
+Une erreur est devenue un échec : le module s’importe, et l’assertion rejette
+ce qu’il renvoie. Supprimez de nouveau `importer.py`. C’est l’agent qui écrit
+le vrai. Votre consigne pour le premier composant tient maintenant en
+quelques lignes : la responsabilité et l’interface de l’analyseur tirées du
+tableau, le fichier qu’il peut créer, et la commande qui veut dire
+« terminé ».
 
 ```text
-Add importer.py with parse_lines(lines), which turns text lines into
-items as test_importer.py describes. Create only importer.py. Done when
-`python3 -m unittest -q` prints OK. Do not change the test.
+Ajoute importer.py avec parse_lines(lines), qui transforme des lignes de
+texte en éléments comme le décrit test_importer.py. Ne crée que
+importer.py. Terminé quand `python3 -m unittest -q` affiche OK. Ne modifie
+pas le test.
 ```
 
-An agent that can't make the test pass may change
-the test until it does, and then the check doesn't check anything. The
-last line of the brief closes that door.
+Un agent qui n’arrive pas à faire passer le test risque de modifier le test
+jusqu’à ce qu’il passe, et le contrôle ne contrôle alors plus rien. La
+dernière ligne de la consigne ferme cette porte.
 
 <Choice id="fails-on-a-stub" objective="coding-with-agents/specifies-work/designs-the-check"
   concepts={['designing-the-verification']}
-  context="Before a coding agent builds a parser that turns text lines into to-do items, the learner writes an acceptance test for it. The test should reject a stub, a version of the parser that has the right function name and does no real work."
-  title="Which test would fail on a stub?" hint="Imagine a parser that returns an empty list, and one that returns every line as an open item. Which test rejects both?"
+  context="Avant qu’un agent de code construise un analyseur qui transforme des lignes de texte en éléments de liste de tâches, l’apprenant écrit un test d’acceptation pour lui. Le test doit rejeter une coquille vide, une version de l’analyseur qui porte le bon nom de fonction et ne fait aucun vrai travail."
+  title="Quel test échouerait sur une coquille vide ?" hint="Imaginez un analyseur qui renvoie une liste vide, et un autre qui renvoie chaque ligne comme un élément ouvert. Quel test rejette les deux ?"
   options={[
-    { text: 'Assert that `parse_lines` on the same four lines returns a list of dictionaries, each with a `text` and a `done` key.', why: 'A stub that returns an empty list passes, because every item in an empty list has the keys. The test checks the format and never the work.' },
-    { text: 'Assert that `parse_lines` on the same four lines runs to the end without raising an error.', why: 'Every stub passes this. A function that does nothing raises nothing.' },
-    { text: 'Assert that `parse_lines` on the same four lines returns three items, with the texts and done marks the lines describe.', correct: true },
-    { text: 'Assert that `importer.py` exists next to `todo.py` and defines a function called `parse_lines` that takes one argument.', why: 'That is what a stub is: the name without the work. The check would pass on the file you just deleted.' },
+    { text: 'Vérifier que `parse_lines` sur les mêmes quatre lignes renvoie une liste de dictionnaires, chacun avec une clé `text` et une clé `done`.', why: 'Une coquille vide qui renvoie une liste vide passe, parce que chaque élément d’une liste vide a les clés. Le test vérifie le format, jamais le travail.' },
+    { text: 'Vérifier que `parse_lines` sur les mêmes quatre lignes va jusqu’au bout sans lever d’erreur.', why: 'Toutes les coquilles vides passent ce test. Une fonction qui ne fait rien ne lève rien.' },
+    { text: 'Vérifier que `parse_lines` sur les mêmes quatre lignes renvoie trois éléments avec les textes et marques voulus.', correct: true },
+    { text: 'Vérifier que `importer.py` existe à côté de `todo.py` et définit une fonction `parse_lines` qui prend un argument.', why: 'C’est exactement ce qu’est une coquille vide : le nom sans le travail. Le contrôle passerait sur le fichier que vous venez de supprimer.' },
   ]}>
-Which of these tests would fail on a stub parser?
+Lequel de ces tests échouerait sur un analyseur réduit à une coquille vide ?
 </Choice>
 
 <MultiChoice id="what-the-brief-names" phase="review" objective="coding-with-agents/specifies-work/designs-the-check"
   concepts={['designing-the-verification']}
-  context="A learner has split an import feature for a small to-do program into components and written an acceptance test for the first one, a parser, before it exists. They are briefing a coding agent to build that one component."
-  title="What does the brief for one component name?" hint="What lets the agent check its own work without you, and what stops it from moving the target?"
+  context="Un apprenant a découpé une fonctionnalité d’import d’un petit programme de liste de tâches en composants et a écrit un test d’acceptation pour le premier, un analyseur, avant qu’il existe. Il donne à un agent de code la consigne de construire ce seul composant."
+  title="Que nomme la consigne d’un composant ?" hint="Qu’est-ce qui permet à l’agent de vérifier son propre travail sans vous, et qu’est-ce qui l’empêche de déplacer la cible ?"
   options={[
-    { text: 'The command that means done, such as the test run that has to print OK.', correct: true },
-    { text: 'The one file the agent is allowed to create or change for this component.', correct: true },
-    { text: 'That the test file stays as it is.', correct: true },
-    { text: 'The whole feature, so the agent sees the big picture while it builds the first part.', why: 'The agent then builds toward the whole and the first component grows a second responsibility. The brief for the merge comes when the parser is checked.' },
-    { text: 'That the agent should write its own test when it is finished.', why: 'A test written after the code asserts whatever the code does. The check that counts was written before, and it is already in the suite.' },
+    { text: 'La commande qui veut dire « terminé », comme l’exécution des tests qui doit afficher OK.', correct: true },
+    { text: 'Le seul fichier que l’agent a le droit de créer ou de modifier pour ce composant.', correct: true },
+    { text: 'Le fait que le fichier de tests reste tel quel.', correct: true },
+    { text: 'Toute la fonctionnalité, pour que l’agent voie l’ensemble pendant qu’il construit la première partie.', why: 'L’agent construit alors vers l’ensemble, et le premier composant se met à avoir une deuxième responsabilité. La consigne de la fusion vient quand l’analyseur est vérifié.' },
+    { text: 'Le fait que l’agent doit écrire son propre test une fois qu’il a terminé.', why: 'Un test écrit après le code vérifie ce que fait le code, quoi que ce soit. Le contrôle qui compte a été écrit avant, et il est déjà dans la suite.' },
   ]}>
-Which of these belong in the brief for the parser?
+Lesquels de ces points ont leur place dans la consigne de l’analyseur ?
 </MultiChoice>
 
-<Exercise stretch="Brief the agent for the parser with the brief above, in a fresh session, and read the diff: it should touch `importer.py` and nothing else.">
-Reset the fixture and take the import feature apart yourself, without
-looking at the table above. Write the components as a list with one
-responsibility and one interface sentence each, draw the dependency
-arrows between them, and put them in build order. Then write the failing
-acceptance test for the first component, run
-`python3 -m unittest -q`, and check that the last line starts with
-`FAILED`. Add a stub with the right name and run it again, and the line
-must still start with `FAILED`. Fifteen lines of notes and one test file is
-enough. You do this so that the agent builds one checked component at a
-time and never gets to choose the split.
+<Exercise stretch="Donnez à l’agent la consigne de l’analyseur ci-dessus, dans une nouvelle session, et lisez le diff : il devrait toucher `importer.py` et rien d’autre.">
+Réinitialisez l’exemple et démontez vous-même la fonctionnalité d’import,
+sans regarder le tableau ci-dessus. Écrivez les composants sous forme de liste,
+avec une responsabilité et une phrase d’interface chacun, dessinez les
+flèches de dépendance entre eux, et mettez-les dans l’ordre de construction.
+Écrivez ensuite le test d’acceptation en échec du premier composant, lancez
+`python3 -m unittest -q`, et vérifiez que la dernière ligne commence par
+`FAILED`. Ajoutez une coquille vide qui porte le bon nom et relancez : la
+ligne doit toujours commencer par `FAILED`. Quinze lignes de notes et un
+fichier de test suffisent. Vous faites cela pour que l’agent construise un
+composant vérifié à la fois et n’ait jamais à choisir le découpage.
 
-A good result: each component's interface fits in a sentence, the first
-one in your order is the one the others take input from, the suite says
-`FAILED` before the component exists and again on the stub, and the brief
-names the test run as what done means. Reflect: which of your components
-would you have merged if the agent had been given the whole feature, and
-what mistake could then have hidden inside it?
+Un bon résultat : l’interface de chaque composant tient en une phrase, le
+premier de votre ordre est celui dont les autres reçoivent leur entrée, la
+suite affiche `FAILED` avant que le composant existe et de nouveau sur la
+coquille vide, et la consigne nomme l’exécution des tests comme ce que veut
+dire « terminé ». Prenez un moment de recul : lesquels de vos composants
+auriez-vous fusionnés si l’agent avait reçu toute la fonctionnalité, et
+quelle erreur aurait alors pu s’y cacher ?
 </Exercise>
 
 <Recap>
-1. A component has one responsibility, an interface that fits in a sentence, and a size that fits one agent session and one reviewable change. Cut where the data changes form.
-2. Dependencies set the build order. The component whose output the others take is built and checked first, so a mistake in it never reaches the next one unseen.
-3. A component checked alone is a fixed point for the next brief. Feed the next component's test what the first one produces, or the second inherits and hides the first one's mistakes.
-4. Write the acceptance test before the component exists, put it in the suite and name the test run in the brief as what done means.
-5. A check that passes on a stub doesn't check the work. Run it against a version with the right name and no work, and the line must still say it failed.
+1. Un composant a une responsabilité, une interface qui tient en une phrase, et une taille qui tient dans une session d’agent et dans une modification relisible. Coupez là où les données changent de forme.
+2. Les dépendances fixent l’ordre de construction. Le composant dont les autres reçoivent la sortie est construit et vérifié en premier, pour qu’une erreur qu’il contient n’atteigne jamais le suivant sans être vue.
+3. Un composant vérifié seul est un point fixe pour la consigne suivante. Donnez au test du composant suivant ce que le premier produit, sinon le second hérite des erreurs du premier et les cache.
+4. Écrivez le test d’acceptation avant que le composant existe, mettez-le dans la suite et nommez l’exécution des tests dans la consigne comme ce que veut dire « terminé ».
+5. Un contrôle qui passe sur une coquille vide ne contrôle pas le travail. Lancez-le sur une version qui porte le bon nom et ne fait rien, et la ligne doit toujours dire qu’il a échoué.
 </Recap>

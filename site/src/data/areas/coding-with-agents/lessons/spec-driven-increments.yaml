@@ -12,7 +12,7 @@ introduces: [spec-driven-change, working-increments, sequencing-for-early-feedba
 assumes:
   - objective: coding-with-agents/specifies-work/defines-success
     lesson: coding-with-agents/deciding-what-to-build
-    section: writing-down-what-success-requires
+    section: écrire-ce-quexige-la-réussite
 extends-to:
   - label: Building a real feature with Claude Code (AI Hero sur YouTube, 44 minutes, en anglais)
     href: https://www.youtube.com/watch?v=hX7yG1KVYhI

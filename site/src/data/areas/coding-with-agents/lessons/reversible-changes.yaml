@@ -12,7 +12,7 @@ introduces: [reversibility, commits-and-prs]
 assumes:
   - objective: coding-with-agents/ships-with-agent/works-in-increments
     lesson: coding-with-agents/spec-driven-increments
-    section: land-the-first-increment
+    section: livrer-le-premier-incrément
 after: [coding-with-agents/spec-driven-increments]
 shorts:
   - >-

@@ -11,7 +11,7 @@ introduces: [design-interview, shared-vocabulary]
 assumes:
   - objective: coding-with-agents/specifies-work/defines-success
     lesson: coding-with-agents/deciding-what-to-build
-    section: writing-down-what-success-requires
+    section: écrire-ce-quexige-la-réussite
 extends-to:
   - label: >-
       Domain-Driven Design Reference (Eric Evans), le motif « Ubiquitous Language » (langage

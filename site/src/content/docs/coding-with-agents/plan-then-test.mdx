@@ -1,75 +1,78 @@
 import { Choice, Predict, Order, Sort, Scenario, Pitfall, Exercise, Recap, Prompt, Response, MultiChoice, Match } from '@components/lesson';
 
-In this lesson we fix one bug with a coding agent, in two halves. In the
-first half the agent may read and may not edit: it works out where the bug
-is and writes down the steps it intends to take, and we correct one of them
-before any file changes. In the second half it writes a test that fails
-because of the bug and then changes the code until the test passes, and we
-read the diff. The bug is in a fixture that ships with this course, and it
-spans three files, which is the size of change where a few minutes of
-planning save more than they cost.
+Dans cette leçon, nous corrigeons un bug avec un agent de code, en deux
+temps. Dans le premier temps, l’agent peut lire et ne peut pas modifier : il
+trouve où est le bug et écrit les étapes qu’il compte suivre, et nous
+corrigeons l’une d’elles avant qu’un fichier change. Dans le second temps, il
+écrit un test qui échoue à cause du bug, puis il modifie le code jusqu’à ce
+que le test passe, et nous lisons le diff. Le bug se trouve dans un exemple
+fourni avec ce cours, et il s’étend sur trois fichiers, la taille de
+modification à partir de laquelle quelques minutes de planification font
+gagner plus qu’elles ne coûtent.
 
-The vendor of Claude Code teaches this rhythm for its own tool: read the
-code, make a plan, and only then edit (@Claude Code best practices).
-Its short course walks through the same loop (@Academy claude-code-101).
-Where this lesson names a Claude Code key or flag, it says so, and the
-source is checked on the date at the end of the lesson. Other coding agents
-have a read-only mode under another name, and the rhythm is the same.
+L’éditeur de Claude Code enseigne ce rythme pour son propre outil : lire le
+code, faire un plan, et seulement ensuite modifier
+(@Claude Code best practices). Son court cours suit la même boucle
+(@Academy claude-code-101). Quand cette leçon nomme une touche ou une option
+de Claude Code, elle le dit, et la source est vérifiée à la date donnée en fin
+de leçon. Les autres agents de code ont un mode en lecture seule sous un autre
+nom, et le rythme est le même.
 
-## The fixture
+## L’exemple
 
-The fixture is the to-do program from *Your first session with a coding
-agent*, a few weeks later. It has grown a `clear` command that removes the
-done items, and it has been split into three modules: `todo.py` holds the
-commands, `store.py` reads, writes and prunes the list, and `render.py`
-formats it. It is in the course repository under
-`site/examples/coding-with-agents/plan-then-test/fixture-repo/`. Copy that
-directory to a place of its own and change into it. A copy has no git
-history, so the reset is to delete the copy and copy again, and the files
-the session adds go with it. Working inside a clone of the course
-repository also works, and there `git checkout -- .` is the reset, but the
-agent then reads the course's own instruction files from the directories
-above the fixture. The copy is the better default.
+L’exemple est le programme de liste de tâches de *Votre première session avec
+un agent de code*, quelques semaines plus tard. Il a gagné une commande
+`clear` qui retire les éléments faits, et il a été découpé en trois modules :
+`todo.py` contient les commandes, `store.py` lit, écrit et élague la liste, et
+`render.py` la met en forme. Il se trouve dans le dépôt du cours, sous
+`site/examples/coding-with-agents/plan-then-test/fixture-repo/`. Copiez ce
+dossier à un endroit à part et placez-vous dedans. Une copie n’a pas
+d’historique git, donc pour réinitialiser, supprimez la copie et copiez de
+nouveau, et les fichiers ajoutés par la session partent avec elle. Travailler
+dans un clone du dépôt du cours fonctionne aussi, et là, `git checkout -- .`
+réinitialise, mais l’agent lit alors les fichiers d’instructions du cours dans
+les dossiers au-dessus de l’exemple. La copie est le meilleur choix par
+défaut.
 
-The committed list has four items, two of them done. Run the program
-before you run the agent, so you know what the list looks like now.
+La liste committée a quatre éléments, dont deux faits. Lancez le programme
+avant de lancer l’agent, pour savoir à quoi ressemble la liste maintenant.
 
-<Predict id="run-list" title="Show the list"
+<Predict id="run-list" title="Afficher la liste"
   answer={`1. [ ] Buy milk
 2. [x] Call the plumber
 3. [x] Renew the passport
 4. [ ] Water the plants
 2 open, 2 done`} run="coding-with-agents/plan-then-test/list.py">
-Run this, and compare what you see with the output below.
+Lancez cette commande et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 todo.py list
 ```
 </Predict>
 
-The tests pass. That is the first thing that is different from the last
-lesson: nothing here is red yet.
+Les tests passent. C’est la première différence avec la leçon précédente :
+rien n’est encore au rouge ici.
 
-<Predict id="run-tests" title="Run the tests"
+<Predict id="run-tests" title="Lancer les tests"
   answer="OK" run="coding-with-agents/plan-then-test/tests.py">
-Run the tests and keep only the last line of the output.
+Lancez les tests et gardez seulement la dernière ligne de la sortie.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-Now the bug. Clear the done items on a copy of the list, and show what is
-left.
+Maintenant, le bug. Retirez les éléments faits d’une copie de la liste, et
+affichez ce qui reste.
 
-<Predict id="run-clear-bug" title="Clear the done items"
+<Predict id="run-clear-bug" title="Retirer les éléments faits"
   answer={`removed 1 done item
 1. [ ] Buy milk
 2. [x] Renew the passport
 3. [ ] Water the plants
 2 open, 1 done`} run="coding-with-agents/plan-then-test/clear_bug.py">
-Run `clear` and then `list` against a copy, so the committed file doesn't
-change.
+Lancez `clear` puis `list` sur une copie, pour que le fichier committé ne
+change pas.
 
 ```sh
 cp todos.json /tmp/todos.json
@@ -78,160 +81,169 @@ TODO_FILE=/tmp/todos.json python3 todo.py list
 ```
 </Predict>
 
-`clear` removed one of the two done items. The other is still there,
-still marked done. You have the evidence, and this time you don't know
-which of the three files holds the cause. That is the question the plan
-answers before anything changes.
+`clear` a retiré un seul des deux éléments faits. L’autre est toujours là,
+toujours marqué comme fait. Vous avez la preuve, et cette fois vous ne savez
+pas lequel des trois fichiers contient la cause. C’est la question à laquelle
+le plan répond avant que quoi que ce soit change.
 
-The examples in this lesson aren't graded. Each one is a command you run
-in the fixture, with the output the course itself checks on every build.
-The checkpoints ask about the session, because running the session is what
-this lesson teaches.
+Les exemples de cette leçon ne sont pas notés. Chacun est une commande que
+vous lancez dans l’exemple, avec la sortie que le cours vérifie lui-même à
+chaque build. Les questions de contrôle portent sur la session, parce que
+c’est la conduite de la session que cette leçon enseigne.
 
-## Put the agent in plan mode
+## Mettre l’agent en mode plan
 
-Plan mode is a read-only mode for the agent: it reads files, searches, and
-runs commands to explore, and it edits nothing. Instead of a diff you get
-a plan, a written list of the steps it intends to take, and the edits wait
-until you approve it. In Claude Code, `Shift+Tab` cycles through the
-permission modes until the status bar says plan mode is on, and
-`claude --permission-mode plan` starts a session in it. A `/plan` prefix
-puts one prompt in plan mode. `Shift+Tab` again leaves it without approving
-anything (@Claude Code permission modes).
+Le mode plan est un mode en lecture seule pour l’agent : il lit des fichiers,
+cherche et lance des commandes pour explorer, et il ne modifie rien. À la
+place d’un diff, vous recevez un plan, une liste écrite des étapes qu’il
+compte suivre, et les modifications attendent votre approbation. Dans Claude
+Code, `Shift+Tab` (Maj+Tab) fait défiler les modes de permission jusqu’à ce que
+la barre d’état indique que le mode plan est actif, et
+`claude --permission-mode plan` démarre une session dans ce mode. Un préfixe
+`/plan` met un seul prompt en mode plan. `Shift+Tab` de nouveau en sort sans
+rien approuver (@Claude Code permission modes).
 
-Start your coding agent in plan mode from inside `fixture-repo`, and hand
-it the evidence you gathered. The brief has the same parts as before: the
-goal, the context, what it may touch, and how you know it is done. The one
-new part is that you ask for a plan, and you ask it to name the cause
-before it names the fix.
+Lancez votre agent de code en mode plan depuis `fixture-repo`, et donnez-lui
+la preuve que vous avez réunie. La consigne a les mêmes parties qu’avant :
+l’objectif, le contexte, ce qu’il peut toucher, et la façon de savoir que
+c’est terminé. La seule partie nouvelle est que vous demandez un plan, et que
+vous lui demandez de nommer la cause avant la correction.
 
 <Prompt model="illustrative" recorded="illustrative">
-`clear` leaves a done item behind. With the committed `todos.json` copied to
-`/tmp/todos.json`, `TODO_FILE=/tmp/todos.json python3 todo.py clear` prints
-"removed 1 done item" and the list still shows "Renew the passport" as done.
-Both done items should have gone. Read the three modules and the tests, then give me a
-plan: where the cause is, which test you would write first, and which files
-you would change. Don't change anything yet. `todos.json` stays as it is.
+`clear` laisse un élément fait derrière lui. Avec le `todos.json` committé
+copié vers `/tmp/todos.json`, `TODO_FILE=/tmp/todos.json python3 todo.py clear`
+affiche « removed 1 done item » et la liste montre toujours « Renew the
+passport » comme fait. Les deux éléments faits auraient dû partir. Lis les
+trois modules et les tests, puis donne-moi un plan : où est la cause, quel test
+tu écrirais en premier, et quels fichiers tu modifierais. Ne modifie encore
+rien. `todos.json` reste tel quel.
 </Prompt>
 <Response>
-I read `todo.py`, `store.py`, `render.py` and `test_todo.py`, and ran the
-command you gave.
+J’ai lu `todo.py`, `store.py`, `render.py` et `test_todo.py`, et j’ai lancé la
+commande que vous avez donnée.
 
-Cause: `store.remove_done` removes items from the list while it is looping
-over the same list. After it removes item 2, item 3 moves into position 2,
-and the loop moves on to position 3, so every done item that follows a
-done item is skipped. `render.py` shows the list it is given, and it is
-right to show the item.
+Cause : `store.remove_done` retire des éléments de la liste pendant qu’il
+parcourt cette même liste. Après avoir retiré l’élément 2, l’élément 3 passe en
+position 2, et la boucle passe à la position 3, donc chaque élément fait qui
+suit un élément fait est sauté. `render.py` affiche la liste qu’on lui donne,
+et il a raison d’afficher l’élément.
 
-Plan:
+Plan :
 
-1. Add `test_clear.py` with a test that calls `store.remove_done` on a
-   list with two done items next to each other, and asserts that it returns
-   2 and that only the two open items remain. Run it and confirm it fails.
-2. Rewrite `remove_done` in `store.py` to build the list of kept items and
-   assign it back in place, so the count and the callers keep working.
-3. Change `render.list_items` in `render.py` to skip done items, so a
-   `list` after `clear` never shows one.
-4. Run `python3 -m unittest -q` and confirm every test passes.
+1. Ajouter `test_clear.py` avec un test qui appelle `store.remove_done` sur une
+   liste avec deux éléments faits côte à côte, et qui vérifie qu’il renvoie 2
+   et qu’il ne reste que les deux éléments ouverts. Le lancer et confirmer
+   qu’il échoue.
+2. Réécrire `remove_done` dans `store.py` pour construire la liste des
+   éléments gardés et la réaffecter sur place, pour que le décompte et les
+   appelants continuent de fonctionner.
+3. Modifier `render.list_items` dans `render.py` pour sauter les éléments
+   faits, pour qu’un `list` après `clear` n’en montre jamais.
+4. Lancer `python3 -m unittest -q` et confirmer que tous les tests passent.
 
-Files changed: `test_clear.py` (new), `store.py`, `render.py`.
+Fichiers modifiés : `test_clear.py` (nouveau), `store.py`, `render.py`.
 </Response>
 
-The transcripts in this lesson are illustrative: they show what a good
-exchange looks like and don't record a specific model's words. Your agent
-phrases things differently, and its plan may have four steps or six.
+Les transcriptions de cette leçon sont des illustrations : elles montrent à
+quoi ressemble un bon échange, sans reproduire les mots d’un modèle précis.
+Votre agent formule les choses autrement, et son plan aura peut-être quatre
+étapes ou six.
 
-Read the plan the way you read a diff. Steps 1 and 2 follow from the cause
-the agent named, and step 3 has no cause behind it. The agent found the cause in
-`store.py`, and then proposed a change to `render.py` anyway, because the
-symptom showed there. Hiding done items in `list` would make the bug
-invisible without fixing it, and it would change what `list` means for
-every user who has a done item they haven't cleared yet.
+Lisez le plan comme vous lisez un diff. Les étapes 1 et 2 découlent de la
+cause que l’agent a nommée, et l’étape 3 n’a aucune cause derrière elle.
+L’agent a trouvé la cause dans `store.py`, puis il a quand même proposé une
+modification de `render.py`, parce que le symptôme apparaissait là. Cacher les
+éléments faits dans `list` rendrait le bug invisible sans le corriger, et
+changerait le sens de `list` pour chaque utilisateur qui a un élément fait
+pas encore retiré.
 
 <Choice id="when-to-plan" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['plan-mode']}
-  context="Plan mode puts a coding agent in a read-only mode: it reads and explores and proposes steps, and it edits nothing until the plan is approved. A plan costs a few minutes at the start of a task."
-  title="Which task gets a plan?" hint="For which task can you not state the whole change in one short sentence?"
+  context="Le mode plan met un agent de code en lecture seule : il lit, explore et propose des étapes, et il ne modifie rien tant que le plan n’est pas approuvé. Un plan coûte quelques minutes au début d’une tâche."
+  title="Quelle tâche mérite un plan ?" hint="Pour quelle tâche ne pouvez-vous pas énoncer toute la modification en une courte phrase ?"
   options={[
-    { text: 'Bump the version string in `pyproject.toml` from 1.4.0 to 1.4.1 for a release.', why: 'You can state the whole change in one short sentence. A plan costs more than the change.' },
-    { text: 'A command gives the wrong result, and the code that could cause it is spread over three modules.', correct: true },
-    { text: 'Add one log line where an exception is caught.', why: 'You already know where the line goes and what it says. Plan mode adds a round trip and finds nothing you did not know.' },
-    { text: 'Rename one variable in one function.', why: 'The change is bounded to a place you can already point at. Let the agent do it and read the diff.' },
+    { text: 'Passer la version de `pyproject.toml` de 1.4.0 à 1.4.1 pour une publication.', why: 'Vous pouvez énoncer toute la modification en une courte phrase. Un plan coûte plus que la modification.' },
+    { text: 'Une commande donne un mauvais résultat, et sa cause possible est répartie sur trois modules.', correct: true },
+    { text: 'Ajouter une ligne de journal à l’endroit où une exception est interceptée.', why: 'Vous savez déjà où va la ligne et ce qu’elle dit. Le mode plan ajoute un aller-retour et ne trouve rien que vous ne sachiez déjà.' },
+    { text: 'Renommer une variable dans une fonction.', why: 'La modification se limite à un endroit que vous pouvez déjà désigner. Laissez l’agent la faire et lisez le diff.' },
   ]}>
-Which of these do you start in plan mode?
+Laquelle de ces tâches commencez-vous en mode plan ?
 </Choice>
 
-## Correct the plan while it is cheap
+## Corriger le plan tant que cela coûte peu
 
-The agent is still in plan mode, so correcting it costs a sentence. Tell
-it which step to drop and why, and ask for the plan again. In Claude Code
-the prompt under a finished plan offers to approve it, to approve it and
-review each edit, or to keep planning, and keep planning is the one you
-want here (@Claude Code permission modes). The same page names a shortcut,
-`Ctrl+G`, that loads the plan into your editor so you can change it
-there. A sentence in the chat does the same job for a one-step fix.
+L’agent est toujours en mode plan, donc le corriger coûte une phrase.
+Dites-lui quelle étape retirer et pourquoi, et redemandez le plan. Dans Claude
+Code, la demande qui suit un plan terminé propose de l’approuver, de
+l’approuver en relisant chaque modification, ou de continuer à planifier, et
+c’est la dernière option que vous voulez ici (@Claude Code permission modes).
+La même page cite un raccourci, `Ctrl+G`, qui charge le plan dans votre
+éditeur pour que vous le modifiiez là. Une phrase dans la conversation fait
+le même travail pour une correction d’une étape.
 
 <Prompt model="illustrative" recorded="illustrative">
-Drop step 3. You found the cause in `store.py`, and `render.py` is showing
-the list correctly. Hiding done items would change what `list` does for
-everyone. Keep steps 1, 2 and 4, and change only `store.py` and the new
-test file.
+Retire l’étape 3. Tu as trouvé la cause dans `store.py`, et `render.py`
+affiche la liste correctement. Cacher les éléments faits changerait ce que fait
+`list` pour tout le monde. Garde les étapes 1, 2 et 4, et ne modifie que
+`store.py` et le nouveau fichier de test.
 </Prompt>
 <Response>
-Agreed. Revised plan:
+D’accord. Plan révisé :
 
-1. Add `test_clear.py` with the failing test for `store.remove_done`. Run
-   it and confirm it fails.
-2. Rewrite `remove_done` in `store.py` to keep the open items and assign
-   them back in place.
-3. Run `python3 -m unittest -q` and confirm every test passes.
+1. Ajouter `test_clear.py` avec le test en échec pour `store.remove_done`. Le
+   lancer et confirmer qu’il échoue.
+2. Réécrire `remove_done` dans `store.py` pour garder les éléments ouverts et
+   les réaffecter sur place.
+3. Lancer `python3 -m unittest -q` et confirmer que tous les tests passent.
 
-Files changed: `test_clear.py` (new), `store.py`. `render.py` and
-`todos.json` stay as they are.
+Fichiers modifiés : `test_clear.py` (nouveau), `store.py`. `render.py` et
+`todos.json` restent tels quels.
 </Response>
 
-Now the plan matches the cause. Approve it, and choose the option that
-still asks you before each edit. You know what the two edits should be,
-and the prompts let you check that those are the two you get.
+Le plan correspond maintenant à la cause. Approuvez-le, et choisissez l’option
+qui vous demande encore votre accord avant chaque modification. Vous savez
+quelles doivent être les deux modifications, et les demandes vous permettent
+de vérifier que ce sont bien ces deux-là que vous obtenez.
 
-<Pitfall title="A confident change in the wrong module">
-An engineer skips the plan and briefs the agent to "make `clear` remove all
-the done items". The agent reads `render.py` first, because
-the output comes from there, and changes `list_items` to leave done items out.
-The symptom is gone, and `list` after `clear` doesn't show a done item. The bug is
-still in `store.py`, the file still holds the item, and the numbers `list`
-shows no longer match the positions in the file, so `done 3` marks whatever
-is third in the file. The rule: for a change you can't place in one
-file, ask for the cause and the steps first, and read the steps against
-the cause before any of them runs.
+<Pitfall title="Une modification sûre d’elle dans le mauvais module">
+Un ingénieur saute le plan et donne à l’agent la consigne de « faire en sorte
+que `clear` retire tous les éléments faits ». L’agent lit d’abord `render.py`,
+parce que la sortie vient de là, et modifie `list_items` pour laisser de côté
+les éléments faits. Le symptôme disparaît, et `list` après `clear` ne montre
+plus d’élément fait. Le bug est toujours dans `store.py`, le fichier contient
+toujours l’élément, et les numéros qu’affiche `list` ne correspondent plus aux
+positions dans le fichier, donc `done 3` marque ce qui est troisième dans le
+fichier. La règle : pour une modification que vous ne savez pas situer dans un
+seul fichier, demandez d’abord la cause et les étapes, et lisez les étapes au
+regard de la cause avant qu’aucune ne s’exécute.
 </Pitfall>
 
 <Scenario id="the-plan-has-an-extra-step" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['plan-mode']}
-  context="A learner has a coding agent in plan mode, a read-only mode where the agent proposes steps and edits nothing until the plan is approved. The agent's plan names the cause of a bug in one module and then also proposes a change to a second module where the symptom showed."
-  title="The plan has a step that doesn't follow" hint="Where is the cheapest place to remove a step: in the plan, in the diff, or in production?"
+  context="Un apprenant a un agent de code en mode plan, un mode en lecture seule où l’agent propose des étapes et ne modifie rien tant que le plan n’est pas approuvé. Le plan de l’agent nomme la cause d’un bug dans un module, puis propose aussi une modification d’un second module où le symptôme est apparu."
+  title="Le plan a une étape qui ne découle de rien" hint="Où retirer une étape coûte-t-il le moins cher : dans le plan, dans le diff, ou en production ?"
   options={[
-    { text: 'Approve the plan. The agent has read more of the code than you have, and you can always revert the second file afterwards.', consequence: 'The agent makes both changes. The tests pass, and you now have to work out which of the two edits fixed the bug and which one changed the program for everyone.' },
-    { text: 'Tell the agent which step to drop and why, and ask for the plan again before you approve anything.', correct: true, consequence: 'The agent returns a shorter plan that changes one module and the test file. Nothing has been edited yet, and the correction cost you one sentence.' },
-    { text: 'Leave plan mode, do the fix yourself in the first module, and ask the agent to write the test afterwards.', consequence: 'You get the fix, and you lose the check that the agent understood the cause. The next plan it writes has the same habit.' },
-    { text: 'Approve the plan and deny the permissions prompt for the second file when it comes.', consequence: 'The agent stops at the prompt, confused about a step you approved a minute ago. You end up explaining what you could have said in the plan.' },
+    { text: 'Approuver le plan. L’agent a lu plus de code que vous, et vous pourrez toujours restaurer le second fichier après coup.', consequence: 'L’agent fait les deux modifications. Les tests passent, et vous devez maintenant découvrir laquelle des deux a corrigé le bug et laquelle a changé le programme pour tout le monde.' },
+    { text: 'Dire à l’agent quelle étape retirer et pourquoi, et redemander le plan avant d’approuver quoi que ce soit.', correct: true, consequence: 'L’agent revient avec un plan plus court qui modifie un module et le fichier de test. Rien n’a encore été modifié, et la correction vous a coûté une phrase.' },
+    { text: 'Quitter le mode plan, faire vous-même la correction dans le premier module, et demander à l’agent d’écrire le test après.', consequence: 'Vous obtenez la correction, et vous perdez la vérification que l’agent a compris la cause. Le prochain plan qu’il écrit a la même habitude.' },
+    { text: 'Approuver le plan et refuser la demande d’autorisation pour le second fichier quand elle arrive.', consequence: 'L’agent s’arrête à la demande, perdu devant une étape que vous avez approuvée une minute plus tôt. Vous finissez par expliquer ce que vous auriez pu dire dans le plan.' },
   ]}>
-The plan names the cause in `store.py`, and step 3 changes `render.py` to
-hide done items. What do you do?
+Le plan nomme la cause dans `store.py`, et l’étape 3 modifie `render.py` pour
+cacher les éléments faits. Que faites-vous ?
 </Scenario>
 
-## The failing test first
+## Le test qui échoue d’abord
 
-The first step of the approved plan is a test, and the agent writes it
-before it touches `store.py`, because a test written after the fix asserts
-whatever the fixed code does. A test written
-before it has to describe the behavior you want, and it has to fail, which
-proves it is looking at the bug at all. The vendor's own guidance for a
-bug brief takes the same order: ask for a test that fails on the bug before
-any fix, and only then for the fix (@Claude Code best practices).
+La première étape du plan approuvé est un test, et l’agent l’écrit avant de
+toucher à `store.py`, parce qu’un test écrit après la correction vérifie ce que
+fait le code corrigé, quoi que ce soit. Un test écrit avant doit décrire le
+comportement voulu, et il doit échouer, ce qui prouve qu’il regarde bien le
+bug. Les conseils de l’éditeur pour la consigne d’un bug suivent le même
+ordre : demander un test qui échoue sur le bug avant toute correction, et
+seulement ensuite la correction (@Claude Code best practices).
 
-The agent creates `test_clear.py` and asks permission for the new file.
-Read it before you approve.
+L’agent crée `test_clear.py` et demande l’autorisation pour le nouveau
+fichier. Lisez-le avant d’approuver.
 
 ```python
 class ClearTests(unittest.TestCase):
@@ -247,59 +259,59 @@ class ClearTests(unittest.TestCase):
         self.assertEqual([item["text"] for item in items], ["Buy milk", "Water the plants"])
 ```
 
-The list has its done items next to each other, because that is the case
-the bug skips.
-A test with one done item would pass today and prove nothing. Approve the
-file, and run the suite yourself.
+La liste a ses éléments faits côte à côte, parce que c’est le cas que le bug
+saute. Un test avec un seul élément fait passerait aujourd’hui et ne
+prouverait rien. Approuvez le fichier, et lancez la suite vous-même.
 
-<Predict id="run-failing-test" title="Run the suite with the new test"
+<Predict id="run-failing-test" title="Lancer la suite avec le nouveau test"
   answer="FAILED (failures=1)" run="coding-with-agents/plan-then-test/failing_test.py">
-With `test_clear.py` in place, run the tests and keep the last line. The
-course checks this against its own copy of the test, which is the one
-shown above.
+Avec `test_clear.py` en place, lancez les tests et gardez la dernière ligne. Le
+cours vérifie ce résultat avec sa propre copie du test, celle qui est montrée
+ci-dessus.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-Red, for the reason you expected: the test reports that `remove_done`
-returned 1. The test is the agent's target now. It can run it on its own,
-as many times as it needs, and it can't say "done" until the line reads
-`OK`.
+Au rouge, pour la raison attendue : le test signale que `remove_done` a renvoyé
+1. Le test est maintenant la cible de l’agent. Il peut le lancer seul, autant
+de fois qu’il en a besoin, et il ne peut pas dire « terminé » avant que la
+ligne affiche `OK`.
 
 <Choice id="the-test-passes-at-once" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['test-driven-change']}
-  context="A learner is driving a bug fix from a failing test: the coding agent writes a test that captures the wanted behavior first, runs it and sees it fail, and then changes the code until it passes. The agent has written the test and run it, before changing any other file."
-  title="The new test passes on the first run" hint="What does a passing test prove about a bug that is still in the code?"
+  context="Un apprenant pilote une correction de bug par un test qui échoue : l’agent de code écrit d’abord un test qui décrit le comportement voulu, le lance et le voit échouer, puis modifie le code jusqu’à ce qu’il passe. L’agent a écrit le test et l’a lancé, avant de modifier un autre fichier."
+  title="Le nouveau test passe dès la première exécution" hint="Que prouve un test qui passe, à propos d’un bug toujours présent dans le code ?"
   options={[
-    { text: 'Good news. The bug must have been fixed by an earlier change, so ask the agent to move on to the cleanup.', why: 'You saw the bug a minute ago, and nothing has changed since. The test is not looking at it.' },
-    { text: 'Fine either way. Approve the fix to store.py and run the suite again afterwards.', why: 'A test that passed before the fix also passes after it, whatever the fix does. It proves nothing about the change.' },
-    { text: 'Delete the test and let the agent fix the code directly, since the tests are unreliable here.', why: 'One test that missed the case is a wording problem in that test. Fixing without any test leaves you with the agent\'s word.' },
-    { text: 'The test does not capture the bug. Ask the agent to change the test until it fails on the code as it is.', correct: true },
+    { text: 'Bonne nouvelle. Le bug a dû être corrigé par une modification antérieure, donc demandez à l’agent de passer au nettoyage.', why: 'Vous avez vu le bug il y a une minute, et rien n’a changé depuis. Le test ne le regarde pas.' },
+    { text: 'Peu importe. Approuver la correction de store.py et relancer la suite ensuite.', why: 'Un test qui passait avant la correction passe aussi après, quoi que fasse la correction. Il ne prouve rien sur la modification.' },
+    { text: 'Supprimer le test et laisser l’agent corriger directement le code, puisque les tests ne sont pas fiables ici.', why: 'Un test qui a manqué le cas est un problème de formulation de ce test. Corriger sans aucun test vous laisse avec la parole de l’agent.' },
+    { text: 'Le test ne capture pas le bug. Demander à l’agent de modifier le test jusqu’à ce qu’il échoue sur le code actuel.', correct: true },
   ]}>
-The agent writes the test, runs it, and reports that it passes. No other
-file has changed. What do you do?
+L’agent écrit le test, le lance, et annonce qu’il passe. Aucun autre fichier
+n’a changé. Que faites-vous ?
 </Choice>
 
-## Implement until it passes, then read the diff
+## Implémenter jusqu’à ce que le test passe, puis lire le diff
 
-The agent moves to step 2, asks permission to edit `store.py`, and you
-approve the one edit the plan named. Then it runs the suite, reads the
-verdict, and reports. The report is a claim, so run the check yourself.
+L’agent passe à l’étape 2, demande l’autorisation de modifier `store.py`, et
+vous approuvez la seule modification que le plan nommait. Il lance ensuite la
+suite, lit le verdict, et fait son rapport. Le rapport est une affirmation,
+donc lancez le contrôle vous-même.
 
-<Predict id="run-tests-after-fix" title="Run the suite after the fix"
+<Predict id="run-tests-after-fix" title="Lancer la suite après la correction"
   answer="OK" run="coding-with-agents/plan-then-test/tests_after_fix.py">
-Run the tests and keep the last line. The course applies the fix shown
-below to its own copy and checks this output against it.
+Lancez les tests et gardez la dernière ligne. Le cours applique la correction
+montrée ci-dessous à sa propre copie et vérifie cette sortie avec elle.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-Then read the diff. It is the second piece of evidence, and the test
-passing is only proof if the diff touched what the plan said.
+Lisez ensuite le diff. C’est la seconde preuve, et le test qui passe ne prouve
+quelque chose que si le diff a touché ce que disait le plan.
 
 ```sh
 git status --short
@@ -319,21 +331,22 @@ git diff
 +    return removed
 ```
 
-`git status` names two files: `store.py` modified, `test_clear.py` new.
-`render.py` isn't in the list, and neither is `todos.json`. The diff builds
-the list of kept items first and assigns it back into the same list, so
-`todo.py`, which holds a reference to that list, sees the change. Your
-agent's version may use another construction. What matters is that it
-changes `remove_done` and nothing else.
+`git status` nomme deux fichiers : `store.py` modifié, `test_clear.py`
+nouveau. `render.py` n’est pas dans la liste, `todos.json` non plus. Le diff
+construit d’abord la liste des éléments gardés et la réaffecte dans la même
+liste, donc `todo.py`, qui garde une référence à cette liste, voit le
+changement. La version de votre agent utilisera peut-être une autre
+construction. Ce qui compte, c’est qu’elle modifie `remove_done` et rien
+d’autre.
 
-Prove it against the list one more time, on a copy.
+Prouvez-le encore une fois sur la liste, avec une copie.
 
-<Predict id="run-clear-after-fix" title="Clear the done items after the fix"
+<Predict id="run-clear-after-fix" title="Retirer les éléments faits après la correction"
   answer={`removed 2 done items
 1. [ ] Buy milk
 2. [ ] Water the plants
 2 open, 0 done`} run="coding-with-agents/plan-then-test/clear_after_fix.py">
-Run `clear` and then `list` against a fresh copy of the committed list.
+Lancez `clear` puis `list` sur une nouvelle copie de la liste committée.
 
 ```sh
 cp todos.json /tmp/todos.json
@@ -342,147 +355,153 @@ TODO_FILE=/tmp/todos.json python3 todo.py list
 ```
 </Predict>
 
-The last step of the plan was the cleanup, and there is little of it here:
-the test file has a name that says what it covers, and the fix has no
-leftover print or comment. When there is more, ask for it as its own step
-and read that diff too. Then end the session, as *Your first session with a
-coding agent* taught. The next task gets a fresh one.
+La dernière étape du plan était le nettoyage, et il y en a peu ici : le
+fichier de test a un nom qui dit ce qu’il couvre, et la correction ne laisse
+ni affichage ni commentaire traînant. Quand il y en a davantage, demandez-le
+comme une étape à part et lisez aussi ce diff. Terminez ensuite la session,
+comme l’a montré *Votre première session avec un agent de code*. La tâche
+suivante a droit à une nouvelle session.
 
 <Order id="test-driven-order" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['test-driven-change']}
-  context="Driving a change from a failing test: the test that captures the wanted behavior is written first, and the code is changed until it passes. The learner runs the checks and reads the diff at the end."
-  title="Put the test-driven steps in order" hint="What has to be red before anything turns green, and what do you read once it is green?"
+  context="Piloter une modification par un test qui échoue : le test qui décrit le comportement voulu est écrit en premier, et le code est modifié jusqu’à ce qu’il passe. L’apprenant lance les contrôles et lit le diff à la fin."
+  title="Mettre dans l’ordre les étapes guidées par le test" hint="Qu’est-ce qui doit être au rouge avant que quoi que ce soit passe au vert, et que lisez-vous une fois au vert ?"
   steps={[
-    'The agent writes a test that describes the wanted behavior',
-    'Run the suite and confirm the new test fails',
-    'The agent changes the code the plan named',
-    'Run the suite yourself and confirm every test passes',
-    'Read the diff and check it touched only the files in the plan',
+    'L’agent écrit un test qui décrit le comportement voulu',
+    'Lancer la suite et confirmer que le nouveau test échoue',
+    'L’agent modifie le code que le plan nommait',
+    'Lancer la suite vous-même et confirmer que tous les tests passent',
+    'Lire le diff et vérifier qu’il n’a touché que les fichiers du plan',
   ]} />
 
-## When a test beats a spec
+## Quand un test vaut mieux qu’une spécification
 
-A failing test suits a change whose wanted behavior fits in an assertion:
-a bug fix, or a bounded change to what one function or one command does.
-The test is precise, the agent can run it without you, and passing it is
-proof. It doesn't suit a change where the question is the design: which
-modules exist, what the interface between them is, what the data looks
-like. For those you write the specification first and the agent works from
-it, and this course has its own lesson on
-[working from a spec in small increments](/coding-with-agents/spec-driven-increments/). The two aren't rivals. A spec-driven feature has tests for
-each of its increments, and a test-driven fix has a one-line spec, the
-sentence that says what "fixed" means.
+Un test qui échoue convient à une modification dont le comportement voulu
+tient dans une assertion : une correction de bug, ou une modification
+délimitée de ce que fait une fonction ou une commande. Le test est précis,
+l’agent peut le lancer sans vous, et le réussir est une preuve. Il ne convient
+pas à une modification où la question porte sur la conception : quels modules
+existent, quelle est l’interface entre eux, à quoi ressemblent les données.
+Pour celles-là, vous écrivez d’abord la spécification et l’agent travaille à
+partir d’elle, et ce cours a sa propre leçon sur le
+[travail à partir d’une spécification, par petits incréments](/coding-with-agents/spec-driven-increments/).
+Les deux méthodes travaillent ensemble. Une fonctionnalité guidée par une
+spécification a des tests pour chacun de ses incréments, et une correction
+guidée par un test a une spécification d’une ligne, la phrase qui dit ce que
+veut dire « corrigé ».
 
 <Sort id="test-or-spec" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['test-driven-change', 'spec-driven-change']}
-  context="A test-driven change starts from a failing test that captures the wanted behavior and suits bug fixes and bounded behavior changes. A spec-driven change starts from a written specification with success criteria and suits changes where the design matters more than any single test."
-  title="Test first, or spec first?" hint="Can you write the wanted behavior as one assertion that fails today? If you can, which way is that?"
-  buckets={['Start from a failing test', 'Start from a spec']}
+  context="Une modification guidée par les tests part d’un test qui échoue et qui décrit le comportement voulu, et convient aux corrections de bugs et aux modifications de comportement délimitées. Une modification guidée par la spécification part d’une spécification écrite avec des critères de réussite, et convient aux modifications où la conception compte plus qu’un test isolé."
+  title="Le test d’abord, ou la spécification d’abord ?" hint="Pouvez-vous écrire le comportement voulu sous forme d’une assertion qui échoue aujourd’hui ? Si oui, quelle méthode est-ce ?"
+  buckets={['Partir d’un test qui échoue', 'Partir d’une spécification']}
   items={[
-    { text: 'The clear command leaves a done item behind', bucket: 0 },
-    { text: 'The add command should refuse an empty text instead of adding a blank item', bucket: 0 },
-    { text: 'Dates on items, with a due command that lists what is overdue', bucket: 1 },
-    { text: 'Split the program into a package with one module per command and a shared store', bucket: 1 },
-    { text: 'The clear command should print the text of each item it removed', bucket: 0 },
-    { text: 'Sync the list with a calendar service', bucket: 1 },
+    { text: 'La commande clear laisse un élément fait derrière elle', bucket: 0 },
+    { text: 'La commande add doit refuser un texte vide au lieu d’ajouter un élément vierge', bucket: 0 },
+    { text: 'Des dates sur les éléments, avec une commande due qui liste ce qui est en retard', bucket: 1 },
+    { text: 'Découper le programme en un paquet avec un module par commande et un stockage commun', bucket: 1 },
+    { text: 'La commande clear doit afficher le texte de chaque élément qu’elle a retiré', bucket: 0 },
+    { text: 'Synchroniser la liste avec un service d’agenda', bucket: 1 },
   ]} />
 
 <Sort id="plan-or-go" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['plan-mode']}
-  context="Plan mode puts a coding agent in a read-only mode: it reads, explores and proposes steps, and it edits nothing until the plan is approved. The lesson uses it for a change you can't place in one file."
-  title="Plan first, or go?" hint="Can you state the whole change in one short sentence before the agent starts?"
-  buckets={['Start in plan mode', 'Skip the plan']}
+  context="Le mode plan met un agent de code en lecture seule : il lit, explore et propose des étapes, et il ne modifie rien tant que le plan n’est pas approuvé. La leçon l’utilise pour une modification qu’on ne sait pas situer dans un seul fichier."
+  title="Planifier d’abord, ou y aller ?" hint="Pouvez-vous énoncer toute la modification en une courte phrase avant que l’agent commence ?"
+  buckets={['Commencer en mode plan', 'Se passer du plan']}
   items={[
-    { text: 'A wrong total whose cause could be in any of three modules', bucket: 0 },
-    { text: 'A command that is slow, and nobody knows which part is slow', bucket: 0 },
-    { text: 'A crash that shows up only with one customer\'s data', bucket: 0 },
-    { text: 'Fix a typo in one error message', bucket: 1 },
-    { text: 'Bump the version number for a release', bucket: 1 },
-    { text: 'Add one log line in a function you already know', bucket: 1 },
+    { text: 'Un total faux dont la cause pourrait se trouver dans l’un de trois modules', bucket: 0 },
+    { text: 'Une commande lente, sans que personne sache quelle partie est lente', bucket: 0 },
+    { text: 'Un plantage qui n’apparaît qu’avec les données d’un seul client', bucket: 0 },
+    { text: 'Corriger une faute de frappe dans un message d’erreur', bucket: 1 },
+    { text: 'Augmenter le numéro de version pour une publication', bucket: 1 },
+    { text: 'Ajouter une ligne de journal dans une fonction que vous connaissez déjà', bucket: 1 },
   ]} />
 
 <MultiChoice id="reading-the-plan" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['plan-mode']}
-  context="A coding agent in plan mode has proposed a plan that names the cause of a bug and lists the steps to fix it. Nothing is edited until the learner approves."
-  title="Reading the plan" hint="What does each step have to follow from?"
+  context="Un agent de code en mode plan a proposé un plan qui nomme la cause d’un bug et liste les étapes pour le corriger. Rien n’est modifié tant que l’apprenant n’a pas approuvé."
+  title="Lire le plan" hint="De quoi chaque étape doit-elle découler ?"
   options={[
-    { text: 'Whether each step follows from the cause the plan names.', correct: true },
-    { text: 'Whether the plan is long enough to look thorough.', why: 'Length says nothing about whether a step belongs. A short plan can be the right one.' },
-    { text: 'Whether the agent sounds sure about the cause.', why: 'Confidence is in the wording. The cause is something you check against the code.' },
-    { text: 'Whether the plan changes only files that the cause needs.', correct: true },
+    { text: 'Si chaque étape découle de la cause que nomme le plan.', correct: true },
+    { text: 'Si le plan est assez long pour avoir l’air approfondi.', why: 'La longueur ne dit rien de la place d’une étape. Un plan court peut être le bon.' },
+    { text: 'Si l’agent a l’air sûr de la cause.', why: 'L’assurance est dans la formulation. La cause, elle, se vérifie dans le code.' },
+    { text: 'Si le plan ne modifie que les fichiers dont la cause a besoin.', correct: true },
   ]}>
 
-Which two things do you check before you approve the plan?
+Quelles sont les deux choses que vous vérifiez avant d’approuver le plan ?
 
 </MultiChoice>
 
 <Scenario id="the-test-already-green" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['test-driven-change']}
-  context="A learner drives a bug fix from a failing test. The bug: the export command drops the last row. The agent has written a test for it and run it before changing anything else."
-  title="The new test passes" hint="Can a test that passes on the buggy code tell you when the bug is fixed?"
+  context="Un apprenant pilote une correction de bug par un test qui échoue. Le bug : la commande d’export perd la dernière ligne. L’agent a écrit un test pour ce bug et l’a lancé avant de modifier quoi que ce soit d’autre."
+  title="Le nouveau test passe" hint="Un test qui passe sur le code bogué peut-il vous dire quand le bug est corrigé ?"
   options={[
-    { text: 'Move on to the fix, since the test is written and it runs.', consequence: 'The fix goes in, the test still passes, and nobody knows whether the fix did anything.' },
-    { text: 'Conclude that the bug is gone, and close the task.', consequence: 'The bug is still there. The test checks only the first row, and the export keeps that row.' },
-    { text: 'Ask the agent to change the test until it fails on the code as it is.', correct: true, consequence: 'The new test uses three rows and fails. After the fix it passes, and now it shows the bug is gone.' },
-    { text: 'Delete the test and let the agent fix the code directly.', consequence: 'The fix has no test, and the bug can come back without anyone noticing.' },
+    { text: 'Passer à la correction, puisque le test est écrit et qu’il tourne.', consequence: 'La correction est faite, le test passe toujours, et personne ne sait si la correction a servi à quelque chose.' },
+    { text: 'Conclure que le bug a disparu, et clore la tâche.', consequence: 'Le bug est toujours là. Le test ne vérifie que la première ligne, et l’export garde cette ligne.' },
+    { text: 'Demander à l’agent de modifier le test jusqu’à ce qu’il échoue sur le code actuel.', correct: true, consequence: 'Le nouveau test utilise trois lignes et échoue. Après la correction, il passe, et il montre maintenant que le bug a disparu.' },
+    { text: 'Supprimer le test et laisser l’agent corriger directement le code.', consequence: 'La correction n’a pas de test, et le bug peut revenir sans que personne s’en aperçoive.' },
   ]}>
 
-The agent writes the test for the missing last row, runs it, and it
-passes. No other file has changed. What do you do?
+L’agent écrit le test pour la dernière ligne manquante, le lance, et il passe.
+Aucun autre fichier n’a changé. Que faites-vous ?
 
 </Scenario>
 
 <Choice id="what-comes-first" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['test-driven-change']}
-  context="The lesson drives a change from a failing test that captures the wanted behavior, and the learner runs the checks and reads the diff at the end."
-  title="Before the code changes" hint="What does the test have to do on the code as it is now?"
+  context="La leçon pilote une modification par un test qui échoue et qui décrit le comportement voulu, et l’apprenant lance les contrôles et lit le diff à la fin."
+  title="Avant que le code change" hint="Que doit faire le test sur le code tel qu’il est maintenant ?"
   options={[
-    { text: 'The agent writes the fix, and then a test that passes on it.', why: 'A test written after the fix may only describe the fix. It never had the chance to fail on the bug.' },
-    { text: 'You read the diff, to see which files the fix will touch.', why: 'There is no diff yet. Reading it comes at the end.' },
-    { text: 'The agent writes a test, and you see it fail on the code as it is.', correct: true },
-    { text: 'You run the whole suite and see that every test passes.', why: 'That check comes after the fix. Before it, the new test has to fail.' },
+    { text: 'L’agent écrit la correction, puis un test qui passe dessus.', why: 'Un test écrit après la correction risque de ne décrire que la correction. Il n’a jamais eu l’occasion d’échouer sur le bug.' },
+    { text: 'Vous lisez le diff, pour voir quels fichiers la correction va toucher.', why: 'Il n’y a pas encore de diff. Sa lecture vient à la fin.' },
+    { text: 'L’agent écrit un test, et vous le voyez échouer sur le code actuel.', correct: true },
+    { text: 'Vous lancez toute la suite et vous voyez que tous les tests passent.', why: 'Ce contrôle vient après la correction. Avant, le nouveau test doit échouer.' },
   ]}>
 
-In a change driven by a failing test, what happens before the agent
-changes the code?
+Dans une modification pilotée par un test qui échoue, que se passe-t-il avant
+que l’agent modifie le code ?
 
 </Choice>
 
 <Match id="start-from" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['test-driven-change', 'spec-driven-change']}
-  context="A test-driven change starts from a failing test and suits a bug fix or a bounded behavior change. A spec-driven change starts from a written specification with success criteria and suits a change where the design matters more than any single test."
-  title="A test or a spec?" hint="Is it one behavior you can pin down in a test, or a design with several parts?"
-  options={['Start from a failing test', 'Start from a spec']}
+  context="Une modification guidée par les tests part d’un test qui échoue et convient à une correction de bug ou à une modification de comportement délimitée. Une modification guidée par la spécification part d’une spécification écrite avec des critères de réussite et convient à une modification où la conception compte plus qu’un test isolé."
+  title="Un test ou une spécification ?" hint="S’agit-il d’un comportement que vous pouvez fixer dans un test, ou d’une conception en plusieurs parties ?"
+  options={['Partir d’un test qui échoue', 'Partir d’une spécification']}
   rows={[
-    { statement: 'The export command drops the last row', option: 0, why: 'Can one test show this behavior?' },
-    { statement: 'The add command should refuse an item longer than 200 characters', option: 0, why: 'Is this one bounded change?' },
-    { statement: 'Tags on items, with a command that lists the items for a tag', option: 1, why: 'How many decisions does this feature need before anyone writes a test?' },
-    { statement: 'Move the storage from a JSON file to a database', option: 1, why: 'Is this about one behavior, or about the design?' },
+    { statement: 'La commande d’export perd la dernière ligne', option: 0, why: 'Un seul test peut-il montrer ce comportement ?' },
+    { statement: 'La commande add doit refuser un élément de plus de 200 caractères', option: 0, why: 'Est-ce une modification délimitée ?' },
+    { statement: 'Des étiquettes sur les éléments, avec une commande qui liste les éléments d’une étiquette', option: 1, why: 'Combien de décisions cette fonctionnalité demande-t-elle avant que quiconque écrive un test ?' },
+    { statement: 'Faire passer le stockage d’un fichier JSON à une base de données', option: 1, why: 'Est-ce un comportement, ou une question de conception ?' },
   ]}
-  rationale="A test pins one behavior. A spec holds the design decisions that the tests then check.">
-Match each change to where it starts.
+  rationale="Un test fixe un comportement. Une spécification contient les décisions de conception que les tests vérifient ensuite.">
+Associez chaque modification à son point de départ.
 </Match>
 
-<Exercise stretch="Now do the same for a change you choose, for example making `done` accept several numbers at once. Decide first whether it starts from a test or a spec, and say why in one line.">
-In a fresh session, with the fixture reset, run the whole bug fix with
-your coding agent: start in plan mode with the brief above, read the plan,
-correct or drop any step that doesn't follow from the cause it names, then
-approve it and let the agent write the failing test and fix `store.py`.
-Run `python3 -m unittest -q` yourself at the red step and at the green
-step, and read `git diff` at the end. Plan on ten minutes. This is the
-rhythm you use on any change you can't state in one short sentence.
+<Exercise stretch="Faites maintenant la même chose pour une modification de votre choix, par exemple faire accepter plusieurs numéros à la fois à `done`. Décidez d’abord si elle part d’un test ou d’une spécification, et dites pourquoi en une ligne.">
+Dans une nouvelle session, avec l’exemple réinitialisé, menez toute la
+correction du bug avec votre agent de code : commencez en mode plan avec la
+consigne ci-dessus, lisez le plan, corrigez ou retirez toute étape qui ne
+découle pas de la cause nommée, puis approuvez-le et laissez l’agent écrire le
+test en échec et corriger `store.py`. Lancez vous-même `python3 -m unittest -q`
+à l’étape rouge et à l’étape verte, et lisez `git diff` à la fin. Comptez dix
+minutes. C’est le rythme à suivre pour toute modification que vous ne pouvez
+pas énoncer en une courte phrase.
 
-A good result: the plan named `store.remove_done` as the cause, the test
-failed before the fix and passed after it, and the diff touches
-`store.py` and one new test file and nothing else. Finish by deleting your
-copy and copying the fixture again, so it is ready for next time. Then answer one question: which step of the plan would you
-have missed if the agent had gone straight to the diff?
+Un bon résultat : le plan a nommé `store.remove_done` comme cause, le test a
+échoué avant la correction et passé après, et le diff touche `store.py` et un
+nouveau fichier de test, rien d’autre. Terminez en supprimant votre copie et en
+copiant de nouveau l’exemple, pour qu’il soit prêt pour la prochaine fois.
+Répondez ensuite à une question : quelle étape du plan auriez-vous manquée si
+l’agent était allé directement au diff ?
 </Exercise>
 
 <Recap>
-1. For a change you can't place in one file, start the agent in plan mode: it reads and proposes, and it edits nothing until you approve (@Claude Code permission modes). Skip the plan when the whole change fits in one short sentence (@Claude Code best practices).
-2. Read the plan against the cause it names, and correct or drop a step that doesn't follow while the correction costs a sentence.
-3. The failing test comes before the fix. It has to fail on the code as it is, or it isn't looking at the bug.
-4. The agent implements until the test passes. You run the check yourself, and you read the diff to see that it touched only what the plan said.
-5. A test suits a bug fix or a bounded behavior change. A design question starts from a spec, and the two work together.
+1. Pour une modification que vous ne savez pas situer dans un seul fichier, lancez l’agent en mode plan : il lit et propose, et il ne modifie rien tant que vous n’avez pas approuvé (@Claude Code permission modes). Passez-vous du plan quand toute la modification tient en une courte phrase (@Claude Code best practices).
+2. Lisez le plan au regard de la cause qu’il nomme, et corrigez ou retirez une étape qui n’en découle pas tant que la correction coûte une phrase.
+3. Le test qui échoue vient avant la correction. Il doit échouer sur le code actuel, sinon il ne regarde pas le bug.
+4. L’agent implémente jusqu’à ce que le test passe. Vous lancez le contrôle vous-même, et vous lisez le diff pour voir qu’il n’a touché que ce que disait le plan.
+5. Un test convient à une correction de bug ou à une modification de comportement délimitée. Une question de conception part d’une spécification, et les deux méthodes travaillent ensemble.
 </Recap>
