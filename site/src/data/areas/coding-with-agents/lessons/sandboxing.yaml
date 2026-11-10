@@ -1,8 +1,9 @@
 id: coding-with-agents/sandboxing
-title: Sandboxing a coding agent
+title: Isoler un agent de code dans un bac à sable
 description: >-
-  Compare the ways to contain a coding agent, put the controls that matter outside its trust boundary,
-  and set up Claude Code's built-in sandbox with a network allowlist whose effect you predict.
+  Comparez les façons de contenir un agent de code, placez les contrôles qui comptent hors de sa
+  frontière de confiance, et configurez le bac à sable intégré de Claude Code avec une liste
+  d’autorisation réseau dont vous prévoyez l’effet.
 mode: tutorial
 covers: coding-with-agents/first-session
 serves: [coding-with-agents/ships-with-agent/runs-a-session]
@@ -15,14 +16,14 @@ assumes:
     lesson: safety/reading-agent-logs
     section: ce-que-le-journal-doit-contenir-et-qui-le-lit
 after: [coding-with-agents/keys-and-secrets]
-shorts: [permission modes]
+shorts: [les modes de permission]
 exercise:
   kind: do
   brief: >-
-    Read the fixture's sandbox settings, which allow one host, predict which of three commands reach the
-    network, check the prediction with the fixture's script, then run Claude Code in a copy of the
-    fixture with those settings and confirm. Stretch goal: run the hardened container and add a proxy
-    allowlist.
+    Lisez les réglages du bac à sable de l’exemple, qui autorisent un seul hôte, prévoyez laquelle
+    de trois commandes atteint le réseau, vérifiez la prévision avec le script de l’exemple, puis
+    lancez Claude Code dans une copie de l’exemple avec ces réglages et confirmez. Pour aller plus
+    loin : lancez le conteneur renforcé et ajoutez une liste d’autorisation par proxy.
 sources:
   - Academy claude-code-in-action
   - Claude Code sandboxing
@@ -61,9 +62,11 @@ notes: >-
   unsupervised run in proportion to how little you watched it); the lessons behind sign-in weren't
   read. Beyond is kept to short summaries of schubergphilis/claude-docker (Apache-2.0, own words, no
   text adapted), the layered containment pattern, unsupervised mode with Codex's layers, and Pi (the
-  plan named badlogic/pi-mono; the citation uses earendil-works/pi, MIT). The optional practices from a
+  plan named badlogic/pi-mono; the citation uses earendil-works/pi, MIT). The optional practices from
+  a
   team that ran agents in containers were left out. Minutes is 25 because the page has about 2,400 words,
-  four graded interactions, a script run and a five-minute live exercise, for readers with English as a
+  four graded interactions, a script run and a five-minute live exercise, for readers with English as
+  a
   second language. The three first checkpoints (a Sort of controls that check the request against
   controls that limit the running process, a Scenario on where a forge token lives, a graded Predict on
   the fixture's allowlist) all serve runs-a-session. The three review alternates are Choices on the idea

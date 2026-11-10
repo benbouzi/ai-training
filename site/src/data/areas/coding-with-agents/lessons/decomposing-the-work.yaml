@@ -1,9 +1,9 @@
 id: coding-with-agents/decomposing-the-work
-title: Splitting the work into components the agent can build one at a time
+title: Découper le travail en composants que l’agent construit un par un
 description: >-
-  Split a feature into components with one responsibility and a one-sentence interface each, order
-  them by dependency, and write the acceptance test for the first one before it exists, so it fails
-  on a stub.
+  Découpez une fonctionnalité en composants qui ont chacun une responsabilité et une interface
+  d’une phrase, ordonnez-les selon leurs dépendances, et écrivez le test d’acceptation du premier
+  avant qu’il existe, pour qu’il échoue sur une coquille vide.
 mode: tutorial
 covers: coding-with-agents/specification
 serves:
@@ -18,18 +18,20 @@ assumes:
     lesson: coding-with-agents/deciding-what-to-build
     section: writing-down-what-success-requires
 extends-to:
-  - label: Tracer bullets (AI Hero)
+  - label: Tracer bullets (AI Hero, en anglais)
     href: https://www.aihero.dev/tracer-bullets
-  - label: "Scale Codex Across Teams and Systems: split work across teams, with a check for each part (OpenAI Academy, free account)"
+  - label: >-
+      Scale Codex Across Teams and Systems : répartir le travail entre équipes, avec un contrôle pour
+      chaque partie (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/scale-codex-across-teams-and-systems-jr83a
 after: [coding-with-agents/deciding-what-to-build]
-shorts: [a check that would fail on a stub]
+shorts: [un contrôle qui échouerait sur une coquille vide]
 exercise:
   kind: do
   brief: >-
-    Split the fixture's import feature into components with one responsibility each and order them
-    by dependency. Then write the failing acceptance test for the first one before briefing the
-    agent.
+    Découpez la fonctionnalité d’import de l’exemple en composants qui ont chacun une
+    responsabilité, et ordonnez-les selon leurs dépendances. Écrivez ensuite le test d’acceptation
+    en échec du premier avant de donner la consigne à l’agent.
 sources: [Academy ai-native-sdlc-playbook, Brilliant SPC, Claude Code memory]
 sources-checked: 2026-09-26
 review-by: 2027-03-26

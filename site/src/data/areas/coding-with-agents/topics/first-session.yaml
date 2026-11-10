@@ -1,84 +1,80 @@
 id: coding-with-agents/first-session
 area: coding-with-agents
-name: Running a coding agent
+name: Lancer un agent de code
 definition: >-
-  A coding agent works inside your repository with your tools. This topic
-  gets a first session going: installing and configuring the agent, letting
-  it read and explain the codebase, making a first small change, understanding
-  what it asks permission for, where the sandbox around it ends, how to
-  handle the API keys it uses without leaking them, and managing the
-  session so its context stays useful.
+  Un agent de code travaille dans votre dépôt avec vos outils. Ce thème couvre une première
+  session : installer et configurer l’agent, lui faire lire et expliquer le code, faire une
+  première petite modification, comprendre ce pour quoi il demande une autorisation, savoir où
+  s’arrête le bac à sable qui l’entoure, gérer les clés d’API qu’il utilise sans les divulguer, et
+  conduire la session pour que son contexte reste utile.
 concepts:
   - id: install-and-setup
-    name: Install and setup
+    name: Installation et configuration
     definition: >-
-      Getting a coding agent running in a terminal or editor: installing the
-      tool, authenticating to a model provider, opening it in a repository
-      and checking it can run the project's own commands. Setup is also where
-      you decide what the agent may reach, so do it in a repository you can
-      afford to have touched and with a clean working tree.
+      Faire fonctionner un agent de code dans un terminal ou un éditeur : installer l’outil,
+      s’authentifier auprès d’un fournisseur de modèles, l’ouvrir dans un dépôt et vérifier qu’il peut
+      lancer les commandes du projet. C’est aussi à l’installation que vous décidez de ce que l’agent
+      peut atteindre. Faites-la donc dans un dépôt que l’agent peut modifier sans dommage, avec un
+      arbre de travail propre.
   - id: codebase-understanding
-    name: Codebase understanding
+    name: Compréhension du code
     definition: >-
-      Using the agent to orient in unfamiliar code before changing it: ask
-      where a feature lives, how a request flows, what a module depends on.
-      The agent reads files and searches faster than you can, and its
-      explanation is a fast first map. Verify the map against the code on
-      anything you will act on, since agents summarize confidently.
+      Utiliser l’agent pour s’orienter dans un code inconnu avant de le modifier : lui demander où se
+      trouve une fonctionnalité, comment circule une requête, de quoi dépend un module. L’agent lit et
+      cherche dans les fichiers plus vite que vous, et son explication donne une première carte
+      rapide. Vérifiez cette carte dans le code pour tout ce sur quoi vous allez agir, car les agents
+      résument avec assurance.
   - id: first-change
-    name: First change
+    name: Première modification
     definition: >-
-      A small, well-bounded edit done with the agent to learn how it works:
-      a fix with a failing test, a rename, a documentation update. Brief it,
-      watch which files it reads, read the diff it proposes and run the
-      tests yourself. The point is to calibrate how it behaves in your
-      project before trusting it with something larger.
+      Une petite modification bien délimitée faite avec l’agent pour apprendre comment il travaille :
+      une correction avec un test qui échoue, un renommage, une mise à jour de la documentation.
+      Donnez-lui la consigne, regardez quels fichiers il lit, lisez le diff qu’il propose et lancez
+      les tests vous-même. Le but est de mesurer son comportement dans votre projet avant de lui
+      confier quelque chose de plus grand.
   - id: permissions
     name: Permissions
     definition: >-
-      What the agent may do without asking: read files, edit files, run
-      commands, reach the network. Coding agents prompt for approval on
-      risky actions by default and let you widen or narrow that. Approving
-      everything for convenience turns a mistake in a command into a mistake
-      in your repository or system, so widen access per project and per
-      task.
+      Ce que l’agent peut faire sans demander : lire des fichiers, modifier des fichiers, lancer des
+      commandes, accéder au réseau. Par défaut, les agents de code demandent une approbation pour les
+      actions risquées, et vous pouvez élargir ou restreindre ce réglage. Tout approuver par commodité
+      transforme une erreur dans une commande en une erreur dans votre dépôt ou votre système.
+      Élargissez donc l’accès projet par projet et tâche par tâche.
   - id: sandbox
-    name: Sandbox
+    name: Bac à sable
     definition: >-
-      An isolated environment the agent runs in so that a wrong command
-      damages only what is inside it: a container, a virtual machine or a
-      separate user account. The sandbox limits
-      which files, network destinations and credentials the agent can reach.
-      It is a control you set up before the session, and a coding agent
-      with no sandbox has exactly the access you have.
+      Un environnement isolé dans lequel l’agent s’exécute, pour qu’une mauvaise commande n’abîme que
+      ce qui s’y trouve : un conteneur, une machine virtuelle ou un compte utilisateur séparé. Le bac
+      à sable limite les fichiers, les destinations réseau et les identifiants que l’agent peut
+      atteindre. C’est un contrôle que vous mettez en place avant la session, et un agent de code sans
+      bac à sable a exactement les accès que vous avez.
   - id: trust-boundary
-    name: Trust boundary
+    name: Frontière de confiance
     definition: >-
-      The line between what the agent may decide on its own and what is
-      enforced from outside it. Instructions in a prompt are requests the
-      model can ignore or be tricked out of, so a control that matters is
-      enforced by the harness, the operating system or the network. Knowing
-      what the agent sends to its provider, from file contents to command
-      output, is part of drawing that line.
+      La ligne qui sépare ce que l’agent peut décider seul de ce qui est imposé de l’extérieur. Les
+      instructions d’un prompt sont des demandes que le modèle peut ignorer ou dont on peut le
+      détourner, donc un contrôle important est imposé par le harnais, le système d’exploitation ou le
+      réseau. Savoir ce que l’agent envoie à son fournisseur, du contenu des fichiers à la sortie des
+      commandes, fait partie du tracé de cette ligne.
   - id: secrets-hygiene
-    name: Secrets hygiene
+    name: Hygiène des secrets
     definition: >-
-      Handling the API keys and tokens an agent needs so a leak stays small.
-      Use a personal key, never a shared one, and keep it in a password
-      manager or an environment variable. A key never goes into a file the
-      agent can commit. If a key may have been exposed, revoke it first and
-      investigate afterwards, because rotation is cheap and a leaked key is
-      used by someone else quickly.
+      Gérer les clés d’API et les jetons dont un agent a besoin pour qu’une fuite reste limitée.
+      Utilisez une clé personnelle, jamais une clé partagée, et gardez-la dans un gestionnaire de mots
+      de passe ou une variable d’environnement. Une clé ne va jamais dans un fichier que l’agent peut
+      committer. Si une clé a pu être exposée, révoquez-la d’abord et enquêtez ensuite, parce qu’une
+      rotation coûte peu et qu’une clé divulguée est vite utilisée par quelqu’un d’autre.
   - id: session-and-context
-    name: Session and context
+    name: Session et contexte
     definition: >-
-      A session is one conversation with the agent and its context window is
-      the session's memory. Every file read and command output lands in it,
-      so long sessions fill up and the agent starts forgetting earlier
-      instructions. Keep one task per session, start fresh for unrelated
-      work, and ask for a summary before compacting or handing off.
+      Une session est une conversation avec l’agent, et sa fenêtre de contexte est la mémoire de la
+      session. Chaque fichier lu et chaque sortie de commande y entre, donc les longues sessions se
+      remplissent et l’agent commence à oublier des instructions données plus tôt. Gardez une tâche
+      par session, recommencez à neuf pour un travail sans rapport, et demandez un résumé avant de
+      compacter ou de passer la main.
 links:
   prerequisites: [using-agents/delegating]
   related: []
   specializations: []
-sources: [AEC-12, DLAI-5, Academy claude-code-101, Academy claude-code-in-action, OpenAI Academy get-started-with-codex-jkhsq]
+sources: [AEC-12, DLAI-5, Academy claude-code-101, Academy claude-code-in-action, OpenAI Academy
+      get-started-with-codex-jkhsq]

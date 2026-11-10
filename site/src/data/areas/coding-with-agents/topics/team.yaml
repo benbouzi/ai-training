@@ -1,87 +1,87 @@
 id: coding-with-agents/team
 area: coding-with-agents
-name: Agents in a team
+name: Les agents dans une équipe
 definition: >-
-  Once several people and several agents work on one repository, individual
-  habits need to become team practice. This topic covers running parallel
-  agent sessions without collisions, using worktrees, wiring agents into CI,
-  enforcing rules with hooks, agreeing review norms, and attributing agent
-  work honestly.
+  Dès que plusieurs personnes et plusieurs agents travaillent sur un même dépôt, les habitudes
+  individuelles doivent devenir une pratique d’équipe. Ce thème couvre les sessions d’agents en
+  parallèle sans collisions, l’usage des worktrees, le branchement des agents sur la CI,
+  l’application des règles par des hooks, les règles de revue convenues, et l’attribution honnête
+  du travail des agents.
 concepts:
   - id: parallel-sessions
-    name: Parallel sessions
+    name: Sessions parallèles
     definition: >-
-      Running more than one agent session at once, on separate tasks, to
-      use waiting time. It multiplies output and also the chances of two
-      sessions editing the same files, losing track of which change belongs
-      where, or exhausting your own attention for review. Parallel work
-      needs isolation per session and a discipline of finishing and
-      reviewing one task before merging the next.
+      Faire tourner plus d’une session d’agent à la fois, sur des tâches séparées, pour utiliser le
+      temps d’attente. Cela multiplie la production, et aussi les risques : deux sessions qui
+      modifient les mêmes fichiers, des modifications dont on ne sait plus à quelle tâche elles
+      appartiennent, une attention épuisée au moment de relire. Le travail en parallèle demande une
+      isolation par session et la discipline de terminer et de relire une tâche avant de fusionner la
+      suivante.
   - id: worktrees
     name: Worktrees
     definition: >-
-      Separate checked-out copies of one repository, each on its own branch,
-      sharing one history. A worktree per agent session gives each its own
-      files and build state, so parallel sessions cannot overwrite each
-      other and a bad session can be discarded without touching the others.
-      They are the standard way to isolate concurrent agent work locally.
+      Des copies extraites séparées d’un même dépôt, chacune sur sa propre branche, qui partagent un
+      seul historique. Un worktree par session d’agent donne à chacune ses propres fichiers et son
+      propre état de build, donc des sessions parallèles ne peuvent pas s’écraser et une session ratée
+      peut être jetée sans toucher aux autres. C’est la façon habituelle d’isoler localement le
+      travail simultané d’agents.
   - id: ci-integration
-    name: CI integration
+    name: Intégration à la CI
     definition: >-
-      Making the continuous integration pipeline the shared gate for agent
-      changes: the same lint, test, build and security checks run on every
-      pull request regardless of who or what wrote it. CI turns individual
-      verification into a team guarantee and gives agents an objective
-      target. Agents can also be given CI results to fix, within the same
-      bounds as any self-checking loop.
+      Faire de la chaîne d’intégration continue le contrôle commun des modifications d’agents : les
+      mêmes contrôles de style, tests, build et sécurité s’appliquent à chaque pull request, quel que
+      soit l’auteur, humain ou outil. La CI transforme une vérification individuelle en garantie
+      d’équipe et donne aux agents une cible objective. On peut aussi confier aux agents des résultats
+      de CI à corriger, dans les mêmes limites que toute boucle d’autovérification.
   - id: team-hooks
-    name: Team hooks
+    name: Hooks d’équipe
     definition: >-
-      Scripts that run automatically at fixed points, before a commit, after
-      an agent edits a file, before a command runs, to enforce a rule
-      mechanically: format the code, block a secret, refuse a forbidden path.
-      Hooks enforce what instructions can only request, and they apply to
-      every session and every team member the same way, which is what makes
-      them a team tool.
+      Des scripts qui s’exécutent automatiquement à des moments fixes (avant un commit, après la
+      modification d’un fichier par un agent, avant l’exécution d’une commande) pour appliquer une
+      règle de façon mécanique : formater le code, bloquer un secret, refuser un chemin interdit. Les
+      hooks imposent ce que les instructions peuvent seulement demander, et ils s’appliquent de la
+      même façon à chaque session et à chaque membre de l’équipe. C’est ce qui en fait un outil
+      d’équipe.
   - id: review-norms
-    name: Review norms
+    name: Règles de revue
     definition: >-
-      The team's agreements on how agent-assisted changes are reviewed: the
-      author reads and understands every line before requesting review, the
-      PR says what the agent did and what was verified, reviewers read the
-      diff rather than the description, and size limits keep changes
-      reviewable. Norms keep the human accountability that agents can quietly
-      erode.
+      Les accords de l’équipe sur la revue des modifications faites avec un agent : l’auteur lit et
+      comprend chaque ligne avant de demander une revue, la pull request dit ce que l’agent a fait et
+      ce qui a été vérifié, les relecteurs lisent le diff lui-même, et des limites de taille gardent
+      les modifications relisibles. Ces règles maintiennent la responsabilité humaine que les agents
+      peuvent éroder sans bruit.
   - id: attribution
     name: Attribution
     definition: >-
-      Recording that an agent contributed to a change, typically as a trailer
-      in the commit message and a note in the pull request, alongside the
-      human who directed and verified the work. Attribution lets reviewers
-      calibrate attention, keeps history honest, and separates what a person
-      certifies from what a tool produced. The human remains the author of
-      record.
+      Indiquer qu’un agent a contribué à une modification, en général par une ligne de fin (trailer)
+      dans le message de commit et une note dans la pull request, à côté de la personne qui a dirigé
+      et vérifié le travail. L’attribution permet aux relecteurs de doser leur attention, garde un
+      historique honnête, et sépare ce qu’une personne certifie de ce qu’un outil a produit. La
+      personne reste l’auteur officiel.
   - id: agent-reachable-backlog
-    name: Agent-reachable backlog
+    name: Backlog accessible à l’agent
     definition: >-
-      Specifications and tickets kept in the team's tracker, with links that
-      record which ticket blocks which, where people and agents can both read
-      and update them. An agent that can list open tickets, read one in full
-      and see what blocks it can pick up work and report on it without anyone
-      pasting text into the session. A command-line tool is the cheapest way
-      in for the agent, with credentials that allow only what the agent
-      needs, such as commenting and no deleting.
+      Des spécifications et des tickets gardés dans l’outil de suivi de l’équipe, avec des liens qui
+      indiquent quel ticket en bloque un autre, là où les personnes et les agents peuvent les lire et
+      les mettre à jour. Un agent qui peut lister les tickets ouverts, en lire un en entier et voir ce
+      qui le bloque peut prendre du travail et en rendre compte sans que personne ne colle de texte
+      dans la session. Un outil en ligne de commande est l’accès le moins coûteux pour l’agent, avec
+      des identifiants qui ne permettent que ce dont il a besoin, par exemple commenter sans pouvoir
+      supprimer.
   - id: standards-file
-    name: Standards file
+    name: Fichier de normes
     definition: >-
-      A written list of the team's coding rules that no tool checks, read by
-      human and agent reviewers alike. Reviewers check a change against the
-      file, and a point that is not in it is a suggestion that does not block
-      the change. When the same finding comes up in several reviews, it is
-      added to the file. When a linter or a hook can check a rule, the rule
-      moves there, because a check runs on every change.
+      Une liste écrite des règles de code de l’équipe qu’aucun outil ne vérifie, lue par les
+      relecteurs humains comme par les agents relecteurs. Les relecteurs comparent une modification au
+      fichier, et un point qui n’y figure pas est une suggestion qui ne bloque pas la modification.
+      Quand la même remarque revient dans plusieurs revues, elle est ajoutée au fichier. Quand un
+      outil d’analyse ou un hook peut vérifier une règle, la règle y est déplacée, parce qu’un
+      contrôle s’exécute sur chaque modification.
 links:
   prerequisites: [coding-with-agents/quality]
   related: []
   specializations: []
-sources: [DLAI-5, Academy claude-code-in-action, Academy ai-native-sdlc-playbook, Claude Code hooks, GitHub docs workflow-syntax, Claude Code best practices, Claude Code memory, GitHub docs creating-issue-dependencies, Google eng-practices, OpenAI Academy extend-codex-workflows-4e61p, OpenAI Academy scale-codex-across-teams-and-systems-jr83a]
+sources: [DLAI-5, Academy claude-code-in-action, Academy ai-native-sdlc-playbook, Claude Code hooks,
+      GitHub docs workflow-syntax, Claude Code best practices, Claude Code memory, GitHub docs
+      creating-issue-dependencies, Google eng-practices, OpenAI Academy extend-codex-workflows-4e61p,
+  OpenAI Academy scale-codex-across-teams-and-systems-jr83a]

@@ -1,113 +1,180 @@
 id: coding-with-agents/specifies-work
 area: coding-with-agents
-statement: Specifies work well enough for an agent to implement and for anyone to verify
+statement: >-
+  Spécifie le travail assez bien pour qu’un agent l’implémente et que n’importe qui le vérifie
 topics: [coding-with-agents/specification, using-agents/decomposition]
 objectives:
   - id: coding-with-agents/specifies-work/judges-worth-building
-    statement: Judges whether something should be built before building it
+    statement: Juge si une chose doit être construite avant de la construire
     level: base
     behaviors:
-      - claim: The learner states the problem and who has it before proposing a change.
-        why: An agent makes building cheap, which makes building the wrong thing cheap too.
-        example: '"Support answers the same question ten times a week" comes before "build a settings page",
-          and the answer may be a documentation fix.'
-      - claim: The learner names at least one alternative to building, including doing nothing, and says why
-          building wins.
-        why: The comparison is what turns a wish into a decision.
-        example: '"We could add the feature, change the default, or document the workaround; the workaround
-          costs each user five minutes a week, so we change the default."'
-      - claim: The learner weighs the cost of owning the change against its value, and the cost of writing
-          it is the smaller part.
-        why: The agent writes it in an hour, and the team maintains it for years.
-        example: A new dependency for one date format is rejected because it adds a package to keep patched,
-          and a ten-line function is written instead.
+      - claim: L’apprenant énonce le problème et qui l’a avant de proposer une modification.
+        why: >-
+          Un agent rend la construction peu coûteuse, donc construire la mauvaise chose devient tout aussi
+          peu coûteux.
+        example: >-
+          « Le support répond dix fois par semaine à la même question » vient avant « construire une page
+          de réglages », et la réponse peut être une correction de la documentation.
+      - claim: >-
+          L’apprenant nomme au moins une autre option que construire, y compris ne rien faire, et dit
+          pourquoi construire l’emporte.
+        why: C’est la comparaison qui transforme un souhait en décision.
+        example: >-
+          « Nous pourrions ajouter la fonctionnalité, changer le réglage par défaut ou documenter le
+          contournement ; le contournement coûte cinq minutes par semaine à chaque utilisateur, donc nous
+          changeons le réglage par défaut. »
+      - claim: >-
+          L’apprenant met en balance le coût de possession de la modification et sa valeur, et le coût
+          d’écriture en est la plus petite partie.
+        why: L’agent l’écrit en une heure, et l’équipe l’entretient pendant des années.
+        example: >-
+          Une nouvelle dépendance pour un seul format de date est refusée, parce qu’elle ajoute un paquet
+          à maintenir à jour, et une fonction de dix lignes est écrite à la place.
   - id: coding-with-agents/specifies-work/defines-success
-    statement: Defines what a successful outcome requires
+    statement: Définit ce qu’exige un résultat réussi
     level: base
     behaviors:
-      - claim: Success is written as observable outcomes that a person other than the author could check.
-        why: A criterion the author has to interpret is a criterion the agent and the reviewer interpret
-          differently.
-        example: '"Search results return within 300 ms at the 95th percentile on the test data set" instead
-          of "search is fast".'
-      - claim: The criteria include what must keep working as well as what is new.
-        why: An agent optimizing for the new criterion trades away anything that is not listed.
-        example: "\"All existing exports still open in the finance team's spreadsheet program\" is added
-          because the new CSV format could break them."
-      - claim: The learner writes down what is out of scope.
-        why: The agent fills the gap between "done" and "everything it could improve" with its own choices.
-        example: '"Not in scope: mobile layout, translations" stops the agent from restyling the whole
-          page.'
+      - claim: >-
+          La réussite est écrite sous forme de résultats observables qu’une autre personne que l’auteur
+          pourrait vérifier.
+        why: >-
+          Un critère que l’auteur doit interpréter est un critère que l’agent et le relecteur interprètent
+          différemment.
+        example: >-
+          « Les résultats de recherche arrivent en moins de 300 ms au 95e centile sur le jeu de données
+          de
+          test » au lieu de « la recherche est rapide ».
+      - claim: Les critères incluent ce qui doit continuer de fonctionner en plus de ce qui est
+          nouveau.
+        why: Un agent qui optimise le nouveau critère sacrifie tout ce qui n’est pas listé.
+        example: >-
+          « Tous les exports existants s’ouvrent toujours dans le tableur de l’équipe finance » est
+          ajouté, parce que le nouveau format CSV pourrait les casser.
+      - claim: L’apprenant écrit ce qui est hors du périmètre.
+        why: >-
+          L’agent remplit l’écart entre « terminé » et « tout ce qu’il pourrait améliorer » avec ses
+          propres choix.
+        example: >-
+          « Hors périmètre : mise en page mobile, traductions » empêche l’agent de restyler toute la page.
   - id: coding-with-agents/specifies-work/decomposes-into-components
-    statement: Decomposes a problem into components with clear dependencies
+    statement: Décompose un problème en composants aux dépendances claires
     level: base
     behaviors:
-      - claim: Each component has one clear responsibility and an interface that fits in a sentence.
-        why: Components a person can describe are components an agent can implement in isolation and a
-          reviewer can check in isolation.
-        example: '"A parser that turns the file into records; a validator that flags bad records; a writer
-          that saves the good ones" rather than one "import" task.'
-      - claim: The learner draws the dependencies and orders the work so each step can be checked before the
-          next starts.
-        why: A component built on an unverified one inherits its mistakes and hides them.
-        example: The parser is built and tested on real files before the validator, because the validator's
-          tests need real parsed records.
-      - claim: Each component is small enough to be one agent session and one reviewable change.
-        why: A task that is too large for a session loses context halfway through, and its diff is too large
-          to read.
-        example: The learner splits "add authentication" into token issuing, token checking and the login
-          page, and briefs each separately.
+      - claim: >-
+          Chaque composant a une seule responsabilité claire et une interface qui tient en une phrase.
+        why: >-
+          Des composants qu’une personne sait décrire sont des composants qu’un agent peut implémenter
+          isolément et qu’un relecteur peut vérifier isolément.
+        example: >-
+          « Un analyseur qui transforme le fichier en enregistrements ; un validateur qui signale les
+          mauvais enregistrements ; un rédacteur qui enregistre les bons », au lieu d’une seule tâche
+          « import ».
+      - claim: >-
+          L’apprenant dessine les dépendances et ordonne le travail pour que chaque étape puisse être
+          vérifiée avant que la suivante commence.
+        why: Un composant construit sur un composant non vérifié hérite de ses erreurs et les cache.
+        example: >-
+          L’analyseur est construit et testé sur de vrais fichiers avant le validateur, parce que les
+          tests du validateur ont besoin de vrais enregistrements analysés.
+      - claim: >-
+          Chaque composant est assez petit pour tenir dans une session d’agent et une modification
+          relisible.
+        why: >-
+          Une tâche trop grande pour une session perd son contexte à mi-chemin, et son diff est trop grand
+          pour être lu.
+        example: >-
+          L’apprenant découpe « ajouter l’authentification » en émission de jetons, vérification de jetons
+          et page de connexion, et rédige une consigne pour chacune.
   - id: coding-with-agents/specifies-work/designs-the-check
-    statement: Designs how the work will be verified before it is built
+    statement: Conçoit la vérification du travail avant de le construire
     level: base
     behaviors:
-      - claim: "Before building, the learner writes down how each success criterion will be verified: which
-          test, which measurement, which manual step."
-        why: A check designed afterwards is designed around what was built, and passes by construction.
-        example: For "no duplicate invoices", the check is a test that imports the same file twice and
-          asserts one set of rows, written before the import code.
-      - claim: The check is something the agent can run, so it can verify its own work before handing back.
-        why: A check only a person can run is run once at the end, and a check the agent can run is run on
-          every attempt.
-        example: The acceptance test goes into the test suite and the brief says "done when `mise run test`
-          passes".
-      - claim: The learner designs at least one check that would fail if the agent took a shortcut.
-        why: Agents optimize for the check they see, and a check that passes on a stub passes on a stub.
-        example: The test for the email sender uses a fake mailbox and asserts the message arrived, where a
-          check on the send function's return value would pass on a stub.
+      - claim: >-
+          Avant de construire, l’apprenant écrit comment chaque critère de réussite sera vérifié : quel
+          test, quelle mesure, quelle étape manuelle.
+        why: >-
+          Un contrôle conçu après coup est conçu autour de ce qui a été construit, et il passe par
+          construction.
+        example: >-
+          Pour « aucune facture en double », le contrôle est un test qui importe deux fois le même fichier
+          et vérifie qu’il n’y a qu’un seul jeu de lignes, écrit avant le code d’import.
+      - claim: >-
+          Le contrôle est une chose que l’agent peut exécuter, pour qu’il vérifie son propre travail avant
+          de rendre la main.
+        why: >-
+          Un contrôle que seule une personne peut lancer est lancé une fois, à la fin, et un contrôle
+          que
+          l’agent peut lancer est lancé à chaque tentative.
+        example: >-
+          Le test d’acceptation va dans la suite de tests, et la consigne dit « terminé quand `mise run
+          test` passe ».
+      - claim: L’apprenant conçoit au moins un contrôle qui échouerait si l’agent prenait un
+          raccourci.
+        why: >-
+          Les agents optimisent pour le contrôle qu’ils voient, et un contrôle qui passe sur une coquille
+          vide (stub) passe sur une coquille vide.
+        example: >-
+          Le test de l’envoi d’e-mails utilise une fausse boîte aux lettres et vérifie que le message
+          est
+          arrivé, là où un contrôle sur la valeur de retour de la fonction d’envoi passerait sur une
+          coquille vide.
   - id: coding-with-agents/specifies-work/is-interviewed-before-planning
-    statement: Reaches a shared design by having the agent interview them before planning
+    statement: >-
+      Arrive à une conception partagée en se faisant interroger par l’agent avant la planification
     level: base
     behaviors:
-      - claim: For a larger feature, the learner asks the agent to interview them about the design before
-          any plan is written.
-        why: The questions bring out decisions the learner had not made yet, while changing them is still
-          free (@Claude Code best practices).
-        example: The learner writes "I want a CSV export. Interview me about it before you plan
-          anything", and gets questions about encodings and very large files they had not considered.
-      - claim: The learner answers with decisions, and says "not decided yet" when there is none.
-        why: An answer made up to move on becomes a requirement the agent builds.
-        example: Asked which time zone the export uses, the learner says it is undecided, and the spec
-          lists it as an open question.
-      - claim: The interview ends in a written spec, and the work starts from that file in a fresh session.
-        why: The file holds the outcome of the interview, and a fresh session has room for the work
-          (@Claude Code best practices).
-        example: The agent writes `SPEC.md`, the learner reads and corrects it, and opens a new session
-          with "implement `SPEC.md`".
+      - claim: >-
+          Pour une fonctionnalité importante, l’apprenant demande à l’agent de l’interroger sur la
+          conception avant d’écrire un plan.
+        why: >-
+          Les questions font apparaître des décisions que l’apprenant n’avait pas encore prises, à un
+          moment où les changer ne coûte encore rien (@Claude Code best practices).
+        example: >-
+          L’apprenant écrit « Je veux un export CSV. Interroge-moi à ce sujet avant de planifier quoi
+          que
+          ce soit », et reçoit des questions sur les encodages et les très gros fichiers auxquelles il
+          n’avait pas pensé.
+      - claim: L’apprenant répond par des décisions, et dit « pas encore décidé » quand il n’y en a
+          pas.
+        why: Une réponse inventée pour avancer devient une exigence que l’agent construit.
+        example: >-
+          À la question du fuseau horaire de l’export, l’apprenant répond que ce n’est pas décidé, et
+          la
+          spécification le liste comme question ouverte.
+      - claim: >-
+          L’entretien se termine par une spécification écrite, et le travail part de ce fichier dans une
+          nouvelle session.
+        why: >-
+          Le fichier contient le résultat de l’entretien, et une nouvelle session a de la place pour le
+          travail (@Claude Code best practices).
+        example: >-
+          L’agent écrit `SPEC.md`, l’apprenant le lit et le corrige, puis ouvre une nouvelle session avec
+          « implémente `SPEC.md` ».
   - id: coding-with-agents/specifies-work/settles-with-a-prototype
-    statement: Settles a design question with a throwaway prototype
+    statement: Tranche une question de conception avec un prototype jetable
     level: expert
     behaviors:
-      - claim: The learner states the one question a prototype must answer before asking for it.
-        why: A prototype without a question grows into a first version of the system (@Thomas 2019).
-        example: '"Can the library read the 2 GB export in under a minute?" and the agent writes a short
-          script that times exactly that.'
-      - claim: The prototype leaves out everything the question does not need.
-        why: Its value is the answer, so tests, error handling and structure are effort spent on code
-          that is deleted.
-        example: The timing script has a hard-coded path and no tests, and the learner does not ask for
-          either.
-      - claim: The learner writes the answer into the specification and deletes the prototype.
-        why: Code built without structure brings its shortcuts into the system when it is kept.
-        example: The spec gains "the parser must stream, because the library loads the whole file into
-          memory", and the prototype branch is deleted.
+      - claim: >-
+          L’apprenant énonce la question unique à laquelle un prototype doit répondre avant de le
+          demander.
+        why: >-
+          Un prototype sans question grandit jusqu’à devenir une première version du système (@Thomas
+          2019).
+        example: >-
+          « La bibliothèque peut-elle lire l’export de 2 Go en moins d’une minute ? », et l’agent écrit
+          un
+          court script qui chronomètre exactement cela.
+      - claim: Le prototype laisse de côté tout ce dont la question n’a pas besoin.
+        why: >-
+          Sa valeur est la réponse, donc des tests, une gestion d’erreurs et une structure sont des
+          efforts dépensés sur du code qui sera supprimé.
+        example: >-
+          Le script de chronométrage a un chemin codé en dur et aucun test, et l’apprenant ne demande
+          ni
+          l’un ni l’autre.
+      - claim: L’apprenant écrit la réponse dans la spécification et supprime le prototype.
+        why: Du code construit sans structure apporte ses raccourcis dans le système quand on le
+          garde.
+        example: >-
+          La spécification gagne la phrase « l’analyseur doit lire en flux, parce que la bibliothèque
+          charge tout le fichier en mémoire », et la branche du prototype est supprimée.

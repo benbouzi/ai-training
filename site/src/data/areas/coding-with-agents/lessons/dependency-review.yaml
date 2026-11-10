@@ -1,8 +1,9 @@
 id: coding-with-agents/dependency-review
-title: Reviewing what the agent pulled in
+title: Relire ce que l’agent a ajouté comme dépendances
 description: >-
-  A coding agent adds packages fast and with confidence. Review each one in proportion to its risk,
-  with the OpenSSF Scorecard checks as the security step and a written skip list.
+  Un agent de code ajoute des paquets vite et avec assurance. Relisez chacun en proportion de son
+  risque, avec les contrôles d’OpenSSF Scorecard comme étape de sécurité et une liste écrite de ce
+  que vous sautez.
 mode: explanation
 covers: coding-with-agents/quality
 serves: [coding-with-agents/verifies-agent-work/screens-for-security]
@@ -15,14 +16,16 @@ assumes:
     lesson: safety/agent-risk
     section: le-rayon-dimpact
 extends-to:
-  - label: Verifying agent work
+  - label: Vérifier le travail d’un agent
     href: /coding-with-agents/verification/
 after: []
 shorts:
-  - reading a lockfile diff, a release age floor
+  - lire le diff d’un fichier de verrouillage, un âge minimal de publication
 exercise:
   kind: judge
-  brief: Classify a lockfile diff and write the verdict per dependency.
+  brief: >-
+    Classez les entrées du diff d’un fichier de verrouillage et écrivez le verdict pour chaque
+    dépendance.
 sources:
   - Fuchsia review
   - OpenSSF Scorecard

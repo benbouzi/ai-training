@@ -1,9 +1,9 @@
 id: coding-with-agents/prototype-to-throw-away
-title: A prototype you throw away
+title: Un prototype qu’on jette
 description: >-
-  Write down one design question, have a coding agent build the smallest program that answers it,
-  put the answer into the spec and the test, and delete the program before it can grow into the
-  system.
+  Écrivez une question de conception, faites construire par un agent de code le plus petit
+  programme qui y répond, mettez la réponse dans la spécification et dans le test, et supprimez le
+  programme avant qu’il grandisse jusqu’à devenir le système.
 mode: tutorial
 covers: coding-with-agents/specification
 serves: [coding-with-agents/specifies-work/settles-with-a-prototype]
@@ -21,8 +21,9 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    Write down one design question the interview left open, have the agent build the smallest
-    program that answers it, record the answer in the specification and delete the program.
+    Écrivez une question de conception que l’entretien a laissée ouverte, faites construire par
+    l’agent le plus petit programme qui y répond, consignez la réponse dans la spécification et
+    supprimez le programme.
 sources: [Thomas 2019, Artima tracer bullets, Brooks 1995]
 issue: 679
 minutes: 15

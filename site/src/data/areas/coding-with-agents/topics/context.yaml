@@ -1,67 +1,66 @@
 id: coding-with-agents/context
 area: coding-with-agents
-name: Context engineering for code
+name: Ingénierie du contexte pour le code
 definition: >-
-  An agent's output quality follows the quality of its context. This topic
-  covers what belongs in a project's standing instructions, how to scope a
-  task so the agent looks in the right places, how to point it at specific
-  files, and how to keep a session from degrading as its context fills.
+  La qualité de ce que produit un agent suit la qualité de son contexte. Ce thème couvre ce qui a
+  sa place dans les instructions permanentes d’un projet, la façon de cadrer une tâche pour que
+  l’agent cherche aux bons endroits, la façon de lui désigner des fichiers précis, et la façon
+  d’éviter qu’une session se dégrade à mesure que son contexte se remplit.
 concepts:
   - id: project-instructions
-    name: Project instructions
+    name: Instructions de projet
     definition: >-
-      A file in the repository the agent reads at the start of every session,
-      holding what it needs to know each time: how to build and test, the
-      conventions to follow, the places not to touch. It is where a recurring
-      agent mistake gets fixed once. Keep it short and factual; long
-      instruction files are followed less reliably than short ones.
+      Un fichier du dépôt que l’agent lit au début de chaque session et qui contient ce qu’il doit
+      savoir à chaque fois : comment construire et tester, quelles conventions suivre, quels endroits
+      ne pas toucher. C’est là qu’une erreur récurrente de l’agent se corrige une fois pour toutes.
+      Gardez-le court et factuel, car les longs fichiers d’instructions sont suivis de façon moins
+      fiable que les courts.
   - id: scoping-a-task
-    name: Scoping a task
+    name: Cadrage d’une tâche
     definition: >-
-      Telling the agent where a task lives and where it stops: which module,
-      which layer, which files are in play and which are off limits.
-      Scoping saves context by avoiding exploration of irrelevant code and
-      prevents the well-meaning refactor that spreads a small change across
-      the repository. A scoped brief also makes the resulting diff easier to
-      review.
+      Dire à l’agent où se trouve une tâche et où elle s’arrête : quel module, quelle couche, quels
+      fichiers sont concernés et lesquels sont interdits. Le cadrage économise du contexte, parce que
+      l’agent n’explore pas du code sans rapport, et il évite la refonte bien intentionnée qui étend
+      une petite modification à tout le dépôt. Une consigne cadrée donne aussi un diff plus facile à
+      relire.
   - id: referencing-files
-    name: Referencing files
+    name: Référencer des fichiers
     definition: >-
-      Naming the exact files, functions or documents the agent should read
-      instead of describing them, so it loads the right context on the first
-      try. A path and a line number beat "the config code". Reference the
-      example to imitate, the test to extend and the spec to follow; the
-      agent will otherwise pick whichever similar file it finds first.
+      Nommer les fichiers, les fonctions ou les documents exacts que l’agent doit lire, au lieu de les
+      décrire, pour qu’il charge le bon contexte du premier coup. Un chemin et un numéro de ligne
+      valent mieux que « le code de configuration ». Référencez l’exemple à imiter, le test à étendre
+      et la spécification à suivre. Sans cela, l’agent prend le premier fichier ressemblant qu’il
+      trouve.
   - id: avoiding-context-rot
-    name: Avoiding context rot
+    name: Éviter la dégradation du contexte
     definition: >-
-      Keeping the session's context lean so the agent keeps following
-      instructions and remembering the goal: one task per session, summaries
-      instead of raw logs, fresh sessions for new work, and no pasting of
-      whole files it can read itself. When answers drift or earlier rules get
-      ignored, the context is full; compact or restart rather than push on.
+      Garder le contexte de la session léger pour que l’agent continue de suivre les instructions et
+      de se souvenir de l’objectif : une tâche par session, des résumés à la place des journaux bruts,
+      une nouvelle session pour un nouveau travail, et aucun fichier entier collé alors que l’agent
+      peut le lire lui-même. Quand les réponses dérivent ou que des règles données plus tôt sont
+      ignorées, le contexte est plein. Compactez ou recommencez avant d’aller plus loin.
   - id: starting-context
-    name: Starting context
+    name: Contexte de départ
     definition: >-
-      Everything in the context window before the first message: the
-      harness's system prompt and tool descriptions, connected servers,
-      skill descriptions, instruction files and saved memory. It is sent
-      again with every request, so it costs tokens each time and leaves less
-      room for the task. A context command shows its size by category.
-      Moving rarely needed guidance into skills or rules that load on demand,
-      and disconnecting unused servers, makes it smaller.
+      Tout ce qui se trouve dans la fenêtre de contexte avant le premier message : le prompt système
+      et les descriptions d’outils du harnais, les serveurs connectés, les descriptions des skills,
+      les fichiers d’instructions et la mémoire enregistrée. Il est renvoyé avec chaque requête, donc
+      il coûte des jetons à chaque fois et laisse moins de place à la tâche. Une commande de contexte
+      montre sa taille par catégorie. Il diminue quand on déplace les consignes rarement utiles dans
+      des skills ou des règles chargées à la demande, et quand on déconnecte les serveurs inutilisés.
   - id: deciding-at-a-phase-boundary
-    name: Deciding at a phase boundary
+    name: Décider en fin de phase
     definition: >-
-      Choosing what the next phase of work starts with when one phase ends,
-      such as after planning. The options are to
-      carry on in the same session, clear the context, compact it into a
-      summary, write a handoff for a fresh session, or delegate the next part
-      to a subagent. The choice follows what the next phase needs: the full
-      history when it continues the same problem, and a written spec in a
-      clean window when it starts a new one.
+      Choisir ce avec quoi la phase de travail suivante commence quand une phase se termine, par
+      exemple après la planification. Les options sont de continuer dans la même session, d’effacer le
+      contexte, de le compacter en un résumé, d’écrire une passation pour une nouvelle session, ou de
+      confier la partie suivante à un sous-agent. Le choix dépend de ce dont la phase suivante a
+      besoin : tout l’historique quand elle poursuit le même problème, et une spécification écrite
+      dans une fenêtre vide quand elle en commence un nouveau.
 links:
   prerequisites: [coding-with-agents/workflow, concepts/grounding]
   related: [customizing-agents/instructions]
   specializations: []
-sources: [AEC-15, Academy claude-code-101, Academy claude-code-in-action, Claude Code context window, Claude Code best practices, Anthropic context engineering, OpenAI Academy get-started-with-codex-jkhsq]
+sources: [AEC-15, Academy claude-code-101, Academy claude-code-in-action, Claude Code context window,
+  Claude Code best practices, Anthropic context engineering, OpenAI Academy
+      get-started-with-codex-jkhsq]

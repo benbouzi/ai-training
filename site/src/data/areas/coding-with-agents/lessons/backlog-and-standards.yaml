@@ -1,12 +1,14 @@
 id: coding-with-agents/backlog-and-standards
-title: A backlog and standards the agent can read
+title: Un backlog et des normes que l’agent peut lire
 description: >-
-  Move a two-part spec into the issue tracker as two issues with a "blocked by" link that an agent
-  reads through `gh`, then turn a finding that came up in two reviews into a line in a standards file
-  or a check, and block on style only for a rule in the file or a failed check.
+  Placez une spécification en deux parties dans l’outil de suivi sous forme de deux tickets reliés
+  par un lien « bloqué par » que l’agent lit avec `gh`, puis transformez une remarque revenue dans
+  deux revues en une ligne d’un fichier de normes ou en un contrôle, et ne bloquez sur le style
+  que pour une règle du fichier ou un contrôle en échec.
 mode: tutorial
 covers: coding-with-agents/team
-serves: [coding-with-agents/works-in-team/keeps-the-backlog-reachable, coding-with-agents/works-in-team/turns-findings-into-rules]
+serves: [coding-with-agents/works-in-team/keeps-the-backlog-reachable,
+      coding-with-agents/works-in-team/turns-findings-into-rules]
 introduces: [agent-reachable-backlog, standards-file]
 assumes:
   - objective: coding-with-agents/works-in-team/follows-team-norms
@@ -24,8 +26,9 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    Move one specification into the issue tracker where the agent reads it through the command-line
-    tool, then turn a finding that came up in two reviews into a line in the standards file or a check.
+    Placez une spécification dans l’outil de suivi, où l’agent la lit avec l’outil en ligne de
+    commande, puis transformez une remarque revenue dans deux revues en une ligne du fichier de
+    normes ou en un contrôle.
 sources:
   - Claude Code best practices
   - Claude Code memory

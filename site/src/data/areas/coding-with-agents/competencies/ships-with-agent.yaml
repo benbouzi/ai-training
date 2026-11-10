@@ -1,121 +1,188 @@
 id: coding-with-agents/ships-with-agent
 area: coding-with-agents
-statement: Ships a change with a coding agent through plan, implement and verify
+statement: Livre une modification avec un agent de code en planifiant, implémentant et vérifiant
 topics:
   - coding-with-agents/first-session
   - coding-with-agents/workflow
   - coding-with-agents/context
 objectives:
   - id: coding-with-agents/ships-with-agent/runs-a-session
-    statement: Runs a session from setup to a reviewed diff
+    statement: Conduit une session de la configuration jusqu’à un diff relu
     level: base
     behaviors:
-      - claim: The learner has the agent describe the codebase and confirm the plan before it edits
-          anything.
-        why: A wrong model of the repository produces a confident change in the wrong place, and it is
-          cheaper to correct a sentence than a diff (@Academy claude-code-101).
-        example: The learner asks "where is the config loaded and which tests cover it?" and checks the
-          answer against the tree before saying "go ahead".
-      - claim: Every session ends with the learner reading the full diff.
-        why: The summary is the agent's account of what it meant to do, and the diff is what it did.
-        example: The summary says "added validation", and the diff also shows a deleted test, which the
-          learner catches and asks about.
-      - claim: The learner keeps a session to one task and starts a new one when the task changes.
-        why: A long session carries stale assumptions in context, and the agent keeps acting on the earlier
-          task's constraints.
-        example: After the bug fix is committed, the learner opens a fresh session for the refactor instead
-          of typing "now also" into the same one.
+      - claim: >-
+          L’apprenant fait décrire le code par l’agent et fait confirmer le plan avant que l’agent modifie
+          quoi que ce soit.
+        why: >-
+          Une fausse idée du dépôt produit une modification sûre d’elle au mauvais endroit, et il coûte
+          moins cher de corriger une phrase qu’un diff (@Academy claude-code-101).
+        example: >-
+          L’apprenant demande « où la configuration est-elle chargée, et quels tests la couvrent ? » et
+          vérifie la réponse dans l’arborescence avant de dire « vas-y ».
+      - claim: Chaque session se termine par la lecture complète du diff par l’apprenant.
+        why: >-
+          Le résumé est le récit par l’agent de ce qu’il voulait faire, et le diff est ce qu’il a fait.
+        example: >-
+          Le résumé dit « validation ajoutée », et le diff montre aussi un test supprimé, que l’apprenant
+          repère et sur lequel il pose une question.
+      - claim: L’apprenant garde une tâche par session et en ouvre une nouvelle quand la tâche
+          change.
+        why: >-
+          Une longue session garde dans son contexte des hypothèses périmées, et l’agent continue
+          d’appliquer les contraintes de la tâche précédente.
+        example: >-
+          Une fois la correction de bug committée, l’apprenant ouvre une nouvelle session pour la refonte
+          au lieu de taper « maintenant, fais aussi » dans la même.
   - id: coding-with-agents/ships-with-agent/works-in-increments
-    statement: Works in small increments, sequenced for early feedback
+    statement: Travaille par petits incréments, ordonnés pour un retour rapide
     level: base
     behaviors:
-      - claim: Each increment leaves the system working and adds one thing that can be shown.
-        why: A working state after every step means a mistake is found in a small diff and the last good
-          state is one step back.
-        example: The learner asks for "the endpoint returning a hard-coded response first, then the real
-          query, then the caching", and runs the app after each.
-      - claim: The learner sequences increments so the riskiest assumption is tested first.
-        why: Finding out on day one that the external API does not return what you expected is cheap, and on
-          day five it is not.
-        example: The integration with the payment provider is the first increment, because its behavior is
-          the least known.
-      - claim: An increment is committed when its check passes, before the next one starts.
-        why: A commit per increment gives a point to return to and a diff a reviewer can read.
-        example: Three small pull requests with green tests replace one large one at the end of the week.
+      - claim: Chaque incrément laisse le système fonctionnel et ajoute une chose qu’on peut
+          montrer.
+        why: >-
+          Un état fonctionnel après chaque étape veut dire qu’une erreur se trouve dans un petit diff
+          et
+          que le dernier bon état est à une étape en arrière.
+        example: >-
+          L’apprenant demande « d’abord le point d’accès (endpoint) qui renvoie une réponse codée en dur,
+          puis la vraie requête, puis le cache », et lance l’application après chaque étape.
+      - claim: L’apprenant ordonne les incréments pour tester en premier l’hypothèse la plus
+          risquée.
+        why: >-
+          Découvrir le premier jour que l’API externe ne renvoie pas ce que vous attendiez coûte peu,
+          et
+          le découvrir le cinquième jour coûte cher.
+        example: >-
+          L’intégration avec le prestataire de paiement est le premier incrément, parce que son
+          comportement est le moins connu.
+      - claim: Un incrément est committé quand son contrôle passe, avant que le suivant commence.
+        why: Un commit par incrément donne un point de retour et un diff qu’un relecteur peut lire.
+        example: >-
+          Trois petites pull requests avec des tests au vert remplacent une grosse en fin de semaine.
   - id: coding-with-agents/ships-with-agent/keeps-change-reversible
-    statement: Keeps every change reversible
+    statement: Garde chaque modification réversible
     level: base
     behaviors:
-      - claim: Every change is on a branch and in commits small enough to revert one at a time.
-        why: Reverting is the cheapest fix there is, and only if the change is isolated.
-        example: The learner has the agent commit after each passing increment instead of one commit at the
-          end.
-      - claim: Data and schema changes are designed with the way back written down before they run.
-        why: Code reverts in a second, and a migrated table does not.
-        example: The migration adds the new column, the code writes both columns, and then a backfill
-          fills the old rows. Dropping the old column is a separate change a week later, after the code
-          has run on the new one.
-      - claim: The learner prefers a change that can be turned off to one that can only be undone.
-        why: A feature flag or a configuration switch reverses in seconds and without a deploy.
-        example: The new ranking algorithm ships behind a flag that is off by default, and is enabled for
-          internal users first.
+      - claim: >-
+          Chaque modification est sur une branche, dans des commits assez petits pour être annulés un
+          par
+          un.
+        why: >-
+          Annuler est la correction la moins chère qui existe, à condition que la modification soit
+          isolée.
+        example: >-
+          L’apprenant fait committer l’agent après chaque incrément qui passe, au lieu d’un seul commit
+          à
+          la fin.
+      - claim: >-
+          Les modifications de données et de schéma sont conçues avec le chemin du retour écrit avant
+          leur
+          exécution.
+        why: Du code s’annule en une seconde, une table migrée ne s’annule pas.
+        example: >-
+          La migration ajoute la nouvelle colonne, le code écrit dans les deux colonnes, puis un
+          remplissage rétroactif (backfill) complète les anciennes lignes. La suppression de l’ancienne
+          colonne est une modification séparée, une semaine plus tard, une fois que le code a tourné sur
+          la nouvelle.
+      - claim: >-
+          L’apprenant préfère une modification qu’on peut désactiver à une modification qu’on peut
+          seulement annuler.
+        why: >-
+          Un drapeau de fonctionnalité (feature flag) ou un réglage de configuration s’inverse en quelques
+          secondes, sans déploiement.
+        example: >-
+          Le nouvel algorithme de classement est livré derrière un drapeau désactivé par défaut, et activé
+          d’abord pour les utilisateurs internes.
   - id: coding-with-agents/ships-with-agent/gives-the-right-context
-    statement: Gives the agent the files, constraints and limits the task needs
+    statement: Donne à l’agent les fichiers, les contraintes et les limites dont la tâche a besoin
     level: base
     behaviors:
-      - claim: The learner names the files the task touches and the files it must not touch.
-        why: Left to search, an agent finds the nearest plausible file, and the nearest one is often the
-          wrong one.
-        example: '"Change the retry logic in `src/http/client.ts`; the tests are in `tests/http/`; leave
-          `src/http/legacy/` alone" instead of "fix the retries".'
-      - claim: "Constraints that are not in the code are stated in the brief: style, compatibility, what
-          must keep working."
-        why: The agent cannot infer a rule it cannot see, and a project convention lives in people's heads
-          until it is written down.
-        example: The learner adds "this must stay compatible with Node 20 and must not add a dependency"
-          because neither fact is visible in the file being edited.
-      - claim: The learner gives the verification command along with the task.
-        why: An agent that knows how the work will be checked runs the check itself and reports honestly
-          against it.
-        example: '"Done when `npm test -- http` passes and the lint task is clean" lets the agent close its
-          own loop before handing back.'
+      - claim: L’apprenant nomme les fichiers que la tâche touche et ceux qu’elle ne doit pas
+          toucher.
+        why: >-
+          Laissé à sa recherche, un agent trouve le fichier plausible le plus proche, et le plus proche
+          est souvent le mauvais.
+        example: >-
+          « Modifie la logique de nouvelle tentative dans `src/http/client.ts` ; les tests sont dans
+          `tests/http/` ; ne touche pas à `src/http/legacy/` » au lieu de « corrige les nouvelles
+          tentatives ».
+      - claim: >-
+          Les contraintes qui ne figurent pas dans le code sont écrites dans la consigne : style,
+          compatibilité, ce qui doit continuer de fonctionner.
+        why: >-
+          L’agent ne peut pas déduire une règle qu’il ne voit pas, et une convention de projet reste dans
+          la tête des gens tant qu’elle n’est pas écrite.
+        example: >-
+          L’apprenant ajoute « cela doit rester compatible avec Node 20 et ne doit ajouter aucune
+          dépendance », parce qu’aucun de ces deux faits n’est visible dans le fichier modifié.
+      - claim: L’apprenant donne la commande de vérification avec la tâche.
+        why: >-
+          Un agent qui sait comment le travail sera vérifié lance le contrôle lui-même et rend compte
+          honnêtement de son résultat.
+        example: >-
+          « Terminé quand `npm test -- http` passe et que la tâche de style est propre » permet à l’agent
+          de boucler lui-même avant de rendre la main.
   - id: coding-with-agents/ships-with-agent/keeps-understanding
-    statement: Keeps their own understanding of the code as the agent produces more of it
+    statement: Garde sa propre compréhension du code à mesure que l’agent en produit davantage
     level: expert
     behaviors:
-      - claim: The learner can explain, without looking, how the parts the agent wrote fit into the system
-          and why they were built that way.
-        why: An engineer who cannot explain the system cannot review changes to it, and the agent's next
-          change goes unchecked.
-        example: Asked in a design review why the cache is keyed by user rather than by request, the learner
-          answers from their own understanding without opening a transcript.
-      - claim: The learner reads agent-written code with the same attention as a colleague's, and asks the
-          agent to explain anything they do not follow.
-        why: Understanding is built while reading, so skipping the reading skips the understanding.
-        example: The learner stops at a regular expression they cannot parse and asks for a plain-language
-          explanation and a test that documents it.
-      - claim: The learner keeps the architecture decisions and the reasons for them in a place the agent
-          also reads.
-        why: A decision that is only in someone's head gets contradicted by the next session.
-        example: The project's `docs/decisions/` folder records why the queue is in-process, and the project
-          instructions point the agent at it.
+      - claim: >-
+          L’apprenant peut expliquer sans regarder comment les parties écrites par l’agent s’insèrent
+          dans
+          le système et pourquoi elles ont été construites ainsi.
+        why: >-
+          Un ingénieur qui ne sait pas expliquer le système ne peut pas relire ses modifications, et la
+          modification suivante de l’agent passe sans contrôle.
+        example: >-
+          Interrogé en revue de conception sur la raison pour laquelle le cache est indexé par utilisateur
+          et pas par requête, l’apprenant répond à partir de sa propre compréhension, sans ouvrir de
+          transcription.
+      - claim: >-
+          L’apprenant lit le code écrit par l’agent avec la même attention que celui d’un collègue, et
+          demande à l’agent d’expliquer tout ce qu’il ne suit pas.
+        why: >-
+          La compréhension se construit en lisant, donc sauter la lecture fait sauter la compréhension.
+        example: >-
+          L’apprenant s’arrête sur une expression régulière qu’il n’arrive pas à lire et demande une
+          explication en langage courant et un test qui la documente.
+      - claim: >-
+          L’apprenant garde les décisions d’architecture et leurs raisons dans un endroit que l’agent
+          lit
+          aussi.
+        why: >-
+          Une décision qui n’existe que dans la tête de quelqu’un est contredite par la session suivante.
+        example: >-
+          Le dossier `docs/decisions/` du projet explique pourquoi la file d’attente tourne dans le
+          processus, et les instructions du projet y renvoient l’agent.
   - id: coding-with-agents/ships-with-agent/chooses-what-a-phase-starts-with
-    statement: Chooses deliberately what each phase of work starts with, including the starting context
+    statement: >-
+      Choisit délibérément ce avec quoi commence chaque phase de travail, y compris le contexte de
+      départ
     level: expert
     behaviors:
-      - claim: At the end of a phase the learner decides whether to carry on, clear, compact, hand off or
-          delegate, and can say why.
-        why: The next phase needs either the history or a clean window, and carrying on by default keeps
-          everything whether it helps or not (@Claude Code best practices).
-        example: After the design interview produces a spec, the learner starts a fresh session with the
-          spec file instead of implementing in the long planning session.
-      - claim: The learner checks a project's starting context with the context command and removes what
-          does not earn its place.
-        why: The starting context is sent with every request and leaves less room for the task (@Claude
-          Code context window).
-        example: The breakdown shows three servers nobody uses and a 400-line instruction file, so the
-          learner disconnects the servers and moves two sections into skills.
-      - claim: Before clearing or compacting, the learner writes down what the next phase must keep.
-        why: Compaction keeps a summary and drops the detail, and clearing drops everything.
-        example: The learner has the agent write the changed files and the open decisions into a handoff
-          file, reads it, and then clears the session.
+      - claim: >-
+          À la fin d’une phase, l’apprenant décide s’il continue, efface, compacte, passe la main ou
+          délègue, et sait dire pourquoi.
+        why: >-
+          La phase suivante a besoin soit de l’historique, soit d’une fenêtre vide, et continuer par
+          défaut garde tout, que cela aide ou non (@Claude Code best practices).
+        example: >-
+          Une fois que l’entretien de conception a produit une spécification, l’apprenant ouvre une
+          nouvelle session avec le fichier de spécification au lieu d’implémenter dans la longue session
+          de planification.
+      - claim: >-
+          L’apprenant examine le contexte de départ d’un projet avec la commande de contexte et retire
+          ce
+          qui ne mérite pas sa place.
+        why: >-
+          Le contexte de départ est envoyé avec chaque requête et laisse moins de place à la tâche
+          (@Claude Code context window).
+        example: >-
+          Le détail montre trois serveurs que personne n’utilise et un fichier d’instructions de 400
+          lignes, donc l’apprenant déconnecte les serveurs et déplace deux sections dans des skills.
+      - claim: Avant d’effacer ou de compacter, l’apprenant écrit ce que la phase suivante doit
+          garder.
+        why: Le compactage garde un résumé et perd le détail, et l’effacement perd tout.
+        example: >-
+          L’apprenant fait écrire par l’agent les fichiers modifiés et les décisions ouvertes dans un
+          fichier de passation, le lit, puis efface la session.

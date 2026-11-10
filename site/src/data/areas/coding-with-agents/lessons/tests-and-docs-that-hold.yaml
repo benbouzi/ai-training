@@ -1,9 +1,10 @@
 id: coding-with-agents/tests-and-docs-that-hold
-title: Tests that prove behavior and docs that stay current
+title: Des tests qui prouvent un comportement et une documentation qui reste à jour
 description: >-
-  Break a small pricing module on purpose to find the agent-written tests that mirror the code,
-  rewrite one so it proves the price, keep the tests fast and whole in the agent's loop, and review
-  a change for the documentation it left stale.
+  Cassez volontairement un petit module de tarification pour trouver les tests écrits par l’agent
+  qui recopient le code, réécrivez-en un pour qu’il prouve le prix, gardez les tests rapides et
+  complets dans la boucle de l’agent, et relisez une modification pour la documentation qu’elle a
+  laissée vieillir.
 mode: tutorial
 covers: coding-with-agents/quality
 serves:
@@ -15,20 +16,22 @@ assumes:
     lesson: safety/agent-risk
     section: le-rayon-dimpact
 extends-to:
-  - label: Reviewing what the agent pulled in
+  - label: Relire ce que l’agent a ajouté comme dépendances
     href: /coding-with-agents/dependency-review/
-  - label: How to make codebases AI agents love (AI Hero)
+  - label: How to make codebases AI agents love (AI Hero, en anglais)
     href: https://www.aihero.dev/how-to-make-codebases-ai-agents-love
-  - label: Your codebase is not ready for AI (AI Hero on YouTube, 9 minutes)
+  - label: Your codebase is not ready for AI (AI Hero sur YouTube, 9 minutes, en anglais)
     href: https://www.youtube.com/watch?v=uC44zFz7JSM
 after: [coding-with-agents/self-checking-loops]
-shorts: [a test that mirrors the implementation]
+shorts: [un test qui recopie l’implémentation]
 exercise:
   kind: judge
   brief: >-
-    Break the fixture on purpose and run its agent-written tests, keep the ones that fail, rewrite
-    one that passed, and check which documentation the change left stale.
-sources: [Academy ai-native-sdlc-playbook, Claude Code best practices, Claude Code memory, Ousterhout 2021]
+    Cassez volontairement l’exemple et lancez ses tests écrits par l’agent, gardez ceux qui
+    échouent, réécrivez-en un qui passait, et vérifiez quelle documentation la modification a
+    laissée vieillir.
+sources: [Academy ai-native-sdlc-playbook, Claude Code best practices, Claude Code memory,
+      Ousterhout 2021]
 issue: 176
 minutes: 20
 sources-checked: 2026-10-02
@@ -39,7 +42,8 @@ notes: >-
   the blast radius of a wrong change to the check itself. DLAI-7 was planned as inspiration only;
   the page doesn't cite it, so it is dropped from sources (it stays on the topic). Sources: Academy
   ai-native-sdlc-playbook (the idea that review and testing become the slow steps when agents
-  produce most of the code, from the public course page, in our own words and with no phrase of it kept), Claude Code best practices (prefer single tests to the
+  produce most of the code, from the public course page, in our own words and with no phrase of it kept),
+  Claude Code best practices (prefer single tests to the
   whole suite for speed, in its example instructions file; link to detailed documentation instead of copying
   it into CLAUDE.md), Claude Code memory (instructions files are loaded each session as context,
   not enforced configuration). The fixtures under site/examples/coding-with-agents/tests-and-docs-that-hold/

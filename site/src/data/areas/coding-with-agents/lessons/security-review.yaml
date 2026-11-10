@@ -1,8 +1,9 @@
 id: coding-with-agents/security-review
-title: Reading agent code as if the input were hostile
+title: Lire le code d’un agent comme si l’entrée était hostile
 description: >-
-  Run a static analyzer over an agent-written search function, find the string-built query it
-  reports and the swallowed error it misses, and brief the agent for a parameterized fix with a test.
+  Passez un analyseur statique sur une fonction de recherche écrite par un agent, trouvez la
+  requête construite par concaténation qu’il signale et l’erreur avalée qu’il manque, et donnez à
+  l’agent la consigne d’une correction paramétrée avec un test.
 mode: tutorial
 covers: coding-with-agents/quality
 serves: [coding-with-agents/verifies-agent-work/screens-for-security]
@@ -15,15 +16,17 @@ assumes:
     lesson: safety/agent-risk
     section: linjection-de-prompt--quand-les-données-donnent-des-ordres
 after: [coding-with-agents/tests-and-docs-that-hold]
-shorts: [the classic mistakes agents copy from their training data]
+shorts: [les erreurs classiques que les agents recopient de leurs données d’entraînement]
 exercise:
   kind: do
   brief: >-
-    Install Bandit 1.8.6 into a throwaway virtual environment outside the course repository, run it
-    on a copy of an agent-written fixture change, find the string-built query it reports and the
-    swallowed error it misses, and brief the agent for the parameterized version with a test that
-    fails on the old code. Running Bandit on a public project is the stretch goal.
-sources: [Academy claude-code-in-action, Brilliant SEC, Pearce 2022, Bandit, Bandit PyPI, Python sqlite3]
+    Installez Bandit 1.8.6 dans un environnement virtuel jetable hors du dépôt du cours, lancez-le
+    sur une copie d’une modification d’exemple écrite par un agent, trouvez la requête construite
+    par concaténation qu’il signale et l’erreur avalée qu’il manque, et donnez à l’agent la consigne
+    de la version paramétrée avec un test qui échoue sur l’ancien code. Pour aller plus loin, lancez
+    Bandit sur un projet public.
+sources: [Academy claude-code-in-action, Brilliant SEC, Pearce 2022, Bandit, Bandit PyPI, Python
+      sqlite3]
 issue: 178
 minutes: 15
 sources-checked: 2026-09-27

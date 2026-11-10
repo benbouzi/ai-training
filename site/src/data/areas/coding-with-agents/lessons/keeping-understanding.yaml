@@ -1,9 +1,10 @@
 id: coding-with-agents/keeping-understanding
-title: Staying the engineer who understands the system
+title: Rester l’ingénieur qui comprend le système
 description: >-
-  An agent that writes most of the code moves the understanding away from you unless you keep it.
-  Read agent code like a colleague's, explain the system from memory after each increment, and keep
-  the architecture decisions in a folder the project instructions point at.
+  Un agent qui écrit la plus grande partie du code vous éloigne de la compréhension, sauf si vous
+  la gardez. Lisez le code de l’agent comme celui d’un collègue, expliquez le système de mémoire
+  après chaque incrément, et gardez les décisions d’architecture dans un dossier vers lequel
+  pointent les instructions du projet.
 mode: explanation
 covers: coding-with-agents/workflow
 serves: [coding-with-agents/ships-with-agent/keeps-understanding]
@@ -17,9 +18,9 @@ shorts: []
 exercise:
   kind: judge
   brief: >-
-    After the fixture increments, explain from memory how the parts fit and why, then check the
-    explanation against the code and record one decision in a decisions folder the instructions
-    point at.
+    Après les incréments de l’exemple, expliquez de mémoire comment les parties s’assemblent et
+    pourquoi, puis comparez l’explication au code et consignez une décision dans un dossier de
+    décisions vers lequel pointent les instructions.
 sources: [Brilliant INC, Claude Code memory]
 sources-checked: 2026-09-24
 review-by: 2027-03-24

@@ -1,9 +1,9 @@
 id: coding-with-agents/what-a-phase-starts-with
-title: What each phase starts with
+title: Ce avec quoi commence chaque phase
 description: >-
-  When planning ends, decide what the implementation phase starts with: the same session, a cleared
-  session and the written plan, or a compacted summary. Know what each keeps, and what the starting
-  context costs before you type.
+  Quand la planification se termine, décidez ce avec quoi la phase d’implémentation commence : la
+  même session, une session effacée avec le plan écrit, ou un résumé compacté. Sachez ce que
+  chaque option garde, et ce que coûte le contexte de départ avant de taper quoi que ce soit.
 mode: explanation
 covers: coding-with-agents/context
 serves: [coding-with-agents/ships-with-agent/chooses-what-a-phase-starts-with]
@@ -16,16 +16,17 @@ assumes:
     lesson: customizing-agents/compaction
     section: what-the-summary-replaces-and-what-comes-back
 extends-to:
-  - label: Writing a handoff before a session ends
+  - label: Écrire une passation avant la fin d’une session
     href: /customizing-agents/session-handoff/
 after: [coding-with-agents/project-instructions]
 shorts: []
 exercise:
   kind: judge
   brief: >-
-    For a session that has finished planning, decide whether implementation continues in it, starts
-    fresh from the written plan, or starts after compaction, and say what the new phase loses.
-sources: [Claude Code context window, Claude Code best practices, Anthropic context engineering, Claude Code costs]
+    Pour une session qui a fini de planifier, décidez si l’implémentation continue dedans, repart à
+    neuf du plan écrit, ou repart après un compactage, et dites ce que la nouvelle phase perd.
+sources: [Claude Code context window, Claude Code best practices, Anthropic context engineering,
+      Claude Code costs]
 sources-checked: 2026-10-07
 review-by: 2027-04-07
 issue: 681

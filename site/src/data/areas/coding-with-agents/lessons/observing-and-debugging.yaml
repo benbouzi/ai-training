@@ -1,26 +1,27 @@
 id: coding-with-agents/observing-and-debugging
-title: Reproducing a fault before the agent fixes it
+title: Reproduire un défaut avant que l’agent le corrige
 description: >-
-  Turn a "sometimes fails" report against a nightly sales import into a rerun that fails every time,
-  read the log of a failing run next to a good one to rule out the suspected cause, halve the
-  exports until one row is left, and only then brief the agent with the confirmed cause and check
-  the fix against the same reproduction.
+  Transformez un signalement « échoue parfois » sur un import nocturne des ventes en une relance
+  qui échoue à chaque fois, lisez le journal d’une exécution en échec à côté de celui d’une
+  exécution réussie pour écarter la cause soupçonnée, divisez les exports par deux jusqu’à ce
+  qu’il ne reste qu’une ligne, et seulement alors donnez à l’agent une consigne avec la cause
+  confirmée, puis vérifiez la correction avec la même reproduction.
 mode: tutorial
 covers: coding-with-agents/verification
 serves: [coding-with-agents/verifies-agent-work/observes-and-debugs]
 introduces: [observing-a-running-system, isolating-a-fault]
 assumes: []
 extends-to:
-  - label: Frontend is harder for AI than backend (AI Hero on YouTube, 5 minutes)
+  - label: Frontend is harder for AI than backend (AI Hero sur YouTube, 5 minutes, en anglais)
     href: https://www.youtube.com/watch?v=pSritFeoYFo
 after: [coding-with-agents/reviewing-the-diff]
-shorts: [bisecting a change with the agent as a pair]
+shorts: ['chercher la modification en cause par dichotomie, avec l’agent en binôme']
 exercise:
   kind: do
   brief: >-
-    Turn a "sometimes fails" report against the fixture into reproduction steps, read the log to
-    rule out one cause, halve the remaining ones, and only then brief the agent with the confirmed
-    cause.
+    Transformez un signalement « échoue parfois » sur l’exemple en étapes de reproduction, lisez le
+    journal pour écarter une cause, divisez les causes restantes par deux, et seulement alors donnez
+    à l’agent une consigne avec la cause confirmée.
 sources: [Brilliant VER, Git docs git-bisect]
 issue: 172
 minutes: 15
