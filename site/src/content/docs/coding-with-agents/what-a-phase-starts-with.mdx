@@ -1,252 +1,266 @@
 import { Choice, Match, Scenario, Sort, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-In this lesson we look at the moment between two phases of work, such as
-the end of planning and the start of implementation. A planning session
-fills its context window with the files it read and the ideas it tried,
-including the ones you turned down. When the plan is written, you choose
-what the next phase starts with: the same session, a new session that
-starts from the written plan, or a summary of the old one. Each choice
-keeps different things, and each costs something different. The page has
-no code to run.
+Dans cette leçon, nous regardons le moment qui sépare deux phases de travail,
+par exemple la fin de la planification et le début de l’implémentation. Une
+session de planification remplit sa fenêtre de contexte (context window) avec les fichiers
+qu’elle a lus et les idées qu’elle a essayées, y compris celles que vous avez
+écartées. Une fois le plan écrit, vous choisissez ce avec quoi la phase
+suivante commence : la même session, une nouvelle session qui part du plan
+écrit, ou un résumé de l’ancienne. Chaque choix garde des choses différentes,
+et chacun a un coût différent. La page n’a pas de code à lancer.
 
-The lesson builds on two earlier ones.
-[*Telling the agent where the task is and where it stops*](/coding-with-agents/scoping-and-referencing/#désigner-le-fichier-au-lieu-de-le-décrire)
-showed how to point an agent at a file by path, and a plan file is the file
-you point the next phase at.
-[*Directing the summary before compaction*](/customizing-agents/compaction/#what-the-summary-replaces-and-what-comes-back)
-listed what Claude Code puts back after a compaction. This page uses that
-list to compare the options. Where it names a Claude Code feature it says
-so, and the vendor pages were checked on the date at the end of the lesson.
+La leçon s’appuie sur deux leçons précédentes.
+[*Dire à l’agent où est la tâche et où elle s’arrête*](/coding-with-agents/scoping-and-referencing/#désigner-le-fichier-au-lieu-de-le-décrire)
+a montré comment désigner un fichier à un agent par son chemin, et un fichier
+de plan est le fichier que vous désignez à la phase suivante.
+[*Diriger le résumé avant le compactage*](/customizing-agents/compaction/#what-the-summary-replaces-and-what-comes-back)
+a listé ce que Claude Code remet en place après un compactage. Cette page
+utilise cette liste pour comparer les options. Quand elle nomme une
+fonctionnalité de Claude Code, elle le dit, et les pages de l’éditeur ont été
+vérifiées à la date donnée en fin de leçon.
 
-## What a session holds before you type
+## Ce que contient une session avant que vous tapiez
 
-A new session doesn't start empty. Its **starting context** is everything
-in the context window before your first message. In Claude Code that's the
-system prompt, the `CLAUDE.md` or `AGENTS.md` instructions, the auto-memory
-notes, the names of the tools from connected Model Context Protocol (MCP)
-servers and a one-line description of each skill (@Claude Code context window).
-Other agents load their own set, and most load an instructions file.
+Une nouvelle session ne démarre pas vide. Son **contexte de départ** est tout
+ce qui se trouve dans la fenêtre de contexte avant votre premier message. Dans
+Claude Code, ce sont le prompt système (system prompt), les instructions de `CLAUDE.md` ou
+`AGENTS.md`, les notes de la mémoire automatique, les noms des outils des
+serveurs MCP (Model Context Protocol) connectés et une description d’une ligne
+de chaque skill (@Claude Code context window). Les autres agents chargent leur
+propre ensemble, et la plupart chargent un fichier d’instructions.
 
-The starting context stays in the window for the whole session. Claude
-Code sends the whole conversation with each request it makes
-(@Claude Code costs), and the starting context goes with it. A large starting context takes room
-from the task in every session, including the short ones. In Claude Code
-the `/context` command shows what fills the window, by category
-(@Claude Code context window).
+Le contexte de départ reste dans la fenêtre pendant toute la session. Claude
+Code envoie toute la conversation avec chaque requête qu’il fait
+(@Claude Code costs), et le contexte de départ part avec elle. Un gros contexte
+de départ prend de la place à la tâche dans chaque session, y compris les
+courtes. Dans Claude Code, la commande `/context` montre ce qui remplit la
+fenêtre, par catégorie (@Claude Code context window).
 
-To make it smaller, move instructions for one workflow, such as how to run
-a database migration, out of `CLAUDE.md` and into a skill, which loads its
-full text only when it is used. Also run `/mcp` to turn off the servers you
-don't use (@Claude Code costs). The lesson [*Writing project instructions the agent reads every session*](/coding-with-agents/project-instructions/)
-gave a second reason to keep the instructions file short: the agent follows
-a short file more reliably than a long one.
+Pour le réduire, sortez de `CLAUDE.md` les instructions propres à un seul
+déroulé de travail, par exemple la façon de lancer une migration de base de
+données, et mettez-les dans une skill, qui ne charge son texte complet que
+lorsqu’elle sert. Lancez aussi `/mcp` pour désactiver les serveurs que vous
+n’utilisez pas (@Claude Code costs). La leçon
+[*Écrire les instructions de projet que l’agent lit à chaque session*](/coding-with-agents/project-instructions/)
+a donné une seconde raison de garder le fichier d’instructions court : l’agent
+suit un fichier court de façon plus fiable qu’un long.
 
 <Choice id="what-the-long-file-costs" objective="coding-with-agents/ships-with-agent/chooses-what-a-phase-starts-with"
   concepts={['starting-context']}
-  context="A project's instructions file, loaded by the coding agent at the start of every session, has 600 lines. 400 of them describe a database migration that the team runs once a month. Today an engineer starts a session to fix one typo in a help text."
-  title="What do the 400 lines cost today?" hint="When does the agent load the instructions file, and what goes into each request after that?"
+  context="Le fichier d’instructions d’un projet, que l’agent de code charge au début de chaque session, compte 600 lignes. 400 d’entre elles décrivent une migration de base de données que l’équipe lance une fois par mois. Aujourd’hui, un ingénieur ouvre une session pour corriger une faute de frappe dans un texte d’aide."
+  title="Que coûtent les 400 lignes aujourd’hui ?" hint="Quand l’agent charge-t-il le fichier d’instructions, et qu’est-ce qui part avec chaque requête ensuite ?"
   options={[
-    { text: 'Nothing, because the agent reads the migration part of the file only when a migration comes up.', why: 'The agent loads the instructions file whole at the start of the session. Loading text only when it is needed is what a skill does.' },
-    { text: 'Nothing after the first request, because the file is sent only once, at the start of the session.', why: 'Each request sends the whole context again, the file included, so the lines take room in the window for the whole session.' },
-    { text: 'They are in the window from the first message and go with each request, although the task never needs them.', correct: true },
-    { text: 'They push the oldest messages out of the window, so the agent forgets the typo it was asked to fix.', why: 'Loading the file doesn\'t remove messages. A one-typo session is far from full, and the cost is the room and tokens the lines take in each request.' },
+    { text: 'Rien, parce que l’agent ne lit la partie sur la migration que lorsqu’une migration est en jeu.', why: 'L’agent charge le fichier d’instructions en entier au début de la session. Charger un texte seulement quand on en a besoin, c’est ce que fait une skill.' },
+    { text: 'Rien après la première requête, parce que le fichier n’est envoyé qu’une fois, au début de la session.', why: 'Chaque requête renvoie tout le contexte, fichier compris, donc les lignes prennent de la place dans la fenêtre pendant toute la session.' },
+    { text: 'Elles sont dans la fenêtre dès le premier message et partent avec chaque requête, sans servir la tâche.', correct: true },
+    { text: 'Elles poussent les messages les plus anciens hors de la fenêtre, donc l’agent oublie la faute qu’il devait corriger.', why: 'Charger le fichier ne retire aucun message. Une session pour une faute de frappe est loin d’être pleine, et le coût est la place et les jetons que prennent les lignes dans chaque requête.' },
   ]}>
-The engineer fixes one typo in this session and closes it. What did the 400
-migration lines cost?
+L’ingénieur corrige une faute de frappe dans cette session et la ferme.
+Qu’ont coûté les 400 lignes sur la migration ?
 </Choice>
 
-## Three ways to start the next phase
+## Trois façons de commencer la phase suivante
 
-Take a planning session on the to-do program from earlier lessons. You asked
-the agent for a `due <n> <date>` command. It read `todo.py`, `store.py` and
-the tests, and tried two date formats. You turned down free-text dates,
-because the list must sort by date. In the chat you also reminded the
-agent not to edit `legacy/`. The agent wrote the plan to `PLAN.md`:
-five steps, the files to change and the test to write first. The plan is
-done, and implementation comes next. Here is what each option starts it
-with.
+Prenez une session de planification sur le programme de liste de tâches des
+leçons précédentes. Vous avez demandé à l’agent une commande
+`due <n> <date>`. Il a lu `todo.py`, `store.py` et les tests, et il a essayé
+deux formats de date. Vous avez écarté les dates en texte libre, parce que la
+liste doit pouvoir se trier par date. Dans la conversation, vous avez aussi
+rappelé à l’agent de ne pas modifier `legacy/`. L’agent a écrit le plan dans
+`PLAN.md` : cinq étapes, les fichiers à modifier et le test à écrire en
+premier. Le plan est terminé, et l’implémentation vient ensuite. Voici ce avec
+quoi chaque option la fait commencer.
 
-**Continue in the same session.** The next phase has everything: each file
-the agent read, each command output and each idea you turned down, word for
-word. That history is also the problem. As the context window fills, the
-agent follows earlier instructions less well and makes more mistakes
-(@Claude Code best practices). Every request in the implementation phase
-also sends the whole planning conversation again (@Claude Code costs).
+**Continuer dans la même session.** La phase suivante a tout : chaque fichier
+que l’agent a lu, chaque sortie de commande et chaque idée que vous avez
+écartée, mot pour mot. Cet historique est aussi le problème. À mesure que la
+fenêtre de contexte se remplit, l’agent suit moins bien les instructions
+données plus tôt et fait davantage d’erreurs (@Claude Code best practices).
+Chaque requête de la phase d’implémentation renvoie aussi toute la
+conversation de planification (@Claude Code costs).
 
-**Clear, and start from the written plan.** In Claude Code, `/clear` starts
-a new session (@Claude Code costs). The next phase has the starting context,
-the repository with its uncommitted changes and the files you point it at,
-and nothing from the conversation. Once a spec is finished, the
-best-practices page recommends a new session for the implementation
-(@Claude Code best practices). The costs page adds that `/clear`
-costs nothing (@Claude Code costs). What you lose is anything that was said
-and not written down.
+**Effacer, et partir du plan écrit.** Dans Claude Code, `/clear` démarre une
+nouvelle session (@Claude Code costs). La phase suivante a le contexte de
+départ, le dépôt avec ses modifications non committées et les fichiers que
+vous lui désignez, et rien de la conversation. Une fois une spécification
+terminée, la page des bonnes pratiques recommande une nouvelle session pour
+l’implémentation (@Claude Code best practices). La page sur les coûts ajoute
+que `/clear` ne coûte rien (@Claude Code costs). Ce que vous perdez, c’est tout
+ce qui a été dit sans être écrit.
 
-**Compact, then continue.** `/compact` replaces the conversation with a
-summary. After it, Claude Code reads the project-root `CLAUDE.md`, the
-auto-memory notes again from disk, and the plan from plan mode, which is
-Claude Code's own plan file. It also reads up to five of the files the agent
-read or edited, the most recently modified first. A `PLAN.md` that the agent
-wrote into the repository is one of those files, so it comes back only when
-it is among the five. What the commands printed and the steps the agent reasoned
-through are not kept word for word (@Claude Code context window). When a big
-piece of work comes next, the context-window page suggests `/compact` with
-instructions that name what the summary keeps (@Claude Code context window).
-A compaction of a long conversation is itself a large request, because the
-agent reads all of it to write the summary (@Claude Code costs). And a
-summary can drop a detail whose importance shows only later
-(@Anthropic context engineering).
+**Compacter, puis continuer.** `/compact` remplace la conversation par un
+résumé. Ensuite, Claude Code relit sur le disque le `CLAUDE.md` de la racine du
+projet, les notes de la mémoire automatique, et le plan du mode plan, qui est
+le propre fichier de plan de Claude Code. Il relit aussi jusqu’à cinq des
+fichiers que l’agent a lus ou modifiés, en commençant par les plus récemment
+modifiés. Un `PLAN.md` que l’agent a écrit dans le dépôt fait partie de ces
+fichiers, donc il ne revient que s’il est parmi les cinq. Ce qu’ont affiché
+les commandes et les étapes de raisonnement de l’agent ne sont pas gardés mot
+pour mot (@Claude Code context window). Quand un gros morceau de travail vient
+ensuite, la page sur la fenêtre de contexte suggère `/compact` avec des
+instructions qui nomment ce que le résumé doit garder
+(@Claude Code context window). Le compactage d’une longue conversation est
+lui-même une grosse requête, parce que l’agent la lit en entier pour écrire le
+résumé (@Claude Code costs). Et un résumé peut perdre un détail dont
+l’importance n’apparaît que plus tard (@Anthropic context engineering).
 
-Two more options are variations on these. A handoff file is a written plan
-for a session that is not done: what was done, what is left and what was
-decided. And a subagent starts with a clean context of its own and reports
-back a short summary, so a large search stays out of your window
-(@Anthropic context engineering).
+Deux autres options sont des variantes de celles-ci. Un fichier de passation
+est un plan écrit pour une session qui n’est pas terminée : ce qui a été fait,
+ce qui reste et ce qui a été décidé. Et un sous-agent (subagent) démarre avec son propre
+contexte vide et rend un court résumé, donc une grosse recherche reste hors de
+votre fenêtre (@Anthropic context engineering).
 
 <Match id="what-each-start-keeps" objective="coding-with-agents/ships-with-agent/chooses-what-a-phase-starts-with"
   concepts={['deciding-at-a-phase-boundary', 'starting-context']}
-  context="A coding agent session in Claude Code has just finished planning a new command, and the plan is in PLAN.md in the repository. The engineer is choosing how the implementation phase starts: going on in the session, running /clear and pointing the new session at PLAN.md, or running /compact and going on."
-  title="What does implementation start with?" hint="Which option keeps the conversation word for word, which keeps a summary of it, and which keeps none of it?"
-  options={['Continue in the session', 'Clear, and start from PLAN.md', 'Compact, then continue']}
+  context="Une session d’agent de code dans Claude Code vient de finir de planifier une nouvelle commande, et le plan est dans PLAN.md dans le dépôt. L’ingénieur choisit comment commence la phase d’implémentation : continuer dans la session, lancer /clear et désigner PLAN.md à la nouvelle session, ou lancer /compact et continuer."
+  title="Avec quoi l’implémentation commence-t-elle ?" hint="Quelle option garde la conversation mot pour mot, laquelle en garde un résumé, et laquelle n’en garde rien ?"
+  options={['Continuer dans la session', 'Effacer, et partir de PLAN.md', 'Compacter, puis continuer']}
   rows={[
-    { statement: 'Every file read, test output and turned-down idea from planning, word for word', option: 0, why: 'Which option leaves the planning conversation in the window as it was?' },
-    { statement: 'The starting context, the repository and the plan file, and nothing that was only said in the chat', option: 1, why: 'Which option starts a new session that has only what is on disk?' },
-    { statement: 'A summary of the conversation, with CLAUDE.md, the memory notes and recent files read again from disk', option: 2, why: 'Which option replaces the conversation with a shorter version of it?' },
+    { statement: 'Chaque fichier lu, chaque sortie de test et chaque idée écartée pendant la planification, mot pour mot', option: 0, why: 'Quelle option laisse la conversation de planification dans la fenêtre telle qu’elle était ?' },
+    { statement: 'Le contexte de départ, le dépôt et le fichier de plan, et rien de ce qui a seulement été dit dans la conversation', option: 1, why: 'Quelle option démarre une nouvelle session qui n’a que ce qui est sur le disque ?' },
+    { statement: 'Un résumé de la conversation, avec CLAUDE.md, les notes de mémoire et les fichiers récents relus sur le disque', option: 2, why: 'Quelle option remplace la conversation par une version plus courte ?' },
   ]}
-  rationale="Continuing keeps all of the history, compacting keeps a summary of it, and clearing keeps only what is in files.">
-Match what the implementation phase has at its start with the option that
-gives it.
+  rationale="Continuer garde tout l’historique, compacter en garde un résumé, et effacer ne garde que ce qui est dans des fichiers.">
+Associez ce que la phase d’implémentation a à son début à l’option qui le lui
+donne.
 </Match>
 
-## Decide at the boundary
+## Décider en fin de phase
 
-**Deciding at a phase boundary** is choosing what the next phase starts
-with when one phase ends. The sources give no rule for it, but they point
-at one question: does the next phase go on with the same problem, or
-start a new one?
+**Décider en fin de phase** consiste à choisir ce avec quoi la phase suivante
+commence quand une phase se termine. Les sources ne donnent pas de règle pour
+cela, mais elles désignent une question : la phase suivante poursuit-elle le
+même problème, ou en commence-t-elle un nouveau ?
 
-Implementation that follows a finished plan is a new problem. It needs the
-plan, the files the plan names and the reasons behind the plan's choices.
-It doesn't need the planning conversation, so clear, and start from the
-plan file. A debugging session in the middle of one hard bug is the other
-case. The same best-practices page says that a long history can be worth
-keeping while you work on one hard problem (@Claude Code best practices).
-Between the two, the context-engineering article matches compaction to work
-with a long exchange of turns on one problem, and notes in a file to work
-that moves in planned steps (@Anthropic context engineering).
+Une implémentation qui suit un plan terminé est un nouveau problème. Elle a
+besoin du plan, des fichiers que le plan nomme et des raisons de ses choix.
+Elle n’a pas besoin de la conversation de planification, donc effacez, et
+partez du fichier de plan. Une session de débogage au milieu d’un bug difficile
+est l’autre cas. La même page des bonnes pratiques dit qu’un long historique
+peut valoir la peine d’être gardé pendant que vous travaillez sur un problème
+difficile (@Claude Code best practices). Entre les deux, l’article sur
+l’ingénierie du contexte associe le compactage à un travail fait de longs
+échanges sur un seul problème, et les notes dans un fichier à un travail qui
+avance par étapes planifiées (@Anthropic context engineering).
 
-Whatever you choose, do one step first: write down what the next phase
-must keep. Clearing drops the whole conversation, and compacting keeps only
-what the summary states. In the planning session above, that is the reason
-you turned down free-text dates. Add it to `PLAN.md` and read the file back.
-Then clear, and start the new session with a brief that points at it:
+Quel que soit votre choix, faites d’abord une étape : écrivez ce que la phase
+suivante doit garder. Effacer perd toute la conversation, et compacter ne garde
+que ce que le résumé énonce. Dans la session de planification ci-dessus, c’est
+la raison pour laquelle vous avez écarté les dates en texte libre.
+Ajoutez-la à `PLAN.md` et relisez le fichier. Effacez ensuite, et commencez la
+nouvelle session avec une consigne qui le désigne :
 
 ```text
-Implement the due command as PLAN.md describes. Start with step 1, the test.
+Implémente la commande due comme le décrit PLAN.md. Commence par l’étape 1, le test.
 ```
 
-The rule about `legacy/` that you typed in the chat an hour ago needs no
-line, because it is already in `AGENTS.md`, and the new session loads that
-file. A rule that is only in the chat needs a line in a file, or it is gone.
+La règle sur `legacy/` que vous avez tapée dans la conversation il y a une
+heure n’a besoin d’aucune ligne, parce qu’elle est déjà dans `AGENTS.md`, et
+la nouvelle session charge ce fichier. Une règle qui n’existe que dans la
+conversation a besoin d’une ligne dans un fichier, sinon elle disparaît.
 
 <Scenario id="planning-is-done" objective="coding-with-agents/ships-with-agent/chooses-what-a-phase-starts-with"
   concepts={['deciding-at-a-phase-boundary']}
-  context="An engineer and a coding agent spent two hours planning a new command. The session read many files, tried two approaches in scratch scripts, and the engineer turned one down for a reason given in the chat. The agent then wrote a five-step plan to PLAN.md that names the files and the first test. The engineer added the turned-down approach and its reason to PLAN.md and read the file. The context window is about two thirds full."
-  title="Planning is done" hint="Does implementation need the two hours of exploration, or what is in PLAN.md?"
+  context="Un ingénieur et un agent de code ont passé deux heures à planifier une nouvelle commande. La session a lu de nombreux fichiers, essayé deux approches dans des scripts de brouillon, et l’ingénieur en a écarté une pour une raison donnée dans la conversation. L’agent a ensuite écrit dans PLAN.md un plan en cinq étapes qui nomme les fichiers et le premier test. L’ingénieur a ajouté l’approche écartée et sa raison à PLAN.md et a lu le fichier. La fenêtre de contexte est pleine aux deux tiers environ."
+  title="La planification est terminée" hint="L’implémentation a-t-elle besoin des deux heures d’exploration, ou de ce qui est dans PLAN.md ?"
   options={[
-    { text: 'Go on in the same session, because it already knows everything that was explored.', consequence: 'Each implementation request sends the two hours of exploration again, and the agent follows its instructions less well as the window fills toward its limit.' },
-    { text: 'Run /compact with no instructions and go on in the same session.', consequence: 'The automatic summary keeps what it judges important from the exploration, and writing it is a large request. The plan was already in a file, so the summary adds little that the next phase needs.' },
-    { text: 'Run /clear, then tell the new session to implement PLAN.md from step 1.', correct: true, consequence: 'The new session has the starting context and the plan, and the plan holds the reason for the turned-down approach. Nothing that implementation needs was only in the chat.' },
-    { text: 'Run /clear, then describe the plan to the new session from memory.', consequence: 'The new session gets your summary of the plan in place of the plan. A retelling from memory tends to miss file names, the order of the steps and the reason you wrote down.' },
+    { text: 'Continuer dans la même session, parce qu’elle sait déjà tout ce qui a été exploré.', consequence: 'Chaque requête d’implémentation renvoie les deux heures d’exploration, et l’agent suit moins bien ses instructions à mesure que la fenêtre s’approche de sa limite.' },
+    { text: 'Lancer /compact sans instructions et continuer dans la même session.', consequence: 'Le résumé automatique garde ce qu’il juge important de l’exploration, et son écriture est une grosse requête. Le plan était déjà dans un fichier, donc le résumé ajoute peu de chose dont la phase suivante a besoin.' },
+    { text: 'Lancer /clear, puis demander à la nouvelle session de réaliser PLAN.md à partir de l’étape 1.', correct: true, consequence: 'La nouvelle session a le contexte de départ et le plan, et le plan contient la raison de l’approche écartée. Rien de ce dont l’implémentation a besoin n’était seulement dans la conversation.' },
+    { text: 'Lancer /clear, puis décrire le plan de mémoire à la nouvelle session.', consequence: 'La nouvelle session reçoit votre résumé du plan à la place du plan. Un récit de mémoire a tendance à oublier des noms de fichiers, l’ordre des étapes et la raison que vous aviez écrite.' },
   ]}>
-What does the implementation phase start with?
+Avec quoi la phase d’implémentation commence-t-elle ?
 </Scenario>
 
-<Pitfall title="The reason the summary dropped">
-At the end of a long planning session, an engineer runs `/compact` and goes
-on to implementation. The plan is in the summary, and the reason for
-turning down free-text dates is not, because it was said once in the chat
-an hour earlier. An hour later the agent proposes free-text dates "to keep
-the change small", and the engineer explains the reason a second time. A
-summary keeps what its writer judges important at that moment, and a
-detail can turn out to matter later (@Anthropic context engineering). The
-rule: before you clear or compact, put what the next phase must keep in a
-file, and read the file.
+<Pitfall title="La raison que le résumé a perdue">
+À la fin d’une longue session de planification, un ingénieur lance `/compact`
+et passe à l’implémentation. Le plan est dans le résumé, et la raison de
+l’abandon des dates en texte libre n’y est pas, parce qu’elle a été dite une
+seule fois dans la conversation une heure plus tôt. Une heure plus tard,
+l’agent propose des dates en texte libre « pour garder la modification
+petite », et l’ingénieur explique la raison une seconde fois. Un résumé garde
+ce que son auteur juge important à ce moment-là, et un détail peut se révéler
+important plus tard (@Anthropic context engineering). La règle : avant
+d’effacer ou de compacter, mettez dans un fichier ce que la phase suivante doit
+garder, et lisez le fichier.
 </Pitfall>
 
 <Sort id="still-there-after-clear" phase="review" objective="coding-with-agents/ships-with-agent/chooses-what-a-phase-starts-with"
   concepts={['deciding-at-a-phase-boundary', 'starting-context']}
-  context="An engineer runs /clear in Claude Code at the end of a planning session, which starts a new session in the same repository. A new session loads its starting context, including the instructions file, and reads files in the repository when it needs them or is pointed at them. The conversation before /clear is not in it."
-  title="Still there after /clear?" hint="Is the item in a file on disk, or was it only said or shown in the conversation?"
-  buckets={['The new session has it, or can read it', 'Gone unless someone wrote it down']}
+  context="Un ingénieur lance /clear dans Claude Code à la fin d’une session de planification, ce qui démarre une nouvelle session dans le même dépôt. Une nouvelle session charge son contexte de départ, dont le fichier d’instructions, et lit des fichiers du dépôt quand elle en a besoin ou qu’on les lui désigne. La conversation d’avant /clear n’y est pas."
+  title="Toujours là après /clear ?" hint="L’élément est-il dans un fichier sur le disque, ou a-t-il seulement été dit ou montré dans la conversation ?"
+  buckets={['La nouvelle session l’a, ou peut le lire', 'Perdu sauf si quelqu’un l’a écrit']}
   items={[
-    { text: 'The rules in the project instructions file', bucket: 0 },
-    { text: 'The plan the agent wrote to PLAN.md', bucket: 0 },
-    { text: 'The uncommitted changes in the working tree', bucket: 0 },
-    { text: 'The reason you gave in the chat for turning down an approach', bucket: 1 },
-    { text: 'The output of a test run from an hour ago', bucket: 1 },
+    { text: 'Les règles du fichier d’instructions du projet', bucket: 0 },
+    { text: 'Le plan que l’agent a écrit dans PLAN.md', bucket: 0 },
+    { text: 'Les modifications non committées de l’arbre de travail', bucket: 0 },
+    { text: 'La raison que vous avez donnée dans la conversation pour écarter une approche', bucket: 1 },
+    { text: 'La sortie d’une exécution de tests d’il y a une heure', bucket: 1 },
   ]}>
-Sort each item by what the session after `/clear` has of it.
+Triez chaque élément selon ce qu’en a la session qui suit `/clear`.
 </Sort>
 
 <Choice id="one-bug-an-hour-in" phase="review" objective="coding-with-agents/ships-with-agent/chooses-what-a-phase-starts-with"
   concepts={['deciding-at-a-phase-boundary']}
-  context="An engineer has worked with a coding agent for an hour on one hard bug in one session. Together they ruled out three causes, each with a test run whose output is in the conversation. The context window is about a quarter full, and the next step is to test a fourth cause. That test reuses the setup and the outputs of the earlier runs."
-  title="An hour into one bug" hint="Has a phase ended, and does the next step need the history of what was ruled out?"
+  context="Un ingénieur travaille depuis une heure avec un agent de code sur un bug difficile, dans une seule session. Ensemble, ils ont écarté trois causes, chacune avec une exécution de tests dont la sortie est dans la conversation. La fenêtre de contexte est pleine au quart environ, et l’étape suivante consiste à tester une quatrième cause. Ce test réutilise la préparation et les sorties des exécutions précédentes."
+  title="Une heure dans un même bug" hint="Une phase s’est-elle terminée, et l’étape suivante a-t-elle besoin de l’historique de ce qui a été écarté ?"
   options={[
-    { text: 'Clear, and start a new session from a note that lists the three causes.', why: 'The note has to restate three causes and the evidence against each, and the work is not at a boundary. The session has room left and the history is what the next step uses.' },
-    { text: 'Compact with instructions to keep the three causes, then test the fourth one.', why: 'A compaction is a large request that buys room the session doesn\'t need yet, and the summary keeps less of the evidence than the conversation does.' },
-    { text: 'Clear, and start a new session with only the bug report.', why: 'The new session knows none of the three causes you ruled out, and it may test them again before it reaches the fourth.' },
-    { text: 'Go on in the same session, because the next step works on the same problem.', correct: true },
+    { text: 'Effacer, et ouvrir une nouvelle session à partir d’une note qui liste les trois causes.', why: 'La note doit reformuler trois causes et la preuve contre chacune, et le travail n’est pas à une fin de phase. La session a de la place, et l’historique est ce dont l’étape suivante se sert.' },
+    { text: 'Compacter avec des instructions qui gardent les trois causes, puis tester la quatrième.', why: 'Un compactage est une grosse requête qui achète une place dont la session n’a pas encore besoin, et le résumé garde moins de preuves que la conversation.' },
+    { text: 'Effacer, et ouvrir une nouvelle session avec seulement le signalement du bug.', why: 'La nouvelle session ne connaît aucune des trois causes écartées, et elle risque de les tester de nouveau avant d’arriver à la quatrième.' },
+    { text: 'Continuer dans la même session, parce que l’étape suivante porte sur le même problème.', correct: true },
   ]}>
-What should the next step start with?
+Avec quoi l’étape suivante doit-elle commencer ?
 </Choice>
 
 <Sort id="loaded-every-session" phase="review" objective="coding-with-agents/ships-with-agent/chooses-what-a-phase-starts-with"
   concepts={['starting-context']}
-  context="In Claude Code, some content is in the context window before the first message of every session and goes with each request. Other content enters the window only when the task uses it. The project has an instructions file, two connected MCP servers and three skills."
-  title="Every session, or only when used?" hint="Is it there before you type anything, or does something in the task have to call for it?"
-  buckets={['In the starting context of every session', 'Loaded only when the task uses it']}
+  context="Dans Claude Code, une partie du contenu se trouve dans la fenêtre de contexte avant le premier message de chaque session et part avec chaque requête. Un autre contenu n’entre dans la fenêtre que lorsque la tâche s’en sert. Le projet a un fichier d’instructions, deux serveurs MCP connectés et trois skills."
+  title="À chaque session, ou seulement quand il sert ?" hint="Est-ce là avant que vous tapiez quoi que ce soit, ou faut-il que quelque chose dans la tâche le demande ?"
+  buckets={['Dans le contexte de départ de chaque session', 'Chargé seulement quand la tâche s’en sert']}
   items={[
-    { text: 'The project instructions file', bucket: 0 },
-    { text: 'The one-line description of each skill', bucket: 0 },
-    { text: 'The names of the tools from the connected MCP servers', bucket: 0 },
-    { text: 'The full text of a skill', bucket: 1 },
-    { text: 'A source file the agent opens to make a change', bucket: 1 },
+    { text: 'Le fichier d’instructions du projet', bucket: 0 },
+    { text: 'La description d’une ligne de chaque skill', bucket: 0 },
+    { text: 'Les noms des outils des serveurs MCP connectés', bucket: 0 },
+    { text: 'Le texte complet d’une skill', bucket: 1 },
+    { text: 'Un fichier source que l’agent ouvre pour faire une modification', bucket: 1 },
   ]}>
-Sort each item by when it enters the context window.
+Triez chaque élément selon le moment où il entre dans la fenêtre de contexte.
 </Sort>
 
-<Exercise stretch="Do the same at the end of your next real planning session. Before you choose, run /context, or your agent's way of showing the context, and note how full the window is. At the start of the next session, check its starting context too, and name one thing in it that the task doesn't need.">
-Judge one phase boundary on paper. A session has just finished planning a
-`tag <n> <word>` command for the to-do program. Over ninety minutes it read
-`todo.py`, `store.py` and the tests, and tried two ways to store tags in a
-scratch script. You turned down storing tags as part of the item text,
-because the `list` output must not change. The agent wrote a four-step plan
-to `PLAN.md`, which doesn't mention the turned-down approach. In the chat
-you also reminded the agent not to edit `legacy/`, which `AGENTS.md` already
-says. The window is about two thirds full. Write three short lines: what
-implementation starts with and why, what the new phase loses, and what you
-add to a file before the switch. Ten minutes is enough.
+<Exercise stretch="Faites la même chose à la fin de votre prochaine vraie session de planification. Avant de choisir, lancez /context, ou la façon dont votre agent montre son contexte, et notez à quel point la fenêtre est pleine. Au début de la session suivante, examinez aussi son contexte de départ, et nommez une chose qui s’y trouve dont la tâche n’a pas besoin.">
+Jugez une fin de phase sur le papier. Une session vient de finir de planifier
+une commande `tag <n> <word>` pour le programme de liste de tâches. En
+quatre-vingt-dix minutes, elle a lu `todo.py`, `store.py` et les tests, et elle
+a essayé deux façons d’enregistrer les étiquettes dans un script de brouillon.
+Vous avez écarté l’enregistrement des étiquettes dans le texte de l’élément,
+parce que la sortie de `list` ne doit pas changer. L’agent a écrit dans
+`PLAN.md` un plan en quatre étapes, qui ne mentionne pas l’approche écartée.
+Dans la conversation, vous avez aussi rappelé à l’agent de ne pas modifier
+`legacy/`, ce que dit déjà `AGENTS.md`. La fenêtre est pleine aux deux tiers
+environ. Écrivez trois lignes courtes : avec quoi l’implémentation commence et
+pourquoi, ce que la nouvelle phase perd, et ce que vous ajoutez à un fichier
+avant le changement. Dix minutes suffisent.
 
-A good result: implementation starts from a cleared session and
-`PLAN.md`, because it is a new problem and the plan is written. The new
-phase loses the exploration with its scratch script output, and everything
-said only in the chat. Before the `/clear` you add the turned-down approach and
-its reason to `PLAN.md`. The `legacy/` rule doesn't need a line, because
-`AGENTS.md` holds it. Then answer one question: what in the work itself
-would make you continue in the session instead?
+Un bon résultat : l’implémentation commence par une session effacée et
+`PLAN.md`, parce que c’est un nouveau problème et que le plan est écrit. La
+nouvelle phase perd l’exploration avec la sortie du script de brouillon, et
+tout ce qui n’a été dit que dans la conversation. Avant le `/clear`, vous
+ajoutez l’approche écartée et sa raison à `PLAN.md`. La règle sur `legacy/` n’a
+besoin d’aucune ligne, parce que `AGENTS.md` la contient. Répondez ensuite à
+une question : qu’est-ce qui, dans le travail lui-même, vous ferait continuer
+dans la session à la place ?
 </Exercise>
 
 <Recap>
-1. The starting context is everything in the window before your first message, and it goes with each request, so keep what the task never needs out of it (@Claude Code context window) (@Claude Code costs).
-2. At a phase boundary you choose what the next phase starts with. It can keep the whole history or a summary of it, or start again from what's in files.
-3. Continuing keeps everything, and a full window makes the agent follow its instructions less well (@Claude Code best practices).
-4. Clearing and starting from the written plan fits a phase that starts a new problem, such as implementation after planning (@Claude Code best practices).
-5. Compacting keeps a summary and drops the detail, and it is itself a large request (@Claude Code costs).
-6. Before you clear or compact, write what the next phase must keep in a file and read the file back.
+1. Le contexte de départ est tout ce qui se trouve dans la fenêtre avant votre premier message, et il part avec chaque requête, donc gardez-en hors ce dont la tâche n’a jamais besoin (@Claude Code context window) (@Claude Code costs).
+2. En fin de phase, vous choisissez ce avec quoi la phase suivante commence. Elle peut garder tout l’historique ou un résumé, ou repartir de ce qui est dans des fichiers.
+3. Continuer garde tout, et une fenêtre pleine fait moins bien suivre ses instructions à l’agent (@Claude Code best practices).
+4. Effacer et partir du plan écrit convient à une phase qui commence un nouveau problème, comme l’implémentation après la planification (@Claude Code best practices).
+5. Compacter garde un résumé et perd le détail, et c’est lui-même une grosse requête (@Claude Code costs).
+6. Avant d’effacer ou de compacter, écrivez dans un fichier ce que la phase suivante doit garder, et relisez le fichier.
 </Recap>
 
 <Habit id="plan-file-before-clear">
-At the end of your next planning session, add the decisions from the chat to the plan file before you clear, and start implementation in a session that points at the file.
+À la fin de votre prochaine session de planification, ajoutez au fichier de plan les décisions prises dans la conversation avant d’effacer, et commencez l’implémentation dans une session qui désigne ce fichier.
 </Habit>
