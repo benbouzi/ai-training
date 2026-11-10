@@ -10,7 +10,7 @@ introduces: [quality-pillars, rubrics]
 assumes:
   - objective: coding-with-agents/verifies-agent-work/reviews-others-code
     lesson: coding-with-agents/reviewing-the-diff
-    section: the-criteria-item-by-item
+    section: les-critères-un-par-un
 extends-to:
   - label: "Evaluate AI Applications: rubric and exact-match graders, run in Promptfoo (OpenAI Academy, free account)"
     href: https://academy.openai.com/public/courses/evaluate-ai-applications-pxds7

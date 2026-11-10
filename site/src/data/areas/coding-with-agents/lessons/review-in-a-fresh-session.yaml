@@ -13,7 +13,7 @@ introduces: [fresh-context-review]
 assumes:
   - objective: coding-with-agents/verifies-agent-work/reviews-others-code
     lesson: coding-with-agents/reviewing-the-diff
-    section: the-criteria-item-by-item
+    section: les-critères-un-par-un
   - objective: coding-with-agents/ships-with-agent/gives-the-right-context
     lesson: coding-with-agents/project-instructions
     section: la-corriger-une-fois-dans-le-fichier
