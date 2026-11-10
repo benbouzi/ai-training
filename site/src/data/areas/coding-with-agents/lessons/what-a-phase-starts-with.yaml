@@ -11,7 +11,7 @@ introduces: [starting-context, deciding-at-a-phase-boundary]
 assumes:
   - objective: coding-with-agents/ships-with-agent/gives-the-right-context
     lesson: coding-with-agents/scoping-and-referencing
-    section: point-at-the-file-instead-of-describing-it
+    section: désigner-le-fichier-au-lieu-de-le-décrire
   - objective: customizing-agents/configures-agent/manages-memory
     lesson: customizing-agents/compaction
     section: what-the-summary-replaces-and-what-comes-back

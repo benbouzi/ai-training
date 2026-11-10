@@ -1,45 +1,47 @@
 import { Choice, Match, MultiChoice, Predict, Repair, Pitfall, Exercise, Recap, Prompt, Response, Sort } from '@components/lesson';
 
-In this lesson we give a coding agent the same small task twice. The first
-brief is one sentence, and we watch which files the agent reads to make
-sense of it. The second brief says where the task is and where it stops:
-which files are in play, which are off limits, which function to imitate,
-which test to extend and which command proves it done. Then we compare the
-two sessions on the files they read and the diff they produce.
+Dans cette leçon, nous donnons deux fois la même petite tâche à un agent de
+code. La première consigne tient en une phrase, et nous regardons quels
+fichiers l’agent lit pour lui donner un sens. La seconde consigne dit où est la
+tâche et où elle s’arrête : quels fichiers sont concernés, lesquels sont
+interdits, quelle fonction imiter, quel test étendre et quelle commande prouve
+que c’est terminé. Nous comparons ensuite les deux sessions selon les fichiers
+qu’elles ont lus et le diff qu’elles ont produit.
 
-The brief is the agent's context, and the agent grounds its work in what it
-reads, as [the retrieval lesson](/concepts/retrieval/) showed for a chat
-model: an answer rests on the passage it was given, and the passage can be
-the wrong one. A coding agent that picks its own files can pick the wrong
-ones too. The vendor of Claude Code gives the same advice for its tool: say
-which files are in play, what must not change, and which existing code the
-new code should copy (@Claude Code best practices), and its short course
-has a module on managing context (@Academy claude-code-101). Where this
-lesson names a Claude Code feature it says so, and the source is checked on
-the date at the end of the lesson.
+La consigne est le contexte de l’agent, et l’agent ancre son travail dans ce
+qu’il lit, comme [la leçon sur la récupération](/concepts/retrieval/) l’a
+montré pour un modèle de conversation : une réponse repose sur le passage
+qu’on lui a donné, et ce passage peut être le mauvais. Un agent de code qui
+choisit ses propres fichiers peut aussi choisir les mauvais. L’éditeur de
+Claude Code donne le même conseil pour son outil : dire quels fichiers sont
+concernés, ce qui ne doit pas changer, et quel code existant le nouveau code
+doit imiter (@Claude Code best practices), et son court cours a un module sur
+la gestion du contexte (@Academy claude-code-101). Quand cette leçon nomme une
+fonctionnalité de Claude Code, elle le dit, et la source est vérifiée à la date
+donnée en fin de leçon.
 
-## The fixture
+## L’exemple
 
-The fixture is the to-do program from *Plan first, then drive the change
-from a failing test*, with the `clear` bug fixed and a few weeks of growth.
-It has grown an `export.py` that writes the list as CSV and a
-`docs/SPEC.md` that specifies every command. A `legacy/` directory holds
-the first version of the program, one file, kept for reference. It is in the course
-repository under
+L’exemple est le programme de liste de tâches de *Planifier d’abord, puis
+piloter la modification par un test qui échoue*, avec le bug de `clear`
+corrigé et quelques semaines de croissance. Il a gagné un `export.py` qui écrit
+la liste en CSV et un `docs/SPEC.md` qui spécifie chaque commande. Un dossier
+`legacy/` contient la première version du programme, un seul fichier, gardé
+pour référence. Il se trouve dans le dépôt du cours, sous
 `site/examples/coding-with-agents/scoping-and-referencing/fixture-repo/`.
-Copy that directory to a place of its own and change into it, as in the
-last lesson. This time also make the copy a git repository with one
-commit, so that `git status` can show what a session changed:
+Copiez ce dossier à un endroit à part et placez-vous dedans, comme dans la
+leçon précédente. Cette fois, faites aussi de la copie un dépôt git avec un
+commit, pour que `git status` puisse montrer ce qu’une session a modifié :
 
 ```sh
 git init -q && git add -A && git commit -qm start
 ```
 
-Delete the copy and copy again to reset.
+Pour réinitialiser, supprimez la copie et copiez de nouveau.
 
-Look at what is there before the agent does.
+Regardez ce qu’il y a avant que l’agent le fasse.
 
-<Predict id="run-files" title="Count the lines per file"
+<Predict id="run-files" title="Compter les lignes de chaque fichier"
   answer={`    8 AGENTS.md
      28 README.md
      16 docs/SPEC.md
@@ -51,71 +53,75 @@ Look at what is there before the agent does.
      55 todo.py
      18 todos.json
     295 total`} run="coding-with-agents/scoping-and-referencing/files.py">
-Run this from inside the copy. The course prints the same table from its
-own copy of the fixture, and your `wc` may pad the numbers differently.
-The `find` leaves out hidden files such as `.git/` and a `.DS_Store`, and
-the `sed` strips the `./` that `find` prints.
+Lancez cette commande depuis la copie. Le cours affiche le même tableau à
+partir de sa propre copie de l’exemple, et votre `wc` aligne peut-être les
+nombres autrement. Le `find` laisse de côté les fichiers cachés comme `.git/`
+et un `.DS_Store`, et le `sed` retire le `./` qu’affiche `find`.
 
 ```sh
 find . -type f -not -path '*/.*' | sed 's#^\./##' | LC_ALL=C sort | xargs wc -l
 ```
 </Predict>
 
-Ten files, 295 lines. An agent can read the whole repository. Even here, a
-vague brief makes it read files it doesn't need, and one of those files is
-a trap.
+Dix fichiers, 295 lignes. Un agent peut lire tout le dépôt. Même ici, une
+consigne vague lui fait lire des fichiers dont il n’a pas besoin, et l’un de
+ces fichiers est un piège.
 
-<Predict id="run-tests" title="Run the tests"
+<Predict id="run-tests" title="Lancer les tests"
   answer="OK" run="coding-with-agents/scoping-and-referencing/tests.py">
-Run the tests and keep the last line.
+Lancez les tests et gardez la dernière ligne.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-The task for this lesson is one `docs/SPEC.md` already specifies and nobody
-has built: an `undo` command that marks a done item as open again. The
-spec says it prints `open #<n>: <text>`, and `no item #<n>` when there is
-no such item.
+La tâche de cette leçon est une tâche que `docs/SPEC.md` spécifie déjà et que
+personne n’a construite : une commande `undo` qui remet un élément fait à
+l’état ouvert. La spécification dit qu’elle affiche `open #<n>: <text>`, et
+`no item #<n>` quand cet élément n’existe pas.
 
-## What a vague brief makes the agent read
+## Ce qu’une consigne vague fait lire à l’agent
 
-Start your coding agent in the copy and give it the brief an engineer types
-when in a hurry.
+Lancez votre agent de code dans la copie et donnez-lui la consigne que tape un
+ingénieur pressé.
 
 <Prompt model="illustrative" recorded="illustrative">
-Let me un-mark a done item.
+Permets-moi de décocher un élément fait.
 </Prompt>
 <Response>
-I searched the repository for how items are marked and unmarked, and read
-`todo.py`, `store.py`, `render.py`, `export.py`, `legacy/todo_v1.py` and
+J’ai cherché dans le dépôt comment les éléments sont marqués et démarqués, et
+j’ai lu `todo.py`, `store.py`, `render.py`, `export.py`, `legacy/todo_v1.py` et
 `test_todo.py`.
 
-`legacy/todo_v1.py` already has an `undone` command that does this, with a
-`mark(items, number, done)` helper the `done` command shares. I'll port that
-design into `todo.py` with a `mark` helper and a rewritten `done`, and add
-an `undone` command that prints `reopened: <text>`. `export.py` gets a
-`state` value for reopened items so the CSV shows them. Go ahead?
+`legacy/todo_v1.py` a déjà une commande `undone` qui fait cela, avec une
+fonction auxiliaire `mark(items, number, done)` que partage la commande `done`.
+Je vais reprendre cette conception dans `todo.py` avec une fonction `mark` et
+un `done` réécrit, et ajouter une commande `undone` qui affiche
+`reopened: <text>`. `export.py` reçoit une valeur `state` pour les éléments
+rouverts, pour que le CSV les montre. J’y vais ?
 </Response>
 
-The transcripts in this lesson are illustrative: they show what such an
-exchange looks like and don't record a specific model's words. Your agent
-phrases it differently, and it may read a different set of files.
+Les transcriptions de cette leçon sont des illustrations : elles montrent à
+quoi ressemble un tel échange, sans reproduire les mots d’un modèle précis.
+Votre agent le formule autrement, et il lira peut-être un autre ensemble de
+fichiers.
 
-Read the response as a list of what the agent did with the room the brief
-gave it. It read six of the ten files. It found the nearest plausible
-answer in `legacy/`, a file the project keeps for reference and nobody
-imports. The old command name and the old message come from there. It
-proposed to rewrite `done`, which works and which nobody asked about, and
-to change `export.py`, which the task doesn't touch. None of that is a
-model failure. The brief said nothing about where the task is or where it
-stops, and the agent filled the gap from what its search found.
+Lisez la réponse comme la liste de ce que l’agent a fait de la marge que la
+consigne lui laissait. Il a lu six des dix fichiers. Il a trouvé la réponse
+plausible la plus proche dans `legacy/`, un fichier que le projet garde pour
+référence et que personne n’importe. L’ancien nom de commande et l’ancien
+message viennent de là. Il a proposé de réécrire `done`, qui fonctionne et sur
+lequel personne n’a rien demandé, et de modifier `export.py`, que la tâche ne
+concerne pas. Rien de tout cela n’est une défaillance du modèle. La consigne ne
+disait rien de l’endroit où se trouve la tâche ni de celui où elle s’arrête, et
+l’agent a comblé le vide avec ce que sa recherche a trouvé.
 
-You can see why the search led there. The words of the brief are the words
-the agent greps for first.
+Vous pouvez voir pourquoi la recherche l’a mené là. Les mots de la consigne,
+ou leur équivalent anglais dans le code, sont les mots que l’agent cherche en
+premier avec grep.
 
-<Predict id="run-search" title="Search for the words of the brief"
+<Predict id="run-search" title="Chercher les mots de la consigne"
   answer={`done: 9 files
     README.md
     docs/SPEC.md
@@ -129,9 +135,9 @@ the agent greps for first.
   undo: 2 files
     docs/SPEC.md
     legacy/todo_v1.py`} run="coding-with-agents/scoping-and-referencing/search.py">
-List the files that contain each word, ignoring case. The course runs the
-same search over its copy of the fixture and prints a count above each
-list.
+Listez les fichiers qui contiennent chaque mot, sans tenir compte de la casse.
+Le cours lance la même recherche sur sa copie de l’exemple et affiche un
+décompte au-dessus de chaque liste.
 
 ```sh
 for word in done undo; do
@@ -140,172 +146,178 @@ done
 ```
 </Predict>
 
-`done` is in nine of the ten files, so it narrows nothing. `undo` is in
-two, and one of them is the legacy file, where it is part of `undone`. An
-agent that starts from a grep opens `legacy/todo_v1.py` and reads it with
-the same attention as `todo.py`. The spec, the file that says what
-`undo` should do, is the other hit, and the agent in the transcript didn't
-open it.
+`done` est dans neuf des dix fichiers, donc il ne restreint rien. `undo` est
+dans deux, et l’un d’eux est le fichier ancien, où il fait partie de `undone`.
+Un agent qui part d’un grep ouvre `legacy/todo_v1.py` et le lit avec la même
+attention que `todo.py`. La spécification, le fichier qui dit ce que doit faire
+`undo`, est l’autre résultat, et l’agent de la transcription ne l’a pas
+ouvert.
 
-**Scoping a task** is telling the agent where the task is and where it
-stops: which module, which files are in play and which are off limits. It
-has two effects you can see. The agent reads less, so more of its context
-window is left for the work, and the vendor's own guidance names an
-unscoped investigation that reads hundreds of files as a common failure
-(@Claude Code best practices). And the change stays where you put it. A
-well-meaning refactor of `done`, or a column in the CSV, is a change that
-spreads because nothing told the agent to stop.
+**Le cadrage d’une tâche** consiste à dire à l’agent où se trouve la tâche et
+où elle s’arrête : quel module, quels fichiers sont concernés et lesquels sont
+interdits. Il a deux effets visibles. L’agent lit moins, donc une plus grande
+part de sa fenêtre de contexte (context window) reste disponible pour le travail, et les
+conseils de l’éditeur citent comme échec courant une enquête sans cadre qui lit
+des centaines de fichiers (@Claude Code best practices). Et la modification
+reste là où vous l’avez placée. Une refonte bien intentionnée de `done`, ou une
+colonne de plus dans le CSV, est une modification qui s’étend parce que rien
+n’a dit à l’agent de s’arrêter.
 
 <Choice id="why-scope" objective="coding-with-agents/ships-with-agent/gives-the-right-context"
   concepts={['scoping-a-task']}
-  context="A learner briefed a coding agent with one sentence on a small repository. The agent read most of the files, found an old command in a legacy directory that nobody imports, and proposed to port its design and to change an export module the task doesn't concern."
-  title="What did the vague brief cost?" hint="Which of these follows from the brief saying nothing about where the task stops?"
+  context="Un apprenant a donné à un agent de code une consigne d’une phrase sur un petit dépôt. L’agent a lu la plupart des fichiers, a trouvé une ancienne commande dans un dossier legacy que personne n’importe, et a proposé de reprendre sa conception et de modifier un module d’export que la tâche ne concerne pas."
+  title="Qu’a coûté la consigne vague ?" hint="Lequel de ces effets découle de ce que la consigne ne disait rien de l’endroit où la tâche s’arrête ?"
   options={[
-    { text: 'The agent read files the task does not need and proposed changes in a module the task does not concern.', correct: true },
-    { text: 'The agent could not find the code that marks an item done, because the brief did not name the function.', why: 'It found that code at once. The problem is what else it found and treated as equally relevant.' },
-    { text: 'The agent refused the task until the learner named a file.', why: 'A coding agent fills a gap in the brief from what its search finds. It rarely stops to ask.' },
-    { text: 'The agent ran the tests before it had a plan, which wasted a turn.', why: 'The response shows no test run. The waste was in the files it read and the scope it chose.' },
+    { text: 'L’agent a lu des fichiers dont la tâche n’a pas besoin et a proposé des modifications dans un module hors sujet.', correct: true },
+    { text: 'L’agent n’a pas trouvé le code qui marque un élément comme fait, parce que la consigne ne nommait pas la fonction.', why: 'Il a trouvé ce code tout de suite. Le problème est ce qu’il a trouvé d’autre et traité comme tout aussi pertinent.' },
+    { text: 'L’agent a refusé la tâche tant que l’apprenant n’a pas nommé de fichier.', why: 'Un agent de code comble un vide de la consigne avec ce que trouve sa recherche. Il s’arrête rarement pour demander.' },
+    { text: 'L’agent a lancé les tests avant d’avoir un plan, ce qui a fait perdre un tour.', why: 'La réponse ne montre aucune exécution de tests. La perte est dans les fichiers lus et dans le périmètre choisi.' },
   ]}>
-Look at the illustrative response once more. What did the missing scope cost?
+Regardez encore une fois la réponse d’illustration. Qu’a coûté l’absence de
+cadrage ?
 </Choice>
 
-## Point at the file instead of describing it
+## Désigner le fichier au lieu de le décrire
 
-The second half of the fix is **referencing files**: naming the exact file,
-function or document the agent should read, so it loads the right context
-on the first try. "The function that marks an item done" is a description,
-and the agent has to search for what matches it, which is how it reached
-`legacy/`. A path and a line range are an address, and there is only one
-thing at an address.
+La seconde moitié de la correction consiste à **référencer des fichiers** :
+nommer le fichier, la fonction ou le document exact que l’agent doit lire, pour
+qu’il charge le bon contexte du premier coup. « La fonction qui marque un
+élément comme fait » est une description, et l’agent doit chercher ce qui y
+correspond, c’est ainsi qu’il est arrivé dans `legacy/`. Un chemin et une plage
+de lignes sont une adresse, et il n’y a qu’une chose à une adresse.
 
-<Predict id="run-reference" title="Read what the reference points at"
+<Predict id="run-reference" title="Lire ce que désigne la référence"
   answer={`16	def done(items, number):
   17	    index = number - 1
   18	    if index < 0 or index >= len(items):
   19	        return f"no item #{number}"
   20	    items[index]["done"] = True
   21	    return f"done #{number}: {items[index]['text']}"`} run="coding-with-agents/scoping-and-referencing/reference.py">
-Print lines 16 to 21 of `todo.py` with their line numbers. The
-brief in the next section points at these lines.
+Affichez les lignes 16 à 21 de `todo.py` avec leurs numéros. La consigne de la
+partie suivante désigne ces lignes.
 
 ```sh
 awk 'NR >= 16 && NR <= 21 { print NR "\t" $0 }' todo.py
 ```
 </Predict>
 
-That is the example to imitate. A brief that says "add `undo` next to
-`done` in `todo.py` lines 16 to 21, with the same arguments and the same
-checks" leaves the agent one thing to read and one pattern to follow. The vendor's guidance for
-Claude Code says the same in its own words: point the agent at an existing
-pattern in the codebase and name a file that is a good example of it
-(@Claude Code best practices).
+C’est l’exemple à imiter. Une consigne qui dit « ajoute `undo` à côté de `done`
+dans `todo.py`, lignes 16 à 21, avec les mêmes arguments et les mêmes
+contrôles » laisse à l’agent une seule chose à lire et un seul modèle à
+suivre. Les conseils de l’éditeur pour Claude Code disent la même chose avec
+leurs propres mots : désigner à l’agent un motif existant dans le code et
+nommer un fichier qui en est un bon exemple (@Claude Code best practices).
 
-A brief most often needs the same references. The **example to imitate**
-is the code the new code should look like, here `done` at `todo.py` lines
-16 to 21. The **test to extend** is the test the new one should sit next
-to, here `test_done_marks_the_numbered_item` at `test_todo.py` line 21.
-The **spec to follow** is the document that says what the result should
-do, here the `undo` row of `docs/SPEC.md`. Each one replaces a search with
-a read.
+Une consigne a le plus souvent besoin des mêmes références. L’**exemple à
+imiter** est le code auquel le nouveau code doit ressembler, ici `done` dans
+`todo.py`, lignes 16 à 21. Le **test à étendre** est le test à côté duquel le
+nouveau doit se placer, ici `test_done_marks_the_numbered_item` à la ligne 21
+de `test_todo.py`. La **spécification à suivre** est le document qui dit ce que
+doit faire le résultat, ici la ligne `undo` de `docs/SPEC.md`. Chacune
+remplace une recherche par une lecture.
 
-In Claude Code, an `@` before a path in the prompt makes the agent read
-that file before it responds, so `@todo.py` is a reference the tool acts on
-as well as a hint to the model (@Claude Code best practices). In another
-agent, write the path. The agent reads it, and a path it can open is exact where
-a description it has to match is a guess.
+Dans Claude Code, un `@` devant un chemin dans le prompt fait lire ce fichier à
+l’agent avant qu’il réponde, donc `@todo.py` est une référence sur laquelle
+l’outil agit, en plus d’une indication pour le modèle
+(@Claude Code best practices). Avec un autre agent, écrivez le chemin. L’agent
+le lit, et un chemin qu’il peut ouvrir est exact là où une description qu’il
+doit faire correspondre est une supposition.
 
-<Pitfall title="The nearest plausible file">
-An engineer asks an agent to "add an undo command, like the old one had".
-The agent greps for `undo`, finds `undone` in `legacy/todo_v1.py`, and
-builds the new command on that file: the old name, the old `reopened:`
-message, and a `mark` helper the current `todo.py` doesn't have. The tests
-pass, because nothing tests the message, and the spec that says
-`open #<n>: <text>` was never read. The rule: when there is a file the
-agent should imitate, name it, because otherwise the agent imitates the
-first file that looks similar, and the first one is often the wrong one.
+<Pitfall title="Le fichier plausible le plus proche">
+Un ingénieur demande à un agent d’« ajouter une commande undo, comme celle de
+l’ancienne version ». L’agent cherche `undo`, trouve `undone` dans
+`legacy/todo_v1.py`, et construit la nouvelle commande sur ce fichier : l’ancien
+nom, l’ancien message `reopened:`, et une fonction auxiliaire `mark` que le
+`todo.py` actuel n’a pas. Les tests passent, parce que rien ne teste le
+message, et la spécification qui dit `open #<n>: <text>` n’a jamais été lue. La
+règle : quand il existe un fichier que l’agent doit imiter, nommez-le, sinon
+l’agent imite le premier fichier qui lui ressemble, et le premier est souvent
+le mauvais.
 </Pitfall>
 
 <Match id="which-reference" objective="coding-with-agents/ships-with-agent/gives-the-right-context"
   concepts={['referencing-files']}
-  context="A brief for a coding agent can point at three kinds of file: the code the new code should look like, the test file the new test should join, and the document that says what the result should do."
-  title="Which reference does each line of the brief need?" hint="For each line, ask what the agent would otherwise have to search for."
-  options={['The example to imitate', 'The test to extend', 'The spec to follow']}
+  context="La consigne d’un agent de code peut désigner trois sortes de fichiers : le code auquel le nouveau code doit ressembler, le fichier de tests que le nouveau test doit rejoindre, et le document qui dit ce que doit faire le résultat."
+  title="De quelle référence chaque ligne de la consigne a-t-elle besoin ?" hint="Pour chaque ligne, demandez-vous ce que l’agent devrait sinon chercher."
+  options={['L’exemple à imiter', 'Le test à étendre', 'La spécification à suivre']}
   rows={[
-    { statement: 'The new command should print the message the project agreed on', option: 2, why: 'Where is the agreed message written down?' },
-    { statement: 'The new function should handle a bad item number the way the existing one does', option: 0, why: 'Which existing code shows that handling?' },
-    { statement: 'The new behavior should be checked by the same suite as the rest', option: 1, why: 'Which file does the suite live in, and which test is closest?' },
+    { statement: 'La nouvelle commande doit afficher le message convenu dans le projet', option: 2, why: 'Où le message convenu est-il écrit ?' },
+    { statement: 'La nouvelle fonction doit traiter un mauvais numéro d’élément comme le fait la fonction existante', option: 0, why: 'Quel code existant montre ce traitement ?' },
+    { statement: 'Le nouveau comportement doit être vérifié par la même suite que le reste', option: 1, why: 'Dans quel fichier se trouve la suite, et quel test est le plus proche ?' },
   ]}
-  rationale="Each line names a search the agent would otherwise run, and a path turns the search into a read.">
-Match each need in the brief to the reference that meets it.
+  rationale="Chaque ligne nomme une recherche que l’agent ferait sinon, et un chemin transforme la recherche en lecture.">
+Associez chaque besoin de la consigne à la référence qui y répond.
 </Match>
 
-## Add what the code can't show, then run it again
+## Ajouter ce que le code ne montre pas, puis relancer
 
-What is left is what no file in the repository says. The task-level
-boundary comes first: `store.py`, `render.py` and `export.py` are not part
-of this change, and `legacy/` is never part of any change. The project's
-instruction file, `AGENTS.md`, already contains the standing rule about
-`legacy/`, which is where a boundary that holds for every task belongs
-(@AEC-15). The boundary for this task goes in the brief. Then the check:
-the command that says the task is done, here the test suite.
+Reste ce qu’aucun fichier du dépôt ne dit. La limite propre à la tâche vient
+en premier : `store.py`, `render.py` et `export.py` ne font pas partie de cette
+modification, et `legacy/` ne fait partie d’aucune modification. Le fichier
+d’instructions du projet, `AGENTS.md`, contient déjà la règle permanente sur
+`legacy/`, et c’est là qu’a sa place une limite valable pour toutes les tâches
+(@AEC-15). La limite de cette tâche va dans la consigne. Vient ensuite le
+contrôle : la commande qui dit que la tâche est terminée, ici la suite de
+tests.
 
-Reset the copy, start a fresh session, and hand over the scoped brief.
+Réinitialisez la copie, ouvrez une nouvelle session, et donnez la consigne
+cadrée.
 
 <Prompt model="illustrative" recorded="illustrative">
-Add an `undo` command to `todo.py`. Imitate `done` at `todo.py` lines 16 to
-21: same arguments, same `no item #<n>` handling, and it sets `done` to
-`False`. The message is `open #<n>: <text>`, as the `undo` row of
-`docs/SPEC.md` says. Add the `undo` branch in `main` next to the `done`
-branch. Add a test next to `test_done_marks_the_numbered_item` in
-`test_todo.py` (line 21), or in a new `test_undo.py`. Change nothing in
-`store.py`, `render.py`, `export.py` or `legacy/`, and leave `todos.json`
-as it is. Done when `python3 -m unittest -q` prints `OK`.
+Ajoute une commande `undo` à `todo.py`. Imite `done` dans `todo.py`, lignes 16
+à 21 : mêmes arguments, même traitement de `no item #<n>`, et elle met `done` à
+`False`. Le message est `open #<n>: <text>`, comme le dit la ligne `undo` de
+`docs/SPEC.md`. Ajoute la branche `undo` dans `main` à côté de la branche
+`done`. Ajoute un test à côté de `test_done_marks_the_numbered_item` dans
+`test_todo.py` (ligne 21), ou dans un nouveau `test_undo.py`. Ne modifie rien
+dans `store.py`, `render.py`, `export.py` ni `legacy/`, et laisse `todos.json`
+tel quel. Terminé quand `python3 -m unittest -q` affiche `OK`.
 </Prompt>
 <Response>
-I read `todo.py`, `test_todo.py` and the `undo` row of `docs/SPEC.md`.
+J’ai lu `todo.py`, `test_todo.py` et la ligne `undo` de `docs/SPEC.md`.
 
-Added `undo(items, number)` to `todo.py` after `done`, with the same index
-check, setting `done` to `False` and returning `open #<n>: <text>`. Added
-an `undo` branch in `main` after the `done` branch. Added `test_undo.py`
-with a test for the normal case and one for a bad number.
+J’ai ajouté `undo(items, number)` à `todo.py` après `done`, avec le même
+contrôle d’indice, qui met `done` à `False` et renvoie `open #<n>: <text>`.
+J’ai ajouté une branche `undo` dans `main` après la branche `done`. J’ai ajouté
+`test_undo.py` avec un test pour le cas normal et un pour un mauvais numéro.
 
-`python3 -m unittest -q` prints `OK`. Files changed: `todo.py`,
-`test_undo.py` (new).
+`python3 -m unittest -q` affiche `OK`. Fichiers modifiés : `todo.py`,
+`test_undo.py` (nouveau).
 </Response>
 
-The agent read `todo.py`, `test_todo.py` and the spec, where the vague
-brief made it read six files, and it never opened `legacy/`. The agent
-didn't rewrite `done`, and `export.py` isn't in the list, because the brief
-said where the task stops. Run the check yourself.
+L’agent a lu `todo.py`, `test_todo.py` et la spécification, là où la consigne
+vague lui avait fait lire six fichiers, et il n’a jamais ouvert `legacy/`.
+L’agent n’a pas réécrit `done`, et `export.py` n’est pas dans la liste, parce
+que la consigne disait où la tâche s’arrête. Lancez le contrôle vous-même.
 
-<Predict id="run-tests-after" title="Run the suite after the change"
+<Predict id="run-tests-after" title="Lancer la suite après la modification"
   answer="OK" run="coding-with-agents/scoping-and-referencing/tests_after.py">
-Run the tests and keep the last line. The course applies the change the
-response describes to its own copy and checks this output against it.
+Lancez les tests et gardez la dernière ligne. Le cours applique à sa propre
+copie la modification que décrit la réponse et vérifie cette sortie avec elle.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-Then read the diff and prove the command against the list, on a copy.
+Lisez ensuite le diff et prouvez la commande sur la liste, avec une copie.
 
 ```sh
 git status --short
 ```
 
-`git status` names two files, `todo.py` modified and `test_undo.py` new.
-The undo command itself:
+`git status` nomme deux fichiers, `todo.py` modifié et `test_undo.py` nouveau.
+La commande undo elle-même :
 
-<Predict id="run-undo" title="Reopen a done item"
+<Predict id="run-undo" title="Rouvrir un élément fait"
   answer={`open #2: Call the plumber
   1. [ ] Buy milk
   2. [ ] Call the plumber
   3. [x] Renew the passport
   4. [ ] Water the plants
   3 open, 1 done`} run="coding-with-agents/scoping-and-referencing/undo_after.py">
-Run `undo` and then `list` against a copy, so the committed file doesn't
-change.
+Lancez `undo` puis `list` sur une copie, pour que le fichier committé ne change
+pas.
 
 ```sh
 cp todos.json /tmp/todos.json
@@ -314,72 +326,73 @@ TODO_FILE=/tmp/todos.json python3 todo.py list
 ```
 </Predict>
 
-The message is the one the spec asked for, because the brief named the
-spec. Compare the two sessions once more. The first read six files and
-proposed changes to two, one of them a rewrite nobody asked for. The
-second read three files and changed one, plus a new test. The diff a
-reviewer gets from the second session is one they can read in a minute.
-Scoping buys a smaller read for the agent now and a smaller read for the
-reviewer later.
+Le message est celui que demandait la spécification, parce que la consigne
+nommait la spécification. Comparez encore une fois les deux sessions. La
+première a lu six fichiers et proposé des modifications dans deux, dont une
+réécriture que personne n’avait demandée. La seconde a lu trois fichiers et en
+a modifié un, plus un nouveau test. Le diff qu’un relecteur reçoit de la
+seconde session se lit en une minute. Le cadrage achète une lecture plus courte
+pour l’agent maintenant et une lecture plus courte pour le relecteur ensuite.
 
 <Repair id="repair-the-scope" objective="coding-with-agents/ships-with-agent/gives-the-right-context"
   concepts={['scoping-a-task', 'referencing-files']}
-  title="Fix the brief" hint="Which file would the agent have to search for, and which file should it never open?"
-  broken={`The CSV export should say "reopened" for items that were undone. Can you make that work?`}
-  model={`In export.py, the rows() function (lines 13 to 16) sets the state column to "done" or "open". Nothing records that an item was reopened, and docs/SPEC.md has no such state, so don't add one. Leave the export as it is and close the task. If you disagree, say why before changing anything. Do not touch todo.py, store.py, render.py or legacy/. Done when python3 -m unittest -q still prints OK.`}>
-A colleague hands this brief to the agent right after the `undo` change.
-Rewrite it so it names the file and lines in play, the files off limits,
-the spec that decides, and the check. Notice first whether the task should
-be done at all.
+  title="Réparer la consigne" hint="Quel fichier l’agent devrait-il chercher, et quel fichier ne devrait-il jamais ouvrir ?"
+  broken={`L’export CSV devrait indiquer « reopened » pour les éléments rouverts. Tu peux faire en sorte que ça marche ?`}
+  model={`Dans export.py, la fonction rows() (lignes 13 à 16) met la colonne state à "done" ou "open". Rien n’enregistre qu’un élément a été rouvert, et docs/SPEC.md n’a pas un tel état, donc n’en ajoute pas. Laisse l’export tel quel et clos la tâche. Si tu n’es pas d’accord, dis pourquoi avant de modifier quoi que ce soit. Ne touche pas à todo.py, store.py, render.py ni legacy/. Terminé quand python3 -m unittest -q affiche toujours OK.`}>
+Un collègue donne cette consigne à l’agent juste après la modification `undo`.
+Réécrivez-la pour qu’elle nomme le fichier et les lignes concernés, les
+fichiers interdits, la spécification qui tranche, et le contrôle. Demandez-vous
+d’abord si la tâche doit être faite.
 </Repair>
 
 <MultiChoice id="which-lines-scope" phase="review" objective="coding-with-agents/ships-with-agent/gives-the-right-context"
   concepts={['scoping-a-task', 'referencing-files']}
-  context="A brief for a coding agent can name where a task is and where it stops, and can point at files by path instead of describing them. Some lines in a brief do that work and some don't."
-  title="Which lines scope the task or reference a file?" hint="Which lines would change what the agent reads, or where it stops?"
+  context="La consigne d’un agent de code peut nommer l’endroit où se trouve une tâche et celui où elle s’arrête, et peut désigner des fichiers par leur chemin au lieu de les décrire. Certaines lignes d’une consigne font ce travail, d’autres non."
+  title="Quelles lignes cadrent la tâche ou référencent un fichier ?" hint="Quelles lignes changeraient ce que lit l’agent, ou l’endroit où il s’arrête ?"
   options={[
-    { text: 'Add the command in `todo.py` next to `done` (lines 16 to 21), with the same checks.', correct: true },
-    { text: 'Please be careful and write clean code.', why: 'This changes nothing about what the agent reads or where it stops. It is a wish, and the agent already tries.' },
-    { text: 'Change nothing in `store.py`, `render.py`, `export.py` or `legacy/`.', correct: true },
-    { text: 'Use your best judgment about which files are involved.', why: 'This hands the scoping to the agent, which is what the vague brief did. The agent then reads whatever its search finds.' },
-    { text: 'The message format is in the `undo` row of `docs/SPEC.md`.', correct: true },
+    { text: 'Ajoute la commande dans `todo.py` à côté de `done` (lignes 16 à 21), avec les mêmes contrôles.', correct: true },
+    { text: 'Fais attention, s’il te plaît, et écris du code propre.', why: 'Cela ne change rien à ce que lit l’agent ni à l’endroit où il s’arrête. C’est un souhait, et l’agent essaie déjà.' },
+    { text: 'Ne modifie rien dans `store.py`, `render.py`, `export.py` ni `legacy/`.', correct: true },
+    { text: 'Fie-toi à ton jugement pour savoir quels fichiers sont concernés.', why: 'Cela confie le cadrage à l’agent, ce que faisait la consigne vague. L’agent lit alors ce que trouve sa recherche.' },
+    { text: 'Le format du message est dans la ligne `undo` de `docs/SPEC.md`.', correct: true },
   ]}>
-Which of these do the work of a scoped brief?
+Lesquelles de ces phrases font le travail d’une consigne cadrée ?
 </MultiChoice>
 
 <Sort id="instructions-or-brief" phase="review" objective="coding-with-agents/ships-with-agent/gives-the-right-context"
   concepts={['scoping-a-task', 'referencing-files']}
-  context="The lesson puts a boundary that holds for every task in the project's instruction file, and the boundary and references for one task in that task's brief. The project has a legacy/ folder that nothing imports."
-  title="Instruction file or brief?" hint="Does this line hold for every task in the project, or only for this one?"
-  buckets={['The project instruction file', 'This task\'s brief']}
+  context="La leçon place une limite valable pour toutes les tâches dans le fichier d’instructions du projet, et la limite et les références d’une tâche dans la consigne de cette tâche. Le projet a un dossier legacy/ que rien n’importe."
+  title="Fichier d’instructions ou consigne ?" hint="Cette ligne vaut-elle pour toutes les tâches du projet, ou seulement pour celle-ci ?"
+  buckets={['Le fichier d’instructions du projet', 'La consigne de cette tâche']}
   items={[
-    { text: 'Never change files under `legacy/`', bucket: 0 },
-    { text: 'Run the tests with `python3 -m unittest -q`', bucket: 0 },
-    { text: 'Change nothing in `export.py` for this fix', bucket: 1 },
-    { text: 'Add the new command next to `done` in `todo.py`', bucket: 1 },
-    { text: 'The message format is in the `undo` row of `docs/SPEC.md`', bucket: 1 },
+    { text: 'Ne jamais modifier les fichiers sous `legacy/`', bucket: 0 },
+    { text: 'Lancer les tests avec `python3 -m unittest -q`', bucket: 0 },
+    { text: 'Ne rien modifier dans `export.py` pour cette correction', bucket: 1 },
+    { text: 'Ajouter la nouvelle commande à côté de `done` dans `todo.py`', bucket: 1 },
+    { text: 'Le format du message est dans la ligne `undo` de `docs/SPEC.md`', bucket: 1 },
   ]} />
 
-<Exercise stretch="Do the same for a task you choose in a repository of your own. Write the vague brief first, then the scoped one, and count the files the agent reads for each.">
-Reset the copy of the fixture and run both sessions yourself with your
-coding agent. Give it the one-sentence brief first and write down every
-file it reads, from its own report or from the tool calls it shows. Reset
-the copy, start a fresh session, and give it the scoped brief from this
-lesson. Write down the files it reads again, run `python3 -m unittest -q`,
-and read `git status --short`. Plan on ten minutes.
+<Exercise stretch="Faites la même chose pour une tâche de votre choix dans un de vos propres dépôts. Écrivez d’abord la consigne vague, puis la consigne cadrée, et comptez les fichiers que l’agent lit pour chacune.">
+Réinitialisez la copie de l’exemple et menez vous-même les deux sessions avec
+votre agent de code. Donnez-lui d’abord la consigne d’une phrase et notez
+chaque fichier qu’il lit, d’après son propre rapport ou d’après les appels
+d’outils qu’il affiche. Réinitialisez la copie, ouvrez une nouvelle session, et
+donnez-lui la consigne cadrée de cette leçon. Notez de nouveau les fichiers
+qu’il lit, lancez `python3 -m unittest -q`, et lisez `git status --short`.
+Comptez dix minutes.
 
-A good result: the second session read fewer files than the first and
-didn't open `legacy/`, the diff touches `todo.py` and one test file, and
-the message matches the `undo` row of `docs/SPEC.md`. Finish by deleting
-the copy. Then answer one question: which line of the scoped brief kept
-the agent out of `legacy/`, and would the `AGENTS.md` rule alone have done
-it?
+Un bon résultat : la seconde session a lu moins de fichiers que la première et
+n’a pas ouvert `legacy/`, le diff touche `todo.py` et un fichier de test, et le
+message correspond à la ligne `undo` de `docs/SPEC.md`. Terminez en supprimant
+la copie. Répondez ensuite à une question : quelle ligne de la consigne cadrée
+a tenu l’agent hors de `legacy/`, et la règle de `AGENTS.md` aurait-elle suffi
+seule ?
 </Exercise>
 
 <Recap>
-1. Scope a task by saying which files are in play and which are off limits. The agent reads less, and the change stays where you put it (@Claude Code best practices).
-2. Reference files by path instead of describing them. Name the example to imitate, the test to extend and the spec to follow, or the agent imitates the first file that looks similar.
-3. A boundary that holds for every task belongs in the project's instruction file, and the boundary for this task belongs in the brief (@AEC-15).
-4. End the brief with the check that proves the task done, and run it yourself.
-5. A scoped brief gives the reviewer a small diff, and a small diff is the one that gets read.
+1. Cadrez une tâche en disant quels fichiers sont concernés et lesquels sont interdits. L’agent lit moins, et la modification reste là où vous l’avez placée (@Claude Code best practices).
+2. Référencez les fichiers par leur chemin au lieu de les décrire. Nommez l’exemple à imiter, le test à étendre et la spécification à suivre, sinon l’agent imite le premier fichier qui lui ressemble.
+3. Une limite valable pour toutes les tâches a sa place dans le fichier d’instructions du projet, et la limite de cette tâche dans la consigne (@AEC-15).
+4. Terminez la consigne par le contrôle qui prouve que la tâche est terminée, et lancez-le vous-même.
+5. Une consigne cadrée donne au relecteur un petit diff, et c’est le petit diff qui est lu.
 </Recap>
