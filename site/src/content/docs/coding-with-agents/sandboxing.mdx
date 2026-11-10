@@ -1,156 +1,167 @@
 import { Choice, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-You ask a coding agent why the app can't reach its database. It opens
-`.env` to check the connection settings, and the database password is now
-in the tool result. Claude Code reads files in the working folder without
-asking you first (@Claude Code permissions), so it didn't ask you. The tool
-result is part of what the agent sends to the model provider with its next
-request. A sandbox changes nothing about that traffic
-(@Claude Code isolation). The password has left your machine, and nobody
-decided to send it.
+Vous demandez à un agent de code pourquoi l’application n’arrive pas à joindre
+sa base de données. Il ouvre `.env` pour vérifier les réglages de connexion, et
+le mot de passe de la base est maintenant dans le résultat de l’outil. Claude
+Code lit les fichiers du dossier de travail sans vous demander d’abord
+(@Claude Code permissions), donc il ne vous a rien demandé. Le résultat de
+l’outil fait partie de ce que l’agent envoie au fournisseur du modèle avec sa
+requête suivante. Un bac à sable ne change rien à ce trafic
+(@Claude Code isolation). Le mot de passe a quitté votre machine, et personne
+n’a décidé de l’envoyer.
 
-[Keeping API keys out of the agent's reach](/coding-with-agents/keys-and-secrets/)
-was about secrets going in to the agent: which key it holds and where that
-key is kept. This lesson is about what can go out. We compare the ways to
-contain a coding agent and look at why the controls that matter most still
-hold when the agent has been convinced to do something else. Then we set up
-Claude Code's built-in sandbox with a network allowlist, and you predict
-which commands that allowlist lets through.
+[Garder les clés d’API hors de portée de l’agent](/coding-with-agents/keys-and-secrets/)
+portait sur les secrets qui entrent dans l’agent : quelle clé il détient et où
+elle est gardée. Cette leçon porte sur ce qui peut sortir. Nous comparons les
+façons de contenir un agent de code et nous voyons pourquoi les contrôles qui
+comptent le plus tiennent encore quand l’agent a été convaincu de faire autre
+chose. Nous configurons ensuite le bac à sable intégré de Claude Code avec une
+liste d’autorisation réseau, et vous prévoyez quelles commandes cette liste
+laisse passer.
 
-## Ways to contain an agent
+## Les façons de contenir un agent
 
-A sandbox is the environment the agent runs in, set up so that a wrong or
-hostile command reaches only what you put inside it. Each kind trades
-setup work for control:
+Un bac à sable est l’environnement dans lequel l’agent tourne, configuré pour
+qu’une commande fausse ou hostile n’atteigne que ce que vous y avez mis. Chaque
+type échange du travail de mise en place contre du contrôle :
 
-| Approach                              | For                                                                                                                                                                    | Against                                                                                                                                                |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| The agent's built-in sandbox          | It comes with the agent, and on macOS there is nothing to install                                                                                                      | Only the shell commands the agent runs are inside it. Hooks, MCP (Model Context Protocol) servers and the agent's own file tools stay on your computer |
-| The vendor's sandbox runtime          | Hooks and MCP servers are inside the boundary too, because the entire agent runs in the operating system isolation of the built-in sandbox. Docker isn't needed        | It is an early beta, and the way you configure it may still change                                                                                     |
-| A hardened container (Docker, Podman) | You choose the mounts, the secrets that go in and the hosts it may reach                                                                                               | Medium to high setup effort                                                                                                                            |
-| A hardened dev container              | The editor starts and manages it, and the vendor's example comes with a firewall that blocks traffic to hosts it doesn't list                                          | The team keeps the image and the firewall's list current. Using it is a team convention, and a developer can still start the agent on the host         |
-| A hardened virtual machine            | A kernel of its own between the agent and your computer, which keeps the two further apart than any other option here                                                  | High setup effort                                                                                                                                      |
-| A vendor-hosted agent in the cloud    | Nothing to install. The vendor runs the isolated machine, and your forge token stays in a proxy outside it, which gives the agent only scoped access to the repository | Your code is copied to the vendor's machines, and you work with the vendor's controls instead of your own. It needs a subscription                     |
-| No isolation, permission prompts only | Nothing to set up                                                                                                                                                      | The agent has all of your access, and you are the only check                                                                                           |
+| Approche                                    | Pour                                                                                                                                                                      | Contre                                                                                                                                                                       |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Le bac à sable intégré de l’agent           | Il est fourni avec l’agent, et sur macOS il n’y a rien à installer                                                                                                        | Seules les commandes shell que lance l’agent sont à l’intérieur. Les hooks, les serveurs MCP (Model Context Protocol) et les propres outils de fichiers de l’agent restent sur votre ordinateur |
+| L’environnement d’isolation de l’éditeur (sandbox runtime) | Les hooks et les serveurs MCP sont aussi à l’intérieur de la limite, parce que l’agent entier tourne dans l’isolation du système d’exploitation du bac à sable intégré. Docker n’est pas nécessaire | C’est une version bêta précoce, et sa façon de se configurer peut encore changer                                                                     |
+| Un conteneur renforcé (Docker, Podman)      | Vous choisissez les montages, les secrets qui entrent et les hôtes qu’il peut joindre                                                                                     | Effort de mise en place moyen à élevé                                                                                                                                        |
+| Un conteneur de développement renforcé (dev container) | L’éditeur le démarre et le gère, et l’exemple de l’éditeur est fourni avec un pare-feu qui bloque le trafic vers les hôtes qu’il ne liste pas                    | L’équipe garde à jour l’image et la liste du pare-feu. Son usage est une convention d’équipe, et un développeur peut toujours lancer l’agent sur la machine hôte              |
+| Une machine virtuelle renforcée             | Un noyau à elle entre l’agent et votre ordinateur, ce qui sépare les deux davantage que toute autre option ici                                                           | Effort de mise en place élevé                                                                                                                                                |
+| Un agent hébergé par l’éditeur dans le cloud | Rien à installer. L’éditeur fait tourner la machine isolée, et votre jeton de forge reste dans un proxy à l’extérieur, qui ne donne à l’agent qu’un accès limité au dépôt | Votre code est copié sur les machines de l’éditeur, et vous travaillez avec les contrôles de l’éditeur au lieu des vôtres. Il faut un abonnement                              |
+| Aucune isolation, seulement les demandes d’autorisation | Rien à mettre en place                                                                                                                                        | L’agent a tous vos accès, et vous êtes le seul contrôle                                                                                                                      |
 
-The vendor's comparison of these options is the source for every row but
-the last (@Claude Code isolation). A container can also keep a credential
-in a second container next to it, a sidecar, as the hardened container in
-the last section does (@claude-docker).
+La comparaison de ces options par l’éditeur est la source de chaque ligne sauf
+la dernière (@Claude Code isolation). Un conteneur peut aussi garder un
+identifiant dans un second conteneur à côté de lui, un conteneur annexe
+(sidecar), comme le fait le conteneur renforcé de la dernière partie
+(@claude-docker).
 
-Whichever you choose, the agent can still change the code you mount for
-writing, and it can still send what it reads to any host the network lets
-it reach (@Claude Code isolation). A sandbox shrinks the blast
-radius of a session. What the agent does inside it still needs your review.
+Quel que soit votre choix, l’agent peut toujours modifier le code que vous
+montez en écriture, et il peut toujours envoyer ce qu’il lit à n’importe quel
+hôte que le réseau le laisse joindre (@Claude Code isolation). Un bac à sable
+réduit le rayon d’impact (blast radius) d’une session. Ce que l’agent fait à l’intérieur
+demande toujours votre relecture.
 
-## Enforce outside the trust boundary
+## Imposer hors de la frontière de confiance
 
-The trust boundary is the line between what the agent decides on its own
-and what the harness, the operating system or the network enforces on it.
-An instruction is on the agent's side of that line. Claude Code loads
-CLAUDE.md at the start of every session (@Claude Code memory), but a line
-in it is a request, and the model can ignore it or be tricked out of it.
+La frontière de confiance est la ligne entre ce que l’agent décide seul et ce
+que le harnais (harness), le système d’exploitation ou le réseau lui imposent. Une
+instruction est du côté de l’agent. Claude Code charge CLAUDE.md au début de
+chaque session (@Claude Code memory), mais une ligne de ce fichier est une
+demande, et le modèle peut l’ignorer ou en être détourné.
 
-The controls on the other side work in two ways. A permission rule, a hook
-and your answer at the prompt check the request: Claude Code judges the
-text of the command before anything runs. The sandbox limits what the
-running process can reach, and the operating system holds that limit no
-matter what the command does once it starts (@Claude Code sandboxing).
+Les contrôles de l’autre côté fonctionnent de deux façons. Une règle de
+permission, un hook et votre réponse à la demande d’autorisation vérifient la
+requête : Claude Code juge le texte de la commande avant que quoi que ce soit
+tourne. Le bac à sable limite ce que le processus en cours peut atteindre, et
+le système d’exploitation tient cette limite quoi que fasse la commande une
+fois lancée (@Claude Code sandboxing).
 
-Prompt injection works on the request. Text in a file can convince the
-agent to ask for a command that your rules allow and that you approve
-because it looks routine, such as a small script with a harmless name. The
-check on the request then passes. A limit on the running process never
-reads that text, so the text can't change it. That is the rule of this
-lesson: for the controls that matter most, put limits on what the running
-process can reach, enforced where nothing the agent reads can change them.
-A network allowlist and a credential held by a sidecar both work this way:
+L’injection de prompt (prompt injection) agit sur la requête. Du texte dans un fichier peut
+convaincre l’agent de demander une commande que vos règles autorisent et que
+vous approuvez parce qu’elle a l’air de routine, comme un petit script au nom
+anodin. La vérification de la requête passe alors. Une limite sur le processus
+en cours ne lit jamais ce texte, donc le texte ne peut pas la changer. C’est la
+règle de cette leçon : pour les contrôles qui comptent le plus, limitez ce que
+le processus en cours peut atteindre, avec des limites imposées là où rien de
+ce que lit l’agent ne peut les changer. Une liste d’autorisation réseau et un
+identifiant détenu par un conteneur annexe fonctionnent tous deux ainsi :
 
-- **A network allowlist enforced by the sandbox or a proxy.** The agent
-  can run any command it likes, and a connection to a host that isn't on
-  the list fails.
-- **A credential held by a sidecar.** The agent's requests go out through
-  the sidecar, which adds the real token on the way. The agent only ever
-  sees a placeholder, so it has no token to leak (@claude-docker).
+- **Une liste d’autorisation réseau imposée par le bac à sable ou un proxy.**
+  L’agent peut lancer n’importe quelle commande, et une connexion vers un hôte
+  absent de la liste échoue.
+- **Un identifiant détenu par un conteneur annexe.** Les requêtes de l’agent
+  sortent par le conteneur annexe, qui ajoute le vrai jeton au passage. L’agent
+  ne voit jamais qu’un marqueur, donc il n’a aucun jeton à divulguer
+  (@claude-docker).
 
 <Sort id="request-or-process" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['trust-boundary', 'sandbox']}
-  context="The lesson separates controls that check an agent's request before it runs from controls that limit what the running process can reach, whatever the command does."
-  title="How does each control work?" hint="Does this control look at the command before it runs, or at what the process can touch while it runs?"
-  buckets={['Checks the request before it runs', 'Limits what the running process can reach']}
+  context="La leçon sépare les contrôles qui vérifient la requête d’un agent avant qu’elle s’exécute de ceux qui limitent ce que le processus en cours peut atteindre, quoi que fasse la commande."
+  title="Comment fonctionne chaque contrôle ?" hint="Ce contrôle regarde-t-il la commande avant qu’elle s’exécute, ou ce que le processus peut toucher pendant qu’il tourne ?"
+  buckets={['Vérifie la requête avant son exécution', 'Limite ce que le processus en cours peut atteindre']}
   items={[
-    { text: 'An ask rule that makes Claude Code prompt before every git push', bucket: 0 },
-    { text: 'A deny rule for Bash(curl *)', bucket: 0 },
-    { text: 'A hook that blocks every command containing the word "secret"', bucket: 0 },
-    { text: 'You approving each command at the permission prompt', bucket: 0 },
-    { text: 'The sandbox\'s strict network allowlist, enforced by a proxy outside the sandbox', bucket: 1 },
-    { text: 'A forge token the container never holds, kept in a sidecar', bucket: 1 },
-    { text: 'A container with only the project folder mounted', bucket: 1 },
+    { text: 'Une règle ask qui fait demander Claude Code avant chaque git push', bucket: 0 },
+    { text: 'Une règle d’interdiction pour Bash(curl *)', bucket: 0 },
+    { text: 'Un hook qui bloque chaque commande contenant le mot « secret »', bucket: 0 },
+    { text: 'Votre approbation de chaque commande à la demande d’autorisation', bucket: 0 },
+    { text: 'La liste d’autorisation réseau stricte du bac à sable, imposée par un proxy hors du bac à sable', bucket: 1 },
+    { text: 'Un jeton de forge que le conteneur ne détient jamais, gardé dans un conteneur annexe', bucket: 1 },
+    { text: 'Un conteneur où seul le dossier du projet est monté', bucket: 1 },
   ]} />
 
 <Scenario id="where-the-forge-token-lives" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['trust-boundary', 'secrets-hygiene']}
-  context="A coding agent runs in a container on a developer's laptop, and a task needs it to open a pull request, so it needs a token for the code forge."
-  title="The agent needs a forge token" hint="In which of these places does the token itself end up in a tool result or a request to the model?"
+  context="Un agent de code tourne dans un conteneur sur l’ordinateur portable d’un développeur, et une tâche lui demande d’ouvrir une pull request, donc il a besoin d’un jeton pour la forge de code."
+  title="L’agent a besoin d’un jeton de forge" hint="Dans lequel de ces endroits le jeton lui-même finit-il dans un résultat d’outil ou dans une requête au modèle ?"
   options={[
-    { text: 'Export it as GH_TOKEN in the shell that starts the agent, so the agent\'s commands can use it.', consequence: 'Every command the agent runs inherits that environment, so one echo or env command puts the token in a tool result.' },
-    { text: 'Paste it into the chat when the agent asks for it, and delete the message once the pull request is open.', consequence: 'The token is now part of the conversation. It went to the model provider with the next request and it stays in the session transcript.' },
-    { text: 'Keep it in a proxy outside the container that adds it to requests for the forge, while the agent sees a placeholder.', correct: true, consequence: 'The token never enters the container, so no tool result can contain it. The agent can still act on the forge through the proxy until the session ends, so give the token access to this one repository only.' },
-    { text: 'Put it in the project\'s CLAUDE.md, with a line that tells the agent never to print it or send it anywhere.', consequence: 'Claude Code loads that file into every session, so the token goes to the model provider every time. The line is a request, and injected text can convince the agent to ignore it.' },
+    { text: 'L’exporter sous le nom GH_TOKEN dans le shell qui lance l’agent, pour que les commandes de l’agent puissent s’en servir.', consequence: 'Chaque commande que lance l’agent hérite de cet environnement, donc une seule commande echo ou env met le jeton dans un résultat d’outil.' },
+    { text: 'Le coller dans la conversation quand l’agent le demande, et supprimer le message une fois la pull request ouverte.', consequence: 'Le jeton fait maintenant partie de la conversation. Il est parti chez le fournisseur du modèle avec la requête suivante, et il reste dans la transcription de la session.' },
+    { text: 'Le garder dans un proxy hors du conteneur, qui l’ajoute aux requêtes vers la forge pendant que l’agent voit un marqueur.', correct: true, consequence: 'Le jeton n’entre jamais dans le conteneur, donc aucun résultat d’outil ne peut le contenir. L’agent peut quand même agir sur la forge par le proxy jusqu’à la fin de la session, donc ne donnez au jeton accès qu’à ce seul dépôt.' },
+    { text: 'Le mettre dans le CLAUDE.md du projet, avec une ligne qui dit à l’agent de ne jamais l’afficher ni l’envoyer nulle part.', consequence: 'Claude Code charge ce fichier dans chaque session, donc le jeton part chez le fournisseur du modèle à chaque fois. La ligne est une demande, et un texte injecté peut convaincre l’agent de l’ignorer.' },
   ]}>
-The agent has finished a change and needs a token for the code forge to
-open the pull request. Where do you keep the token?
+L’agent a terminé une modification et a besoin d’un jeton (token) pour la forge de
+code afin d’ouvrir la pull request. Où gardez-vous le jeton ?
 </Scenario>
 
-## Set up the built-in sandbox
+## Configurer le bac à sable intégré
 
-Claude Code's sandbox covers the shell commands the agent runs and every
-program those commands start. The operating system enforces it: Seatbelt on
-macOS, and bubblewrap on Linux and WSL2 (the Windows Subsystem for Linux),
-where you install `bubblewrap` and `socat` first. It doesn't run on native
-Windows (@Claude Code sandboxing).
+Le bac à sable de Claude Code couvre les commandes shell que lance l’agent et
+chaque programme que ces commandes démarrent. Le système d’exploitation
+l’impose : Seatbelt sur macOS, et bubblewrap sur Linux et WSL2 (le
+sous-système Windows pour Linux), où vous installez d’abord `bubblewrap` et
+`socat`. Il ne tourne pas sous Windows natif (@Claude Code sandboxing).
 
-**Which files.** By default a sandboxed command writes only in the working
-folder, a per-user temporary folder and any folder you added. It can
-read almost the whole computer, including `~/.ssh` and
-`~/.aws/credentials`, until you list those under `sandbox.credentials` or
-`sandbox.filesystem.denyRead`. Sandboxed commands also inherit the
-environment Claude Code was started with, credentials included, unless
-`sandbox.credentials` removes them. Claude Code's own file tools don't run
-in the sandbox, and permission rules govern them instead. For the `.env`
-case, the `Read(./.env)` deny rule from the keys lesson blocks the file
-tools. Once the sandbox is on, Claude Code adds `Read` deny rules to the
-sandbox's read blocks too, so a script the agent writes can't open the
-file either (@Claude Code sandboxing). Use `denyRead` for a path you don't
-want as a permission rule.
+**Quels fichiers.** Par défaut, une commande dans le bac à sable n’écrit que
+dans le dossier de travail, un dossier temporaire propre à l’utilisateur et
+tout dossier que vous avez ajouté. Elle peut lire presque tout l’ordinateur, y
+compris `~/.ssh` et `~/.aws/credentials`, tant que vous ne les listez pas sous
+`sandbox.credentials` ou `sandbox.filesystem.denyRead`. Les commandes dans le
+bac à sable héritent aussi de l’environnement avec lequel Claude Code a été
+lancé, identifiants compris, sauf si `sandbox.credentials` les retire. Les
+propres outils de fichiers de Claude Code ne tournent pas dans le bac à sable,
+et ce sont les règles de permission qui les gouvernent. Pour le cas de `.env`,
+la règle d’interdiction `Read(./.env)` de la leçon sur les clés bloque les
+outils de fichiers. Une fois le bac à sable activé, Claude Code ajoute aussi les
+règles d’interdiction `Read` aux blocages de lecture du bac à sable, donc un
+script écrit par l’agent ne peut pas non plus ouvrir le fichier
+(@Claude Code sandboxing). Utilisez `denyRead` pour un chemin que vous ne voulez
+pas sous forme de règle de permission.
 
-**Which hosts.** Network traffic from sandboxed commands goes through a
-proxy that runs outside the sandbox. No host is allowed at the start, and
-the first time a command reaches a new host, Claude Code asks you
-(@Claude Code sandboxing). `allowedDomains` lists the hosts that pass
-without a question. An entry such as `*.example.com` covers subdomains, a
-`:443` suffix limits an entry to one port, and `deniedDomains` blocks a
-host even when an allowed entry covers it (@Claude Code all settings). With
-`strictAllowlist` set to `true`, a host that isn't on the list is blocked
-instead of asked about. Claude Code reads that setting only from your user
-settings, managed settings or a file you pass with `--settings`, and in a
-repository's `.claude/settings.json` it has no effect. It needs Claude Code
-v2.1.219 or later (@Claude Code sandboxing).
+**Quels hôtes.** Le trafic réseau des commandes dans le bac à sable passe par
+un proxy qui tourne hors du bac à sable. Aucun hôte n’est autorisé au départ,
+et la première fois qu’une commande joint un nouvel hôte, Claude Code vous
+demande (@Claude Code sandboxing). `allowedDomains` liste les hôtes qui passent
+sans question. Une entrée comme `*.example.com` couvre les sous-domaines, un
+suffixe `:443` limite une entrée à un port, et `deniedDomains` bloque un hôte
+même quand une entrée autorisée le couvre (@Claude Code all settings). Avec
+`strictAllowlist` à `true`, un hôte absent de la liste est bloqué au lieu de
+faire l’objet d’une question. Claude Code ne lit ce réglage que dans vos
+réglages utilisateur, dans les réglages gérés (managed settings) ou dans un
+fichier passé avec `--settings`, et dans le `.claude/settings.json` d’un dépôt
+il n’a aucun effet. Il demande Claude Code v2.1.219 ou plus récent
+(@Claude Code sandboxing).
 
-**What happens when the sandbox can't run a command.** If the sandbox can't
-start at all, Claude Code shows a warning and runs commands without it,
-unless `failIfUnavailable` is `true`, which makes it refuse to start. When
-one command fails inside the sandbox, the agent may retry it outside, where
-the normal permission prompt applies, and `allowUnsandboxedCommands: false`
-takes that retry away (@Claude Code sandboxing). By default a command that
-runs in the sandbox runs without asking you, and
-`autoAllowBashIfSandboxed: false` brings the prompt back
+**Ce qui se passe quand le bac à sable ne peut pas lancer une commande.** Si le
+bac à sable ne peut pas démarrer du tout, Claude Code affiche un avertissement
+et lance les commandes sans lui, sauf si `failIfUnavailable` vaut `true`, ce
+qui le fait refuser de démarrer. Quand une commande échoue dans le bac à sable,
+l’agent peut la retenter hors du bac à sable, où s’applique la demande
+d’autorisation habituelle, et `allowUnsandboxedCommands: false` supprime cette
+nouvelle tentative (@Claude Code sandboxing). Par défaut, une commande qui
+tourne dans le bac à sable tourne sans vous demander, et
+`autoAllowBashIfSandboxed: false` rétablit la demande
 (@Claude Code all settings).
 
-The course repository has a fixture for this lesson in
-`site/examples/coding-with-agents/sandboxing/`. Its `sandbox-settings.json`
-uses the same setting names as the next lesson's settings file and allows
-one host:
+Le dépôt du cours a un exemple pour cette leçon dans
+`site/examples/coding-with-agents/sandboxing/`. Son `sandbox-settings.json`
+utilise les mêmes noms de réglages que le fichier de réglages de la leçon
+suivante et autorise un seul hôte :
 
 ```json
 {
@@ -170,11 +181,11 @@ one host:
 }
 ```
 
-The allowlist covers the sandboxed commands only. Claude Code's web fetch
-tool runs inside Claude Code itself and follows its permission rules
-(@Claude Code sandboxing), so the deny rules turn off the web tools as well.
-Next to the settings, `commands.txt` holds three commands that each try to
-reach a different host:
+La liste d’autorisation ne couvre que les commandes dans le bac à sable. L’outil
+de récupération web de Claude Code tourne dans Claude Code lui-même et suit ses
+règles de permission (@Claude Code sandboxing), donc les règles d’interdiction
+désactivent aussi les outils web. À côté des réglages, `commands.txt` contient
+trois commandes qui essaient chacune de joindre un hôte différent :
 
 ```text
 curl -sI https://pypi.org/simple/
@@ -182,31 +193,31 @@ curl -sI https://files.pythonhosted.org/
 curl -s https://collect.example.invalid/upload
 ```
 
-The last address ends in `.invalid`, a name reserved so that it never
-belongs to a real server (@RFC 2606). The fixture's `check_allowlist.py` makes no
-network call. It reads the settings, finds the host and port of each
-command and applies the matching rules above.
+La dernière adresse se termine par `.invalid`, un nom réservé pour qu’il
+n’appartienne jamais à un vrai serveur (@RFC 2606). Le `check_allowlist.py` de
+l’exemple ne fait aucun appel réseau. Il lit les réglages, trouve l’hôte et le
+port de chaque commande et applique les règles correspondantes ci-dessus.
 
 <Predict id="which-commands-get-out" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['sandbox', 'trust-boundary']}
-  context="A Claude Code sandbox settings file allows only pypi.org, with strictAllowlist set to true. Three curl commands try to reach https addresses on pypi.org, files.pythonhosted.org and collect.example.invalid. A script prints, for each command, whether the sandbox lets its host through."
-  title="Which commands get out?" hint="For each host, is it on the list exactly as written, and what does strictAllowlist do with a host that isn't?"
+  context="Un fichier de réglages du bac à sable de Claude Code n’autorise que pypi.org, avec strictAllowlist à true. Trois commandes curl essaient de joindre des adresses https sur pypi.org, files.pythonhosted.org et collect.example.invalid. Un script affiche, pour chaque commande, si le bac à sable laisse passer son hôte."
+  title="Quelles commandes sortent ?" hint="Pour chaque hôte, est-il sur la liste exactement tel qu’il est écrit, et que fait strictAllowlist d’un hôte qui n’y est pas ?"
   answer={`allowedDomains: pypi.org
   deniedDomains: (none)
   strictAllowlist: true
   1. pypi.org:443  allowed (matches pypi.org)
   2. files.pythonhosted.org:443  blocked, no prompt (not on the list)
   3. collect.example.invalid:443  blocked, no prompt (not on the list)`} run="coding-with-agents/sandboxing/check_allowlist.py">
-Read the settings and the three commands above. For each command, decide
-whether the sandbox lets it through, asks you, or blocks it. The script
-first prints `allowedDomains:`, `deniedDomains:` and `strictAllowlist:`,
-each followed by its value from the settings, with `(none)` for an empty
-list. Then it prints one numbered line per command, such as
-`1. host:443`, followed by two spaces and one of
-`allowed (matches <entry>)`, `blocked (deniedDomains has <entry>)`,
-`asks you (not on the list)` or `blocked, no prompt (not on the list)`.
-Write the output, then run the script from the fixture's folder and
-compare.
+Lisez les réglages et les trois commandes ci-dessus. Pour chaque commande,
+décidez si le bac à sable la laisse passer, vous demande, ou la bloque. Le
+script affiche d’abord `allowedDomains:`, `deniedDomains:` et
+`strictAllowlist:`, chacun suivi de sa valeur dans les réglages, avec `(none)`
+pour une liste vide. Il affiche ensuite une ligne numérotée par commande, comme
+`1. host:443`, suivie de deux espaces et de l’une des mentions
+`allowed (matches <entry>)` (autorisé), `blocked (deniedDomains has <entry>)`
+(bloqué par deniedDomains), `asks you (not on the list)` (vous demande) ou
+`blocked, no prompt (not on the list)` (bloqué sans demande). Écrivez la
+sortie, puis lancez le script depuis le dossier de l’exemple et comparez.
 
 ```sh
 python3 check_allowlist.py
@@ -214,73 +225,75 @@ python3 check_allowlist.py
 
 </Predict>
 
-Only the first command gets out. The list names hosts, so a host that isn't
-written there is blocked, however closely it is related to one that is.
-When a command you need is blocked, add the one host it needs, and prefer
-a named host to a wildcard.
+Seule la première commande sort. La liste nomme des hôtes, donc un hôte qui n’y
+est pas écrit est bloqué, aussi proche soit-il d’un hôte qui y est. Quand une
+commande dont vous avez besoin est bloquée, ajoutez le seul hôte dont elle a
+besoin, et préférez un hôte nommé à un joker.
 
 <Choice id="the-upload-with-a-routine-name" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['trust-boundary', 'exfiltration']}
-  context="A coding agent runs with a CLAUDE.md that forbids uploads, a deny rule for curl commands, a hook that blocks commands containing curl or wget, and the Claude Code sandbox with a strict network allowlist that lists only pypi.org and unsandboxed retries turned off."
-  title="Which control stops the upload?" hint="Which of these would see the script's connection, whatever the script is called?"
+  context="Un agent de code tourne avec un CLAUDE.md qui interdit les envois de fichiers, une règle d’interdiction pour les commandes curl, un hook qui bloque les commandes contenant curl ou wget, et le bac à sable de Claude Code avec une liste d’autorisation réseau stricte qui ne liste que pypi.org et des nouvelles tentatives hors bac à sable désactivées."
+  title="Quel contrôle arrête l’envoi ?" hint="Lequel de ces contrôles verrait la connexion du script, quel que soit le nom du script ?"
   options={[
-    { text: 'The line in CLAUDE.md that forbids uploading project files to any outside address.', why: 'The injected text already convinced the agent to ignore this line. It is a request to the model.' },
-    { text: 'The deny rule for Bash(curl *), which covers every command that sends data over the web.', why: 'The rule matches commands that start with curl. The command here runs python3 and a script.' },
-    { text: 'The hook that blocks every command whose text contains the word curl or the word wget.', why: 'The hook reads the command\'s text, and neither word appears in it.' },
-    { text: 'The strict network allowlist, which lists only pypi.org and blocks every other host.', correct: true },
+    { text: 'La ligne de CLAUDE.md qui interdit d’envoyer des fichiers du projet vers une adresse extérieure.', why: 'Le texte injecté a déjà convaincu l’agent d’ignorer cette ligne. C’est une demande au modèle.' },
+    { text: 'La règle d’interdiction pour Bash(curl *), qui couvre chaque commande qui envoie des données sur le web.', why: 'La règle correspond aux commandes qui commencent par curl. La commande ici lance python3 et un script.' },
+    { text: 'Le hook qui bloque chaque commande dont le texte contient le mot curl ou le mot wget.', why: 'Le hook lit le texte de la commande, et aucun des deux mots n’y figure.' },
+    { text: 'La liste d’autorisation réseau stricte, qui ne liste que pypi.org et bloque tous les autres hôtes.', correct: true },
   ]}>
-Injected text in a file convinces the agent to upload `.env` to
-`paste.example.invalid`. It writes a script named `sync_check.py` that does
-the upload and asks to run it, and you approve because the name looks
-routine. The sandbox is set so that a blocked command can't be retried
-outside it (`allowUnsandboxedCommands: false`). Which control still stops
-the upload?
+Un texte injecté dans un fichier convainc l’agent d’envoyer `.env` vers
+`paste.example.invalid`. Il écrit un script nommé `sync_check.py` qui fait
+l’envoi et demande à le lancer, et vous approuvez parce que le nom a l’air de
+routine. Le bac à sable est réglé pour qu’une commande bloquée ne puisse pas
+être retentée hors de lui (`allowUnsandboxedCommands: false`). Quel contrôle
+arrête quand même l’envoi ?
 </Choice>
 
 <Choice id="what-the-sidecar-still-exposes" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['trust-boundary', 'secrets-hygiene']}
-  context="A coding agent runs in a container. A sidecar container holds the real forge token and adds it to requests for the forge on their way out, and the agent's environment holds only a placeholder."
-  title="What is still exposed?" hint="What can the agent do through the sidecar, and for how long?"
+  context="Un agent de code tourne dans un conteneur. Un conteneur annexe détient le vrai jeton de forge et l’ajoute aux requêtes vers la forge à leur sortie, et l’environnement de l’agent ne contient qu’un marqueur."
+  title="Qu’est-ce qui reste exposé ?" hint="Que peut faire l’agent par le conteneur annexe, et pendant combien de temps ?"
   options={[
-    { text: 'The agent can act on the forge through the sidecar until the session ends.', correct: true },
-    { text: 'The agent can read the real token from its environment and send it to any host.', why: 'The environment holds only a placeholder. The real token stays in the sidecar.' },
-    { text: 'Nothing on the forge, since the real token never entered the agent\'s container.', why: 'The sidecar adds the token to every request for the forge, including the ones a compromised agent makes.' },
-    { text: 'The real token, for as long as it is valid, since the agent can read each request.', why: 'The sidecar adds the token after the request leaves the agent\'s container, so the agent never sees it.' },
+    { text: 'L’agent peut agir sur la forge par le conteneur annexe jusqu’à la fin de la session.', correct: true },
+    { text: 'L’agent peut lire le vrai jeton dans son environnement et l’envoyer à n’importe quel hôte.', why: 'L’environnement ne contient qu’un marqueur. Le vrai jeton reste dans le conteneur annexe.' },
+    { text: 'Rien sur la forge, puisque le vrai jeton n’est jamais entré dans le conteneur de l’agent.', why: 'Le conteneur annexe ajoute le jeton à chaque requête vers la forge, y compris celles que fait un agent compromis.' },
+    { text: 'Le vrai jeton, tant qu’il est valide, puisque l’agent peut lire chaque requête.', why: 'Le conteneur annexe ajoute le jeton après que la requête a quitté le conteneur de l’agent, donc l’agent ne le voit jamais.' },
   ]}>
-Text in a file the agent read has taken over the session. What can it
-still do with the forge token?
+Un texte dans un fichier que l’agent a lu a pris le contrôle de la session. Que
+peut-il encore faire avec le jeton de forge ?
 </Choice>
 
 <Choice id="the-fix-that-keeps-holding" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['trust-boundary', 'sandbox']}
-  context="After a red-team session, a team found that its coding agent sent project data to an unlisted host, using a small script with a harmless name that the developer approved at the prompt. The team considers four changes."
-  title="The fix that keeps holding" hint="Which of these would still act if the next script had a different name?"
+  context="Après une séance de red teaming, une équipe a découvert que son agent de code avait envoyé des données du projet vers un hôte non listé, avec un petit script au nom anodin que le développeur avait approuvé à la demande d’autorisation. L’équipe envisage quatre modifications."
+  title="La correction qui tient" hint="Laquelle de ces modifications agirait encore si le prochain script avait un autre nom ?"
   options={[
-    { text: 'A deny rule for the exact command the agent ran last time, so that the same script can\'t run again.', why: 'The rule matches that command\'s text. The next script has another name and passes.' },
-    { text: 'The sandbox\'s strict network allowlist in your user settings, with unsandboxed retries turned off.', correct: true },
-    { text: 'A line in CLAUDE.md that tells the agent to ask you before it uploads anything to any address.', why: 'The line is a request to the model. Injected text can convince the agent to ignore it.' },
-    { text: 'A hook that blocks every command whose text contains the word upload or the word paste.', why: 'The hook reads the command\'s text. A script with a harmless name contains neither word.' },
+    { text: 'Une règle d’interdiction pour la commande exacte que l’agent a lancée la dernière fois, pour que le même script ne puisse plus tourner.', why: 'La règle correspond au texte de cette commande. Le script suivant a un autre nom et passe.' },
+    { text: 'La liste d’autorisation réseau stricte du bac à sable dans vos réglages utilisateur, avec les nouvelles tentatives hors bac à sable désactivées.', correct: true },
+    { text: 'Une ligne dans CLAUDE.md qui dit à l’agent de vous demander avant d’envoyer quoi que ce soit vers une adresse.', why: 'La ligne est une demande au modèle. Un texte injecté peut convaincre l’agent de l’ignorer.' },
+    { text: 'Un hook qui bloque chaque commande dont le texte contient le mot upload ou le mot paste.', why: 'Le hook lit le texte de la commande. Un script au nom anodin ne contient aucun des deux mots.' },
   ]}>
-Which change still holds when the next injected text makes the agent write
-a different script?
+Quelle modification tient encore quand le prochain texte injecté fait écrire à
+l’agent un autre script ?
 </Choice>
 
-<Pitfall title="The allowlist that let everything out">
-A developer adds `github.com` to `allowedDomains` so that the agent can push
-its branches, and feels safe because the list is short. But anyone can
-create an account on that site and receive data there. The sandbox's proxy
-decides from the host name alone and doesn't look inside encrypted
-traffic, and the vendor warns that a broad domain such as `github.com` can
-become a way to send data out (@Claude Code sandboxing). Allow the
-narrowest host a command needs. When the agent must reach a broad host,
-send its traffic through a proxy of your own that can look inside the
-requests, which the same page describes. Your proxy then decides which
-hosts pass, so give it the allowlist as well.
+<Pitfall title="La liste d’autorisation qui laissait tout sortir">
+Un développeur ajoute `github.com` à `allowedDomains` pour que l’agent puisse
+pousser ses branches, et se sent en sécurité parce que la liste est courte. Mais
+n’importe qui peut créer un compte sur ce site et y recevoir des données. Le
+proxy du bac à sable décide à partir du seul nom d’hôte et ne regarde pas
+l’intérieur du trafic chiffré, et l’éditeur prévient qu’un domaine large comme
+`github.com` peut devenir un moyen de faire sortir des données
+(@Claude Code sandboxing). Autorisez l’hôte le plus étroit dont une commande a
+besoin. Quand l’agent doit joindre un hôte large, faites passer son trafic par
+un proxy à vous qui peut regarder à l’intérieur des requêtes, comme le décrit
+la même page. Votre proxy décide alors quels hôtes passent, donc donnez-lui
+aussi la liste d’autorisation.
 </Pitfall>
 
-<Exercise stretch="Run the hardened container from the next section on a copy of the fixture, with no credential flags. Its threat model lists open outbound network, so add an allowlist in front of it, either the built-in sandbox inside the container or a proxy of your own, which then decides which hosts pass, and run the three commands again.">
-From the top folder of your clone of the course repository, copy the
-fixture folder and start Claude Code in the copy with the fixture's settings, in Manual mode:
+<Exercise stretch="Lancez le conteneur renforcé de la partie suivante sur une copie de l’exemple, sans option d’identifiant. Son modèle de menace mentionne un réseau sortant ouvert, donc placez une liste d’autorisation devant lui, soit le bac à sable intégré dans le conteneur, soit un proxy à vous qui décide alors quels hôtes passent, et relancez les trois commandes.">
+Depuis le dossier racine de votre clone du dépôt du cours, copiez le dossier de
+l’exemple et lancez Claude Code dans la copie avec les réglages de l’exemple, en
+mode Manual :
 
 ```sh
 cp -R site/examples/coding-with-agents/sandboxing ~/sandbox-try
@@ -288,86 +301,92 @@ cd ~/sandbox-try
 claude --permission-mode default --settings sandbox-settings.json
 ```
 
-If `~/sandbox-try` is left over from an earlier try, remove it first or
-use a new folder name, because `cp -R` would put the copy inside the old
-folder. On the first start in a new folder, Claude Code asks whether you
-trust it (@Claude Code security). Say Yes, since the folder is the copy
-you just made. Run `/sandbox` and check that the sandbox is on. Then ask the agent to run
-the commands in `commands.txt` one at a time and report what each printed.
-Approve each command at the prompt, since they only read a web address,
-and answer No if the agent asks for anything else. Write down which
-commands got a response and which failed with a network error from the
-sandbox, and compare that with your prediction. This part runs a real
-agent, so the course can't check its output. The results depend on your
-Claude Code version and on your own settings, which Claude Code merges
-with the file you pass (@Claude Code settings). A host you allowed there,
-or in a `WebFetch(domain:...)` allow rule, is on the list in this session
-too (@Claude Code sandboxing). It takes about five minutes.
+Si `~/sandbox-try` reste d’un essai précédent, supprimez-le d’abord ou utilisez
+un autre nom de dossier, parce que `cp -R` placerait la copie à l’intérieur de
+l’ancien dossier. Au premier démarrage dans un nouveau dossier, Claude Code
+vous demande si vous lui faites confiance (@Claude Code security). Répondez
+Yes, puisque le dossier est la copie que vous venez de faire. Lancez `/sandbox`
+et vérifiez que le bac à sable est actif. Demandez ensuite à l’agent de lancer
+les commandes de `commands.txt` une par une et de dire ce que chacune a
+affiché. Approuvez chaque commande à la demande, puisqu’elles ne font que lire
+une adresse web, et répondez No si l’agent demande quoi que ce soit d’autre.
+Notez quelles commandes ont reçu une réponse et lesquelles ont échoué sur une
+erreur réseau du bac à sable, et comparez avec votre prévision. Cette partie
+fait tourner un vrai agent, donc le cours ne peut pas vérifier sa sortie. Les
+résultats dépendent de votre version de Claude Code et de vos propres réglages,
+que Claude Code fusionne avec le fichier que vous passez
+(@Claude Code settings). Un hôte que vous y avez autorisé, ou dans une règle
+d’autorisation `WebFetch(domain:...)`, est aussi sur la liste dans cette session
+(@Claude Code sandboxing). Comptez environ cinq minutes.
 
-A good result is a table with one row per command: the host, what you
-predicted, what happened, and the setting that decided it. If a row
-disagrees with your prediction, find the setting from your own files that
-explains it. Then answer one question: which host would you add for a real
-project, and what could the agent send there?
+Un bon résultat est un tableau avec une ligne par commande : l’hôte, ce que vous
+aviez prévu, ce qui s’est passé, et le réglage qui en a décidé. Si une ligne
+contredit votre prévision, trouvez dans vos propres fichiers le réglage qui
+l’explique. Répondez ensuite à une question : quel hôte ajouteriez-vous pour un
+vrai projet, et que pourrait y envoyer l’agent ?
 </Exercise>
 
-## Beyond the built-in sandbox
+## Au-delà du bac à sable intégré
 
-The summaries below each link to their source, for when the built-in
-sandbox isn't enough.
+Les résumés ci-dessous renvoient chacun à leur source, pour le cas où le bac à
+sable intégré ne suffit pas.
 
-**A hardened container with a written threat model.** The public
+**Un conteneur renforcé avec un modèle de menace écrit.** Le dépôt public
 [`schubergphilis/claude-docker`](https://github.com/schubergphilis/claude-docker)
-repository runs Claude Code in a container, and its README says what that
-protects and what it doesn't (@claude-docker). Apart from the agent's own
-sign-in, a credential goes in only when you pass its flag. A forge token
-stays in a sidecar for the session, and the agent can still use it through
-the sidecar while the session runs. The threat model also warns that tools
-such as `npx` and `uvx` download and run code the first time you use them.
-After a compromised session, it says to assume the data has already left
-and to rotate every credential that entered the container.
+fait tourner Claude Code dans un conteneur, et son README dit ce que cela
+protège et ce que cela ne protège pas (@claude-docker). Hormis la propre
+connexion de l’agent, un identifiant n’entre que si vous passez son option. Un
+jeton de forge reste dans un conteneur annexe pendant la session, et l’agent
+peut toujours s’en servir par le conteneur annexe tant que la session tourne. Le
+modèle de menace prévient aussi que des outils comme `npx` et `uvx`
+téléchargent et exécutent du code la première fois que vous les utilisez. Après
+une session compromise, il dit de considérer que les données sont déjà sorties
+et de faire tourner chaque identifiant entré dans le conteneur.
 
-**A layered containment pattern.** Some teams stack controls from
-different projects. No single source documents the stack as a whole:
+**Un modèle de confinement en couches.** Certaines équipes empilent des
+contrôles venus de projets différents. Aucune source ne documente cet
+empilement comme un tout :
 
-| Layer                         | What it does                                                                                                        | Public building blocks               |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| Isolation                     | One container per agent on its own network, with only the workspace mounted                                         | Docker, Podman, dev containers       |
-| Enforcement outside the agent | A wrapper proxy allows listed hosts and commands, and removes secrets from tool results before they go to the model | mitmproxy, a small proxy of your own |
-| Review gate                   | The agent pushes to a local git server, and a person reviews there before anything reaches the real remote          | Forgejo, Gitea, a bare repository    |
-| Supply-chain hygiene          | A secret scan before each commit, and no package version younger than a set age                                     | Gitleaks, pnpm's `minimumReleaseAge` |
-| Observation                   | Rules that record network, file and process events around the container without blocking them                       | Tetragon, Falco                      |
+| Couche                          | Ce qu’elle fait                                                                                                                    | Briques publiques                      |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| Isolation                       | Un conteneur par agent sur son propre réseau, avec seulement l’espace de travail monté                                             | Docker, Podman, dev containers         |
+| Contrôle imposé hors de l’agent | Un proxy enveloppe autorise les hôtes et les commandes listés, et retire les secrets des résultats d’outils avant qu’ils aillent au modèle | mitmproxy, un petit proxy à vous   |
+| Barrière de revue               | L’agent pousse vers un serveur git local, et une personne relit là avant que quoi que ce soit atteigne le vrai dépôt distant      | Forgejo, Gitea, un dépôt nu (bare)     |
+| Hygiène de la chaîne d’approvisionnement | Une recherche de secrets avant chaque commit, et aucune version de paquet plus jeune qu’un âge fixé                       | Gitleaks, le `minimumReleaseAge` de pnpm |
+| Observation                     | Des règles qui enregistrent les événements réseau, fichiers et processus autour du conteneur sans les bloquer                     | Tetragon, Falco                        |
 
-Gitleaks scans a repository for secrets (@Gitleaks), and pnpm's
-`minimumReleaseAge` holds back a new package version for a set time, one
-day by default (@pnpm supply chain).
+Gitleaks cherche les secrets dans un dépôt (@Gitleaks), et le
+`minimumReleaseAge` de pnpm retient une nouvelle version de paquet pendant une
+durée fixée, un jour par défaut (@pnpm supply chain).
 
-**Running with every prompt switched off.** In Claude Code that is
-`--dangerously-skip-permissions`, and nothing replaces the prompts it
-removes (@Claude Code sandboxing). Anthropic asks that such a session run
-where its file tools, MCP servers and hooks are isolated as well, which
-means a container, a virtual machine or the sandbox runtime
-(@Claude Code isolation). Check such a run more closely the less of it you
-watched, as the Academy course *Claude Code in action* advises
-(@Academy claude-code-in-action). Codex keeps where commands may write
-apart from when the agent asks you, and turns the network off by default
-(@Codex approvals). Those are three separate decisions in any agent, and a
-setup can be strict on one and loose on another.
+**Tourner avec toutes les demandes désactivées.** Dans Claude Code, c’est
+`--dangerously-skip-permissions`, et rien ne remplace les demandes qu’il
+supprime (@Claude Code sandboxing). Anthropic demande qu’une telle session
+tourne là où ses outils de fichiers, ses serveurs MCP et ses hooks sont aussi
+isolés, c’est-à-dire dans un conteneur, une machine virtuelle ou
+l’environnement d’isolation de l’éditeur (@Claude Code isolation). Vérifiez une
+telle exécution d’autant plus près que vous en avez peu regardé, comme le
+conseille le cours de l’Academy *Claude Code in action*
+(@Academy claude-code-in-action). Codex sépare l’endroit où les commandes
+peuvent écrire du moment où l’agent vous demande, et désactive le réseau par
+défaut (@Codex approvals). Ce sont trois décisions distinctes dans n’importe
+quel agent, et une configuration peut être stricte sur l’une et souple sur une
+autre.
 
-**The model brings no guardrails.** Pi, an open-source coding agent, has no
-approval step before each tool call. Its documentation leaves safety to
-whatever limits what Pi can reach, usually a container, a virtual machine
-or a sandbox around it (@Pi security). The limits come from the harness
-and the environment, whatever the model.
+**Le modèle n’apporte aucun garde-fou.** Pi, un agent de code open source, n’a
+aucune étape d’approbation avant chaque appel d’outil (tool call). Sa documentation confie
+la sécurité à ce qui limite ce que Pi peut atteindre, en général un conteneur,
+une machine virtuelle ou un bac à sable autour de lui (@Pi security). Les
+limites viennent du harnais et de l’environnement, quel que soit le modèle.
 
 <Recap>
-1. A file the agent reads goes to the model provider in the next request, whether or not a sandbox is on. A sandbox limits which files it can read and which hosts it can send them to (@Claude Code isolation).
-2. The ways to contain an agent run from the built-in sandbox, quick to start and limited to shell commands, through the sandbox runtime, containers, dev containers and virtual machines, to a vendor-hosted agent that needs no setup and gives you only the vendor's controls.
-3. A permission rule, a hook or a prompt checks what the agent asks for, and injected text can steer that request. For the controls that matter most, limit what the running process can reach: a network allowlist enforced by a proxy, and credentials held by a sidecar.
-4. In Claude Code, `allowedDomains` lists the hosts, `strictAllowlist` blocks the rest without asking when it comes from your own or a passed settings file, and `allowUnsandboxedCommands: false` with `failIfUnavailable: true` stops the agent's commands from running outside the sandbox (@Claude Code sandboxing).
-5. Keep a token the agent needs in a proxy or sidecar that adds it on the way out, and assume the agent can use it for the whole session.
+1. Un fichier que lit l’agent part chez le fournisseur du modèle avec la requête suivante, que le bac à sable soit actif ou non. Un bac à sable limite les fichiers qu’il peut lire et les hôtes vers lesquels il peut les envoyer (@Claude Code isolation).
+2. Les façons de contenir un agent vont du bac à sable intégré, rapide à lancer et limité aux commandes shell, à l’environnement d’isolation de l’éditeur, aux conteneurs, aux conteneurs de développement et aux machines virtuelles, jusqu’à un agent hébergé par l’éditeur qui ne demande aucune mise en place et ne vous laisse que les contrôles de l’éditeur.
+3. Une règle de permission, un hook ou une demande d’autorisation vérifient ce que demande l’agent, et un texte injecté peut orienter cette demande. Pour les contrôles qui comptent le plus, limitez ce que le processus en cours peut atteindre : une liste d’autorisation réseau imposée par un proxy, et des identifiants détenus par un conteneur annexe.
+4. Dans Claude Code, `allowedDomains` liste les hôtes, `strictAllowlist` bloque les autres sans demander quand il vient de vos propres réglages ou d’un fichier de réglages passé, et `allowUnsandboxedCommands: false` avec `failIfUnavailable: true` empêche les commandes de l’agent de tourner hors du bac à sable (@Claude Code sandboxing).
+5. Gardez un jeton dont l’agent a besoin dans un proxy ou un conteneur annexe qui l’ajoute à la sortie, et considérez que l’agent peut s’en servir pendant toute la session.
 </Recap>
 
 <Habit id="name-the-hosts-first">
-Before you let an agent run commands in a new project, write down the hosts those commands really need, and check that your allowlist names those hosts and nothing wider.
+Avant de laisser un agent lancer des commandes dans un nouveau projet, écrivez les hôtes dont ces commandes ont vraiment besoin, et vérifiez que votre liste d’autorisation nomme ces hôtes et rien de plus large.
 </Habit>
