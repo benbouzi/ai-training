@@ -1,8 +1,9 @@
 id: customizing-agents/mcp-tool-cost
-title: Measuring what a tool server costs
+title: Mesurer ce que coûte un serveur d’outils
 description: >-
-  Count what a twenty-tool server's definitions take from the context window, run one query through the
-  server and through a CLI, and decide which tools and servers stay connected.
+  Comptez ce que les définitions d’un serveur à vingt outils prennent à la fenêtre de contexte,
+  faites passer une requête par le serveur puis par une CLI, et décidez quels outils et quels
+  serveurs restent connectés.
 mode: tutorial
 covers: customizing-agents/mcp
 serves: [customizing-agents/connects-tools-safely/weighs-tool-cost]
@@ -15,19 +16,21 @@ assumes:
     lesson: customizing-agents/mcp-first-server
     section: connect-the-real-server
 extends-to:
-  - label: How to kill the bloat in Claude Code's system prompt (AI Hero)
+  - label: How to kill the bloat in Claude Code's system prompt (AI Hero, en anglais)
     href: https://www.aihero.dev/how-to-kill-the-bloat-in-claude-codes-system-prompt
 sources-checked: 2026-10-07
 review-by: 2027-04-07
 after: [customizing-agents/mcp-first-server]
 shorts:
-  - On-demand tool loading and why disabling unused servers is still the control (Academy claude-code-101)
+  - >-
+    Le chargement des outils à la demande, et pourquoi désactiver les serveurs inutilisés reste le
+    bon contrôle (Academy claude-code-101)
 exercise:
   kind: judge
   brief: >-
-    Connect a server with many tools, read the token count of its definitions from the client, then
-    compare one query through the server with the same query through the CLI, and record both costs
-    in a short table.
+    Connectez un serveur qui a beaucoup d’outils, lisez dans le client le nombre de jetons de ses
+    définitions, comparez ensuite une requête faite par le serveur avec la même requête faite par la
+    CLI, et notez les deux coûts dans un court tableau.
 sources:
   - MCP specification
   - MCP filesystem server

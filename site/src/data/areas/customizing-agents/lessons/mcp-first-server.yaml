@@ -1,9 +1,9 @@
 id: customizing-agents/mcp-first-server
-title: Connecting your first tool server
+title: Connecter votre premier serveur d’outils
 description: >-
-  Connect a local file-system server scoped to one copied directory, give the agent a list-and-summarize
-  test task, and read the transcript for every tool call and its arguments before the server touches real
-  work.
+  Connectez un serveur de fichiers local limité à un dossier copié, donnez à l’agent une tâche de
+  test qui liste et résume, et lisez dans la transcription chaque appel d’outil et ses arguments
+  avant que le serveur touche à un vrai travail.
 mode: tutorial
 covers: customizing-agents/mcp
 serves: [customizing-agents/connects-tools-safely/adds-a-tool]
@@ -16,18 +16,21 @@ assumes:
     lesson: coding-with-agents/first-session
     section: lancer-lagent-et-lui-demander-dexpliquer
 extends-to:
-  - label: Model Context Protocol tutorial (AI Hero)
+  - label: Model Context Protocol tutorial (AI Hero, en anglais)
     href: https://www.aihero.dev/model-context-protocol-tutorial
 sources-checked: 2026-10-07
 review-by: 2027-04-07
 after: [customizing-agents/mcp]
 shorts:
-  - Local and remote transports and what each one means for credentials (Academy model-context-protocol-advanced-topics)
+  - >-
+    Les transports locaux et distants, et ce que chacun implique pour les identifiants (Academy
+    model-context-protocol-advanced-topics)
 exercise:
   kind: do
   brief: >-
-    Connect a local file-system server scoped to one fixture directory, ask the agent to list and
-    summarize its files, and read the transcript for what it called and with which arguments.
+    Connectez un serveur de fichiers local limité à un dossier de l’exemple, demandez à l’agent de
+    lister et de résumer ses fichiers, et lisez dans la transcription ce qu’il a appelé et avec
+    quels arguments.
 sources:
   - MCP specification
   - MCP filesystem server
@@ -44,7 +47,8 @@ notes: >-
   `tools/call` exchange without npm or the network. The exercise connects the real reference server
   (@modelcontextprotocol/server-filesystem) through npx, scoped to a copy of the fixture's handbook
   directory, pinned to the npm version current on sources-checked. Claude Code answers `roots/list` with
-  its launch directory and `--add-dir` directories, and the server's roots replace its argument list, so
+  its launch directory and `--add-dir` directories, and the server's roots replace its argument list,
+  so
   the page has the learner start the agent inside the copy. The `claude mcp add` syntax, the roots
   behavior, the scope names, the `.mcp.json` approval prompt, the tool-search default, the stdio
   negotiation default (MCP_PROTOCOL_NEGOTIATION=auto, and a feature-flag rollout from v2.1.285) and that

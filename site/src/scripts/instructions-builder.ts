@@ -62,9 +62,9 @@ export function mountInstructionsBuilder(root: Element, writeText: WriteText = c
 		const label = copy.textContent;
 		try {
 			await writeText(buildInstructions(readForm(root)));
-			copy.textContent = 'Copied';
+			copy.textContent = 'Copié';
 		} catch {
-			copy.textContent = 'Select and copy';
+			copy.textContent = 'Sélectionnez et copiez';
 		}
 		setTimeout(() => {
 			copy.textContent = label;

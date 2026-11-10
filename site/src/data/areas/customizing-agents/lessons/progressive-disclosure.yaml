@@ -1,8 +1,9 @@
 id: customizing-agents/progressive-disclosure
-title: Loading only what the skill needs
+title: Ne charger que ce dont la skill a besoin
 description: >-
-  Measure what the release skill costs at each loading stage, move its rollback procedure into a
-  reference file the skill points to, and measure again, so the common path stays small.
+  Mesurez ce que coûte la skill de publication à chaque étape de chargement, déplacez sa procédure
+  de retour en arrière dans un fichier de référence vers lequel la skill renvoie, et mesurez à
+  nouveau, pour que le chemin courant reste petit.
 mode: tutorial
 covers: customizing-agents/skills
 serves: [customizing-agents/writes-skill/discloses-progressively]
@@ -16,20 +17,20 @@ assumes:
     section: compter-les-jetons-dune-page
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/first-skill
-    section: pass-one-the-directory-and-the-description
+    section: premier-passage--le-dossier-et-la-description
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/testing-a-skill
-    section: run-it-again-and-compare
+    section: la-relancer-et-comparer
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 after: [customizing-agents/first-skill]
 shorts:
-  - Counting the tokens a skill costs on every turn (Academy introduction-to-agent-skills)
+  - Compter les jetons qu’une skill coûte à chaque tour (Academy introduction-to-agent-skills)
 exercise:
   kind: do
   brief: >-
-    Measure the release skill's token count, move the rollback procedure into a reference file the
-    skill points to, and measure again.
+    Mesurez le nombre de jetons de la skill de publication, déplacez la procédure de retour en
+    arrière dans un fichier de référence vers lequel la skill renvoie, et mesurez à nouveau.
 sources:
   - AEC-17
   - Agent Skills spec

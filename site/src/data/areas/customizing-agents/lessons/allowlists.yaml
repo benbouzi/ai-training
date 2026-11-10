@@ -1,8 +1,9 @@
 id: customizing-agents/allowlists
-title: Allowing the commands the task needs
+title: Autoriser les commandes dont la tâche a besoin
 description: >-
-  Run one small task with a coding agent twice, first with nothing pre-approved and then with an
-  allowlist for the test command and the files it edits, then prune every rule the run never used.
+  Faites deux fois une petite tâche avec un agent de code, d’abord sans rien de préapprouvé, puis
+  avec une liste d’autorisation pour la commande de test et les fichiers qu’elle modifie, et
+  retirez ensuite chaque règle que l’exécution n’a jamais utilisée.
 mode: tutorial
 covers: customizing-agents/hooks-permissions
 serves: [customizing-agents/configures-agent/sets-permissions]
@@ -14,12 +15,14 @@ assumes:
 sources-checked: 2026-09-23
 review-by: 2027-03-23
 after: [customizing-agents/permission-modes]
-shorts: [How a wildcard pattern widens an allowlist beyond the command that prompted it]
+shorts: ["Comment un motif joker élargit une liste d’autorisation au-delà de la commande qui a provoqué
+      la\a demande"]
 exercise:
   kind: do
   brief: >-
-    Start from nothing pre-approved, allow the test command and the read-only version-control commands,
-    finish the fixture task, then remove every entry the transcript shows was not used.
+    Partez de zéro autorisation, autorisez la commande de test et les commandes de gestion de
+    versions en lecture seule, terminez la tâche de l’exemple, puis retirez chaque entrée dont la
+    transcription montre qu’elle n’a pas servi.
 sources: [Claude Code permissions, Claude Code permission modes]
 minutes: 15
 notes: >-

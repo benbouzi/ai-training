@@ -1,91 +1,87 @@
 id: customizing-agents/skills
 area: customizing-agents
-name: Agent skills
+name: Skills d’agent
 definition: >-
-  A skill packages a procedure so an agent can load and follow it on demand:
-  a description of when it applies, instructions to follow and any files it
-  needs. This topic distinguishes skills from tools and instructions,
-  introduces the skill specification, explains progressive disclosure and
-  covers what makes a skill worth reusing.
+  Une skill regroupe une procédure pour qu’un agent puisse la charger et la suivre à la demande :
+  une description du moment où elle s’applique, des instructions à suivre et les fichiers dont
+  elle a besoin. Ce thème distingue les skills des outils et des instructions, présente la
+  spécification des skills, explique la divulgation progressive et couvre ce qui fait qu’une skill
+  vaut la peine d’être réutilisée.
 concepts:
   - id: skill-vs-tool-vs-instruction
-    name: Skill vs tool vs instruction
+    name: Skill, outil ou instruction
     definition: >-
-      Three ways to change what an agent does. An instruction is standing
-      text loaded every session, for rules that always apply. A tool is a
-      function the agent can call, for capabilities it lacks. A skill is a
-      procedure loaded only when relevant, for repeatable multi-step work the
-      agent could do but does inconsistently. Pick by frequency, by whether
-      the need is knowledge or capability, and by context cost.
+      Trois façons de changer ce que fait un agent. Une instruction est un texte permanent chargé à
+      chaque session, pour les règles qui s’appliquent toujours. Un outil est une fonction que l’agent
+      peut appeler, pour les capacités qui lui manquent. Une skill est une procédure chargée seulement
+      quand elle est utile, pour un travail répétable en plusieurs étapes que l’agent saurait faire
+      mais fait de façon irrégulière. Choisissez selon la fréquence, selon que le besoin est un savoir
+      ou une capacité, et selon le coût en contexte.
   - id: skill-spec
-    name: Skill spec
+    name: Spécification des skills
     definition: >-
-      The open format for an agent skill: a directory with a metadata file
-      that names the skill, describes when to use it and holds the
-      instructions, plus optional scripts and reference files alongside. The
-      description is what the agent reads to decide whether to load the
-      skill, so it carries the trigger; the body carries the procedure.
-      Because the format is shared, skills move between agents.
+      Le format ouvert d’une skill d’agent : un dossier avec un fichier de métadonnées qui nomme la
+      skill, décrit quand l’utiliser et contient les instructions, accompagné de scripts et de
+      fichiers de référence facultatifs. La description est ce que l’agent lit pour décider de charger
+      la skill ou non, donc elle porte le déclencheur, et le corps porte la procédure. Comme le format
+      est partagé, les skills passent d’un agent à l’autre.
   - id: progressive-disclosure
-    name: Progressive disclosure
+    name: Divulgation progressive
     definition: >-
-      Structuring a skill so the agent reads only what the current step
-      needs: a short description always visible, the main instructions loaded
-      when the skill is chosen, and detailed references or scripts opened
-      only when a step calls for them. It keeps the context window small
-      across many available skills and puts depth where it is used instead of
-      where it is loaded.
+      Organiser une skill pour que l’agent ne lise que ce dont l’étape en cours a besoin : une courte
+      description toujours visible, les instructions principales chargées quand la skill est choisie,
+      et des références détaillées ou des scripts ouverts seulement quand une étape les demande. Cela
+      garde la fenêtre de contexte petite même avec beaucoup de skills disponibles, et place le détail
+      là où il sert, au moment où il sert.
   - id: writing-a-good-skill
-    name: Writing a good skill
+    name: Écrire une bonne skill
     definition: >-
-      A good skill has a description that fires on the right requests and no
-      others, steps that are concrete enough to follow without guessing, a
-      way for the agent to check its own result, and scripts for anything
-      deterministic. It is tested by watching an agent use it on a real task
-      and revising where it hesitated or went wrong, the same iteration
-      loop as prompting.
+      Une bonne skill a une description qui se déclenche sur les bonnes demandes et sur aucune autre,
+      des étapes assez concrètes pour être suivies sans deviner, un moyen pour l’agent de vérifier son
+      propre résultat, et des scripts pour tout ce qui est déterministe. On la teste en regardant un
+      agent l’utiliser sur une vraie tâche et en la révisant là où il a hésité ou s’est trompé, avec
+      la même boucle d’itération que pour un prompt.
   - id: plugins
     name: Plugins
     definition: >-
-      The unit for distributing customizations together: a plugin bundles
-      skills, hooks, subagents and server connections into one installable
-      package with a version. A marketplace is a catalog of plugins that a
-      team or vendor publishes so others can install from it by name.
-      Installing a plugin lets its hooks run in your sessions and gives its
-      servers the access you grant, so treat it like any other dependency
-      and read what it contains.
+      L’unité de distribution des personnalisations regroupées : un plugin rassemble des skills, des
+      hooks, des sous-agents et des connexions à des serveurs dans un seul paquet installable avec une
+      version. Une place de marché (marketplace) est un catalogue de plugins qu’une équipe ou un
+      éditeur publie pour que d’autres puissent les installer par leur nom. Installer un plugin laisse
+      ses hooks s’exécuter dans vos sessions et donne à ses serveurs l’accès que vous accordez, donc
+      traitez-le comme toute autre dépendance et lisez ce qu’il contient.
   - id: invocation-mode
-    name: Invocation mode
+    name: Mode d’invocation
     definition: >-
-      Who may start a skill: the model, when a request matches the skill's
-      description, or only the person, by typing its name. A model-invoked
-      skill applies itself when it fits, and its description takes up context
-      in every session. A user-invoked skill costs no context until it is
-      called and runs only when the person decides, which suits procedures
-      with side effects such as a deploy. A skill can also be hidden from the
-      person and kept for the model.
+      Qui peut lancer une skill : le modèle, quand une demande correspond à la description de la
+      skill, ou seulement la personne, en tapant son nom. Une skill invoquée par le modèle s’applique
+      d’elle-même quand elle convient, et sa description occupe du contexte dans chaque session. Une
+      skill invoquée par l’utilisateur ne coûte aucun contexte tant qu’elle n’est pas appelée et ne
+      s’exécute que quand la personne le décide, ce qui convient aux procédures qui ont des effets de
+      bord, comme un déploiement. Une skill peut aussi être cachée à la personne et réservée au
+      modèle.
   - id: skill-scope
-    name: Skill scope
+    name: Portée d’une skill
     definition: >-
-      Where a skill is installed decides who has it. A personal skill is in
-      the user's own configuration and follows that person into every
-      project. A project skill is committed to the repository, so everyone
-      who works there gets the same version and can review changes to it. An
-      organization can also install skills for all its users. When two skills
-      share a name, a fixed order decides which one wins, and a personal skill
-      hides a project skill of the same name.
+      L’endroit où une skill est installée décide de qui l’a. Une skill personnelle se trouve dans la
+      configuration de l’utilisateur et suit cette personne dans chaque projet. Une skill de projet
+      est committée dans le dépôt, donc tous ceux qui y travaillent ont la même version et peuvent en
+      relire les modifications. Une organisation peut aussi installer des skills pour tous ses
+      utilisateurs. Quand deux skills ont le même nom, un ordre fixe décide laquelle l’emporte, et une
+      skill personnelle masque une skill de projet du même nom.
   - id: published-skill-sets
-    name: Published skill sets
+    name: Jeux de skills publiés
     definition: >-
-      Collections of skills that a vendor or a developer maintains for others
-      to install, often as a plugin. Model vendors, tool makers and
-      individual developers all publish them. A set like this is a
-      dependency: it runs in your sessions, it changes when its author
-      updates it, and its license can differ from one skill to the next.
-      Judge it as you would a library, by who maintains it, how active it is,
-      what it contains and what dropping it would cost.
+      Des collections de skills qu’un éditeur ou un développeur maintient pour que d’autres les
+      installent, souvent sous forme de plugin. Les éditeurs de modèles, les fabricants d’outils et
+      des développeurs indépendants en publient tous. Un jeu de ce genre est une dépendance : il
+      s’exécute dans vos sessions, il change quand son auteur le met à jour, et sa licence peut varier
+      d’une skill à l’autre. Jugez-le comme une bibliothèque, selon qui le maintient, son activité, ce
+      qu’il contient et ce que coûterait de l’abandonner.
 links:
   prerequisites: [customizing-agents/instructions]
   related: []
   specializations: []
-sources: [AEC-17, DLAI-10, Academy introduction-to-agent-skills, Academy claude-code-in-action, Academy ai-native-sdlc-playbook, Claude Code skills, Agent Skills spec, Claude Code plugins, anthropics skills, OpenAI Academy extend-codex-workflows-4e61p]
+sources: [AEC-17, DLAI-10, Academy introduction-to-agent-skills, Academy claude-code-in-action,
+      Academy ai-native-sdlc-playbook, Claude Code skills, Agent Skills spec, Claude Code plugins,
+      anthropics skills, OpenAI Academy extend-codex-workflows-4e61p]

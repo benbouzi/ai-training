@@ -1,9 +1,9 @@
 id: customizing-agents/first-hook
-title: Writing a hook that blocks a mistake
+title: Écrire un hook qui bloque une erreur
 description: >-
-  Write a Claude Code hook that runs before each commit and blocks it when the lockfile changed and
-  the manifest did not, test it by hand, then make the mistake on purpose and read what the agent does
-  with the message.
+  Écrivez un hook Claude Code qui s’exécute avant chaque commit et le bloque quand le fichier de
+  verrouillage a changé sans le manifeste, testez-le à la main, puis faites l’erreur exprès et
+  lisez ce que l’agent fait du message.
 mode: tutorial
 covers: customizing-agents/hooks-permissions
 serves: [customizing-agents/configures-agent/adds-a-hook]
@@ -16,24 +16,30 @@ assumes:
     lesson: customizing-agents/allowlists
     section: run-two-write-the-allowlist
 extends-to:
-  - label: "How to actually force Claude Code to use the right CLI (don't use CLAUDE.md) (AI Hero on YouTube, 7 minutes)"
+  - label: >-
+      How to actually force Claude Code to use the right CLI (don't use CLAUDE.md) (AI Hero sur
+      YouTube, 7 minutes, en anglais)
     href: https://www.youtube.com/watch?v=3CSi8QAoN-s
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 after: [customizing-agents/allowlists]
 shorts:
-  - The hook exit-code contract, and what the agent sees when a hook blocks (Academy claude-code-101)
+  - >-
+    Le contrat des codes de sortie des hooks, et ce que voit l’agent quand un hook bloque (Academy
+    claude-code-101)
 exercise:
   kind: do
   brief: >-
-    Write a pre-tool hook that rejects a commit when the lockfile changed and the manifest did not,
-    with the message that says what to do, then make the mistake on purpose and watch it fire.
+    Écrivez un hook avant outil qui rejette un commit quand le fichier de verrouillage a changé sans
+    le manifeste, avec un message qui dit quoi faire, puis faites l’erreur exprès et regardez-le se
+    déclencher.
 sources: [Claude Code hooks, Claude Code hooks guide, Git docs git-diff, Git docs git-commit]
 issue: 184
 minutes: 25
 notes: >-
   The pitfall carries the rule from when-instructions-are-not-enough: a rule that must hold every
-  time needs a mechanism (a hook, with CI behind it), and guidance stays an instruction. The fixture repository is a tiny npm project
+  time needs a mechanism (a hook, with CI behind it), and guidance stays an instruction. The fixture repository
+  is a tiny npm project
   whose `package.json` and `package-lock.json` are committed as `package.sample.json` and
   `package-lock.sample.json`, so no dependency tool or scanner reads them as a real project, and the
   learner renames them in their copy. `harness.py` feeds `lockfile_guard.py` the PreToolUse JSON

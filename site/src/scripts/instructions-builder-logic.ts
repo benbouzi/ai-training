@@ -32,26 +32,26 @@ function valueOr(line: LineInput, placeholder: string): string {
 /** The AGENTS.md text for `input`, ending in one newline. A section with no ticked line is left out. */
 export function buildInstructions(input: BuilderInput): string {
 	const { lines: l } = input;
-	const out: string[] = [`# ${input.name || 'my-project'}`];
+	const out: string[] = [`# ${input.name || 'mon-projet'}`];
 	if (input.purpose) out.push('', input.purpose);
 
 	const commands: string[] = [];
-	if (l.runtime.on) commands.push(`- Runtime: ${valueOr(l.runtime, '<language and version>')}`);
-	if (l.test.on) commands.push(`- Test: \`${valueOr(l.test, '<test command>')}\``);
-	if (l.lint.on) commands.push(`- Lint and format: \`${valueOr(l.lint, '<lint command>')}\``);
-	if (commands.length > 0) out.push('', '## Commands', '', ...commands);
+	if (l.runtime.on) commands.push(`- Environnement : ${valueOr(l.runtime, '<langage et version>')}`);
+	if (l.test.on) commands.push(`- Tests : \`${valueOr(l.test, '<commande de test>')}\``);
+	if (l.lint.on) commands.push(`- Style et mise en forme : \`${valueOr(l.lint, '<commande de style>')}\``);
+	if (commands.length > 0) out.push('', '## Commandes', '', ...commands);
 
 	const rules: string[] = [];
-	if (l.branch.on) rules.push(`- ${valueOr(l.branch, '<branch rule>')}`);
-	if (l.notouch.on) rules.push(`- Never edit: ${valueOr(l.notouch, '<paths>')}`);
-	if (l.mistake.on) rules.push(`- ${valueOr(l.mistake, '<the mistake to stop, and what to do instead>')}`);
-	if (rules.length > 0) out.push('', '## Rules', '', ...rules);
+	if (l.branch.on) rules.push(`- ${valueOr(l.branch, '<règle de branche>')}`);
+	if (l.notouch.on) rules.push(`- Ne jamais modifier : ${valueOr(l.notouch, '<chemins>')}`);
+	if (l.mistake.on) rules.push(`- ${valueOr(l.mistake, '<l’erreur à arrêter, et quoi faire à la place>')}`);
+	if (rules.length > 0) out.push('', '## Règles', '', ...rules);
 
 	return `${out.join('\n')}\n`;
 }
 
-/** The line count next to the file name, counting only lines with text: `1 non-empty line`, `7 non-empty lines`. */
+/** The line count next to the file name, counting only lines with text: `1 ligne non vide`, `7 lignes non vides`. French takes the singular for 0 and 1. */
 export function lineCountText(file: string): string {
 	const n = file.split('\n').filter((line) => line.trim().length > 0).length;
-	return `${n} non-empty line${n === 1 ? '' : 's'}`;
+	return n > 1 ? `${n} lignes non vides` : `${n} ligne non vide`;
 }

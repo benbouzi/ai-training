@@ -1,8 +1,8 @@
 id: customizing-agents/notes-that-go-stale
-title: Notes that go stale
+title: Des notes qui deviennent périmées
 description: >-
-  Tell a primary source from a secondary one, name the source each memory note summarizes, and
-  decide whether to trust, check or delete each note.
+  Distinguez une source primaire d’une source secondaire, nommez la source que résume chaque note
+  de mémoire, et décidez s’il faut faire confiance à chaque note, la vérifier ou la supprimer.
 mode: explanation
 covers: customizing-agents/memory
 serves: [customizing-agents/configures-agent/manages-memory]
@@ -12,7 +12,7 @@ assumes:
     lesson: customizing-agents/memory-review
     section: delete-what-has-gone-stale
 extends-to:
-  - label: Handing work to the next session
+  - label: Écrire une passation avant la fin d’une session
     href: /customizing-agents/session-handoff/
 sources-checked: 2026-10-15
 review-by: 2027-04-15
@@ -21,8 +21,8 @@ shorts: []
 exercise:
   kind: judge
   brief: >-
-    For five memory entries, say which source each one summarizes and whether to trust it, check it
-    against that source, or delete it.
+    Pour cinq entrées de mémoire, dites quelle source résume chacune, et s’il faut lui faire
+    confiance, la vérifier par rapport à cette source, ou la supprimer.
 sources: [Claude Code memory]
 issue: 688
 minutes: 10

@@ -1,72 +1,77 @@
 import { Choice, MultiChoice, Match, Predict, Sort, Scenario, Pitfall, Exercise, MorePractice, Recap, Habit } from '@components/lesson';
 
-The last lesson wrote a short `AGENTS.md` for `invoice-mailer`, the
-fictional Python service that renders invoices to PDF and sends them over
-SMTP. A year later the same file has 57 lines. Each line was added for a
-reason, and the agent now follows the file less well than it followed the
-short version. In this lesson we make it short again. We point at what
-only some tasks need, and we cut what no task needs.
+La leçon précédente a écrit un court `AGENTS.md` pour `invoice-mailer`, le
+service Python fictif qui produit des factures en PDF et les envoie par SMTP. Un
+an plus tard, le même fichier compte 57 lignes. Chaque ligne a été ajoutée pour
+une raison, et l’agent suit maintenant le fichier moins bien qu’il ne suivait la
+version courte. Dans cette leçon, nous le raccourcissons à nouveau. Nous
+renvoyons à ce dont seules certaines tâches ont besoin, et nous coupons ce dont
+aucune tâche n’a besoin.
 
-The files for this lesson are in
-`site/examples/customizing-agents/load-point-prune/` in the course
-repository. `AGENTS.long.md` is the long file, `AGENTS.pruned.md` is one
-pruned version of it, and `docs/` holds the files the pruned version points
-at. In the commands below, replace `<course-repo>` with the path to your
-copy of the course repository. The loading rules here are Claude Code's, checked against its
-documentation on the date at the end of the lesson. Other agents load
-their files in other ways, and the method transfers.
+Les fichiers de cette leçon se trouvent dans
+`site/examples/customizing-agents/load-point-prune/` du dépôt du cours.
+`AGENTS.long.md` est le long fichier, `AGENTS.pruned.md` en est une version
+élaguée, et `docs/` contient les fichiers vers lesquels la version élaguée
+renvoie. Ces fichiers sont en anglais, comme le reste du projet. Dans les
+commandes ci-dessous, remplacez `<course-repo>` par le chemin de votre copie du
+dépôt du cours. Les règles de chargement décrites ici sont celles de Claude
+Code, vérifiées dans sa documentation à la date indiquée en fin de leçon.
+D’autres agents chargent leurs fichiers autrement, et la méthode reste valable.
 
-## Every loaded line is in every session
+## Chaque ligne chargée est dans chaque session
 
-Claude Code reads its instruction files at the start of every session
-(@Claude Code memory). Every line in them is in the context of every
-task, the one-line typo fix as well as the release. The [lesson on what
-tokens cost](/concepts/what-tokens-cost/#la-règle-enfouie) showed
-what that does to a rule: it competes with all the other text in the
-window, and a rule among many weighs less than a rule among few. The
-vendor gives the same advice for instruction files. Its documentation
-says that each extra line uses up context and makes the agent stick to the
-rules less well (@Claude Code memory).
+Claude Code lit ses fichiers d’instructions au début de chaque session
+(@Claude Code memory). Chacune de leurs lignes est dans le contexte de chaque
+tâche, la correction d’une faute de frappe d’une ligne comme la publication
+d’une version. La [leçon sur ce que coûtent les jetons](/concepts/what-tokens-cost/#la-règle-enfouie)
+a montré ce que cela fait à une règle : elle est en concurrence avec tout
+l’autre texte de la fenêtre, et une règle parmi beaucoup d’autres pèse moins
+qu’une règle parmi peu. L’éditeur donne le même conseil pour les fichiers
+d’instructions. Sa documentation dit que chaque ligne de plus consomme du
+contexte et fait que l’agent respecte moins bien les règles (@Claude Code memory).
 
-The choice for each piece of guidance is **loading versus pointing**.
-Loading puts the text in the instruction file, so it is in context
-whether the task needs it or not. Pointing puts one line in the file that
-says where the text is and when to read it, and the agent opens the file
-only when a task calls for it. Anthropic's engineering team describes the
-same split for agents in general. An agent can keep a short reference such
-as a file path and load what it points at with a tool at the moment it
-needs it. Claude Code works this way: its instruction files go into
-context at the start, and it finds the other files of the project with
-search tools as it works (@Anthropic context engineering).
+Pour chaque élément de guidage, le choix est de **charger ou renvoyer**.
+Charger met le texte dans le fichier d’instructions, donc il est dans le
+contexte que la tâche en ait besoin ou non. Renvoyer met dans le fichier une
+ligne qui dit où se trouve le texte et quand le lire, et l’agent n’ouvre le
+fichier que quand une tâche le demande. L’équipe d’ingénierie d’Anthropic décrit
+le même partage pour les agents en général. Un agent peut garder une courte
+référence, comme un chemin de fichier, et charger ce vers quoi elle pointe avec
+un outil au moment où il en a besoin. Claude Code fonctionne ainsi : ses
+fichiers d’instructions entrent dans le contexte au départ, et il trouve les
+autres fichiers du projet avec des outils de recherche au fil du travail
+(@Anthropic context engineering).
 
-Load what nearly every task needs: the test command, the branch rule, the
-mistake the agent keeps making. Point at the rest. The vendor's examples
-of guidance to move out of the file are a procedure with many steps and a
-rule that matters for only one part of the code. Claude Code also has two
-places for those that load less often than the instruction file. A skill
-loads when you call it or when the agent decides it fits the task, and a
-rule file with a `paths` field loads only when the agent works with files
-that match it (@Claude Code memory).
+Chargez ce dont presque chaque tâche a besoin : la commande de test, la règle
+des branches, l’erreur que l’agent refait. Renvoyez au reste. Les exemples de
+l’éditeur de guidage à sortir du fichier sont une procédure en plusieurs étapes
+et une règle qui ne compte que pour une partie du code. Claude Code a aussi deux
+endroits pour ceux-là, qui se chargent moins souvent que le fichier
+d’instructions. Une skill se charge quand vous l’appelez ou quand l’agent décide
+qu’elle convient à la tâche, et un fichier de règle avec un champ `paths` ne se
+charge que quand l’agent travaille sur des fichiers qui lui correspondent
+(@Claude Code memory).
 
-## An import still loads
+## Une importation charge quand même
 
-Claude Code lets an instruction file import another file with a line such
-as `@docs/release.md`. The import isn't a pointer. When the session
-starts, Claude Code reads the imported file and puts its whole text in
-the context with the file that contains the import. The vendor says plainly
-that an import keeps a long file tidy without making it cheaper
-(@Claude Code memory). A path without the `@`, such as `docs/release.md`
-in a sentence, is plain text and doesn't import anything, and Claude Code
-also skips an `@path` written inside a code span or a code block
-(@Claude Code memory). The agent reads a file named in plain text only if
-it decides to open it.
+Claude Code permet à un fichier d’instructions d’importer un autre fichier avec
+une ligne comme `@docs/release.md`. L’importation n’est pas un renvoi. Au
+démarrage de la session, Claude Code lit le fichier importé et met tout son
+texte dans le contexte avec le fichier qui contient l’importation. L’éditeur le
+dit clairement : une importation garde un long fichier bien rangé, sans le
+rendre moins coûteux (@Claude Code memory). Un chemin sans le `@`, comme
+`docs/release.md` dans une phrase, est du texte simple et n’importe rien, et
+Claude Code ignore aussi un `@chemin` écrit dans un bout de code ou dans un bloc
+de code (@Claude Code memory). L’agent ne lit un fichier nommé en texte simple
+que s’il décide de l’ouvrir.
 
-`startup.py` in the lesson folder counts the lines each version of the
-file puts in context at the start of a session. It follows the import rule
-above, simplified. `AGENTS.pruned.md` points at two files with lines such
-as "To cut a release, read `docs/release.md` and follow it step by step".
-`AGENTS.imports.md` is the same file with each of those two lines replaced
-by an import.
+`startup.py`, dans le dossier de la leçon, compte les lignes que chaque version
+du fichier met dans le contexte au début d’une session. Il suit la règle
+d’importation ci-dessus, simplifiée. `AGENTS.pruned.md` renvoie à deux fichiers
+avec des lignes comme « To cut a release, read `docs/release.md` and follow it
+step by step » (pour publier une version, lire `docs/release.md` et le suivre
+étape par étape). `AGENTS.imports.md` est le même fichier, avec chacune de ces
+deux lignes remplacée par une importation.
 
 ```sh
 cd <course-repo>/site/examples/customizing-agents/load-point-prune
@@ -75,247 +80,254 @@ python3 startup.py
 
 <Predict id="lines-at-start" objective="customizing-agents/configures-agent/chooses-load-or-point"
   concepts={['loading-versus-pointing']}
-  context="A script counts the lines an instruction file puts in context when a session starts, adding the lines of every file it imports with @path. AGENTS.long.md has 57 lines and imports nothing. AGENTS.pruned.md has 20 lines and names docs/templates.md (7 lines) and docs/release.md (11 lines) in plain text. AGENTS.imports.md has 20 lines and imports those two files with @docs/templates.md and @docs/release.md."
-  title="How many lines load?" hint="Which of the two short files makes the agent read the two docs files before the first task?"
+  context="Un script compte les lignes qu’un fichier d’instructions met dans le contexte au démarrage d’une session, en ajoutant les lignes de chaque fichier qu’il importe avec @chemin. AGENTS.long.md a 57 lignes et n’importe rien. AGENTS.pruned.md a 20 lignes et nomme docs/templates.md (7 lignes) et docs/release.md (11 lignes) en texte simple. AGENTS.imports.md a 20 lignes et importe ces deux fichiers avec @docs/templates.md et @docs/release.md."
+  title="Combien de lignes sont chargées ?" hint="Lequel des deux fichiers courts fait lire à l’agent les deux fichiers de docs avant la première tâche ?"
   answer={`AGENTS.long.md: 57 lines at start
   AGENTS.imports.md: 38 lines at start
   AGENTS.pruned.md: 20 lines at start`} run="customizing-agents/load-point-prune/startup.py">
-`AGENTS.long.md` has 57 lines and imports nothing. `AGENTS.pruned.md` and
-`AGENTS.imports.md` have 20 lines each. `docs/templates.md` has 7 lines and
-`docs/release.md` has 11. The script prints one line per file, in the
-order long, imports, pruned, in the form `AGENTS.long.md: 57 lines at start`.
-What does it print?
+`AGENTS.long.md` a 57 lignes et n’importe rien. `AGENTS.pruned.md` et
+`AGENTS.imports.md` ont 20 lignes chacun. `docs/templates.md` a 7 lignes et
+`docs/release.md` en a 11. Le script affiche une ligne par fichier, dans l’ordre
+long, imports, pruned, sous la forme `AGENTS.long.md: 57 lines at start`
+(57 lignes au démarrage). Qu’affiche-t-il ?
 </Predict>
 
-The imports version is 20 lines when you read it and 38 lines in the
-context, and the 18 lines it imports are there for the typo fix as well.
-The pointer version is 20 lines in both places. The files in `docs/` cost
-nothing until a task touches a template or cuts a release.
+La version à importations fait 20 lignes quand vous la lisez et 38 lignes dans
+le contexte, et les 18 lignes qu’elle importe sont là aussi pour la correction
+d’une faute de frappe. La version à renvois fait 20 lignes aux deux endroits.
+Les fichiers de `docs/` ne coûtent rien tant qu’une tâche ne touche pas à un
+modèle de document ou ne publie pas de version.
 
-## A pointer says when
+## Un renvoi dit quand
 
-A pointer works only when the agent opens the file it names, and the agent
-decides that from the pointer line and the task in front of it. The vendor
-gives an example of this case. When there is a `CLAUDE.md`,
-`.claude/CLAUDE.md` or `CLAUDE.local.md` in the directory you start Claude
-Code in or in any directory above it, Claude Code doesn't load `AGENTS.md`
-by itself. A `CLAUDE.md` that asks in a sentence for `AGENTS.md` to be
-read then gets it read only when Claude decides to open it
-(@Claude Code memory). So write the pointer as a condition and a place: "Before you change a file in `templates/`, read
-`docs/templates.md`." The condition is what the agent matches against the
-task. A bare "see `docs/`" gives it no task to match, and "always read
-`docs/release.md` first" makes it read the file in every session, which
-costs as much as loading it.
+Un renvoi ne fonctionne que si l’agent ouvre le fichier qu’il nomme, et l’agent
+en décide à partir de la ligne de renvoi et de la tâche qu’il a devant lui.
+L’éditeur donne un exemple de ce cas. Quand il y a un `CLAUDE.md`, un
+`.claude/CLAUDE.md` ou un `CLAUDE.local.md` dans le dossier où vous lancez
+Claude Code ou dans un dossier au-dessus, Claude Code ne charge pas `AGENTS.md`
+de lui-même. Un `CLAUDE.md` qui demande dans une phrase de lire `AGENTS.md` ne le
+fait alors lire que quand Claude décide de l’ouvrir (@Claude Code memory).
+Écrivez donc le renvoi sous la forme d’une condition et d’un endroit : « Avant de
+modifier un fichier de `templates/`, lis `docs/templates.md`. » La condition est
+ce que l’agent compare à la tâche. Un simple « voir `docs/` » ne lui donne aucune
+tâche à comparer, et « lis toujours `docs/release.md` d’abord » lui fait lire le
+fichier dans chaque session, ce qui coûte autant que de le charger.
 
 <Choice id="best-release-pointer" objective="customizing-agents/configures-agent/chooses-load-or-point"
   concepts={['loading-versus-pointing']}
-  context="A team moves a nine-step release procedure out of its instruction file into docs/release.md and keeps one line in the instruction file in its place. The agent is Claude Code, where a line that starts with @ imports the file at start-up."
-  title="Which line should stay?" hint="For each line, when does the agent read the procedure: in every session, only on a release, or never?"
+  context="Une équipe sort de son fichier d’instructions une procédure de publication en neuf étapes pour la mettre dans docs/release.md, et garde une ligne à sa place dans le fichier d’instructions. L’agent est Claude Code, où une ligne qui commence par @ importe le fichier au démarrage."
+  title="Quelle ligne garder ?" hint="Pour chaque ligne, quand l’agent lit-il la procédure : dans chaque session, seulement lors d’une publication, ou jamais ?"
   options={[
-    { text: 'Always read `docs/release.md` before you start work.', why: 'The agent follows that in every session, so the nine steps are in context for every task again.' },
-    { text: 'See also the files in `docs/` for more detail.', why: 'This names no task and no file. The agent has nothing to match a release against, so it may never open the procedure.' },
-    { text: '@docs/release.md', why: 'An import expands the file into the context at start-up, so every session pays for the nine steps.' },
-    { text: 'To cut a release, read `docs/release.md` and follow it.', correct: true },
+    { text: 'Lis toujours `docs/release.md` avant de commencer le travail.', why: 'L’agent suit cette ligne dans chaque session, donc les neuf étapes sont de nouveau dans le contexte de chaque tâche.' },
+    { text: 'Voir aussi les fichiers de `docs/` pour plus de détails.', why: 'Cette ligne ne nomme ni tâche ni fichier. L’agent n’a rien à quoi comparer une publication, donc il peut ne jamais ouvrir la procédure.' },
+    { text: '@docs/release.md', why: 'Une importation déploie le fichier dans le contexte au démarrage, donc chaque session paie les neuf étapes.' },
+    { text: 'Pour publier une version, lis `docs/release.md` et suis-le.', correct: true },
   ]}>
-The procedure should be read when the task is a release, and at no other
-time. Which line should the instruction file keep?
+La procédure doit être lue quand la tâche est une publication, et à aucun autre
+moment. Quelle ligne le fichier d’instructions doit-il garder ?
 </Choice>
 
 <Match id="load-or-point-rows" phase="review" objective="customizing-agents/configures-agent/chooses-load-or-point"
   concepts={['loading-versus-pointing']}
-  context="In Claude Code, the project instruction file is read at the start of every session. A line that starts with @ followed by a path imports that file. A rule file with a paths field loads when the agent works with files that match it."
-  title="When is it in context?" hint="Does Claude Code read the text when the session starts, or does something in the task have to bring it in?"
-  options={['In context from the start of every session', 'In context only when a task calls for it']}
+  context="Dans Claude Code, le fichier d’instructions du projet est lu au début de chaque session. Une ligne qui commence par @ suivi d’un chemin importe ce fichier. Un fichier de règle avec un champ paths se charge quand l’agent travaille sur des fichiers qui lui correspondent."
+  title="Quand est-ce dans le contexte ?" hint="Claude Code lit-il le texte au démarrage de la session, ou faut-il que quelque chose dans la tâche le fasse entrer ?"
+  options={['Dans le contexte dès le début de chaque session', 'Dans le contexte seulement quand une tâche le demande']}
   rows={[
-    { statement: 'A line of text in the project instruction file', option: 0, why: 'When does Claude Code read the instruction file?' },
-    { statement: 'A file the instruction file imports with `@docs/release.md`', option: 0, why: 'What does Claude Code do with an @path line when the session starts?' },
-    { statement: 'A file named in a pointer line, "To cut a release, read docs/release.md"', option: 1, why: 'Who decides to open a file that is only named in a sentence?' },
-    { statement: 'A rule file whose paths field matches only templates/**', option: 1, why: 'What has to happen before a rule with a paths field loads?' },
+    { statement: 'Une ligne de texte du fichier d’instructions du projet', option: 0, why: 'Quand Claude Code lit-il le fichier d’instructions ?' },
+    { statement: 'Un fichier que le fichier d’instructions importe avec `@docs/release.md`', option: 0, why: 'Que fait Claude Code d’une ligne @chemin au démarrage de la session ?' },
+    { statement: 'Un fichier nommé dans une ligne de renvoi, « Pour publier une version, lis docs/release.md »', option: 1, why: 'Qui décide d’ouvrir un fichier seulement nommé dans une phrase ?' },
+    { statement: 'Un fichier de règle dont le champ paths ne correspond qu’à templates/**', option: 1, why: 'Que doit-il se passer avant qu’une règle avec un champ paths se charge ?' },
   ]}
-  rationale="The instruction file and everything it imports load at start-up. A file named in a pointer line and a rule with a paths field load only when the task reaches them.">
-Match each way of giving guidance to when its text is in the agent's
-context.
+  rationale="Le fichier d’instructions et tout ce qu’il importe se chargent au démarrage. Un fichier nommé dans une ligne de renvoi et une règle avec un champ paths ne se chargent que quand la tâche les atteint.">
+Associez chaque façon de guider l’agent au moment où son texte est dans le
+contexte de l’agent.
 </Match>
 
 <MultiChoice id="what-loads-at-start" phase="review" objective="customizing-agents/configures-agent/chooses-load-or-point"
   revision={2} concepts={['loading-versus-pointing']}
-  context="In Claude Code, the project and user instruction files are read at the start of every session. A file in .claude/rules/ loads at start-up unless a paths field scopes it. A skill's instructions load when you call the skill or when the agent decides the task fits it. A CLAUDE.md in a subdirectory is read when the agent first reads, writes or edits a file in that subdirectory."
-  title="What is in context before the first task?" hint="For each one, does the agent read the text whatever the task is?"
+  context="Dans Claude Code, les fichiers d’instructions du projet et de l’utilisateur sont lus au début de chaque session. Un fichier de .claude/rules/ se charge au démarrage, sauf si un champ paths en limite la portée. Les instructions d’une skill se chargent quand vous appelez la skill ou quand l’agent décide que la tâche lui convient. Un CLAUDE.md dans un sous-dossier est lu quand l’agent lit, écrit ou modifie pour la première fois un fichier de ce sous-dossier."
+  title="Qu’y a-t-il dans le contexte avant la première tâche ?" hint="Pour chacun, l’agent lit-il le texte quelle que soit la tâche ?"
   options={[
-    { text: 'A rule file in `.claude/rules/` with no `paths` field', correct: true },
-    { text: 'The instructions of a skill for writing database migrations', why: 'A skill loads when it is called or when the agent decides the task fits it. A task without a migration leaves it out.' },
-    { text: 'Your personal `~/.claude/CLAUDE.md`', correct: true },
-    { text: 'The `CLAUDE.md` in `services/web/` when the task is in another service', why: 'A subdirectory file is read only once the agent works on a file in that subdirectory.' },
+    { text: 'Un fichier de règle de `.claude/rules/` sans champ `paths`', correct: true },
+    { text: 'Les instructions d’une skill pour écrire des migrations de base de données', why: 'Une skill se charge quand on l’appelle ou quand l’agent décide que la tâche lui convient. Une tâche sans migration la laisse de côté.' },
+    { text: 'Votre `~/.claude/CLAUDE.md` personnel', correct: true },
+    { text: 'Le `CLAUDE.md` de `services/web/` quand la tâche concerne un autre service', why: 'Le fichier d’un sous-dossier n’est lu qu’une fois que l’agent travaille sur un fichier de ce sous-dossier.' },
   ]}>
-Which two of these are in the agent's context at the start of every
-session, whatever the task is? Select two.
+Lesquels de ces éléments sont dans le contexte de l’agent au début de chaque
+session, quelle que soit la tâche ? Choisissez-en deux.
 </MultiChoice>
 
-## Cut what does nothing
+## Couper ce qui ne sert à rien
 
-Pointing makes the file shorter. **Pruning instructions** makes it shorter
-again, by deleting lines that no task needs. The vendor's test asks of
-each line whether the agent would get something wrong without it, and a
-line the agent wouldn't miss goes (@Claude Code best practices). The
-lines that fail the test are usually one of these.
+Renvoyer raccourcit le fichier. **Élaguer les instructions** le raccourcit
+encore, en supprimant les lignes dont aucune tâche n’a besoin. Le test de
+l’éditeur demande pour chaque ligne si l’agent se tromperait sur quelque chose
+sans elle, et une ligne qui ne manquerait pas à l’agent disparaît
+(@Claude Code best practices). Les lignes qui échouent à ce test entrent en
+général dans l’une de ces catégories.
 
-**A rule the agent follows anyway.** "Write clean, readable,
-well-documented code" describes what the agent does without it, and so
-does a line about a convention the agent already applies, such as type
-hints in a code base that has them everywhere.
+**Une règle que l’agent suit de toute façon.** « Écris du code propre, lisible
+et bien documenté » décrit ce que fait l’agent sans cette ligne, tout comme une
+ligne sur une convention que l’agent applique déjà, par exemple les annotations
+de type dans un code qui en a partout.
 
-**A fact the code already states.** The formatter's configuration sets the
-quote style and the line length, so "use double quotes" and "keep lines
-under 100 characters" repeat it. The dependency list and the Python
-version are in `pyproject.toml`. The paragraph about the modules says only
-what the folder names already say. It doesn't name a generated directory and
-doesn't say where new code goes, which are the parts of a structure
-section that the code doesn't show. A copy of a fact can also go stale
-while the code changes, and then the agent has two sources that disagree.
+**Un fait que le code dit déjà.** La configuration de l’outil de mise en forme
+fixe le style des guillemets et la longueur des lignes, donc « utilise des
+guillemets doubles » et « garde les lignes sous 100 caractères » la répètent.
+La liste des dépendances et la version de Python sont dans `pyproject.toml`. Le
+paragraphe sur les modules ne dit que ce que disent déjà les noms des dossiers.
+Il ne nomme aucun dossier généré et ne dit pas où va le nouveau code, alors que
+ce sont les parties d’une section sur la structure que le code ne montre pas.
+Une copie d’un fait peut aussi devenir périmée pendant que le code change, et
+l’agent a alors deux sources qui se contredisent.
 
-**A rule for a problem that has gone away.** "Keep the PDF library below
-version 52" was right when the crash happened. The project has used
-version 62 for a year, and the line now asks the agent to downgrade.
+**Une règle pour un problème qui a disparu.** « Garde la bibliothèque PDF sous
+la version 52 » était juste quand le plantage a eu lieu. Le projet utilise la
+version 62 depuis un an, et la ligne demande maintenant à l’agent de revenir à
+une version antérieure.
 
-**A line that contradicts another.** The long file says `uv run pytest`
-under Commands and `python -m pytest` under Rules. Given two lines that
-disagree, Claude may pick either one (@Claude Code memory).
-Resolve a conflict by keeping one version, and keep what the cut line meant
-as well. The second line also said *when* to run the tests. The pruned
-file says that next to the right command.
+**Une ligne qui en contredit une autre.** Le long fichier dit `uv run pytest`
+sous Commands et `python -m pytest` sous Rules. Devant deux lignes qui se
+contredisent, Claude peut choisir l’une ou l’autre (@Claude Code memory).
+Résolvez une contradiction en gardant une seule version, et gardez aussi ce que
+voulait dire la ligne coupée. La seconde ligne disait aussi *quand* lancer les
+tests. Le fichier élagué le dit, à côté de la bonne commande.
 
-Claude Code can look for some of these lines for you. `/doctor
-prompt-audit` reports instructions that contradict each other or name
-files and commands that don't exist, and it changes nothing until you ask
-it to (@Claude Code memory). The audit finds candidates, and you still
-make the call on each line.
+Claude Code peut chercher certaines de ces lignes pour vous. `/doctor
+prompt-audit` signale les instructions qui se contredisent ou qui nomment des
+fichiers et des commandes qui n’existent pas, et il ne change rien tant que vous
+ne le lui demandez pas (@Claude Code memory). L’audit trouve des candidats, et
+c’est toujours vous qui tranchez pour chaque ligne.
 
 <Sort id="keep-point-or-cut" objective="customizing-agents/configures-agent/prunes-instructions"
   revision={2} concepts={['pruning-instructions', 'loading-versus-pointing']}
-  context="The lines come from a long instruction file for a Python service that renders invoices and sends them by email. Without a test command in the file, the agent has guessed wrong ones. The formatter's configuration sets double quotes. The project has used version 62 of its PDF library for a year. The agent has committed straight to the main branch before, and nearly every task ends in a commit. Releases happen once a month, and templates change a few times a year."
-  title="Keep it, point at it, or cut it?" hint="For each line: would the agent get something wrong if the line were gone, and if so, does nearly every task need it?"
-  buckets={['Keep in the file', 'Move behind a pointer', 'Cut']}
+  context="Les lignes viennent du long fichier d’instructions d’un service Python qui produit des factures et les envoie par courriel. Sans commande de test dans le fichier, l’agent en a deviné de fausses. La configuration de l’outil de mise en forme impose des guillemets doubles. Le projet utilise la version 62 de sa bibliothèque PDF depuis un an. L’agent a déjà committé directement sur la branche principale, et presque chaque tâche se termine par un commit. Les publications ont lieu une fois par mois, et les modèles de document changent quelques fois par an."
+  title="La garder, y renvoyer ou la couper ?" hint="Pour chaque ligne : l’agent se tromperait-il sur quelque chose si la ligne disparaissait, et si oui, presque chaque tâche en a-t-elle besoin ?"
+  buckets={['La garder dans le fichier', 'La placer derrière un renvoi', 'La couper']}
   items={[
-    { text: 'Never commit to `main`. Branch as `feat/...` or `fix/...`.', bucket: 0 },
-    { text: 'Test: `uv run pytest`', bucket: 0 },
-    { text: 'The nine steps for cutting a release', bucket: 1 },
-    { text: 'Regenerate the golden files for templates with `uv run pytest --update-golden`', bucket: 1 },
-    { text: 'Use double quotes for strings.', bucket: 2 },
-    { text: 'Keep the PDF library below version 52, which crashes on right-to-left text.', bucket: 2 },
-    { text: 'Write clean, readable, well-documented code.', bucket: 2 },
+    { text: 'Ne jamais committer sur `main`. Créer des branches `feat/...` ou `fix/...`.', bucket: 0 },
+    { text: 'Tests : `uv run pytest`', bucket: 0 },
+    { text: 'Les neuf étapes de la publication d’une version', bucket: 1 },
+    { text: 'Régénérer les fichiers de référence des modèles avec `uv run pytest --update-golden`', bucket: 1 },
+    { text: 'Utiliser des guillemets doubles pour les chaînes.', bucket: 2 },
+    { text: 'Garder la bibliothèque PDF sous la version 52, qui plante sur le texte de droite à gauche.', bucket: 2 },
+    { text: 'Écrire du code propre, lisible et bien documenté.', bucket: 2 },
   ]} />
 
-## Watch the sessions after the cut
+## Observer les sessions après la coupe
 
-A pruning pass is a change to a prompt, and you test it the way you test
-any prompt change: run the usual tasks and watch what the agent does. The
-vendor asks you to look after the file the way you look after code. Cut
-lines from it on a schedule, and check in later sessions whether the agent
-acts differently (@Claude Code best practices). When a session goes wrong after the cut,
-the cut line that would have stopped it comes back, and only that line.
+Un passage d’élagage est une modification d’un prompt, et vous le testez comme
+toute modification d’un prompt : lancez les tâches habituelles et regardez ce
+que fait l’agent. L’éditeur vous demande d’entretenir le fichier comme vous
+entretenez le code. Coupez-y des lignes à intervalles réguliers, et vérifiez
+dans les sessions suivantes si l’agent agit différemment
+(@Claude Code best practices). Quand une session tourne mal après la coupe, la
+ligne coupée qui l’aurait empêché revient, et seulement cette ligne.
 
 <Scenario id="after-the-cut" objective="customizing-agents/configures-agent/prunes-instructions"
   concepts={['pruning-instructions']}
-  context="A developer pruned a 57-line instruction file to 20 lines. One cut line said to run the tests with the wrong command before finishing, and it was cut because it contradicted the right test command elsewhere in the file. In the next five sessions the agent twice said a task was done without running the tests. Nothing else went wrong."
-  title="Two sessions skipped the tests" hint="Which cut line was doing a job, and which part of it?"
+  context="Un développeur a élagué un fichier d’instructions de 57 lignes à 20 lignes. Une ligne coupée disait de lancer les tests avec la mauvaise commande avant de terminer, et elle a été coupée parce qu’elle contredisait la bonne commande de test ailleurs dans le fichier. Dans les cinq sessions suivantes, l’agent a dit deux fois qu’une tâche était terminée sans lancer les tests. Rien d’autre n’a mal tourné."
+  title="Deux sessions ont sauté les tests" hint="Quelle ligne coupée faisait un travail, et quelle partie de cette ligne ?"
   options={[
-    { text: 'Put the whole 57-line file back, because the cut broke something.', consequence: 'The tests run again, and so do the lines that did nothing. The wrong test command is back as well, so the conflict returns.' },
-    { text: 'Add "IMPORTANT" to every rule in the file, so the agent skips none of them.', consequence: 'A mark on every line makes no line special, and the file still never says to run the tests before finishing.' },
-    { text: 'Add back when to run the tests, next to the right test command.', correct: true, consequence: 'The file grows by a few words. In the next sessions the agent runs the tests before it says a task is done.' },
-    { text: 'Leave the file as it is. Two sessions out of five are noise.', consequence: 'The agent keeps finishing without tests in some sessions. Without that line the agent got something wrong, which is the reason to keep it.' },
+    { text: 'Remettre tout le fichier de 57 lignes, parce que la coupe a cassé quelque chose.', consequence: 'Les tests sont de nouveau lancés, et les lignes qui ne servaient à rien reviennent aussi. La mauvaise commande de test est de retour elle aussi, donc la contradiction revient.' },
+    { text: 'Ajouter « IMPORTANT » à chaque règle du fichier, pour que l’agent n’en saute aucune.', consequence: 'Une marque sur chaque ligne ne distingue plus aucune ligne, et le fichier ne dit toujours pas de lancer les tests avant de terminer.' },
+    { text: 'Remettre quand lancer les tests, à côté de la bonne commande de test.', correct: true, consequence: 'Le fichier gagne quelques mots. Dans les sessions suivantes, l’agent lance les tests avant de dire qu’une tâche est terminée.' },
+    { text: 'Laisser le fichier tel quel. Deux sessions sur cinq, c’est du bruit.', consequence: 'L’agent continue de terminer sans tests dans certaines sessions. Sans cette ligne, l’agent se trompait, et c’est la raison de la garder.' },
   ]}>
-Two of five sessions after the cut ended without a test run. What do you
-change?
+Deux des cinq sessions après la coupe se sont terminées sans lancer les tests.
+Que changez-vous ?
 </Scenario>
 
 <Choice id="the-line-test" phase="review" objective="customizing-agents/configures-agent/prunes-instructions"
   concepts={['pruning-instructions']}
-  context="A developer goes through a coding agent's instruction file line by line to make it shorter, and needs one question to decide for each line whether it stays."
-  title="Which question decides?" hint="What is the instruction file for, from the agent's side?"
+  context="Une développeuse parcourt ligne par ligne le fichier d’instructions d’un agent de code pour le raccourcir, et a besoin d’une seule question pour décider si chaque ligne reste."
+  title="Quelle question tranche ?" hint="À quoi sert le fichier d’instructions, du point de vue de l’agent ?"
   options={[
-    { text: 'Is the line still true for the project today?', why: 'A true line can still do nothing. "Write clean code" is true and changes no behavior.' },
-    { text: 'Would a new person on the team find the line useful?', why: 'A new person also wants a tour of the modules and the project history, and the agent reads those from the code and the git log.' },
-    { text: 'Would the agent get something wrong if the line were gone?', correct: true },
-    { text: 'Is the line shorter than twenty words?', why: 'Length says nothing about whether a line does a job. A short line can be noise, and a longer one can stop a real mistake.' },
+    { text: 'La ligne est-elle encore vraie pour le projet aujourd’hui ?', why: 'Une ligne vraie peut quand même ne servir à rien. « Écris du code propre » est vrai et ne change aucun comportement.' },
+    { text: 'Une nouvelle personne de l’équipe trouverait-elle la ligne utile ?', why: 'Une nouvelle personne veut aussi une visite des modules et l’histoire du projet, et l’agent les lit dans le code et dans le journal git.' },
+    { text: 'L’agent se tromperait-il sur quelque chose si la ligne disparaissait ?', correct: true },
+    { text: 'La ligne fait-elle moins de vingt mots ?', why: 'La longueur ne dit rien de l’utilité d’une ligne. Une ligne courte peut être du bruit, et une plus longue peut empêcher une vraie erreur.' },
   ]}>
-Which question decides whether a line stays in the file?
+Quelle question décide si une ligne reste dans le fichier ?
 </Choice>
 
 <MultiChoice id="which-lines-go" phase="review" objective="customizing-agents/configures-agent/prunes-instructions"
   concepts={['pruning-instructions']}
-  context="A Python service has an instruction file for its coding agent. Its formatter's configuration sets the line length to 100. The service has used version 62 of its PDF library for a year. The agent has committed to the main branch before, and it has added retries around mail calls that the mail queue already retries."
-  title="Which lines go?" hint="For each line, what does the agent do if the line is gone?"
+  context="Un service Python a un fichier d’instructions pour son agent de code. La configuration de son outil de mise en forme fixe la longueur des lignes à 100. Le service utilise la version 62 de sa bibliothèque PDF depuis un an. L’agent a déjà committé sur la branche principale, et il a déjà ajouté de nouvelles tentatives autour des appels d’envoi de courriel que la file d’attente réessaie déjà."
+  title="Quelles lignes disparaissent ?" hint="Pour chaque ligne, que fait l’agent si la ligne disparaît ?"
   options={[
-    { text: 'Keep lines under 100 characters.', correct: true },
-    { text: 'Never commit to `main`. Branch as `feat/...` or `fix/...`.', why: 'The agent has committed to main before, so removing the line brings that mistake back.' },
-    { text: 'Do not add retries around SMTP calls. The queue already retries.', why: 'The agent has added those retries before. The line stops a real mistake.' },
-    { text: 'Keep the PDF library below version 52.', correct: true },
+    { text: 'Garder les lignes sous 100 caractères.', correct: true },
+    { text: 'Ne jamais committer sur `main`. Créer des branches `feat/...` ou `fix/...`.', why: 'L’agent a déjà committé sur main, donc retirer la ligne fait revenir cette erreur.' },
+    { text: 'Ne pas ajouter de nouvelles tentatives autour des appels SMTP. La file réessaie déjà.', why: 'L’agent a déjà ajouté ces nouvelles tentatives. La ligne empêche une vraie erreur.' },
+    { text: 'Garder la bibliothèque PDF sous la version 52.', correct: true },
   ]}>
-Which two of these can you cut from the file? Select two.
+Lesquelles de ces règles pouvez-vous couper du fichier ? Choisissez-en deux.
 </MultiChoice>
 
-<Pitfall title="Pointing at the rule every task needs">
-A team prunes its file and moves the branch rules into `docs/git.md`,
-behind the line "for branch naming, read `docs/git.md`". A week later the
-agent commits a fix straight to `main`. The task was a small fix, nothing
-about it mentioned branch naming, and the agent didn't open the file. Keep
-a rule that applies to nearly every task in the instruction file itself.
-Pointing is for detail that only some tasks need.
+<Pitfall title="Renvoyer la règle dont chaque tâche a besoin">
+Une équipe élague son fichier et déplace les règles de branches dans
+`docs/git.md`, derrière la ligne « pour le nommage des branches, lis
+`docs/git.md` ». Une semaine plus tard, l’agent committe une correction
+directement sur `main`. La tâche était une petite correction, rien en elle ne
+parlait du nommage des branches, et l’agent n’a pas ouvert le fichier. Gardez
+dans le fichier d’instructions lui-même une règle qui s’applique à presque chaque
+tâche. Le renvoi sert au détail dont seules certaines tâches ont besoin.
 </Pitfall>
 
-<Exercise stretch="Do the same pass on a copy of an instruction file from a project you work in, on a branch of its own. Then run three of your usual tasks with the pruned file and add back only the lines whose absence caused a mistake.">
-Practicing the line test on a file whose facts are given makes it easier
-to use on a file you care about, where the facts are yours to find. Copy the long file to a scratch
-folder outside the course repository. You edit the copy and leave the
-original alone:
+<Exercise stretch="Faites le même passage sur une copie du fichier d’instructions d’un projet sur lequel vous travaillez, sur une branche à part. Lancez ensuite trois de vos tâches habituelles avec le fichier élagué, et ne remettez que les lignes dont l’absence a causé une erreur.">
+S’exercer au test des lignes sur un fichier dont les faits sont donnés le rend
+plus facile à appliquer à un fichier qui vous importe, où c’est à vous de
+trouver les faits. Copiez le long fichier dans un dossier de travail hors du
+dépôt du cours. Vous modifiez la copie et laissez l’original intact :
 
 ```sh
 mkdir -p ~/prune-me/docs
 cp <course-repo>/site/examples/customizing-agents/load-point-prune/AGENTS.long.md ~/prune-me/AGENTS.md
 ```
 
-Go through `~/prune-me/AGENTS.md` line by line and mark each line *keep*,
-*point* or *cut*. Use these facts about the project. The formatter's
-configuration sets double quotes and a line length of 100. Every public
-function already has type hints. The project has used version 62 of its
-PDF library for a year. The agent has committed to `main` before, has
-edited `uv.lock` by hand, and has added retries around SMTP calls. Move
-each *point* group into its own file under `~/prune-me/docs/`, and replace
-it in `AGENTS.md` with one line that says when to read it and where it is.
-Delete every *cut* line. Then count what you have left:
+Parcourez `~/prune-me/AGENTS.md` ligne par ligne et marquez chaque ligne
+*garder*, *renvoyer* ou *couper*. Utilisez ces faits sur le projet. La
+configuration de l’outil de mise en forme fixe des guillemets doubles et une
+longueur de ligne de 100. Chaque fonction publique a déjà des annotations de
+type. Le projet utilise la version 62 de sa bibliothèque PDF depuis un an.
+L’agent a déjà committé sur `main`, a déjà modifié `uv.lock` à la main, et a déjà
+ajouté de nouvelles tentatives autour des appels SMTP. Déplacez chaque groupe
+*renvoyer* dans son propre fichier sous `~/prune-me/docs/`, et remplacez-le dans
+`AGENTS.md` par une ligne qui dit quand le lire et où il se trouve. Supprimez
+chaque ligne *couper*. Comptez ensuite ce qui reste :
 
 ```sh
 wc -l ~/prune-me/AGENTS.md ~/prune-me/docs/*.md
 ```
 
-A good result is about 20 lines in `AGENTS.md`, with every rule the agent has broken
-still in it, the test command written once and correctly, and no `@`
-imports. Compare it with `AGENTS.pruned.md`, `docs/templates.md` and
-`docs/release.md` in the lesson folder, which are one answer, not the only
-one. Where your choice and the model answer differ on a line, say what
-mistake the agent would make without that line, or why it would make
-none. Which of your
-cuts would you check first in a real session, and why that one?
+Un bon résultat compte environ 20 lignes dans `AGENTS.md`, avec chaque règle que
+l’agent a enfreinte toujours présente, la commande de test écrite une fois et
+correctement, et aucune importation `@`. Comparez-le avec `AGENTS.pruned.md`,
+`docs/templates.md` et `docs/release.md` dans le dossier de la leçon, qui sont
+une réponse possible parmi d’autres. Là où votre choix et la réponse modèle
+diffèrent sur une ligne, dites quelle erreur l’agent ferait sans cette ligne, ou
+pourquoi il n’en ferait aucune. Laquelle de vos coupes vérifieriez-vous en
+premier dans une vraie session, et pourquoi celle-là ?
 </Exercise>
 
 <Recap>
-1. Every line in an instruction file is in context for every task, and a
-   long file gets followed less well than a short one (@Claude Code memory).
-2. Load what nearly every task needs, and point at the rest with one line
-   that says when to read the file and where it is.
-3. An `@path` import expands the file into the context at start-up, so it
-   makes the file tidier without making it cheaper (@Claude Code memory).
-4. Prune by asking of each line whether the agent would get something
-   wrong without it.
-   Cut rules the agent follows anyway, facts the code states, problems
-   that have gone away, and one of every pair of lines that contradict
-   each other (@Claude Code best practices).
-5. After a cut, run the usual tasks and add back only the line whose
-   absence caused a mistake.
+1. Chaque ligne d’un fichier d’instructions est dans le contexte de chaque
+   tâche, et un long fichier est moins bien suivi qu’un court
+   (@Claude Code memory).
+2. Chargez ce dont presque chaque tâche a besoin, et renvoyez au reste avec une
+   ligne qui dit quand lire le fichier et où il se trouve.
+3. Une importation `@chemin` déploie le fichier dans le contexte au démarrage,
+   donc elle range le fichier sans le rendre moins coûteux (@Claude Code memory).
+4. Élaguez en vous demandant pour chaque ligne si l’agent se tromperait sur
+   quelque chose sans elle. Coupez les règles que l’agent suit de toute façon,
+   les faits que le code dit déjà, les problèmes qui ont disparu, et une ligne de
+   chaque paire de lignes qui se contredisent (@Claude Code best practices).
+5. Après une coupe, lancez les tâches habituelles et ne remettez que la ligne
+   dont l’absence a causé une erreur.
 </Recap>
 
 <Habit id="delete-one-when-you-add-one">
-Each time you add a line to an instruction file, look through the rest of
-it for a line that no longer prevents a mistake. If you find one, delete
-it.
+Chaque fois que vous ajoutez une ligne à un fichier d’instructions, cherchez
+dans le reste du fichier une ligne qui n’empêche plus aucune erreur. Si vous en
+trouvez une, supprimez-la.
 </Habit>

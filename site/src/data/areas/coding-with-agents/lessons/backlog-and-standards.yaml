@@ -16,7 +16,7 @@ assumes:
     section: avant-de-demander-une-revue
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
-    section: what-belongs-in-it
+    section: ce-qui-a-sa-place-dedans
   - objective: coding-with-agents/works-in-team/sets-team-practice
     lesson: coding-with-agents/ci-and-hooks
     section: pour-aller-plus-loin-en-équipe

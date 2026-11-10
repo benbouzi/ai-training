@@ -378,8 +378,8 @@ TABLE: list[tuple[str, str, str, bool]] = [
     ),
     (
         S + "checkpoint-logic.ts",
-        "return `Passed ${passed} of ${answered} so far.`;",
-        "return `${passed} réussie(s) sur ${answered} pour l’instant.`;",
+        "if (answered < total) return `Passed ${passed} of ${answered} so far.`;",
+        "if (answered < total) return `${passed} sur ${answered} réussie${passed > 1 ? 's' : ''} pour l’instant.`;",
         False,
     ),
     (
@@ -391,7 +391,7 @@ TABLE: list[tuple[str, str, str, bool]] = [
     (
         S + "checkpoint-logic.ts",
         "return `Passed ${passed} of ${total}. ${tail}`;",
-        "return `${passed} réussie(s) sur ${total}. ${tail}`;",
+        "return `${passed} sur ${total} réussie${passed > 1 ? 's' : ''}. ${tail}`;",
         False,
     ),
     (S + "checkpoint-logic.ts", "label: 'retired' };", "label: 'acquise' };", False),
@@ -481,6 +481,177 @@ TABLE: list[tuple[str, str, str, bool]] = [
         "return `Sources vérifiées le ${longDate(sourcesChecked)}. ${due}`;",
         False,
     ),
+    # Widget du fichier d’instructions (customizing-agents/instructions)
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "Tick what is true for your project and fill in the short fields. The\n      file on the right updates as you type.",
+        "Cochez ce qui est vrai pour votre projet et remplissez les champs courts.\n      Le fichier de droite se met à jour pendant que vous tapez.",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<span>Project name</span>",
+        "<span>Nom du projet</span>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<span>One line: what it is</span>",
+        "<span>En une ligne : ce que c’est</span>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        'placeholder="Sends monthly invoices as PDF over SMTP."',
+        'placeholder="Envoie les factures mensuelles en PDF par SMTP."',
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<legend>Commands</legend>",
+        "<legend>Commandes</legend>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<span>Language and runtime</span>",
+        "<span>Langage et environnement d’exécution</span>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        'placeholder="Python 3.13, dependencies via uv"',
+        'placeholder="Python 3.13, dépendances avec uv"',
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<span>Test command</span>",
+        "<span>Commande de test</span>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<span>Lint and format command</span>",
+        "<span>Commande de style et de mise en forme</span>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<legend>Rules</legend>",
+        "<legend>Règles</legend>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<span>Branch rule</span>",
+        "<span>Règle de branche</span>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        'placeholder="Never commit to main; branch as feat/… or fix/…"',
+        'placeholder="Ne jamais committer sur main, créer des branches feat/… ou fix/…"',
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<span>Files never to touch</span>",
+        "<span>Fichiers à ne jamais modifier</span>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        'placeholder="migrations/, uv.lock, anything under vendor/"',
+        'placeholder="migrations/, uv.lock, tout ce qui est sous vendor/"',
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        "<span>A recurring mistake to stop</span>",
+        "<span>Une erreur récurrente à arrêter</span>",
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        'placeholder="Do not add retries around SMTP calls; the queue already retries."',
+        'placeholder="Ne pas ajouter de nouvelles tentatives autour des appels SMTP : la file d’attente réessaie déjà."',
+        False,
+    ),
+    (
+        "src/components/widgets/InstructionsBuilder.astro",
+        'class="ib-copy">Copy</button>',
+        'class="ib-copy">Copier</button>',
+        False,
+    ),
+    (
+        S + "instructions-builder-logic.ts",
+        "input.name || 'my-project'",
+        "input.name || 'mon-projet'",
+        False,
+    ),
+    (
+        S + "instructions-builder-logic.ts",
+        "`- Runtime: ${valueOr(l.runtime, '<language and version>')}`",
+        "`- Environnement : ${valueOr(l.runtime, '<langage et version>')}`",
+        False,
+    ),
+    (
+        S + "instructions-builder-logic.ts",
+        "`- Test: \\`${valueOr(l.test, '<test command>')}\\``",
+        "`- Tests : \\`${valueOr(l.test, '<commande de test>')}\\``",
+        False,
+    ),
+    (
+        S + "instructions-builder-logic.ts",
+        "`- Lint and format: \\`${valueOr(l.lint, '<lint command>')}\\``",
+        "`- Style et mise en forme : \\`${valueOr(l.lint, '<commande de style>')}\\``",
+        False,
+    ),
+    (S + "instructions-builder-logic.ts", "'## Commands'", "'## Commandes'", False),
+    (
+        S + "instructions-builder-logic.ts",
+        "valueOr(l.branch, '<branch rule>')",
+        "valueOr(l.branch, '<règle de branche>')",
+        False,
+    ),
+    (
+        S + "instructions-builder-logic.ts",
+        "`- Never edit: ${valueOr(l.notouch, '<paths>')}`",
+        "`- Ne jamais modifier : ${valueOr(l.notouch, '<chemins>')}`",
+        False,
+    ),
+    (
+        S + "instructions-builder-logic.ts",
+        "'<the mistake to stop, and what to do instead>'",
+        "'<l’erreur à arrêter, et quoi faire à la place>'",
+        False,
+    ),
+    (S + "instructions-builder-logic.ts", "'## Rules'", "'## Règles'", False),
+    (
+        S + "instructions-builder-logic.ts",
+        "/** The line count next to the file name, counting only lines with text: `1 non-empty line`, `7 non-empty lines`. */",
+        "/** The line count next to the file name, counting only lines with text: `1 ligne non vide`, `7 lignes non vides`. French takes the singular for 0 and 1. */",
+        False,
+    ),
+    (
+        S + "instructions-builder-logic.ts",
+        "return `${n} non-empty line${n === 1 ? '' : 's'}`;",
+        "return n > 1 ? `${n} lignes non vides` : `${n} ligne non vide`;",
+        False,
+    ),
+    (
+        S + "instructions-builder.ts",
+        "copy.textContent = 'Copied';",
+        "copy.textContent = 'Copié';",
+        False,
+    ),
+    (
+        S + "instructions-builder.ts",
+        "copy.textContent = 'Select and copy';",
+        "copy.textContent = 'Sélectionnez et copiez';",
+        False,
+    ),
 ]
 
 # Remplacements propres aux tests, pour les chaînes construites dans le code.
@@ -491,6 +662,51 @@ TESTS_SEULS: list[tuple[str, str]] = [
     ("'Correct.'", "'Juste.'"),
     ("'Correct order.'", "'Ordre juste.'"),
     ("'Not the right order yet.'", "'Pas encore le bon ordre.'"),
+]
+
+# Remplacements propres à un fichier de test, pour les chaînes trop courantes
+# pour être remplacées dans tous les tests (comme « Copy »).
+TESTS_PAR_FICHIER: list[tuple[str, str, str]] = [
+    *[
+        (f, a, n)
+        for f in (
+            "tests/scripts/instructions-builder.test.ts",
+            "tests/scripts/instructions-builder-logic.test.ts",
+        )
+        for a, n in [
+            ("my-project", "mon-projet"),
+            ("## Commands", "## Commandes"),
+            ("## Rules", "## Règles"),
+            ("- Runtime: <language and version>", "- Environnement : <langage et version>"),
+            ("- Test: `", "- Tests : `"),
+            ("- Lint and format: `", "- Style et mise en forme : `"),
+            ("<test command>", "<commande de test>"),
+            ("<lint command>", "<commande de style>"),
+            ("<branch rule>", "<règle de branche>"),
+            ("- Never edit: ", "- Ne jamais modifier : "),
+            ("<paths>", "<chemins>"),
+            (
+                "<the mistake to stop, and what to do instead>",
+                "<l’erreur à arrêter, et quoi faire à la place>",
+            ),
+            ("'5 non-empty lines'", "'5 lignes non vides'"),
+            ("'2 non-empty lines'", "'2 lignes non vides'"),
+            ("'3 non-empty lines'", "'3 lignes non vides'"),
+            ("'1 non-empty line'", "'1 ligne non vide'"),
+            ("'0 non-empty lines'", "'0 ligne non vide'"),
+            (
+                "uses the singular for one line and the plural for none",
+                "uses the singular for one line or none, as French does",
+            ),
+        ]
+    ],
+    ("tests/scripts/instructions-builder.test.ts", "toBe('Copied')", "toBe('Copié')"),
+    (
+        "tests/scripts/instructions-builder.test.ts",
+        "toBe('Select and copy')",
+        "toBe('Sélectionnez et copiez')",
+    ),
+    ("tests/scripts/instructions-builder.test.ts", "toBe('Copy')", "toBe('Copier')"),
 ]
 
 
@@ -517,6 +733,12 @@ def main() -> int:
         if nouveau != texte:
             test.write_text(nouveau, encoding="utf-8")
             print(f"test mis à jour : {test.relative_to(RACINE)}")
+    for rel, ancien, neuf in TESTS_PAR_FICHIER:
+        chemin = SITE / rel
+        texte = chemin.read_text(encoding="utf-8")
+        if ancien in texte:
+            chemin.write_text(texte.replace(ancien, neuf), encoding="utf-8")
+            print(f"test mis à jour : {chemin.relative_to(RACINE)}")
     return 1 if manquants else 0
 
 

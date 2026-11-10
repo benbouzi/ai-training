@@ -1,8 +1,9 @@
 id: customizing-agents/mcp-hardening
-title: Hardening a tool connection
+title: Renforcer une connexion d’outil
 description: >-
-  Give a notes server a read-only token that expires in an hour, turn on its tool-call log, plant an
-  instruction in one note, and read in the log which control stopped the send it asked for.
+  Donnez à un serveur de notes un jeton en lecture seule qui expire au bout d’une heure, activez
+  son journal des appels d’outil, plantez une instruction dans une note, et lisez dans le journal
+  quel contrôle a arrêté l’envoi qu’elle demandait.
 mode: tutorial
 covers: customizing-agents/mcp
 serves: [customizing-agents/connects-tools-safely/hardens-a-connection]
@@ -18,13 +19,14 @@ sources-checked: 2026-09-26
 review-by: 2027-03-26
 after: [customizing-agents/mcp-first-server]
 shorts:
-  - Tool poisoning across servers, one worked example
+  - L’empoisonnement d’outils d’un serveur à l’autre, avec un exemple détaillé
 exercise:
   kind: do
   brief: >-
-    Give the fixture server a read-only, short-lived token, turn on tool-call logging, plant an
-    instruction in one note that asks the agent to send the note to an outside address, and show in
-    the log or the transcript that the send was refused or asked about.
+    Donnez au serveur de l’exemple un jeton en lecture seule et de courte durée, activez la
+    journalisation des appels d’outil, plantez dans une note une instruction qui demande à l’agent
+    d’envoyer la note à une adresse extérieure, et montrez dans le journal ou la transcription que
+    l’envoi a été refusé ou a fait l’objet d’une demande.
 sources:
   - MCP specification
   - MCP deprecated features

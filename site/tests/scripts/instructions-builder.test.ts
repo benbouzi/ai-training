@@ -64,9 +64,9 @@ describe('mountInstructionsBuilders', () => {
 	it('draws the first file from the default ticks, with the rule fields disabled', () => {
 		expect(mountInstructionsBuilders(document)).toBe(1);
 		expect(code()).toBe(
-			'# my-project\n\n## Commands\n\n- Runtime: <language and version>\n- Test: `<test command>`\n- Lint and format: `<lint command>`\n',
+			'# mon-projet\n\n## Commandes\n\n- Environnement : <langage et version>\n- Tests : `<commande de test>`\n- Style et mise en forme : `<commande de style>`\n',
 		);
-		expect(count()).toBe('5 non-empty lines');
+		expect(count()).toBe('5 lignes non vides');
 		expect(field('.ib-runtime').disabled).toBe(false);
 		expect(field('.ib-branch').disabled).toBe(true);
 		expect(field('.ib-notouch').disabled).toBe(true);
@@ -78,7 +78,7 @@ describe('mountInstructionsBuilders', () => {
 		const [first, second] = document.querySelectorAll(ROOT_SELECTOR);
 		const firstCode = first?.querySelector('.ib-code');
 		const before = firstCode?.textContent;
-		expect(before).toContain('# my-project');
+		expect(before).toContain('# mon-projet');
 		const name = second?.querySelector('.ib-name') as HTMLInputElement;
 		name.value = 'second-project';
 		name.dispatchEvent(new window.Event('input', { bubbles: true }) as unknown as Event);
@@ -100,19 +100,19 @@ describe('mountInstructionsBuilder', () => {
 		type('.ib-purpose', 'Sends invoices.');
 		type('.ib-test', 'uv run pytest');
 		expect(code()).toContain('# invoice-mailer\n\nSends invoices.\n');
-		expect(code()).toContain('- Test: `uv run pytest`');
+		expect(code()).toContain('- Tests : `uv run pytest`');
 	});
 	it('enables a field when its box is ticked and drops its line when unticked', () => {
 		mountInstructionsBuilder(builder());
 		type('.ib-has-branch', true);
 		expect(field('.ib-branch').disabled).toBe(false);
-		expect(code()).toContain('## Rules\n\n- <branch rule>\n');
+		expect(code()).toContain('## Règles\n\n- <règle de branche>\n');
 		type('.ib-has-runtime', false);
 		type('.ib-has-test', false);
 		type('.ib-has-lint', false);
 		expect(field('.ib-runtime').disabled).toBe(true);
-		expect(code()).toBe('# my-project\n\n## Rules\n\n- <branch rule>\n');
-		expect(count()).toBe('3 non-empty lines');
+		expect(code()).toBe('# mon-projet\n\n## Règles\n\n- <règle de branche>\n');
+		expect(count()).toBe('3 lignes non vides');
 	});
 	it('does not submit the form', () => {
 		mountInstructionsBuilder(builder());
@@ -127,10 +127,10 @@ describe('mountInstructionsBuilder', () => {
 		type('.ib-name', 'invoice-mailer');
 		const copy = builder().querySelector('.ib-copy') as HTMLButtonElement;
 		copy.click();
-		await vi.waitFor(() => expect(copy.textContent).toBe('Copied'));
+		await vi.waitFor(() => expect(copy.textContent).toBe('Copié'));
 		expect(writeText).toHaveBeenCalledWith(code());
 		vi.advanceTimersByTime(COPY_LABEL_MS);
-		expect(copy.textContent).toBe('Copy');
+		expect(copy.textContent).toBe('Copier');
 	});
 	it('asks the learner to select and copy when the clipboard refuses, then restores the label', async () => {
 		vi.useFakeTimers();
@@ -140,9 +140,9 @@ describe('mountInstructionsBuilder', () => {
 		mountInstructionsBuilder(builder(), writeText);
 		const copy = builder().querySelector('.ib-copy') as HTMLButtonElement;
 		copy.click();
-		await vi.waitFor(() => expect(copy.textContent).toBe('Select and copy'));
+		await vi.waitFor(() => expect(copy.textContent).toBe('Sélectionnez et copiez'));
 		vi.advanceTimersByTime(COPY_LABEL_MS);
-		expect(copy.textContent).toBe('Copy');
+		expect(copy.textContent).toBe('Copier');
 	});
 	it('uses the browser clipboard by default', async () => {
 		const writeText = vi.fn(async (_text: string) => {});

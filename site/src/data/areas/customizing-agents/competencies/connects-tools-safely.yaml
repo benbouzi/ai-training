@@ -1,88 +1,150 @@
 id: customizing-agents/connects-tools-safely
 area: customizing-agents
-statement: Connects an agent to tools and data safely
-topics: [customizing-agents/mcp, customizing-agents/hooks-permissions, safety/agent-risk, customizing-agents/inspecting-the-agent]
+statement: Connecte un agent à des outils et à des données en sécurité
+topics: [customizing-agents/mcp, customizing-agents/hooks-permissions, safety/agent-risk,
+      customizing-agents/inspecting-the-agent]
 objectives:
   - id: customizing-agents/connects-tools-safely/adds-a-tool
-    statement: Adds a tool via MCP or CLI with least privilege
+    statement: Ajoute un outil par MCP ou par une CLI avec le moindre privilège
     level: base
     behaviors:
-      - claim: The learner adds the smallest tool that does the job, with read-only access where the task is
-          read-only.
-        why: A tool's permissions are what the agent, or an injected instruction, can do with it.
-        example: The issue tracker is connected with a token that can read and comment and cannot close or
-          delete.
-      - claim: The learner picks between an MCP server and a CLI by what the agent needs and what each
-          costs.
-        why: An MCP server's tool list is in context on every turn, and a CLI is called only when used and
-          needs a shell.
-        example: For two occasional queries the learner uses the CLI. For a tool the agent calls constantly
-          with structured input, they use an MCP server.
-      - claim: The tool is added with a test task and the transcript is read before it is used on real work.
-        why: The first use shows what the agent thinks the tool does, which may differ from what it does.
-        example: The learner asks the agent to "list open issues" and sees it call the tool with the wrong
-          filter, then fixes the description.
+      - claim: >-
+          L’apprenant ajoute le plus petit outil qui fait le travail, avec un accès en lecture seule quand
+          la tâche ne fait que lire.
+        why: >-
+          Les permissions d’un outil sont ce que l’agent, ou une instruction injectée, peut faire avec
+          lui.
+        example: >-
+          Le suivi des tickets est connecté avec un jeton qui peut lire et commenter, mais ne peut ni
+          fermer ni supprimer.
+      - claim: >-
+          L’apprenant choisit entre un serveur MCP et une CLI selon ce dont l’agent a besoin et ce que
+          coûte chacun.
+        why: >-
+          La liste d’outils d’un serveur MCP est dans le contexte à chaque tour, et une CLI n’est appelée
+          que quand elle sert et demande un shell.
+        example: >-
+          Pour deux requêtes occasionnelles, l’apprenant utilise la CLI. Pour un outil que l’agent appelle
+          sans cesse avec des entrées structurées, il utilise un serveur MCP.
+      - claim: >-
+          L’outil est ajouté avec une tâche de test, et la transcription est lue avant de l’utiliser sur
+          un vrai travail.
+        why: >-
+          La première utilisation montre ce que l’agent croit que fait l’outil, qui peut différer de ce
+          qu’il fait.
+        example: >-
+          L’apprenant demande à l’agent de « lister les tickets ouverts », le voit appeler l’outil avec
+          le
+          mauvais filtre, puis corrige la description.
   - id: customizing-agents/connects-tools-safely/weighs-tool-cost
-    statement: Explains the token and risk cost of a tool before adding it
+    statement: Explique le coût en jetons et le risque d’un outil avant de l’ajouter
     level: base
     behaviors:
-      - claim: Before adding a tool, the learner can say how many tokens its definitions take and on how
-          many turns they are paid.
-        why: Tool definitions travel with every request, and a tool used once costs on every turn it is
-          present.
-        example: The learner measures that a server's forty tool schemas add several thousand tokens per
-          turn and keeps only the three tools the task uses.
-      - claim: The learner names what the tool lets the agent do that it could not before, and what an
-          injected instruction could do with it.
-        why: A tool's risk is its abilities in the wrong hands, and any web page the agent reads can hold an
-          injected instruction.
-        example: A tool that posts to chat is what turns a read-only summarizer into an exfiltration path,
-          so it is added only where posting is the task.
-      - claim: The learner compares the tool against the alternative of no tool.
-        why: Many tools wrap something the agent could read from a file or a command.
-        example: Instead of a documentation MCP server, the docs are checked into the repository and the
-          agent reads them.
+      - claim: >-
+          Avant d’ajouter un outil, l’apprenant sait dire combien de jetons prennent ses définitions et
+          sur combien de tours elles sont payées.
+        why: >-
+          Les définitions d’outils voyagent avec chaque requête, et un outil utilisé une fois coûte à
+          chaque tour où il est présent.
+        example: >-
+          L’apprenant mesure que les quarante schémas d’outils d’un serveur ajoutent plusieurs milliers
+          de
+          jetons par tour, et ne garde que les trois outils dont la tâche se sert.
+      - claim: >-
+          L’apprenant nomme ce que l’outil permet à l’agent de faire qu’il ne pouvait pas faire avant,
+          et
+          ce qu’une instruction injectée pourrait en faire.
+        why: >-
+          Le risque d’un outil, ce sont ses capacités entre de mauvaises mains, et toute page web que
+          lit
+          l’agent peut contenir une instruction injectée.
+        example: >-
+          Un outil qui publie dans une discussion est ce qui transforme un résumeur en lecture seule en
+          voie d’exfiltration, donc il n’est ajouté que là où publier est la tâche.
+      - claim: L’apprenant compare l’outil à la possibilité de n’avoir aucun outil.
+        why: >-
+          Beaucoup d’outils enveloppent quelque chose que l’agent pourrait lire dans un fichier ou par
+          une
+          commande.
+        example: >-
+          À la place d’un serveur MCP de documentation, la documentation est versionnée dans le dépôt
+          et
+          l’agent la lit.
   - id: customizing-agents/connects-tools-safely/hardens-a-connection
-    statement: Hardens a tool connection against injection and exfiltration
+    statement: Protège une connexion d’outil contre l’injection et l’exfiltration
     level: expert
     behaviors:
-      - claim: The learner treats every tool result as untrusted input to the model, and designs the
-          connection assuming a result will one day contain instructions.
-        why: Anything the tool reads from the world can carry an injected instruction, and the model cannot
-          tell.
-        example: The web-fetch tool strips scripts and marks its output as "content from the page", and the
-          agent's sensitive tools require approval when a fetch happened in the same turn.
-      - claim: Outbound abilities are gated or removed on any agent that reads untrusted content.
-        why: Exfiltration is read plus send, and the send is the part you can control.
-        example: The research agent has fetch and file-write, and no email or chat tool, and file-write is
-          confined to one directory.
-      - claim: Credentials given to a tool are scoped, short-lived and separate from the person's own.
-        why: A leaked agent token should cost one revocation and nothing more.
-        example: The MCP server runs with a service account that can read one project's issues, and the
-          token expires daily.
-      - claim: The learner logs tool calls and their arguments and reviews them for the tool's first weeks.
-        why: Injection shows up as a call that made no sense for the task, and only a log shows it.
-        example: The log shows the agent tried to fetch a URL containing a file's contents, and the learner
-          traces it to a planted comment in a README.
+      - claim: >-
+          L’apprenant traite chaque résultat d’outil comme une entrée non fiable pour le modèle, et
+          conçoit la connexion en supposant qu’un résultat contiendra un jour des instructions.
+        why: >-
+          Tout ce que l’outil lit dans le monde peut porter une instruction injectée, et le modèle ne
+          peut
+          pas le savoir.
+        example: >-
+          L’outil de récupération web retire les scripts et marque sa sortie comme « contenu de la page
+          »,
+          et les outils sensibles de l’agent demandent une approbation quand une récupération a eu lieu
+          dans le même tour.
+      - claim: >-
+          Les capacités d’envoi vers l’extérieur sont soumises à approbation ou retirées sur tout agent
+          qui lit du contenu non fiable.
+        why: >-
+          L’exfiltration, c’est lire puis envoyer, et l’envoi est la partie que vous pouvez contrôler.
+        example: >-
+          L’agent de recherche a la récupération web et l’écriture de fichiers, sans outil de courriel
+          ni
+          de discussion, et l’écriture de fichiers est limitée à un dossier.
+      - claim: >-
+          Les identifiants donnés à un outil sont limités, de courte durée et séparés de ceux de la
+          personne.
+        why: Un jeton d’agent divulgué ne devrait coûter qu’une révocation, rien de plus.
+        example: >-
+          Le serveur MCP tourne avec un compte de service qui peut lire les tickets d’un seul projet,
+          et
+          le jeton expire chaque jour.
+      - claim: >-
+          L’apprenant journalise les appels d’outil et leurs arguments, et les relit pendant les premières
+          semaines de l’outil.
+        why: >-
+          Une injection se voit comme un appel qui n’avait aucun sens pour la tâche, et seul un journal
+          le
+          montre.
+        example: >-
+          Le journal montre que l’agent a essayé de récupérer une URL qui contenait le contenu d’un
+          fichier, et l’apprenant remonte jusqu’à un commentaire planté dans un README.
   - id: customizing-agents/connects-tools-safely/inspects-requests
-    statement: Inspects the requests to see what tools and context cost, and keeps request logs local
+    statement: >-
+      Inspecte les requêtes pour voir ce que coûtent les outils et le contexte, et garde les journaux
+      de requêtes en local
     level: expert
     behaviors:
-      - claim: The learner logs the requests of a session and measures what each tool description, file and
-          instruction adds.
-        why: A guess at what fills the context is often wrong, and the logged request shows it exactly
-          (@Claude Code llm gateway).
-        example: The log shows that one server's tool descriptions are a fifth of every request, so the
-          learner disconnects it in projects that do not use it.
-      - claim: The learner keeps request logs and session records on machines the team controls and
-          deletes them when they are no longer needed.
-        why: They hold everything the agent read, including file contents and any secret it printed
-          (@Claude Code claude directory).
-        example: The learner runs the logging gateway on their own machine, and clears its logs at the
-          end of the investigation.
-      - claim: The learner turns on full request logging only for the investigation and turns it off
-          afterwards.
-        why: Monitoring leaves out prompt and request content by default for this reason (@Claude Code
-          monitoring).
-        example: The learner sets the variable that exports raw request bodies for one afternoon and
-          removes it from their settings that evening.
+      - claim: >-
+          L’apprenant journalise les requêtes d’une session et mesure ce qu’ajoutent chaque description
+          d’outil, chaque fichier et chaque instruction.
+        why: >-
+          Une supposition sur ce qui remplit le contexte est souvent fausse, et la requête journalisée
+          le
+          montre exactement (@Claude Code llm gateway).
+        example: >-
+          Le journal montre que les descriptions d’outils d’un serveur font un cinquième de chaque
+          requête, donc l’apprenant le déconnecte dans les projets qui ne s’en servent pas.
+      - claim: >-
+          L’apprenant garde les journaux de requêtes et les journaux de session sur des machines que
+          l’équipe contrôle, et les supprime quand ils ne servent plus.
+        why: >-
+          Ils contiennent tout ce que l’agent a lu, y compris le contenu des fichiers et tout secret qu’il
+          a affiché (@Claude Code claude directory).
+        example: >-
+          L’apprenant fait tourner la passerelle de journalisation sur sa propre machine, et efface ses
+          journaux à la fin de l’enquête.
+      - claim: >-
+          L’apprenant n’active la journalisation complète des requêtes que pour l’enquête, et la désactive
+          ensuite.
+        why: >-
+          C’est pour cette raison que la supervision omet par défaut le contenu des prompts et des
+          requêtes (@Claude Code monitoring).
+        example: >-
+          L’apprenant règle la variable qui exporte le corps brut des requêtes pour un après-midi, et
+          la
+          retire de ses réglages le soir même.

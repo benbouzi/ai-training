@@ -1,9 +1,9 @@
 id: customizing-agents/settings-layering
-title: Where a setting comes from
+title: D’où vient un réglage
 description: >-
-  Why a coding agent's setting seems ignored: the settings files in override order, one worked
-  example where four layers disagree and the effective permission set is derived entry by entry,
-  and what a team commits versus what each person keeps local.
+  Pourquoi un réglage d’agent de code semble ignoré : les fichiers de réglages dans leur ordre de
+  priorité, un exemple détaillé où quatre couches divergent et où les permissions effectives sont
+  déduites entrée par entrée, et ce qu’une équipe committe et ce que chacun garde en local.
 mode: explanation
 covers: customizing-agents/hooks-permissions
 serves: [customizing-agents/configures-agent/sets-permissions]
@@ -19,8 +19,9 @@ shorts: []
 exercise:
   kind: judge
   brief: >-
-    Given a user file, a committed project file, a local override and a session flag that disagree,
-    write down the effective permission set and which layer decided each entry.
+    À partir d’un fichier utilisateur, d’un fichier de projet committé, d’un remplacement local et
+    d’une option de session qui divergent, écrivez les permissions effectives et la couche qui a
+    décidé de chaque entrée.
 sources: [Claude Code settings, Claude Code permissions]
 minutes: 10
 notes: >-

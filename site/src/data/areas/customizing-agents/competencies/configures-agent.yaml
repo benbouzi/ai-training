@@ -1,128 +1,203 @@
 id: customizing-agents/configures-agent
 area: customizing-agents
-statement: Configures an agent for a project
+statement: Configure un agent pour un projet
 topics:
   - customizing-agents/instructions
   - customizing-agents/hooks-permissions
   - customizing-agents/memory
 objectives:
   - id: customizing-agents/configures-agent/writes-project-instructions
-    statement: Writes instructions that remove a recurring agent mistake
+    statement: Écrit des instructions qui suppriment une erreur récurrente de l’agent
     level: base
     behaviors:
-      - claim: Each instruction is traceable to a mistake the agent made in a real session.
-        why: Instructions written from imagination pad the file, dilute the ones that matter and are never
-          tested.
-        example: After the agent ran `npm install` twice against a pinned lockfile, the learner adds
-          "install with `npm ci`, never `npm install`" and nothing else that day.
-      - claim: An instruction says what to do and how the agent can tell it did it, in one or two lines.
-        why: Vague guidance such as "write clean code" gives the agent nothing to check itself against.
-        example: '"Run `mise run ci` before reporting done; it must exit 0" replaces "make sure everything
-          works".'
-      - claim: The learner removes an instruction when the mistake stops recurring or when a hook or a check
-          now enforces it.
-        why: A project file that only grows gets skimmed, and the rules that still matter get lost in it
-          (@Academy claude-code-in-action).
-        example: Once a pre-commit hook rejects unformatted files, the learner deletes the "always run the
-          formatter" line from the instructions.
+      - claim: Chaque instruction remonte à une erreur que l’agent a faite dans une vraie session.
+        why: >-
+          Des instructions écrites d’imagination gonflent le fichier, diluent celles qui comptent et ne
+          sont jamais testées.
+        example: >-
+          Après que l’agent a lancé deux fois `npm install` sur un fichier de verrouillage figé,
+          l’apprenant ajoute « installer avec `npm ci`, jamais `npm install` » et rien d’autre ce jour-là.
+      - claim: >-
+          Une instruction dit quoi faire et comment l’agent peut savoir qu’il l’a fait, en une ou deux
+          lignes.
+        why: >-
+          Un conseil vague comme « écrire du code propre » ne donne à l’agent rien à quoi se comparer.
+        example: >-
+          « Lancer `mise run ci` avant de dire que c’est terminé, et la commande doit sortir avec 0 »
+          remplace « s’assurer que tout fonctionne ».
+      - claim: >-
+          L’apprenant retire une instruction quand l’erreur ne revient plus ou quand un hook ou un
+          contrôle l’impose désormais.
+        why: >-
+          Un fichier de projet qui ne fait que grossir est survolé, et les règles qui comptent encore
+          s’y
+          perdent (@Academy claude-code-in-action).
+        example: >-
+          Une fois qu’un hook de pré-commit rejette les fichiers mal mis en forme, l’apprenant supprime
+          la
+          ligne « toujours lancer l’outil de mise en forme » des instructions.
   - id: customizing-agents/configures-agent/sets-permissions
-    statement: Sets permissions to the least the work needs
+    statement: Règle les permissions au minimum dont le travail a besoin
     level: base
     behaviors:
-      - claim: The learner starts from deny by default and allows the specific commands and paths the task
-          needs.
-        why: A broad allowlist granted for convenience is the blast radius of every later mistake.
-        example: The settings allow `npm test` and `git diff` without asking, and everything else prompts.
-      - claim: The learner separates what the agent may read from what it may write and run.
-        why: Reading is nearly always safe, and writing and running are where damage happens.
-        example: The agent may read the whole repository but may write only under `src/` and `tests/`.
-      - claim: The learner reviews the permission set after a task and removes what was not used.
-        why: Permissions accumulate and are never removed on their own.
-        example: After the migration is done, the learner removes the database CLI from the allowlist.
+      - claim: >-
+          L’apprenant part d’une interdiction par défaut et autorise les commandes et les chemins précis
+          dont la tâche a besoin.
+        why: >-
+          Une liste d’autorisation large accordée par commodité devient le rayon d’impact de chaque erreur
+          ultérieure.
+        example: >-
+          Les réglages autorisent `npm test` et `git diff` sans demander, et tout le reste déclenche une
+          demande.
+      - claim: L’apprenant sépare ce que l’agent peut lire de ce qu’il peut écrire et lancer.
+        why: >-
+          Lire est presque toujours sans danger, et c’est en écrivant et en lançant que les dégâts
+          arrivent.
+        example: L’agent peut lire tout le dépôt, mais ne peut écrire que sous `src/` et `tests/`.
+      - claim: >-
+          L’apprenant relit l’ensemble des permissions après une tâche et retire ce qui n’a pas servi.
+        why: Les permissions s’accumulent et ne disparaissent jamais d’elles-mêmes.
+        example: >-
+          Une fois la migration terminée, l’apprenant retire l’outil en ligne de commande de la base de
+          données de la liste d’autorisation.
   - id: customizing-agents/configures-agent/adds-a-hook
-    statement: Adds a hook that enforces a rule the instructions cannot
+    statement: Ajoute un hook qui impose une règle que les instructions ne peuvent pas imposer
     level: base
     behaviors:
-      - claim: The learner reaches for a hook when a rule must hold every time, and for an instruction when
-          it is guidance.
-        why: An instruction is read and sometimes ignored, but a hook runs whether or not the model
-          remembered (@Academy claude-code-in-action).
-        example: '"Run the formatter before committing" becomes a pre-commit hook after the third
-          unformatted commit.'
-      - claim: A hook fails loudly and says what to do, and it runs fast enough that nobody disables it.
-        why: A silent hook is a mystery to the agent and a slow hook is a hook someone turns off.
-        example: The hook prints "lockfile changed but the manifest did not; run `bun install` or revert"
-          and exits non-zero in under a second.
-      - claim: The learner tests the hook by making the mistake it is meant to catch.
-        why: A hook that has never fired may not work, and the first real mistake is a bad time to find out.
-        example: The learner writes a commit with the forbidden pattern and checks that the hook rejects it,
-          before relying on it.
+      - claim: >-
+          L’apprenant choisit un hook quand une règle doit tenir à chaque fois, et une instruction quand
+          il s’agit d’un conseil.
+        why: >-
+          Une instruction est lue et parfois ignorée, mais un hook s’exécute, que le modèle s’en soit
+          souvenu ou non (@Academy claude-code-in-action).
+        example: >-
+          « Lancer l’outil de mise en forme avant de committer » devient un hook de pré-commit après le
+          troisième commit mal mis en forme.
+      - claim: >-
+          Un hook échoue de façon visible et dit quoi faire, et il s’exécute assez vite pour que personne
+          ne le désactive.
+        why: >-
+          Un hook silencieux est un mystère pour l’agent, et un hook lent est un hook que quelqu’un
+          désactive.
+        example: >-
+          Le hook affiche « lockfile changed but the manifest did not; run `bun install` or revert » (le
+          fichier de verrouillage a changé sans le manifeste) et sort avec un code non nul en moins d’une
+          seconde.
+      - claim: L’apprenant teste le hook en faisant l’erreur qu’il doit attraper.
+        why: >-
+          Un hook qui ne s’est jamais déclenché ne fonctionne peut-être pas, et la première vraie erreur
+          est un mauvais moment pour le découvrir.
+        example: >-
+          L’apprenant écrit un commit avec le motif interdit et vérifie que le hook le rejette, avant
+          de
+          compter sur lui.
   - id: customizing-agents/configures-agent/chooses-load-or-point
-    statement: Decides for each piece of guidance whether to load it or point at it
+    statement: Décide pour chaque élément de guidage s’il faut le charger ou y renvoyer
     level: base
     behaviors:
-      - claim: The learner keeps in the instruction file only what nearly every task needs, and replaces
-          the rest with a line that says where it is.
-        why: Everything in the file is in context for every task, and a pointer costs one line until a
-          task needs the detail (@Claude Code memory).
-        example: The release procedure moves from the instruction file into a skill, and the file keeps
-          "to cut a release, use the release skill".
-      - claim: The learner writes a pointer that says when to follow it as well as where it goes.
-        why: A file that an instruction only asks the agent to read is read when the agent decides to
-          open it, so the pointer has to tell it when (@Claude Code memory).
-        example: '"Before changing the database schema, read `docs/migrations.md`" instead of "see also
-          `docs/`".'
-      - claim: The learner knows that an import which pulls a file in at start-up still loads it.
-        why: An import makes the file shorter to read and leaves the context just as full (@Claude Code
-          memory).
-        example: The learner moves a 300-line style guide behind a path-scoped rule that loads only for
-          the files it covers, instead of importing it.
+      - claim: >-
+          L’apprenant ne garde dans le fichier d’instructions que ce dont presque chaque tâche a besoin,
+          et remplace le reste par une ligne qui dit où il se trouve.
+        why: >-
+          Tout ce que contient le fichier est dans le contexte de chaque tâche, et un renvoi coûte une
+          ligne jusqu’à ce qu’une tâche ait besoin du détail (@Claude Code memory).
+        example: >-
+          La procédure de publication passe du fichier d’instructions à une skill, et le fichier garde
+          « pour publier une version, utiliser la skill de publication ».
+      - claim: L’apprenant écrit un renvoi qui dit quand le suivre, en plus de l’endroit où il mène.
+        why: >-
+          Un fichier qu’une instruction demande seulement de lire est lu quand l’agent décide de l’ouvrir,
+          donc le renvoi doit lui dire quand (@Claude Code memory).
+        example: >-
+          « Avant de modifier le schéma de la base de données, lire `docs/migrations.md` » à la place
+          de
+          « voir aussi `docs/` ».
+      - claim: >-
+          L’apprenant sait qu’une importation qui inclut un fichier au démarrage le charge quand même.
+        why: >-
+          Une importation rend le fichier plus court à lire et laisse le contexte tout aussi plein
+          (@Claude Code memory).
+        example: >-
+          L’apprenant place un guide de style de 300 lignes derrière une règle limitée à certains chemins,
+          chargée seulement pour les fichiers qu’elle couvre, sans l’importer.
   - id: customizing-agents/configures-agent/manages-memory
-    statement: Manages what the agent carries between sessions
+    statement: Gère ce que l’agent emporte d’une session à l’autre
     level: expert
     behaviors:
-      - claim: The learner decides what the agent should carry between sessions and puts it in a file the
-          agent reads, rather than relying on automatic memory.
-        why: Automatic memory keeps what the tool thought was important, and a file keeps what the team
-          decided was.
-        example: The project's context file records "the staging database is read-only for agents" so no
-          session has to relearn it.
-      - claim: The learner reviews what the agent has remembered and deletes what is stale or wrong.
-        why: A wrong remembered fact is applied to every future session with full confidence.
-        example: The memory file still says the tests take ten minutes. After the test speed-up, the learner
-          removes the line so the agent stops skipping them.
-      - claim: "When a session's work continues later, the learner has the agent write a handoff: state,
-          decisions, what is left."
-        why: Context does not survive the session, and the next session otherwise reconstructs it from the
-          diff, badly.
-        example: The session ends with a `HANDOFF.md` that names the failing test and the two approaches
-          already ruled out.
-      - claim: The learner turns a fix that sessions had to make more than once into a skill or an
-          instruction.
-        why: Repeated work in memory is a symptom, and the cure is a reusable procedure.
-        example: After three sessions each worked out how to regenerate the API client, the steps become a
-          skill.
+      - claim: >-
+          L’apprenant décide de ce que l’agent doit emporter d’une session à l’autre et le met dans un
+          fichier que l’agent lit, sans compter sur la mémoire automatique.
+        why: >-
+          La mémoire automatique garde ce que l’outil a jugé important, et un fichier garde ce que
+          l’équipe a décidé d’important.
+        example: >-
+          Le fichier de contexte du projet enregistre « la base de données de préproduction est en lecture
+          seule pour les agents », pour qu’aucune session n’ait à le réapprendre.
+      - claim: L’apprenant relit ce dont l’agent s’est souvenu et supprime ce qui est périmé ou
+          faux.
+        why: Un fait faux mémorisé est appliqué à chaque session future avec une confiance totale.
+        example: >-
+          Le fichier de mémoire dit encore que les tests prennent dix minutes. Après l’accélération des
+          tests, l’apprenant retire la ligne pour que l’agent arrête de les sauter.
+      - claim: >-
+          Quand le travail d’une session continue plus tard, l’apprenant fait écrire une passation à
+          l’agent : l’état, les décisions, ce qui reste.
+        why: >-
+          Le contexte ne survit pas à la session, et sinon la session suivante le reconstruit à partir
+          du
+          diff, mal.
+        example: >-
+          La session se termine par un `HANDOFF.md` qui nomme le test en échec et les deux approches déjà
+          écartées.
+      - claim: >-
+          L’apprenant transforme une correction que les sessions ont dû faire plus d’une fois en skill
+          ou
+          en instruction.
+        why: >-
+          Du travail répété dans la mémoire est un symptôme, et le remède est une procédure réutilisable.
+        example: >-
+          Après trois sessions qui ont chacune retrouvé comment régénérer le client de l’API, les étapes
+          deviennent une skill.
   - id: customizing-agents/configures-agent/prunes-instructions
-    statement: Prunes instruction files line by line
+    statement: Élague les fichiers d’instructions ligne par ligne
     level: expert
     behaviors:
-      - claim: For each line the learner asks whether removing it would cause a mistake, and removes it
-          when it would not.
-        why: Rules in a long file get ignored, so every line that does nothing weakens the ones that
-          matter (@Claude Code best practices).
-        example: '"Write clean, readable code" goes, because the agent behaves the same without it.'
-      - claim: The learner removes lines the agent can work out from the code, and lines about problems
-          that have gone away.
-        why: Those lines cost context in every session and can go stale while the code changes.
-        example: A paragraph describing the folder layout goes, and so does a warning about a build bug
-          that was fixed last year.
-      - claim: The learner resolves conflicting lines, including lines in different instruction files that
-          contradict each other.
-        why: When two instructions conflict, the agent may follow either one (@Claude Code memory).
-        example: The root file says "use tabs" and a package file says "use spaces", so the learner keeps
-          the package rule and adds the reason for the exception.
-      - claim: After a pruning pass the learner watches a few sessions to confirm that nothing broke.
-        why: Testing a change to the instructions means watching the agent's behavior, as with any change
-          to a prompt.
-        example: The learner runs the usual tasks after the cut and adds back the one line whose removal
-          made the agent skip the formatter.
+      - claim: >-
+          Pour chaque ligne, l’apprenant se demande si la retirer causerait une erreur, et la retire si
+          ce
+          n’est pas le cas.
+        why: >-
+          Les règles d’un long fichier sont ignorées, donc chaque ligne inutile affaiblit celles qui
+          comptent (@Claude Code best practices).
+        example: >-
+          « Écrire du code propre et lisible » disparaît, parce que l’agent se comporte de la même façon
+          sans cette ligne.
+      - claim: >-
+          L’apprenant retire les lignes que l’agent peut déduire du code, et les lignes sur des problèmes
+          qui ont disparu.
+        why: >-
+          Ces lignes coûtent du contexte à chaque session et peuvent devenir périmées pendant que le code
+          change.
+        example: >-
+          Un paragraphe qui décrit l’organisation des dossiers disparaît, de même qu’un avertissement
+          sur
+          un bug de build corrigé l’an dernier.
+      - claim: >-
+          L’apprenant résout les lignes qui se contredisent, y compris des lignes de fichiers
+          d’instructions différents.
+        why: >-
+          Quand deux instructions se contredisent, l’agent peut suivre l’une ou l’autre (@Claude Code
+          memory).
+        example: >-
+          Le fichier racine dit « utiliser des tabulations » et le fichier d’un paquet dit « utiliser
+          des
+          espaces », donc l’apprenant garde la règle du paquet et ajoute la raison de l’exception.
+      - claim: >-
+          Après un passage d’élagage, l’apprenant observe quelques sessions pour confirmer que rien n’est
+          cassé.
+        why: >-
+          Tester une modification des instructions veut dire observer le comportement de l’agent, comme
+          pour toute modification d’un prompt.
+        example: >-
+          L’apprenant lance les tâches habituelles après la coupe, et remet la seule ligne dont le retrait
+          a fait sauter l’outil de mise en forme à l’agent.

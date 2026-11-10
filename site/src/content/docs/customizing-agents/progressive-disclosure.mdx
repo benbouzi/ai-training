@@ -1,91 +1,93 @@
 import { Choice, Match, MultiChoice, Predict, Sort, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-The previous lesson ended with a release skill that ran from a new session
-in a clean clone. Suppose the team then had a release go wrong, and someone
-added a section to the skill on how to undo one. The section is useful, and
-it is needed in one release out of many. This lesson measures what that
-section costs on every other release, moves it into a separate file the
-skill points to, and measures again.
+La leçon précédente s’est terminée par une skill de publication lancée depuis une
+nouvelle session dans un clone propre. Supposons que l’équipe ait ensuite eu une
+publication qui a mal tourné, et que quelqu’un ait ajouté à la skill une section
+sur la façon d’en annuler une. La section est utile, et elle sert une fois sur
+beaucoup de publications. Cette leçon mesure ce que coûte cette section à toutes
+les autres publications, la déplace dans un fichier séparé vers lequel la skill
+renvoie, et mesure de nouveau.
 
-The measuring is done by a short Python script that only reads files, and
-the course checks its output on every build. It is in the course repository
-at `site/examples/customizing-agents/progressive-disclosure/`, next to two
-versions of the release skill. Run the commands in this lesson from that
-directory. In the `cd` line, replace `<course-repo>` with the path to your
-copy of the course repository.
+La mesure est faite par un court script Python qui ne fait que lire des
+fichiers, et le cours vérifie sa sortie à chaque construction du site. Il se
+trouve dans le dépôt du cours, dans
+`site/examples/customizing-agents/progressive-disclosure/`, à côté de deux
+versions de la skill de publication, en anglais comme le paquet. Lancez les
+commandes de cette leçon depuis ce dossier. Dans la ligne `cd`, remplacez
+`<course-repo>` par le chemin de votre copie du dépôt du cours.
 
 ```sh
 cd <course-repo>/site/examples/customizing-agents/progressive-disclosure
 ```
 
-## What the agent reads, and when
+## Ce que lit l’agent, et quand
 
-An agent that supports the open skill format doesn't read a whole skill at
-once. It reads it in stages, and the specification names three
-(@Agent Skills spec). At startup the agent loads the `name` and
-`description` of every skill it can see. When a task matches a
-description, it loads that skill's whole `SKILL.md`. Other files in the
-skill's directory are loaded only when a step in `SKILL.md` sends the agent
-to them. Anthropic's overview of skills describes the same three stages for
-Claude (@Claude docs agent-skills-overview). Designing a skill for this is
-called **progressive disclosure**: each stage holds only what the agent
-needs at that point (@AEC-17).
+Un agent qui prend en charge le format ouvert des skills ne lit pas une skill
+entière d’un coup. Il la lit par étapes, et la spécification en nomme trois
+(@Agent Skills spec). Au démarrage, l’agent charge le `name` et la `description`
+de chaque skill qu’il voit. Quand une tâche correspond à une description, il
+charge tout le `SKILL.md` de cette skill. Les autres fichiers du dossier de la
+skill ne sont chargés que quand une étape de `SKILL.md` y envoie l’agent. La
+présentation des skills d’Anthropic décrit les trois mêmes étapes pour Claude
+(@Claude docs agent-skills-overview). Concevoir une skill pour ce fonctionnement
+s’appelle la **divulgation progressive** (progressive disclosure) : chaque étape
+ne contient que ce dont l’agent a besoin à ce moment-là (@AEC-17).
 
-Each stage has its own cost. The name and description are in context on
-every turn of every session, whether the skill runs or not. Both
-documents put that stage at about 100 tokens per skill. The specification
-recommends keeping the body under 5000 tokens, and Anthropic's overview
-gives the same figure for the body (@Agent Skills spec)
-(@Claude docs agent-skills-overview). In Claude Code, the body stays in the
-conversation on the turns after the skill runs (@Claude Code skills). As
-[How a language model works](/concepts/how-models-work/) showed, the model
-reads everything so far each time it predicts a token, so a body that's
-still in context is read again on each of those turns. A file the agent never opens
-doesn't cost any tokens (@Claude docs agent-skills-overview).
+Chaque étape a son propre coût. Le nom et la description sont dans le contexte à
+chaque tour de chaque session, que la skill s’exécute ou non. Les deux documents
+estiment cette étape à environ 100 jetons (tokens) par skill. La spécification recommande
+de garder le corps sous 5000 jetons, et la présentation d’Anthropic donne le même
+chiffre pour le corps (@Agent Skills spec) (@Claude docs agent-skills-overview).
+Dans Claude Code, le corps reste dans la conversation aux tours qui suivent
+l’exécution de la skill (@Claude Code skills). Comme l’a montré
+[Comment fonctionne un modèle de langage](/concepts/how-models-work/), le modèle
+relit tout ce qui précède chaque fois qu’il prédit un jeton, donc un corps encore
+dans le contexte est relu à chacun de ces tours. Un fichier que l’agent n’ouvre
+jamais ne coûte aucun jeton (@Claude docs agent-skills-overview).
 
 <Sort id="which-stage-loads-it" objective="customizing-agents/writes-skill/discloses-progressively"
   concepts={['progressive-disclosure']}
-  context="A release skill has a SKILL.md file with front matter and a body, and a rollback.md file next to it that one step of the body points to. An agent that follows the open skill format loads the parts of a skill at different times."
-  title="When does the agent load it?" hint="Which part does the agent need to decide whether to use the skill, which part to run it, and which part only in one case?"
-  buckets={['At startup, for every skill', 'When a task matches the skill', 'Only when a step sends the agent to it']}
+  context="Une skill de publication a un fichier SKILL.md avec un en-tête et un corps, et un fichier rollback.md à côté vers lequel renvoie une étape du corps. Un agent qui suit le format ouvert des skills charge les parties d’une skill à des moments différents."
+  title="Quand l’agent le charge-t-il ?" hint="De quelle partie l’agent a-t-il besoin pour décider d’utiliser la skill, de laquelle pour l’exécuter, et de laquelle seulement dans un cas ?"
+  buckets={['Au démarrage, pour chaque skill', 'Quand une tâche correspond à la skill', 'Seulement quand une étape y envoie l’agent']}
   items={[
-    { text: 'The description in the front matter of SKILL.md', bucket: 0 },
-    { text: 'The numbered release steps in the body of SKILL.md', bucket: 1 },
-    { text: 'The line in the body that says when to read rollback.md', bucket: 1 },
-    { text: 'The undo steps in rollback.md', bucket: 2 },
+    { text: 'La description dans l’en-tête de SKILL.md', bucket: 0 },
+    { text: 'Les étapes de publication numérotées dans le corps de SKILL.md', bucket: 1 },
+    { text: 'La ligne du corps qui dit quand lire rollback.md', bucket: 1 },
+    { text: 'Les étapes d’annulation de rollback.md', bucket: 2 },
   ]} />
 
-## Measure the skill as it stands
+## Mesurer la skill telle qu’elle est
 
-The directory `grown/release/` holds the release skill from the previous
-lesson with the new section added. It is called "When a release goes wrong"
-and has five numbered steps. A release that nobody has pushed yet is undone
-with `git tag -d` and a reset. For a release that was pushed, the agent
-leaves the remote tag alone and makes a new fix release. The section is
-between the release steps and "Done when". The agent reads it on every
-release.
+Le dossier `grown/release/` contient la skill de publication de la leçon
+précédente, avec la nouvelle section ajoutée. Elle s’appelle « When a release
+goes wrong » (quand une publication tourne mal) et a cinq étapes numérotées. Une
+publication que personne n’a encore poussée s’annule avec `git tag -d` et un
+reset. Pour une publication poussée, l’agent laisse l’étiquette distante telle
+quelle et fait une nouvelle publication corrective. La section se trouve entre
+les étapes de publication et « Done when ». L’agent la lit à chaque publication.
 
-The script `measure.py` prints one line per stage. For the first stage it
-counts the `name` and `description` lines of the front matter. The second
-stage is the whole `SKILL.md`, and each other Markdown file in the
-directory gets a line of its own. Then it prints two totals, one for a run
-that reads only `SKILL.md` and one for a run that reads every file.
+Le script `measure.py` affiche une ligne par étape. Pour la première étape, il
+compte les lignes `name` et `description` de l’en-tête. La deuxième étape est le
+`SKILL.md` complet, et chaque autre fichier Markdown du dossier a sa propre
+ligne. Il affiche ensuite deux totaux, l’un pour une exécution qui ne lit que
+`SKILL.md`, l’autre pour une exécution qui lit tous les fichiers.
 
-The counts are estimates. The script uses the same rule as the counter in
-[What the model can see](/concepts/context-window/), about four characters
-per token. A word of up to six characters counts as one token and a longer
-word as one token per four characters. Each punctuation mark counts as a
-token of its own. Markdown has a lot of punctuation, and the rule gives a
-higher count for a skill than for plain prose of the same length. The exact
-count for a model comes from the vendor's own tokenizer. The rule is the
-same for both versions of the skill, so the difference between them is what
-matters here.
+Les nombres sont des estimations. Le script utilise la même règle que le
+compteur de [Ce que le modèle peut voir](/concepts/context-window/), environ
+quatre caractères par jeton. Un mot de six caractères au plus compte pour un
+jeton, et un mot plus long pour un jeton tous les quatre caractères. Chaque signe
+de ponctuation compte pour un jeton à lui seul. Le Markdown contient beaucoup de
+ponctuation, et la règle donne un nombre plus élevé pour une skill que pour de la
+prose simple de même longueur. Le nombre exact pour un modèle vient du découpeur
+en jetons (tokenizer) de l’éditeur. La règle est la même pour les deux versions
+de la skill, donc c’est la différence entre elles qui compte ici.
 
-Before you run it, guess the second line. The file is about two pages of
-Markdown, and the counter from the concepts lesson gave 115 tokens for half
-a page of notes.
+Avant de le lancer, devinez la deuxième ligne. Le fichier fait environ deux pages
+de Markdown, et le compteur de la leçon sur les concepts donnait 115 jetons pour
+une demi-page de notes.
 
-<Predict id="measure-the-grown-skill" title="Measure the skill as it stands"
+<Predict id="measure-the-grown-skill" title="Mesurer la skill telle qu’elle est"
   answer={`grown/release
     always loaded, name and description: 39
     when the skill runs, SKILL.md: 1256
@@ -93,7 +95,10 @@ a page of notes.
     total, SKILL.md read: 1295
     total, every file read: 1295`}
   run="customizing-agents/progressive-disclosure/before.py">
-Run this, and compare with the output below.
+Lancez ceci, et comparez avec la sortie ci-dessous. Les lignes, en anglais,
+donnent dans l’ordre le coût toujours chargé du nom et de la description, le coût
+de `SKILL.md` quand la skill s’exécute, les autres fichiers lus par une étape,
+puis les deux totaux.
 
 ```sh
 python3 measure.py grown/release
@@ -101,24 +106,26 @@ python3 measure.py grown/release
 
 </Predict>
 
-The first line is small, and it should be. A description of two short
-sentences is far below the figure of about 100 tokens. The second line is
-the one to read. A release loads all 1256 tokens of `SKILL.md`, and the
-rollback steps are part of them even when the release goes right.
+La première ligne est petite, et elle doit l’être. Une description de deux
+courtes phrases est bien en dessous du chiffre d’environ 100 jetons. C’est la
+deuxième ligne qu’il faut lire. Une publication charge les 1256 jetons de
+`SKILL.md`, et les étapes d’annulation en font partie même quand la publication
+se passe bien.
 
-## Move the rollback into a reference file
+## Déplacer l’annulation dans un fichier de référence
 
-The fix is to keep the common path in `SKILL.md` and move the rare case
-into its own file. The specification suggests keeping `SKILL.md` short and
-moving detailed material into separate files, referenced by a relative
-path and one level deep from `SKILL.md` (@Agent Skills spec). Anthropic's
-guide explains the one level. The agent may read only part of a file it
-reaches through another reference file (@Claude docs best-practices).
+La correction consiste à garder le chemin courant dans `SKILL.md` et à déplacer
+le cas rare dans son propre fichier. La spécification suggère de garder
+`SKILL.md` court et de déplacer le matériel détaillé dans des fichiers séparés,
+référencés par un chemin relatif et à un seul niveau de `SKILL.md`
+(@Agent Skills spec). Le guide d’Anthropic explique ce niveau unique. L’agent
+peut ne lire qu’une partie d’un fichier qu’il atteint par un autre fichier de
+référence (@Claude docs best-practices).
 
-Make a copy of the grown skill to work on. The first line deletes
-`~/skill-copy`, so the commands also work on a second attempt. The copy's
-directory is named `release`, because a skill's directory name must equal
-its `name`.
+Faites une copie de la skill agrandie pour travailler dessus. La première ligne
+supprime `~/skill-copy`, donc les commandes fonctionnent aussi à un second essai.
+Le dossier de la copie s’appelle `release`, parce que le nom du dossier d’une
+skill doit être égal à son `name`.
 
 ```sh
 rm -rf ~/skill-copy
@@ -126,11 +133,16 @@ mkdir ~/skill-copy
 cp -R grown/release ~/skill-copy/release
 ```
 
-In `~/skill-copy/release/`, create `rollback.md` with the heading and the
-opening line below. Move the text of the "When a release goes wrong"
-section into it, from its first sentence to the end of step 5. Change "Use
-this section only when" to "Use these steps only when", because the text
-is now a file of its own.
+Dans `~/skill-copy/release/`, créez `rollback.md` avec le titre et la ligne
+d’ouverture ci-dessous. Déplacez-y le texte de la section « When a release goes
+wrong », de sa première phrase à la fin de l’étape 5. Remplacez « Use this
+section only when » par « Use these steps only when », parce que le texte est
+maintenant un fichier à part. Gardez le texte en anglais pour obtenir les mêmes
+nombres que le cours : le titre dit d’annuler une publication du paquet de
+notes, et la ligne d’ouverture dit que la skill de publication envoie l’agent
+ici, de n’utiliser ces étapes que quand l’utilisateur demande d’annuler une
+publication ou qu’un contrôle après l’étiquette montre qu’elle est fausse, et de
+ne rien annuler d’autre.
 
 ```markdown
 # Undo a release of the notes package
@@ -142,8 +154,11 @@ release is wrong. Undo nothing else.
 1. Run `git describe --tags`, `git log --format='%h %s' -n 3` and ...
 ```
 
-Then leave the heading in `SKILL.md` and replace the text under it with a
-pointer that says when to read the file:
+Laissez ensuite le titre dans `SKILL.md` et remplacez le texte qui suit par un
+renvoi qui dit quand lire le fichier. Le renvoi dit que si l’utilisateur demande
+d’annuler une publication, ou qu’un contrôle après l’étiquette montre qu’elle est
+fausse, l’agent lit `rollback.md` dans le dossier de cette skill et le suit, sans
+rien annuler avant de l’avoir lu :
 
 ```markdown
 ## When a release goes wrong
@@ -153,34 +168,35 @@ that the release is wrong, read `rollback.md` in this skill's directory
 and follow it. Don't undo anything before you have read it.
 ```
 
-The pointer names the situation, and that is what makes it work. A line
-that says only "see `rollback.md`" gives the agent no way to tell whether
-this run needs the file, so it may read it every time, or never.
-Anthropic's guide says to watch for this when you test a skill: an agent
-that never opens a bundled file may be missing a clear enough signal in
-`SKILL.md` (@Claude docs best-practices). The agent reads the pointer only
-in a run where the skill has loaded. An undo asked for in a new session
-loads the skill only if its description names that request.
+Le renvoi nomme la situation, et c’est ce qui le fait fonctionner. Une ligne qui
+dit seulement « voir `rollback.md` » ne donne à l’agent aucun moyen de savoir si
+cette exécution a besoin du fichier, donc il peut le lire à chaque fois, ou
+jamais. Le guide d’Anthropic dit d’y faire attention quand vous testez une
+skill : un agent qui n’ouvre jamais un fichier fourni avec la skill manque
+peut-être d’un signal assez clair dans `SKILL.md` (@Claude docs best-practices).
+L’agent ne lit le renvoi que lors d’une exécution où la skill s’est chargée. Une
+annulation demandée dans une nouvelle session ne charge la skill que si sa
+description nomme cette demande.
 
-The course repository has the result in `split/release/`. Measure it, and
-then measure your copy with `python3 measure.py ~/skill-copy/release`. If
-you moved the text as shown, your copy gives the same numbers. Its first
-line is your path.
+Le dépôt du cours contient le résultat dans `split/release/`. Mesurez-le, puis
+mesurez votre copie avec `python3 measure.py ~/skill-copy/release`. Si vous avez
+déplacé le texte comme indiqué, votre copie donne les mêmes nombres. Sa première
+ligne est votre chemin.
 
 <Choice id="which-line-drops" objective="customizing-agents/writes-skill/discloses-progressively"
   concepts={['progressive-disclosure']}
-  context="A release skill had a rollback section in its SKILL.md. The section was moved into a rollback.md file in the same directory, and a three-line pointer that says when to read it was left in its place. A script prints an estimated token count for the name and description, for SKILL.md and for each other file, then the total when only SKILL.md is read and the total when every file is read."
-  title="Which line drops?" hint="Which file lost the undo steps, and which parts of the skill did the move leave as they were?"
+  context="Une skill de publication avait une section d’annulation dans son SKILL.md. La section a été déplacée dans un fichier rollback.md du même dossier, et un renvoi de trois lignes qui dit quand le lire a été laissé à sa place. Un script affiche une estimation du nombre de jetons pour le nom et la description, pour SKILL.md et pour chaque autre fichier, puis le total quand seul SKILL.md est lu et le total quand tous les fichiers sont lus."
+  title="Quelle ligne baisse ?" hint="Quel fichier a perdu les étapes d’annulation, et quelles parties de la skill le déplacement a-t-il laissées telles quelles ?"
   options={[
-    { text: 'The line for the name and description, since the skill now has less text in it.', why: 'The move left the front matter as it was, so the name and description cost the same.' },
-    { text: 'The line for SKILL.md, since the undo steps are no longer in that file.', correct: true },
-    { text: 'The total when every file is read, since the undo steps are now read only on demand.', why: 'A run that reads every file reads the undo steps as well as the pointer, so this total doesn\'t drop.' },
+    { text: 'La ligne du nom et de la description, puisque la skill contient maintenant moins de texte.', why: 'Le déplacement a laissé l’en-tête tel quel, donc le nom et la description coûtent pareil.' },
+    { text: 'La ligne de SKILL.md, puisque les étapes d’annulation ne sont plus dans ce fichier.', correct: true },
+    { text: 'Le total quand tous les fichiers sont lus, puisque les étapes d’annulation ne sont plus lues qu’à la demande.', why: 'Une exécution qui lit tous les fichiers lit les étapes d’annulation en plus du renvoi, donc ce total ne baisse pas.' },
   ]}>
-Before you run the script on the split skill, predict which line drops
-compared with the grown skill.
+Avant de lancer le script sur la skill découpée, prédisez quelle ligne baisse par
+rapport à la skill agrandie.
 </Choice>
 
-<Predict id="measure-the-split-skill" title="Measure the split skill"
+<Predict id="measure-the-split-skill" title="Mesurer la skill découpée"
   answer={`split/release
     always loaded, name and description: 39
     when the skill runs, SKILL.md: 813
@@ -188,7 +204,7 @@ compared with the grown skill.
     total, SKILL.md read: 852
     total, every file read: 1368`}
   run="customizing-agents/progressive-disclosure/after.py">
-Run this, and compare with the output below.
+Lancez ceci, et comparez avec la sortie ci-dessous.
 
 ```sh
 python3 measure.py split/release
@@ -196,90 +212,93 @@ python3 measure.py split/release
 
 </Predict>
 
-The description didn't change, so the first line is still 39. A release
-that goes right now loads 852 tokens where it loaded 1295. A rollback reads
-both files and loads 1368, a little more than before, because the agent
-reads the pointer and the new file's heading as well as the steps. The
-split makes the common run cheaper, and the rare run pays a small amount
-extra.
+La description n’a pas changé, donc la première ligne reste à 39. Une
+publication qui se passe bien charge maintenant 852 jetons, là où elle en
+chargeait 1295. Une annulation lit les deux fichiers et charge 1368 jetons, un peu
+plus qu’avant, parce que l’agent lit le renvoi et le titre du nouveau fichier en
+plus des étapes. Le découpage rend l’exécution courante moins coûteuse, et
+l’exécution rare paie un petit supplément.
 
 <Choice id="where-the-table-goes" objective="customizing-agents/writes-skill/discloses-progressively"
   concepts={['progressive-disclosure']}
-  context="A deployment skill has a 200-line table that explains each error code the deploy tool can print. The agent needs the table only when a deploy fails, which is about one run in twenty."
-  title="Where does the table go?" hint="Which place costs nothing on the nineteen runs that don't need the table, and is still found on the run that does?"
+  context="Une skill de déploiement a un tableau de 200 lignes qui explique chaque code d’erreur que l’outil de déploiement peut afficher. L’agent n’a besoin du tableau que quand un déploiement échoue, soit environ une exécution sur vingt."
+  title="Où va le tableau ?" hint="Quel endroit ne coûte rien aux dix-neuf exécutions qui n’ont pas besoin du tableau, tout en restant trouvable lors de celle qui en a besoin ?"
   options={[
-    { text: 'In the description, so the agent knows about every error code before it picks the skill.', why: 'The description is loaded on every turn of every session. A table there costs its full size on every task, deploys or not.' },
-    { text: 'In the body of SKILL.md, under a heading that says to use it only when a deploy fails.', why: 'The heading tells the agent when to use the table, but the whole body is loaded on every run, so all nineteen good runs still pay for it.' },
-    { text: 'In errors.md, with a line in SKILL.md that says to read it when the deploy tool prints an error code.', correct: true },
-    { text: 'In errors.md, reached from a troubleshooting.md file that SKILL.md points to for every kind of failure.', why: 'The table is out of the body, but it is two levels from SKILL.md, and a file reached through another reference file may be read only in part.' },
+    { text: 'Dans la description, pour que l’agent connaisse chaque code d’erreur avant de choisir la skill.', why: 'La description est chargée à chaque tour de chaque session. Un tableau à cet endroit coûte toute sa taille sur chaque tâche, déploiement ou non.' },
+    { text: 'Dans le corps de SKILL.md, sous un titre qui dit de ne s’en servir que quand un déploiement échoue.', why: 'Le titre dit à l’agent quand utiliser le tableau, mais tout le corps est chargé à chaque exécution, donc les dix-neuf bonnes exécutions le paient quand même.' },
+    { text: 'Dans errors.md, avec une ligne de SKILL.md qui dit de le lire quand l’outil de déploiement affiche un code d’erreur.', correct: true },
+    { text: 'Dans errors.md, atteint depuis un fichier troubleshooting.md vers lequel SKILL.md renvoie pour tout type d’échec.', why: 'Le tableau est sorti du corps, mais il est à deux niveaux de SKILL.md, et un fichier atteint par un autre fichier de référence peut n’être lu qu’en partie.' },
   ]}>
-Where should the error-code table go?
+Où le tableau des codes d’erreur doit-il aller ?
 </Choice>
 
 <MultiChoice id="what-leaves-the-body" phase="review" objective="customizing-agents/writes-skill/discloses-progressively"
   concepts={['progressive-disclosure']}
-  context="A team reviews a release skill whose SKILL.md body has grown to twice its first size. They decide which parts to move into files next to SKILL.md that the body points to, and which parts stay in the body."
-  title="What moves out of the body?" hint="For each part, ask how many release runs need it."
+  context="Une équipe relit une skill de publication dont le corps de SKILL.md a doublé depuis sa première version. Elle décide quelles parties déplacer dans des fichiers à côté de SKILL.md vers lesquels le corps renvoie, et quelles parties restent dans le corps."
+  title="Qu’est-ce qui sort du corps ?" hint="Pour chaque partie, demandez-vous combien d’exécutions de publication en ont besoin."
   options={[
-    { text: 'The steps for undoing a release that went wrong.', correct: true },
-    { text: 'The numbered steps every release runs, from the tests to the tag.', why: 'Every run needs these. Moving them to another file makes every run read two files instead of one.' },
-    { text: 'A long table of the changelog formats the team used in past years.', correct: true },
-    { text: 'The check that says when the release is done.', why: 'Every run ends with this check. It is part of the common path and stays in the body.' },
+    { text: 'Les étapes pour annuler une publication qui a mal tourné.', correct: true },
+    { text: 'Les étapes numérotées que suit chaque publication, des tests à l’étiquette.', why: 'Chaque exécution en a besoin. Les déplacer dans un autre fichier fait lire deux fichiers à chaque exécution au lieu d’un.' },
+    { text: 'Un long tableau des formats de journal que l’équipe a utilisés les années passées.', correct: true },
+    { text: 'Le contrôle qui dit quand la publication est terminée.', why: 'Chaque exécution se termine par ce contrôle. Il fait partie du chemin courant et reste dans le corps.' },
   ]}>
-Which two parts should move into files the body points to?
+Quelles deux parties doivent aller dans des fichiers vers lesquels le corps
+renvoie ?
 </MultiChoice>
 
 <Choice id="which-pointer-works" phase="review" objective="customizing-agents/writes-skill/discloses-progressively"
   concepts={['progressive-disclosure']}
-  context="A release skill's undo steps were moved from SKILL.md into a file named rollback.md next to it, and the author must write the line in SKILL.md that points to the file."
-  title="Which pointer line works?" hint="Which line lets the agent decide, on a given run, whether it needs the file?"
+  context="Les étapes d’annulation d’une skill de publication ont été déplacées de SKILL.md vers un fichier rollback.md à côté, et l’auteur doit écrire la ligne de SKILL.md qui renvoie au fichier."
+  title="Quelle ligne de renvoi fonctionne ?" hint="Quelle ligne permet à l’agent de décider, lors d’une exécution donnée, s’il a besoin du fichier ?"
   options={[
-    { text: 'If the user asks to undo a release, or a check after the tag fails, read rollback.md.', correct: true },
-    { text: 'See rollback.md for more information about releases and what can go wrong.', why: 'This names no situation, so the agent can\'t tell whether this run needs the file. It may read it every time, or never.' },
-    { text: 'Read rollback.md before you start, so you know what to do if something fails.', why: 'This loads the file on every run, which costs at least as much as keeping the steps in the body.' },
+    { text: 'Si l’utilisateur demande d’annuler une publication, ou si un contrôle après l’étiquette échoue, lire rollback.md.', correct: true },
+    { text: 'Voir rollback.md pour plus d’informations sur les publications et ce qui peut mal tourner.', why: 'Cette ligne ne nomme aucune situation, donc l’agent ne peut pas savoir si cette exécution a besoin du fichier. Il peut le lire à chaque fois, ou jamais.' },
+    { text: 'Lire rollback.md avant de commencer, pour savoir quoi faire si quelque chose échoue.', why: 'Cette ligne charge le fichier à chaque exécution, ce qui coûte au moins autant que de garder les étapes dans le corps.' },
   ]}>
-Which line should `SKILL.md` have in place of the moved steps?
+Quelle ligne `SKILL.md` doit-il avoir à la place des étapes déplacées ?
 </Choice>
 
 <Match id="cost-of-each-part" phase="review" objective="customizing-agents/writes-skill/discloses-progressively"
   concepts={['progressive-disclosure']}
-  context="A release skill has a two-sentence description that names requests to release, bump the version or tag, a SKILL.md body with the release steps and a pointer line, and a rollback.md file the pointer names. Each row is a kind of session, and the options say which parts of the skill it loads."
-  title="What does each session load?" hint="Which part is loaded for every skill, which when the skill runs, and which only when a step sends the agent there?"
-  options={['The description only', 'The description and SKILL.md', 'The description, SKILL.md and rollback.md']}
+  context="Une skill de publication a une description de deux phrases qui nomme les demandes de publication, de montée de version ou d’étiquetage, un corps SKILL.md avec les étapes de publication et une ligne de renvoi, et un fichier rollback.md que nomme le renvoi. Chaque ligne du tableau est un genre de session, et les options disent quelles parties de la skill elle charge."
+  title="Que charge chaque session ?" hint="Quelle partie est chargée pour chaque skill, laquelle quand la skill s’exécute, et laquelle seulement quand une étape y envoie l’agent ?"
+  options={['La description seule', 'La description et SKILL.md', 'La description, SKILL.md et rollback.md']}
   rows={[
-    { statement: 'A session that fixes a typo in the README', option: 0, why: 'Does a typo fix match the release skill\'s description?' },
-    { statement: 'A session that cuts release 0.4.0, and every check passes', option: 1, why: 'Does anything in a good release send the agent to the undo steps?' },
-    { statement: 'A session that cuts release 0.4.0, and the check after the tag shows the tag is on the wrong commit', option: 2, why: 'Which line in SKILL.md names this situation, and where does it send the agent?' },
+    { statement: 'Une session qui corrige une faute de frappe dans le README', option: 0, why: 'Une correction de faute de frappe correspond-elle à la description de la skill de publication ?' },
+    { statement: 'Une session qui publie la version 0.4.0, et chaque contrôle passe', option: 1, why: 'Quelque chose dans une bonne publication envoie-t-il l’agent vers les étapes d’annulation ?' },
+    { statement: 'Une session qui publie la version 0.4.0, et le contrôle après l’étiquette montre que l’étiquette est sur le mauvais commit', option: 2, why: 'Quelle ligne de SKILL.md nomme cette situation, et où envoie-t-elle l’agent ?' },
   ]}
-  rationale="Only the description is paid for in every session. The body is paid for when the skill runs, and rollback.md only on the run that needs it.">
-Match each session to what it loads of the release skill.
+  rationale="Seule la description se paie dans chaque session. Le corps se paie quand la skill s’exécute, et rollback.md seulement lors de l’exécution qui en a besoin.">
+Associez chaque session à ce qu’elle charge de la skill de publication.
 </Match>
 
-<Pitfall title="The skill that grew one section at a time">
-A team's release skill starts at forty lines. Over six months people add a
-note on urgent fixes and a table of past incidents. Later come the rollback
-steps and a paragraph on the old release tool. Each change is small enough
-that nobody objects in review. The body ends up three times its first size,
-and a release loads all of it, although most runs need only the first forty
-lines. Someone also adds trigger words for each new case to the
-description, which every session pays for. Each change looked cheap, and
-nobody measured the sum. Measure the skill each time you add to it, and
-keep in the body only what every run needs.
+<Pitfall title="La skill qui grandissait section par section">
+La skill de publication d’une équipe commence à quarante lignes. En six mois,
+des personnes ajoutent une note sur les corrections urgentes et un tableau des
+incidents passés. Viennent ensuite les étapes d’annulation et un paragraphe sur
+l’ancien outil de publication. Chaque modification est assez petite pour que
+personne ne s’y oppose en revue. Le corps finit trois fois plus long qu’au
+départ, et une publication le charge en entier, alors que la plupart des
+exécutions n’ont besoin que des quarante premières lignes. Quelqu’un ajoute aussi
+à la description des mots déclencheurs pour chaque nouveau cas, que chaque
+session paie. Chaque modification semblait peu coûteuse, et personne n’a mesuré
+la somme. Mesurez la skill chaque fois que vous y ajoutez quelque chose, et ne
+gardez dans le corps que ce dont chaque exécution a besoin.
 </Pitfall>
 
-<Exercise stretch="After the commands above, type /release 0.4.1 in a new session in ~/notes-clean, and check in the transcript whether the agent opened rollback.md.">
-If you followed the walkthrough, your `~/skill-copy/release/` is the
-exercise. Go to the result below. Otherwise make the copy
-with the commands in the last section. Measure it with `measure.py`, move
-the "When a release goes wrong" section into `rollback.md` with a pointer
-that says when to read it, and measure again. The script only reads files,
-and you change only the copy. Afterwards you can check any skill you write
-for a rare case that every run pays for.
+<Exercise stretch="Après les commandes ci-dessus, tapez /release 0.4.1 dans une nouvelle session dans ~/notes-clean, et vérifiez dans la transcription si l’agent a ouvert rollback.md.">
+Si vous avez suivi la démonstration, votre `~/skill-copy/release/` est
+l’exercice. Passez au résultat ci-dessous. Sinon, faites la copie avec les
+commandes de la dernière section. Mesurez-la avec `measure.py`, déplacez la
+section « When a release goes wrong » dans `rollback.md` avec un renvoi qui dit
+quand le lire, et mesurez de nouveau. Le script ne fait que lire des fichiers, et
+vous ne modifiez que la copie. Vous pourrez ensuite vérifier, dans toute skill
+que vous écrivez, s’il y a un cas rare que chaque exécution paie.
 
-For the stretch, these commands put your split skill into the clean clone
-from the last lesson and commit it, then make one change for the release to
-list. The skill edits files and makes commits and tags, so run it only in
-that clone, which has no remote.
+Pour aller plus loin, ces commandes placent votre skill découpée dans le clone
+propre de la leçon précédente et la committent, puis font une modification que
+la publication listera. La skill modifie des fichiers et fait des commits et des
+étiquettes, donc lancez-la seulement dans ce clone, qui n’a pas de dépôt distant.
 
 ```sh
 rm -rf ~/notes-clean/.claude/skills/release
@@ -291,31 +310,32 @@ echo 'Run `python3 notes.py list` to see your notes.' >> README.md
 git commit -q -a -m "Document the list command"
 ```
 
-A good result: the first line didn't change, the second dropped from 1256
-to 813 if you moved the text as shown, and `rollback.md` appears as its own
-line. The pointer in `SKILL.md` names the requests that need the file.
-Read the body that is left. Is there another part that only some runs
-need?
+Un bon résultat : la première ligne n’a pas changé, la deuxième est passée de
+1256 à 813 si vous avez déplacé le texte comme indiqué, et `rollback.md` apparaît
+sur sa propre ligne. Le renvoi de `SKILL.md` nomme les demandes qui ont besoin du
+fichier. Lisez le corps qui reste. Y a-t-il une autre partie dont seules
+certaines exécutions ont besoin ?
 </Exercise>
 
 <Recap>
-1. An agent loads a skill in stages: the name and description of every
-   skill at startup, the whole `SKILL.md` when a task matches it, and other
-   files only when a step points to them (@Agent Skills spec)
+1. Un agent charge une skill par étapes : le nom et la description de chaque
+   skill au démarrage, le `SKILL.md` complet quand une tâche lui correspond, et
+   les autres fichiers seulement quand une étape y renvoie (@Agent Skills spec)
    (@Claude docs agent-skills-overview).
-2. The description is paid for on every turn of every session, and the
-   body on every run of the skill. In Claude Code the body stays in the
-   conversation for the turns after it runs (@Claude Code skills).
-3. Keep the common path in `SKILL.md`. Move a rare case or a long
-   reference into a file one level from `SKILL.md`, and leave a pointer
-   that names when to read it (@Claude docs best-practices).
-4. Measure the skill with the same rule before and after a change. An
-   estimate is enough to compare two versions. The exact count for a model
-   comes from the vendor's tokenizer.
-5. Skills grow a little at a time, so measure after each addition.
+2. La description se paie à chaque tour de chaque session, et le corps à chaque
+   exécution de la skill. Dans Claude Code, le corps reste dans la conversation
+   aux tours qui suivent son exécution (@Claude Code skills).
+3. Gardez le chemin courant dans `SKILL.md`. Déplacez un cas rare ou une longue
+   référence dans un fichier à un niveau de `SKILL.md`, et laissez un renvoi qui
+   dit quand le lire (@Claude docs best-practices).
+4. Mesurez la skill avec la même règle avant et après une modification. Une
+   estimation suffit pour comparer deux versions. Le nombre exact pour un modèle
+   vient du découpeur en jetons de l’éditeur.
+5. Les skills grandissent petit à petit, donc mesurez après chaque ajout.
 </Recap>
 
 <Habit id="measure-after-adding">
-The next time you add a section to a skill, measure the skill before and
-after the change. Then ask whether every run needs the new section.
+La prochaine fois que vous ajoutez une section à une skill, mesurez la skill
+avant et après la modification. Demandez-vous ensuite si chaque exécution a
+besoin de la nouvelle section.
 </Habit>

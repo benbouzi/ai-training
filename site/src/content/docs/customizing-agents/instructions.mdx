@@ -1,39 +1,43 @@
 import { Repair, Pitfall, Exercise, Recap } from '@components/lesson';
 import InstructionsBuilder from '@components/widgets/InstructionsBuilder.astro';
 
-In your first session you gave the agent context by hand, from the files
-that mattered to the test command and the branch to leave alone. In this lesson
-we write that context down once, in a file the agent reads at the start of
-every session. We also look at what belongs in that file and what doesn't,
-and at what to do when a written rule isn't enough.
+Dans votre première session, vous avez donné du contexte à l’agent à la main,
+des fichiers qui comptaient jusqu’à la commande de test et la branche à ne pas
+toucher. Dans cette leçon, nous écrivons ce contexte une fois pour toutes, dans
+un fichier que l’agent lit au début de chaque session. Nous regardons aussi ce
+qui a sa place dans ce fichier et ce qui ne l’a pas, et ce qu’il faut faire
+quand une règle écrite ne suffit pas.
 
-You don't run anything in this lesson. The examples are file contents, and the
-fixture is a small fictional project called `invoice-mailer`: a Python
-service that renders invoices to PDF and sends them over SMTP. You can
-reproduce every step in an empty directory with a text editor.
+Vous ne lancez rien dans cette leçon. Les exemples sont des contenus de
+fichiers, et l’exemple est un petit projet fictif appelé `invoice-mailer` : un
+service Python qui produit des factures en PDF et les envoie par SMTP. Vous
+pouvez refaire chaque étape dans un dossier vide avec un éditeur de texte.
 
-## One file, read before anything else
+## Un fichier, lu avant tout le reste
 
-Most coding agents look for a Markdown file at the root of the repository
-and load it into their context before the first user message. The
-convention differs by tool: some look for `AGENTS.md`, some for
-`CLAUDE.md`, some for both. Claude Code, for example, reads `CLAUDE.md`.
-It reads `AGENTS.md` only when there is no `CLAUDE.md`,
-`.claude/CLAUDE.md` or `CLAUDE.local.md` in the directory you start it in
-or in any directory above it (@Claude Code memory). The content is the
-same either way, so the common pattern is to write `AGENTS.md` and make
-`CLAUDE.md` a symlink to it, or to give `CLAUDE.md` the one line
-`@AGENTS.md`, which imports the file. A `CLAUDE.md` that only asks in
-words for `AGENTS.md` to be read gets it read only when Claude decides to
-open it (@Claude Code memory).
+La plupart des agents de code cherchent un fichier Markdown à la racine du dépôt
+et le chargent dans leur contexte avant le premier message de l’utilisateur. La
+convention dépend de l’outil : certains cherchent `AGENTS.md`, d’autres
+`CLAUDE.md`, d’autres les deux. Claude Code, par exemple, lit `CLAUDE.md`. Il ne
+lit `AGENTS.md` que s’il n’y a ni `CLAUDE.md`, ni `.claude/CLAUDE.md`, ni
+`CLAUDE.local.md` dans le dossier où vous le lancez ou dans un dossier
+au-dessus (@Claude Code memory). Le contenu est le même dans les deux cas, donc
+l’habitude courante consiste à écrire `AGENTS.md` et à faire de `CLAUDE.md` un
+lien symbolique vers lui, ou à donner à `CLAUDE.md` la seule ligne
+`@AGENTS.md`, qui importe le fichier. Un `CLAUDE.md` qui demande seulement avec
+des mots de lire `AGENTS.md` ne le fait lire que lorsque Claude décide de
+l’ouvrir (@Claude Code memory).
 
-The file is the briefing you would give a capable contractor on their
-first morning. They can read code. They can't know which command
-your team runs before pushing, which directory is generated, or which
-obvious-looking fix has already been tried and reverted twice. That's the
-gap the file fills.
+Le fichier est la présentation que vous feriez à un prestataire compétent, le
+matin de son premier jour. Il sait lire du code. Il ne peut pas savoir quelle
+commande votre équipe lance avant de pousser, quel dossier est généré, ou quelle
+correction en apparence évidente a déjà été essayée puis annulée deux fois.
+C’est ce manque que le fichier comble.
 
-Here is the smallest useful version for our fixture:
+Voici la plus petite version utile pour notre exemple, en anglais comme le reste
+du projet. Elle dit ce que fait le service, avec quelle version de Python et
+quel gestionnaire de paquets, puis donne la commande de test et la commande de
+vérification et de mise en forme :
 
 ```markdown
 # invoice-mailer
@@ -46,88 +50,92 @@ Renders invoices to PDF and sends them over SMTP. Python 3.13, uv.
 - Lint and format: `uv run ruff check . && uv run ruff format .`
 ```
 
-An agent that reads these few lines runs the right test
-command on the first try instead of guessing between `pytest`,
-`python -m pytest` and `make test`. That alone pays for the file.
+Un agent qui lit ces quelques lignes lance la bonne commande de test du premier
+coup, sans hésiter entre `pytest`, `python -m pytest` et `make test`. Cela
+suffit déjà à justifier le fichier.
 
-## What belongs in it
+## Ce qui a sa place dedans
 
-Everything in the file should be something the agent can't work out from
-the code, or could work out but gets wrong often enough that you are tired
-of correcting it. In practice that's four kinds of content.
+Tout ce que contient le fichier devrait être quelque chose que l’agent ne peut
+pas déduire du code, ou qu’il pourrait déduire mais se trompe assez souvent pour
+que vous soyez lassé de le corriger. En pratique, cela fait quatre sortes de
+contenu.
 
-**Commands.** How to install, test, lint, build, and run. One line each,
-with the exact invocation. If the project has a task runner, name it and
-say that the runner is the source of truth.
+**Les commandes.** Comment installer, tester, vérifier le style, construire et
+lancer. Une ligne chacune, avec l’appel exact. Si le projet a un lanceur de
+tâches, nommez-le et dites qu’il fait foi.
 
-**Structure.** Where things live, at the level of directories, not files.
-Which directories are generated and must not be edited by hand. Where new
-code of each kind goes.
+**La structure.** Où se trouvent les choses, dossier par dossier, sans descendre au
+niveau des fichiers. Quels dossiers sont générés et ne doivent pas être modifiés à la main.
+Où va chaque sorte de nouveau code.
 
-**Conventions.** The rules the code follows that a reader would not infer
-from one file: the commit message format, the branch naming scheme, the
-test naming scheme, and which style choices are deliberate.
+**Les conventions.** Les règles que suit le code et qu’un lecteur ne déduirait
+pas d’un seul fichier : le format des messages de commit, le nommage des
+branches, le nommage des tests, et les choix de style qui sont délibérés.
 
-**Rules that remove a recurring mistake.** This is the most valuable
-category and the hardest to write in advance. Every time the agent does
-the same wrong thing twice, add one line that stops it. "Don't add
-retries around SMTP calls. The queue already retries" is a good rule. It
-is specific, it says what to do instead, and it exists because of a real
-incident.
+**Les règles qui suppriment une erreur récurrente.** C’est la catégorie la plus
+précieuse, et la plus difficile à écrire à l’avance. Chaque fois que l’agent
+fait deux fois la même erreur, ajoutez une ligne qui l’arrête. « N’ajoute pas de
+nouvelles tentatives autour des appels SMTP. La file d’attente réessaie déjà »
+est une bonne règle. Elle est précise, elle dit quoi faire à la place, et elle
+existe à cause d’un vrai incident.
 
-Build one now. Tick what's true for a project you know, fill in the
-short fields, and read the result as if you were the agent seeing it for
-the first time.
+Construisez-en un maintenant. Cochez ce qui est vrai pour un projet que vous
+connaissez, remplissez les champs courts, et lisez le résultat comme si vous
+étiez l’agent qui le découvre.
 
 <InstructionsBuilder />
 
-Notice how short the output is even with every box ticked. That's the
-target. A real project's file grows over time, but it grows one line per
-lesson learned, not one paragraph per feature.
+Remarquez combien le résultat est court, même avec toutes les cases cochées.
+C’est la cible. Le fichier d’un vrai projet grandit avec le temps, mais il
+grandit d’une ligne à chaque leçon tirée.
 
-Claude Code can write a first draft of the file with its `/init` command,
-from what it finds in the repository. Treat that draft as a list of
-candidates and delete every line the agent could have found itself. The
-vendor's own advice is close to the exercise at the end of this lesson:
-add to the file when the agent repeats a mistake, or when you find
-yourself giving it a correction you already gave it in an earlier session
+Claude Code peut écrire un premier brouillon du fichier avec sa commande
+`/init`, à partir de ce qu’il trouve dans le dépôt. Traitez ce brouillon comme
+une liste de candidats, et supprimez chaque ligne que l’agent aurait pu trouver
+lui-même. Le conseil de l’éditeur est proche de l’exercice de fin de leçon :
+ajoutez au fichier quand l’agent répète une erreur, ou quand vous vous surprenez
+à lui donner une correction déjà donnée dans une session précédente
 (@Claude Code memory).
 
-## What doesn't belong
+## Ce qui n’a pas sa place dedans
 
-The failure mode of instruction files isn't that they're missing. It is
-that they're long. Every line costs context on every turn of every
-session, and an agent given two pages of prose follows some of it and
-silently drops the rest.
+Le défaut habituel des fichiers d’instructions est leur longueur. Chaque ligne coûte du contexte à chaque tour de chaque session,
+et un agent à qui l’on donne deux pages de prose en suit une partie et laisse
+tomber le reste sans le dire.
 
-Leave these out:
+Laissez de côté :
 
-**Anything the agent can read from the code.** The list of dependencies
-is in the lockfile. The function signatures are in the source. The API
-routes are in the router. Pointing at the file ("routes are registered in
-`app/routes.py`") is fine; copying its contents isn't, because the copy
-goes stale and the agent then has two conflicting sources.
+**Tout ce que l’agent peut lire dans le code.** La liste des dépendances est
+dans le fichier de verrouillage. Les signatures des fonctions sont dans les
+sources. Les routes de l’API sont dans le routeur. Renvoyer au fichier (« les
+routes sont enregistrées dans `app/routes.py` ») convient. Copier son contenu ne
+convient pas, parce que la copie devient périmée et que l’agent a alors deux
+sources contradictoires.
 
-**Long prose.** Architecture essays, project history, the reasoning behind
-every decision. If the reasoning matters, put it in a design document and
-link to it. The agent reads it when the task calls for it.
+**La prose longue.** Les essais d’architecture, l’histoire du projet, le
+raisonnement derrière chaque décision. Si le raisonnement compte, mettez-le dans
+un document de conception et faites un lien vers lui. L’agent le lit quand la
+tâche le demande.
 
-**Restating the obvious.** "Write clean code." "Follow best practices."
-"Make sure tests pass." A capable agent already does these, and the lines
-teach nothing about your project. They also dilute the lines that do.
+**L’évidence répétée.** « Écris du code propre. » « Suis les bonnes pratiques. »
+« Vérifie que les tests passent. » Un agent compétent fait déjà tout cela, et ces
+lignes n’apprennent rien sur votre projet. Elles diluent aussi les lignes qui
+apprennent quelque chose.
 
-<Pitfall title="The file that says everything and changes nothing">
-A team writes a two-page `AGENTS.md` on day one: architecture overview,
-coding philosophy, a paragraph on each module. Three weeks later the agent
-is still committing to `main` and still running the wrong test command,
-because those two facts are in paragraph seven and paragraph eleven. The
-rule: one short line per fact, commands and hard rules first, and add to
-the file only when something went wrong.
+<Pitfall title="Le fichier qui dit tout et ne change rien">
+Une équipe écrit un `AGENTS.md` de deux pages dès le premier jour : vue
+d’ensemble de l’architecture, philosophie du code, un paragraphe sur chaque
+module. Trois semaines plus tard, l’agent committe toujours sur `main` et lance
+toujours la mauvaise commande de test, parce que ces deux faits se trouvent au
+septième et au onzième paragraphe. La règle : une ligne courte par fait, les
+commandes et les règles strictes d’abord, et n’ajoutez au fichier que quand
+quelque chose a mal tourné.
 </Pitfall>
 
 <Repair id="fix-the-instructions" objective="customizing-agents/configures-agent/writes-project-instructions"
   concepts={['agents-md-claude-md', 'sections']}
-  title="Fix the instructions" hint="Which lines here would change what the agent does on its next task? Which lines could it have read from the repository itself?"
+  title="Corriger les instructions" hint="Lesquelles de ces lignes changeraient ce que fait l’agent lors de sa prochaine tâche ? Lesquelles aurait-il pu lire dans le dépôt lui-même ?"
   broken={`# invoice-mailer
 
 Welcome to invoice-mailer! This project is a modern, well-architected Python
@@ -169,37 +177,42 @@ Renders invoices to PDF and sends them over SMTP. Python 3.13, uv.
 - Do not edit \`uv.lock\` by hand; use \`uv add\` / \`uv remove\`.
 - Do not add retries around SMTP calls; the queue already retries.
 - Every change to a template needs a matching golden-file test in \`tests/rendering/\`.`}>
-This is the current `AGENTS.md` of `invoice-mailer`. The agent keeps running
-`python -m pytest` (wrong) and committing to `main`. It also wraps mail
-calls in retry loops. Rewrite the file so that each of those stops, and so that
-nothing in it restates what the agent could read from the repository.
+Voici l’`AGENTS.md` actuel d’`invoice-mailer`, en anglais comme le projet. Il
+souhaite la bienvenue, vante la qualité du code, demande d’écrire du code propre
+et de faire passer les tests, décrit les modules un par un, et finit par
+« faites attention ». L’agent continue de lancer `python -m pytest` (faux) et de
+committer sur `main`. Il enveloppe aussi les appels d’envoi de courriel dans des
+boucles de nouvelles tentatives. Réécrivez le fichier pour que chacune de ces
+erreurs cesse, et pour que rien n’y répète ce que l’agent pourrait lire dans le
+dépôt. Vous pouvez écrire votre version en anglais ou en français.
 </Repair>
 
-## Instructions in a monorepo
+## Les instructions dans un monorepo
 
-A repository with more than one project in it needs more than one file.
-Most tools read the file at the repository root, and also a file in a
-subdirectory when the agent works on files under that directory. Claude
-Code, for example, reads the instruction files in the directory you start
-it in and in every directory above it when the session starts. It reads a
-subdirectory's file when it first reads a file in that subdirectory. In
-both places a `CLAUDE.md` wins over an `AGENTS.md`. Claude Code reads an
-`AGENTS.md` only under the rule above, and a subdirectory's `AGENTS.md`
-only when that subdirectory also has no `CLAUDE.md`, `.claude/CLAUDE.md`
-or `CLAUDE.local.md` of its own (@Claude Code memory).
+Un dépôt qui contient plus d’un projet a besoin de plus d’un fichier. La plupart
+des outils lisent le fichier à la racine du dépôt, et aussi le fichier d’un
+sous-dossier quand l’agent travaille sur des fichiers de ce sous-dossier. Claude
+Code, par exemple, lit au démarrage de la session les fichiers d’instructions du
+dossier où vous le lancez et de chaque dossier au-dessus. Il lit le fichier d’un
+sous-dossier la première fois qu’il lit un fichier de ce sous-dossier. Aux deux
+endroits, un `CLAUDE.md` l’emporte sur un `AGENTS.md`. Claude Code ne lit un
+`AGENTS.md` que selon la règle ci-dessus, et celui d’un sous-dossier seulement si
+ce sous-dossier n’a pas non plus son propre `CLAUDE.md`, `.claude/CLAUDE.md` ou
+`CLAUDE.local.md` (@Claude Code memory).
 
-The tools differ on a conflict between two files. The AGENTS.md format
-says that the file closest to the edited file takes precedence
-(@AGENTS.md format). Claude Code keeps every file in its context, with the
-closer file after the root file, and when two rules contradict each other
-it may follow either one (@Claude Code memory). So treat a conflict
-between two files as a mistake to fix, and don't count on the closer file
-to apply.
+Les outils diffèrent quand deux fichiers se contredisent. Le format AGENTS.md
+dit que le fichier le plus proche du fichier modifié l’emporte
+(@AGENTS.md format). Claude Code garde tous les fichiers dans son contexte, le
+plus proche après celui de la racine, et quand deux règles se contredisent il
+peut suivre l’une ou l’autre (@Claude Code memory). Traitez donc une
+contradiction entre deux fichiers comme une erreur à corriger, sans compter sur
+le fichier le plus proche pour s’appliquer.
 
-The way the tools read the files gives a natural split. The root file
-holds what's true everywhere: the task runner, the commit convention, the
-branch rule. Each project's file holds only what differs: its own test
-command, its own language, its own recurring mistakes.
+La façon dont les outils lisent les fichiers donne un découpage naturel. Le
+fichier racine contient ce qui est vrai partout : le lanceur de tâches, la
+convention de commit, la règle des branches. Le fichier de chaque projet ne
+contient que ce qui diffère : sa propre commande de test, son propre langage,
+ses propres erreurs récurrentes.
 
 ```text
 repo/
@@ -211,70 +224,77 @@ repo/
       AGENTS.md          # bun test; never edit generated/ by hand
 ```
 
-Resist the urge to copy the root rules into each child file so that it
-reads standalone. The agent sees both; the copy only adds a second place
-to keep in sync.
+Les commentaires de l’arbre reprennent le découpage : à la racine, le lanceur de
+tâches, le format des commits et la règle des branches. Pour `invoice-mailer`,
+`uv run pytest` et pas de nouvelles tentatives SMTP. Pour `web`, `bun test` et
+ne jamais modifier `generated/` à la main.
 
-Your personal preferences belong in neither file. Claude Code also reads
-a user-level `~/.claude/CLAUDE.md`, in every project and only for you
-(@Claude Code memory). How you like a change explained or which shell
-you use goes there. The shared file then holds only what the whole team
-needs (@Academy claude-code-101).
+Résistez à l’envie de copier les règles de la racine dans chaque fichier enfant
+pour qu’il se lise seul. L’agent voit les deux, et la copie ne fait qu’ajouter
+un second endroit à tenir à jour.
 
-## When instructions aren't enough
+Vos préférences personnelles n’ont leur place dans aucun des deux fichiers.
+Claude Code lit aussi un `~/.claude/CLAUDE.md` au niveau de l’utilisateur, dans
+chaque projet et pour vous seul (@Claude Code memory). La façon dont vous aimez
+qu’on vous explique une modification, ou le shell que vous utilisez, va là. Le
+fichier partagé ne contient alors que ce dont toute l’équipe a besoin
+(@Academy claude-code-101).
 
-An instruction is a request. The agent reads it, usually follows it, and
-sometimes doesn't, particularly late in a long session when the file has
-scrolled far back in its context. If a rule is one you can't afford to
-have skipped even once, don't rely on prose for it. A *hook* runs a
-command of yours at a fixed point in the agent's loop, such as before a
-tool call or after an edit. When it runs before a tool call, it can
-block the action outright. For example, a hook that runs before every
-shell command, inspects the command the agent is about to run, and
-exits with code 2 when it matches `git push` to `main` means the push
-never happens, however far back the instruction file has scrolled. In
-Claude Code, exit code 2 is the code that blocks. A hook that exits
-with 1 reports an error, and the command still runs
-(@Claude Code hooks). "Never push to `main`" in `AGENTS.md` is advice.
-The hook enforces it. A hook that runs the formatter after every edit
-works the same way for a procedure the agent often forgets. The message
-a blocking hook prints goes back to the agent, so it learns why the
-action was refused and can change course instead of retrying
-(@Claude Code hooks). Hooks in the project's shared settings file,
-`.claude/settings.json` in Claude Code, are committed with the code
-(@Claude Code hooks). Everyone who clones the repository gets the same
-enforcement without setting it up (@Academy claude-code-101). And when
-a rule isn't a prohibition but a procedure, a multi-step thing the
-agent should do the same way every time, it is better packaged as a
-*skill*: a named, self-contained set of instructions the agent loads
-only when the task calls for it, so it doesn't sit in every session's
-context. A later lesson in this course is about writing one.
+## Quand les instructions ne suffisent pas
 
-<Exercise stretch="Now add one more rule that is enforced rather than advised: an agent hook that blocks the action, or a CI check that fails when the rule is broken, and remove the equivalent line from AGENTS.md.">
-In an empty directory, create a throwaway project: any language, a test
-command that works, one source file. Run a coding agent in it and give it
-three small tasks without any instructions file. Note every time it
-guesses wrong (test command, file location, style, branch). Then write an
-`AGENTS.md` of at most fifteen lines that would have prevented each wrong
-guess. Delete the project's git history and repeat the same three tasks.
+Une instruction est une demande. L’agent la lit, la suit en général, et parfois
+non, surtout tard dans une longue session, quand le fichier est loin en arrière
+dans son contexte. Si vous ne pouvez pas vous permettre qu’une règle soit sautée
+une seule fois, ne comptez pas sur de la prose pour elle. Un *hook* lance une
+commande à vous à un moment fixe de la boucle de l’agent, par exemple avant un
+appel d’outil (tool call) ou après une modification. Quand il s’exécute avant un appel
+d’outil, il peut bloquer l’action net. Par exemple, avec un hook qui s’exécute
+avant chaque commande shell, examine la commande que l’agent s’apprête à lancer
+et se termine avec le code 2 quand elle correspond à un `git push` vers `main`,
+le push n’a jamais lieu, aussi loin que soit le fichier d’instructions dans le
+contexte. Dans Claude Code, le code de sortie 2 est celui qui bloque. Un hook qui
+se termine avec 1 signale une erreur, et la commande s’exécute quand même
+(@Claude Code hooks). « Ne jamais pousser sur `main` » dans `AGENTS.md` est un
+conseil. Le hook l’impose. Un hook qui lance l’outil de mise en forme après
+chaque modification fonctionne de la même façon pour une procédure que l’agent
+oublie souvent. Le message qu’affiche un hook qui bloque revient à l’agent, qui
+apprend ainsi pourquoi l’action a été refusée et peut changer de cap sans
+réessayer la même action (@Claude Code hooks). Les hooks du fichier de réglages partagé du
+projet, `.claude/settings.json` dans Claude Code, sont committés avec le code
+(@Claude Code hooks). Toute personne qui clone le dépôt reçoit les mêmes
+contrôles sans rien configurer (@Academy claude-code-101). Et quand une règle
+est une procédure, une chose en plusieurs étapes que
+l’agent devrait faire de la même façon à chaque fois, il vaut mieux la regrouper
+dans une *skill* : un ensemble d’instructions nommé et autonome que l’agent ne
+charge que quand la tâche le demande, pour qu’il n’occupe pas le contexte de
+chaque session. Une leçon suivante de ce cours apprend à en écrire une.
 
-A good result: the second run makes none of the wrong guesses from the
-first, and every line in your file traces back to one of them. If a line
-doesn't, it is a candidate to delete.
+<Exercise stretch="Ajoutez maintenant une règle de plus que le système impose : un hook d’agent qui bloque l’action, ou un contrôle de CI qui échoue quand la règle est enfreinte, et retirez la ligne équivalente d’AGENTS.md.">
+Dans un dossier vide, créez un projet jetable : n’importe quel langage, une
+commande de test qui fonctionne, un fichier source. Lancez-y un agent de code et
+donnez-lui trois petites tâches sans aucun fichier d’instructions. Notez chaque
+fois qu’il devine mal (commande de test, emplacement d’un fichier, style,
+branche). Écrivez ensuite un `AGENTS.md` de quinze lignes au plus qui aurait
+évité chaque mauvaise supposition. Supprimez l’historique git du projet et
+refaites les trois mêmes tâches.
+
+Un bon résultat : la seconde exécution ne fait aucune des mauvaises suppositions
+de la première, et chaque ligne de votre fichier remonte à l’une d’elles. Une
+ligne qui ne remonte à aucune est candidate à la suppression.
 </Exercise>
 
 <Recap>
-1. The agent reads `AGENTS.md` (or `CLAUDE.md`; same content, different
-   tool convention) at the start of every session; it is the briefing for
-   a capable contractor's first morning.
-2. Put in it what the agent can't read from the code: commands,
-   structure, conventions, and one line for every mistake it keeps making.
-3. Leave out what the code already says, long prose, and rules that apply
-   to every project on earth. Short files get followed; long ones get
-   skimmed.
-4. In a monorepo, the root file holds what's shared and each project's
-   file holds only what differs. Keep the two from contradicting each
-   other, because tools differ on which one applies.
-5. A rule you can't afford to have skipped belongs in a hook rather than
-   in prose, and a procedure the agent should repeat belongs in a skill.
+1. L’agent lit `AGENTS.md` (ou `CLAUDE.md`, même contenu, convention d’un autre
+   outil) au début de chaque session. C’est la présentation que vous feriez à un
+   prestataire compétent le matin de son premier jour.
+2. Mettez-y ce que l’agent ne peut pas lire dans le code : les commandes, la
+   structure, les conventions, et une ligne pour chaque erreur qu’il refait.
+3. Laissez de côté ce que le code dit déjà, la prose longue, et les règles qui
+   s’appliquent à tous les projets du monde. Les fichiers courts sont suivis, les
+   longs sont survolés.
+4. Dans un monorepo, le fichier racine contient ce qui est partagé et le fichier
+   de chaque projet ne contient que ce qui diffère. Empêchez-les de se
+   contredire, parce que les outils diffèrent sur celui qui s’applique.
+5. Une règle qui ne doit jamais être sautée va dans un hook, et une procédure
+   que l’agent doit répéter va dans une skill.
 </Recap>

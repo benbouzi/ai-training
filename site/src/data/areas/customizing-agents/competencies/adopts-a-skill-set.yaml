@@ -1,74 +1,107 @@
 id: customizing-agents/adopts-a-skill-set
 area: customizing-agents
-statement: Adopts a published skill set without giving up control of the project
-topics: [customizing-agents/skills, customizing-agents/instructions, customizing-agents/hooks-permissions]
+statement: Adopte un jeu de skills publié sans perdre le contrôle du projet
+topics: [customizing-agents/skills, customizing-agents/instructions,
+      customizing-agents/hooks-permissions]
 notes: >-
   A later lesson on picking and taking up a skills framework would serve this
   competency.
 objectives:
   - id: customizing-agents/adopts-a-skill-set/vets-a-skill-set
-    statement: Vets a published skill set before installing it, as they would a dependency
+    statement: >-
+      Examine un jeu de skills publié avant de l’installer, comme il le ferait pour une dépendance
     level: base
     behaviors:
-      - claim: The learner checks the license of the set and of each skill they plan to use.
-        why: One collection can mix licenses, with open-source skills next to skills that are only
-          source-available (@anthropics skills).
-        example: The learner finds that the document skills in a collection are source-available and uses
-          only the Apache-licensed ones in the team's repository.
-      - claim: The learner looks at who maintains the set, how recently it changed and how its changes are
-          released.
-        why: A skill set is code that runs in every session, and one that nobody maintains drifts away
-          from the agent it was written for.
-        example: The learner sees regular releases with a changelog and an open issue tracker, and notes
-          the version they reviewed.
-      - claim: The learner reads every skill, script and hook in the set before installing it.
-        why: A plugin's hooks and scripts run in the learner's sessions with the session's permissions
-          (@Claude Code plugins).
-        example: One skill runs a setup script that writes to the home directory, so the learner reads
-          the script before deciding.
-      - claim: The learner compares the set with the alternatives, including writing the few skills they
-          need.
-        why: A set of thirty skills brings thirty descriptions and thirty things to keep up to date, and
-          the team may need three of them.
-        example: The learner writes their own review skill from the two ideas they liked, and does not
-          install the whole collection.
+      - claim: L’apprenant vérifie la licence du jeu et de chaque skill qu’il compte utiliser.
+        why: >-
+          Une même collection peut mélanger les licences, avec des skills open source à côté de skills
+          dont le code est seulement consultable (@anthropics skills).
+        example: >-
+          L’apprenant découvre que les skills de documents d’une collection ont un code seulement
+          consultable, et n’utilise que celles sous licence Apache dans le dépôt de l’équipe.
+      - claim: >-
+          L’apprenant regarde qui maintient le jeu, quand il a changé pour la dernière fois et comment
+          ses
+          modifications sont publiées.
+        why: >-
+          Un jeu de skills est du code qui s’exécute à chaque session, et un jeu que personne ne maintient
+          s’éloigne de l’agent pour lequel il a été écrit.
+        example: >-
+          L’apprenant voit des versions régulières avec un journal des modifications et un suivi des
+          tickets ouvert, et note la version qu’il a relue.
+      - claim: L’apprenant lit chaque skill, chaque script et chaque hook du jeu avant de
+          l’installer.
+        why: >-
+          Les hooks et les scripts d’un plugin s’exécutent dans les sessions de l’apprenant avec les
+          permissions de la session (@Claude Code plugins).
+        example: >-
+          Une skill lance un script d’installation qui écrit dans le dossier personnel, donc l’apprenant
+          lit le script avant de décider.
+      - claim: >-
+          L’apprenant compare le jeu aux autres possibilités, y compris écrire lui-même les quelques
+          skills dont il a besoin.
+        why: >-
+          Un jeu de trente skills apporte trente descriptions et trente choses à tenir à jour, et l’équipe
+          n’a peut-être besoin que de trois d’entre elles.
+        example: >-
+          L’apprenant écrit sa propre skill de revue à partir des deux idées qui lui ont plu, et
+          n’installe pas toute la collection.
   - id: customizing-agents/adopts-a-skill-set/adopts-skills-gradually
-    statement: Adopts a few skills at a time and checks each one's effect and context cost
+    statement: Adopte quelques skills à la fois et vérifie l’effet et le coût en contexte de chacune
     level: base
     behaviors:
-      - claim: The learner turns on one or two skills at a time and uses them on real work before adding
-          more.
-        why: With one change at a time, a better or worse result can be traced to the skill that caused
-          it.
-        example: The learner uses the planning skill for a week of tickets before trying the review skill
-          from the same set.
-      - claim: The learner checks how much context the installed skills add to every session.
-        why: The description of every model-invoked skill loads in every session, whether or not the
-          skill is used (@Claude Code skills).
-        example: The context breakdown shows the skill descriptions growing after the install, so the
-          learner makes two rarely used skills user-invoked.
-      - claim: The learner removes a skill that did not change the results.
-        why: A skill with no effect still costs context and still has to be kept up to date.
-        example: After two weeks the commit-message skill produced the same messages as before, so the
-          learner uninstalls it.
+      - claim: >-
+          L’apprenant active une ou deux skills à la fois et les utilise sur un vrai travail avant d’en
+          ajouter d’autres.
+        why: >-
+          Avec un seul changement à la fois, un résultat meilleur ou pire peut être relié à la skill qui
+          l’a causé.
+        example: >-
+          L’apprenant utilise la skill de planification pendant une semaine de tickets avant d’essayer
+          la
+          skill de revue du même jeu.
+      - claim: L’apprenant vérifie combien de contexte les skills installées ajoutent à chaque
+          session.
+        why: >-
+          La description de chaque skill invoquée par le modèle est chargée dans chaque session, que la
+          skill serve ou non (@Claude Code skills).
+        example: >-
+          Le détail du contexte montre que les descriptions de skills ont grossi après l’installation,
+          donc l’apprenant rend deux skills rarement utilisées invocables par l’utilisateur seulement.
+      - claim: L’apprenant retire une skill qui n’a pas changé les résultats.
+        why: Une skill sans effet coûte quand même du contexte et doit quand même être tenue à jour.
+        example: >-
+          Au bout de deux semaines, la skill de messages de commit produisait les mêmes messages qu’avant,
+          donc l’apprenant la désinstalle.
   - id: customizing-agents/adopts-a-skill-set/keeps-the-project-in-charge
-    statement: Keeps the project's own instructions, hooks and permissions in charge when a skill set disagrees
+    statement: >-
+      Garde les instructions, les hooks et les permissions du projet aux commandes quand un jeu de
+      skills les contredit
     level: base
     behaviors:
-      - claim: When a skill contradicts the project's instructions, the learner changes or drops the skill
-          and leaves the instructions as they are.
-        why: When two instructions conflict, the agent may follow either one, so the conflict must be
-          removed (@Claude Code memory).
-        example: A skill says to commit after every change, the project says to commit once per task, and
-          the learner removes that step from their copy of the skill.
-      - claim: The learner keeps enforcement in the project's hooks and permissions, and no skill widens
-          them.
-        why: A skill is text the agent reads, and only hooks and permission rules enforce anything (@Claude
-          Code best practices).
-        example: A skill asks for permission to run any shell command, and the learner keeps the narrow
-          allowlist and adds only the one command the skill needs.
-      - claim: The learner pins the version of the set and reviews each update before taking it.
-        why: An update changes what runs in every session, and a pinned version changes only when someone
-          decides it should (@Claude Code plugin install).
-        example: The team turns off automatic updates for the marketplace and reads the changes of each
-          new release before moving the pin.
+      - claim: >-
+          Quand une skill contredit les instructions du projet, l’apprenant modifie ou abandonne la skill
+          et laisse les instructions telles qu’elles sont.
+        why: >-
+          Quand deux instructions se contredisent, l’agent peut suivre l’une ou l’autre, donc la
+          contradiction doit être supprimée (@Claude Code memory).
+        example: >-
+          Une skill dit de committer après chaque modification, le projet dit de committer une fois par
+          tâche, et l’apprenant retire cette étape de sa copie de la skill.
+      - claim: >-
+          L’apprenant garde l’application des règles dans les hooks et les permissions du projet, et
+          aucune skill ne les élargit.
+        why: >-
+          Une skill est un texte que l’agent lit, et seuls les hooks et les règles de permission imposent
+          quoi que ce soit (@Claude Code best practices).
+        example: >-
+          Une skill demande la permission de lancer n’importe quelle commande shell, et l’apprenant garde
+          la liste d’autorisation étroite en n’y ajoutant que la commande dont la skill a besoin.
+      - claim: L’apprenant fige la version du jeu et relit chaque mise à jour avant de la prendre.
+        why: >-
+          Une mise à jour change ce qui s’exécute dans chaque session, et une version figée ne change
+          que
+          quand quelqu’un décide qu’elle doit changer (@Claude Code plugin install).
+        example: >-
+          L’équipe désactive les mises à jour automatiques de la place de marché et lit les modifications
+          de chaque nouvelle version avant de déplacer la version figée.

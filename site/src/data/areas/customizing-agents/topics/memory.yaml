@@ -1,65 +1,64 @@
 id: customizing-agents/memory
 area: customizing-agents
-name: Memory and session context
+name: Mémoire et contexte de session
 definition: >-
-  An agent forgets everything when a session ends unless something is written
-  down. This topic covers automatic memory notes, curated context files,
-  compaction of a long session, handing work from one session to the next,
-  and turning work the agent repeats into knowledge it can reuse.
+  Un agent oublie tout à la fin d’une session, sauf si quelque chose est écrit. Ce thème couvre
+  les notes de mémoire automatique, les fichiers de contexte tenus à la main, le compactage d’une
+  longue session, la passation du travail d’une session à la suivante, et la transformation du
+  travail que l’agent répète en savoir qu’il peut réutiliser.
 concepts:
   - id: auto-memory
-    name: Auto-memory
+    name: Mémoire automatique
     definition: >-
-      Notes an agent writes for itself during a session and reads back in
-      later ones: preferences it learned, facts about the project, decisions
-      made. It reduces re-explaining but is unreviewed by default, so it can
-      carry a wrong assumption forward for weeks. Read what the agent
-      remembers now and then, and correct or delete entries that have gone
-      stale.
+      Des notes qu’un agent écrit pour lui-même pendant une session et relit dans les suivantes : des
+      préférences qu’il a apprises, des faits sur le projet, des décisions prises. Elle évite de
+      réexpliquer, mais personne ne la relit par défaut, donc elle peut transporter une hypothèse
+      fausse pendant des semaines. Lisez de temps en temps ce dont l’agent se souvient, et corrigez ou
+      supprimez les entrées devenues périmées.
   - id: context-files
-    name: Context files
+    name: Fichiers de contexte
     definition: >-
-      Files a person curates for the agent to read: project instructions,
-      design notes, a plan, a glossary of domain terms. Unlike auto-memory
-      they are deliberate, versioned and reviewed like code. They are the
-      right place for anything the whole team wants every session to know,
-      and the place to move a fact once auto-memory has proven it useful.
+      Des fichiers qu’une personne tient à jour pour que l’agent les lise : les instructions du
+      projet, des notes de conception, un plan, un glossaire des termes du domaine. Contrairement à la
+      mémoire automatique, ils sont délibérés, versionnés et relus comme du code. C’est le bon endroit
+      pour tout ce que l’équipe entière veut que chaque session sache, et l’endroit où déplacer un
+      fait une fois que la mémoire automatique a montré qu’il était utile.
   - id: compaction
-    name: Compaction
+    name: Compactage
     definition: >-
-      Replacing a long session's history with a summary so work can continue
-      inside the context window. Compaction keeps the goal and recent state
-      and drops the raw detail, so anything not in the summary is lost.
-      Ask for a summary that names open items and decisions before
-      compacting, and save it to a file when the work will span sessions.
+      Remplacer l’historique d’une longue session par un résumé pour que le travail continue dans la
+      fenêtre de contexte. Le compactage garde l’objectif et l’état récent et laisse tomber le détail
+      brut, donc tout ce qui n’est pas dans le résumé est perdu. Demandez un résumé qui nomme les
+      points ouverts et les décisions avant de compacter, et enregistrez-le dans un fichier quand le
+      travail s’étendra sur plusieurs sessions.
   - id: session-handoff
-    name: Session handoff
+    name: Passation de session
     definition: >-
-      Ending one session so the next can pick up without loss: a written
-      state of what was done, what remains, what was decided and why, and
-      where the relevant files are, stored in the repository or a plan file.
-      A good handoff lets a fresh session, or a colleague's, start productive
-      in one turn instead of rediscovering the work.
+      Terminer une session pour que la suivante reprenne sans perte : un état écrit de ce qui a été
+      fait, de ce qui reste, de ce qui a été décidé et pourquoi, et de l’endroit où se trouvent les
+      fichiers concernés, enregistré dans le dépôt ou dans un fichier de plan. Une bonne passation
+      permet à une session neuve, ou à celle d’un collègue, d’être productive dès le premier tour,
+      sans redécouvrir le travail.
   - id: turning-repeated-work-into-reusable-knowledge
-    name: Turning repeated work into reusable knowledge
+    name: Transformer le travail répété en savoir réutilisable
     definition: >-
-      Noticing when the agent is explained the same thing or walked through
-      the same steps twice, and moving it somewhere durable: a fact into
-      project instructions, a procedure into a skill, a check into a hook, an
-      example into a context file. Each move removes a future explanation and
-      a future mistake. It is the compounding part of working with agents.
+      Remarquer quand on explique deux fois la même chose à l’agent, ou qu’on lui fait suivre deux
+      fois les mêmes étapes, et la déplacer vers un endroit durable : un fait dans les instructions du
+      projet, une procédure dans une skill, un contrôle dans un hook, un exemple dans un fichier de
+      contexte. Chaque déplacement supprime une explication future et une erreur future. C’est la
+      partie du travail avec des agents dont les gains s’accumulent.
   - id: primary-and-secondary-sources
-    name: Primary and secondary sources
+    name: Sources primaires et secondaires
     definition: >-
-      The code, the tests and the history of a repository are the primary
-      source for what is true about a project now. Notes, handoffs, plans and
-      saved memories are secondary: each records what someone believed at one
-      moment, and it goes stale as the code moves on. An agent treats a
-      secondary source as a lead and checks it against the primary one before
-      acting on it. When the two disagree, the code wins and the note is
-      corrected or deleted.
+      Le code, les tests et l’historique d’un dépôt sont la source primaire de ce qui est vrai sur un
+      projet aujourd’hui. Les notes, les passations, les plans et les mémoires enregistrées sont
+      secondaires : chacun enregistre ce que quelqu’un croyait à un moment donné, et il devient périmé
+      à mesure que le code avance. Un agent traite une source secondaire comme une piste et la vérifie
+      par rapport à la source primaire avant d’agir. Quand les deux divergent, le code l’emporte et la
+      note est corrigée ou supprimée.
 links:
   prerequisites: [customizing-agents/skills, concepts/grounding]
   related: []
   specializations: []
-sources: [AEC-05, Brilliant MEM, Academy claude-code-101, Academy claude-code-in-action, Claude Code memory]
+sources: [AEC-05, Brilliant MEM, Academy claude-code-101, Academy claude-code-in-action, Claude Code
+      memory]

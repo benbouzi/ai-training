@@ -1,8 +1,8 @@
 id: customizing-agents/mcp
-title: Connecting an agent to your systems with MCP
+title: Connecter un agent à vos systèmes avec MCP
 description: >-
-  The operator's view of a remote tool server, from the identity the agent acts under to the point
-  where a CLI is the better connection.
+  Le point de vue de l’exploitant sur un serveur d’outils distant, de l’identité sous laquelle
+  agit l’agent au moment où une CLI est la meilleure connexion.
 mode: explanation
 covers: customizing-agents/mcp
 serves:
@@ -13,17 +13,17 @@ introduces: [server, client, transport, mcp-primitives, mcp-vs-cli, tool-cost, m
 assumes:
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
-    section: when-instructions-arent-enough
+    section: quand-les-instructions-ne-suffisent-pas
 extends-to:
-  - label: Hooks and permissions
+  - label: Hooks et permissions
     href: /customizing-agents/hooks-permissions/
 after: []
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Put a five-rule guardrail block in an agent's system prompt and test it against an injected
-    instruction in a sandbox page.
+    Placez un bloc de garde-fous en cinq règles dans le prompt système d’un agent et testez-le
+    contre une instruction injectée dans une page de bac à sable.
 sources:
   - Academy introduction-to-model-context-protocol
   - Academy model-context-protocol-advanced-topics

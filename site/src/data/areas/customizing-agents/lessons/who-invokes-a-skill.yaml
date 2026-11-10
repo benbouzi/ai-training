@@ -1,9 +1,10 @@
 id: customizing-agents/who-invokes-a-skill
-title: Who invokes a skill, and where it lives
+title: Qui invoque une skill, et où elle se trouve
 description: >-
-  Decide whether the agent may start a skill on its own or only a person may, what each choice costs
-  in context, and whether the skill belongs in the project, in your own configuration or with the
-  organization, including which one runs when two share a name.
+  Décidez si l’agent peut lancer une skill de lui-même ou si seule une personne le peut, ce que
+  coûte chaque choix en contexte, et si la skill a sa place dans le projet, dans votre propre
+  configuration ou dans l’organisation, y compris laquelle s’exécute quand deux skills ont le même
+  nom.
 mode: explanation
 covers: customizing-agents/skills
 serves: [customizing-agents/writes-skill/chooses-invocation-and-scope]
@@ -11,7 +12,7 @@ introduces: [invocation-mode, skill-scope]
 assumes:
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/first-skill
-    section: pass-one-the-directory-and-the-description
+    section: premier-passage--le-dossier-et-la-description
 extends-to: []
 sources-checked: 2026-10-07
 review-by: 2027-04-07
@@ -20,8 +21,8 @@ shorts: []
 exercise:
   kind: judge
   brief: >-
-    For four skills, decide whether the agent may start each one on its own or only a person may,
-    and whether it belongs to the project or to the user.
+    Pour quatre skills, décidez si l’agent peut lancer chacune de lui-même ou si seule une personne
+    le peut, et si elle appartient au projet ou à l’utilisateur.
 sources: [Claude Code skills, Agent Skills spec]
 issue: 691
 minutes: 10

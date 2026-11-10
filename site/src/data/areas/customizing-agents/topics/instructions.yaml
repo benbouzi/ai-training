@@ -1,67 +1,63 @@
 id: customizing-agents/instructions
 area: customizing-agents
-name: Project instructions
+name: Instructions de projet
 definition: >-
-  Project instructions are the standing brief an agent reads at the start of
-  every session in a repository. This topic covers the instruction file and
-  its conventions, which sections earn their place, how instructions layer in
-  a monorepo, and the point where a rule needs a hook or a tool instead of a
-  sentence.
+  Les instructions de projet sont la consigne permanente qu’un agent lit au début de chaque
+  session dans un dépôt. Ce thème couvre le fichier d’instructions et ses conventions, les
+  sections qui méritent leur place, la superposition des instructions dans un monorepo, et le
+  moment où une règle a besoin d’un hook ou d’un outil à la place d’une phrase.
 concepts:
   - id: agents-md-claude-md
     name: AGENTS.md / CLAUDE.md
     definition: >-
-      The instruction file coding agents load automatically from a
-      repository root. Several tools read a shared name and others read
-      their own; a symlink lets one file serve both. It holds what the agent
-      must know every session: commands, conventions, boundaries. It is not
-      documentation for people and is read on every turn, so every line
-      costs context.
+      Le fichier d’instructions que les agents de code chargent automatiquement depuis la racine d’un
+      dépôt. Plusieurs outils lisent un nom commun et d’autres lisent le leur, et un lien symbolique
+      permet à un seul fichier de servir aux deux. Il contient ce que l’agent doit savoir à chaque
+      session : les commandes, les conventions, les limites. Ce n’est pas une documentation pour les
+      personnes, et il est lu à chaque tour, donc chaque ligne coûte du contexte.
   - id: sections
     name: Sections
     definition: >-
-      The recurring parts of a good instruction file: what the project is,
-      how to build, test and lint, the layout of the code, the conventions to
-      follow, the things never to do, and how to finish a piece of work. Each
-      section answers a question the agent would otherwise guess at. Remove
-      anything the agent can discover cheaply itself, and keep examples
-      concrete.
+      Les parties récurrentes d’un bon fichier d’instructions : ce qu’est le projet, comment
+      construire, tester et vérifier le style, l’organisation du code, les conventions à suivre, ce
+      qu’il ne faut jamais faire, et comment terminer un travail. Chaque section répond à une question
+      sur laquelle l’agent devinerait sinon. Retirez tout ce que l’agent peut découvrir lui-même à peu
+      de frais, et gardez des exemples concrets.
   - id: monorepo-hierarchy
-    name: Monorepo hierarchy
+    name: Hiérarchie dans un monorepo
     definition: >-
-      In a repository with many packages, instruction files can sit at the
-      root and inside subdirectories; the agent reads the ones on the path to
-      the files it is working on. Root holds what is true everywhere,
-      subdirectory files hold what differs. The hierarchy keeps each file
-      short and lets teams own their own rules without conflicting.
+      Dans un dépôt qui contient beaucoup de paquets, des fichiers d’instructions peuvent se trouver à
+      la racine et dans des sous-dossiers, et l’agent lit ceux qui sont sur le chemin des fichiers sur
+      lesquels il travaille. La racine contient ce qui est vrai partout, et les fichiers des
+      sous-dossiers contiennent ce qui diffère. La hiérarchie garde chaque fichier court et permet aux
+      équipes d’avoir leurs propres règles sans conflit.
   - id: when-instructions-are-not-enough
-    name: When instructions are not enough
+    name: Quand les instructions ne suffisent pas
     definition: >-
-      Instructions are requests; a model follows them most of the time and
-      forgets them as context fills. A rule that must hold every time, such as
-      never committing secrets or always running the formatter, belongs in a
-      hook or a permission setting that enforces it mechanically. A capability
-      the agent lacks belongs in a tool or a skill, not in a longer paragraph.
+      Les instructions sont des demandes : un modèle les suit la plupart du temps et les oublie à
+      mesure que le contexte se remplit. Une règle qui doit tenir à chaque fois, comme ne jamais
+      committer de secrets ou toujours lancer l’outil de mise en forme, va dans un hook ou dans un
+      réglage de permission qui l’impose mécaniquement. Une capacité qui manque à l’agent va dans un
+      outil ou dans une skill, et un paragraphe plus long ne la lui donne pas.
   - id: loading-versus-pointing
-    name: Loading versus pointing
+    name: Charger ou renvoyer
     definition: >-
-      Two ways to give an agent guidance. Loading puts the text in the
-      instruction file, so it is in the context of every session whether the
-      task needs it or not. Pointing puts one line there that says where the
-      detail is, such as a file path or a skill, and the agent reads it when a
-      task calls for it. Load what nearly every task needs and point at the
-      rest. An import that pulls a file in at start-up still loads it.
+      Deux façons de guider un agent. Charger met le texte dans le fichier d’instructions, donc il est
+      dans le contexte de chaque session, que la tâche en ait besoin ou non. Renvoyer y met une ligne
+      qui dit où se trouve le détail, comme un chemin de fichier ou une skill, et l’agent le lit quand
+      une tâche le demande. Chargez ce dont presque chaque tâche a besoin et renvoyez au reste. Une
+      importation qui inclut un fichier au démarrage le charge quand même.
   - id: pruning-instructions
-    name: Pruning instructions
+    name: Élaguer les instructions
     definition: >-
-      Removing the lines of an instruction file that no longer earn their
-      place: a rule the agent already follows without being told, a fact it
-      can work out from the code, a line that conflicts with another, a rule
-      for a problem that has gone away. The test for each line is whether
-      removing it would cause a mistake. Rules in a long file get ignored, so
-      pruning makes the remaining rules work better.
+      Retirer les lignes d’un fichier d’instructions qui ne méritent plus leur place : une règle que
+      l’agent suit déjà sans qu’on la lui dise, un fait qu’il peut déduire du code, une ligne qui en
+      contredit une autre, une règle pour un problème qui a disparu. Le test pour chaque ligne est de
+      savoir si la retirer causerait une erreur. Les règles d’un long fichier sont ignorées, donc
+      élaguer fait mieux fonctionner les règles qui restent.
 links:
   prerequisites: []
   related: [coding-with-agents/context]
   specializations: []
-sources: [AEC-15, Academy claude-code-101, Academy claude-code-in-action, Claude Code memory, Claude Code best practices, Anthropic context engineering]
+sources: [AEC-15, Academy claude-code-101, Academy claude-code-in-action, Claude Code memory, Claude
+      Code best practices, Anthropic context engineering]
