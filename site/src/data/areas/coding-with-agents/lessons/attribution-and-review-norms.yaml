@@ -1,8 +1,9 @@
 id: coding-with-agents/attribution-and-review-norms
-title: Saying what the agent did, in the commit and the review
+title: Dire ce qu’a fait l’agent, dans le commit et dans la revue
 description: >-
-  Get an agent's change ready for review, say in the pull request what the agent did and what you
-  checked, and attribute it in a commit trailer with no sign-off the agent cannot give.
+  Préparez la modification d’un agent pour la revue, dites dans la pull request ce qu’a fait
+  l’agent et ce que vous avez vérifié, et attribuez-la par une ligne de fin de commit, sans la
+  signature que l’agent ne peut pas donner.
 mode: explanation
 covers: coding-with-agents/team
 serves:
@@ -20,12 +21,13 @@ after:
   - coding-with-agents/reversible-changes
   - coding-with-agents/reviewing-the-diff
   - coding-with-agents/security-review
-shorts: [commit trailers and the certificate of origin]
+shorts: [les lignes de fin de commit et le certificat d’origine]
 exercise:
   kind: judge
   brief: >-
-    Rewrite a commit message and a PR description from the fixture so they carry the agent trailer
-    and say what was verified, with no sign-off, because only a person may give one.
+    Réécrivez un message de commit et une description de pull request de l’exemple pour qu’ils
+    portent la ligne de fin de l’agent et disent ce qui a été vérifié, sans signature, parce que
+    seule une personne peut en donner une.
 sources:
   - DLAI-5
   - Git docs git-interpret-trailers

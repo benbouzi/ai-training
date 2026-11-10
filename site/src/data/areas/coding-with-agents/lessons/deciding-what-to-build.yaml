@@ -1,9 +1,9 @@
 id: coding-with-agents/deciding-what-to-build
-title: Deciding whether to build it at all
+title: Décider s’il faut construire, avant tout
 description: >-
-  An agent makes building cheap, so the judgment moves before the code. Find the problem behind a
-  request, price the change by what the team owns afterwards, and write success criteria a stranger
-  could check.
+  Un agent rend la construction peu coûteuse, donc le jugement se déplace avant le code. Trouvez
+  le problème derrière une demande, chiffrez la modification par ce que l’équipe devra entretenir
+  ensuite, et écrivez des critères de réussite qu’un inconnu pourrait vérifier.
 mode: explanation
 covers: coding-with-agents/specification
 serves:
@@ -15,17 +15,19 @@ assumes:
     lesson: using-agents/delegating
     section: écrire-la-consigne
 extends-to:
-  - label: Deciding and specifying
+  - label: Décider et spécifier
     href: /topics/coding-with-agents/specification/
-  - label: "Scope AI Solutions: compare business opportunities and scope a pilot (OpenAI Academy, free account)"
+  - label: >-
+      Scope AI Solutions : comparer des opportunités métier et cadrer un pilote (OpenAI Academy,
+      compte gratuit)
     href: https://academy.openai.com/public/courses/scope-ai-solutions-kjplw
 after: [coding-with-agents/first-session]
-shorts: [the cost of keeping a change]
+shorts: [le coût de conservation d’une modification]
 exercise:
   kind: judge
   brief: >-
-    Take three feature requests against the fixture and reject or shrink at least one. For the rest,
-    write checkable success criteria with an out-of-scope line.
+    Prenez trois demandes de fonctionnalités sur l’exemple, et rejetez ou réduisez-en au moins une.
+    Pour les autres, écrivez des critères de réussite vérifiables avec une ligne « hors périmètre ».
 sources: [Academy ai-fluency-for-builders, Brilliant TAS]
 sources-checked: 2026-09-26
 review-by: 2027-03-26

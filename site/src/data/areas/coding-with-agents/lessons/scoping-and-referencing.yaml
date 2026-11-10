@@ -1,9 +1,9 @@
 id: coding-with-agents/scoping-and-referencing
-title: Telling the agent where the task is and where it stops
+title: Dire à l’agent où est la tâche et où elle s’arrête
 description: >-
-  Rewrite a vague brief for a small repository so it names the files in play, the files off limits,
-  the example to imitate, the test to extend and the check to run, and compare which files the agent
-  reads before and after.
+  Réécrivez une consigne vague pour un petit dépôt afin qu’elle nomme les fichiers concernés, les
+  fichiers interdits, l’exemple à imiter, le test à étendre et le contrôle à lancer, et comparez
+  les fichiers que l’agent lit avant et après.
 mode: tutorial
 covers: coding-with-agents/context
 serves: [coding-with-agents/ships-with-agent/gives-the-right-context]
@@ -15,12 +15,13 @@ assumes:
 sources-checked: 2026-09-24
 review-by: 2027-03-24
 after: [coding-with-agents/plan-then-test]
-shorts: [why a path and a line number work better than a description of the code]
+shorts: [pourquoi un chemin et un numéro de ligne fonctionnent mieux qu’une description du code]
 exercise:
   kind: do
   brief: >-
-    Rewrite a vague brief for the fixture with the files in play, the files off limits, the example
-    to imitate and the verification command, then compare which files the agent reads in both runs.
+    Réécrivez une consigne vague pour l’exemple avec les fichiers concernés, les fichiers interdits,
+    l’exemple à imiter et la commande de vérification, puis comparez les fichiers que l’agent lit
+    dans les deux exécutions.
 sources: [AEC-15, Academy claude-code-101, Claude Code best practices]
 issue: 160
 minutes: 10

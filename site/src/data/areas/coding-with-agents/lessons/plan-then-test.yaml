@@ -1,9 +1,9 @@
 id: coding-with-agents/plan-then-test
-title: Plan first, then drive the change from a failing test
+title: Planifier d’abord, puis piloter la modification par un test qui échoue
 description: >-
-  Put a coding agent in plan mode for a bug that spans three modules, correct one step of its plan
-  while corrections are cheap, then have it write the failing test, fix the code until the test
-  passes, and read the diff.
+  Mettez un agent de code en mode plan pour un bug qui touche trois modules, corrigez une étape de
+  son plan tant que les corrections coûtent peu, puis faites-lui écrire le test qui échoue,
+  corriger le code jusqu’à ce que le test passe, et lisez le diff.
 mode: tutorial
 covers: coding-with-agents/workflow
 serves: [coding-with-agents/ships-with-agent/runs-a-session]
@@ -11,21 +11,22 @@ introduces: [plan-mode, test-driven-change]
 assumes:
   - objective: coding-with-agents/ships-with-agent/gives-the-right-context
     lesson: coding-with-agents/first-session
-    section: give-the-right-context
+    section: donner-le-bon-contexte
 sources-checked: 2026-09-23
 review-by: 2027-03-23
 extends-to:
-  - label: I was an AI skeptic. Then I tried plan mode (AI Hero on YouTube, 12 minutes)
+  - label: I was an AI skeptic. Then I tried plan mode (AI Hero sur YouTube, 12 minutes, en anglais)
     href: https://www.youtube.com/watch?v=WNx-s-RxVxk
-  - label: Red green refactor with Claude Code (AI Hero on YouTube, 5 minutes)
+  - label: Red green refactor with Claude Code (AI Hero sur YouTube, 5 minutes, en anglais)
     href: https://www.youtube.com/watch?v=hYZdIwFIy-c
 after: [coding-with-agents/first-session, coding-with-agents/decomposing-the-work]
-shorts: [when a test beats a spec and when a spec beats a test]
+shorts: ["quand un test vaut mieux qu’une spécification, et quand une spécification vaut mieux qu’un test"]
 exercise:
   kind: do
   brief: >-
-    In plan mode, have the agent propose steps for a bug fix in the fixture, correct one step, then
-    let it write the failing test and implement until it passes.
+    En mode plan, faites proposer à l’agent les étapes d’une correction de bug dans l’exemple,
+    corrigez une étape, puis laissez-le écrire le test qui échoue et implémenter jusqu’à ce qu’il
+    passe.
 sources:
   - Academy claude-code-101
   - Claude Code permission modes

@@ -1,9 +1,10 @@
 id: coding-with-agents/spec-driven-increments
-title: Working from a spec in small increments
+title: Travailler à partir d’une spécification, par petits incréments
 description: >-
-  Write a one-page spec for a due-dates feature in the to-do fixture, have a coding agent split it
-  into increments that each leave the program working, order them with the least certain one first,
-  and land the first one against the spec's own success criteria.
+  Écrivez une spécification d’une page pour une fonctionnalité de dates d’échéance dans l’exemple
+  de liste de tâches, faites-la découper par un agent de code en incréments qui laissent chacun le
+  programme fonctionnel, ordonnez-les en commençant par le moins sûr, et livrez le premier au
+  regard des critères de réussite de la spécification elle-même.
 mode: tutorial
 covers: coding-with-agents/workflow
 serves: [coding-with-agents/ships-with-agent/works-in-increments]
@@ -13,17 +14,18 @@ assumes:
     lesson: coding-with-agents/deciding-what-to-build
     section: writing-down-what-success-requires
 extends-to:
-  - label: Building a real feature with Claude Code (AI Hero on YouTube, 44 minutes)
+  - label: Building a real feature with Claude Code (AI Hero sur YouTube, 44 minutes, en anglais)
     href: https://www.youtube.com/watch?v=hX7yG1KVYhI
-  - label: My 7 phases of AI development (AI Hero)
+  - label: My 7 phases of AI development (AI Hero, en anglais)
     href: https://www.aihero.dev/my-7-phases-of-ai-development
 after: [coding-with-agents/plan-then-test]
-shorts: [the thin end-to-end path]
+shorts: [le chemin mince de bout en bout]
 exercise:
   kind: do
   brief: >-
-    From the spec on the page, brief the agent for the second increment only and land it: the test
-    with the two dates first, then the code, then the criterion checked by hand.
+    À partir de la spécification de la page, donnez à l’agent la consigne du deuxième incrément
+    seulement et livrez-le : d’abord le test avec les deux dates, puis le code, puis le critère
+    vérifié à la main.
 sources: [Academy ai-native-sdlc-playbook, Brilliant INC]
 sources-checked: 2026-09-26
 review-by: 2027-03-26

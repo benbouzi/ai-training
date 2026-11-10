@@ -1,9 +1,11 @@
 id: coding-with-agents/review-in-a-fresh-session
-title: A review from a fresh session
+title: Une revue depuis une nouvelle session
 description: >-
-  Give the due-dates branch to a new agent session with the diff, the spec and the criteria, ask
-  only for gaps against the spec, check each finding before acting on it, and sort the findings into
-  ones to fix, ones to reject and ones to turn into a rule, while the gates still decide the merge.
+  Confiez la branche des dates d’échéance à une nouvelle session d’agent avec le diff, la
+  spécification et les critères, demandez seulement les manques au regard de la spécification,
+  vérifiez chaque remarque avant d’agir, et classez les remarques entre celles à corriger, celles
+  à rejeter et celles à transformer en règle, pendant que les barrières décident toujours de la
+  fusion.
 mode: tutorial
 covers: coding-with-agents/verification
 serves: [coding-with-agents/verifies-agent-work/uses-a-fresh-review]
@@ -21,8 +23,9 @@ shorts: []
 exercise:
   kind: do
   brief: >-
-    Have a new session review a change the first session wrote, against the specification, and sort
-    its findings into ones to fix, ones to reject and ones to turn into a rule.
+    Faites relire par une nouvelle session une modification écrite par la première, au regard de la
+    spécification, et classez ses remarques entre celles à corriger, celles à rejeter et celles à
+    transformer en règle.
 sources:
   - Claude Code best practices
   - Claude Code subagents

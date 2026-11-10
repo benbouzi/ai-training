@@ -1,9 +1,9 @@
 id: coding-with-agents/agent-interviews-you
-title: Let the agent interview you
+title: Se faire interroger par l’agent
 description: >-
-  Have the agent interview you about a feature before any plan exists, answer with decisions or "not
-  decided yet", write the settled terms down, and check that the spec and a fresh session's plan use
-  them.
+  Faites-vous interroger par l’agent sur une fonctionnalité avant qu’un plan existe, répondez par
+  des décisions ou par « pas encore décidé », écrivez les termes arrêtés, et vérifiez que la
+  spécification et le plan d’une nouvelle session les emploient.
 mode: tutorial
 covers: coding-with-agents/specification
 serves: [coding-with-agents/specifies-work/is-interviewed-before-planning]
@@ -13,15 +13,18 @@ assumes:
     lesson: coding-with-agents/deciding-what-to-build
     section: writing-down-what-success-requires
 extends-to:
-  - label: Domain-Driven Design Reference (Eric Evans), the Ubiquitous Language pattern
+  - label: >-
+      Domain-Driven Design Reference (Eric Evans), le motif « Ubiquitous Language » (langage
+      omniprésent)
     href: https://www.domainlanguage.com/ddd/reference/
 after: [coding-with-agents/deciding-what-to-build]
 shorts: []
 exercise:
   kind: do
   brief: >-
-    Ask an agent to interview you about a small feature until the two of you agree on the design,
-    then write down the terms you settled on and check that the plan it writes uses them.
+    Demandez à un agent de vous interroger sur une petite fonctionnalité jusqu’à ce que vous soyez
+    d’accord tous les deux sur la conception, puis écrivez les termes arrêtés et vérifiez que le
+    plan qu’il écrit les emploie.
 sources: [Claude Code best practices, Claude Code memory, Evans 2003, Evans DDD Reference]
 sources-checked: 2026-10-07
 review-by: 2027-04-07

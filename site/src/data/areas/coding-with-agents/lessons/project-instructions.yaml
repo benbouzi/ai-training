@@ -1,9 +1,9 @@
 id: coding-with-agents/project-instructions
-title: Writing project instructions the agent reads every session
+title: Écrire les instructions de projet que l’agent lit à chaque session
 description: >-
-  Read two coding agent sessions on the same small repository, find the mistake the agent makes in
-  both, fix it with one line in the project's instructions file, and keep later sessions short
-  enough that the agent keeps following that file.
+  Lisez deux sessions d’agent de code sur le même petit dépôt, trouvez l’erreur que l’agent fait
+  dans les deux, corrigez-la par une ligne dans le fichier d’instructions du projet, et gardez les
+  sessions suivantes assez courtes pour que l’agent continue de suivre ce fichier.
 mode: tutorial
 covers: coding-with-agents/context
 serves:
@@ -20,21 +20,25 @@ assumes:
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 extends-to:
-  - label: A complete guide to AGENTS.md (AI Hero)
+  - label: A complete guide to AGENTS.md (AI Hero, en anglais)
     href: https://www.aihero.dev/a-complete-guide-to-agents-md
-  - label: Never run claude /init (AI Hero on YouTube, 11 minutes)
+  - label: Never run claude /init (AI Hero sur YouTube, 11 minutes, en anglais)
     href: https://www.youtube.com/watch?v=9tmsq-Gvx6g
-  - label: "Get Started with Codex, the lab: make a repository ready for the agent with AGENTS.md (OpenAI Academy, free account)"
+  - label: >-
+      Get Started with Codex, l’exercice pratique : préparer un dépôt pour l’agent avec AGENTS.md
+      (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/get-started-with-codex-jkhsq
 after: [coding-with-agents/scoping-and-referencing]
 shorts:
-  - long instruction files are followed less reliably than short ones. When the agent drifts,
-    compact or restart.
+  - >-
+    les longs fichiers d’instructions sont suivis de façon moins fiable que les courts. Quand
+    l’agent dérive, compactez ou recommencez.
 exercise:
   kind: do
   brief: >-
-    Find the mistake the agent repeats across two fixture sessions, put the one-line fix in the
-    fixture's existing instructions file, and confirm a fresh session follows it without being told.
+    Trouvez l’erreur que l’agent répète dans deux sessions de l’exemple, mettez la correction d’une
+    ligne dans le fichier d’instructions existant de l’exemple, et confirmez qu’une nouvelle session
+    la suit sans qu’on le lui dise.
 sources: [AEC-15, Academy claude-code-in-action, Claude Code memory, Claude Code best practices]
 issue: 163
 minutes: 15

@@ -1,124 +1,189 @@
 id: coding-with-agents/verifies-agent-work
 area: coding-with-agents
-statement: Verifies agent-written code before trusting it
+statement: Vérifie le code écrit par un agent avant de lui faire confiance
 topics: [coding-with-agents/verification, coding-with-agents/quality, safety/agent-risk]
 objectives:
   - id: coding-with-agents/verifies-agent-work/reviews-others-code
-    statement: Reviews code they did not write, against the specification
+    statement: Relit du code qu’il n’a pas écrit, au regard de la spécification
     level: base
     behaviors:
-      - claim: The review starts from the specification and asks whether the change does what was asked,
-          before looking at how it does it.
-        why: Well-written code that solves the wrong problem is the most common agent failure and the
-          hardest to see line by line.
-        example: The learner reads the brief, then the tests, then the diff, and finds the agent implemented
-          the filter as case-sensitive where the brief said otherwise.
-      - claim: The learner reads every changed file and questions changes the brief did not ask for.
-        why: An agent's diff often includes "improvements" that are the riskiest part of the change.
-        example: A "fix the retry" pull request also reformats two unrelated files and changes a timeout, so
-          the learner asks for those to be dropped or split.
-      - claim: The learner runs the code as well as reading it.
-        why: Reading catches design problems, and running catches the behavior the tests missed.
-        example: The learner checks out the branch and tries the two edge cases the brief mentioned before
-          approving.
+      - claim: >-
+          La revue part de la spécification et se demande si la modification fait ce qui était demandé,
+          avant de regarder comment elle le fait.
+        why: >-
+          Un code bien écrit qui résout le mauvais problème est l’échec d’agent le plus courant, et le
+          plus difficile à voir ligne par ligne.
+        example: >-
+          L’apprenant lit la consigne, puis les tests, puis le diff, et découvre que l’agent a rendu le
+          filtre sensible à la casse alors que la consigne disait le contraire.
+      - claim: >-
+          L’apprenant lit chaque fichier modifié et interroge les modifications que la consigne ne
+          demandait pas.
+        why: >-
+          Le diff d’un agent contient souvent des « améliorations » qui sont la partie la plus risquée
+          de
+          la modification.
+        example: >-
+          Une pull request « corriger la nouvelle tentative » reformate aussi deux fichiers sans rapport
+          et change un délai d’expiration, donc l’apprenant demande de les retirer ou de les séparer.
+      - claim: L’apprenant exécute le code en plus de le lire.
+        why: >-
+          La lecture détecte les problèmes de conception, et l’exécution détecte les comportements que
+          les
+          tests ont manqués.
+        example: >-
+          L’apprenant récupère la branche et essaie les deux cas limites mentionnés dans la consigne avant
+          d’approuver.
   - id: coding-with-agents/verifies-agent-work/observes-and-debugs
-    statement: Observes the running system and isolates a fault systematically
+    statement: Observe le système en marche et isole un défaut de façon méthodique
     level: base
     behaviors:
-      - claim: The learner reproduces the fault before changing anything, and writes down the steps.
-        why: A fix for a fault you cannot reproduce cannot be verified, and the agent may fix something
-          else.
-        example: The learner turns a "sometimes fails" report into "fails when the file has a header row and
-          no data" before briefing the agent.
-      - claim: The learner reads the logs and traces of the running system as well as the code.
-        why: The code says what should happen, and the system says what did.
-        example: The stack trace shows the request never reached the handler, so the learner looks at
-          routing rather than at the handler the agent was about to rewrite.
-      - claim: "The learner narrows the fault by halving: one change, one observation, and a note of what
-          was ruled out."
-        why: Changing several things at once and hoping is how a debugging session runs for hours.
-        example: The learner disables the cache, sees the bug persist, and rules out caching before letting
-          the agent touch anything.
+      - claim: L’apprenant reproduit le défaut avant de modifier quoi que ce soit, et note les
+          étapes.
+        why: >-
+          Une correction d’un défaut qu’on ne sait pas reproduire ne peut pas être vérifiée, et l’agent
+          risque de corriger autre chose.
+        example: >-
+          L’apprenant transforme un signalement « échoue parfois » en « échoue quand le fichier a une
+          ligne d’en-tête et aucune donnée » avant de donner la consigne à l’agent.
+      - claim: L’apprenant lit les journaux et les traces du système en marche en plus du code.
+        why: Le code dit ce qui devrait se passer, et le système dit ce qui s’est passé.
+        example: >-
+          La trace d’appels montre que la requête n’a jamais atteint le gestionnaire, donc l’apprenant
+          regarde le routage avant le gestionnaire que l’agent s’apprêtait à réécrire.
+      - claim: >-
+          L’apprenant réduit le défaut par moitiés : une modification, une observation, et une note de
+          ce
+          qui a été écarté.
+        why: >-
+          Changer plusieurs choses à la fois en espérant est la façon dont une séance de débogage dure
+          des
+          heures.
+        example: >-
+          L’apprenant désactive le cache, voit que le bug persiste, et écarte le cache avant de laisser
+          l’agent toucher à quoi que ce soit.
   - id: coding-with-agents/verifies-agent-work/automates-the-check
-    statement: Turns a check into a bounded, self-checking loop
+    statement: Transforme un contrôle en boucle d’autovérification bornée
     level: base
     behaviors:
-      - claim: The learner turns a manual check into a command the agent can run and read the result of.
-        why: A check the agent can run is run on every iteration, and a check only the learner can run is
-          run once (@Claude Code best practices).
-        example: '"Open the page and see that the table has rows" becomes a test that renders the page and
-          asserts on the row count.'
-      - claim: "The loop has a bound: a number of attempts or a time limit, after which the agent stops and
-          reports."
-        why: An agent told "keep going until the tests pass" can run forever or delete the test.
-        example: The brief says "run the tests; if they fail, fix and rerun, at most five times, then stop
-          and show me what you found".
-      - claim: The learner protects the check from the agent that runs against it.
-        why: The shortest path to a green check is often to change the check.
-        example: The brief says the test file is read-only, and the review confirms the assertions did not
-          change.
+      - claim: >-
+          L’apprenant transforme un contrôle manuel en commande que l’agent peut lancer et dont il peut
+          lire le résultat.
+        why: >-
+          Un contrôle que l’agent peut lancer est lancé à chaque itération, et un contrôle que seul
+          l’apprenant peut lancer est lancé une fois (@Claude Code best practices).
+        example: >-
+          « Ouvrir la page et voir que le tableau a des lignes » devient un test qui affiche la page et
+          vérifie le nombre de lignes.
+      - claim: >-
+          La boucle a une limite : un nombre de tentatives ou une durée, après quoi l’agent s’arrête et
+          fait son rapport.
+        why: >-
+          Un agent à qui l’on dit « continue jusqu’à ce que les tests passent » peut tourner indéfiniment
+          ou supprimer le test.
+        example: >-
+          La consigne dit « lance les tests ; s’ils échouent, corrige et relance, au plus cinq fois, puis
+          arrête-toi et montre-moi ce que tu as trouvé ».
+      - claim: L’apprenant protège le contrôle contre l’agent qui s’y confronte.
+        why: Le chemin le plus court vers un contrôle au vert consiste souvent à modifier le
+          contrôle.
+        example: >-
+          La consigne dit que le fichier de tests est en lecture seule, et la revue confirme que les
+          assertions n’ont pas changé.
   - id: coding-with-agents/verifies-agent-work/prefers-gates-to-opinions
-    statement: Chooses a deterministic gate over a model's review to block work
+    statement: >-
+      Choisit une barrière déterministe de préférence à la revue d’un modèle pour bloquer un travail
     level: base
     behaviors:
-      - claim: The learner lets only checks whose result needs no judgment, such as tests, type checks,
-          builds and schema checks, block a merge or end an agent's loop on their own.
-        why: A gate that isn't flaky gives the same result for the same input, so a failure means the
-          same thing on every run.
-        example: The team makes the test suite and the type checker required checks on every pull
-          request, and marks the AI reviewer's comments as advisory.
-      - claim: The learner treats a second model's review as an opinion that a person weighs, next to
-          the gates and never in place of them.
-        why: A model's verdict is a judgment. It can miss what the writing model missed, and it can differ
-          from one run to the next.
-        example: An AI reviewer approves a change whose type check fails, and the learner holds the merge
-          until the type check passes.
-      - claim: The learner reads an agent's report that the checks pass as a claim, and looks at the
-          result of the gate itself.
-        why: The report is the agent's words about the gate, and only the gate's own output shows what
-          ran.
-        example: The agent says all tests pass, so the learner opens the CI run and finds the test job was
-          skipped.
+      - claim: >-
+          L’apprenant ne laisse bloquer une fusion ou terminer la boucle d’un agent qu’aux contrôles dont
+          le résultat ne demande aucun jugement, comme les tests, la vérification des types, les builds
+          et
+          les contrôles de schéma.
+        why: >-
+          Une barrière fiable donne le même résultat pour la même entrée, donc un échec a le même sens
+          à
+          chaque exécution.
+        example: >-
+          L’équipe rend la suite de tests et la vérification des types obligatoires sur chaque pull
+          request, et marque les commentaires du relecteur IA comme consultatifs.
+      - claim: >-
+          L’apprenant traite la revue d’un second modèle comme un avis qu’une personne pèse, à côté des
+          barrières et jamais à leur place.
+        why: >-
+          Le verdict d’un modèle est un jugement. Il peut manquer ce que le modèle qui a écrit a manqué,
+          et il peut changer d’une exécution à l’autre.
+        example: >-
+          Un relecteur IA approuve une modification dont la vérification des types échoue, et l’apprenant
+          bloque la fusion jusqu’à ce que la vérification des types passe.
+      - claim: >-
+          L’apprenant lit comme une affirmation le rapport d’un agent selon lequel les contrôles passent,
+          et regarde le résultat de la barrière elle-même.
+        why: >-
+          Le rapport est ce que l’agent dit de la barrière, et seule la sortie de la barrière montre ce
+          qui a tourné.
+        example: >-
+          L’agent dit que tous les tests passent, donc l’apprenant ouvre l’exécution de la CI et découvre
+          que la tâche de tests a été sautée.
   - id: coding-with-agents/verifies-agent-work/screens-for-security
-    statement: Screens agent output for security and supply-chain problems
+    statement: >-
+      Contrôle ce que produit un agent pour les problèmes de sécurité et de chaîne d’approvisionnement
     level: base
     behaviors:
-      - claim: "The learner checks every new dependency the agent added: does it exist, is it the intended
-          package, is it maintained, and is it needed."
-        why: Agents suggest packages from memory, and a name that does not exist, or a look-alike package
-          published under a misspelled name, gets installed.
-        example: The diff adds a package with a slightly different name from the well-known one, so the
-          learner checks the registry and removes it.
-      - claim: The learner looks at how the change handles input, secrets and permissions, as a reviewer
-          would for any code.
-        why: Agent-written code has the same classes of vulnerability as human code, produced faster and
-          with more confidence.
-        example: The learner finds the generated query built with string formatting and asks for a
-          parameterized one.
-      - claim: The learner checks that no secret or credential ended up in the code, the tests or the
-          transcript.
-        why: An agent that read a `.env` file to solve a problem may paste its contents into a fixture.
-        example: The pull request's test fixtures contain a real-looking API key, so the learner rotates it
-          and adds the file to the secret scanner.
+      - claim: >-
+          L’apprenant vérifie chaque nouvelle dépendance ajoutée par l’agent : existe-t-elle, est-ce le
+          paquet voulu, est-elle maintenue, est-elle nécessaire.
+        why: >-
+          Les agents proposent des paquets de mémoire, et un nom qui n’existe pas, ou un paquet sosie
+          publié sous un nom mal orthographié, finit installé.
+        example: >-
+          Le diff ajoute un paquet dont le nom diffère légèrement de celui du paquet connu, donc
+          l’apprenant consulte le registre et le retire.
+      - claim: >-
+          L’apprenant regarde comment la modification traite les entrées, les secrets et les permissions,
+          comme un relecteur le ferait pour n’importe quel code.
+        why: >-
+          Le code écrit par un agent a les mêmes classes de vulnérabilités que le code humain, produites
+          plus vite et avec plus d’assurance.
+        example: >-
+          L’apprenant repère la requête générée par formatage de chaîne et demande une requête paramétrée.
+      - claim: >-
+          L’apprenant vérifie qu’aucun secret ni identifiant n’a fini dans le code, les tests ou la
+          transcription.
+        why: >-
+          Un agent qui a lu un fichier `.env` pour résoudre un problème peut coller son contenu dans des
+          données de test (fixture).
+        example: >-
+          Les données de test de la pull request contiennent une clé d’API qui a l’air réelle, donc
+          l’apprenant la fait tourner et ajoute le fichier au détecteur de secrets.
   - id: coding-with-agents/verifies-agent-work/uses-a-fresh-review
-    statement: Has a change reviewed in a fresh session and weighs the findings
+    statement: Fait relire une modification dans une nouvelle session et pèse les remarques
     level: base
     behaviors:
-      - claim: The learner gives the review to a session that did not write the change, together with the
-          diff, the specification and the criteria to check.
-        why: A fresh session judges the result without the reasoning that produced it, so it does not
-          defend the choices made (@Claude Code best practices).
-        example: The learner has a subagent review the diff against `PLAN.md` and check that every listed
-          edge case has a test.
-      - claim: The learner tells the reviewer to report only what affects correctness or the stated
-          requirements.
-        why: A reviewer asked for gaps reports some even in sound work, and chasing all of them adds code
-          nobody needs.
-        example: The review prompt ends with "report gaps against the spec, not style preferences", and
-          the review comes back with two findings instead of fifteen.
-      - claim: The learner decides on each finding to fix it, reject it or file it, and the gates still
-          decide the merge.
-        why: A review finding is a model's judgment, and only a deterministic gate can block a change on
-          its own.
-        example: The learner fixes the missing null check, rejects a suggested extra abstraction, and
-          waits for CI before merging.
+      - claim: >-
+          L’apprenant confie la revue à une session qui n’a pas écrit la modification, avec le diff, la
+          spécification et les critères à vérifier.
+        why: >-
+          Une nouvelle session juge le résultat sans le raisonnement qui l’a produit, donc elle ne défend
+          pas les choix faits (@Claude Code best practices).
+        example: >-
+          L’apprenant fait relire le diff par un sous-agent au regard de `PLAN.md`, et lui fait vérifier
+          que chaque cas limite listé a un test.
+      - claim: >-
+          L’apprenant dit au relecteur de ne signaler que ce qui touche la justesse ou les exigences
+          énoncées.
+        why: >-
+          Un relecteur à qui l’on demande des manques en signale même dans un travail solide, et les
+          traiter tous ajoute du code dont personne n’a besoin.
+        example: >-
+          Le prompt de revue se termine par « signale les manques au regard de la spécification, sans
+          préférences de style », et la revue revient avec deux remarques au lieu de quinze.
+      - claim: >-
+          L’apprenant décide pour chaque remarque de la corriger, de la rejeter ou d’en faire un ticket,
+          et les barrières décident toujours de la fusion.
+        why: >-
+          Une remarque de revue est le jugement d’un modèle, et seule une barrière déterministe peut
+          bloquer seule une modification.
+        example: >-
+          L’apprenant corrige le contrôle de valeur nulle manquant, rejette une abstraction supplémentaire
+          proposée, et attend la CI avant de fusionner.

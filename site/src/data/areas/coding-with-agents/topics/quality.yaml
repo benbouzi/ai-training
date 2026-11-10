@@ -1,67 +1,67 @@
 id: coding-with-agents/quality
 area: coding-with-agents
-name: Quality with agents
+name: La qualité avec des agents
 definition: >-
-  Agents make it cheap to produce code and just as cheap to produce debt.
-  This topic covers keeping tests meaningful, documentation current,
-  dependencies deliberate, and reviewing agent output for the security and
-  supply-chain problems it introduces more readily than a careful human would.
+  Les agents rendent la production de code peu coûteuse, et la production de dette tout aussi peu
+  coûteuse. Ce thème couvre la façon de garder des tests utiles, une documentation à jour, des
+  dépendances choisies, et la revue de ce que produit un agent pour les problèmes de sécurité et
+  de chaîne d’approvisionnement qu’il introduit plus facilement qu’une personne attentive.
 concepts:
   - id: testing
-    name: Testing
+    name: Tests
     definition: >-
-      Keeping tests that prove behavior rather than mirror implementation.
-      Agents write tests readily, and readily write tests that pass by
-      asserting what the code happens to do. Review agent tests for what they
-      would catch if the code were wrong, keep them fast enough to run in an
-      agent's loop, and never let an agent delete or weaken a test to make a
-      change pass.
+      Garder des tests qui prouvent un comportement, indépendamment de l’implémentation. Les agents
+      écrivent volontiers des tests, et écrivent tout aussi volontiers des tests qui passent parce
+      qu’ils vérifient ce que le code fait déjà. Relisez les tests d’un agent en vous demandant ce
+      qu’ils détecteraient si le code était faux, gardez-les assez rapides pour tourner dans la boucle
+      d’un agent, et ne laissez jamais un agent supprimer ou affaiblir un test pour faire passer une
+      modification.
   - id: documentation
     name: Documentation
     definition: >-
-      Keeping the written explanation of a system current as agents change
-      it. Agents can draft documentation from code well, and equally well
-      leave it stale. Treat docs as part of the change: the brief names what
-      must be updated, the review checks it, and project instructions tell
-      the agent where documentation lives and what style it follows.
+      Garder à jour l’explication écrite d’un système à mesure que les agents le modifient. Les agents
+      savent bien rédiger une documentation à partir du code, et savent tout aussi bien la laisser
+      vieillir. Traitez la documentation comme une partie de la modification : la consigne nomme ce
+      qui doit être mis à jour, la revue le vérifie, et les instructions du projet disent à l’agent où
+      se trouve la documentation et quel style elle suit.
   - id: dependency-hygiene
-    name: Dependency hygiene
+    name: Hygiène des dépendances
     definition: >-
-      Adding libraries deliberately and keeping them pinned, current and few.
-      An agent asked to solve a problem will often add a package where a few
-      lines would do, or pick one it has seen frequently rather than one that
-      is maintained. Review every new dependency for need, license,
-      maintenance and size, and lock versions so builds stay reproducible.
+      Ajouter des bibliothèques de façon réfléchie et les garder figées, à jour et peu nombreuses. Un
+      agent à qui l’on demande de résoudre un problème ajoute souvent un paquet là où quelques lignes
+      suffiraient, ou choisit un paquet qu’il a souvent vu au lieu d’un paquet maintenu. Relisez
+      chaque nouvelle dépendance pour son utilité, sa licence, sa maintenance et sa taille, et
+      verrouillez les versions pour que les builds restent reproductibles.
   - id: security-review-of-agent-output
-    name: Security review of agent output
+    name: Revue de sécurité du code d’un agent
     definition: >-
-      Checking agent-written code for the classic mistakes it makes easily:
-      unvalidated input, string-built queries and commands, secrets in code,
-      permissive defaults, disabled checks, error handling that hides
-      failures. Agents reproduce common patterns including common
-      vulnerabilities. Static analysis catches some; a reviewer asking "what
-      if the input is hostile" catches more.
+      Vérifier dans le code écrit par un agent les erreurs classiques qu’il fait facilement : des
+      entrées non validées, des requêtes et des commandes construites par concaténation de chaînes,
+      des secrets dans le code, des réglages par défaut trop permissifs, des contrôles désactivés, une
+      gestion d’erreurs qui masque les échecs. Les agents reproduisent les schémas courants, y compris
+      les vulnérabilités courantes. L’analyse statique en détecte une partie. Un relecteur qui se
+      demande « et si l’entrée était hostile ? » en détecte davantage.
   - id: supply-chain-risk
-    name: Supply-chain risk
+    name: Risque de chaîne d’approvisionnement
     definition: >-
-      The risk that something you install is not what it seems: a package
-      name the agent hallucinated that an attacker has registered, an action
-      or plugin pinned to a moving tag, a transitive dependency with a known
-      flaw. Agents increase exposure by suggesting names from memory. Verify
-      that packages exist and are the intended ones, pin to exact versions,
-      and audit regularly.
+      Le risque que ce que vous installez ne soit pas ce qu’il semble être : un nom de paquet inventé
+      par l’agent et enregistré par un attaquant, une action ou un plugin figé sur une étiquette qui
+      bouge, une dépendance transitive avec une faille connue. Les agents augmentent l’exposition
+      parce qu’ils proposent des noms de mémoire. Vérifiez que les paquets existent et sont bien ceux
+      que vous voulez, figez des versions exactes et faites des audits réguliers.
   - id: deep-modules
-    name: Deep modules
+    name: Modules profonds
     definition: >-
-      Modules whose interface is small compared with what they do: a few
-      operations that hide a large implementation. A shallow module has an
-      interface almost as complex as its code, so its callers have to
-      understand the inside anyway. Deep modules help an agent change code
-      safely, because a change inside one stays inside, and the agent needs
-      to read only the interface to use it. A brief that asks to keep modules
-      deep limits how far a change spreads.
+      Des modules dont l’interface est petite par rapport à ce qu’ils font : quelques opérations qui
+      cachent une grande implémentation. Un module superficiel a une interface presque aussi complexe
+      que son code, donc ceux qui l’appellent doivent de toute façon comprendre son intérieur. Les
+      modules profonds aident un agent à modifier le code sans risque, parce qu’une modification à
+      l’intérieur reste à l’intérieur, et que l’agent n’a besoin de lire que l’interface pour s’en
+      servir. Une consigne qui demande de garder les modules profonds limite la portée d’une
+      modification.
 links:
   prerequisites: [coding-with-agents/verification, safety/agent-risk]
   related: []
   specializations: []
-sources: [DLAI-7, Brilliant SEC, Fuchsia review, OpenSSF Scorecard, Academy ai-native-sdlc-playbook, Academy claude-code-in-action, Pearce 2022, Ousterhout 2021]
+sources: [DLAI-7, Brilliant SEC, Fuchsia review, OpenSSF Scorecard, Academy ai-native-sdlc-playbook,
+      Academy claude-code-in-action, Pearce 2022, Ousterhout 2021]

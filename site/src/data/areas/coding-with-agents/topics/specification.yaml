@@ -1,89 +1,84 @@
 id: coding-with-agents/specification
 area: coding-with-agents
-name: Deciding and specifying
+name: Décider et spécifier
 definition: >-
-  When an agent does the implementing, the engineer's skill concentrates
-  before the code: judging whether something is worth building, defining
-  what success requires, breaking the problem into components with clear
-  dependencies, and designing how the result will be verified before any of
-  it exists.
+  Quand un agent fait l’implémentation, le savoir-faire de l’ingénieur se concentre avant le
+  code : juger si quelque chose vaut la peine d’être construit, définir ce que la réussite exige,
+  découper le problème en composants aux dépendances claires, et concevoir la vérification du
+  résultat avant qu’il existe.
 concepts:
   - id: what-is-worth-building
-    name: What is worth building
+    name: Ce qui vaut la peine d’être construit
     definition: >-
-      Judging an idea before building it: who needs it, what it costs to
-      build and to keep, what it displaces, and what happens if it is not
-      built. Cheap implementation makes this judgment more important, not
-      less, because the cost of building the wrong thing is now mostly the
-      cost of maintaining it. Say no, or say smaller, before the agent starts.
+      Juger une idée avant de la construire : qui en a besoin, ce qu’elle coûte à construire et à
+      entretenir, ce qu’elle remplace, et ce qui se passe si on ne la construit pas. Une
+      implémentation peu coûteuse rend ce jugement plus important, parce que le coût d’une mauvaise
+      construction est désormais surtout le coût de sa maintenance. Dites non, ou proposez plus petit,
+      avant que l’agent commence.
   - id: success-criteria
-    name: Success criteria
+    name: Critères de réussite
     definition: >-
-      Concrete, checkable statements of what a finished result must do and
-      must not do, written before the work starts. Good criteria describe
-      observable behavior, name the edge cases that matter and set limits
-      such as performance or compatibility. They become the agent's target
-      and the reviewer's checklist, and they stop a plausible result from
-      being accepted as a correct one.
+      Des énoncés concrets et vérifiables de ce qu’un résultat terminé doit faire et ne doit pas
+      faire, écrits avant le début du travail. De bons critères décrivent un comportement observable,
+      nomment les cas limites qui comptent et fixent des limites, de performance ou de compatibilité
+      par exemple. Ils deviennent la cible de l’agent et la liste de contrôle du relecteur, et ils
+      empêchent d’accepter un résultat plausible comme un résultat correct.
   - id: decomposition-into-components
-    name: Decomposition into components
+    name: Décomposition en composants
     definition: >-
-      Splitting a problem into parts with clear responsibilities and
-      interfaces, each small enough to build and verify on its own. Good
-      components can be implemented in any order that respects their
-      dependencies, tested in isolation and replaced without touching the
-      rest. The split is a design decision the engineer owns; agents follow
-      it well and invent it poorly.
+      Découper un problème en parties aux responsabilités et aux interfaces claires, chacune assez
+      petite pour être construite et vérifiée seule. De bons composants peuvent être implémentés dans
+      n’importe quel ordre qui respecte leurs dépendances, testés isolément et remplacés sans toucher
+      au reste. Le découpage est une décision de conception qui revient à l’ingénieur : les agents le
+      suivent bien et l’inventent mal.
   - id: dependencies
-    name: Dependencies
+    name: Dépendances
     definition: >-
-      The relationships that force an order: which component needs another
-      to exist first, which decision has to be made before a piece can be
-      specified, which external system must be available. Naming
-      dependencies early sets the sequence of work, shows what can proceed
-      in parallel and exposes the risky assumption that everything else
-      rests on.
+      Les relations qui imposent un ordre : quel composant a besoin qu’un autre existe d’abord, quelle
+      décision doit être prise avant qu’une partie puisse être spécifiée, quel système externe doit
+      être disponible. Nommer les dépendances tôt fixe l’ordre du travail, montre ce qui peut avancer
+      en parallèle et fait apparaître l’hypothèse risquée sur laquelle tout le reste repose.
   - id: designing-the-verification
-    name: Designing the verification
+    name: Conception de la vérification
     definition: >-
-      Deciding how each piece of work will be checked before it is built:
-      which tests must pass, what to observe in the running system, which
-      review questions to ask. Designing the check first makes the criteria
-      precise, gives the agent a target it can run itself, and keeps
-      verification from being replaced by a glance at a diff that looks
-      right.
+      Décider comment chaque partie du travail sera vérifiée avant de la construire : quels tests
+      doivent passer, quoi observer dans le système en marche, quelles questions poser en revue.
+      Concevoir la vérification d’abord rend les critères précis, donne à l’agent une cible qu’il peut
+      exécuter lui-même, et évite que la vérification se réduise à un coup d’œil sur un diff qui a
+      l’air juste.
   - id: design-interview
-    name: Design interview
+    name: Entretien de conception
     definition: >-
-      Having the agent question the engineer about a feature before any plan
-      is written. The agent asks about the implementation, edge cases,
-      concerns and trade-offs, skips the obvious, and keeps going until the
-      open points are settled, then writes the result down as a
-      specification. The questions bring out decisions the engineer had not
-      made yet, while changing them costs nothing. The written spec lets a
-      fresh session build the design without the interview in its context.
+      Faire interroger l’ingénieur par l’agent sur une fonctionnalité avant d’écrire un plan. L’agent
+      pose des questions sur l’implémentation, les cas limites, les inquiétudes et les compromis,
+      passe sur l’évident, et continue jusqu’à ce que les points ouverts soient tranchés. Il écrit
+      ensuite le résultat sous forme de spécification. Les questions font apparaître des décisions que
+      l’ingénieur n’avait pas encore prises, à un moment où les changer ne coûte rien. La
+      spécification écrite permet à une nouvelle session de construire la conception sans avoir
+      l’entretien dans son contexte.
   - id: throwaway-prototype
-    name: Throwaway prototype
+    name: Prototype jetable
     definition: >-
-      A small program built only to answer one design question, such as
-      whether a library can handle the data or which of two interfaces reads
-      better, and deleted once the question is answered. It skips error
-      handling, tests and structure, because none of its code is kept. With an
-      agent a prototype is cheap, so trying an idea can replace a long
-      discussion of it. The answer goes into the specification, and the
-      prototype's code stays out of the real system.
+      Un petit programme construit seulement pour répondre à une question de conception, par exemple
+      si une bibliothèque supporte les données ou laquelle de deux interfaces se lit le mieux, et
+      supprimé une fois la question tranchée. Il se passe de gestion d’erreurs, de tests et de
+      structure, puisque aucune ligne de son code n’est gardée. Avec un agent, un prototype coûte peu,
+      donc essayer une idée peut remplacer une longue discussion à son sujet. La réponse va dans la
+      spécification, et le code du prototype reste hors du vrai système.
   - id: shared-vocabulary
-    name: Shared vocabulary
+    name: Vocabulaire commun
     definition: >-
-      One agreed meaning for each term of the problem domain, used the same
-      way by domain experts, engineers, specifications, code and agent
-      instructions. When the spec says "account" and the code says
-      "customer" for the same thing, an agent has to guess whether the two
-      differ, and some of its guesses are wrong. A short glossary the agent
-      reads keeps the terms aligned, and renaming a term is a change to the
-      design.
+      Un seul sens convenu pour chaque terme du domaine, employé de la même façon par les experts du
+      domaine, les ingénieurs, les spécifications, le code et les instructions de l’agent. Quand la
+      spécification dit « compte » et que le code dit « client » pour la même chose, un agent doit
+      deviner si les deux diffèrent, et certaines de ses suppositions sont fausses. Un court glossaire
+      que l’agent lit garde les termes alignés, et renommer un terme est une modification de la
+      conception.
 links:
   prerequisites: [coding-with-agents/first-session, using-agents/decomposition]
   related: []
   specializations: []
-sources: [Brilliant TAS, Brilliant SPC, Academy ai-native-sdlc-playbook, Academy ai-fluency-for-builders, Claude Code best practices, Thomas 2019, Artima tracer bullets, Brooks 1995, Evans 2003, Evans DDD Reference, OpenAI Academy scope-ai-solutions-kjplw, OpenAI Academy scale-codex-across-teams-and-systems-jr83a]
+sources: [Brilliant TAS, Brilliant SPC, Academy ai-native-sdlc-playbook, Academy
+      ai-fluency-for-builders, Claude Code best practices, Thomas 2019, Artima tracer bullets,
+      Brooks 1995, Evans 2003, Evans DDD Reference, OpenAI Academy scope-ai-solutions-kjplw, OpenAI
+      Academy scale-codex-across-teams-and-systems-jr83a]

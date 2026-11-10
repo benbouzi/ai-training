@@ -1,8 +1,9 @@
 id: coding-with-agents/first-session
-title: Your first session with a coding agent
+title: Votre première session avec un agent de code
 description: >-
-  Start a coding agent in a small repository and give it the context it needs. Then make one change
-  behind a permissions prompt and review the diff before you trust it.
+  Lancez un agent de code dans un petit dépôt et donnez-lui le contexte dont il a besoin. Faites
+  ensuite une modification derrière une demande d’autorisation, et relisez le diff avant de lui
+  faire confiance.
 mode: tutorial
 covers: coding-with-agents/first-session
 serves:
@@ -22,16 +23,19 @@ assumes:
     lesson: safety/agent-risk
     section: le-rayon-dimpact
 extends-to:
-  - label: Plan, implement, verify
+  - label: Planifier, implémenter, vérifier
     href: /coding-with-agents/workflow/
-  - label: "Get Started with Codex: a first session in Codex, with a lab on a starter app (OpenAI Academy, free account)"
+  - label: >-
+      Get Started with Codex : une première session dans Codex, avec un exercice pratique sur une
+      application de départ (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/get-started-with-codex-jkhsq
 after: []
 shorts:
-  - permission modes (S02 worked example), directed compaction and rewind
+  - >-
+    les modes de permission (exemple travaillé de S02), le compactage dirigé et le retour en arrière
 exercise:
   kind: do
-  brief: A scripted change in the fixture repository, reviewed the same way.
+  brief: Une modification scriptée dans le dépôt d’exemple, relue de la même façon.
 sources:
   - Academy claude-code-101
   - Academy claude-code-in-action

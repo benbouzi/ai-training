@@ -1,126 +1,199 @@
 id: coding-with-agents/works-in-team
 area: coding-with-agents
-statement: Works with agents alongside a team
+statement: Travaille avec des agents au sein d’une équipe
 topics: [coding-with-agents/team, coding-with-agents/workflow]
 objectives:
   - id: coding-with-agents/works-in-team/attributes-honestly
-    statement: Attributes agent work honestly in commits and reviews
+    statement: Attribue honnêtement le travail des agents dans les commits et les revues
     level: base
     behaviors:
-      - claim: Commits and pull requests say that an agent wrote the change, in the form the team agreed on.
-        why: Reviewers read agent-written and human-written changes differently, and they need to know which
-          one they have.
-        example: The commit trailer names the agent and model, per the repository's convention, on every
-          agent-authored commit.
-      - claim: The learner takes responsibility for the change as its author, and the attribution does not
-          shift blame to the tool.
-        why: The person who submitted the change is accountable, and the tool is not.
-        example: In the review the learner writes "I asked the agent for this and I checked it", instead of
-          "the agent did this".
-      - claim: The learner keeps the attribution form the project asks for, including what it forbids.
-        why: Some projects need a certificate of origin only a person can sign, and an agent's sign-off is
-          not valid.
-        example: The learner adds the assisted-by trailer and leaves out `Signed-off-by` because the project
-          says only humans certify.
+      - claim: >-
+          Les commits et les pull requests disent qu’un agent a écrit la modification, sous la forme
+          convenue par l’équipe.
+        why: >-
+          Les relecteurs lisent différemment une modification écrite par un agent et une modification
+          écrite par une personne, et ils ont besoin de savoir laquelle ils ont sous les yeux.
+        example: >-
+          La ligne de fin du commit nomme l’agent et le modèle, selon la convention du dépôt, sur chaque
+          commit écrit par un agent.
+      - claim: >-
+          L’apprenant assume la responsabilité de la modification en tant qu’auteur, et l’attribution
+          ne
+          reporte pas la faute sur l’outil.
+        why: La personne qui a soumis la modification en répond, et l’outil n’en répond pas.
+        example: >-
+          En revue, l’apprenant écrit « j’ai demandé cela à l’agent et je l’ai vérifié » au lieu de
+          « l’agent a fait cela ».
+      - claim: >-
+          L’apprenant respecte la forme d’attribution que demande le projet, y compris ce qu’elle
+          interdit.
+        why: >-
+          Certains projets demandent un certificat d’origine que seule une personne peut signer, et la
+          signature d’un agent n’est pas valable.
+        example: >-
+          L’apprenant ajoute la ligne de fin « assisted-by » et omet `Signed-off-by`, parce que le projet
+          dit que seules les personnes certifient.
   - id: coding-with-agents/works-in-team/follows-team-norms
-    statement: Follows the team's review and CI norms for agent changes
+    statement: Suit les règles de revue et de CI de l’équipe pour les modifications d’agents
     level: base
     behaviors:
-      - claim: Agent-written changes go through the same review and CI gates as any other change, and the
-          learner does not bypass them because "the agent tested it".
-        why: The gates exist for changes from anyone, and an agent's tests are part of the change under
-          review.
-        example: The learner waits for CI and a reviewer's approval on the agent's pull request instead of
-          merging it themselves.
-      - claim: The learner sizes and labels agent changes so reviewers can read them.
-        why: A reviewer who receives a 3000-line agent diff either skips it or blocks it.
-        example: The learner splits the generated change into three pull requests and marks them as
-          agent-assisted in the title, as the team asked.
-      - claim: The learner reads and follows the team's agent instructions file before starting, and
-          proposes changes to it instead of working around it.
-        why: The file is the team's shared agreement, and a session that ignores it makes changes the team
-          rejects.
-        example: The instructions say "no new dependencies without an issue", so the learner opens the issue
-          first.
+      - claim: >-
+          Les modifications écrites par un agent passent par les mêmes barrières de revue et de CI que
+          toute autre modification, et l’apprenant ne les contourne pas parce que « l’agent a testé ».
+        why: >-
+          Les barrières existent pour les modifications de n’importe qui, et les tests d’un agent font
+          partie de la modification relue.
+        example: >-
+          L’apprenant attend la CI et l’approbation d’un relecteur sur la pull request de l’agent au lieu
+          de la fusionner lui-même.
+      - claim: >-
+          L’apprenant dimensionne et étiquette les modifications d’agents pour que les relecteurs puissent
+          les lire.
+        why: Un relecteur qui reçoit un diff d’agent de 3 000 lignes le saute ou le bloque.
+        example: >-
+          L’apprenant découpe la modification générée en trois pull requests et les marque comme faites
+          avec un agent dans le titre, comme l’équipe l’a demandé.
+      - claim: >-
+          L’apprenant lit et suit le fichier d’instructions pour agents de l’équipe avant de commencer,
+          et
+          propose des modifications à ce fichier au lieu de le contourner.
+        why: >-
+          Le fichier est l’accord commun de l’équipe, et une session qui l’ignore fait des modifications
+          que l’équipe rejette.
+        example: >-
+          Les instructions disent « aucune nouvelle dépendance sans ticket », donc l’apprenant ouvre
+          d’abord le ticket.
   - id: coding-with-agents/works-in-team/keeps-the-backlog-reachable
-    statement: Keeps specs and tickets where the team and the agent can both reach them
+    statement: Garde les spécifications et les tickets là où l’équipe et l’agent peuvent les
+      atteindre
     level: base
     behaviors:
-      - claim: Specs and tickets go into the team's tracker, and the learner keeps none of them only in a
-          private note or a chat.
-        why: Work that is only in one person's notes is invisible to the rest of the team and to every
-          agent session.
-        example: The learner turns the plan from a chat into three tickets, each linking the spec, before
-          any agent starts on them.
-      - claim: The learner records which ticket blocks which with the tracker's own links.
-        why: The tracker then marks blocked tickets, so a person or an agent picking up work can skip them
-          (@GitHub docs creating-issue-dependencies).
-        example: The ticket for the login page is marked as blocked by the token ticket, and the agent
-          asked for the next open ticket takes the token one.
-      - claim: The agent reaches the tracker through a command-line tool with credentials that allow only
-          what it needs.
-        why: A command-line tool costs little context, and narrow credentials limit what a wrong command
-          can do (@Claude Code best practices).
-        example: The agent's token can read tickets and add comments, and it cannot delete tickets or
-          change the project's settings.
+      - claim: >-
+          Les spécifications et les tickets vont dans l’outil de suivi de l’équipe, et l’apprenant n’en
+          garde aucun seulement dans une note privée ou une conversation.
+        why: >-
+          Un travail qui n’existe que dans les notes d’une personne est invisible pour le reste de
+          l’équipe et pour chaque session d’agent.
+        example: >-
+          L’apprenant transforme le plan d’une conversation en trois tickets, chacun avec un lien vers
+          la
+          spécification, avant qu’un agent commence à travailler dessus.
+      - claim: >-
+          L’apprenant indique quel ticket en bloque un autre avec les liens propres à l’outil de suivi.
+        why: >-
+          L’outil de suivi marque alors les tickets bloqués, donc une personne ou un agent qui prend du
+          travail peut les sauter (@GitHub docs creating-issue-dependencies).
+        example: >-
+          Le ticket de la page de connexion est marqué comme bloqué par le ticket des jetons, et l’agent
+          à
+          qui l’on demande le prochain ticket ouvert prend celui des jetons.
+      - claim: >-
+          L’agent accède à l’outil de suivi par un outil en ligne de commande, avec des identifiants qui
+          ne permettent que ce dont il a besoin.
+        why: >-
+          Un outil en ligne de commande coûte peu de contexte, et des identifiants restreints limitent
+          ce
+          qu’une mauvaise commande peut faire (@Claude Code best practices).
+        example: >-
+          Le jeton de l’agent peut lire les tickets et ajouter des commentaires, et il ne peut ni
+          supprimer de tickets ni changer les réglages du projet.
   - id: coding-with-agents/works-in-team/turns-findings-into-rules
-    statement: Turns recurring review findings into written standards or automated checks
+    statement: >-
+      Transforme les remarques de revue récurrentes en normes écrites ou en contrôles automatiques
     level: base
     behaviors:
-      - claim: When the same review finding comes up again, the learner adds it to the team's standards
-          file.
-        why: A rule written down once is read by every reviewer and every agent, and a finding repeated in
-          comments is forgotten (@Claude Code memory).
-        example: After the third comment about logging personal data, the learner adds the rule to the
-          standards file with an example of what to log instead.
-      - claim: A rule that a linter or a hook can check moves out of the file and into the check.
-        why: A written rule is advice the agent may miss, and a check runs on every change (@Claude Code
-          best practices).
-        example: The rule "no print statements in library code" becomes a lint rule, and the line in the
-          standards file is deleted.
-      - claim: Reviewers block a change only for a rule in the file or a failed check, and mark other
-          points as suggestions.
-        why: A review that blocks on personal preference makes the standard unclear and the rules in the
-          file worth less (@Google eng-practices).
-        example: 'A reviewer writes "Nit: I would name this differently" and approves, because naming is
-          not covered by the file.'
+      - claim: >-
+          Quand la même remarque de revue revient, l’apprenant l’ajoute au fichier de normes de l’équipe.
+        why: >-
+          Une règle écrite une fois est lue par chaque relecteur et chaque agent, et une remarque répétée
+          dans des commentaires s’oublie (@Claude Code memory).
+        example: >-
+          Après le troisième commentaire sur la journalisation de données personnelles, l’apprenant ajoute
+          la règle au fichier de normes avec un exemple de ce qu’il faut journaliser à la place.
+      - claim: >-
+          Une règle qu’un outil d’analyse ou un hook peut vérifier sort du fichier et passe dans le
+          contrôle.
+        why: >-
+          Une règle écrite est un conseil que l’agent peut manquer, et un contrôle s’exécute sur chaque
+          modification (@Claude Code best practices).
+        example: >-
+          La règle « pas d’instructions print dans le code des bibliothèques » devient une règle de
+          l’outil d’analyse, et la ligne du fichier de normes est supprimée.
+      - claim: >-
+          Les relecteurs ne bloquent une modification que pour une règle du fichier ou un contrôle en
+          échec, et marquent les autres points comme des suggestions.
+        why: >-
+          Une revue qui bloque sur une préférence personnelle rend la norme floue et donne moins de poids
+          aux règles du fichier (@Google eng-practices).
+        example: >-
+          Un relecteur écrit « Détail : je nommerais cela autrement » et approuve, parce que le nommage
+          n’est pas couvert par le fichier.
   - id: coding-with-agents/works-in-team/runs-parallel-work
-    statement: Runs several agent sessions without losing coherence
+    statement: Fait tourner plusieurs sessions d’agents sans perdre la cohérence
     level: expert
     behaviors:
-      - claim: Each parallel session works in its own checkout or worktree on its own branch, with a task
-          that does not overlap the others.
-        why: Two agents editing the same files produce conflicts that cost more than the parallelism saved.
-        example: The learner briefs one agent on the API change and another on the documentation, in two
-          worktrees, and merges the API first.
-      - claim: The learner keeps a written list of what each session is doing and what state it is in.
-        why: A person can follow only one session closely at a time, and a forgotten session is a session
-          that finished the wrong way.
-        example: "A short note per session: branch, task, next check-in, and whether it is waiting on the
-          learner."
-      - claim: The learner integrates often and in a fixed order, and rebases the rest.
-        why: Parallel branches drift, and the longer they live the harder they merge.
-        example: Every afternoon the learner merges the finished branches into main and has the remaining
-          sessions rebase before they continue.
-      - claim: Shared resources (ports, databases, the stash, credentials) are either per session or left
-          alone.
-        why: Sessions that share a port or a stash interfere with each other without any visible conflict.
-        example: The learner tells each agent not to start the dev server, because the port is shared, and
-          to run the build instead.
+      - claim: >-
+          Chaque session parallèle travaille dans sa propre copie extraite ou son propre worktree, sur
+          sa
+          propre branche, avec une tâche qui ne recoupe pas les autres.
+        why: >-
+          Deux agents qui modifient les mêmes fichiers produisent des conflits qui coûtent plus que ce
+          que
+          le parallélisme a fait gagner.
+        example: >-
+          L’apprenant confie à un agent la modification de l’API et à un autre la documentation, dans
+          deux
+          worktrees, et fusionne d’abord l’API.
+      - claim: >-
+          L’apprenant tient une liste écrite de ce que fait chaque session et de l’état où elle se trouve.
+        why: >-
+          Une personne ne peut suivre de près qu’une session à la fois, et une session oubliée est une
+          session qui a mal fini.
+        example: >-
+          Une courte note par session : branche, tâche, prochain point d’étape, et si elle attend
+          l’apprenant.
+      - claim: L’apprenant intègre souvent et dans un ordre fixe, et rebase les autres branches.
+        why: >-
+          Les branches parallèles divergent, et plus elles vivent longtemps, plus elles sont difficiles
+          à
+          fusionner.
+        example: >-
+          Chaque après-midi, l’apprenant fusionne les branches terminées dans main et fait rebaser les
+          sessions restantes avant qu’elles continuent.
+      - claim: >-
+          Les ressources partagées (ports, bases de données, la remise (stash), identifiants) sont soit
+          propres à chaque session, soit laissées tranquilles.
+        why: Des sessions qui partagent un port ou une remise se gênent sans aucun conflit visible.
+        example: >-
+          L’apprenant dit à chaque agent de ne pas démarrer le serveur de développement, parce que le
+          port
+          est partagé, et de lancer le build à la place.
   - id: coding-with-agents/works-in-team/sets-team-practice
-    statement: Sets the team's practice for agent use
+    statement: Fixe la pratique d’équipe pour l’usage des agents
     level: expert
     behaviors:
-      - claim: "The learner writes the team's agent practice down where the team and the agents read it:
-          what agents may do, how work is attributed, how it is reviewed."
-        why: Unwritten practice is a different practice per person, and the agents follow none of them.
-        example: The repository's `AGENTS.md` says what the CI gate is, what a commit trailer looks like,
-          and which directories agents may not touch.
-      - claim: The practice starts from the mistakes the team has seen and changes when the mistakes change.
-        why: A practice written from imagination guards against the wrong things.
-        example: After two incidents of agents committing generated lockfiles, the team adds a hook and a
-          line in the instructions, and removes a rule that never triggered.
-      - claim: The learner makes the practice checkable by tooling where possible.
-        why: A rule enforced by a hook is followed every time, and a rule in a document is followed by
-          whoever read it.
-        example: A lint hook checks the commit message format, and CI checks the attribution trailer.
+      - claim: >-
+          L’apprenant écrit la pratique de l’équipe là où l’équipe et les agents la lisent : ce que les
+          agents peuvent faire, comment le travail est attribué, comment il est relu.
+        why: >-
+          Une pratique non écrite est une pratique différente pour chaque personne, et les agents n’en
+          suivent aucune.
+        example: >-
+          Le fichier `AGENTS.md` du dépôt dit quelle est la barrière de CI, à quoi ressemble une ligne
+          de
+          fin de commit, et quels dossiers les agents ne doivent pas toucher.
+      - claim: >-
+          La pratique part des erreurs que l’équipe a vues, et elle change quand les erreurs changent.
+        why: Une pratique écrite de façon imaginaire protège contre les mauvaises choses.
+        example: >-
+          Après deux incidents où des agents ont committé des fichiers de verrouillage générés, l’équipe
+          ajoute un hook et une ligne dans les instructions, et retire une règle qui ne s’est jamais
+          déclenchée.
+      - claim: L’apprenant rend la pratique vérifiable par des outils quand c’est possible.
+        why: >-
+          Une règle imposée par un hook est suivie à chaque fois, et une règle écrite dans un document
+          est
+          suivie par ceux qui l’ont lue.
+        example: >-
+          Un hook de style vérifie le format du message de commit, et la CI vérifie la ligne de fin
+          d’attribution.

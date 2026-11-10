@@ -1,29 +1,33 @@
 id: coding-with-agents/parallel-sessions
-title: Running several agent sessions in worktrees
+title: Faire tourner plusieurs sessions d’agents dans des worktrees
 description: >-
-  Run two agent sessions on one project at once, each in its own git worktree and branch with a task
-  that changes other files, keep a one-line note per session, and integrate in a fixed order: merge
-  the API branch, have the docs session rebase and run the check again, and keep every session away
-  from the shared stash and port.
+  Faites tourner deux sessions d’agents à la fois sur un même projet, chacune dans son propre
+  worktree git et sa propre branche, avec une tâche qui modifie d’autres fichiers. Tenez une note
+  d’une ligne par session et intégrez dans un ordre fixe : fusionnez la branche de l’API, faites
+  rebaser la session de documentation et relancer le contrôle, et tenez chaque session à l’écart
+  de la remise (stash) et du port partagés.
 mode: tutorial
 covers: coding-with-agents/team
 serves: [coding-with-agents/works-in-team/runs-parallel-work]
 introduces: [parallel-sessions, worktrees]
 assumes: []
 extends-to:
-  - label: "I'm using claude --worktree for everything now (AI Hero on YouTube, 8 minutes)"
+  - label: >-
+      I’m using claude --worktree for everything now (AI Hero sur YouTube, 8 minutes, en anglais)
     href: https://www.youtube.com/watch?v=yv8VZpov8bk
-  - label: "Extend Codex Workflows: subagents in worktrees, and how to merge their work (OpenAI Academy, free account)"
+  - label: >-
+      Extend Codex Workflows : des sous-agents dans des worktrees, et comment fusionner leur travail
+      (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/extend-codex-workflows-4e61p
 after: [coding-with-agents/ci-and-hooks]
 shorts:
-  - git worktree in five commands, shared ports and the shared stash
+  - git worktree en cinq commandes, les ports partagés et la remise partagée
 exercise:
   kind: do
   brief: >-
-    Open two worktrees of the fixture and brief one agent on the API change and one on the docs,
-    with no shared files. Keep a one-line note per session, merge the API branch first and have the
-    other session rebase.
+    Ouvrez deux worktrees de l’exemple et confiez à un agent la modification de l’API et à un autre
+    la documentation, sans fichier commun. Tenez une note d’une ligne par session, fusionnez d’abord
+    la branche de l’API et faites rebaser l’autre session.
 sources:
   - Brilliant BLD
   - Claude Code worktrees

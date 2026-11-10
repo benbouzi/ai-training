@@ -14,7 +14,7 @@ assumes:
     section: lire-la-transcription
   - objective: coding-with-agents/ships-with-agent/runs-a-session
     lesson: coding-with-agents/first-session
-    section: start-the-agent-and-ask-it-to-explain
+    section: lancer-lagent-et-lui-demander-dexpliquer
 extends-to:
   - label: Model Context Protocol tutorial (AI Hero)
     href: https://www.aihero.dev/model-context-protocol-tutorial

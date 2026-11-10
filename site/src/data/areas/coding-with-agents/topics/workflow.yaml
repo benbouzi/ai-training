@@ -1,69 +1,67 @@
 id: coding-with-agents/workflow
 area: coding-with-agents
-name: Plan, implement, verify
+name: Planifier, implémenter, vérifier
 definition: >-
-  A repeatable rhythm for shipping with a coding agent: plan before editing,
-  drive the change from a specification or a failing test, land it in small
-  working increments ordered so feedback arrives early, keep every step
-  reversible, and record the work in commits and pull requests a team can
-  review.
+  Un rythme reproductible pour livrer avec un agent de code : planifier avant de modifier, piloter
+  la modification par une spécification ou un test qui échoue, la livrer en petits incréments
+  fonctionnels ordonnés pour que les retours arrivent tôt, garder chaque étape réversible, et
+  consigner le travail dans des commits et des pull requests qu’une équipe peut relire.
 concepts:
   - id: plan-mode
-    name: Plan mode
+    name: Mode plan
     definition: >-
-      Having the agent explore and propose before it edits anything. In plan
-      mode it reads the code, asks questions and writes down the steps it
-      intends to take; you correct the plan while corrections are cheap. Most
-      agent mistakes are cheaper to catch in a plan than in a diff, so use it
-      for any change touching more than a couple of files.
+      Faire explorer et proposer l’agent avant qu’il modifie quoi que ce soit. En mode plan, il lit le
+      code, pose des questions et écrit les étapes qu’il compte suivre. Vous corrigez le plan tant que
+      les corrections coûtent peu. La plupart des erreurs d’agent coûtent moins cher à détecter dans
+      un plan que dans un diff, donc utilisez-le pour toute modification qui touche plus de deux ou
+      trois fichiers.
   - id: spec-driven-change
-    name: Spec-driven change
+    name: Modification guidée par la spécification
     definition: >-
-      Writing the specification of a change, including its success criteria,
-      as a document the agent works from and the reviewer checks against.
-      The spec stays the source of truth while the agent iterates; when the
-      code and the spec disagree, one of them is updated deliberately. It
-      suits changes where the design matters more than any single test.
+      Écrire la spécification d’une modification, avec ses critères de réussite, dans un document à
+      partir duquel l’agent travaille et auquel le relecteur compare le résultat. La spécification
+      reste la référence pendant que l’agent itère. Quand le code et la spécification divergent, l’un
+      des deux est mis à jour de façon délibérée. Cette méthode convient aux modifications où la
+      conception compte plus qu’un test isolé.
   - id: test-driven-change
-    name: Test-driven change
+    name: Modification guidée par les tests
     definition: >-
-      Writing or having the agent write a failing test that captures the
-      desired behavior, then implementing until it passes, then cleaning up.
-      The test gives the agent an unambiguous target it can run on its own
-      and gives you proof that the change does what was asked. It suits
-      bounded behavioral changes and bug fixes.
+      Écrire, ou faire écrire par l’agent, un test qui échoue et qui décrit le comportement voulu,
+      puis implémenter jusqu’à ce qu’il passe, puis nettoyer. Le test donne à l’agent une cible sans
+      ambiguïté qu’il peut exécuter seul, et vous donne la preuve que la modification fait ce qui
+      était demandé. Cette méthode convient aux modifications de comportement délimitées et aux
+      corrections de bugs.
   - id: working-increments
-    name: Working increments
+    name: Incréments fonctionnels
     definition: >-
-      Landing a change as a series of small steps, each of which leaves the
-      system working and tested. Increments keep the diff reviewable, keep
-      the agent's context focused and make it obvious which step introduced
-      a problem. An agent will happily produce a large change in one go;
-      asking for increments is part of the brief.
+      Livrer une modification sous forme d’une série de petites étapes qui laissent chacune le système
+      fonctionnel et testé. Les incréments gardent le diff relisible, gardent le contexte de l’agent
+      concentré et montrent clairement quelle étape a introduit un problème. Un agent produit
+      volontiers une grosse modification d’un seul coup, donc demander des incréments fait partie de
+      la consigne.
   - id: sequencing-for-early-feedback
-    name: Sequencing for early feedback
+    name: Ordonner pour un retour rapide
     definition: >-
-      Ordering increments so the riskiest assumption or the most visible
-      behavior is tested first. Build the thin end-to-end path before the
-      details, the integration before the polish, the part you are least sure
-      about before the part you are certain of. Early feedback turns a
-      possible rewrite into a small correction.
+      Ordonner les incréments pour tester en premier l’hypothèse la plus risquée ou le comportement le
+      plus visible. Construisez le chemin de bout en bout, même mince, avant les détails,
+      l’intégration avant les finitions, la partie dont vous êtes le moins sûr avant celle dont vous
+      êtes certain. Un retour rapide transforme une réécriture possible en petite correction.
   - id: reversibility
-    name: Reversibility
+    name: Réversibilité
     definition: >-
-      Keeping every change easy to undo: committed in small steps, on a
-      branch, with no destructive operations mixed in, and with data
-      migrations that can be rolled back. Reversibility is what makes it safe
-      to let an agent try something. If a step cannot be reversed, it is the
-      step that needs a human to look before it runs.
+      Garder chaque modification facile à annuler : committée par petites étapes, sur une branche,
+      sans opération destructrice mêlée au reste, et avec des migrations de données qu’on peut
+      annuler. La réversibilité est ce qui rend sûr de laisser un agent essayer quelque chose. Si une
+      étape ne peut pas être annulée, c’est celle qui demande qu’une personne la regarde avant son
+      exécution.
   - id: commits-and-prs
-    name: Commits and PRs
+    name: Commits et pull requests
     definition: >-
-      Recording agent-assisted work in the team's normal units: focused
-      commits with messages that say why, and pull requests that explain the
-      change, link the specification and state what was verified and how.
-      Good commit boundaries make review and revert possible; a PR that
-      describes the agent's role lets reviewers calibrate their attention.
+      Consigner le travail fait avec un agent dans les unités habituelles de l’équipe : des commits
+      ciblés dont le message dit pourquoi, et des pull requests qui expliquent la modification,
+      renvoient à la spécification et disent ce qui a été vérifié et comment. De bonnes limites de
+      commit rendent la revue et l’annulation possibles, et une pull request qui décrit le rôle de
+      l’agent permet aux relecteurs de doser leur attention.
 links:
   prerequisites: [coding-with-agents/first-session, coding-with-agents/specification]
   related: []

@@ -1,87 +1,83 @@
 id: coding-with-agents/verification
 area: coding-with-agents
-name: Verifying agent work
+name: Vérifier le travail d’un agent
 definition: >-
-  Code you did not write needs a different kind of reading. This topic covers
-  reviewing an agent's diff against the specification rather than for
-  plausibility, observing the system as it runs, narrowing a fault
-  systematically, turning checks into loops the agent can run itself within
-  limits you set, relying on deterministic gates over model opinions, and
-  attacking your own agent before someone else does.
+  Du code que vous n’avez pas écrit demande une autre façon de lire. Ce thème couvre la revue du
+  diff d’un agent au regard de la spécification au lieu d’un jugement de vraisemblance,
+  l’observation du système en marche, la réduction méthodique d’un défaut, la transformation des
+  contrôles en boucles que l’agent exécute lui-même dans les limites que vous fixez, le recours à
+  des barrières déterministes de préférence aux avis d’un modèle, et l’attaque de votre propre
+  agent avant que quelqu’un d’autre ne s’en charge.
 concepts:
   - id: reviewing-code-you-did-not-write
-    name: Reviewing code you did not write
+    name: Relire du code qu’on n’a pas écrit
     definition: >-
-      Reading an agent's diff as a reviewer, not an author: you have no
-      memory of why each line exists, so every line has to justify itself.
-      Look for changes outside the brief, silent behavior changes, deleted
-      tests, copied patterns applied wrongly and comments that describe
-      intent rather than what the code does. Read the code, not the agent's
-      summary of it.
+      Lire le diff d’un agent en relecteur, sans la mémoire de l’auteur : vous ne savez pas pourquoi
+      chaque ligne existe, donc chaque ligne doit se justifier. Cherchez les modifications hors de la
+      consigne, les changements de comportement silencieux, les tests supprimés, les schémas recopiés
+      au mauvais endroit et les commentaires qui décrivent une intention à la place de ce que fait le
+      code. Lisez le code lui-même, au-delà du résumé qu’en fait l’agent.
   - id: verifying-against-the-specification
-    name: Verifying against the specification
+    name: Vérification au regard de la spécification
     definition: >-
-      Checking the result against the success criteria written before the
-      work, item by item, instead of judging whether the change looks
-      reasonable. This catches the plausible-but-wrong result, the criterion
-      quietly dropped and the edge case skipped. If a criterion cannot be
-      checked, either the spec or the verification design needs fixing
-      before the change is accepted.
+      Comparer le résultat aux critères de réussite écrits avant le travail, point par point, au lieu
+      de juger si la modification a l’air raisonnable. Cela détecte le résultat plausible mais faux,
+      le critère abandonné en silence et le cas limite oublié. Si un critère ne peut pas être vérifié,
+      il faut corriger la spécification ou la conception de la vérification avant d’accepter la
+      modification.
   - id: observing-a-running-system
-    name: Observing a running system
+    name: Observation d’un système en marche
     definition: >-
-      Running the changed software and watching what it actually does: the
-      logs it writes, the requests it makes, the state it leaves behind, the
-      screen it renders. Tests prove what they cover; observation catches
-      what nobody thought to test. For agent work, running it yourself is
-      also the check that the agent's report of "tests pass" is true.
+      Lancer le logiciel modifié et regarder ce qu’il fait vraiment : les journaux qu’il écrit, les
+      requêtes qu’il envoie, l’état qu’il laisse, l’écran qu’il affiche. Les tests prouvent ce qu’ils
+      couvrent, et l’observation détecte ce que personne n’a pensé à tester. Pour le travail d’un
+      agent, le lancer vous-même vérifie aussi que son « les tests passent » est vrai.
   - id: isolating-a-fault
-    name: Isolating a fault
+    name: Isoler un défaut
     definition: >-
-      Narrowing a failure to its cause by systematic steps: reproduce it,
-      shrink the input, bisect the change, add observation at the boundary,
-      confirm the hypothesis before fixing. Agents can help at each step but
-      will also guess fixes; insisting on a reproduced, explained cause
-      before any patch is what keeps the fix from becoming a new bug.
+      Réduire un échec jusqu’à sa cause par étapes méthodiques : le reproduire, réduire l’entrée,
+      chercher par dichotomie la modification en cause, ajouter de l’observation à la frontière,
+      confirmer l’hypothèse avant de corriger. Les agents peuvent aider à chaque étape, et ils
+      devinent aussi des corrections. Exiger une cause reproduite et expliquée avant tout correctif
+      évite que la correction devienne un nouveau bug.
   - id: bounded-self-checking-loops
-    name: Bounded self-checking loops
+    name: Boucles d’autovérification bornées
     definition: >-
-      Giving the agent a check it can run itself, such as a test suite, a
-      linter or a build, and letting it iterate until the check passes, with
-      a limit on attempts and a rule for what it may change. The bound
-      matters: an unbounded loop will eventually satisfy the check by
-      weakening it. The human verifies the check is still honest at the end.
+      Donner à l’agent un contrôle qu’il peut exécuter lui-même, comme une suite de tests, un outil
+      d’analyse ou un build, et le laisser itérer jusqu’à ce que le contrôle passe, avec une limite
+      sur le nombre de tentatives et une règle sur ce qu’il peut modifier. La limite compte : une
+      boucle sans limite finit par satisfaire le contrôle en l’affaiblissant. À la fin, la personne
+      vérifie que le contrôle est toujours honnête.
   - id: deterministic-gates
-    name: Deterministic gates
+    name: Barrières déterministes
     definition: >-
-      Checks whose outcome does not depend on a model's judgment: tests, type
-      checks, linters, builds and schema validation. They give the same
-      answer for the same input, so they can block a merge. A review by
-      another model adds a second opinion and finds things a gate cannot,
-      but it can be wrong or be persuaded in the same way as the first
-      model, so it never replaces the gate.
+      Des contrôles dont le résultat ne dépend pas du jugement d’un modèle : tests, vérification des
+      types, outils d’analyse, builds et validation de schéma. Ils donnent la même réponse pour la
+      même entrée, donc ils peuvent bloquer une fusion. Une revue par un autre modèle ajoute un second
+      avis et trouve des choses qu’une barrière ne voit pas, mais elle peut se tromper ou être
+      convaincue de la même façon que le premier modèle, donc elle ne remplace jamais la barrière.
   - id: red-teaming-your-own-agent
-    name: Red-teaming your own agent
+    name: Attaquer son propre agent
     definition: >-
-      Deliberately trying to make your own agent misbehave before relying on
-      it: feeding it a file with hidden instructions, pasting it a web page
-      you did not read, asking for something its permissions should stop,
-      giving it an ambiguous brief and seeing how far it runs. The aim is to
-      learn what it does under pressure, in a sandbox where nothing real can
-      be damaged. What you find becomes a permission change, an instruction
-      or a gate.
+      Essayer délibérément de faire dérailler votre propre agent avant de compter sur lui (red
+      teaming) : lui donner un fichier qui contient des instructions cachées, lui coller une page web
+      que vous n’avez pas lue, lui demander une chose que ses permissions devraient empêcher, lui
+      donner une consigne ambiguë et voir jusqu’où il va. Le but est d’apprendre ce qu’il fait sous
+      pression, dans un bac à sable où rien de réel ne peut être abîmé. Ce que vous trouvez devient
+      une modification des permissions, une instruction ou une barrière.
   - id: fresh-context-review
-    name: Fresh-context review
+    name: Revue en contexte neuf
     definition: >-
-      A review by an agent session that did not write the change. It gets
-      the diff, the specification and the criteria to check, and none of the
-      reasoning that produced the change, so it judges the result on its own
-      terms. A reviewer asked for gaps finds some even in sound work, so it is
-      told to report only what affects correctness or the stated
-      requirements. Its findings are advice a person weighs, next to the
-      deterministic gates that decide whether a change merges.
+      Une revue faite par une session d’agent qui n’a pas écrit la modification. Elle reçoit le diff,
+      la spécification et les critères à vérifier, et aucun des raisonnements qui ont produit la
+      modification, donc elle juge le résultat pour lui-même. Un relecteur à qui l’on demande des
+      manques en trouve même dans un travail solide, donc on lui dit de ne signaler que ce qui touche
+      la justesse ou les exigences énoncées. Ses remarques sont des avis qu’une personne pèse, à côté
+      des barrières déterministes qui décident si une modification est fusionnée.
 links:
   prerequisites: [coding-with-agents/workflow, safety/verification]
   related: []
   specializations: []
-sources: [Brilliant VER, Academy ai-fluency-for-builders, Academy claude-code-in-action, Claude Code best practices, OpenAI Academy get-started-with-codex-jkhsq, OpenAI Academy scale-codex-across-teams-and-systems-jr83a]
+sources: [Brilliant VER, Academy ai-fluency-for-builders, Academy claude-code-in-action, Claude Code
+      best practices, OpenAI Academy get-started-with-codex-jkhsq, OpenAI Academy
+      scale-codex-across-teams-and-systems-jr83a]

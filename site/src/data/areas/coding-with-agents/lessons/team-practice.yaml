@@ -1,9 +1,9 @@
 id: coding-with-agents/team-practice
-title: Writing down how the team uses agents
+title: Écrire comment l’équipe utilise les agents
 description: >-
-  Write the team's practice for agent use into the project instructions file, starting from the
-  incidents in the project's history, take out the rule no incident supports, and decide which
-  agreements a hook or a CI check also enforces.
+  Écrivez la pratique de l’équipe pour l’usage des agents dans le fichier d’instructions du
+  projet, en partant des incidents de l’historique du projet, retirez la règle qu’aucun incident
+  ne justifie, et décidez quels accords un hook ou un contrôle de CI applique aussi.
 mode: explanation
 covers: coding-with-agents/team
 serves: [coding-with-agents/works-in-team/sets-team-practice]
@@ -26,8 +26,8 @@ shorts: []
 exercise:
   kind: judge
   brief: >-
-    From three incidents in the fixture's history, write the practice section of an agent
-    instructions file and drop the rule no incident supports.
+    À partir de trois incidents de l’historique de l’exemple, écrivez la section « pratique » d’un
+    fichier d’instructions pour agents et retirez la règle qu’aucun incident ne justifie.
 sources:
   - Claude Code memory
   - AI Training AGENTS

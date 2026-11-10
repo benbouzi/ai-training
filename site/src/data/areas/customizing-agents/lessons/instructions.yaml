@@ -10,7 +10,7 @@ introduces: [agents-md-claude-md, sections, monorepo-hierarchy, when-instruction
 assumes:
   - objective: coding-with-agents/ships-with-agent/gives-the-right-context
     lesson: coding-with-agents/first-session
-    section: give-the-right-context
+    section: donner-le-bon-contexte
 extends-to:
   - label: Agent skills
     href: /customizing-agents/skills/

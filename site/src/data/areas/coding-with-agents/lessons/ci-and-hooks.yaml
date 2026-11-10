@@ -1,9 +1,10 @@
 id: coding-with-agents/ci-and-hooks
-title: Enforcing the team's rules with hooks and CI
+title: Faire appliquer les règles de l’équipe par des hooks et la CI
 description: >-
-  Make two team rules run without anyone remembering them: a Claude Code hook that blocks agent
-  edits to the nightly import's test and data, and a pinned CI job that runs the deterministic gates
-  on every pull request, with the agent fixing the failing job from its log within a bound.
+  Faites appliquer deux règles d’équipe sans que personne ait à s’en souvenir : un hook Claude
+  Code qui bloque les modifications de l’agent sur le test et les données de l’import nocturne, et
+  une tâche de CI figée qui exécute les barrières déterministes sur chaque pull request, l’agent
+  corrigeant la tâche en échec à partir de son journal, dans une limite fixée.
 mode: tutorial
 covers: coding-with-agents/team
 serves:
@@ -21,19 +22,23 @@ assumes:
     lesson: coding-with-agents/self-checking-loops
     section: gates-and-second-opinions
 extends-to:
-  - label: How to use Claude Code hooks to enforce the right CLI (AI Hero)
+  - label: How to use Claude Code hooks to enforce the right CLI (AI Hero, en anglais)
     href: https://www.aihero.dev/how-to-use-claude-code-hooks-to-enforce-the-right-cli
-  - label: "Scale Codex Across Teams and Systems: run Codex without a person, with output that follows a schema (OpenAI Academy, free account)"
+  - label: >-
+      Scale Codex Across Teams and Systems : faire tourner Codex sans personne, avec une sortie qui
+      suit un schéma (OpenAI Academy, compte gratuit)
     href: https://academy.openai.com/public/courses/scale-codex-across-teams-and-systems-jr83a
 after: [coding-with-agents/self-checking-loops]
 shorts:
-  - an agent review pass in CI with a security lane, evals in CI (a pointer to
-    building-agents/evaluation)
+  - >-
+    une passe de revue par un agent dans la CI avec un volet sécurité, des évaluations dans la CI
+    (renvoi vers building-agents/evaluation)
 exercise:
   kind: do
   brief: >-
-    Add a hook to the fixture that blocks an edit to a protected path and a CI job that runs the
-    deterministic gates, then have the agent hit both and fix the CI failure within a bound.
+    Ajoutez à l’exemple un hook qui bloque la modification d’un chemin protégé et une tâche de CI
+    qui exécute les barrières déterministes, puis faites buter l’agent sur les deux et faites-lui
+    corriger l’échec de CI dans une limite fixée.
 sources:
   - Academy ai-native-sdlc-playbook
   - Claude Code best practices
@@ -63,5 +68,6 @@ notes: >-
   because "Run the gates in CI" starts from the deterministic gates taught there. The fixtures under
   site/examples/coding-with-agents/ci-and-hooks/ load self-checking-loops/_common.py with importlib
   for the copy and the fix, add the hook, its settings and checks.yml, feed the hook five tool
-  calls (two in a worktree under .claude/worktrees/, per Claude Code worktrees), and run the `run` lines of checks.yml before and after the fix. They run no git. Evals in
+  calls (two in a worktree under .claude/worktrees/, per Claude Code worktrees), and run the `run` lines
+  of checks.yml before and after the fix. They run no git. Evals in
   CI point at building-agents/rubrics, the live lesson that covers building-agents/evaluation.

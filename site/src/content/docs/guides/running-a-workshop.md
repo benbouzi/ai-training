@@ -57,7 +57,7 @@ l’atelier, et un exercice terminé prend la forme d’une réponse écrite.
 
 Pour Coder avec des agents, chaque leçon a son propre dépôt d’exercice (sa
 fixture). Faites votre propre copie de chaque fixture utilisée en suivant les
-étapes de la section [The fixture](/coding-with-agents/first-session/#the-fixture)
+étapes de la section [The fixture](/coding-with-agents/first-session/#lexemple)
 de la première leçon. Dans chaque copie, faites un commit et posez une
 étiquette (tag) sur l’état de départ et sur l’état final de chaque exercice.
 Poussez ensuite les copies avec leurs étiquettes à un endroit où les binômes

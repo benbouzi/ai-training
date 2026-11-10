@@ -1,10 +1,11 @@
 id: coding-with-agents/self-checking-loops
-title: Giving the agent a check it can run, with a limit
+title: Donner à l’agent un contrôle qu’il peut lancer, avec une limite
 description: >-
-  Turn the reproduction steps of the nightly sales import into a test the coding agent runs after
-  every change, brief the fix-and-rerun loop with a limit of five attempts and a read-only test
-  file, confirm with git that the test did not change, and tell the deterministic gates that can
-  block a merge from a second model's opinion.
+  Transformez les étapes de reproduction de l’import nocturne des ventes en un test que l’agent de
+  code lance après chaque modification, donnez la consigne d’une boucle corriger-relancer limitée
+  à cinq tentatives avec un fichier de tests en lecture seule, confirmez avec git que le test n’a
+  pas changé, et distinguez les barrières déterministes qui peuvent bloquer une fusion de l’avis
+  d’un second modèle.
 mode: tutorial
 covers: coding-with-agents/verification
 serves:
@@ -19,18 +20,22 @@ assumes:
     lesson: coding-with-agents/observing-and-debugging
     section: reproduce-it-first
 extends-to:
-  - label: Essential AI coding feedback loops for TypeScript projects (AI Hero)
+  - label: Essential AI coding feedback loops for TypeScript projects (AI Hero, en anglais)
     href: https://www.aihero.dev/essential-ai-coding-feedback-loops-for-type-script-projects
-  - label: "Scale Codex Across Teams and Systems, the lab: a goal-driven run over several milestones, where the agent may not weaken an approved test (OpenAI Academy, free account)"
+  - label: >-
+      Scale Codex Across Teams and Systems, l’exercice pratique : une exécution guidée par un objectif
+      sur plusieurs étapes, où l’agent ne peut pas affaiblir un test approuvé (OpenAI Academy, compte
+      gratuit)
     href: https://academy.openai.com/public/courses/scale-codex-across-teams-and-systems-jr83a
 after: [coding-with-agents/observing-and-debugging]
-shorts: [why a second model's review never replaces a test]
+shorts: [pourquoi la revue d’un second modèle ne remplace jamais un test]
 exercise:
   kind: do
   brief: >-
-    Run the lesson's test, written from the fixture's manual reproduction steps, and brief the agent
-    to fix and rerun at most five times with the test file read-only. Afterwards, confirm with git
-    that the test did not change and no file was added, and run the test yourself.
+    Lancez le test de la leçon, écrit à partir des étapes de reproduction manuelles de l’exemple, et
+    donnez à l’agent la consigne de corriger et relancer au plus cinq fois, avec le fichier de tests
+    en lecture seule. Ensuite, confirmez avec git que le test n’a pas changé et qu’aucun fichier n’a
+    été ajouté, et lancez le test vous-même.
 sources:
   - Academy ai-native-sdlc-playbook
   - Academy claude-code-in-action
@@ -53,7 +58,8 @@ notes: >-
   deny rule does and doesn't cover). The fixtures under
   site/examples/coding-with-agents/self-checking-loops/ copy the observing-and-debugging nightly/
   directory to a temporary place, add test_nights.py, tag a commit before-run, and apply either
-  the bounded run's fix with the CSV module or an unbounded run that skips bad rows and deletes the row check from
+  the bounded run's fix with the CSV module or an unbounded run that skips bad rows and deletes the row
+  check from
   the test. The test counts the data rows itself so that a skip-the-row fix fails. The fix's two
   text edits are read with ast from observing-and-debugging/after_fix.py, and only the added
   `import csv` line is repeated in _common.py. The gate-or-opinion checkpoint and its review

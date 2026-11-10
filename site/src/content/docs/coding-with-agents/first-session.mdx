@@ -1,45 +1,47 @@
 import { Choice, Predict, Repair, Scenario, Sort, Pitfall, Exercise, Recap, Prompt, Response, Match } from '@components/lesson';
 
-In this lesson we run one complete session with a coding agent. We open
-it in a small repository and ask it to explain the code. We point it at a
-failing test and let it make one change. Then we read the diff before we
-accept it. The repository is a fixture that ships with this course, so nothing you do here
-can touch your own work.
+Dans cette leçon, nous menons une session complète avec un agent de code.
+Nous l’ouvrons dans un petit dépôt et nous lui demandons d’expliquer le code.
+Nous lui montrons un test qui échoue et nous le laissons faire une
+modification. Puis nous lisons le diff avant de l’accepter. Le dépôt est un
+exemple fourni avec ce cours, donc rien de ce que vous faites ici ne peut
+toucher votre propre travail.
 
-A coding agent is an agent that works in your terminal or editor with the
-tools a programmer has: it reads and edits files, and it runs commands. Claude
-Code is one example, and there are others. The steps in this lesson work
-with any of them, and the notes that name Claude Code are for readers who
-use it. Wherever it says "your coding agent", use the one you have
-installed. If yours is Claude Code, the vendor's own short course
-covers installing it and the commands this lesson leaves out, so read it
-after this lesson (@Academy claude-code-101). If you get stuck, the site's
-tutor can give you hints on this lesson inside your own agent.
-[How to study with the tutor](/guides/tutor/) explains the setup.
+Un agent de code est un agent qui travaille dans votre terminal ou votre
+éditeur avec les outils d’un programmeur : il lit et modifie des fichiers, et
+il lance des commandes. Claude Code en est un exemple, et il en existe
+d’autres. Les étapes de cette leçon fonctionnent avec n’importe lequel, et
+les notes qui nomment Claude Code s’adressent à ceux qui l’utilisent. Partout
+où le texte dit « votre agent de code », utilisez celui que vous avez
+installé. Si c’est Claude Code, le court cours de l’éditeur explique son
+installation et les commandes que cette leçon laisse de côté. Lisez-le après
+cette leçon (@Academy claude-code-101). Si vous bloquez, le tuteur du site
+peut vous donner des indices sur cette leçon dans votre propre agent.
+[Étudier avec le tuteur](/guides/tutor/) explique comment l’installer.
 
-## The fixture
+## L’exemple
 
-The fixture is a to-do list command in about seventy lines of Python. It
-lives in the course repository under
-`site/examples/coding-with-agents/first-session/fixture-repo/`. Copy that
-directory out of the course repository into your home directory, and work
-in the copy. The course repository has instruction files for agents of its
-own, and an agent started inside it can read those in place of the
-fixture's. Make the copy a git repository with one commit, so that git can
-show you what changed and put it back.
+L’exemple est une commande de liste de tâches d’environ soixante-dix lignes de
+Python. Il se trouve dans le dépôt du cours, sous
+`site/examples/coding-with-agents/first-session/fixture-repo/`. Copiez ce
+dossier hors du dépôt du cours, dans votre dossier personnel, et travaillez
+dans la copie. Le dépôt du cours a ses propres fichiers d’instructions pour
+agents, et un agent lancé à l’intérieur peut les lire à la place de ceux de
+l’exemple. Faites de la copie un dépôt git avec un commit, pour que git puisse
+vous montrer ce qui a changé et le remettre en place.
 
-The program needs Python 3.9 or newer and nothing else. On a Mac, the
-`python3` that comes with the system is enough, and so is its `git`. On a
-fresh Mac the first `git` or `python3` command may open a dialog from Apple
-offering to install its developer tools for the terminal (the Xcode Command
-Line Tools). Accept it and wait for the install to finish. Then delete
-`~/fixture-repo` if it exists, and run the commands below again from the
-start.
+Le programme a besoin de Python 3.9 ou plus récent, et de rien d’autre. Sur
+un Mac, le `python3` fourni avec le système suffit, tout comme son `git`. Sur
+un Mac neuf, la première commande `git` ou `python3` peut ouvrir une fenêtre
+d’Apple qui propose d’installer ses outils de développement pour le terminal
+(les Xcode Command Line Tools). Acceptez et attendez la fin de
+l’installation. Supprimez ensuite `~/fixture-repo` s’il existe, et relancez
+les commandes ci-dessous depuis le début.
 
-These commands fetch the course repository into your home directory, copy
-the fixture out of it and make the copy a repository. If you already have a
-clone of the course, skip the `git clone` line and use your clone's path in
-the `cp` line.
+Ces commandes récupèrent le dépôt du cours dans votre dossier personnel, en
+copient l’exemple et font de la copie un dépôt. Si vous avez déjà un clone du
+cours, sautez la ligne `git clone` et mettez le chemin de votre clone dans la
+ligne `cp`.
 
 ```sh
 cd ~
@@ -51,115 +53,119 @@ cp -R ai-training/site/examples/coding-with-agents/first-session/fixture-repo ~/
   && git commit -qm "fixture as shipped"
 ```
 
-The `&&` between the commands stops the rest when one of them fails, so
-git never runs in the wrong directory. If git asks who you are, follow its
-message, and then run `git commit -qm "fixture as shipped"` again inside
-`~/fixture-repo`.
+Les `&&` entre les commandes arrêtent la suite quand l’une d’elles échoue,
+donc git ne tourne jamais dans le mauvais dossier. Si git vous demande qui
+vous êtes, suivez son message, puis relancez
+`git commit -qm "fixture as shipped"` dans `~/fixture-repo`.
 
-Run these commands once. From then on, `git checkout -- .` inside the copy
-puts every file back the way it was. Expect to reset it at least once. To
-start over from nothing, delete `~/fixture-repo` and run the commands again
-from the `cp` line on.
+Lancez ces commandes une seule fois. Ensuite, `git checkout -- .` dans la
+copie remet chaque fichier dans son état d’origine. Attendez-vous à le faire
+au moins une fois. Pour repartir de zéro, supprimez `~/fixture-repo` et
+relancez les commandes à partir de la ligne `cp`.
 
-Inside are five files: `todo.py`, the program; `test_todo.py`, its
-tests; `todos.json`, a committed list of three items; `README.md`; and
-`AGENTS.md`, four lines of instructions for the agent. Run the program
-before you run the agent. You want to know what "working" looks like
-before someone else changes it.
+Le dossier contient cinq fichiers : `todo.py`, le programme ; `test_todo.py`,
+ses tests ; `todos.json`, une liste de trois éléments committée ;
+`README.md` ; et `AGENTS.md`, quatre lignes d’instructions pour l’agent.
+Lancez le programme avant de lancer l’agent. Vous voulez savoir à quoi
+ressemble « ça marche » avant que quelqu’un d’autre le modifie.
 
-<Predict id="run-list" title="Show the list"
+<Predict id="run-list" title="Afficher la liste"
   answer={`1. [ ] Buy milk
 2. [x] Call the plumber
 3. [ ] Water the plants`} run="coding-with-agents/first-session/list.py">
-Run this, and compare what you see with the output below.
+Lancez cette commande et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 todo.py list
 ```
 </Predict>
 
-The examples in this lesson aren't graded. Each one is a command you run
-in the fixture, with the output the course itself checks on every build.
-The checkpoints come later, and they ask about the session, because
-working with the agent is what this lesson teaches.
+Les exemples de cette leçon ne sont pas notés. Chacun est une commande que
+vous lancez dans l’exemple, avec la sortie que le cours vérifie lui-même à
+chaque build. Les questions de contrôle viennent plus tard et portent sur la
+session, parce que c’est le travail avec l’agent que cette leçon enseigne.
 
-## Start the agent and ask it to explain
+## Lancer l’agent et lui demander d’expliquer
 
-Start your coding agent from inside your copy of `fixture-repo`. The
-directory you start in is the agent's world: it reads and edits files
-there, and it runs commands there. Starting one level too high hands it
-your whole home directory.
+Lancez votre agent de code depuis votre copie de `fixture-repo`. Le dossier
+de départ est le monde de l’agent : il y lit et modifie des fichiers, et il y
+lance des commandes. Le lancer un niveau trop haut lui donne tout votre
+dossier personnel.
 
-Check one setting before your first message. This lesson is built around
-the moment the agent asks you before it edits a file, and some agents start
-in a mode that doesn't ask. Recent versions of Claude Code start in auto
-mode, in which file edits in the working directory go through without a
-prompt and a second model reviews most of the other actions in place of
-you. The mode that asks before each edit is called Manual there, and
-`claude --permission-mode default` starts a session in it. In a session
-you have already started, Shift+Tab switches from auto mode to Manual,
-and in the VS Code extension the mode indicator at the bottom of the
-prompt box does the same (@Claude Code permission modes). The section on
-permission modes later in this lesson explains the other choices.
+Vérifiez un réglage avant votre premier message. Cette leçon est construite
+autour du moment où l’agent vous demande votre accord avant de modifier un
+fichier, et certains agents démarrent dans un mode qui ne demande pas. Les
+versions récentes de Claude Code démarrent en mode automatique (auto mode) :
+les modifications de fichiers dans le dossier de travail passent sans
+demande, et un second modèle examine la plupart des autres actions à votre
+place. Le mode qui demande avant chaque modification s’y appelle Manual, et
+`claude --permission-mode default` démarre une session dans ce mode. Dans une
+session déjà ouverte, Maj+Tab passe du mode automatique à Manual, et dans
+l’extension VS Code, l’indicateur de mode en bas de la zone de saisie fait de
+même (@Claude Code permission modes). La partie sur les modes de permission,
+plus loin dans cette leçon, explique les autres choix.
 
-Your first message isn't a task. It is a question, and its purpose is to
-check that the agent is looking at the same code you are.
+Votre premier message n’est pas une tâche. C’est une question, et elle sert à
+vérifier que l’agent regarde le même code que vous.
 
 <Prompt model="illustrative" recorded="illustrative">
-Explain what this repository does and how the pieces fit together. Don't
-change anything.
+Explique ce que fait ce dépôt et comment les éléments s’articulent. Ne
+modifie rien.
 </Prompt>
 <Response>
-This is a small command-line to-do list. `todo.py` stores items in
-`todos.json` (or the file named by `TODO_FILE`) and offers three commands:
-`add`, `list` and `done`. `test_todo.py` covers the three operations with
-`unittest`. `AGENTS.md` asks for standard library only and says not to edit
-`todos.json`. The `done` function takes a 1-based item number from the
-command line but indexes the list with it directly, which looks like an
-off-by-one.
+C’est une petite liste de tâches en ligne de commande. `todo.py` enregistre
+les éléments dans `todos.json` (ou dans le fichier indiqué par `TODO_FILE`) et
+propose trois commandes : `add`, `list` et `done`. `test_todo.py` couvre les
+trois opérations avec `unittest`. `AGENTS.md` demande de n’utiliser que la
+bibliothèque standard et dit de ne pas modifier `todos.json`. La fonction
+`done` reçoit de la ligne de commande un numéro d’élément qui commence à 1,
+mais elle l’utilise directement comme indice de la liste, ce qui ressemble à
+une erreur de décalage d’une unité.
 </Response>
 
-The transcripts in this lesson are illustrative: they show what a good
-exchange looks like and don't record a specific model's words. Your agent
-phrases things differently, and may or may not spot the off-by-one
-unprompted. Either is fine, because you are about to hand it the evidence.
+Les transcriptions de cette leçon sont des illustrations : elles montrent à
+quoi ressemble un bon échange, sans reproduire les mots d’un modèle précis.
+Votre agent formule les choses autrement, et il repérera ou non l’erreur de
+décalage d’une unité (off-by-one) sans qu’on le lui demande. Les deux cas
+conviennent, parce que vous allez lui donner la preuve.
 
-Notice what the agent read without being asked: `AGENTS.md`. Most coding
-agents load a project-instructions file at start. The lines in that file
-set the rules for the whole session, and you didn't have to repeat them.
-Claude Code reads `AGENTS.md` when there is no `CLAUDE.md` in the
-directory it starts in or in any directory above it. That holds for your
-copy of the fixture, and it doesn't hold inside the course repository,
-which has a `CLAUDE.md` at its root (@Claude Code memory).
+Remarquez ce que l’agent a lu sans qu’on le lui demande : `AGENTS.md`. La
+plupart des agents de code chargent un fichier d’instructions de projet au
+démarrage. Les lignes de ce fichier fixent les règles de toute la session, et
+vous n’avez pas eu à les répéter. Claude Code lit `AGENTS.md` quand il n’y a
+pas de `CLAUDE.md` dans le dossier de départ ni dans un dossier au-dessus.
+C’est le cas pour votre copie de l’exemple, et ce n’est pas le cas dans le
+dépôt du cours, qui a un `CLAUDE.md` à sa racine (@Claude Code memory).
 
-Many coding agents have a read-only mode, often called plan mode, in which
-the agent reads, searches and runs commands to explore, but edits nothing.
-It suits this first question. You get the explanation, and the agent doesn't act on it before
-you have checked it (@Academy claude-code-101).
+Beaucoup d’agents de code ont un mode en lecture seule, souvent appelé mode
+plan, dans lequel l’agent lit, cherche et lance des commandes pour explorer,
+sans rien modifier. Il convient à cette première question. Vous obtenez
+l’explication, et l’agent n’agit pas dessus avant que vous l’ayez vérifiée
+(@Academy claude-code-101).
 
-## Find the evidence yourself
+## Trouver la preuve vous-même
 
-Before you ask for a fix, see the failure with your own eyes. It takes ten
-seconds, and it gives you something exact to point at.
+Avant de demander une correction, voyez l’échec de vos propres yeux. Cela
+prend dix secondes et vous donne quelque chose de précis à montrer.
 
-<Predict id="run-tests" title="Run the tests"
+<Predict id="run-tests" title="Lancer les tests"
   answer="FAILED (failures=1)" run="coding-with-agents/first-session/tests.py">
-Run the tests and keep only the last line of the output.
+Lancez les tests et gardez seulement la dernière ligne de la sortie.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
 ```
 </Predict>
 
-Read the failing test. `test_done_marks_the_numbered_item` calls
-`todo.done(items, 1)` and expects `"done #1: Buy milk"`. The program says
-something else. Prove it against the committed list, on a copy so the
-committed file doesn't change.
+Lisez le test qui échoue. `test_done_marks_the_numbered_item` appelle
+`todo.done(items, 1)` et attend `"done #1: Buy milk"`. Le programme dit autre
+chose. Prouvez-le sur la liste committée, en travaillant sur une copie pour
+que le fichier committé ne change pas.
 
-<Predict id="run-done" title="Prove the bug"
+<Predict id="run-done" title="Prouver le bug"
   answer="done #1: Call the plumber" run="coding-with-agents/first-session/done_bug.py">
-Mark item 1 as done on a copy of the list. The program answers with the
-item it marked.
+Marquez l’élément 1 comme fait sur une copie de la liste. Le programme répond
+avec l’élément qu’il a marqué.
 
 ```sh
 cp todos.json /tmp/todos.json
@@ -167,199 +173,211 @@ TODO_FILE=/tmp/todos.json python3 todo.py done 1
 ```
 </Predict>
 
-Item 1 is "Buy milk", and the program marked "Call the plumber". The
-function takes the number you typed and uses it as the list index without
-subtracting one.
+L’élément 1 est « Buy milk », et le programme a marqué « Call the plumber ».
+La fonction prend le numéro que vous avez tapé et l’utilise comme indice de
+la liste sans retirer un.
 
-You now have concrete evidence: the file with the bug, the failing test,
-and the wrong output. That's the context the agent needs. A
-brief without them makes the agent go and find them, and it may find
-something else instead. The hunt has a cost of its own: every file the
-agent opens while searching stays in the session's memory. So a short brief
-ends up using more of that memory than a precise one
+Vous avez maintenant une preuve concrète : le fichier qui contient le bug, le
+test qui échoue et la mauvaise sortie. C’est le contexte dont l’agent a
+besoin. Une consigne sans ces éléments envoie l’agent les chercher, et il
+risque de trouver autre chose. Cette recherche a un coût : chaque fichier que
+l’agent ouvre en cherchant reste dans la mémoire de la session. Une consigne
+courte finit donc par consommer plus de cette mémoire qu’une consigne précise
 (@Academy claude-code-101).
 
-## Give the right context
+## Donner le bon contexte
 
-Think back to the brief you wrote in *Delegating a task to an agent*: goal,
-context, limits, done-criteria. For a coding agent the context is files and
-commands, the limits are which files it may touch, and the done-criterion
-is usually a test.
+Repensez à la consigne que vous avez écrite dans *Déléguer une tâche à un
+agent* : objectif, contexte, limites, critères d’achèvement (done-criteria). Pour un agent de
+code, le contexte est fait de fichiers et de commandes, les limites disent
+quels fichiers il peut toucher, et le critère d’achèvement est en général un
+test.
 
-Before you write it, decide what belongs in it. Some of the evidence you
-gathered is exactly what the agent needs. Some of it the agent reads
-faster than you can type it, and some of it has nothing to do with the
-task.
+Avant de l’écrire, décidez de ce qui doit y figurer. Une partie de la preuve
+que vous avez réunie est exactement ce dont l’agent a besoin. L’agent lit une
+autre partie plus vite que vous ne pourriez la taper, et une dernière partie
+n’a rien à voir avec la tâche.
 
 <Sort id="what-goes-in-the-brief" objective="coding-with-agents/ships-with-agent/gives-the-right-context"
   concepts={['first-change', 'task-brief']}
-  context="A learner is about to brief a coding agent to fix an off-by-one bug in a small Python to-do program. A failing unit test already shows the bug, and the project has a short AGENTS.md file that the agent loads at start."
-  title="What goes in the brief?" hint="Ask whether the agent needs it for this task, and whether it can get it faster than you can type it."
-  buckets={['Goes in the brief', 'The agent finds this itself', 'Leave it out']}
+  context="Un apprenant s’apprête à donner à un agent de code la consigne de corriger une erreur de décalage d’une unité dans un petit programme Python de liste de tâches. Un test unitaire en échec montre déjà le bug, et le projet a un court fichier AGENTS.md que l’agent charge au démarrage."
+  title="Qu’est-ce qui va dans la consigne ?" hint="Demandez-vous si l’agent en a besoin pour cette tâche, et s’il peut l’obtenir plus vite que vous ne pourriez le taper."
+  buckets={['Va dans la consigne', 'L’agent le trouve seul', 'À laisser de côté']}
   items={[
-    { text: 'The name of the failing test', bucket: 0 },
-    { text: 'Which file the agent may edit', bucket: 0 },
-    { text: 'That the failing test must not change', bucket: 0 },
-    { text: 'The command that shows the task is done', bucket: 0 },
-    { text: 'The full text of todo.py', bucket: 1 },
-    { text: 'The four lines of AGENTS.md', bucket: 1 },
-    { text: 'The git history of the fixture', bucket: 2 },
-    { text: 'Your guess at how long the fix should take', bucket: 2 },
+    { text: 'Le nom du test qui échoue', bucket: 0 },
+    { text: 'Le fichier que l’agent peut modifier', bucket: 0 },
+    { text: 'Le fait que le test en échec ne doit pas changer', bucket: 0 },
+    { text: 'La commande qui montre que la tâche est terminée', bucket: 0 },
+    { text: 'Le texte complet de todo.py', bucket: 1 },
+    { text: 'Les quatre lignes de AGENTS.md', bucket: 1 },
+    { text: 'L’historique git de l’exemple', bucket: 2 },
+    { text: 'Votre estimation du temps que devrait prendre la correction', bucket: 2 },
   ]} />
 
 <Match id="where-it-comes-from" phase="review" objective="coding-with-agents/ships-with-agent/gives-the-right-context"
   concepts={['first-change', 'task-brief']}
-  context="A learner is about to brief a coding agent to fix a bug that a failing unit test shows, in a small project with a short AGENTS.md file that the agent loads at start."
-  title="Brief, agent, or neither?" hint="Can the agent read this in the repository, does only you know it, or does the task not need it?"
-  options={['Goes in the brief', 'The agent finds this itself', 'Leave it out']}
+  context="Un apprenant s’apprête à donner à un agent de code la consigne de corriger un bug que montre un test unitaire en échec, dans un petit projet avec un court fichier AGENTS.md que l’agent charge au démarrage."
+  title="La consigne, l’agent, ou ni l’un ni l’autre ?" hint="L’agent peut-il le lire dans le dépôt, êtes-vous seul à le savoir, ou la tâche n’en a-t-elle pas besoin ?"
+  options={['Va dans la consigne', 'L’agent le trouve seul', 'À laisser de côté']}
   rows={[
-    { statement: 'The command that shows the task is done', option: 0, why: 'Who decides what done means?' },
-    { statement: 'The contents of the test file', option: 1, why: 'Can the agent open this file on its own?' },
-    { statement: 'The test file the agent must not change for this fix', option: 0, why: 'Would the agent know this limit without being told?' },
-    { statement: 'What you think of the previous developer\'s style', option: 2, why: 'Does the fix need this?' },
+    { statement: 'La commande qui montre que la tâche est terminée', option: 0, why: 'Qui décide de ce que veut dire « terminé » ?' },
+    { statement: 'Le contenu du fichier de tests', option: 1, why: 'L’agent peut-il ouvrir ce fichier tout seul ?' },
+    { statement: 'Le fichier de tests que l’agent ne doit pas modifier pour cette correction', option: 0, why: 'L’agent connaîtrait-il cette limite sans qu’on la lui dise ?' },
+    { statement: 'Ce que vous pensez du style du développeur précédent', option: 2, why: 'La correction en a-t-elle besoin ?' },
   ]}
-  rationale="The brief holds what only you know: the limits and the check that shows the task is done. The agent reads the code itself.">
-Match each item to where it comes from.
+  rationale="La consigne contient ce que vous êtes seul à savoir : les limites et le contrôle qui montre que la tâche est terminée. L’agent lit le code lui-même.">
+Associez chaque élément à sa provenance.
 </Match>
 
 <Repair id="repair-the-brief" objective="coding-with-agents/ships-with-agent/gives-the-right-context"
   concepts={['first-change', 'task-brief']}
-  title="Fix the brief" hint="If you handed this to a colleague who had never seen the repository, what would they have to go and find out first?"
-  broken={`The done command is broken, please fix it.`}
-  model={`Fix the off-by-one in the done() function in todo.py: "done 1" currently marks the second item. The failing test is test_done_marks_the_numbered_item in test_todo.py; make it pass without changing the test. Only edit todo.py. Do not touch todos.json. Done when python3 -m unittest -q reports OK.`}>
-This brief sends the agent hunting. Rewrite it so it names the file,
-the failing test, what the agent may and may not change, and how you
-know it is done.
+  title="Réparer la consigne" hint="Si vous donniez ceci à un collègue qui n’a jamais vu le dépôt, qu’aurait-il à découvrir d’abord ?"
+  broken={`La commande done ne marche pas, corrige-la s’il te plaît.`}
+  model={`Corrige l’erreur de décalage d’une unité dans la fonction done() de todo.py : « done 1 » marque actuellement le deuxième élément. Le test qui échoue est test_done_marks_the_numbered_item dans test_todo.py ; fais-le passer sans modifier le test. Ne modifie que todo.py. Ne touche pas à todos.json. Terminé quand python3 -m unittest -q affiche OK.`}>
+Cette consigne envoie l’agent chercher. Réécrivez-la pour qu’elle nomme le
+fichier, le test qui échoue, ce que l’agent peut et ne peut pas modifier, et
+la façon de savoir que c’est terminé.
 </Repair>
 
-## The first change and the permissions prompt
+## La première modification et la demande d’autorisation
 
-Send your repaired brief. The agent reads `todo.py`, proposes an edit,
-and stops. Before it writes the file it asks you.
+Envoyez votre consigne réparée. L’agent lit `todo.py`, propose une
+modification et s’arrête. Avant d’écrire le fichier, il vous demande votre
+accord.
 
 <Prompt model="illustrative" recorded="illustrative">
-Fix the off-by-one in `done()` in `todo.py`: `done 1` marks the
-second item. The failing test is `test_done_marks_the_numbered_item` in
-`test_todo.py`. Make it pass without changing the test. Only edit
-`todo.py`. Don't touch `todos.json`. Done when `python3 -m unittest -q`
-reports OK.
+Corrige l’erreur de décalage d’une unité dans `done()` de `todo.py` :
+`done 1` marque le deuxième élément. Le test qui échoue est
+`test_done_marks_the_numbered_item` dans `test_todo.py`. Fais-le passer sans
+modifier le test. Ne modifie que `todo.py`. Ne touche pas à `todos.json`.
+Terminé quand `python3 -m unittest -q` affiche OK.
 </Prompt>
 <Response>
-The bug is on the first line of `done()`: `index = number` should be
-`index = number - 1`. The bounds check below it already assumes a
-zero-based index, so it doesn't need to change.
+Le bug est sur la première ligne de `done()` : `index = number` devrait être
+`index = number - 1`. Le contrôle des bornes juste en dessous suppose déjà un
+indice qui commence à zéro, donc il n’a pas besoin de changer.
 
-I would like to edit `todo.py` (1 line). Allow?
+Je voudrais modifier `todo.py` (1 ligne). J’autorise ?
 </Response>
 
-That question is the permissions prompt. In the mode this lesson uses, a
-coding agent asks before it edits a file or runs a command that does more
-than read, and the answer is where your judgment enters the session. Ask
-about blast radius, as you did in *Why agent safety is different*: a
-one-line edit to a file you can
-`git checkout` is about as small as a blast radius gets. Approve it.
+Cette question est la demande d’autorisation (permissions prompt). Dans le
+mode qu’utilise cette leçon, un agent de code demande avant de modifier un
+fichier ou de lancer une commande qui fait plus que lire, et votre réponse est
+le moment où votre jugement entre dans la session. Posez la question du rayon
+d’impact, comme dans *Pourquoi la sécurité des agents est différente* : une
+modification d’une ligne dans un fichier que vous pouvez restaurer avec
+`git checkout` a un rayon d’impact à peu près aussi petit que possible.
+Approuvez-la.
 
-Some agents offer to stop asking for the rest of the session. Decline that
-for now. The prompt is the pause in which you read what's about to happen,
-and this lesson is about building the habit of reading.
+Certains agents proposent de ne plus demander jusqu’à la fin de la session.
+Refusez pour l’instant. La demande est la pause pendant laquelle vous lisez
+ce qui va se passer, et cette leçon sert à prendre l’habitude de lire.
 
 <Scenario id="edit-outside-the-brief" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['permissions', 'first-change']}
-  context="A learner briefed a coding agent to fix a bug in todo.py, a small Python to-do program. The brief and the project's AGENTS.md both say the agent must not touch todos.json, the data file. The agent stops at the permissions prompt before every edit."
-  title="The agent asks for a different file" hint="Which document already answered this question before the agent asked it?"
+  context="Un apprenant a donné à un agent de code la consigne de corriger un bug dans todo.py, un petit programme Python de liste de tâches. La consigne et le fichier AGENTS.md du projet disent tous deux que l’agent ne doit pas toucher à todos.json, le fichier de données. L’agent s’arrête à la demande d’autorisation avant chaque modification."
+  title="L’agent demande un autre fichier" hint="Quel document avait déjà répondu à cette question avant que l’agent la pose ?"
   options={[
-    { text: 'Allow it. The agent has read more of the code than you have, and it probably knows what it is doing.', consequence: 'The agent edits the committed data file. The test still fails, because it builds its own list and never reads that file, and now there are two changes to undo instead of one.' },
-    { text: 'Stop the session, reset the fixture and start over with the same brief.', consequence: 'You lose only time, but you learn nothing about why the agent went there. The next session may make the same move, and you will face the same prompt.' },
-    { text: 'Allow it, and revert the file with git afterwards.', consequence: 'The rest of the agent\'s work builds on the edited file. After the revert, its account of the fix no longer matches the code.' },
-    { text: 'Deny the edit, and ask why it needs to change a file the brief said to leave alone.', correct: true, consequence: 'The agent re-reads the test, sees that it builds its own list and never reads todos.json, and comes back with the one-line change to done() in todo.py.' },
+    { text: 'Autoriser. L’agent a lu plus de code que vous, et il sait sans doute ce qu’il fait.', consequence: 'L’agent modifie le fichier de données committé. Le test échoue toujours, parce qu’il construit sa propre liste et ne lit jamais ce fichier, et vous avez maintenant deux modifications à annuler au lieu d’une.' },
+    { text: 'Arrêter la session, réinitialiser l’exemple et recommencer avec la même consigne.', consequence: 'Vous ne perdez que du temps, mais vous n’apprenez rien sur la raison qui a poussé l’agent vers ce fichier. La session suivante risque de faire le même choix, et vous retrouverez la même demande.' },
+    { text: 'Autoriser, puis restaurer le fichier avec git ensuite.', consequence: 'Le reste du travail de l’agent s’appuie sur le fichier modifié. Après la restauration, son récit de la correction ne correspond plus au code.' },
+    { text: 'Refuser, et demander pourquoi il veut modifier un fichier que la consigne excluait.', correct: true, consequence: 'L’agent relit le test, voit qu’il construit sa propre liste et ne lit jamais todos.json, et revient avec la modification d’une ligne dans done() de todo.py.' },
   ]}>
-You send the repaired brief. The agent reads `todo.py` and `test_todo.py`,
-and then asks: "I would like to edit `todos.json` to mark item 2 as not
-done, so the test passes. Allow?" The brief said not to touch `todos.json`,
-and so does `AGENTS.md`. What do you do?
+Vous envoyez la consigne réparée. L’agent lit `todo.py` et `test_todo.py`,
+puis demande : « Je voudrais modifier `todos.json` pour marquer l’élément 2
+comme non fait, afin que le test passe. J’autorise ? » La consigne disait de
+ne pas toucher à `todos.json`, et `AGENTS.md` aussi. Que faites-vous ?
 </Scenario>
 
-## Permission modes
+## Les modes de permission
 
-The prompt you just answered is one setting of a wider control. Most
-coding agents let you choose, at the start of a session or during it, how
-much the agent may do without asking. The names differ from one agent to
-the next, and the set of choices is much the same
-(@Academy claude-code-in-action).
+La demande à laquelle vous venez de répondre est un réglage parmi d’autres
+d’un contrôle plus large. La plupart des agents de code vous laissent choisir,
+au début d’une session ou en cours de route, ce que l’agent peut faire sans
+demander. Les noms varient d’un agent à l’autre, et l’éventail des choix est
+à peu près le même (@Academy claude-code-in-action).
 
-- **Read-only.** The agent reads files, searches, and runs commands to
-  explore, and it edits nothing. It proposes changes and you decide what
-  happens next. Whether a command that does more than read stops for a
-  prompt in this mode depends on the agent. This is the plan mode from
-  the start of this lesson.
-- **Ask before each action.** The mode you have used so far. Each edit
-  stops for your answer, and so does each command, apart from a built-in
-  set that only reads. You saw that set at work during the explain step,
-  when the agent read files and searched without asking.
-- **Accept edits, ask before commands.** Edits to files inside the
-  working directory go through without a prompt, and so do common
-  file-management commands on paths in that directory. In Claude Code that
-  set includes deleting a file and editing one in place with a stream
-  editor, so "accept edits" covers more than typing into a file. Other
-  commands still stop and ask (@Claude Code permission modes).
-- **Skip every check.** The agent edits and runs whatever it decides to,
-  and you find out afterwards.
+- **Lecture seule.** L’agent lit des fichiers, cherche et lance des commandes
+  pour explorer, et il ne modifie rien. Il propose des modifications et vous
+  décidez de la suite. Selon l’agent, une commande qui fait plus que lire
+  s’arrête ou non pour une demande dans ce mode. C’est le mode plan du début
+  de cette leçon.
+- **Demander avant chaque action.** Le mode que vous avez utilisé jusqu’ici.
+  Chaque modification attend votre réponse, ainsi que chaque commande, sauf
+  un ensemble intégré de commandes qui ne font que lire. Vous avez vu cet
+  ensemble à l’œuvre pendant l’étape d’explication, quand l’agent lisait des
+  fichiers et cherchait sans demander.
+- **Accepter les modifications, demander avant les commandes.** Les
+  modifications de fichiers dans le dossier de travail passent sans demande,
+  ainsi que les commandes courantes de gestion de fichiers sur des chemins de
+  ce dossier. Dans Claude Code, cet ensemble comprend la suppression d’un
+  fichier et sa modification sur place par un éditeur de flux, donc
+  « accepter les modifications » couvre davantage que l’écriture dans un
+  fichier. Les autres commandes s’arrêtent toujours pour demander
+  (@Claude Code permission modes).
+- **Sauter tous les contrôles.** L’agent modifie et lance tout ce qu’il
+  décide, et vous le découvrez après coup.
 
-Some agents add modes between the last two, such as a list of commands you
-approved in advance that runs without a prompt, or an automatic check that
-reviews each action against your request in place of you. Before you use
-one, read what your agent's documentation says it still asks about. Check
-which mode your agent starts in, too. In Claude Code that depends on the
-version, on whether you run it in a terminal, an editor or the browser, and
-on your settings. On older versions it depended on your plan as well
-(@Claude Code permission modes).
+Certains agents ajoutent des modes entre les deux derniers, comme une liste de
+commandes approuvées à l’avance qui tournent sans demande, ou un contrôle
+automatique qui compare chaque action à votre demande à votre place. Avant
+d’en utiliser un, lisez ce que la documentation de votre agent dit qu’il
+demande encore. Vérifiez aussi dans quel mode démarre votre agent. Dans Claude
+Code, cela dépend de la version, de l’endroit où vous le lancez (un terminal,
+un éditeur ou le navigateur) et de vos réglages. Dans les anciennes versions,
+cela dépendait aussi de votre abonnement (@Claude Code permission modes).
 
-Each mode sets how much the agent can do before you get a chance to say
-no. In read-only mode that is what the agent reads, so the worst case is
-that it repeats something it should not have seen. With the prompt on, it
-is one action: the edit or command you approved. Accepting edits widens it
-to every file in the working directory. That is acceptable in a repository
-under version control because `git diff` shows you what changed and
-`git checkout -- .` puts tracked files back, and the next section makes
-that review the habit. Know the limit of that reset: a file the agent
-deleted that was never committed does not come back. Skipping every check
-widens it to everything the shell can reach, which on your own machine is
-every file you own, as *Why agent safety is different* put it. Use that
-mode only inside a sandbox, meaning a container or virtual machine made
-for the session, without internet access and with nothing in it you would
-miss, and put no credentials in it. The vendor documentation says the same
-about isolation and internet access (@Claude Code permission modes).
+Chaque mode fixe ce que l’agent peut faire avant que vous ayez l’occasion de
+dire non. En lecture seule, c’est ce que l’agent lit, donc le pire cas est
+qu’il répète une chose qu’il n’aurait pas dû voir. Avec la demande activée,
+c’est une action : la modification ou la commande que vous avez approuvée.
+Accepter les modifications l’étend à chaque fichier du dossier de travail.
+C’est acceptable dans un dépôt sous gestion de versions, parce que `git diff`
+vous montre ce qui a changé et que `git checkout -- .` remet en place les
+fichiers suivis, et la partie suivante fait de cette relecture une habitude.
+Connaissez la limite de cette remise à zéro : un fichier supprimé par l’agent
+et jamais committé ne revient pas. Sauter tous les contrôles l’étend à tout ce
+que le shell peut atteindre, c’est-à-dire, sur votre propre machine, chaque
+fichier qui vous appartient, comme le disait *Pourquoi la sécurité des agents
+est différente*. N’utilisez ce mode que dans un bac à sable, c’est-à-dire un
+conteneur ou une machine virtuelle créé pour la session, sans accès à
+internet, sans rien dedans qui vous manquerait, et sans aucun identifiant. La
+documentation de l’éditeur dit la même chose sur l’isolation et l’accès à
+internet (@Claude Code permission modes).
 
-Pick the mode per task, the way you sized the brief. A question or a plan
-asks for read-only. A first change in a project, or any change in a
-project you do not know, keeps the prompt on, because the prompt is where
-you learn how this agent behaves in this code. A change of a kind you have
-reviewed before, in a working tree that git can restore, can accept edits,
-and then you read the whole diff at the end where you would have read each
-prompt. The mode decides how much you see before it happens. It says
-nothing about how well the agent behaves.
+Choisissez le mode tâche par tâche, comme vous avez dimensionné la consigne.
+Une question ou un plan demande la lecture seule. Une première modification
+dans un projet, ou toute modification dans un projet que vous ne connaissez
+pas, garde la demande activée, parce que la demande est l’endroit où vous
+apprenez comment cet agent se comporte dans ce code. Une modification d’un
+type que vous avez déjà relu, dans un arbre de travail que git peut
+restaurer, peut accepter les modifications, et vous lisez alors tout le diff
+à la fin, à l’endroit où vous auriez lu chaque demande. Le mode décide de ce
+que vous voyez avant que cela se produise. Il ne dit rien de la qualité du
+comportement de l’agent.
 
 <Scenario id="which-permission-mode" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['permissions']}
-  context="A learner has finished the bug fix in the fixture with the permissions prompt on and has read every diff. A colleague now asks them to fix one small bug in a different project, which the learner has never opened before. The repository is on the learner's own laptop, next to their other work, and its working tree is committed clean. The learner started the session in read-only mode, asked the agent to explain the bug, and the agent has proposed a one-line fix. The coding agent offers four modes: read-only, ask before each action, accept edits and ask before commands, and skip every check."
-  title="Which mode for the change?" hint="How do you find out how an agent behaves in a project you have never worked in, and what could go wrong on this machine while you find out?"
+  context="Un apprenant a terminé la correction du bug dans l’exemple avec la demande d’autorisation activée et a lu chaque diff. Un collègue lui demande maintenant de corriger un petit bug dans un autre projet, que l’apprenant n’a jamais ouvert. Le dépôt est sur l’ordinateur portable de l’apprenant, à côté de ses autres travaux, et son arbre de travail est committé et propre. L’apprenant a démarré la session en lecture seule, a demandé à l’agent d’expliquer le bug, et l’agent a proposé une correction d’une ligne. L’agent de code propose quatre modes : lecture seule, demander avant chaque action, accepter les modifications et demander avant les commandes, et sauter tous les contrôles."
+  title="Quel mode pour la modification ?" hint="Comment apprendre le comportement d’un agent dans un projet où vous n’avez jamais travaillé, et qu’est-ce qui pourrait mal tourner sur cette machine pendant ce temps ?"
   options={[
-    { text: 'Stay in read-only. The agent has already worked out the fix, so it can apply it from there.', consequence: 'Nothing changes. Read-only mode edits nothing, and the agent tells you it needs a different mode before it can write the file.' },
-    { text: 'Ask before each action. Read the edit at the prompt, as you did in the fixture.', correct: true, consequence: 'The agent stops at its first edit and you read it. You learn how it behaves in this project one action at a time, and nothing happens that you did not see first.' },
-    { text: 'Accept edits, ask before commands. The tree is committed, so git can undo anything.', consequence: 'The agent edits three files before you see any of them. Git can put the files back, and you still know nothing about why it went to the other two, which is what the prompt would have told you in a project you have not worked in yet.' },
-    { text: 'Skip every check. It is one small bug, and the tree is committed.', consequence: 'The agent runs a command that touches a directory outside the repository. Git restores the repository and nothing else, and the laptop holds the rest of your work.' },
+    { text: 'Rester en lecture seule. L’agent a déjà trouvé la correction, donc il peut l’appliquer depuis ce mode.', consequence: 'Rien ne change. Le mode lecture seule ne modifie rien, et l’agent vous dit qu’il lui faut un autre mode pour écrire le fichier.' },
+    { text: 'Demander avant chaque action. Lire la modification à la demande, comme dans l’exemple.', correct: true, consequence: 'L’agent s’arrête à sa première modification et vous la lisez. Vous apprenez comment il se comporte dans ce projet une action à la fois, et rien ne se produit que vous n’ayez vu d’abord.' },
+    { text: 'Accepter les modifications, demander avant les commandes. L’arbre est committé, donc git peut tout annuler.', consequence: 'L’agent modifie trois fichiers avant que vous en voyiez un seul. Git peut remettre les fichiers en place, et vous ne savez toujours pas pourquoi il est allé dans les deux autres, ce que la demande vous aurait dit dans un projet où vous n’avez pas encore travaillé.' },
+    { text: 'Sauter tous les contrôles. C’est un petit bug, et l’arbre est committé.', consequence: 'L’agent lance une commande qui touche un dossier hors du dépôt. Git restaure le dépôt et rien d’autre, et l’ordinateur contient le reste de votre travail.' },
   ]}>
-A colleague asks you to fix a small bug in a project you have never opened.
-The repository is on your laptop, next to your other work, and `git status`
-shows a clean tree. You started in read-only mode and asked the agent to
-explain the bug, and it has proposed a one-line fix. Which mode do you
-switch to for making the change?
+Un collègue vous demande de corriger un petit bug dans un projet que vous
+n’avez jamais ouvert. Le dépôt est sur votre ordinateur portable, à côté de
+vos autres travaux, et `git status` montre un arbre propre. Vous avez démarré
+en lecture seule et demandé à l’agent d’expliquer le bug, et il a proposé une
+correction d’une ligne. Vers quel mode passez-vous pour faire la
+modification ?
 </Scenario>
 
-## Review the diff
+## Relire le diff
 
-The agent says it is done. It may even say the tests pass. Don't take its
-word for either. Look at what changed.
+L’agent dit qu’il a terminé. Il dit peut-être même que les tests passent. Ne
+le croyez sur parole ni pour l’un ni pour l’autre. Regardez ce qui a changé.
 
 ```sh
 git diff
@@ -370,8 +388,8 @@ git diff
 +    index = number - 1
 ```
 
-Then run the check you named in the brief. The done-criterion was yours,
-so you run it.
+Lancez ensuite le contrôle que vous avez nommé dans la consigne. Le critère
+d’achèvement était le vôtre, donc c’est vous qui le lancez.
 
 ```sh
 python3 -m unittest -q 2>&1 | tail -1
@@ -381,156 +399,163 @@ python3 -m unittest -q 2>&1 | tail -1
 OK
 ```
 
-This course doesn't assert that output, because your agent produced the
-edit. It is what you should see if the fix is the one above. If you see
-anything else, read the diff again before you ask the agent for more.
+Le cours ne vérifie pas cette sortie, parce que c’est votre agent qui a
+produit la modification. C’est ce que vous devriez voir si la correction est
+celle ci-dessus. Si vous voyez autre chose, relisez le diff avant de demander
+davantage à l’agent.
 
-<Pitfall title="Accepting a diff you did not read">
-An engineer asks an agent to fix a failing test, sees "all tests pass" in
-the reply, and accepts. The agent had changed the test's expected value to
-match the buggy output. The tests did pass. The rule: the agent's summary
-is a claim, the diff is the evidence, and a passing test is only proof if
-you also confirm the test didn't move. Read every line the agent changed,
-every time.
+<Pitfall title="Accepter un diff que vous n’avez pas lu">
+Un ingénieur demande à un agent de corriger un test qui échoue, voit « tous
+les tests passent » dans la réponse, et accepte. L’agent avait changé la
+valeur attendue du test pour qu’elle corresponde à la sortie boguée. Les tests
+passaient bien. La règle : le résumé de l’agent est une affirmation, le diff
+est la preuve, et un test qui passe ne prouve quelque chose que si vous
+vérifiez aussi que le test n’a pas bougé. Lisez chaque ligne que l’agent a
+modifiée, à chaque fois.
 </Pitfall>
 
 <Choice id="the-diff-moved-the-test" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['first-change', 'codebase-understanding']}
-  context="A learner briefed a coding agent to fix an off-by-one bug in todo.py, a small Python program, by making a failing unit test pass without changing the test. The agent reports that it is done and that every test passes."
-  title="The diff moved the test" hint="What did the brief say about the test, and what does a passing run prove if the test itself changed?"
+  context="Un apprenant a donné à un agent de code la consigne de corriger une erreur de décalage d’une unité dans todo.py, un petit programme Python, en faisant passer un test unitaire en échec sans modifier le test. L’agent annonce qu’il a terminé et que tous les tests passent."
+  title="Le diff a déplacé le test" hint="Que disait la consigne sur le test, et que prouve une exécution réussie si le test lui-même a changé ?"
   options={[
-    { text: 'Ask the agent to undo its change to the test and make the original test pass by editing todo.py alone.', correct: true },
-    { text: 'Accept it. The done-criterion was a passing test run, and the tests pass.', why: 'The brief said the test must not change. A passing run proves nothing once the test expects the buggy output.' },
-    { text: 'Put the test back by hand and keep the rest of the diff.', why: 'That leaves the reason unexamined. The change to todo.py may only work together with the moved test, and you would not find out until later.' },
-    { text: 'Run the tests again yourself to confirm they pass.', why: 'They will pass, because the test now expects the buggy output. Running the check again tells you nothing you did not know.' },
+    { text: 'Demander à l’agent d’annuler sa modification du test et de faire passer le test d’origine en modifiant seulement todo.py.', correct: true },
+    { text: 'Accepter. Le critère d’achèvement était une exécution des tests réussie, et les tests passent.', why: 'La consigne disait que le test ne devait pas changer. Une exécution réussie ne prouve rien dès que le test attend la sortie boguée.' },
+    { text: 'Remettre le test en place à la main et garder le reste du diff.', why: 'La raison reste inexaminée. La modification de todo.py ne fonctionne peut-être qu’avec le test déplacé, et vous ne le découvririez que plus tard.' },
+    { text: 'Relancer les tests vous-même pour confirmer qu’ils passent.', why: 'Ils passeront, parce que le test attend maintenant la sortie boguée. Relancer le contrôle ne vous apprend rien de nouveau.' },
   ]}>
-The agent says it is done and that all four tests pass. You run `git diff`.
-The diff changes one line in `todo.py`, and it also changes the expected
-string in `test_todo.py`. What do you do?
+L’agent dit qu’il a terminé et que les quatre tests passent. Vous lancez
+`git diff`. Le diff modifie une ligne de `todo.py`, et il modifie aussi la
+chaîne attendue dans `test_todo.py`. Que faites-vous ?
 </Choice>
 
-## Sessions and context
+## Les sessions et le contexte
 
-Everything you have said and everything the agent has read in this session
-is in its context window, the agent's working memory. The context window
-is how the agent could answer "explain this repository" once and then fix
-the bug without re-reading the tests. The tests were already in context.
+Tout ce que vous avez dit et tout ce que l’agent a lu dans cette session se
+trouve dans sa fenêtre de contexte (context window), la mémoire de travail de l’agent. La
+fenêtre de contexte explique comment l’agent a pu répondre une fois à
+« explique ce dépôt », puis corriger le bug sans relire les tests. Les tests
+étaient déjà dans le contexte.
 
-It is also why sessions should end. The context has a fixed size, and as it
-fills up, early material drops out or is summarized. A long session that
-drifts across unrelated tasks gets worse at each of them. The habit to
-build: one task, one session. When you've reviewed the diff and the tests pass,
-end the session and start a fresh one for the next task.
+C’est aussi la raison pour laquelle les sessions doivent se terminer. Le
+contexte a une taille fixe, et à mesure qu’il se remplit, les premiers
+éléments disparaissent ou sont résumés. Une longue session qui dérive d’une
+tâche sans rapport à une autre fait chacune moins bien. L’habitude à prendre :
+une tâche, une session. Quand vous avez relu le diff et que les tests
+passent, terminez la session et ouvrez-en une nouvelle pour la tâche
+suivante.
 
-Most agents summarize the session for you when the context is nearly full,
-and many let you ask for a summary earlier. The summary keeps what the
-agent judges important, which isn't always what you need next. When you ask
-for one, say what it should keep: the task, the files touched, and the
-check that still has to run (@Academy claude-code-in-action). In Claude
-Code, the `/compact` command followed by what to focus on asks for that
-summary (@Claude Code how it works).
+La plupart des agents résument la session pour vous quand le contexte est
+presque plein, et beaucoup vous laissent demander un résumé plus tôt. Le
+résumé garde ce que l’agent juge important, qui n’est pas toujours ce dont
+vous avez besoin ensuite. Quand vous en demandez un, dites ce qu’il doit
+garder : la tâche, les fichiers touchés, et le contrôle qui reste à lancer
+(@Academy claude-code-in-action). Dans Claude Code, la commande `/compact`
+suivie de ce sur quoi se concentrer demande ce résumé
+(@Claude Code how it works).
 
 <Choice id="same-session-or-new" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['session-and-context']}
-  context="A learner has just finished one task with a coding agent: a bug fix in a small Python program, reviewed in the diff, with the tests passing. Everything the agent read and was told about that task is still in the session's context window."
-  title="Same session, or a new one?" hint="What is still in the agent's context from the first task, and does the second task want any of it?"
+  context="Un apprenant vient de terminer une tâche avec un agent de code : une correction de bug dans un petit programme Python, relue dans le diff, avec les tests qui passent. Tout ce que l’agent a lu et tout ce qu’on lui a dit sur cette tâche est encore dans la fenêtre de contexte de la session."
+  title="La même session, ou une nouvelle ?" hint="Qu’est-ce qui reste de la première tâche dans le contexte de l’agent, et la deuxième tâche en a-t-elle besoin ?"
   options={[
-    { text: 'Type the refactor request into the same session. The agent already knows the code.', why: 'It also still holds the bug-fix brief, with its limits and its done-criterion, and it keeps acting on them while it does the refactor.' },
-    { text: 'Ask the agent to summarize the session first, then continue in it with the refactor.', why: 'A summary makes the context shorter. The first task\'s constraints stay in it, and the session is still about two tasks.' },
-    { text: 'Keep the session open and start a second agent in the same directory for the refactor.', why: 'Two agents in one working tree edit each other\'s files.' },
-    { text: 'End the session, and start a new one with a new brief for the refactor.', correct: true },
+    { text: 'Taper la demande de refonte dans la même session. L’agent connaît déjà le code.', why: 'Il garde aussi la consigne de la correction, avec ses limites et son critère d’achèvement, et il continue de les appliquer pendant la refonte.' },
+    { text: 'Demander d’abord à l’agent de résumer la session, puis y continuer avec la refonte.', why: 'Un résumé raccourcit le contexte. Les contraintes de la première tâche y restent, et la session porte toujours sur deux tâches.' },
+    { text: 'Garder la session ouverte et lancer un second agent dans le même dossier pour la refonte.', why: 'Deux agents dans un même arbre de travail modifient les fichiers l’un de l’autre.' },
+    { text: 'Terminer la session, et en ouvrir une nouvelle avec une nouvelle consigne pour la refonte.', correct: true },
   ]}>
-The fix is in, you have read the diff, and the tests pass. Now you want the
-agent to replace the done-mark strings in `todo.py` with a constant. Where
-do you ask for it?
+La correction est faite, vous avez lu le diff, et les tests passent. Vous
+voulez maintenant que l’agent remplace les chaînes de marque « fait » de
+`todo.py` par une constante. Où le lui demandez-vous ?
 </Choice>
 
 <Choice id="the-settings-file" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['permissions', 'first-change']}
-  context="A learner briefed a coding agent to fix a bug in a small program. The brief says not to touch settings.toml. The agent stops at the permissions prompt before every edit."
-  title="An edit the brief ruled out" hint="What does the prompt give you the chance to do before the edit happens?"
+  context="Un apprenant a donné à un agent de code la consigne de corriger un bug dans un petit programme. La consigne dit de ne pas toucher à settings.toml. L’agent s’arrête à la demande d’autorisation avant chaque modification."
+  title="Une modification que la consigne excluait" hint="Qu’est-ce que la demande vous donne l’occasion de faire avant que la modification ait lieu ?"
   options={[
-    { text: 'Allow it, because the agent has read more of the code than you have.', why: 'Reading more code doesn\'t change the brief. The prompt is where your judgment enters.' },
-    { text: 'Deny the edit, and ask why it needs a file the brief ruled out.', correct: true },
-    { text: 'Allow it, and put the file back with git after the session.', why: 'By then the test passed because of the edit, and you have learned nothing about the bug.' },
-    { text: 'End the session, and start again with the same brief.', why: 'The same brief leads to the same question. Asking why tells you what the brief is missing.' },
+    { text: 'Autoriser, parce que l’agent a lu plus de code que vous.', why: 'Avoir lu plus de code ne change pas la consigne. C’est à la demande que votre jugement entre en jeu.' },
+    { text: 'Refuser la modification, et demander pourquoi il a besoin d’un fichier que la consigne excluait.', correct: true },
+    { text: 'Autoriser, et remettre le fichier en place avec git après la session.', why: 'À ce moment-là, le test aura passé grâce à la modification, et vous n’aurez rien appris sur le bug.' },
+    { text: 'Terminer la session, et recommencer avec la même consigne.', why: 'La même consigne mène à la même question. Demander pourquoi vous dit ce qui manque à la consigne.' },
   ]}>
 
-The agent asks to edit `settings.toml` "so the test passes". The brief says
-to leave that file alone. What do you do?
+L’agent demande à modifier `settings.toml` « pour que le test passe ». La
+consigne dit de laisser ce fichier tranquille. Que faites-vous ?
 
 </Choice>
 
 <Match id="mode-per-task" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['permissions']}
-  context="A coding agent offers four permission modes: read-only, ask before each action, accept edits and ask before commands, and skip every check. The lesson picks a mode per task."
-  title="Which mode for this task?" hint="Does the task change anything, is it your first change in the project, can git undo it, and is it inside a sandbox?"
-  options={['Read-only', 'Ask before each action', 'Accept edits, ask before commands', 'Skip every check']}
+  context="Un agent de code propose quatre modes de permission : lecture seule, demander avant chaque action, accepter les modifications et demander avant les commandes, et sauter tous les contrôles. La leçon choisit un mode par tâche."
+  title="Quel mode pour cette tâche ?" hint="La tâche modifie-t-elle quelque chose, est-ce votre première modification dans le projet, git peut-il l’annuler, et se déroule-t-elle dans un bac à sable ?"
+  options={['Lecture seule', 'Demander avant chaque action', 'Accepter les modifications, demander avant les commandes', 'Sauter tous les contrôles']}
   rows={[
-    { statement: 'Ask the agent to explain how the storage module works', option: 0, why: 'Does this task need to change anything?' },
-    { statement: 'Your first change in a project you have never opened', option: 1, why: 'How much do you know about what an edit here can reach?' },
-    { statement: 'Routine edits in your own project, where git can restore what you did not read', option: 2, why: 'What undoes an edit here, and what doesn\'t?' },
-    { statement: 'A throwaway task in a sandbox that holds nothing else', option: 3, why: 'What can the agent reach from inside the sandbox?' },
+    { statement: 'Demander à l’agent d’expliquer le fonctionnement du module de stockage', option: 0, why: 'Cette tâche a-t-elle besoin de modifier quoi que ce soit ?' },
+    { statement: 'Votre première modification dans un projet que vous n’avez jamais ouvert', option: 1, why: 'Que savez-vous de ce qu’une modification peut atteindre ici ?' },
+    { statement: 'Des modifications de routine dans votre propre projet, où git peut restaurer ce que vous n’avez pas lu', option: 2, why: 'Qu’est-ce qui annule une modification ici, et qu’est-ce qui ne l’annule pas ?' },
+    { statement: 'Une tâche jetable dans un bac à sable qui ne contient rien d’autre', option: 3, why: 'Que peut atteindre l’agent depuis l’intérieur du bac à sable ?' },
   ]}
-  rationale="The mode follows from what the task changes and from what can undo a mistake.">
-Match each task to its permission mode.
+  rationale="Le mode découle de ce que la tâche modifie et de ce qui peut annuler une erreur.">
+Associez chaque tâche à son mode de permission.
 </Match>
 
 <Scenario id="fixed-all-green" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['first-change', 'codebase-understanding']}
-  context="A learner briefed a coding agent to make a failing test pass by changing the program's code and not the test. The agent reports: fixed, all tests pass."
-  title="The agent says it is done" hint="Is the agent's summary evidence, or a claim?"
+  context="Un apprenant a donné à un agent de code la consigne de faire passer un test en échec en modifiant le code du programme sans toucher au test. L’agent annonce : corrigé, tous les tests passent."
+  title="L’agent dit qu’il a terminé" hint="Le résumé de l’agent est-il une preuve, ou une affirmation ?"
   options={[
-    { text: 'Accept it. The done-criterion was a passing test run.', consequence: 'The diff also changed the test\'s expected value. The bug is still in the code, and the test no longer looks for it.' },
-    { text: 'Read the diff, then run the check you named yourself.', correct: true, consequence: 'The diff shows that the agent also changed the test\'s expected value. You send the change back before you accept anything.' },
-    { text: 'Ask the agent to confirm that it didn\'t touch the test.', consequence: 'It confirms. Its answer is a second claim, and you still haven\'t looked.' },
-    { text: 'Run the test suite yourself, and accept when it passes.', consequence: 'It passes, because the agent edited the test. You needed the diff to see that.' },
+    { text: 'Accepter. Le critère d’achèvement était une exécution des tests réussie.', consequence: 'Le diff a aussi changé la valeur attendue du test. Le bug est toujours dans le code, et le test ne le cherche plus.' },
+    { text: 'Lire le diff, puis lancer vous-même le contrôle que vous avez nommé.', correct: true, consequence: 'Le diff montre que l’agent a aussi changé la valeur attendue du test. Vous renvoyez la modification avant d’accepter quoi que ce soit.' },
+    { text: 'Demander à l’agent de confirmer qu’il n’a pas touché au test.', consequence: 'Il confirme. Sa réponse est une seconde affirmation, et vous n’avez toujours pas regardé.' },
+    { text: 'Lancer vous-même la suite de tests, et accepter si elle passe.', consequence: 'Elle passe, parce que l’agent a modifié le test. Il vous fallait le diff pour le voir.' },
   ]}>
 
-The agent reports that the bug is fixed and all tests pass. What do you do
-before you accept?
+L’agent annonce que le bug est corrigé et que tous les tests passent. Que
+faites-vous avant d’accepter ?
 
 </Scenario>
 
 <Sort id="same-session-or-fresh" phase="review" objective="coding-with-agents/ships-with-agent/runs-a-session"
   concepts={['session-and-context']}
-  context="A learner has just finished a bug fix with a coding agent and has read the diff. Everything the agent read and was told about that task is still in the session's context window. The lesson gives each task its own session."
-  title="Same session, or a new one?" hint="Is this still the task you just finished, or a new task?"
-  buckets={['Same session', 'A new session']}
+  context="Un apprenant vient de terminer une correction de bug avec un agent de code et a lu le diff. Tout ce que l’agent a lu et tout ce qu’on lui a dit sur cette tâche est encore dans la fenêtre de contexte de la session. La leçon donne à chaque tâche sa propre session."
+  title="La même session, ou une nouvelle ?" hint="S’agit-il encore de la tâche que vous venez de terminer, ou d’une nouvelle tâche ?"
+  buckets={['La même session', 'Une nouvelle session']}
   items={[
-    { text: 'Ask why the fix changed one line in the way it did', bucket: 0 },
-    { text: 'Fix the typo the fix left in the same line', bucket: 0 },
-    { text: 'Replace the done-mark strings with a constant', bucket: 1 },
-    { text: 'Add a new command to the program', bucket: 1 },
+    { text: 'Demander pourquoi la correction a modifié une ligne de cette façon', bucket: 0 },
+    { text: 'Corriger la coquille que la correction a laissée dans la même ligne', bucket: 0 },
+    { text: 'Remplacer les chaînes de marque « fait » par une constante', bucket: 1 },
+    { text: 'Ajouter une nouvelle commande au programme', bucket: 1 },
   ]} />
 
-If you do want a second change in the same repository, reset first so the
-next session starts from a known state.
+Si vous voulez une deuxième modification dans le même dépôt, réinitialisez-le
+d’abord pour que la session suivante parte d’un état connu.
 
 ```sh
 git checkout -- .
 python3 -m unittest -q 2>&1 | tail -1
 ```
 
-That puts the bug back, and the last line is `FAILED (failures=1)` again.
-Same command as the example above, same output.
+Le bug revient, et la dernière ligne est de nouveau `FAILED (failures=1)`.
+C’est la même commande que dans l’exemple ci-dessus, avec la même sortie.
 
-<Exercise stretch="Now ask the agent for a refactor you choose, for example replacing the done-mark strings with a constant, and review it the same way: read the diff, run the tests, reset if you do not like it.">
-In a fresh session, with the fixture reset, fix the bug with your coding
-agent using the brief you repaired above. Approve the edit at the
-permissions prompt, then read `git diff` and run
-`python3 -m unittest -q` yourself.
+<Exercise stretch="Demandez maintenant à l’agent une refonte de votre choix, par exemple remplacer les chaînes de marque « fait » par une constante, et relisez-la de la même façon : lisez le diff, lancez les tests, réinitialisez si elle ne vous convient pas.">
+Dans une nouvelle session, avec l’exemple réinitialisé, corrigez le bug avec
+votre agent de code en utilisant la consigne que vous avez réparée plus haut.
+Approuvez la modification à la demande d’autorisation, puis lisez `git diff`
+et lancez vous-même `python3 -m unittest -q`.
 
-A good result: the diff touches one line in `todo.py`, `test_todo.py` and
-`todos.json` are unchanged, and the last line of the test run is `OK`.
-Finish by running `git checkout -- .` so the fixture is ready for next time.
+Un bon résultat : le diff touche une ligne de `todo.py`, `test_todo.py` et
+`todos.json` n’ont pas changé, et la dernière ligne de l’exécution des tests
+est `OK`. Terminez par `git checkout -- .` pour que l’exemple soit prêt pour la
+prochaine fois.
 </Exercise>
 
 <Recap>
-1. Start the agent in the directory that's the task's world, and ask it to explain before you ask it to change.
-2. Find the evidence yourself first: the file, the failing test, the wrong output. Then put those in the brief, with limits and a done-criterion.
-3. The permissions prompt is where your judgment enters; weigh the blast radius, and keep the prompt on.
-4. Pick the permission mode per task: read-only for a question, the prompt for a first change in a project, accept edits only where git can restore what you did not read, and skip every check only inside a sandbox.
-5. The agent's summary is a claim. The diff is the evidence, and you run the check you named.
-6. Give each task its own session. Reset the fixture and start fresh.
+1. Lancez l’agent dans le dossier qui constitue le monde de la tâche, et demandez-lui d’expliquer avant de lui demander de modifier.
+2. Trouvez d’abord la preuve vous-même : le fichier, le test qui échoue, la mauvaise sortie. Mettez-les ensuite dans la consigne, avec des limites et un critère d’achèvement.
+3. La demande d’autorisation est le moment où votre jugement entre en jeu. Pesez le rayon d’impact (blast radius), et gardez la demande activée.
+4. Choisissez le mode de permission tâche par tâche : la lecture seule pour une question, la demande pour une première modification dans un projet, l’acceptation des modifications seulement là où git peut restaurer ce que vous n’avez pas lu, et le saut de tous les contrôles seulement dans un bac à sable.
+5. Le résumé de l’agent est une affirmation. Le diff est la preuve, et c’est vous qui lancez le contrôle que vous avez nommé.
+6. Donnez à chaque tâche sa propre session. Réinitialisez l’exemple et repartez à neuf.
 </Recap>
