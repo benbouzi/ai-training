@@ -11,7 +11,7 @@ introduces: [hooks]
 assumes:
   - objective: coding-with-agents/verifies-agent-work/automates-the-check
     lesson: coding-with-agents/self-checking-loops
-    section: write-the-check-as-a-test
+    section: écrire-le-contrôle-sous-forme-de-test
   - objective: customizing-agents/configures-agent/sets-permissions
     lesson: customizing-agents/allowlists
     section: run-two-write-the-allowlist

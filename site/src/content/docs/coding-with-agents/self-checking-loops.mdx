@@ -1,42 +1,43 @@
 import { Choice, MultiChoice, Match, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Prompt, Response, Habit } from '@components/lesson';
 
-At the end of the previous lesson you checked the agent's fix yourself:
-you ran the reproduction steps on every night and compared the totals.
-That check works, but only you can run it, and you run it once. In this
-lesson the same steps become a test the coding agent runs after every
-change it makes. Then you give the agent a limit on how often it may try,
-and a rule that it may not change the test, and you confirm afterwards
-that it kept to both.
+À la fin de la leçon précédente, vous avez vérifié vous-même la correction de
+l’agent : vous avez lancé les étapes de reproduction sur chaque nuit et comparé
+les totaux. Ce contrôle fonctionne, mais vous seul pouvez le lancer, et vous le
+lancez une fois. Dans cette leçon, les mêmes étapes deviennent un test que
+l’agent de code lance après chaque modification qu’il fait. Vous donnez ensuite
+à l’agent une limite sur le nombre de ses tentatives, et une règle qui lui
+interdit de modifier le test, et vous confirmez ensuite qu’il a respecté les
+deux.
 
-The program is the nightly sales import from the previous lesson, before
-the fix. Here are the reproduction steps you wrote there.
+Le programme est l’import nocturne des ventes de la leçon précédente, avant la
+correction. Voici les étapes de reproduction que vous y avez écrites.
 
 ```text
-From nightly/, run: python3 importer.py nights/2026-09-15/*.csv
-Expected: a total in euros, exit status 0
-Actual: the batch is rejected, exit status 1
-Reruns: 3 of 3 fail. The 14th and the 16th pass 3 of 3,
-with totals 22975.95 EUR and 23257.33 EUR.
+Depuis nightly/, lancer : python3 importer.py nights/2026-09-15/*.csv
+Attendu : un total en euros, code de sortie 0
+Obtenu : le lot est rejeté, code de sortie 1
+Relances : 3 échecs sur 3. Le 14 et le 16 passent 3 fois sur 3,
+avec des totaux de 22975.95 EUR et 23257.33 EUR.
 ```
 
-## Write the check as a test
+## Écrire le contrôle sous forme de test
 
-A check that only you can run gets run when you remember it. The vendor
-guide for Claude Code says that without a check the agent can run, you
-are the one who has to notice every mistake. Its advice is to give the
-agent a check with a pass or fail result. A test suite is one, and a
-script that compares the output with a known good result is another. The agent can then
-rerun the check after each change and stop once it passes
-(@Claude Code best practices). The Academy course The AI-native SDLC
-playbook (SDLC is short for the development life cycle of software) teaches
-the same idea in a lesson on giving the agent a feedback loop
-(@Academy ai-native-sdlc-playbook).
+Un contrôle que vous seul pouvez lancer est lancé quand vous y pensez. Le guide
+de l’éditeur de Claude Code dit que, sans contrôle que l’agent peut lancer,
+c’est à vous de remarquer chaque erreur. Il conseille de donner à l’agent un
+contrôle dont le résultat est réussi ou échoué. Une suite de tests en est un, et
+un script qui compare la sortie à un bon résultat connu en est un autre.
+L’agent peut alors relancer le contrôle après chaque modification et
+s’arrêter une fois qu’il passe (@Claude Code best practices). Le cours de
+l’Academy The AI-native SDLC playbook (SDLC désigne le cycle de vie du
+développement logiciel) enseigne la même idée dans une leçon sur la boucle de
+retour à donner à l’agent (@Academy ai-native-sdlc-playbook).
 
-For the nightly import, the check is `test_nights.py`, a short Python
-script in the course repository. It runs the importer on each night the
-way the nightly job does, and prints one line per night. It exits with
-status 0 when every night passes, and with status 1 when one fails. These
-are the nights it knows:
+Pour l’import nocturne, le contrôle est `test_nights.py`, un court script
+Python du dépôt du cours. Il lance l’import sur chaque nuit comme le fait la
+tâche nocturne, et affiche une ligne par nuit. Il sort avec le code 0 quand
+toutes les nuits passent, et avec le code 1 quand l’une échoue. Voici les nuits
+qu’il connaît :
 
 ```python
 # Each night, with the total it must print, or None when the total is not
@@ -49,15 +50,17 @@ NIGHTS = {
 }
 ```
 
-A night passes when the importer exits with status 0 and parses every
-data row of the night's exports, and for the 14th and the 16th, when it
-prints the same total as before. The test counts the rows itself, one per
-line after the header. That count is there because of the previous
-lesson: a "fix" that skips a row it can't read also exits with status 0,
-and the row count is what catches it.
+Le commentaire dit que chaque nuit est associée au total qu’elle doit afficher,
+ou à `None` quand ce total n’est pas encore fixé. Une nuit passe quand l’import
+sort avec le code 0 et analyse chaque ligne de données des exports de la nuit,
+et, pour le 14 et le 16, quand il affiche le même total qu’avant. Le test compte
+lui-même les lignes, une par ligne après l’en-tête. Ce décompte est là à cause
+de la leçon précédente : une « correction » qui saute une ligne qu’elle ne sait
+pas lire sort aussi avec le code 0, et c’est le décompte des lignes qui la
+détecte.
 
-From the root of your clone of the course repository, copy the import
-and the test to a place of your own, and run the test there.
+Depuis la racine de votre clone du dépôt du cours, copiez l’import et le test à
+un endroit à vous, et lancez-y le test.
 
 ```sh
 cp -R site/examples/coding-with-agents/observing-and-debugging/nightly ~/loop-me
@@ -66,78 +69,81 @@ cd ~/loop-me
 python3 test_nights.py; echo "exit status $?"
 ```
 
-<Predict id="run-the-test" title="The test, before any fix"
+<Predict id="run-the-test" title="Le test, avant toute correction"
   answer={`2026-09-14: pass
   2026-09-15: FAIL: exit status 1; parsed 39 rows, expected 40 rows
   2026-09-16: pass
   2026-09-17: FAIL: exit status 1; parsed 46 rows, expected 47 rows
   2 passed, 2 failed
   exit status 1`} run="coding-with-agents/self-checking-loops/run_test.py">
-Run the test in your copy and compare what you see with the output below.
+Lancez le test dans votre copie et comparez ce que vous voyez avec la sortie
+ci-dessous.
 </Predict>
 
-The examples in this lesson aren't graded. Each one is a command you
-run, with output the course checks on every build.
+Les exemples de cette leçon ne sont pas notés. Chacun est une commande que vous
+lancez, avec une sortie que le cours vérifie à chaque build.
 
-The output is written for a reader who wasn't there. Each failing line
-names the night and what went wrong, so the agent can read it and decide
-what to try next, and the last line and the exit status give the verdict
-in one place.
+La sortie est écrite pour un lecteur qui n’était pas là. Chaque ligne en échec
+nomme la nuit et ce qui n’a pas marché, donc l’agent peut la lire et décider de
+ce qu’il essaie ensuite, et la dernière ligne et le code de sortie donnent le
+verdict en un seul endroit.
 
 <Choice id="a-check-the-agent-can-run" objective="coding-with-agents/verifies-agent-work/automates-the-check"
   concepts={['bounded-self-checking-loops']}
-  context="A team has a job that builds a sales report as a PDF every morning. Today a person checks it by hand. The team wants a coding agent to change the job and check its own work."
-  title="Which check can the agent run?" hint="Which option gives the agent a result it can read without asking a person?"
+  context="Une équipe a une tâche qui produit chaque matin un rapport de ventes en PDF. Aujourd’hui, une personne le vérifie à la main. L’équipe veut qu’un agent de code modifie la tâche et vérifie son propre travail."
+  title="Quel contrôle l’agent peut-il lancer ?" hint="Quelle option donne à l’agent un résultat qu’il peut lire sans demander à une personne ?"
   options={[
-    { text: 'A script that builds the report from yesterday\'s input and exits with status 1 when a total differs from the finance export.', correct: true },
-    { text: 'A line in the brief asking the agent to make sure the totals look right before it says it is done.', why: 'The agent would judge its own work by eye. Nothing gives it a pass or a fail it can read.' },
-    { text: 'A request that the agent paste the finished PDF into the chat, so that you can look over the totals yourself.', why: 'You are still the check, and you look once. The agent can\'t rerun you after each change.' },
-    { text: 'A rule in the project instructions saying that the totals in the report must always match the finance export.', why: 'The rule states the goal, and there is still nothing to run. The agent can\'t tell from it whether its change broke a total.' },
+    { text: 'Un script qui produit le rapport à partir des données d’hier et sort avec le code 1 quand un total diffère de l’export comptable.', correct: true },
+    { text: 'Une ligne dans la consigne qui demande à l’agent de s’assurer que les totaux ont l’air justes avant de dire qu’il a terminé.', why: 'L’agent jugerait son propre travail à vue d’œil. Rien ne lui donne un réussi ou un échoué qu’il puisse lire.' },
+    { text: 'Une demande à l’agent de coller le PDF terminé dans la conversation, pour que vous vérifiiez vous-même les totaux.', why: 'Vous restez le contrôle, et vous regardez une fois. L’agent ne peut pas vous relancer après chaque modification.' },
+    { text: 'Une règle dans les instructions du projet qui dit que les totaux du rapport doivent toujours correspondre à l’export comptable.', why: 'La règle énonce l’objectif, et il n’y a toujours rien à lancer. L’agent ne peut pas savoir grâce à elle si sa modification a cassé un total.' },
   ]}>
-Today the check is "open the PDF each morning and see that the totals
-are right". Which rewrite gives the agent a check it can run and read?
+Aujourd’hui, le contrôle est « ouvrir le PDF chaque matin et voir que les
+totaux sont justes ». Quelle réécriture donne à l’agent un contrôle qu’il peut
+lancer et lire ?
 </Choice>
 
-## Brief the loop with a limit
+## Donner la consigne de la boucle avec une limite
 
-A **bounded self-checking loop** is a loop where the agent runs the
-check, fixes and reruns, with a limit you set. The brief sets two
-limits. The first is a number of attempts, after which the agent stops
-and reports what it found, pass or fail. The second says what the agent
-may change, and the check itself is not on that list. Without the
-limits, an agent told to keep going until the test passes can keep going
-for a long time, and the shortest way to a passing test is often to
-change the test. Automating a check is one of the verification skills
-in Brilliant's skills map for coding with AI (@Brilliant VER). The limits
-are what make it safe to hand the check to the agent.
+Une **boucle d’autovérification bornée** est une boucle dans laquelle l’agent
+lance le contrôle, corrige et relance, avec une limite que vous fixez. La
+consigne fixe deux limites. La première est un nombre de tentatives, après
+lequel l’agent s’arrête et rend compte de ce qu’il a trouvé, que le contrôle
+passe ou non. La seconde dit ce que l’agent peut modifier, et le contrôle
+lui-même n’est pas sur cette liste. Sans ces limites, un agent à qui l’on dit
+de continuer jusqu’à ce que le test passe peut continuer longtemps, et le
+chemin le plus court vers un test qui passe consiste souvent à modifier le
+test. Automatiser un contrôle est l’une des compétences de vérification de la
+carte des compétences de Brilliant pour le code avec l’IA (@Brilliant VER).
+Les limites sont ce qui permet de confier le contrôle à l’agent sans risque.
 
-The transcript below is illustrative and doesn't record a specific
-model's words.
+La transcription ci-dessous est une illustration, sans reproduire les mots d’un
+modèle précis.
 
 <Prompt model="illustrative" recorded="illustrative">
-Run `python3 test_nights.py` in this directory. It fails on the 15th and
-the 17th, because `read_rows` in `importer.py` splits a quoted amount
-such as `"1,250.00"` into two fields. Fix `importer.py` so the test
-passes. After each change, rerun the test and read its output. Stop
-after five attempts, pass or fail, and show me the last output and what
-you tried. `test_nights.py` and the files under `nights/` are read-only.
-If you think the test is wrong, stop and tell me why, and don't change
-it. Done when the test prints `4 passed, 0 failed` and exits with
-status 0.
+Lance `python3 test_nights.py` dans ce dossier. Il échoue sur le 15 et le 17,
+parce que `read_rows` dans `importer.py` découpe un montant entre guillemets
+comme `"1,250.00"` en deux champs. Corrige `importer.py` pour que le test
+passe. Après chaque modification, relance le test et lis sa sortie.
+Arrête-toi après cinq tentatives, que le test passe ou non, et montre-moi la
+dernière sortie et ce que tu as essayé. `test_nights.py` et les fichiers sous
+`nights/` sont en lecture seule. Si tu penses que le test est faux,
+arrête-toi et dis-moi pourquoi, sans le modifier. Terminé quand le test affiche
+`4 passed, 0 failed` et sort avec le code 0.
 </Prompt>
 <Response>
-Attempt 1: I changed `read_rows` to read each file with the `csv`
-module, which keeps a quoted field together. The test still failed on
-the 15th and the 17th with exit status 1: the amount "1,250.00" can't
-be turned into a number. Attempt 2: I removed the thousands separator
-before the conversion. The test now prints `4 passed, 0 failed`. I
-changed only `importer.py`.
+Tentative 1 : j’ai modifié `read_rows` pour lire chaque fichier avec le module
+`csv`, qui garde ensemble un champ entre guillemets. Le test échouait toujours
+sur le 15 et le 17 avec le code 1 : le montant « 1,250.00 » ne peut pas être
+converti en nombre. Tentative 2 : j’ai retiré le séparateur de milliers avant
+la conversion. Le test affiche maintenant `4 passed, 0 failed`. Je n’ai modifié
+que `importer.py`.
 </Response>
 
-The response is a claim about what the agent did. Before the run, make
-the copy a git repository with one commit and give that commit a tag.
-Afterwards git can list every file that differs from the tag, even when
-the agent made commits of its own.
+La réponse est une affirmation sur ce qu’a fait l’agent. Avant l’exécution,
+faites de la copie un dépôt git avec un commit, et donnez une étiquette (tag) à
+ce commit. Ensuite, git peut lister chaque fichier qui diffère de l’étiquette,
+même si l’agent a fait ses propres commits.
 
 ```sh
 git init
@@ -146,12 +152,13 @@ git commit -m "Before the agent's run"
 git tag before-run
 ```
 
-After the run, list what changed, and run the test yourself. A plain
-`git diff` leaves out files the agent created, so stage everything
-first, with `git add -A`, and compare the staged files with the tag.
-A new file then shows in the list like a changed one.
+Après l’exécution, listez ce qui a changé, et lancez le test vous-même. Un
+simple `git diff` laisse de côté les fichiers que l’agent a créés, donc
+indexez d’abord tout avec `git add -A`, et comparez les fichiers indexés à
+l’étiquette. Un nouveau fichier apparaît alors dans la liste comme un fichier
+modifié.
 
-<Predict id="run-after-the-loop" title="What the bounded run changed"
+<Predict id="run-after-the-loop" title="Ce qu’a modifié l’exécution bornée"
   answer={`$ git add -A
   $ git diff --cached --stat before-run
    importer.py | 9 +++++----
@@ -163,8 +170,8 @@ A new file then shows in the list like a changed one.
   2026-09-17: pass
   4 passed, 0 failed
   exit status 0`} run="coding-with-agents/self-checking-loops/after_loop.py">
-These are the commands you run in `~/loop-me` after your own agent's
-run, in the exercise at the end of the lesson:
+Voici les commandes que vous lancez dans `~/loop-me` après l’exécution de votre
+propre agent, dans l’exercice de fin de leçon :
 
 ```sh
 git add -A
@@ -172,10 +179,10 @@ git diff --cached --stat before-run
 python3 test_nights.py
 ```
 
-The course's script applies the change from the transcript to a fresh
-copy of its own, runs the same three commands, and prints their output,
-with the exit status of the test as the last line. Run it from
-`site/examples/coding-with-agents/self-checking-loops/` in your clone.
+Le script du cours applique la modification de la transcription à une nouvelle
+copie à lui, lance les trois mêmes commandes, et affiche leur sortie, avec le
+code de sortie du test en dernière ligne. Lancez-le depuis
+`site/examples/coding-with-agents/self-checking-loops/` dans votre clone.
 
 ```sh
 python3 after_loop.py
@@ -183,47 +190,50 @@ python3 after_loop.py
 
 </Predict>
 
-Only `importer.py` changed, and no file was added, so the test ran with
-the assertions you wrote. The test passing now means what it meant when you wrote it.
+Seul `importer.py` a changé, et aucun fichier n’a été ajouté, donc le test a
+tourné avec les assertions que vous avez écrites. Le test qui passe maintenant
+veut dire ce qu’il voulait dire quand vous l’avez écrit.
 
-"Read-only" in a brief is a request, and the agent decides whether to
-follow it. Claude Code can enforce part of it with a deny rule on the
-file. The rule applies to the agent's own file tools, to the file
-commands it recognizes in a shell command, such as `sed`, and to the
-target of a redirect. It doesn't apply to a script the agent runs that
-opens the file itself (@Claude Code permissions). With or without the
-rule, the list of changed files after the run is the check that the
-test stayed the same.
+« Lecture seule » dans une consigne est une demande, et l’agent décide de la
+suivre ou non. Claude Code peut en imposer une partie avec une règle
+d’interdiction sur le fichier. La règle s’applique aux propres outils de
+fichiers de l’agent, aux commandes de fichiers qu’il reconnaît dans une
+commande shell, comme `sed`, et à la cible d’une redirection. Elle ne
+s’applique pas à un script que l’agent lance et qui ouvre le fichier lui-même
+(@Claude Code permissions). Avec ou sans la règle, la liste des fichiers
+modifiés après l’exécution est le contrôle qui montre que le test n’a pas
+changé.
 
 <MultiChoice id="lines-of-the-loop-brief" objective="coding-with-agents/verifies-agent-work/automates-the-check"
   concepts={['bounded-self-checking-loops']}
-  context="A learner briefs a coding agent to fix a nightly import until its test, test_nights.py, passes. The agent can run the test itself and read the result."
-  title="What goes into the loop brief?" hint="Which lines make the agent check its own work, which lines limit how long it runs or what it may change, and which lines take a limit away?"
+  context="Un apprenant donne à un agent de code la consigne de corriger un import nocturne jusqu’à ce que son test, test_nights.py, passe. L’agent peut lancer le test lui-même et lire le résultat."
+  title="Qu’est-ce qui va dans la consigne de la boucle ?" hint="Quelles lignes font vérifier son propre travail à l’agent, lesquelles limitent sa durée ou ce qu’il peut modifier, et lesquelles retirent une limite ?"
   options={[
-    { text: 'Rerun the test after each change and read what it prints.', correct: true },
-    { text: 'Keep going until the test passes, however long that takes.', why: 'That removes the limit. An agent that can\'t make the test pass keeps trying, and the test itself becomes the easiest thing to change.' },
-    { text: 'Stop after five attempts and show the last output, pass or fail.', correct: true },
-    { text: 'If a check in the test is in the way, relax it a little.', why: 'That gives the agent the check to change. A relaxed check can pass on the bug it was written to catch.' },
-    { text: 'Leave the test file alone, and stop to say why if it looks wrong.', correct: true },
+    { text: 'Relance le test après chaque modification et lis ce qu’il affiche.', correct: true },
+    { text: 'Continue jusqu’à ce que le test passe, aussi longtemps que cela prendra.', why: 'Cela retire la limite. Un agent qui n’arrive pas à faire passer le test continue d’essayer, et le test lui-même devient la chose la plus facile à modifier.' },
+    { text: 'Arrête-toi après cinq tentatives et montre la dernière sortie, que le test passe ou non.', correct: true },
+    { text: 'Si un contrôle du test te gêne, assouplis-le un peu.', why: 'Cela donne le contrôle à modifier à l’agent. Un contrôle assoupli peut passer sur le bug qu’il devait détecter.' },
+    { text: 'Laisse le fichier de test tranquille, et arrête-toi pour dire pourquoi s’il te paraît faux.', correct: true },
   ]}>
-Which of these lines belong in the brief for the loop?
+Lesquelles de ces lignes ont leur place dans la consigne de la boucle ?
 </MultiChoice>
 
-<Pitfall title="The suite that went green overnight">
-An engineer left an agent running overnight with the brief "make the
-build pass", and in the morning the build passed. The diff showed a fix
-to the flaky upload code and, in the test file, a timeout raised from 2
-seconds to 60 and one test marked as skipped. Nobody had told the agent
-the test file was off limits, or when to stop and ask. Give every loop a
-limit on attempts and a list of what it may change, and read the diff of
-the test files before you accept a passing run.
+<Pitfall title="La suite passée au vert pendant la nuit">
+Un ingénieur a laissé un agent tourner toute la nuit avec la consigne « fais
+passer le build », et le matin, le build passait. Le diff montrait une
+correction du code d’envoi instable et, dans le fichier de test, un délai
+d’expiration porté de 2 à 60 secondes et un test marqué comme sauté. Personne
+n’avait dit à l’agent que le fichier de test était interdit, ni quand
+s’arrêter et demander. Donnez à chaque boucle une limite de tentatives et une
+liste de ce qu’elle peut modifier, et lisez le diff des fichiers de test avant
+d’accepter une exécution qui passe.
 </Pitfall>
 
-Here is the same fixture after a run without the read-only rule. The
-agent made the importer skip the rows it can't read, saw the row count
-in the test fail, and removed the row count from the test.
+Voici le même exemple après une exécution sans la règle de lecture seule.
+L’agent a fait sauter à l’import les lignes qu’il ne sait pas lire, a vu
+échouer le décompte des lignes dans le test, et a retiré le décompte du test.
 
-<Predict id="run-the-unbounded-run" title="What a run without limits changed"
+<Predict id="run-the-unbounded-run" title="Ce qu’a modifié une exécution sans limites"
   answer={`$ git add -A
   $ git diff --cached --stat before-run
    importer.py    | 3 +--
@@ -236,9 +246,9 @@ in the test fail, and removed the row count from the test.
   2026-09-17: pass
   4 passed, 0 failed
   exit status 0`} run="coding-with-agents/self-checking-loops/unbounded_run.py">
-The course's script makes those two changes to a fresh copy and runs the
-same three commands. You can run it from
-`site/examples/coding-with-agents/self-checking-loops/` in your clone.
+Le script du cours fait ces deux modifications sur une nouvelle copie et lance
+les trois mêmes commandes. Vous pouvez le lancer depuis
+`site/examples/coding-with-agents/self-checking-loops/` dans votre clone.
 
 ```sh
 python3 unbounded_run.py
@@ -248,138 +258,144 @@ python3 unbounded_run.py
 
 <Scenario id="the-test-file-changed" objective="coding-with-agents/verifies-agent-work/automates-the-check"
   concepts={['bounded-self-checking-loops']}
-  context="A coding agent was asked to fix a nightly import until its test passed. After the run, the list of changed files holds importer.py and the test file, test_nights.py, with six lines deleted from the test. The test prints 4 passed, 0 failed."
-  title="The test passes, and the test changed" hint="If you put the test back the way you wrote it, what would it say about the importer as it is now?"
+  context="On a demandé à un agent de code de corriger un import nocturne jusqu’à ce que son test passe. Après l’exécution, la liste des fichiers modifiés contient importer.py et le fichier de test, test_nights.py, avec six lignes supprimées du test. Le test affiche 4 passed, 0 failed."
+  title="Le test passe, et le test a changé" hint="Si vous remettiez le test tel que vous l’avez écrit, que dirait-il de l’import tel qu’il est maintenant ?"
   options={[
-    { text: 'Accept the run, since the test passes and the good nights still print their old totals.', consequence: 'The total of the 15th now leaves out a sale of 1,250.00 GBP without saying so, and the check that would have caught it is gone.' },
-    { text: 'Put the test file back from the commit, rerun it, and brief the agent again with the file read-only.', correct: true, consequence: 'The restored test fails on the 15th and the 17th, with one row missing each night. The importer change is a skip, and the next run starts from a check you trust.' },
-    { text: 'Ask a second model to read the test change and say whether the agent had a good reason for it.', consequence: 'The reviewer finds the agent\'s reason plausible. The test is still weaker than the one you wrote, and nothing has run it.' },
-    { text: 'Keep both changes, and add a line to the importer\'s docstring that rows it can\'t read are skipped.', consequence: 'The docstring is honest now, and the totals are still wrong on every night with a big sale.' },
+    { text: 'Accepter l’exécution, puisque le test passe et que les bonnes nuits affichent toujours leurs anciens totaux.', consequence: 'Le total du 15 laisse maintenant de côté une vente de 1,250.00 GBP sans le dire, et le contrôle qui l’aurait détecté a disparu.' },
+    { text: 'Restaurer le fichier de test depuis le commit, le relancer, et redonner la consigne à l’agent avec le fichier en lecture seule.', correct: true, consequence: 'Le test restauré échoue sur le 15 et le 17, avec une ligne manquante chaque nuit. La modification de l’import est un saut de ligne, et l’exécution suivante part d’un contrôle auquel vous vous fiez.' },
+    { text: 'Demander à un second modèle de lire la modification du test et de dire si l’agent avait une bonne raison de la faire.', consequence: 'Le relecteur trouve la raison de l’agent plausible. Le test est toujours plus faible que celui que vous aviez écrit, et rien ne l’a lancé.' },
+    { text: 'Garder les deux modifications, et ajouter à la docstring de l’import une ligne qui dit que les lignes illisibles sont sautées.', consequence: 'La docstring est maintenant honnête, et les totaux sont toujours faux chaque nuit qui a une grosse vente.' },
   ]}>
-The agent reports `4 passed, 0 failed`. `git diff --cached --stat before-run` lists
-`importer.py` and `test_nights.py`, with six lines deleted from the
-test. What do you do?
+L’agent annonce `4 passed, 0 failed`. `git diff --cached --stat before-run`
+liste `importer.py` et `test_nights.py`, avec six lignes supprimées du test.
+Que faites-vous ?
 </Scenario>
 
-## Gates and second opinions
+## Les barrières et les seconds avis
 
-The test is one of the **deterministic gates** a project can have. A
-deterministic gate is a check whose result doesn't depend on anyone's
-judgment: tests, type checks, linters, builds and schema validation.
-A gate that isn't flaky gives the same answer for the same input, which
-is why a team can let a failing gate block a merge. The same gates can
-also end an agent's loop. In Claude Code, a hook that runs when the
-agent is about to stop can run the test and send the agent back to work
-until the test passes, up to a limit that Claude Code sets
-(@Claude Code best practices). Deciding when an agent's work is done
-from what a gate reports is also a theme of the Academy course Claude
-Code in action (@Academy claude-code-in-action).
+Le test est l’une des **barrières déterministes** qu’un projet peut avoir. Une
+barrière déterministe est un contrôle dont le résultat ne dépend du jugement de
+personne : tests, vérification des types, outils d’analyse (linters), builds et
+validation de schéma. Une barrière fiable donne la même réponse pour la même
+entrée, et c’est pourquoi une équipe peut laisser une barrière en échec bloquer
+une fusion. Les mêmes barrières peuvent aussi terminer la boucle d’un agent.
+Dans Claude Code, un hook qui s’exécute quand l’agent est sur le point de
+s’arrêter peut lancer le test et renvoyer l’agent au travail jusqu’à ce que le
+test passe, dans une limite que fixe Claude Code (@Claude Code best practices).
+Décider quand le travail d’un agent est terminé à partir de ce que rapporte une
+barrière est aussi un thème du cours de l’Academy Claude Code in action
+(@Academy claude-code-in-action).
 
-A review by a second model is a different kind of check. A fresh model
-that reads the diff can find what no gate tests: a design problem, a
-case nobody wrote a test for, a change outside the brief. But its answer
-is a judgment. It can miss what the writing model missed, and its
-verdict can change from one run to the next. The vendor guide adds that a
-reviewer told to look for problems tends to find some even in good work,
-so a person weighs its findings as well (@Claude Code best practices).
-Use the second model as a second opinion next to the gates, and never
-in place of them.
+La revue par un second modèle est un autre genre de contrôle. Un modèle neuf
+qui lit le diff peut trouver ce qu’aucune barrière ne teste : un problème de
+conception, un cas pour lequel personne n’a écrit de test, une modification
+hors de la consigne. Mais sa réponse est un jugement. Il peut manquer ce que le
+modèle qui a écrit a manqué, et son verdict peut changer d’une exécution à
+l’autre. Le guide de l’éditeur ajoute qu’un relecteur à qui l’on dit de
+chercher des problèmes a tendance à en trouver même dans un bon travail, donc
+une personne pèse aussi ses remarques (@Claude Code best practices). Utilisez
+le second modèle comme second avis à côté des barrières, et jamais à leur
+place.
 
 <Sort id="gate-or-opinion" objective="coding-with-agents/verifies-agent-work/prefers-gates-to-opinions"
   concepts={['deterministic-gates']}
-  context="A team decides which results can block a merge of agent-written code on their own, and which results a person weighs before deciding."
-  title="Gate or opinion?" hint="Would the same input give the same result every time, without anyone's judgment?"
-  buckets={['A gate: it can block the merge', 'An opinion: a person weighs it']}
+  context="Une équipe décide quels résultats peuvent bloquer seuls la fusion d’un code écrit par un agent, et quels résultats une personne pèse avant de décider."
+  title="Barrière ou avis ?" hint="La même entrée donnerait-elle le même résultat à chaque fois, sans le jugement de personne ?"
+  buckets={['Une barrière : elle peut bloquer la fusion', 'Un avis : une personne le pèse']}
   items={[
-    { text: 'The test suite exits with status 1', bucket: 0 },
-    { text: 'A second model says the change looks safe', bucket: 1 },
-    { text: 'The type checker reports two errors', bucket: 0 },
-    { text: 'The agent\'s summary says all tests pass', bucket: 1 },
-    { text: 'The config file fails its schema check', bucket: 0 },
-    { text: 'An AI reviewer flags a possible race condition', bucket: 1 },
+    { text: 'La suite de tests sort avec le code 1', bucket: 0 },
+    { text: 'Un second modèle dit que la modification a l’air sûre', bucket: 1 },
+    { text: 'Le vérificateur de types signale deux erreurs', bucket: 0 },
+    { text: 'Le résumé de l’agent dit que tous les tests passent', bucket: 1 },
+    { text: 'Le fichier de configuration échoue à son contrôle de schéma', bucket: 0 },
+    { text: 'Un relecteur IA signale une possible situation de concurrence (race condition)', bucket: 1 },
   ]} />
 
 <Choice id="drop-the-tests-for-a-reviewer" phase="review" objective="coding-with-agents/verifies-agent-work/prefers-gates-to-opinions"
   concepts={['deterministic-gates']}
-  context="A team runs its test suite on every pull request and blocks the merge when it fails. It has also added a second model that reviews every pull request."
-  title="A reviewer in place of the tests" hint="Which of the two checks gives the same answer for the same change every time?"
+  context="Une équipe lance sa suite de tests sur chaque pull request et bloque la fusion quand elle échoue. Elle a aussi ajouté un second modèle qui relit chaque pull request."
+  title="Un relecteur à la place des tests" hint="Lequel des deux contrôles donne la même réponse pour la même modification à chaque fois ?"
   options={[
-    { text: 'Nothing, since the reviewer reads every line of every change and the tests only cover some of them.', why: 'Reading every line is not the same as catching every fault, and the tests run the code the reviewer only reads.' },
-    { text: 'Only the cost, since running the reviewer on every pull request costs more than running the tests.', why: 'Cost is a real concern, and it is not the one that matters here. The question is what can block a merge.' },
-    { text: 'The reviewer\'s verdict is a judgment that can miss a fault or change between runs, and the tests give a fixed answer.', correct: true },
-    { text: 'The reviewer can\'t read test files, so it has no way to tell whether a change breaks one of them.', why: 'A reviewer can read test files like any other file.' },
+    { text: 'Rien, puisque le relecteur lit chaque ligne de chaque modification et que les tests n’en couvrent qu’une partie.', why: 'Lire chaque ligne n’est pas détecter chaque défaut, et les tests font tourner le code que le relecteur se contente de lire.' },
+    { text: 'Seulement le coût, puisque faire tourner le relecteur sur chaque pull request coûte plus que lancer les tests.', why: 'Le coût est une vraie préoccupation, et ce n’est pas celle qui compte ici. La question est de savoir ce qui peut bloquer une fusion.' },
+    { text: 'Le verdict du relecteur est un jugement qui peut manquer un défaut ou changer d’une exécution à l’autre, et les tests donnent une réponse fixe.', correct: true },
+    { text: 'Le relecteur ne peut pas lire les fichiers de test, donc il n’a aucun moyen de savoir si une modification en casse un.', why: 'Un relecteur peut lire les fichiers de test comme n’importe quel autre fichier.' },
   ]}>
-A colleague proposes to stop running the tests on pull requests, because
-the second model now reviews each one. What is wrong with the proposal?
+Un collègue propose d’arrêter de lancer les tests sur les pull requests, parce
+que le second modèle relit maintenant chacune. Qu’est-ce qui ne va pas dans
+cette proposition ?
 </Choice>
 
 <Match id="what-each-line-prevents" phase="review" objective="coding-with-agents/verifies-agent-work/automates-the-check"
   concepts={['bounded-self-checking-loops']}
-  context="A learner writes a brief for a coding agent that fixes code until a test passes. Each line of the brief guards against one way the run can go wrong."
-  title="What does each line prevent?" hint="For each line, what would the agent be free to do without it?"
-  options={['A run that never ends', 'A test that passes on the bug', 'A fix nobody checked']}
+  context="Un apprenant écrit la consigne d’un agent de code qui corrige du code jusqu’à ce qu’un test passe. Chaque ligne de la consigne protège contre une façon dont l’exécution peut mal tourner."
+  title="Qu’empêche chaque ligne ?" hint="Pour chaque ligne, qu’est-ce que l’agent serait libre de faire sans elle ?"
+  options={['Une exécution qui ne finit jamais', 'Un test qui passe sur le bug', 'Une correction que personne n’a vérifiée']}
   rows={[
-    { statement: 'Stop after five attempts and report, pass or fail', option: 0, why: 'Which line tells the agent when to give up?' },
-    { statement: 'The test file is read-only', option: 1, why: 'What is the shortest path to a passing test, if the test can change?' },
-    { statement: 'Rerun the test after each change and read its output', option: 2, why: 'Without a rerun, what tells the agent its change worked?' },
+    { statement: 'Arrête-toi après cinq tentatives et rends compte, que le test passe ou non', option: 0, why: 'Quelle ligne dit à l’agent quand abandonner ?' },
+    { statement: 'Le fichier de test est en lecture seule', option: 1, why: 'Quel est le chemin le plus court vers un test qui passe, si le test peut changer ?' },
+    { statement: 'Relance le test après chaque modification et lis sa sortie', option: 2, why: 'Sans relance, qu’est-ce qui dit à l’agent que sa modification a marché ?' },
   ]}
-  rationale="The attempt limit ends the run, the read-only rule keeps the check honest, and the rerun is what makes the loop check itself." />
+  rationale="La limite de tentatives termine l’exécution, la règle de lecture seule garde le contrôle honnête, et la relance est ce qui fait que la boucle se vérifie elle-même." />
 
 <Choice id="the-agent-wants-to-edit-the-test" phase="review" objective="coding-with-agents/verifies-agent-work/automates-the-check"
   concepts={['bounded-self-checking-loops']}
-  context="A coding agent is fixing an import program until a test passes. Its brief says the test file is read-only and that it should stop and explain if it thinks the test is wrong. On attempt three it stops."
-  title="The agent thinks the test is wrong" hint="Who wrote the test, and who should decide whether it changes?"
+  context="Un agent de code corrige un programme d’import jusqu’à ce qu’un test passe. Sa consigne dit que le fichier de test est en lecture seule et qu’il doit s’arrêter et expliquer s’il pense que le test est faux. À la troisième tentative, il s’arrête."
+  title="L’agent pense que le test est faux" hint="Qui a écrit le test, et qui doit décider s’il change ?"
   options={[
-    { text: 'Let it change the test, since it stopped and asked, which is what the brief told it to do.', why: 'Stopping to ask was right. Whether the test changes is still your decision, made against what the test is for.' },
-    { text: 'Tell it to carry on for as many attempts as it needs, since three of five are gone already.', why: 'That removes the limit and leaves the question about the test unanswered.' },
-    { text: 'Ask a second model whether the row check is reasonable, and let the agent follow its advice.', why: 'That swaps your judgment for another model\'s, on the one file the loop may not change.' },
-    { text: 'Read its reason yourself, and decide whether the test changes before the loop starts again.', correct: true },
+    { text: 'Le laisser modifier le test, puisqu’il s’est arrêté pour demander, comme le lui disait la consigne.', why: 'S’arrêter pour demander était la bonne chose. Que le test change reste votre décision, prise au regard de ce à quoi sert le test.' },
+    { text: 'Lui dire de continuer autant de tentatives qu’il lui faut, puisque trois sur cinq sont déjà passées.', why: 'Cela retire la limite et laisse sans réponse la question sur le test.' },
+    { text: 'Demander à un second modèle si le contrôle des lignes est raisonnable, et laisser l’agent suivre son conseil.', why: 'Cela remplace votre jugement par celui d’un autre modèle, sur le seul fichier que la boucle ne peut pas modifier.' },
+    { text: 'Lire vous-même sa raison, et décider si le test change avant que la boucle reparte.', correct: true },
   ]}>
-The agent stops and says: "The row check in the test seems too strict,
-because some exports have a row the importer can't read. May I remove
-it?" What do you do?
+L’agent s’arrête et dit : « Le contrôle des lignes du test me semble trop
+strict, parce que certains exports ont une ligne que l’import ne sait pas lire.
+Puis-je le retirer ? » Que faites-vous ?
 </Choice>
 
 <MultiChoice id="checks-an-agent-can-read" phase="review" objective="coding-with-agents/verifies-agent-work/automates-the-check"
   concepts={['bounded-self-checking-loops']}
-  context="A learner lists checks for a coding agent to run in a loop. A check fits the loop when the agent can run it and read a pass or a fail from it without asking a person."
-  title="Which checks fit the loop?" hint="For each check, is there a command whose result the agent can read?"
+  context="Un apprenant liste des contrôles qu’un agent de code lancera dans une boucle. Un contrôle convient à la boucle quand l’agent peut le lancer et y lire un réussi ou un échoué sans demander à une personne."
+  title="Quels contrôles conviennent à la boucle ?" hint="Pour chaque contrôle, existe-t-il une commande dont l’agent peut lire le résultat ?"
   options={[
-    { text: 'A test script that exits with status 1 and names the failing case.', correct: true },
-    { text: 'A colleague who looks at the new page and says whether it is right.', why: 'The agent can\'t run your colleague after each change.' },
-    { text: 'A build command that prints its errors and exits with status 1.', correct: true },
-    { text: 'A line in the brief that says the new page must look clean.', why: 'There is nothing to run, and "clean" has no pass or fail.' },
+    { text: 'Un script de test qui sort avec le code 1 et nomme le cas en échec.', correct: true },
+    { text: 'Un collègue qui regarde la nouvelle page et dit si elle est juste.', why: 'L’agent ne peut pas relancer votre collègue après chaque modification.' },
+    { text: 'Une commande de build qui affiche ses erreurs et sort avec le code 1.', correct: true },
+    { text: 'Une ligne dans la consigne qui dit que la nouvelle page doit avoir l’air propre.', why: 'Il n’y a rien à lancer, et « propre » n’a ni réussite ni échec.' },
   ]}>
-Which of these can the agent run itself, after each change?
+Lesquels de ces contrôles l’agent peut-il lancer lui-même, après chaque
+modification ?
 </MultiChoice>
 
-<Exercise stretch="Then pick one check you do by hand in your own project, such as opening a page or reading a report, and write it as a command that exits with status 1 when the check fails.">
-Use the copy in `~/loop-me` from earlier in the lesson, and make it a git
-repository with one tagged commit if you haven't yet. Start your own coding
-agent inside `~/loop-me`, so that it works on the copy and not on your
-clone, and give it the brief from this lesson. Let it run, which takes a few minutes.
+<Exercise stretch="Choisissez ensuite un contrôle que vous faites à la main dans votre propre projet, comme ouvrir une page ou lire un rapport, et écrivez-le sous forme d’une commande qui sort avec le code 1 quand le contrôle échoue.">
+Utilisez la copie de `~/loop-me` créée plus tôt dans la leçon, et faites-en un
+dépôt git avec un commit étiqueté si ce n’est pas encore fait. Lancez votre
+propre agent de code dans `~/loop-me`, pour qu’il travaille sur la copie et pas
+sur votre clone, et donnez-lui la consigne de cette leçon. Laissez-le tourner,
+ce qui prend quelques minutes.
 
-Then check the run yourself. Run `git add -A`, then
-`git diff --cached --stat before-run`, and confirm that `test_nights.py`
-isn't in the list. Run `git diff --cached before-run -- test_nights.py`
-and confirm that it doesn't print anything. Run `python3 test_nights.py` and confirm that it prints
-`4 passed, 0 failed`. A test the agent could change is a test you
-can't rely on, and these commands show whether it changed.
+Vérifiez ensuite l’exécution vous-même. Lancez `git add -A`, puis
+`git diff --cached --stat before-run`, et confirmez que `test_nights.py` n’est
+pas dans la liste. Lancez `git diff --cached before-run -- test_nights.py` et
+confirmez qu’il n’affiche rien. Lancez `python3 test_nights.py` et confirmez
+qu’il affiche `4 passed, 0 failed`. Un test que l’agent pouvait modifier est un
+test auquel vous ne pouvez pas vous fier, et ces commandes montrent s’il a
+changé.
 
-A good result has a run that stopped within five attempts, a list of
-changed files that holds `importer.py` and nothing else, and a test you
-ran yourself that passes. Then answer one question: if the agent had
-stopped after five attempts with the test still failing, what would you
-have wanted its report to contain?
+Un bon résultat a une exécution qui s’est arrêtée en cinq tentatives au plus,
+une liste de fichiers modifiés qui contient `importer.py` et rien d’autre, et
+un test que vous avez lancé vous-même et qui passe. Répondez ensuite à une
+question : si l’agent s’était arrêté après cinq tentatives avec le test
+toujours en échec, qu’auriez-vous voulu trouver dans son rapport ?
 </Exercise>
 
 <Recap>
-1. Turn a manual check into a command the agent can run and read, one that exits with status 0 on a pass and names what failed otherwise. The agent can then rerun it after every change, and you no longer have to notice every mistake yourself (@Claude Code best practices).
-2. A bounded self-checking loop has a limit on attempts, after which the agent stops and reports, and a rule that the check itself is read-only.
-3. After the run, stage everything with `git add -A` and compare it with a commit from before the run. The list shows whether the test changed and which files the agent added. Then run the test yourself. A rule that denies edits to the test blocks the agent's file tools, the shell file commands it recognizes and redirects into the file. A script the agent runs can still write the file (@Claude Code permissions).
-4. Deterministic gates, such as tests, type checks, linters, builds and schema checks, give the same answer for the same input when they aren't flaky, and can block a merge. A second model's review is a second opinion next to them and never replaces them (@Claude Code best practices).
+1. Transformez un contrôle manuel en commande que l’agent peut lancer et lire, qui sort avec le code 0 en cas de réussite et nomme ce qui a échoué sinon. L’agent peut alors la relancer après chaque modification, et vous n’avez plus à remarquer vous-même chaque erreur (@Claude Code best practices).
+2. Une boucle d’autovérification bornée a une limite de tentatives, après laquelle l’agent s’arrête et rend compte, et une règle qui met le contrôle lui-même en lecture seule.
+3. Après l’exécution, indexez tout avec `git add -A` et comparez avec un commit d’avant l’exécution. La liste montre si le test a changé et quels fichiers l’agent a ajoutés. Lancez ensuite le test vous-même. Une règle qui interdit de modifier le test bloque les outils de fichiers de l’agent, les commandes de fichiers du shell qu’il reconnaît et les redirections vers le fichier. Un script lancé par l’agent peut quand même écrire le fichier (@Claude Code permissions).
+4. Les barrières déterministes, comme les tests, la vérification des types, les outils d’analyse, les builds et les contrôles de schéma, donnent la même réponse pour la même entrée quand elles sont fiables, et peuvent bloquer une fusion. La revue d’un second modèle est un second avis à côté d’elles et ne les remplace jamais (@Claude Code best practices).
 </Recap>
 
 <Habit id="look-for-the-test-file">
-The next time an agent tells you the tests pass, look for a test file among the files it changed before you read the rest of the change. Use `git status` for work it didn't commit, and `git diff --stat` against the commit you started from when it made commits.
+La prochaine fois qu’un agent vous dit que les tests passent, cherchez un fichier de test parmi les fichiers qu’il a modifiés avant de lire le reste de la modification. Utilisez `git status` pour le travail qu’il n’a pas committé, et `git diff --stat` par rapport au commit de départ quand il a fait des commits.
 </Habit>

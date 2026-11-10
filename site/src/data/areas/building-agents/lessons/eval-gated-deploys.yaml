@@ -13,7 +13,7 @@ introduces: [eval-gated-deploys, rollout-strategies]
 assumes:
   - objective: coding-with-agents/verifies-agent-work/automates-the-check
     lesson: coding-with-agents/self-checking-loops
-    section: write-the-check-as-a-test
+    section: écrire-le-contrôle-sous-forme-de-test
   - objective: safety/judges-agent-risk/sets-oversight
     lesson: safety/reading-agent-logs
     section: traiter-un-changement-de-modèle-comme-toute-autre-mise-à-jour
