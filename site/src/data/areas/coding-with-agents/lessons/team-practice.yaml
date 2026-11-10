@@ -14,13 +14,13 @@ assumes:
     section: le-fichier-que-lagent-lit-en-premier
   - objective: coding-with-agents/works-in-team/attributes-honestly
     lesson: coding-with-agents/attribution-and-review-norms
-    section: the-sign-off-only-a-person-gives
+    section: la-signature-que-seule-une-personne-donne
   - objective: coding-with-agents/works-in-team/follows-team-norms
     lesson: coding-with-agents/ci-and-hooks
-    section: run-the-gates-in-ci
+    section: lancer-les-barrières-dans-la-ci
   - objective: coding-with-agents/works-in-team/runs-parallel-work
     lesson: coding-with-agents/parallel-sessions
-    section: know-what-the-worktrees-share
+    section: savoir-ce-que-les-worktrees-partagent
 after: [coding-with-agents/parallel-sessions, coding-with-agents/attribution-and-review-norms]
 shorts: []
 exercise:

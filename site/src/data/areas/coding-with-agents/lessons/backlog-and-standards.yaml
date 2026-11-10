@@ -13,13 +13,13 @@ introduces: [agent-reachable-backlog, standards-file]
 assumes:
   - objective: coding-with-agents/works-in-team/follows-team-norms
     lesson: coding-with-agents/attribution-and-review-norms
-    section: before-you-ask-for-a-review
+    section: avant-de-demander-une-revue
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
     section: what-belongs-in-it
   - objective: coding-with-agents/works-in-team/sets-team-practice
     lesson: coding-with-agents/ci-and-hooks
-    section: further-steps-for-the-team
+    section: pour-aller-plus-loin-en-équipe
 extends-to: []
 after: [coding-with-agents/ci-and-hooks]
 shorts: []

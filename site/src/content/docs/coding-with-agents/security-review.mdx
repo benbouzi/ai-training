@@ -1,35 +1,37 @@
 import { Choice, MultiChoice, Match, Predict, Sort, Scenario, Pitfall, Exercise, Recap, Prompt, Response, Habit } from '@components/lesson';
 
-A coding agent added a search box to a small notes app. The brief was
-short: a user types part of a title and sees their own notes that match.
-The agent wrote a search function and a small admin check, and the
-search works when you try it. In this lesson we read that change the way an
-attacker would. A static analyzer finds part of what is wrong with it,
-and we read the code for the rest. Then we brief the agent for a fix,
-with a test that proves it.
+Un agent de code a ajouté une zone de recherche à une petite application de
+notes. La consigne était courte : un utilisateur tape une partie d’un titre et
+voit ses propres notes qui correspondent. L’agent a écrit une fonction de
+recherche et un petit contrôle d’administration, et la recherche marche quand
+on l’essaie. Dans cette leçon, nous faisons la revue de sécurité du code d’un
+agent : nous lisons cette modification comme le ferait un attaquant. Un
+analyseur statique trouve une partie de ce qui ne va pas, et nous lisons le
+code pour le reste. Nous donnons ensuite à l’agent la consigne d’une
+correction, avec un test qui la prouve.
 
-Brilliant's *Coding with AI* skills map lists security and adversarial
-thinking as a skill area of its own (@Brilliant SEC). The question this
-lesson practices is the adversarial one: what happens when the input is
-hostile?
+La carte des compétences *Coding with AI* de Brilliant range la sécurité et la
+pensée adverse parmi ses domaines de compétences à part entière
+(@Brilliant SEC). La question que cette leçon entraîne est celle de
+l’adversaire : que se passe-t-il quand l’entrée est hostile ?
 
-## The agent's change
+## La modification de l’agent
 
-The fixture is in `site/examples/coding-with-agents/security-review/` in
-your clone of the course repository. From the root of your clone, copy it
-somewhere outside the clone, so that nothing you run touches the
-repository. If `~/security-review` exists from an earlier try, delete it
-first, or `cp` puts the new copy inside the old one.
+L’exemple se trouve dans `site/examples/coding-with-agents/security-review/`
+dans votre clone du dépôt du cours. Depuis la racine de votre clone, copiez-le
+quelque part hors du clone, pour que rien de ce que vous lancez ne touche le
+dépôt. Si `~/security-review` existe depuis un essai précédent, supprimez-le
+d’abord, sinon `cp` place la nouvelle copie à l’intérieur de l’ancienne.
 
 ```sh
 cp -R site/examples/coding-with-agents/security-review ~/security-review
 cd ~/security-review
 ```
 
-`notes_search.py` is the agent's change. The route that calls
-`search_notes` passes the logged-in user's name as `owner` and the text
-from the search box as `term`. This is the whole function, with the
-admin check the agent added in the same commit:
+`notes_search.py` est la modification de l’agent. La route qui appelle
+`search_notes` passe le nom de l’utilisateur connecté comme `owner` et le texte
+de la zone de recherche comme `term`. Voici la fonction entière, avec le
+contrôle d’administration que l’agent a ajouté dans le même commit :
 
 ```python
 ADMIN_PASSWORD = "notes-admin-2026"
@@ -52,68 +54,71 @@ def search_notes(conn: sqlite3.Connection, owner: str, term: str) -> "list[str]"
     return [row[0] for row in rows]
 ```
 
-It reads cleanly and it does what the brief asked for. Keep it open while
-you read the next section.
+Elle se lit facilement et elle fait ce que demandait la consigne. Gardez-la
+ouverte pendant que vous lisez la partie suivante.
 
-## The mistakes agents copy
+## Les erreurs que les agents recopient
 
-A model learns to write code from a large amount of public code, and
-public code contains bugs, including security bugs. In a study from 2021,
-Pearce and colleagues gave GitHub Copilot 89 coding scenarios built
-around high-risk weakness types from the Top 25 list that the MITRE
-Corporation publishes. They judged about 40 percent of the 1,689 programs
-it produced to be vulnerable. Their explanation is that a model trained
-on code that nobody checked has learned the exploitable patterns in it
-(@Pearce 2022). Models have changed since that study, and they're still
-trained on public code. The list below is this course's own, of mistakes
-that appear in a lot of that code:
+Un modèle apprend à écrire du code à partir d’une grande quantité de code
+public, et le code public contient des bugs, y compris des bugs de sécurité.
+Dans une étude de 2021, Pearce et ses collègues ont donné à GitHub Copilot 89
+scénarios de programmation construits autour de types de faiblesses à haut
+risque tirés de la liste Top 25 que publie la MITRE Corporation. Ils ont jugé
+vulnérables environ 40 % des 1 689 programmes produits. Leur explication est
+qu’un modèle entraîné sur du code que personne n’a vérifié a appris les motifs
+exploitables qu’il contient (@Pearce 2022). Les modèles ont changé depuis cette
+étude, et ils sont toujours entraînés sur du code public. La liste ci-dessous
+est propre à ce cours, et recense des erreurs qu’on trouve dans une grande
+partie de ce code :
 
-- **Unvalidated input.** A value from a form, a file or an application
-  programming interface (API) is used as if it were trusted: a quantity
-  that can be negative, a file name that can contain `../`.
-- **String-built queries and commands.** Input is pasted into an SQL
-  (Structured Query Language) query or a shell command, so the input can
-  change what the query or the command does.
-- **Secrets in code.** A password, token or key is written into the
-  source, where every copy of the repository has it.
-- **Permissive defaults.** A server listens on every network interface, a
-  debug mode stays on, or a file is created readable by everyone.
-- **Disabled checks.** Certificate checking is turned off to make an
-  error go away, or a test is skipped because it failed.
-- **Error handling that hides failures.** An exception is caught and
-  replaced with an empty result. A failure then looks the same as
-  "nothing found".
+- **Entrée non validée.** Une valeur venue d’un formulaire, d’un fichier ou d’une
+  interface de programmation (API) est utilisée comme si elle était fiable :
+  une quantité qui peut être négative, un nom de fichier qui peut contenir
+  `../`.
+- **Requêtes et commandes construites par concaténation de chaînes.** L’entrée
+  est collée dans une requête SQL (Structured Query Language) ou une commande
+  shell, donc elle peut changer ce que fait la requête ou la commande.
+- **Secrets dans le code.** Un mot de passe, un jeton (token) ou une clé est écrit dans
+  le code source, où chaque copie du dépôt l’a.
+- **Réglages par défaut trop permissifs.** Un serveur écoute sur toutes les
+  interfaces réseau, un mode de débogage reste actif, ou un fichier est créé
+  lisible par tous.
+- **Contrôles désactivés.** La vérification des certificats est désactivée pour
+  faire disparaître une erreur, ou un test est sauté parce qu’il échouait.
+- **Gestion d’erreurs qui masque les échecs.** Une exception est interceptée et
+  remplacée par un résultat vide. Un échec ressemble alors à « rien trouvé ».
 
-Each of these makes the code shorter or makes an error go away. An agent
-that is told to get the task done uses them for the same reason a
-hurried person does.
+Chacune de ces erreurs raccourcit le code ou fait disparaître une erreur. Un
+agent à qui l’on dit de terminer la tâche y recourt pour la même raison qu’une
+personne pressée.
 
 <MultiChoice id="lines-that-stop-review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['security-review-of-agent-output']}
-  context="The lesson lists six classic mistakes to look for in agent-written code: unvalidated input, string-built queries and commands, secrets in code, permissive defaults, disabled checks, and error handling that hides failures."
-  title="Which lines stop the review?" hint="For each line, ask what an attacker controls and what the line lets them change."
+  context="La leçon liste six erreurs classiques à chercher dans le code écrit par un agent : entrée non validée, requêtes et commandes construites par concaténation, secrets dans le code, réglages par défaut trop permissifs, contrôles désactivés, et gestion d’erreurs qui masque les échecs."
+  title="Quelles lignes arrêtent la revue ?" hint="Pour chaque ligne, demandez-vous ce que contrôle un attaquant et ce que la ligne lui permet de changer."
   options={[
     { text: '`requests.get(url, verify=False)`', correct: true },
-    { text: '`cursor.execute("SELECT title FROM notes WHERE owner = ?", (owner,))`', why: 'The owner goes to the database as a value through the placeholder, so it cannot change the query.' },
+    { text: '`cursor.execute("SELECT title FROM notes WHERE owner = ?", (owner,))`', why: 'Le propriétaire part vers la base de données comme valeur, par le paramètre fictif (placeholder), donc il ne peut pas changer la requête.' },
     { text: '`os.system("convert " + name + " thumb.png")`', correct: true },
-    { text: '`token = os.environ["NOTES_API_TOKEN"]`', why: 'The token comes from the environment at run time. The source code holds only its name.' },
+    { text: '`token = os.environ["NOTES_API_TOKEN"]`', why: 'Le jeton vient de l’environnement à l’exécution. Le code source ne contient que son nom.' },
     { text: '`app.run(host="0.0.0.0", debug=True)`', correct: true },
-    { text: '`except sqlite3.Error: log.exception("search failed"); raise`', why: 'The error is logged and raised again, so the failure stays visible to the caller.' },
+    { text: '`except sqlite3.Error: log.exception("search failed"); raise`', why: 'L’erreur est journalisée et relancée, donc l’échec reste visible pour l’appelant.' },
   ]}>
-Each line comes from a different agent-written change. Which lines show
-one of the classic mistakes?
+Chaque ligne vient d’une modification différente écrite par un agent.
+Lesquelles montrent l’une des erreurs classiques ?
 </MultiChoice>
 
-## What the analyzer finds
+## Ce que trouve l’analyseur
 
-A static analyzer reads source code without running it and reports
-patterns that are often mistakes. For Python, Bandit is a free,
-Apache-2.0 licensed analyzer that looks for common security problems
-(@Bandit). In the exercise at the end of this lesson, you install Bandit
-and run it on your own copy of the fixture. The recorded run below is for
-reading now, and for readers who skip the install. On September 27, 2026,
-Bandit 1.8.6 running on Python 3.9.25 printed this for `notes_search.py`
-in a fresh copy of the fixture, with the start time left out:
+Un analyseur statique lit le code source sans l’exécuter et signale des motifs
+qui sont souvent des erreurs. Pour Python, Bandit est un analyseur gratuit sous
+licence Apache-2.0 qui cherche les problèmes de sécurité courants (@Bandit).
+Dans l’exercice de fin de leçon, vous installez Bandit et vous le lancez sur
+votre propre copie de l’exemple. L’exécution enregistrée ci-dessous est à lire
+maintenant, et sert aux lecteurs qui sautent l’installation. Le 27 septembre
+2026, Bandit 1.8.6 tournant sous Python 3.9.25 a affiché ceci pour
+`notes_search.py` dans une nouvelle copie de l’exemple, sans l’heure de
+départ :
 
 ```text
 Test results:
@@ -139,76 +144,78 @@ Test results:
 --------------------------------------------------
 ```
 
-The run also printed a summary with the line count and the issues per
-severity, and it exited with status 1 because it found issues. The
-column of the B608 finding depends on the Python version: 3.9, 3.10 and
-3.11 printed `22:8`, and 3.12 and 3.13 printed `22:10`.
+L’exécution a aussi affiché un résumé avec le nombre de lignes et les problèmes
+par gravité, et elle est sortie avec le code 1 parce qu’elle a trouvé des
+problèmes. La colonne de la remarque B608 dépend de la version de Python : 3.9,
+3.10 et 3.11 ont affiché `22:8`, et 3.12 et 3.13 ont affiché `22:10`.
 
-Bandit found two of the classic mistakes. B105 is a password in the
-source, which Bandit spots because the variable name contains
-`password`. B608 is the query built from strings. Bandit rates its
-confidence in that finding as Low. A pattern check can't see where
-`owner` and `term` come from. You can, and here `term` comes from a user,
-so the finding is real.
+Bandit a trouvé deux des erreurs classiques. B105 est un mot de passe dans le
+code source, que Bandit repère parce que le nom de la variable contient
+`password`. B608 est la requête construite à partir de chaînes. Bandit évalue
+sa confiance dans cette remarque à Low (faible). Un contrôle de motifs ne peut
+pas voir d’où viennent `owner` et `term`. Vous le pouvez, et ici, `term` vient
+d’un utilisateur, donc la remarque est réelle.
 
-Bandit didn't report the `except sqlite3.Error: return []`. One of its
-checks, B110, looks for an `except` block whose only statement is `pass`
-(@Bandit). This block returns an empty list, which hides the error just
-as well and matches no rule. An analyzer finds patterns that someone
-wrote a rule for. What the code means for this app, such as whether an
-empty list means that nothing matched, is a question only a reader can
-answer.
+Bandit n’a pas signalé le `except sqlite3.Error: return []`. L’un de ses
+contrôles, B110, cherche un bloc `except` dont la seule instruction est `pass`
+(@Bandit). Ce bloc renvoie une liste vide, ce qui masque l’erreur tout aussi
+bien et ne correspond à aucune règle. Un analyseur trouve les motifs pour
+lesquels quelqu’un a écrit une règle. Ce que le code veut dire pour cette
+application, par exemple si une liste vide veut dire que rien n’a correspondu,
+est une question à laquelle seul un lecteur peut répondre.
 
 <Choice id="what-bandit-missed" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['security-review-of-agent-output']}
-  context="An agent-written search function for a notes app builds its SQL query with an f-string, keeps an admin password in the source, and turns a database error into an empty list. Bandit, a static analyzer for Python, has rules for hardcoded passwords, for SQL built from strings, and for an except block whose only statement is pass."
-  title="What did the analyzer miss?" hint="Hold each part of the function against the three rules. Which part matches none of them?"
+  context="Une fonction de recherche écrite par un agent pour une application de notes construit sa requête SQL avec une f-string, garde un mot de passe d’administration dans le code source, et transforme une erreur de base de données en liste vide. Bandit, un analyseur statique pour Python, a des règles pour les mots de passe écrits en dur, pour le SQL construit à partir de chaînes, et pour un bloc except dont la seule instruction est pass."
+  title="Qu’a manqué l’analyseur ?" hint="Comparez chaque partie de la fonction aux trois règles. Quelle partie ne correspond à aucune d’elles ?"
   options={[
-    { text: 'The query that is built from the search text with an f-string.', why: 'That matches the rule for SQL built from strings, B608, which Bandit reported at line 22.' },
-    { text: 'The admin password that is written into the source file.', why: 'That matches the rule for hardcoded passwords, B105, which Bandit reported at line 11.' },
-    { text: 'The except block that turns a database error into an empty list.', correct: true },
-    { text: 'The use of the sqlite3 module where an object-relational mapper is expected.', why: 'The sqlite3 module is safe with placeholders, and choosing it is not a security finding.' },
+    { text: 'La requête construite à partir du texte de recherche avec une f-string.', why: 'Cela correspond à la règle sur le SQL construit à partir de chaînes, B608, que Bandit a signalée à la ligne 22.' },
+    { text: 'Le mot de passe d’administration écrit dans le fichier source.', why: 'Cela correspond à la règle sur les mots de passe écrits en dur, B105, que Bandit a signalée à la ligne 11.' },
+    { text: 'Le bloc except qui transforme une erreur de base de données en liste vide.', correct: true },
+    { text: 'L’usage du module sqlite3 là où l’on attendrait un outil de mapping objet-relationnel.', why: 'Le module sqlite3 est sûr avec des paramètres fictifs, et le choisir n’est pas une remarque de sécurité.' },
   ]}>
-Bandit has rules that catch hardcoded passwords, SQL built from strings,
-and an `except` block whose only statement is `pass`. Which problem in
-`notes_search.py` does it not report?
+Bandit a des règles qui détectent les mots de passe écrits en dur, le SQL
+construit à partir de chaînes, et un bloc `except` dont la seule instruction est
+`pass`. Quel problème de `notes_search.py` ne signale-t-il pas ?
 </Choice>
 
-<Pitfall title="The search that finds nothing">
-Alice searches for her note "Call O'Brien about the lease" and the app
-says she has no matching notes. The apostrophe in `O'Brien` ends the
-quoted string in the SQL too early, and the database rejects the query.
-The `except` block turns that error into an empty list without logging
-it, and it would hide an attacker's failed attempts in the same way. Read
-every `except` in agent code, ask what the user sees when it runs, and
-let an error that nobody handles reach the caller or the log.
+<Pitfall title="La recherche qui ne trouve rien">
+Alice cherche sa note « Call O'Brien about the lease », et l’application lui
+dit qu’elle n’a aucune note correspondante. L’apostrophe de `O'Brien` ferme
+trop tôt la chaîne entre guillemets dans le SQL, et la base de données rejette
+la requête. Le bloc `except` transforme cette erreur en liste vide sans la
+journaliser, et il masquerait de la même façon les tentatives ratées d’un
+attaquant. Lisez chaque `except` du code d’un agent, demandez-vous ce que voit
+l’utilisateur quand il s’exécute, et laissez une erreur que personne ne traite
+atteindre l’appelant ou le journal.
 </Pitfall>
 
-## What if the input is hostile
+## Et si l’entrée était hostile
 
-Now ask the question at each place where data enters the function, and
-where its error goes:
+Posez maintenant la question à chaque endroit où des données entrent dans la
+fonction, et là où va son erreur :
 
-- `term` comes from the search box. Anyone who can log in controls all
-  of it.
-- `owner` comes from the login session. It's trusted only as long as the
-  route takes it from the session, and a later change that reads it from
-  the web address (URL) makes it hostile too.
-- The database error goes back to the user as an empty list, so the user
-  can't tell a failure from "no match".
+- `term` vient de la zone de recherche. Quiconque peut se connecter le contrôle
+  entièrement.
+- `owner` vient de la session de connexion. Il n’est fiable que tant que la
+  route le prend dans la session, et une modification ultérieure qui le lirait
+  dans l’adresse web (URL) le rendrait hostile aussi.
+- L’erreur de base de données revient à l’utilisateur sous forme de liste vide,
+  donc l’utilisateur ne peut pas distinguer un échec d’un « aucune
+  correspondance ».
 
-Take `term` first. Suppose Alice types `%' OR owner != '` into the search
-box. The f-string pastes it into the query, and the `WHERE` clause becomes
-`owner = 'alice' AND title LIKE '%%' OR owner != '%'`. `AND` binds more
-tightly than `OR` in SQL.
+Prenez d’abord `term`. Supposons qu’Alice tape `%' OR owner != '` dans la zone
+de recherche. La f-string la colle dans la requête, et la clause `WHERE`
+devient `owner = 'alice' AND title LIKE '%%' OR owner != '%'`. En SQL, `AND`
+lie plus fortement que `OR`.
 
 <Predict id="predict-hostile-count" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['security-review-of-agent-output']}
-  context="The lesson has a small notes database in which Alice and Bob each own two notes. An agent-written search function builds its SQL with an f-string, as WHERE owner = 'the user' AND title LIKE '%the term%', with the user and the term pasted between the single quotes."
-  title="Predict how many titles come back" hint="Split the WHERE clause at OR. Which owners make the second half true?"
+  context="La leçon a une petite base de données de notes dans laquelle Alice et Bob possèdent chacun deux notes. Une fonction de recherche écrite par un agent construit son SQL avec une f-string, sous la forme WHERE owner = 'l’utilisateur' AND title LIKE '%le terme%', avec l’utilisateur et le terme collés entre les apostrophes."
+  title="Prévoir combien de titres reviennent" hint="Coupez la clause WHERE au niveau du OR. Quels propriétaires rendent la seconde moitié vraie ?"
   answer="4" run="coding-with-agents/security-review/hostile_count.py">
-The database holds four notes, two of Alice's and two of Bob's. How many
-titles does `search_notes(conn, "alice", "%' OR owner != '")` return?
+La base de données contient quatre notes, deux d’Alice et deux de Bob. Combien
+de titres renvoie `search_notes(conn, "alice", "%' OR owner != '")` ?
 
 ```python
 print(len(search_notes(notes_db(), "alice", "%' OR owner != '")))
@@ -216,15 +223,16 @@ print(len(search_notes(notes_db(), "alice", "%' OR owner != '")))
 
 </Predict>
 
-`hostile.py` runs the search as Alice with three terms: the ordinary one
-the brief had in mind, the hostile one, and a title with an apostrophe.
+`hostile.py` lance la recherche en tant qu’Alice avec trois termes : le terme
+ordinaire qu’avait en tête la consigne, le terme hostile, et un titre avec une
+apostrophe.
 
-<Predict id="run-hostile" title="Run the three searches"
+<Predict id="run-hostile" title="Lancer les trois recherches"
   answer={`'plan': ['Plan the team offsite']
   "%' OR owner != '": ['Bank login reminder', "Call O'Brien about the lease", 'Plan salary review', 'Plan the team offsite']
   "O'Brien": []`} run="coding-with-agents/security-review/hostile.py">
-From `~/security-review`, run the script and compare what you see with
-the output below.
+Depuis `~/security-review`, lancez le script et comparez ce que vous voyez avec
+la sortie ci-dessous.
 
 ```sh
 python3 hostile.py
@@ -232,66 +240,69 @@ python3 hostile.py
 
 </Predict>
 
-The second line shows Bob's notes to Alice, including one about his bank
-login. The third line is the pitfall above: an ordinary search that
-fails and reports nothing. The Python docs warn against building a query
-with string operations for this reason and give the fix, a placeholder in
-the SQL with the values passed separately to `execute()`
-(@Python sqlite3). The database then treats the values as data, whatever
-characters they contain.
+La deuxième ligne montre à Alice les notes de Bob, dont une sur son identifiant
+bancaire. La troisième ligne est le piège ci-dessus : une recherche ordinaire
+qui échoue et ne signale rien. La documentation de Python met en garde contre
+la construction d’une requête par des opérations sur les chaînes pour cette
+raison, et donne la correction : un paramètre fictif dans le SQL, avec les
+valeurs passées séparément à `execute()` (@Python sqlite3). La base de données
+traite alors les valeurs comme des données, quels que soient les caractères
+qu’elles contiennent.
 
-The fix is small, and that makes it tempting to accept the agent's first
-version of it. Ask for a test that fails on the old code and passes on
-the new. The review then ends with proof that the fix covers what you
-found. Scaling the check to how little you watched the agent work is
-the habit the Academy's *Claude Code in action* course teaches for
-unsupervised runs (@Academy claude-code-in-action), and a failing test
-is the cheapest proof.
+La correction est petite, et c’est ce qui rend tentante l’acceptation de la
+première version de l’agent. Demandez un test qui échoue sur l’ancien code et
+passe sur le nouveau. La revue se termine alors par la preuve que la correction
+couvre ce que vous avez trouvé. Proportionner le contrôle au peu que vous avez
+regardé l’agent travailler est l’habitude qu’enseigne le cours *Claude Code in
+action* de l’Academy pour les exécutions sans surveillance
+(@Academy claude-code-in-action), et un test qui échoue est la preuve la moins
+coûteuse.
 
 <Scenario id="brief-the-fix" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['security-review-of-agent-output']}
-  context="An agent-written search function for a notes app builds its SQL from the search text with an f-string, and catches database errors by returning an empty list. A hostile search term shows other users' notes, and a search for O'Brien finds nothing. You are writing the brief for the fix."
-  title="Brief the fix" hint="Which brief leaves you with evidence that the hostile term and the apostrophe now work, and nothing silenced?"
+  context="Une fonction de recherche écrite par un agent pour une application de notes construit son SQL à partir du texte de recherche avec une f-string, et intercepte les erreurs de base de données en renvoyant une liste vide. Un terme de recherche hostile montre les notes d’autres utilisateurs, et une recherche de O'Brien ne trouve rien. Vous écrivez la consigne de la correction."
+  title="Donner la consigne de la correction" hint="Quelle consigne vous laisse la preuve que le terme hostile et l’apostrophe fonctionnent maintenant, sans rien réduire au silence ?"
   options={[
-    { text: 'Ask the agent to escape every single quote in term before it goes into the query, and to keep the rest.', consequence: 'The agent doubles every quote in term and the two searches work. The owner value is still pasted in unescaped, the except block still hides errors, and the next change to the query has to remember the escaping.' },
-    { text: 'Ask the agent to add a # nosec comment on the query line, because the route only passes logged-in users.', consequence: 'Bandit stops reporting B608. The query is as injectable as before, and the comment tells the next reviewer that someone checked it.' },
-    { text: 'Ask the agent to make the search secure, and to fix anything else it notices in the files it reads.', consequence: 'The agent adds quote escaping, reformats three files and adds a dependency. You now review a larger diff with no test that shows the injection is gone.' },
-    { text: 'Ask for placeholders for both values, errors raised to the caller, and a test with the hostile term and O\'Brien that fails on the old code.', correct: true, consequence: 'The agent changes one function and adds one test file. You run the test on the old code and see it fail, then on the new code and see it pass.' },
+    { text: 'Demander à l’agent d’échapper chaque apostrophe de term avant qu’il entre dans la requête, et de garder le reste.', consequence: 'L’agent double chaque apostrophe de term et les deux recherches fonctionnent. La valeur owner est toujours collée sans échappement, le bloc except masque toujours les erreurs, et la prochaine modification de la requête devra se souvenir de l’échappement.' },
+    { text: 'Demander à l’agent d’ajouter un commentaire # nosec sur la ligne de la requête, parce que la route ne passe que des utilisateurs connectés.', consequence: 'Bandit cesse de signaler B608. La requête est aussi injectable qu’avant, et le commentaire dit au prochain relecteur que quelqu’un l’a vérifiée.' },
+    { text: 'Demander à l’agent de sécuriser la recherche, et de corriger tout ce qu’il remarque d’autre dans les fichiers qu’il lit.', consequence: 'L’agent ajoute un échappement des apostrophes, remet en forme trois fichiers et ajoute une dépendance. Vous relisez maintenant un diff plus gros, sans aucun test qui montre que l’injection a disparu.' },
+    { text: 'Demander des paramètres fictifs pour les deux valeurs, des erreurs remontées à l’appelant, et un test avec le terme hostile et O\'Brien qui échoue sur l’ancien code.', correct: true, consequence: 'L’agent modifie une fonction et ajoute un fichier de test. Vous lancez le test sur l’ancien code et le voyez échouer, puis sur le nouveau et le voyez passer.' },
   ]}>
-Which brief do you give the agent?
+Quelle consigne donnez-vous à l’agent ?
 </Scenario>
 
-Here is a brief in that form. The pair below is illustrative: the author
-wrote both the brief and a summary of the kind of answer to expect.
+Voici une consigne de cette forme. La paire ci-dessous est une illustration :
+l’auteur a écrit la consigne et un résumé du genre de réponse à attendre.
 
 <Prompt model="illustrative" recorded="illustrative">
-In `notes_search.py`, `search_notes` builds its SQL with an f-string, so a
-search term such as `%' OR owner != '` returns other users' notes, and a
-term with an apostrophe fails. Change the query to use `?` placeholders
-for `owner` and `term`, and pass both values as the second argument to
-`execute()`. Remove the `except sqlite3.Error` block so errors reach the
-caller. Move `ADMIN_PASSWORD` to an environment variable. First write
-`test_notes_search.py` with two tests, the hostile term (expect an empty
-list for Alice) and `O'Brien` (expect her note), and show me that both
-fail on the current code. Don't change any other file, and don't add a
-dependency.
+Dans `notes_search.py`, `search_notes` construit son SQL avec une f-string,
+donc un terme de recherche comme `%' OR owner != '` renvoie les notes d’autres
+utilisateurs, et un terme avec une apostrophe échoue. Modifie la requête pour
+utiliser des paramètres fictifs `?` pour `owner` et `term`, et passe les deux
+valeurs comme second argument de `execute()`. Retire le bloc
+`except sqlite3.Error` pour que les erreurs atteignent l’appelant. Déplace
+`ADMIN_PASSWORD` dans une variable d’environnement. Écris d’abord
+`test_notes_search.py` avec deux tests, le terme hostile (attendre une liste
+vide pour Alice) et `O'Brien` (attendre sa note), et montre-moi que les deux
+échouent sur le code actuel. Ne modifie aucun autre fichier, et n’ajoute
+aucune dépendance.
 </Prompt>
 <Response>
-I added test_notes_search.py with the two tests, and both fail on the
-current code. Then I changed search_notes to use placeholders and removed
-the except block, and is_admin now reads NOTES_ADMIN_PASSWORD from the
-environment. Both tests pass.
+J’ai ajouté test_notes_search.py avec les deux tests, et les deux échouent sur
+le code actuel. J’ai ensuite modifié search_notes pour utiliser des paramètres
+fictifs et retiré le bloc except, et is_admin lit maintenant
+NOTES_ADMIN_PASSWORD dans l’environnement. Les deux tests passent.
 </Response>
 
-The fixture has the result as `fixed/notes_search.py`, with the test next
-to the agent's version. `run_test.py` runs the test against each version
-in its own temporary directory.
+L’exemple contient le résultat sous `fixed/notes_search.py`, avec le test à
+côté de la version de l’agent. `run_test.py` lance le test sur chaque version,
+dans son propre dossier temporaire.
 
-<Predict id="run-the-test" title="Run the test against both versions"
+<Predict id="run-the-test" title="Lancer le test sur les deux versions"
   answer={`agent version: FAILED (failures=2)
   fixed version: OK`} run="coding-with-agents/security-review/run_test.py">
-From `~/security-review`, run the script and compare what you see with
-the output below.
+Depuis `~/security-review`, lancez le script et comparez ce que vous voyez avec
+la sortie ci-dessous.
 
 ```sh
 python3 run_test.py
@@ -299,94 +310,96 @@ python3 run_test.py
 
 </Predict>
 
-In a second recorded run the same day, Bandit reported no issue for
-`fixed/notes_search.py` and exited with status 0. A clean run means that
-no rule matched. You know the fix works because of the test, and
-the test is also what stops a later change from bringing the problem
-back.
+Lors d’une seconde exécution enregistrée le même jour, Bandit n’a signalé aucun
+problème pour `fixed/notes_search.py` et il est sorti avec le code 0. Une
+exécution propre veut dire qu’aucune règle n’a correspondu. Vous savez que la
+correction fonctionne grâce au test, et c’est aussi le test qui empêche une
+modification ultérieure de ramener le problème.
 
-## The review and the blast radius
+## La revue et le rayon d’impact
 
-The search runs with the app's database connection. Its blast radius is
-everything that connection can read or change. For a read-only account
-that's every note in the database. For an account that can write, a
-string-built query can also delete or change notes. How long
-you spend on a security review follows the same rule as any risk
-decision: look at what the code can reach before you decide how much
-checking it needs.
+La recherche tourne avec la connexion à la base de données de l’application.
+Son rayon d’impact (blast radius) est tout ce que cette connexion peut lire ou modifier. Pour
+un compte en lecture seule, ce sont toutes les notes de la base. Pour un compte
+qui peut écrire, une requête construite par concaténation peut aussi supprimer
+ou modifier des notes. Le temps que vous consacrez à une revue de sécurité suit
+la même règle que toute décision de risque : regardez ce que le code peut
+atteindre avant de décider combien de contrôle il demande.
 
-SQL injection and prompt injection are the same mistake in two places.
-In both, data that should only be read is placed next to instructions,
-and the reader can't tell them apart. The agent's f-string puts Alice's
-search text in the SQL. A web page an agent reads puts its text in the
-prompt. The fix for SQL is to keep data and instructions in separate
-channels with a placeholder. A prompt has no such channel, which is why
-an agent's access has to be limited instead.
+L’injection SQL et l’injection de prompt (prompt injection) sont la même erreur à deux endroits.
+Dans les deux cas, des données qui ne devraient qu’être lues sont placées à côté
+d’instructions, et le lecteur ne peut pas les distinguer. La f-string de
+l’agent met le texte de recherche d’Alice dans le SQL. Une page web qu’un agent
+lit met son texte dans le prompt. La correction pour le SQL consiste à garder
+données et instructions dans des canaux séparés, avec un paramètre fictif. Un
+prompt n’a pas de tel canal, et c’est pourquoi il faut limiter les accès d’un
+agent à la place.
 
 <Sort id="found-or-missed" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['security-review-of-agent-output']}
-  context="The lesson runs the Bandit 1.8.6 static analyzer over an agent-written search function for a notes app. Bandit has rules for a hardcoded password string, SQL built with string formatting, and an except block whose only statement is pass."
-  title="Which would Bandit report?" hint="Bandit matches patterns it has a rule for. Which of these match a rule, and which need a reader who knows the app?"
-  buckets={['Bandit reports it', 'Only a reader finds it']}
+  context="La leçon passe l’analyseur statique Bandit 1.8.6 sur une fonction de recherche écrite par un agent pour une application de notes. Bandit a des règles pour un mot de passe écrit en dur, pour le SQL construit par formatage de chaînes, et pour un bloc except dont la seule instruction est pass."
+  title="Que signalerait Bandit ?" hint="Bandit fait correspondre les motifs pour lesquels il a une règle. Lesquels de ces éléments correspondent à une règle, et lesquels demandent un lecteur qui connaît l’application ?"
+  buckets={['Bandit le signale', 'Seul un lecteur le trouve']}
   items={[
-    { text: 'An admin password assigned to ADMIN_PASSWORD in the source', bucket: 0 },
-    { text: 'An f-string that pastes the search text into a SELECT', bucket: 0 },
-    { text: 'An except block that returns an empty list on a database error', bucket: 1 },
-    { text: 'A route that later reads owner from the URL instead of the session', bucket: 1 },
+    { text: 'Un mot de passe d’administration affecté à ADMIN_PASSWORD dans le code source', bucket: 0 },
+    { text: 'Une f-string qui colle le texte de recherche dans un SELECT', bucket: 0 },
+    { text: 'Un bloc except qui renvoie une liste vide en cas d’erreur de base de données', bucket: 1 },
+    { text: 'Une route qui lit plus tard owner dans l’URL au lieu de la session', bucket: 1 },
   ]} />
 
 <Choice id="why-placeholder" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['security-review-of-agent-output']}
-  context="An agent-written search function in Python builds its SQL with an f-string, and a search term containing a single quote changes what the query selects. The fix uses the placeholders of the sqlite3 module, which passes each value to SQLite separately from the SQL text."
-  title="Why a placeholder?" hint="What does the database receive in each version, and which part of it can the user's text change?"
+  context="Une fonction de recherche écrite en Python par un agent construit son SQL avec une f-string, et un terme de recherche qui contient une apostrophe change ce que sélectionne la requête. La correction utilise les paramètres fictifs du module sqlite3, qui passe chaque valeur à SQLite séparément du texte SQL."
+  title="Pourquoi un paramètre fictif ?" hint="Que reçoit la base de données dans chaque version, et quelle partie le texte de l’utilisateur peut-il changer ?"
   options={[
-    { text: 'The placeholder sends the value to SQLite separately, so it is never read as part of the SQL.', correct: true },
-    { text: 'The placeholder escapes every quote in the value, which is all that an injection needs removed.', why: 'Escaping is a different approach, and it depends on getting every special character right. A placeholder does not put the value into the SQL text at all.' },
-    { text: 'The placeholder makes Bandit stop reporting B608, which is how you know the query is safe.', why: 'A missing finding means no rule matched. The test that fails on the old code is what shows the fix works.' },
-    { text: 'The placeholder rejects any search term that contains SQL keywords such as OR and SELECT.', why: 'It rejects nothing. A term containing OR is searched for as text, like any other term.' },
+    { text: 'Le paramètre fictif envoie la valeur à SQLite séparément, donc elle n’est jamais lue comme du SQL.', correct: true },
+    { text: 'Le paramètre fictif échappe chaque apostrophe de la valeur, ce qui suffit à retirer tout ce dont une injection a besoin.', why: 'L’échappement est une autre approche, et il dépend de la bonne gestion de chaque caractère spécial. Un paramètre fictif ne met pas du tout la valeur dans le texte SQL.' },
+    { text: 'Le paramètre fictif fait cesser le signalement B608 par Bandit, et c’est ainsi que vous savez que la requête est sûre.', why: 'Une remarque absente veut dire qu’aucune règle n’a correspondu. C’est le test qui échoue sur l’ancien code qui montre que la correction fonctionne.' },
+    { text: 'Le paramètre fictif rejette tout terme de recherche qui contient des mots-clés SQL comme OR et SELECT.', why: 'Il ne rejette rien. Un terme contenant OR est recherché comme du texte, comme n’importe quel autre terme.' },
   ]}>
-Why does the parameterized query stop the hostile search term?
+Pourquoi la requête paramétrée arrête-t-elle le terme de recherche hostile ?
 </Choice>
 
 <Match id="line-to-mistake" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['security-review-of-agent-output']}
-  context="The lesson lists six classic mistakes to look for in agent-written code: unvalidated input, string-built queries and commands, secrets in code, permissive defaults, disabled checks, and error handling that hides failures."
-  title="Name the mistake" hint="For each line, ask what it turns off, opens up, writes down or hides."
-  options={['Unvalidated input', 'String-built query or command', 'Secret in code', 'Permissive default', 'Disabled check', 'Error handling that hides failures']}
+  context="La leçon liste six erreurs classiques à chercher dans le code écrit par un agent : entrée non validée, requêtes et commandes construites par concaténation, secrets dans le code, réglages par défaut trop permissifs, contrôles désactivés, et gestion d’erreurs qui masque les échecs."
+  title="Nommer l’erreur" hint="Pour chaque ligne, demandez-vous ce qu’elle désactive, ouvre, écrit ou masque."
+  options={['Entrée non validée', 'Requête ou commande construite par concaténation', 'Secret dans le code', 'Réglage par défaut trop permissif', 'Contrôle désactivé', 'Gestion d’erreurs qui masque les échecs']}
   rows={[
-    { statement: '`requests.get(url, verify=False)`', option: 4, why: 'What does verify=False stop the library from checking?' },
-    { statement: '`SMTP_PASSWORD = "summer-2026"` at the top of a module', option: 2, why: 'Where does every copy of the repository keep this value?' },
-    { statement: '`except OSError: return None` in a function that reads a config file', option: 5, why: 'What does the caller see when the file cannot be read?' },
-    { statement: '`app.run(host="0.0.0.0")` for a tool meant for one laptop', option: 3, why: 'Which machines can reach a server that listens on every network interface?' },
+    { statement: '`requests.get(url, verify=False)`', option: 4, why: 'Qu’est-ce que verify=False empêche la bibliothèque de vérifier ?' },
+    { statement: '`SMTP_PASSWORD = "summer-2026"` en haut d’un module', option: 2, why: 'Où chaque copie du dépôt garde-t-elle cette valeur ?' },
+    { statement: '`except OSError: return None` dans une fonction qui lit un fichier de configuration', option: 5, why: 'Que voit l’appelant quand le fichier ne peut pas être lu ?' },
+    { statement: '`app.run(host="0.0.0.0")` pour un outil prévu pour un seul ordinateur portable', option: 3, why: 'Quelles machines peuvent atteindre un serveur qui écoute sur toutes les interfaces réseau ?' },
   ]}
-  rationale="Each line makes the code shorter or makes an error go away, and each one is a line a reviewer stops at.">
-Match each line from an agent-written change to the classic mistake it
-shows.
+  rationale="Chaque ligne raccourcit le code ou fait disparaître une erreur, et chacune est une ligne sur laquelle un relecteur s’arrête.">
+Associez chaque ligne d’une modification écrite par un agent à l’erreur
+classique qu’elle montre.
 </Match>
 
 <Choice id="what-proves-the-fix" phase="review" objective="coding-with-agents/verifies-agent-work/screens-for-security"
   concepts={['security-review-of-agent-output']}
-  context="An agent-written search function builds its SQL from the search text with an f-string, so a hostile term shows other users' notes. The reviewer writes a brief for a parameterized fix."
-  title="What proves the fix?" hint="Which line of the brief gives you something to run on the old code and on the new?"
+  context="Une fonction de recherche écrite par un agent construit son SQL à partir du texte de recherche avec une f-string, donc un terme hostile montre les notes d’autres utilisateurs. Le relecteur écrit la consigne d’une correction paramétrée."
+  title="Qu’est-ce qui prouve la correction ?" hint="Quelle ligne de la consigne vous donne quelque chose à lancer sur l’ancien code et sur le nouveau ?"
   options={[
-    { text: 'Do not change any other file, and do not add a dependency.', why: 'That keeps the diff small enough to review. It says nothing about whether the injection is gone.' },
-    { text: 'Use placeholders for both values and pass them to execute().', why: 'That is the fix itself. The brief still needs something that shows the fix covers the hostile term.' },
-    { text: 'Write a test with the hostile term that fails on the current code.', correct: true },
-    { text: 'Run the static analyzer again when the change is done.', why: 'A clean run means that no rule matched. It does not show that the hostile term now returns only the user\'s own notes.' },
+    { text: 'Ne modifie aucun autre fichier, et n’ajoute aucune dépendance.', why: 'Cela garde le diff assez petit pour être relu. Cela ne dit rien de la disparition de l’injection.' },
+    { text: 'Utilise des paramètres fictifs pour les deux valeurs et passe-les à execute().', why: 'C’est la correction elle-même. La consigne a encore besoin de quelque chose qui montre que la correction couvre le terme hostile.' },
+    { text: 'Écris un test avec le terme hostile qui échoue sur le code actuel.', correct: true },
+    { text: 'Relance l’analyseur statique quand la modification est terminée.', why: 'Une exécution propre veut dire qu’aucune règle n’a correspondu. Elle ne montre pas que le terme hostile ne renvoie plus que les propres notes de l’utilisateur.' },
   ]}>
-Which line of the brief gives you proof that the fix works?
+Quelle ligne de la consigne vous donne la preuve que la correction fonctionne ?
 </Choice>
 
-<Exercise stretch="If you installed Bandit above, run it on a public Python project before you delete the environment. Clone one into a scratch directory outside the course repository and run ~/bandit-1.8.6/bin/bandit -r on its source directory, without -q. Read the Files skipped list at the end first: Bandit lists a file there when it can't parse it, for example a file that uses syntax newer than your Python. Pick one finding with Low confidence, and decide in writing whether it is a real problem in that code, and why.">
-After this exercise you can review an agent's change to code that reads
-user input without trusting a clean analyzer run.
+<Exercise stretch="Si vous avez installé Bandit, lancez-le sur un projet Python public avant de supprimer l’environnement. Clonez-en un dans un dossier de travail hors du dépôt du cours et lancez ~/bandit-1.8.6/bin/bandit -r sur son dossier source, sans -q. Lisez d’abord la liste Files skipped à la fin : Bandit y liste un fichier qu’il ne sait pas analyser, par exemple un fichier qui utilise une syntaxe plus récente que votre Python. Choisissez une remarque avec une confiance Low, et décidez par écrit s’il s’agit d’un vrai problème dans ce code, et pourquoi.">
+Après cet exercice, vous saurez relire la modification d’un agent sur du code
+qui lit des entrées utilisateur sans vous fier à une exécution propre de
+l’analyseur.
 
-From the root of your clone of the course repository, make two fresh
-copies of the fixture, one for the agent and one that keeps the agent's
-original version. Remove the fix and the test from both, so that the
-agent starts from the change as it arrived. If `~/search-fix` or
-`~/search-before` exists from an earlier try, delete it first, or `cp`
-puts the new copy inside the old one.
+Depuis la racine de votre clone du dépôt du cours, faites deux nouvelles copies
+de l’exemple, une pour l’agent et une qui garde la version d’origine de
+l’agent. Retirez des deux la correction et le test, pour que l’agent parte de la
+modification telle qu’elle est arrivée. Si `~/search-fix` ou `~/search-before`
+existe depuis un essai précédent, supprimez-le d’abord, sinon `cp` place la
+nouvelle copie à l’intérieur de l’ancienne.
 
 ```sh
 cp -R site/examples/coding-with-agents/security-review ~/search-fix
@@ -395,27 +408,27 @@ rm -r ~/search-fix/fixed ~/search-fix/test_notes_search.py ~/search-fix/run_test
 rm -r ~/search-before/fixed ~/search-before/test_notes_search.py ~/search-before/run_test.py
 ```
 
-Next, install Bandit 1.8.6 into a virtual environment in your home
-directory. A virtual environment is a directory with its own Python
-packages, and installing into it leaves the course repository and both
-copies unchanged. First check which Python you have:
+Installez ensuite Bandit 1.8.6 dans un environnement virtuel de votre dossier
+personnel. Un environnement virtuel est un dossier qui a ses propres paquets
+Python, et l’installation à l’intérieur laisse inchangés le dépôt du cours et
+les deux copies. Vérifiez d’abord quelle version de Python vous avez :
 
 ```sh
 python3 --version
 ```
 
-Bandit 1.8.6 needs Python 3.9 or newer, and its PyPI page lists Python
-3.9 to 3.13 as supported (@Bandit PyPI). On the same day as the recorded
-run, on Python 3.14.7, it printed two `ERROR` lines for
-`notes_search.py`, listed none of the findings and exited with status 0,
-which looks like a clean run. If your version is 3.14 or newer, check the
-system Python (`/usr/bin/python3` on macOS) with
-`/usr/bin/python3 --version`. If that prints 3.9 to 3.13, write
-`/usr/bin/python3` in place of `python3` in the first command below. If
-it doesn't, skip the install and the Bandit steps, and work from the
-recorded run in this lesson. If your version is 3.9 to 3.13, or you use
-the system Python, create the environment, install the pinned version
-and run it on the agent's version:
+Bandit 1.8.6 a besoin de Python 3.9 ou plus récent, et sa page PyPI liste
+Python 3.9 à 3.13 comme versions prises en charge (@Bandit PyPI). Le jour de
+l’exécution enregistrée, sous Python 3.14.7, il a affiché deux lignes `ERROR`
+pour `notes_search.py`, n’a listé aucune remarque et il est sorti avec le
+code 0, ce qui ressemble à une exécution propre. Si votre version est 3.14 ou
+plus récente, vérifiez le Python du système (`/usr/bin/python3` sur macOS) avec
+`/usr/bin/python3 --version`. S’il affiche une version de 3.9 à 3.13, écrivez
+`/usr/bin/python3` à la place de `python3` dans la première commande
+ci-dessous. Sinon, sautez l’installation et les étapes Bandit, et travaillez à
+partir de l’exécution enregistrée de cette leçon. Si votre version va de 3.9 à
+3.13, ou si vous utilisez le Python du système, créez l’environnement, installez
+la version figée et lancez-la sur la version de l’agent :
 
 ```sh
 python3 -m venv ~/bandit-1.8.6
@@ -424,42 +437,43 @@ cd ~/search-fix
 ~/bandit-1.8.6/bin/bandit -q notes_search.py
 ```
 
-Compare the findings with the recorded run and write them down. Then
-read the function yourself, list every place where input enters and
-every `except`, and note which problems Bandit missed. Start a coding
-agent session in `~/search-fix`, which is a copy you can delete, and
-give it a brief for the parameterized version with a test, in your own
-words. Before you accept the change, the agent's test must fail when you
-copy it into `~/search-before` and run it there. In `~/search-fix` it
-must pass. Then run Bandit on the agent's new version:
+Comparez les remarques avec l’exécution enregistrée et notez-les. Lisez ensuite
+la fonction vous-même, listez chaque endroit où une entrée arrive et chaque
+`except`, et notez les problèmes que Bandit a manqués. Ouvrez une session
+d’agent de code dans `~/search-fix`, une copie que vous pouvez supprimer, et
+donnez-lui avec vos propres mots la consigne de la version paramétrée avec un
+test. Avant d’accepter la modification, le test de l’agent doit échouer quand
+vous le copiez dans `~/search-before` et le lancez là. Dans `~/search-fix`, il
+doit passer. Lancez ensuite Bandit sur la nouvelle version de l’agent :
 
 ```sh
 ~/bandit-1.8.6/bin/bandit -q ~/search-fix/notes_search.py
 ```
 
-B608 is gone when the query uses placeholders. B105 still shows if your
-brief left the password in the source. A clean run means that no rule
-matched, and the test is what shows that the fix works. When you are
-done, including the stretch goal, delete the environment with
+B608 a disparu quand la requête utilise des paramètres fictifs. B105 apparaît
+toujours si votre consigne a laissé le mot de passe dans le code source. Une
+exécution propre veut dire qu’aucune règle n’a correspondu, et c’est le test qui
+montre que la correction fonctionne. Quand vous avez terminé, y compris
+l’objectif pour aller plus loin, supprimez l’environnement avec
 `rm -r ~/bandit-1.8.6`.
 
-A good result is a short note with the Bandit findings, the problem it
-missed, your brief, and the two test results. The agent's diff changes
-one function and adds one test file, and it doesn't add a dependency.
+Un bon résultat est une courte note avec les remarques de Bandit, le problème
+qu’il a manqué, votre consigne et les deux résultats de test. Le diff de l’agent
+modifie une fonction et ajoute un fichier de test, sans ajouter de dépendance.
 
-Reflect: which of the problems would you have found without Bandit, and
-which one would you have missed without asking what happens when the
-input is hostile?
+Prenez un moment de recul : lesquels de ces problèmes auriez-vous trouvés sans
+Bandit, et lequel auriez-vous manqué sans vous demander ce qui se passe quand
+l’entrée est hostile ?
 </Exercise>
 
 <Recap>
-1. Agents learn from public code, and they learn the security bugs in it too (@Pearce 2022). Look for unvalidated input, string-built queries and commands, secrets in code, permissive defaults, disabled checks, and error handling that hides failures.
-2. A static analyzer such as Bandit finds the patterns it has rules for. Read its findings, including the ones with Low confidence, and then read the code for what it can't know.
-3. At each place where data enters, ask what happens when the input is hostile, and follow every `except` to what the user sees.
-4. Brief the fix with placeholders and a test that fails on the old code, and run that test on both versions before you accept it (@Python sqlite3).
-5. The blast radius of an injection is everything the code's connection can reach, and SQL injection is the same mistake as prompt injection: data placed where instructions go.
+1. Les agents apprennent à partir de code public, et ils en apprennent aussi les bugs de sécurité (@Pearce 2022). Cherchez les entrées non validées, les requêtes et commandes construites par concaténation, les secrets dans le code, les réglages par défaut trop permissifs, les contrôles désactivés, et la gestion d’erreurs qui masque les échecs.
+2. Un analyseur statique comme Bandit trouve les motifs pour lesquels il a des règles. Lisez ses remarques, y compris celles de confiance Low, puis lisez le code pour ce qu’il ne peut pas savoir.
+3. À chaque endroit où des données arrivent, demandez-vous ce qui se passe quand l’entrée est hostile, et suivez chaque `except` jusqu’à ce que voit l’utilisateur.
+4. Donnez la consigne de la correction avec des paramètres fictifs et un test qui échoue sur l’ancien code, et lancez ce test sur les deux versions avant de l’accepter (@Python sqlite3).
+5. Le rayon d’impact d’une injection est tout ce que peut atteindre la connexion du code, et l’injection SQL est la même erreur que l’injection de prompt : des données placées là où vont les instructions.
 </Recap>
 
 <Habit id="ask-what-if-hostile">
-The next time you review an agent's change that reads user input, find each place the input enters and ask what happens if it is hostile before you approve.
+La prochaine fois que vous relisez la modification d’un agent qui lit des entrées utilisateur, trouvez chaque endroit où l’entrée arrive et demandez-vous ce qui se passe si elle est hostile avant d’approuver.
 </Habit>

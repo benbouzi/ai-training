@@ -10,7 +10,7 @@ introduces: [plugins]
 assumes:
   - objective: coding-with-agents/verifies-agent-work/screens-for-security
     lesson: coding-with-agents/dependency-review
-    section: principles-that-keep-the-review-affordable
+    section: des-principes-qui-gardent-la-revue-abordable
   - objective: customizing-agents/writes-skill/discloses-progressively
     lesson: customizing-agents/progressive-disclosure
     section: what-the-agent-reads-and-when
