@@ -16,7 +16,7 @@ assumes:
     section: the-criteria-item-by-item
   - objective: coding-with-agents/ships-with-agent/gives-the-right-context
     lesson: coding-with-agents/project-instructions
-    section: fix-it-once-in-the-file
+    section: la-corriger-une-fois-dans-le-fichier
 extends-to: []
 after: [coding-with-agents/reviewing-the-diff]
 shorts: []

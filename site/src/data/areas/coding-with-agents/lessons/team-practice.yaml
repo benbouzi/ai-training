@@ -11,7 +11,7 @@ introduces: []
 assumes:
   - objective: coding-with-agents/ships-with-agent/gives-the-right-context
     lesson: coding-with-agents/project-instructions
-    section: the-file-the-agent-reads-first
+    section: le-fichier-que-lagent-lit-en-premier
   - objective: coding-with-agents/works-in-team/attributes-honestly
     lesson: coding-with-agents/attribution-and-review-norms
     section: the-sign-off-only-a-person-gives
