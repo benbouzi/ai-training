@@ -1,81 +1,84 @@
 import { Choice, MultiChoice, Match, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-The lessons of this part each gave the team one agreement. The
-[lesson on attribution and review](/coding-with-agents/attribution-and-review-norms/)
-agreed how a change says what the agent did. The
-[lesson on hooks and CI](/coding-with-agents/ci-and-hooks/) made two rules
-run by themselves, and the
-[lesson on parallel sessions](/coding-with-agents/parallel-sessions/)
-kept sessions away from what they share. This last lesson of the course
-doesn't add a new idea. We write those agreements down as the team's practice
-for agent use, starting from the mistakes the team has seen. Then we
-decide which of them a check enforces.
+Chaque leçon de cette partie a donné un accord à l’équipe. La
+[leçon sur l’attribution et la revue](/coding-with-agents/attribution-and-review-norms/)
+a fixé comment une modification dit ce qu’a fait l’agent. La
+[leçon sur les hooks et la CI](/coding-with-agents/ci-and-hooks/) a fait
+appliquer deux règles d’elles-mêmes, et la
+[leçon sur les sessions parallèles](/coding-with-agents/parallel-sessions/) a
+tenu les sessions à l’écart de ce qu’elles partagent. Cette dernière leçon du
+cours n’ajoute pas d’idée nouvelle. Nous écrivons ces accords sous la forme de
+la pratique de l’équipe pour l’usage des agents, en partant des erreurs que
+l’équipe a vues. Ensuite, nous décidons lesquels un contrôle fait appliquer.
 
-## Why the practice is written down
+## Pourquoi écrire la pratique
 
-Ask five engineers how the team uses agents, and when nothing is written
-down you get five answers. Each person follows the habits they built in
-their own sessions. The agents follow none of them, because an agent
-knows only what is in its context. A habit in someone's head never gets
-there. A file that the agent loads at the start of every session does.
+Demandez à cinq ingénieurs comment l’équipe utilise les agents : si rien n’est
+écrit, vous obtenez cinq réponses. Chaque personne suit les habitudes qu’elle a
+prises dans ses propres sessions. Les agents n’en suivent aucune, parce qu’un
+agent ne connaît que ce qui est dans son contexte. Une habitude qui reste dans
+la tête de quelqu’un n’y arrive jamais. Un fichier que l’agent charge au début
+de chaque session y arrive.
 
-That file is the project instructions file from the
-[lesson on project instructions](/coding-with-agents/project-instructions/),
-`AGENTS.md` or `CLAUDE.md` at the root of the repository. The Claude Code
-documentation says that the agent reads the project's file at the start of
-every session. The file reaches the whole team through the repository, and
-the documentation advises keeping personal preferences out of it
-(@Claude Code memory). A change to the practice is then a change to a
-file, and it gets a diff and a review like any other change.
+Ce fichier est le fichier d’instructions du projet de la
+[leçon sur les instructions du projet](/coding-with-agents/project-instructions/),
+`AGENTS.md` ou `CLAUDE.md` à la racine du dépôt. La documentation de Claude Code
+dit que l’agent lit le fichier du projet au début de chaque session. Le fichier
+atteint toute l’équipe par le dépôt, et la documentation conseille d’en garder
+les préférences personnelles à l’écart (@Claude Code memory). Une modification
+de la pratique est alors une modification d’un fichier, et elle a un diff et une
+revue comme toute autre modification.
 
-The practice section of that file says:
+La section « pratique » de ce fichier dit :
 
-- what agents may do, and what every change must pass before it merges,
-- how agent work is attributed in commits and pull requests,
-- how agent work is reviewed, and what the author does before asking,
-- which directories and commands are off limits to agents.
+- ce que les agents ont le droit de faire, et ce que chaque modification doit
+  passer avant d’être fusionnée,
+- comment le travail des agents est attribué dans les commits et les pull
+  requests,
+- comment le travail des agents est relu, et ce que fait l’auteur avant de
+  demander une revue,
+- quels dossiers et quelles commandes sont interdits aux agents.
 
-This course's repository is a worked example. Its `AGENTS.md` says that
-the full check must pass before a push, that no agent pushes to `main`,
-and that every commit message an agent writes ends with a
-`Co-Authored-By` line and an `Assisted-by` line and carries no
-`Signed-off-by` (@AI Training AGENTS). The AI-native software development
-playbook on Claude Academy has a lesson on the `CLAUDE.md` file, and its
-course page describes that file and the team's skills as knowledge the
-team keeps in versioned files that the agents read
-(@Academy ai-native-sdlc-playbook).
+Le dépôt de ce cours en est un exemple concret. Son `AGENTS.md` dit que le
+contrôle complet doit passer avant un push, qu’aucun agent ne pousse sur `main`,
+et que chaque message de commit écrit par un agent se termine par une ligne
+`Co-Authored-By` et une ligne `Assisted-by` et ne porte aucun `Signed-off-by`
+(@AI Training AGENTS). Le cours de l’Academy The AI-native SDLC playbook a une
+leçon sur le fichier `CLAUDE.md`, et sa page de cours décrit ce fichier et les
+skills de l’équipe comme un savoir que l’équipe garde dans des fichiers
+versionnés que les agents lisent (@Academy ai-native-sdlc-playbook).
 
 <Choice id="where-the-practice-lives" objective="coding-with-agents/works-in-team/sets-team-practice"
   concepts={['review-norms']}
-  context="A team of five engineers uses coding agents on one repository, and nothing about how they use the agents is written down yet."
-  title="Where does the answer go?" hint="Which of these places do the agents load, and which of them can the whole team read and change?"
+  context="Une équipe de cinq ingénieurs utilise des agents de code sur un dépôt, et rien n’est encore écrit sur la façon dont elle les utilise."
+  title="Où va la réponse ?" hint="Lesquels de ces endroits les agents chargent-ils, et lesquels toute l’équipe peut-elle lire et modifier ?"
   options={[
-    { text: 'On a page of the team wiki that every new member of the team reads in their first week.', why: 'People read it once, and no agent session loads it. The agents keep working from nothing.' },
-    { text: 'In the user instructions file of each engineer, the one their own agent loads in every session.', why: 'Five copies, each edited by one person, drift apart. That is the unwritten practice again, and the team cannot review it.' },
-    { text: 'In the project instructions file in the repository, where each change to it gets a review.', correct: true },
-    { text: 'In the minutes of the team meeting where the five engineers agreed on the answer together.', why: 'The minutes record the agreement for people who look for them. No agent reads them at the start of a session.' },
+    { text: 'Sur une page du wiki de l’équipe que chaque nouveau membre lit pendant sa première semaine.', why: 'Les personnes la lisent une fois, et aucune session d’agent ne la charge. Les agents continuent à travailler à partir de rien.' },
+    { text: 'Dans le fichier d’instructions personnel de chaque ingénieur, celui que son agent charge à chaque session.', why: 'Cinq copies, chacune modifiée par une personne, s’éloignent les unes des autres. C’est de nouveau la pratique non écrite, et l’équipe ne peut pas la relire.' },
+    { text: 'Dans le fichier d’instructions du projet, dans le dépôt, où chaque modification passe par une revue.', correct: true },
+    { text: 'Dans le compte rendu de la réunion où les cinq ingénieurs se sont mis d’accord sur la réponse.', why: 'Le compte rendu garde l’accord pour les personnes qui le cherchent. Aucun agent ne le lit au début d’une session.' },
   ]}>
-A new engineer asks whether an agent may push to a shared branch, and the
-other four engineers give three different answers. Where does the team
-write the answer, so that every person and every agent session works from
-the same one?
+Une nouvelle ingénieure demande si un agent a le droit de pousser sur une
+branche partagée, et les quatre autres ingénieurs donnent trois réponses
+différentes. Où l’équipe écrit-elle la réponse, pour que chaque personne et
+chaque session d’agent travaillent à partir de la même ?
 </Choice>
 
-## Start from the mistakes you have seen
+## Partir des erreurs que vous avez vues
 
-A few lines of the practice are decisions the team makes once, at the
-start: the check every change passes, and the form of the attribution
-trailer. The other lines come from incidents. An incident is a change the
-team had to take back or repair, and each one shows a mistake that
-happened on this project, with these people and these agents. A rule
-written from an incident guards against a mistake the team knows it
-makes. Write the incident next to the rule. A reader then knows why the
-rule is there and can tell when the reason is gone.
+Quelques lignes de la pratique sont des décisions que l’équipe prend une fois,
+au début : le contrôle que passe chaque modification, et la forme de la ligne de
+fin d’attribution. Les autres lignes viennent d’incidents. Un incident est une
+modification que l’équipe a dû annuler ou réparer, et chacun montre une erreur
+qui s’est produite sur ce projet, avec ces personnes et ces agents. Une règle
+écrite à partir d’un incident protège contre une erreur que l’équipe sait
+commettre. Écrivez l’incident à côté de la règle. Un lecteur sait alors pourquoi
+la règle est là et peut voir quand la raison a disparu.
 
-The fixture for this lesson is a small invoice project in the course
-repository under `site/examples/coding-with-agents/team-practice/`. Its
-`AGENTS.md` has a practice section that the team wrote before any of the
-incidents in its history:
+L’exemple de cette leçon est un petit projet de facturation dans le dépôt du
+cours, sous `site/examples/coding-with-agents/team-practice/`. Son `AGENTS.md`
+a une section « pratique » que l’équipe a écrite avant tous les incidents de
+son historique :
 
 ```markdown
 ## Working with agents
@@ -86,7 +89,12 @@ incidents in its history:
 - Agents never edit the database migrations in `migrations/`.
 ```
 
-<Predict id="read-the-history" title="The invoice project's history"
+La section, en anglais comme le reste du projet, demande d’être prudent avec les
+dépendances, de ne pas perdre le travail des autres, de dire quand un agent a
+aidé pour un commit, et interdit aux agents de modifier les migrations de base
+de données de `migrations/`.
+
+<Predict id="read-the-history" title="L’historique du projet de facturation"
   answer={`2026-05-04  chore: the invoice service
   2026-05-11  feat: export invoices as CSV
               Assisted-by: Claude:claude-sonnet-4-6
@@ -117,11 +125,11 @@ incidents in its history:
   2026-06-18  feat: late fee on overdue invoices
               Assisted-by: Claude:claude-sonnet-4-6
               Signed-off-by: Robin <robin@example.com>`} run="coding-with-agents/team-practice/history.py">
-The course's script builds the project's git history with fixed dates and
-prints each commit, oldest first, with its message body indented under
-it. Run it from `site/examples/coding-with-agents/team-practice/` in your
-clone of the course repository, and compare what you see with the output
-below.
+Le script du cours construit l’historique git du projet avec des dates fixes et
+affiche chaque commit, du plus ancien au plus récent, avec le corps de son
+message en retrait en dessous. Lancez-le depuis
+`site/examples/coding-with-agents/team-practice/` dans votre clone du dépôt du
+cours, et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 history.py
@@ -129,195 +137,203 @@ python3 history.py
 
 </Predict>
 
-This example isn't graded. Three of the commits take back or repair an
-earlier one, and their messages say what went wrong. You write the
-practice from them in the exercise at the end of the lesson.
+Cet exemple n’est pas noté. Trois des commits annulent ou réparent un commit
+précédent, et leurs messages disent ce qui s’est mal passé. Le premier annule
+l’export CSV, parce que l’agent avait mis à jour les deux dépendances dans le
+fichier de verrouillage sans que la revue le lise. Le deuxième remet une limite
+de remise qu’une autre session avait fait disparaître par le stash. Le
+troisième annule un commit signé au nom de l’agent. Vous écrivez la pratique à
+partir d’eux dans l’exercice de fin de leçon.
 
-The practice also changes when the mistakes change. When a review finds
-the same kind of mistake a second time, it gets a line, as the
-[lesson on hooks and CI](/coding-with-agents/ci-and-hooks/) said. A rule
-whose reason is gone comes out, for example because the thing it guarded
-no longer exists. The Claude Code documentation advises reading the
-instructions files again from time to time to take out rules that are old
-or contradict each other. It adds that a longer file uses more context and
-the agent follows it less well (@Claude Code memory).
+La pratique change aussi quand les erreurs changent. Quand une revue trouve le
+même genre d’erreur une deuxième fois, il reçoit une ligne, comme l’a dit la
+[leçon sur les hooks et la CI](/coding-with-agents/ci-and-hooks/). Une règle dont
+la raison a disparu est retirée, par exemple parce que ce qu’elle protégeait
+n’existe plus. La documentation de Claude Code conseille de relire de temps en
+temps les fichiers d’instructions pour en retirer les règles anciennes ou
+contradictoires. Elle ajoute qu’un fichier plus long occupe plus de contexte et
+que l’agent le suit moins bien (@Claude Code memory).
 
-This course's repository keeps some of its rules for the agents that
-write lessons in its authoring guide, and several of them name the
-incident behind them. The rule that every number in the prose that a
-fixture can produce is pasted from its output has its reason next to
-it: in one group of agent branches, several had a number worked out by
-hand that the fixture contradicted. The rule to check every invented
-name comes from a made-up freight company that turned out to be real
+Le dépôt de ce cours garde certaines de ses règles pour les agents qui écrivent
+les leçons dans son guide de rédaction, et plusieurs d’entre elles nomment
+l’incident à leur origine. La règle selon laquelle chaque nombre du texte qu’un
+exemple peut produire est collé depuis sa sortie a sa raison à côté d’elle :
+dans un groupe de branches d’agents, plusieurs avaient un nombre calculé à la
+main que l’exemple contredisait. La règle de vérifier chaque nom inventé vient
+d’une entreprise de fret imaginaire qui s’est révélée réelle
 (@AI Training writing-a-lesson).
 
-<Pitfall title="Thirty rules for the agents they imagined">
-A team wrote its agent practice in a one-hour meeting, before anyone had
-used an agent on the code. It had thirty rules on which files an agent
-may read and how many lines it may write. In the first two months the
-agents committed generated files from the build folder, and reviewers
-approved pull requests they had only skimmed. The thirty rules missed
-both mistakes, and nobody could say which rules were still needed. Write
-the practice from the incidents you have, add a rule when a new mistake
-shows up, and take out each rule that has no incident or day-one decision
-behind it.
+<Pitfall title="Trente règles pour des agents imaginés">
+Une équipe a écrit sa pratique des agents en une réunion d’une heure, avant que
+quiconque ait utilisé un agent sur le code. Elle comptait trente règles sur les
+fichiers qu’un agent peut lire et le nombre de lignes qu’il peut écrire. Pendant
+les deux premiers mois, les agents ont committé des fichiers générés du dossier
+de build, et des relecteurs ont approuvé des pull requests qu’ils n’avaient fait
+que survoler. Les trente règles ont manqué les deux erreurs, et personne ne
+pouvait dire lesquelles étaient encore utiles. Écrivez la pratique à partir des
+incidents que vous avez, ajoutez une règle quand une nouvelle erreur apparaît,
+et retirez chaque règle qui n’a derrière elle ni incident ni décision du
+premier jour.
 </Pitfall>
 
 <Scenario id="the-rule-that-never-fired" objective="coding-with-agents/works-in-team/sets-team-practice"
   concepts={['review-norms']}
-  context="A team's practice section has had the rule that agents never edit migrations/ for a year, and the project has no database and no migrations folder. This month, two agent pull requests edited the CI workflow file to skip a failing job."
-  title="A year of practice" hint="Which rule has an incident behind it, and which one guards a folder the project doesn't have?"
+  context="La section « pratique » d’une équipe contient depuis un an la règle selon laquelle les agents ne modifient jamais migrations/, et le projet n’a ni base de données ni dossier de migrations. Ce mois-ci, deux pull requests d’agents ont modifié le fichier de workflow de CI pour sauter une tâche en échec."
+  title="Un an de pratique" hint="Quelle règle a un incident derrière elle, et laquelle protège un dossier que le projet n’a pas ?"
   options={[
-    { text: 'Add the rule on the workflow file, and keep the migrations rule, because a rule that never fired costs nothing.', consequence: 'Every session loads a line about a folder that doesn\'t exist, and readers start to skim the section. The next unused rule stays in too, and the file grows with every fear.' },
-    { text: 'Leave the file as it is, and remind the team in chat to look for workflow edits in each review.', consequence: 'The agents never read the chat, so the third pull request that skips a job comes a week later. It depends on each reviewer remembering the message.' },
-    { text: 'Rewrite the whole section from a new list of risks that the team collects in a one-hour meeting.', consequence: 'The new list guards against what the team imagines, as the old one did. The two real pull requests are one line among many.' },
-    { text: 'Add a rule on the workflow file that names the two pull requests, and remove the migrations rule.', correct: true, consequence: 'The section stays short, and each rule in it has a reason a reader can check. The next review sees the two pull requests and why the rule exists.' },
+    { text: 'Ajouter la règle sur le fichier de workflow, et garder la règle des migrations, parce qu’une règle qui ne sert jamais ne coûte rien.', consequence: 'Chaque session charge une ligne sur un dossier qui n’existe pas, et les lecteurs commencent à survoler la section. La règle inutile suivante reste aussi, et le fichier grossit à chaque crainte.' },
+    { text: 'Laisser le fichier tel quel, et rappeler à l’équipe dans la discussion de chercher les modifications de workflow à chaque revue.', consequence: 'Les agents ne lisent jamais la discussion, donc la troisième pull request qui saute une tâche arrive une semaine plus tard. Tout dépend de chaque relecteur qui se souvient du message.' },
+    { text: 'Réécrire toute la section à partir d’une nouvelle liste de risques que l’équipe rassemble en une réunion d’une heure.', consequence: 'La nouvelle liste protège contre ce que l’équipe imagine, comme l’ancienne. Les deux vraies pull requests sont une ligne parmi beaucoup d’autres.' },
+    { text: 'Ajouter une règle sur le fichier de workflow qui nomme les deux pull requests, et retirer la règle des migrations.', correct: true, consequence: 'La section reste courte, et chacune de ses règles a une raison qu’un lecteur peut vérifier. La revue suivante voit les deux pull requests et la raison de la règle.' },
   ]}>
-The practice section has a rule that agents never edit `migrations/`,
-written in the first week. The project has no database. This month two
-agent pull requests changed the CI workflow file to skip a failing job.
-What do you change in the practice?
+La section « pratique » a une règle selon laquelle les agents ne modifient
+jamais `migrations/`, écrite pendant la première semaine. Le projet n’a pas de
+base de données. Ce mois-ci, deux pull requests d’agents ont modifié le fichier
+de workflow de CI pour sauter une tâche en échec. Que changez-vous dans la
+pratique ?
 </Scenario>
 
-## Say it in the file, check it where a script can
+## Le dire dans le fichier, le vérifier là où un script le peut
 
-The practice section draws together what this part of the course taught.
-Parallel sessions run in worktrees, each on its own branch, and leave
-alone what the clone and the machine have only once. CI integration makes
-one check the gate for every change, whoever wrote it. Team hooks stop an
-agent's step before it happens. Review norms say what the author does
-before asking for a review and what the pull request says. Attribution
-names the agent in a trailer, and only a person signs off.
+La section « pratique » rassemble ce que cette partie du cours a enseigné. Les
+sessions parallèles tournent dans des worktrees, chacune sur sa propre branche,
+et laissent de côté ce que le clone et la machine n’ont qu’en un exemplaire.
+L’intégration à la CI fait d’un contrôle la barrière de chaque modification,
+quel qu’en soit l’auteur. Les hooks d’équipe arrêtent une étape de l’agent avant
+qu’elle ait lieu. Les règles de revue disent ce que fait l’auteur avant de
+demander une revue et ce que dit la pull request. L’attribution nomme l’agent
+dans une ligne de fin, et seule une personne signe.
 
-Each of these agreements goes in the file with its reason, so the people
-and the agents know it. The file doesn't enforce anything. The Claude
-Code documentation says that the agent reads its instructions files as
-guidance and that nothing in them is enforced. For an action that must
-never happen, it recommends a `PreToolUse` hook, which runs before the
-tool call and can stop it (@Claude Code memory). So an agreement that
-must hold every time also gets a hook or a CI check, as the lesson on
-hooks and CI showed. An agreement that needs a person's judgment, such
-as whether the author read every line, stays in the file and in the
-review.
+Chacun de ces accords va dans le fichier avec sa raison, pour que les personnes
+et les agents le connaissent. Le fichier n’impose rien. La documentation de
+Claude Code dit que l’agent lit ses fichiers d’instructions comme des conseils
+et que rien de ce qu’ils contiennent n’est imposé. Pour une action qui ne doit
+jamais avoir lieu, elle recommande un hook `PreToolUse`, qui s’exécute avant
+l’appel d’outil (tool call) et peut l’arrêter (@Claude Code memory). Un accord qui doit tenir
+à chaque fois reçoit donc aussi un hook ou un contrôle de CI, comme l’a montré
+la leçon sur les hooks et la CI. Un accord qui demande le jugement d’une
+personne, comme savoir si l’auteur a lu chaque ligne, reste dans le fichier et
+dans la revue.
 
-This course's repository does both for the stash. Its page on
-orchestration says that agents never run `git stash` in any worktree and
-gives the reason, the one stash that all worktrees of a clone share. A
-hook in the repository rejects the command (@AI Training orchestration).
+Le dépôt de ce cours fait les deux pour le stash. Sa page sur l’orchestration
+dit que les agents ne lancent jamais `git stash` dans aucun worktree et en donne
+la raison : le stash unique que partagent tous les worktrees d’un clone. Un hook
+du dépôt rejette la commande (@AI Training orchestration).
 
 <Match id="incident-to-rule" objective="coding-with-agents/works-in-team/sets-team-practice"
   concepts={['team-hooks', 'parallel-sessions', 'attribution']}
-  context="A team reads its last quarter of history and finds three incidents with coding agents. It has four candidate rules for its practice section, and wants each rule it keeps to have an incident behind it."
-  title="Which rule does each incident support?" hint="For each incident, which rule would have stopped that exact mistake? Is there a rule that no incident needs?"
-  options={['Agents never edit tests/recorded/, and a hook blocks it', 'Agents check pages with the build and never start the dev server', 'Agent commits end with an Assisted-by trailer in the last paragraph', 'Agents write at most 200 lines in one session']}
+  context="Une équipe relit son dernier trimestre d’historique et trouve trois incidents avec des agents de code. Elle a quatre règles candidates pour sa section « pratique », et veut que chaque règle gardée ait un incident derrière elle."
+  title="Quelle règle chaque incident justifie-t-il ?" hint="Pour chaque incident, quelle règle aurait arrêté exactement cette erreur ? Y a-t-il une règle dont aucun incident n’a besoin ?"
+  options={['Les agents ne modifient jamais tests/recorded/, et un hook le bloque', 'Les agents vérifient les pages avec le build et ne démarrent jamais le serveur de développement', 'Les commits d’agents se terminent par une ligne de fin Assisted-by dans le dernier paragraphe', 'Les agents écrivent au plus 200 lignes par session']}
   rows={[
-    { statement: 'An agent edited the recorded test data until a failing test passed, and the pull request was approved', option: 0, why: 'Which rule stops the edit itself, before the test data changes?' },
-    { statement: 'Two sessions in worktrees of one clone used the same port, and one checked pages the other served', option: 1, why: 'Which resource do all worktrees on one machine share, and which rule keeps sessions off it?' },
-    { statement: 'An agent put its trailer in the middle of the body, and the count of agent-assisted commits missed it', option: 2, why: 'Where does git read trailers from, and which rule names that place?' },
+    { statement: 'Un agent a modifié les données de test enregistrées jusqu’à ce qu’un test en échec passe, et la pull request a été approuvée', option: 0, why: 'Quelle règle arrête la modification elle-même, avant que les données de test changent ?' },
+    { statement: 'Deux sessions dans des worktrees d’un même clone ont utilisé le même port, et l’une a vérifié des pages que l’autre servait', option: 1, why: 'Quelle ressource tous les worktrees d’une même machine partagent-ils, et quelle règle en tient les sessions à l’écart ?' },
+    { statement: 'Un agent a mis sa ligne de fin au milieu du corps, et le décompte des commits faits avec un agent l’a manquée', option: 2, why: 'Où git lit-il les lignes de fin, et quelle règle nomme cet endroit ?' },
   ]}
-  rationale="Each rule the team keeps names the incident it came from. The limit on lines has no incident behind it, so it stays out of the practice.">
-Match each incident to the rule it supports.
+  rationale="Chaque règle que l’équipe garde nomme l’incident dont elle vient. La limite de lignes n’a aucun incident derrière elle, donc elle reste hors de la pratique.">
+Associez chaque incident à la règle qu’il justifie.
 </Match>
 
 <Sort id="said-or-checked" objective="coding-with-agents/works-in-team/sets-team-practice"
   concepts={['ci-integration', 'team-hooks', 'review-norms']}
-  context="A team is writing the practice section of its project instructions file. Every agreement goes in the file with its reason, and the team decides which of them also get a hook on agent commands or a CI check on every pull request."
-  title="Does a check enforce it too?" hint="Can a script decide the rule from the command the agent runs or from the files and messages in the pull request?"
-  buckets={['The file says it, and a hook or CI check enforces it', 'The file says it, and people keep to it']}
+  context="Une équipe écrit la section « pratique » de son fichier d’instructions du projet. Chaque accord va dans le fichier avec sa raison, et l’équipe décide lesquels reçoivent aussi un hook sur les commandes des agents ou un contrôle de CI sur chaque pull request."
+  title="Un contrôle l’impose-t-il aussi ?" hint="Un script peut-il trancher la règle à partir de la commande que lance l’agent, ou à partir des fichiers et des messages de la pull request ?"
+  buckets={['Le fichier le dit, et un hook ou un contrôle de CI l’impose', 'Le fichier le dit, et les personnes s’y tiennent']}
   items={[
-    { text: 'Agents never run git stash in any worktree', bucket: 0 },
-    { text: 'No commit carries a Signed-off-by in the agent\'s name', bucket: 0 },
-    { text: 'The lockfile changes only in a pull request of its own', bucket: 0 },
-    { text: 'The author reads every changed line before asking for review', bucket: 1 },
-    { text: 'The pull request says truthfully what the author ran and saw', bucket: 1 },
+    { text: 'Les agents ne lancent jamais git stash dans aucun worktree', bucket: 0 },
+    { text: 'Aucun commit ne porte de Signed-off-by au nom de l’agent', bucket: 0 },
+    { text: 'Le fichier de verrouillage ne change que dans une pull request à part', bucket: 0 },
+    { text: 'L’auteur lit chaque ligne modifiée avant de demander une revue', bucket: 1 },
+    { text: 'La pull request dit honnêtement ce que l’auteur a lancé et vu', bucket: 1 },
   ]} />
 
 <MultiChoice id="a-rule-worth-its-line" phase="review" objective="coding-with-agents/works-in-team/sets-team-practice"
   concepts={['review-norms']}
-  context="A team adds rules to the practice section of its project instructions file, the file every agent session loads, after incidents with coding agents."
-  title="What a rule in the file has" hint="For each property, does it help a reader know why the rule is there and whether a change breaks it?"
+  context="Une équipe ajoute des règles à la section « pratique » de son fichier d’instructions du projet, le fichier que charge chaque session d’agent, après des incidents avec des agents de code."
+  title="Ce qu’a une règle du fichier" hint="Pour chaque propriété, aide-t-elle un lecteur à savoir pourquoi la règle est là et si une modification l’enfreint ?"
   options={[
-    { text: 'It names the incident or decision it came from.', correct: true },
-    { text: 'It is precise enough to tell when a change breaks it.', correct: true },
-    { text: 'It says which hook or CI check enforces it, if any.', correct: true },
-    { text: 'It covers every risk the team could think of in a meeting.', why: 'Imagined risks guard against the wrong things, and the section grows until nobody reads it.' },
-    { text: 'It is worded by each engineer in their own user file.', why: 'Then each engineer has a different rule, and the team never reviews them together.' },
+    { text: 'Elle nomme l’incident ou la décision dont elle vient.', correct: true },
+    { text: 'Elle est assez précise pour voir quand une modification l’enfreint.', correct: true },
+    { text: 'Elle dit quel hook ou quel contrôle de CI l’impose, s’il y en a un.', correct: true },
+    { text: 'Elle couvre chaque risque que l’équipe a pu imaginer en réunion.', why: 'Les risques imaginés protègent contre les mauvaises choses, et la section grossit jusqu’à ce que personne ne la lise.' },
+    { text: 'Elle est formulée par chaque ingénieur dans son propre fichier personnel.', why: 'Chaque ingénieur a alors une règle différente, et l’équipe ne les relit jamais ensemble.' },
   ]}>
-Which of these should a rule in the practice section have?
+Lesquelles de ces propriétés une règle de la section « pratique » devrait-elle
+avoir ?
 </MultiChoice>
 
 <Choice id="the-push-to-main" phase="review" objective="coding-with-agents/works-in-team/sets-team-practice"
   concepts={['team-hooks', 'review-norms']}
-  context="A team agreed in a meeting that agents open a pull request for every change and never push to main. The agreement is written nowhere, and last week an agent session pushed a change straight to main."
-  title="The agent pushed to main" hint="Which fix reaches every session, whoever starts it, and still holds when an agent ignores an instruction?"
+  context="Une équipe a convenu en réunion que les agents ouvrent une pull request pour chaque modification et ne poussent jamais sur main. L’accord n’est écrit nulle part, et la semaine dernière une session d’agent a poussé une modification directement sur main."
+  title="L’agent a poussé sur main" hint="Quelle correction atteint chaque session, quelle que soit la personne qui la lance, et tient encore quand un agent ignore une instruction ?"
   options={[
-    { text: 'Write the rule in the project instructions file, and add a check that rejects a push to main.', correct: true },
-    { text: 'Ask the engineer who started that session to repeat the agreement in each brief from now on.', why: 'It then holds in one person\'s sessions, as long as they remember it. The other engineers\' agents still don\'t know.' },
-    { text: 'Repeat the agreement at the next team meeting, so that every engineer on the team remembers it.', why: 'The people remember it for a while. The agents never attend the meeting, and nothing reaches their context.' },
-    { text: 'Add the rule to that engineer\'s own user instructions file, the one their agent loads in each session.', why: 'Only that engineer\'s sessions load it, and a rule in an instructions file is advice the agent can still skip.' },
+    { text: 'Écrire la règle dans le fichier d’instructions du projet, et ajouter un contrôle qui rejette un push sur main.', correct: true },
+    { text: 'Demander à l’ingénieur qui a lancé cette session de répéter l’accord dans chaque consigne à partir de maintenant.', why: 'L’accord tient alors dans les sessions d’une personne, tant qu’elle s’en souvient. Les agents des autres ingénieurs ne le connaissent toujours pas.' },
+    { text: 'Répéter l’accord à la prochaine réunion d’équipe, pour que chaque ingénieur de l’équipe s’en souvienne.', why: 'Les personnes s’en souviennent un moment. Les agents n’assistent jamais à la réunion, et rien n’arrive dans leur contexte.' },
+    { text: 'Ajouter la règle au fichier d’instructions personnel de cet ingénieur, celui que son agent charge à chaque session.', why: 'Seules les sessions de cet ingénieur le chargent, et une règle dans un fichier d’instructions est un conseil que l’agent peut encore ignorer.' },
   ]}>
-What does the team change so that no agent session pushes to `main` again?
+Que change l’équipe pour qu’aucune session d’agent ne pousse plus sur `main` ?
 </Choice>
 
 <Scenario id="the-copied-practice" phase="review" objective="coding-with-agents/works-in-team/sets-team-practice"
   concepts={['review-norms', 'ci-integration']}
-  context="A team is starting to use coding agents on its repository and has no written practice yet. Another team offers its practice section of forty rules, written for a different project."
-  title="Forty rules from another team" hint="Which lines can the team decide today, and where do the other lines come from?"
+  context="Une équipe commence à utiliser des agents de code sur son dépôt et n’a pas encore de pratique écrite. Une autre équipe lui propose sa section « pratique » de quarante règles, écrite pour un autre projet."
+  title="Quarante règles d’une autre équipe" hint="Quelles lignes l’équipe peut-elle décider aujourd’hui, et d’où viennent les autres lignes ?"
   options={[
-    { text: 'Copy all forty rules into the file, since the other team learned them the hard way.', consequence: 'The file guards against the other team\'s mistakes on another project. Nobody can say which rules apply here, and the agents load all forty in every session.' },
-    { text: 'Write the gate and the attribution form now, and add a rule with its incident as each mistake happens.', correct: true, consequence: 'The file is short on day one and has a reason for each line. The first incident a month later becomes a rule with its date.' },
-    { text: 'Write nothing for the first year, so the team has enough incidents before it writes any rule.', consequence: 'For a year each engineer and each agent works to a different practice. The gate and the trailer form were decisions the team could make on the first day.' },
-    { text: 'Hold a meeting to list every risk agents bring, and write one rule for each risk on the list.', consequence: 'The list is what the team imagines, and the first real incidents fall between its rules.' },
+    { text: 'Copier les quarante règles dans le fichier, puisque l’autre équipe les a apprises à ses dépens.', consequence: 'Le fichier protège contre les erreurs de l’autre équipe sur un autre projet. Personne ne peut dire quelles règles s’appliquent ici, et les agents chargent les quarante à chaque session.' },
+    { text: 'Écrire la barrière et la forme de l’attribution maintenant, et ajouter une règle avec son incident à chaque nouvelle erreur.', correct: true, consequence: 'Le fichier est court le premier jour et a une raison pour chaque ligne. Le premier incident, un mois plus tard, devient une règle avec sa date.' },
+    { text: 'Ne rien écrire pendant la première année, pour que l’équipe ait assez d’incidents avant d’écrire une règle.', consequence: 'Pendant un an, chaque ingénieur et chaque agent suit une pratique différente. La barrière et la forme de la ligne de fin étaient des décisions que l’équipe pouvait prendre dès le premier jour.' },
+    { text: 'Tenir une réunion pour lister chaque risque qu’apportent les agents, et écrire une règle pour chaque risque de la liste.', consequence: 'La liste reflète ce que l’équipe imagine, et les premiers vrais incidents tombent entre ses règles.' },
   ]}>
-The team has no written practice yet. What does it write?
+L’équipe n’a pas encore de pratique écrite. Qu’écrit-elle ?
 </Scenario>
 
 <Sort id="keep-or-take-out" phase="review" objective="coding-with-agents/works-in-team/sets-team-practice"
   concepts={['review-norms']}
-  context="A team reviews the practice section of its project instructions file. Each item is a rule in that section, with what the team knows about it."
-  title="Keep it or take it out?" hint="Does the rule still have a reason on this project today?"
-  buckets={['Keep it in the practice', 'Take it out of the practice']}
+  context="Une équipe relit la section « pratique » de son fichier d’instructions du projet. Chaque élément est une règle de cette section, avec ce que l’équipe sait d’elle."
+  title="La garder ou la retirer ?" hint="La règle a-t-elle encore une raison d’être sur ce projet aujourd’hui ?"
+  buckets={['La garder dans la pratique', 'La retirer de la pratique']}
   items={[
-    { text: 'The lockfile rule, added after a release failed on an upgrade the review skipped', bucket: 0 },
-    { text: 'A rule about the old build tool that the team replaced last spring', bucket: 1 },
-    { text: 'The trailer form that the team\'s commit check reads on every pull request', bucket: 0 },
-    { text: 'A rule on a migrations folder, in a project that has no database', bucket: 1 },
+    { text: 'La règle sur le fichier de verrouillage, ajoutée après l’échec d’une version sur une mise à jour que la revue n’avait pas lue', bucket: 0 },
+    { text: 'Une règle sur l’ancien outil de build que l’équipe a remplacé au printemps dernier', bucket: 1 },
+    { text: 'La forme de la ligne de fin que le contrôle des commits de l’équipe lit sur chaque pull request', bucket: 0 },
+    { text: 'Une règle sur un dossier de migrations, dans un projet qui n’a pas de base de données', bucket: 1 },
   ]} />
 
-<Exercise stretch="Do the same for a repository your team uses with agents: read the last three months of history for reverts and fixes of agent work, and compare what you find with the practice section of its instructions file.">
-Build the invoice project where you can read it with git. From
-`site/examples/coding-with-agents/team-practice/` in your clone of the
-course repository, run this, with a folder name that doesn't exist yet:
+<Exercise stretch="Faites de même pour un dépôt que votre équipe utilise avec des agents : lisez les trois derniers mois d’historique pour y trouver les annulations et les corrections du travail des agents, et comparez ce que vous trouvez avec la section « pratique » de son fichier d’instructions.">
+Construisez le projet de facturation à un endroit où vous pouvez le lire avec
+git. Depuis `site/examples/coding-with-agents/team-practice/` dans votre clone
+du dépôt du cours, lancez ceci, avec un nom de dossier qui n’existe pas encore :
 
 ```sh
 python3 history.py ~/invoices
 ```
 
-In `~/invoices`, read the history with `git log` and each incident with
-`git show`. Then rewrite the "Working with agents" section of `AGENTS.md`
-there. Write one rule for each of the three incidents, precise enough
-that a reviewer can tell whether a change breaks it, and give the date of
-the commit it came from. Say after each rule whether a hook or a CI check
-should also enforce it, and which one. Drop the rule that no incident
-supports. Delete `~/invoices` when you are done, and run the script again
-to start over.
+Dans `~/invoices`, lisez l’historique avec `git log` et chaque incident avec
+`git show`. Réécrivez ensuite la section « Working with agents » du `AGENTS.md`
+qui s’y trouve. Écrivez une règle pour chacun des trois incidents, assez précise
+pour qu’un relecteur puisse dire si une modification l’enfreint, et donnez la
+date du commit dont elle vient. Indiquez après chaque règle si un hook ou un
+contrôle de CI devrait aussi l’imposer, et lequel. Retirez la règle qu’aucun
+incident ne justifie. Supprimez `~/invoices` quand vous avez terminé, et relancez
+le script pour recommencer.
 
-A good result has three rules, each tied to one of the two reverts or
-the fix, and none of them as vague as the draft's
-lines. The rule with no incident behind it is gone, and the section is
-shorter than a screen. A colleague who reads only the section could say
-why each rule is there. Then answer one question: which rule of your own
-team's practice could nobody tie to an incident or a decision, and what
-would happen if you took it out?
+Un bon résultat : trois règles, chacune liée à l’une des deux annulations ou à la
+correction, et aucune aussi vague que les lignes du brouillon. La règle sans
+incident derrière elle a disparu, et la section tient sur moins d’un écran. Un
+collègue qui ne lit que la section pourrait dire pourquoi chaque règle est là.
+Répondez ensuite à une question : quelle règle de la pratique de votre propre
+équipe personne ne pourrait relier à un incident ou à une décision, et que se
+passerait-il si vous la retiriez ?
 </Exercise>
 
 <Recap>
-1. Write the team's practice for agent use in the project instructions file, where every person and every agent session reads it (@Claude Code memory). It says what agents may do and what every change passes, how agent work is attributed and reviewed, and which directories and commands are off limits.
-2. Make the gate and the attribution form decisions at the start. Write every other rule from an incident the team has seen, and name the incident next to the rule.
-3. Add a rule when a mistake comes back. Read the file again from time to time (@Claude Code memory), and remove a rule when its reason is gone or no incident or day-one decision is behind it.
-4. The file states each agreement and its reason. An agreement that must hold every time also gets a hook or a CI check, and one that needs a person's judgment stays with the review.
+1. Écrivez la pratique de l’équipe pour l’usage des agents dans le fichier d’instructions du projet, que lisent chaque personne et chaque session d’agent (@Claude Code memory). Elle dit ce que les agents ont le droit de faire et ce que passe chaque modification, comment le travail des agents est attribué et relu, et quels dossiers et quelles commandes leur sont interdits.
+2. Prenez au début les décisions sur la barrière et la forme de l’attribution. Écrivez chaque autre règle à partir d’un incident que l’équipe a vu, et nommez l’incident à côté de la règle.
+3. Ajoutez une règle quand une erreur revient. Relisez le fichier de temps en temps (@Claude Code memory), et retirez une règle quand sa raison a disparu, ou quand ni incident ni décision du premier jour ne la justifie.
+4. Le fichier énonce chaque accord et sa raison. Un accord qui doit tenir à chaque fois reçoit aussi un hook ou un contrôle de CI, et un accord qui demande le jugement d’une personne reste dans la revue.
 </Recap>
 
 <Habit id="rule-with-its-incident">
-The next time a review finds an agent mistake that the team has seen before, add a rule to the practice section with the date or the pull request it came from.
+La prochaine fois qu’une revue trouve une erreur d’agent que l’équipe a déjà vue, ajoutez une règle à la section « pratique » avec la date ou la pull request dont elle vient.
 </Habit>
