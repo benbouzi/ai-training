@@ -1,45 +1,45 @@
 import { Choice, MultiChoice, Match, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Prompt, Response, Habit } from '@components/lesson';
 
-In this lesson you get a bug report that says "sometimes fails", and you
-turn it into a confirmed cause before a coding agent changes a line. The
-program is a small nightly import that adds up the sales exports of eight
-stores. The course keeps it as a fixture, so everyone debugs the same
-code and the same data. Here is the report.
+Dans cette leçon, vous recevez un signalement de bug qui dit « échoue
+parfois », et vous le transformez en cause confirmée avant qu’un agent de code
+modifie une ligne. Le programme est un petit import nocturne qui additionne les
+exports de ventes de huit magasins. Le cours le garde comme exemple, pour que
+tout le monde débogue le même code et les mêmes données. Voici le signalement.
 
 ```text
-The nightly sales import failed on Tuesday the 15th and on Thursday the
-17th, and ran fine on the 14th and the 16th. Nobody changed the code. I
-think the exchange-rate download is sometimes late at night and leaves a
-half-written rates.json. Can you ask the agent to make the download more
-reliable?
+L’import nocturne des ventes a échoué le mardi 15 et le jeudi 17, et il a
+bien tourné le 14 et le 16. Personne n’a modifié le code. Je pense que le
+téléchargement des taux de change est parfois en retard la nuit et laisse
+un rates.json à moitié écrit. Vous pouvez demander à l’agent de rendre le
+téléchargement plus fiable ?
 ```
 
-The report contains a symptom, two dates, and a theory. An agent handed
-this report gets a theory to work from and a request for a fix, and the
-fix it writes is aimed at the theory. Asking for a reproduced, explained
-cause before any patch keeps the fix from becoming a second bug
-(@Brilliant VER).
+Le signalement contient un symptôme, deux dates et une théorie. Un agent à qui
+l’on remet ce signalement reçoit une théorie à partir de laquelle travailler et
+une demande de correction, et la correction qu’il écrit vise la théorie. Exiger
+une cause reproduite et expliquée avant tout correctif évite que la correction
+devienne un second bug (@Brilliant VER).
 
-## Reproduce it first
+## Reproduire d’abord
 
-"Sometimes" means you don't yet know what the failure depends on. The
-first step is to run the failing case again, the same way, and see
-whether it fails every time. The fixture keeps each night's exports in
-`nightly/nights/<date>/`, one comma-separated values (CSV) file per
-store, and the nightly job runs
-`python3 importer.py nights/<date>/*.csv` from `nightly/`. The course's
-script runs that command three times for each of the four nights and
-prints the result of each run, with the total for a night that passes.
+« Parfois » veut dire que vous ne savez pas encore de quoi dépend l’échec. La
+première étape consiste à relancer le cas en échec, de la même façon, et à voir
+s’il échoue à chaque fois. L’exemple garde les exports de chaque nuit dans
+`nightly/nights/<date>/`, un fichier CSV (comma-separated values, valeurs
+séparées par des virgules) par magasin, et la tâche nocturne lance
+`python3 importer.py nights/<date>/*.csv` depuis `nightly/`. Le script du cours
+lance cette commande trois fois pour chacune des quatre nuits et affiche le
+résultat de chaque exécution, avec le total pour une nuit qui passe.
 
-<Predict id="run-reproduce" title="Run each night three times"
+<Predict id="run-reproduce" title="Lancer chaque nuit trois fois"
   answer={`2026-09-14: ok ok ok (total: 22975.95 EUR)
   2026-09-15: rejected rejected rejected
   2026-09-16: ok ok ok (total: 23257.33 EUR)
   2026-09-17: rejected rejected rejected`} run="coding-with-agents/observing-and-debugging/reproduce.py">
-In a clone of the course repository, go to the fixture directory,
-`site/examples/coding-with-agents/observing-and-debugging/`, and run the
-reproduction script there. The scripts in this lesson all run from that
-directory.
+Dans un clone du dépôt du cours, allez dans le dossier de l’exemple,
+`site/examples/coding-with-agents/observing-and-debugging/`, et lancez-y le
+script de reproduction. Les scripts de cette leçon tournent tous depuis ce
+dossier.
 
 ```sh
 python3 reproduce.py
@@ -47,49 +47,49 @@ python3 reproduce.py
 
 </Predict>
 
-The examples in this lesson aren't graded. Each one is a command you
-run, with output the course checks on every build. The checkpoints ask
-what you do with what the commands show.
+Les exemples de cette leçon ne sont pas notés. Chacun est une commande que vous
+lancez, avec une sortie que le cours vérifie à chaque build. Les questions de
+contrôle portent sur ce que vous faites de ce que montrent les commandes.
 
-Every rerun gives the same result as the night it reruns. The failure
-now has a precise condition: it happens every time, on the exports of
-the 15th and the 17th. Note the totals of the two good nights as well,
-because the fix must not change them. Write the steps down now, in a
-form someone else can follow, because they're the test the fix must pass
-at the end.
+Chaque relance donne le même résultat que la nuit qu’elle rejoue. L’échec a
+maintenant une condition précise : il se produit à chaque fois, sur les exports
+du 15 et du 17. Notez aussi les totaux des deux bonnes nuits, parce que la
+correction ne doit pas les changer. Écrivez les étapes maintenant, sous une
+forme qu’une autre personne peut suivre, parce qu’elles sont le test que la
+correction devra passer à la fin.
 
 ```text
-From nightly/, run: python3 importer.py nights/2026-09-15/*.csv
-Expected: a total in euros, exit status 0
-Actual: the batch is rejected, exit status 1
-Reruns: 3 of 3 fail. The 14th and the 16th pass 3 of 3,
-with totals 22975.95 EUR and 23257.33 EUR.
+Depuis nightly/, lancer : python3 importer.py nights/2026-09-15/*.csv
+Attendu : un total en euros, code de sortie 0
+Obtenu : le lot est rejeté, code de sortie 1
+Relances : 3 échecs sur 3. Le 14 et le 16 passent 3 fois sur 3,
+avec des totaux de 22975.95 EUR et 23257.33 EUR.
 ```
 
 <Choice id="what-the-reruns-show" objective="coding-with-agents/verifies-agent-work/observes-and-debugs"
   concepts={['isolating-a-fault']}
-  context="A nightly import of store sales exports failed on two nights of four. Every night reads the same rates.json file. The learner reran each night's exports three times: two nights passed every time and two failed every time."
-  title="What do the reruns tell you?" hint="What is different between the runs that pass and the runs that fail, and what is the same?"
+  context="Un import nocturne d’exports de ventes de magasins a échoué deux nuits sur quatre. Chaque nuit lit le même fichier rates.json. L’apprenant a relancé trois fois les exports de chaque nuit : deux nuits ont passé à chaque fois et deux ont échoué à chaque fois."
+  title="Que vous disent les relances ?" hint="Qu’est-ce qui diffère entre les exécutions qui passent et celles qui échouent, et qu’est-ce qui est identique ?"
   options={[
-    { text: 'That the rates file was half-written on the 15th and the 17th and still is today.', why: 'All four nights read the same rates.json. A broken rates file would make every night fail, and two of them pass.' },
-    { text: 'That the failure follows the exports of the 15th and the 17th, because the same input fails on every run.', correct: true },
-    { text: 'That the failure follows the time of day, and the reruns happened to land on a calm moment.', why: 'Twelve runs at one time of day split exactly along the nights. Timing would not sort the results by input.' },
-    { text: 'That nothing is known yet, because a fault that fails only sometimes can never be made to fail on demand.', why: 'It was just made to fail on demand, six times out of six on two inputs.' },
+    { text: 'Que le fichier des taux était à moitié écrit le 15 et le 17 et l’est encore aujourd’hui.', why: 'Les quatre nuits lisent le même rates.json. Un fichier de taux cassé ferait échouer toutes les nuits, et deux d’entre elles passent.' },
+    { text: 'Que l’échec suit les exports du 15 et du 17, parce que la même entrée échoue à chaque exécution.', correct: true },
+    { text: 'Que l’échec suit l’heure de la journée, et que les relances sont tombées par hasard sur un moment calme.', why: 'Douze exécutions à une même heure se répartissent exactement selon les nuits. L’heure ne trierait pas les résultats par entrée.' },
+    { text: 'Qu’on ne sait encore rien, parce qu’un défaut qui n’échoue que parfois ne peut jamais être provoqué à la demande.', why: 'Il vient d’être provoqué à la demande, six fois sur six, sur deux entrées.' },
   ]}>
-The 15th and the 17th fail three runs of three, and the 14th and the
-16th pass three runs of three. What does that tell you about the cause?
+Le 15 et le 17 échouent trois fois sur trois, et le 14 et le 16 passent trois
+fois sur trois. Qu’est-ce que cela vous dit de la cause ?
 </Choice>
 
-## Read what the system recorded
+## Lire ce que le système a enregistré
 
-Observing a running system means looking at what the program did, and
-not only at what its code says it should do: the log it writes, the
-files it reads, the output and the exit status. The code tells you what
-should happen, and the log tells you what did (@Brilliant VER). The
-importer writes one log line per step. Put the log of a failing night
-next to the log of a good one.
+L’observation d’un système en marche consiste à regarder ce que le programme a
+fait, au-delà de ce que son code dit qu’il devrait faire : le journal qu’il
+écrit, les fichiers qu’il lit, la sortie et le code de sortie. Le code vous dit
+ce qui devrait se passer, et le journal vous dit ce qui s’est passé
+(@Brilliant VER). L’import écrit une ligne de journal par étape. Placez le
+journal d’une nuit en échec à côté de celui d’une bonne nuit.
 
-<Predict id="run-night-log" title="The log of a good night and a failing one"
+<Predict id="run-night-log" title="Le journal d’une bonne nuit et d’une nuit en échec"
   answer={`$ python3 importer.py nights/2026-09-14/*.csv
   INFO reading 8 files
   INFO rates: 3 currencies loaded
@@ -102,11 +102,11 @@ next to the log of a good one.
   INFO parsed 39 rows
   ERROR 1 row(s) with the wrong number of fields, batch rejected
   exit status 1`} run="coding-with-agents/observing-and-debugging/night_log.py">
-From the fixture directory, the course's script runs the importer on
-the 14th and on the 15th, from `nightly/`, and prints each log with its
-exit status. To run the two commands yourself instead, `cd nightly`
-first, follow each command with `echo $?`, and `cd ..` when you are
-done. The next steps start from the fixture directory again.
+Depuis le dossier de l’exemple, le script du cours lance l’import sur le 14 et
+sur le 15, depuis `nightly/`, et affiche chaque journal avec son code de
+sortie. Pour lancer vous-même les deux commandes, faites d’abord `cd nightly`,
+faites suivre chaque commande de `echo $?`, et faites `cd ..` quand vous avez
+terminé. Les étapes suivantes repartent du dossier de l’exemple.
 
 ```sh
 python3 night_log.py
@@ -114,53 +114,56 @@ python3 night_log.py
 
 </Predict>
 
-Read the two logs line by line. Both read eight files, and both load
-three currencies from the rates file. The failing run gets past the
-rates step and stops at the next one, where one row has the wrong number
-of fields. The rerun rules out the colleague's theory: the rates load in
-full, and the batch is still rejected at the next step. Write
-that down too, with the evidence, so nobody has to rule it out again.
+Lisez les deux journaux ligne par ligne. Les deux lisent huit fichiers, et les
+deux chargent trois devises depuis le fichier des taux. L’exécution en échec
+dépasse l’étape des taux et s’arrête à la suivante, où une ligne n’a pas le bon
+nombre de champs. La relance écarte la théorie du collègue : les taux se
+chargent entièrement, et le lot est quand même rejeté à l’étape suivante.
+Notez cela aussi, avec la preuve, pour que personne n’ait à l’écarter de
+nouveau.
 
-The log doesn't say which of the eight files holds the bad row. It
-narrowed the cause from the whole program to one step, and the step
-still has eight suspects.
+Le journal ne dit pas lequel des huit fichiers contient la mauvaise ligne. Il a
+réduit la cause du programme entier à une étape, et cette étape a encore huit
+suspects.
 
-<Pitfall title="The handler the request never reached">
-A checkout page sometimes shows an error, and the coding agent starts to
-rewrite the order handler with more checks for a field that could be
-missing. The engineer opens the service's request log first, and the
-failing requests aren't in it. A proxy in front of the service rejected
-them for headers that were too large, so the handler never saw them. The
-rewrite would have passed its tests and changed nothing for the user. Before
-anyone changes the code a theory points at, check in the log that the
-failing run reached that code.
+<Pitfall title="Le gestionnaire que la requête n’a jamais atteint">
+Une page de paiement affiche parfois une erreur, et l’agent de code commence à
+réécrire le gestionnaire de commandes avec davantage de contrôles pour un champ
+qui pourrait manquer. L’ingénieur ouvre d’abord le journal des requêtes du
+service, et les requêtes en échec n’y sont pas. Un proxy placé devant le
+service les a rejetées parce que leurs en-têtes étaient trop gros, donc le
+gestionnaire ne les a jamais vues. La réécriture aurait passé ses tests et
+n’aurait rien changé pour l’utilisateur. Avant que quiconque modifie le code
+que vise une théorie, vérifiez dans le journal que l’exécution en échec a bien
+atteint ce code.
 </Pitfall>
 
 <Scenario id="the-agent-wants-retries" objective="coding-with-agents/verifies-agent-work/observes-and-debugs"
   concepts={['observing-a-running-system']}
-  context="A nightly import failed on some nights. A colleague blamed a late download of the exchange rates. The log of a rerun of a failing night shows the rates loading in full, then one row with the wrong number of fields and the batch rejected. The agent now proposes a fix for the download."
-  title="The agent proposes retries" hint="In the rerun of the failing night, did the run get as far as the code the agent wants to change, and did that step succeed?"
+  context="Un import nocturne a échoué certaines nuits. Un collègue a accusé un téléchargement tardif des taux de change. Le journal d’une relance d’une nuit en échec montre les taux chargés entièrement, puis une ligne avec un mauvais nombre de champs et le lot rejeté. L’agent propose maintenant une correction du téléchargement."
+  title="L’agent propose de nouvelles tentatives" hint="Dans la relance de la nuit en échec, l’exécution est-elle allée jusqu’au code que l’agent veut modifier, et cette étape a-t-elle réussi ?"
   options={[
-    { text: 'Let it add the retries, since a more reliable download is useful even if it isn\'t this bug.', consequence: 'The change ships, the 15th still fails the same way, and you have one more diff to review with no evidence behind it.' },
-    { text: 'Ask it to add detailed logging to the download, so the next failing night shows what the download did.', consequence: 'The next failing log shows the download working in more detail. The fault is in a later step, and you have waited a night to learn it.' },
-    { text: 'Ask it to rewrite the import to be more tolerant, so that one bad row no longer rejects the batch.', consequence: 'The total now leaves out a sale without saying so. The bad row is still there and nobody knows which one it is, and the rule that a partial night never prints a total is gone.' },
-    { text: 'Stop it and point at the log of the rerun, where the rates load in full and the parsing step fails after them.', correct: true, consequence: 'The download is ruled out with evidence. The question left is which of the eight files holds the bad row, and nobody has changed any code yet.' },
+    { text: 'Le laisser ajouter les nouvelles tentatives, puisqu’un téléchargement plus fiable est utile même si ce n’est pas ce bug.', consequence: 'La modification est livrée, le 15 échoue toujours de la même façon, et vous avez un diff de plus à relire sans aucune preuve derrière.' },
+    { text: 'Lui demander d’ajouter une journalisation détaillée au téléchargement, pour que la prochaine nuit en échec montre ce qu’il a fait.', consequence: 'Le prochain journal en échec montre plus en détail le téléchargement qui fonctionne. Le défaut est dans une étape ultérieure, et vous avez attendu une nuit pour l’apprendre.' },
+    { text: 'Lui demander de réécrire l’import pour le rendre plus tolérant, pour qu’une seule mauvaise ligne ne rejette plus le lot.', consequence: 'Le total laisse maintenant de côté une vente sans le dire. La mauvaise ligne est toujours là et personne ne sait laquelle c’est, et la règle selon laquelle une nuit partielle n’affiche jamais de total a disparu.' },
+    { text: 'L’arrêter et désigner le journal de la relance, où les taux se chargent entièrement et où l’analyse échoue ensuite.', correct: true, consequence: 'Le téléchargement est écarté avec une preuve. La question qui reste est de savoir lequel des huit fichiers contient la mauvaise ligne, et personne n’a encore modifié de code.' },
   ]}>
-The agent says: "The rate download is unreliable at night. I'll add
-three retries with a pause between them, and check that `rates.json` is
-complete before it is used." The log of the rerun of the 15th is open
-next to it. What do you do?
+L’agent dit : « Le téléchargement des taux n’est pas fiable la nuit. Je vais
+ajouter trois nouvelles tentatives avec une pause entre elles, et vérifier que
+`rates.json` est complet avant de l’utiliser. » Le journal de la relance du 15
+est ouvert à côté. Que faites-vous ?
 </Scenario>
 
-## Halve what is left
+## Diviser par deux ce qui reste
 
-Isolating a fault means narrowing it down to its cause in steps, where
-each step changes one thing and gives one observation. With eight files
-to suspect, the fastest way is to halve them. Run the importer on half
-of the files. If that half passes, the bad row is in the other half, and
-if it fails, the bad row is in this one. Each run rules out half of what
-is left, so eight files take three runs, and a fourth run confirms the
-last one. The shell pattern `store-0[1-4].csv` picks four files by name.
+Isoler un défaut consiste à le réduire jusqu’à sa cause par étapes, où chaque
+étape change une seule chose et donne une seule observation. Avec huit fichiers
+suspects, le plus rapide est de les diviser par deux. Lancez l’import sur la
+moitié des fichiers. Si cette moitié passe, la mauvaise ligne est dans l’autre
+moitié, et si elle échoue, la mauvaise ligne est dans celle-ci. Chaque
+exécution écarte la moitié de ce qui reste, donc huit fichiers demandent trois
+exécutions, et une quatrième confirme le dernier. Le motif shell
+`store-0[1-4].csv` choisit quatre fichiers par leur nom.
 
 ```sh
 cd nightly
@@ -171,13 +174,14 @@ python3 importer.py nights/2026-09-15/store-06.csv
 cd ..
 ```
 
-<Predict id="run-halve" title="Halve the files of the 15th"
+<Predict id="run-halve" title="Diviser par deux les fichiers du 15"
   answer={`store-01 to store-04: ok
   store-05 and store-06: rejected
   store-05: ok
   store-06: rejected`} run="coding-with-agents/observing-and-debugging/halve.py">
-From the fixture directory, the course's script runs the four commands
-above from `nightly/` and prints `ok` or `rejected` for each.
+Depuis le dossier de l’exemple, le script du cours lance les quatre commandes
+ci-dessus depuis `nightly/` et affiche `ok` ou `rejected` (rejeté) pour
+chacune.
 
 ```sh
 python3 halve.py
@@ -185,13 +189,13 @@ python3 halve.py
 
 </Predict>
 
-Keep a note of what each run ruled out, one line per run: stores 1 to 4
-are ruled out, stores 7 and 8 are ruled out, store 5 is ruled out, and
-store 6 fails alone. Halving works best when the failure has one cause.
-If both halves had failed, the note would show it at once, and you would
-halve each of them.
+Notez ce que chaque exécution a écarté, une ligne par exécution : les magasins
+1 à 4 sont écartés, les magasins 7 et 8 sont écartés, le magasin 5 est écarté,
+et le magasin 6 échoue seul. La division par deux fonctionne le mieux quand
+l’échec a une seule cause. Si les deux moitiés avaient échoué, la note le
+montrerait tout de suite, et vous diviseriez chacune par deux.
 
-Now store-06.csv is short enough to read.
+store-06.csv est maintenant assez court pour être lu.
 
 ```text
 date,store,currency,amount
@@ -201,75 +205,75 @@ date,store,currency,amount
 2026-09-15,store-06,GBP,432.53
 ```
 
-The fourth line has an amount of a thousand or more, which the store's
-system writes in quotes and with a comma. Read `read_rows` in
-`importer.py` with that line in mind: it splits each line on every
-comma, so `"1,250.00"` becomes two fields and the row has five. This
-cause explains the whole report: the nights that failed are the nights
-with a big sale, and nothing about the timing matters. The condition is
-now precise. The import fails when an export holds an amount of 1,000 or
-more.
+La quatrième ligne a un montant de mille ou plus, que le système du magasin
+écrit entre guillemets et avec une virgule. Lisez `read_rows` dans
+`importer.py` avec cette ligne en tête : elle découpe chaque ligne à chaque
+virgule, donc `"1,250.00"` devient deux champs et la ligne en a cinq. Cette
+cause explique tout le signalement : les nuits en échec sont les nuits avec une
+grosse vente, et l’heure n’y est pour rien. La condition est maintenant
+précise. L’import échoue quand un export contient un montant de 1 000 ou plus.
 
-The same halving works on commits as well as on files. When a fault
-appeared between a version that worked and one that doesn't, `git bisect`
-does a binary search over the commits between them. It checks out one
-commit at a time, you mark it good or bad, and it stops at the commit
-that brought the fault in (@Git docs git-bisect).
+La même division par deux fonctionne sur les commits comme sur les fichiers.
+Quand un défaut est apparu entre une version qui marchait et une version qui ne
+marche pas, `git bisect` fait une recherche par dichotomie sur les commits
+entre les deux. Il extrait un commit à la fois, vous le marquez bon ou mauvais,
+et il s’arrête sur le commit qui a introduit le défaut (@Git docs git-bisect).
 
 <Choice id="the-next-run" objective="coding-with-agents/verifies-agent-work/observes-and-debugs"
   concepts={['isolating-a-fault']}
-  context="A nightly import rejects the batch for one night of eight store exports, and the log does not say which file holds the bad row. The learner is narrowing it down by halving and has just seen the first four files pass on their own."
-  title="Which run comes next?" hint="After that result, which files are still suspects, and what is half of them?"
+  context="Un import nocturne rejette le lot d’une nuit de huit exports de magasins, et le journal ne dit pas quel fichier contient la mauvaise ligne. L’apprenant réduit les suspects par moitiés et vient de voir les quatre premiers fichiers passer seuls."
+  title="Quelle exécution vient ensuite ?" hint="Après ce résultat, quels fichiers sont encore suspects, et quelle est la moitié de ce reste ?"
   options={[
-    { text: 'The importer on store-05 and store-06 only, because the bad row is now among stores 5 to 8, and half of that is two files.', correct: true },
-    { text: 'The importer on stores 1 to 4 once more, because one passing run of a failure that seemed random proves nothing.', why: 'The reruns already showed that the same input gives the same result every time. A second run of this half would tell you nothing new.' },
-    { text: 'The importer on store-01 alone, because the first file is where a bad row most often turns up in a batch.', why: 'Store-01 was in the half that passed. That run already ruled it out.' },
-    { text: 'The importer on stores 5 to 8 with a change that makes it skip bad rows, to see whether the total then looks right.', why: 'That run changes two things at once, and a skipped row hides the fault instead of locating it.' },
+    { text: 'L’import sur store-05 et store-06 seulement, parce que la mauvaise ligne est parmi les magasins 5 à 8, dont la moitié fait deux fichiers.', correct: true },
+    { text: 'L’import de nouveau sur les magasins 1 à 4, parce qu’une seule exécution réussie d’un échec qui semblait aléatoire ne prouve rien.', why: 'Les relances ont déjà montré que la même entrée donne le même résultat à chaque fois. Une seconde exécution de cette moitié ne vous apprendrait rien.' },
+    { text: 'L’import sur store-01 seul, parce que le premier fichier est celui où une mauvaise ligne apparaît le plus souvent dans un lot.', why: 'Store-01 faisait partie de la moitié qui a passé. Cette exécution l’a déjà écarté.' },
+    { text: 'L’import sur les magasins 5 à 8 avec une modification qui saute les mauvaises lignes, pour voir si le total a alors l’air juste.', why: 'Cette exécution change deux choses à la fois, et une ligne sautée cache le défaut au lieu de le localiser.' },
   ]}>
-On the 15th, `store-0[1-4].csv` passes on its own. Which run do you do
-next?
+Pour le 15, `store-0[1-4].csv` passe seul. Quelle exécution faites-vous
+ensuite ?
 </Choice>
 
-## Brief the agent with the cause
+## Donner à l’agent une consigne avec la cause
 
-Only now does the agent get the task. The brief contains everything the
-reproduction and the halving found: the command that fails, the file and
-the line, the reason, what was ruled out, and what done means. The
-transcript is illustrative and doesn't record a specific model's words.
+C’est seulement maintenant que l’agent reçoit la tâche. La consigne contient
+tout ce qu’ont trouvé la reproduction et la division par deux : la commande qui
+échoue, le fichier et la ligne, la raison, ce qui a été écarté, et ce que veut
+dire « terminé ». La transcription est une illustration, sans reproduire les
+mots d’un modèle précis.
 
 <Prompt model="illustrative" recorded="illustrative">
-The nightly import in `nightly/importer.py` rejects the batch for
-2026-09-15 every time. To reproduce it, run
-`python3 importer.py nights/2026-09-15/*.csv` from `nightly/`. It logs
-`1 row(s) with the wrong number of fields` and exits with status 1. The
-cause is line 4 of `nights/2026-09-15/store-06.csv`, the amount
-`"1,250.00"`: `read_rows` splits on every comma, so the quoted amount
-becomes two fields. The rates download is ruled out, because a rerun
-with a complete `rates.json` fails the same way. Fix the parsing so that
-a quoted amount with a thousands separator is read as one amount, and
-change nothing else. The 17th fails with the same log line. Done when
-all four nights under `nights/` exit with status 0, and the 14th and the
-16th still print 22975.95 EUR and 23257.33 EUR.
+L’import nocturne de `nightly/importer.py` rejette le lot du 2026-09-15 à
+chaque fois. Pour le reproduire, lance `python3 importer.py nights/2026-09-15/*.csv`
+depuis `nightly/`. Il journalise `1 row(s) with the wrong number of fields` et
+sort avec le code 1. La cause est la ligne 4 de
+`nights/2026-09-15/store-06.csv`, le montant `"1,250.00"` : `read_rows` découpe
+à chaque virgule, donc le montant entre guillemets devient deux champs. Le
+téléchargement des taux est écarté, parce qu’une relance avec un `rates.json`
+complet échoue de la même façon. Corrige l’analyse pour qu’un montant entre
+guillemets avec un séparateur de milliers soit lu comme un seul montant, et ne
+change rien d’autre. Le 17 échoue avec la même ligne de journal. Terminé quand
+les quatre nuits de `nights/` sortent avec le code 0, et que le 14 et le 16
+affichent toujours 22975.95 EUR et 23257.33 EUR.
 </Prompt>
 <Response>
-I changed `read_rows` to read each file with the `csv` module, which
-keeps a quoted field together, and removed the comma from the amount
-before it is turned into a number. Nothing else changed. All four nights
-now pass.
+J’ai modifié `read_rows` pour lire chaque fichier avec le module `csv`, qui
+garde ensemble un champ entre guillemets, et j’ai retiré la virgule du montant
+avant de le convertir en nombre. Rien d’autre n’a changé. Les quatre nuits
+passent maintenant.
 </Response>
 
-The response is a claim, and the reproduction steps are the check. Run
-them again yourself, on every night, and compare the totals of the
-nights that already passed. The course's script applies the same fix to
-a copy of `nightly/` and reruns the reproduction.
+La réponse est une affirmation, et les étapes de reproduction sont le contrôle.
+Relancez-les vous-même, sur chaque nuit, et comparez les totaux des nuits qui
+passaient déjà. Le script du cours applique la même correction à une copie de
+`nightly/` et relance la reproduction.
 
-<Predict id="run-after-fix" title="The reproduction, after the fix"
+<Predict id="run-after-fix" title="La reproduction, après la correction"
   answer={`2026-09-14: ok, total: 22975.95 EUR
   2026-09-15: ok, total: 18505.15 EUR
   2026-09-16: ok, total: 23257.33 EUR
   2026-09-17: ok, total: 23213.13 EUR`} run="coding-with-agents/observing-and-debugging/after_fix.py">
-From the fixture directory, run the script that applies the fix on a
-copy and prints each night's result and total.
+Depuis le dossier de l’exemple, lancez le script qui applique la correction sur
+une copie et affiche le résultat et le total de chaque nuit.
 
 ```sh
 python3 after_fix.py
@@ -277,110 +281,111 @@ python3 after_fix.py
 
 </Predict>
 
-The two failing nights pass, and the two good nights print the same
-totals as before. The fix is verified against the steps that showed the
-fault, which is a stronger check than the agent's summary of it.
+Les deux nuits en échec passent, et les deux bonnes nuits affichent les mêmes
+totaux qu’avant. La correction est vérifiée au regard des étapes qui ont montré
+le défaut, un contrôle plus solide que le résumé de l’agent.
 
 <MultiChoice id="what-the-brief-holds" objective="coding-with-agents/verifies-agent-work/observes-and-debugs"
   concepts={['isolating-a-fault']}
-  context="A nightly import of store sales exports fails on two nights. The learner has reproduced the failure, ruled out the rates download from the log and halved the files down to one row with a quoted amount of 1,250.00. Now the learner writes the brief for the coding agent."
-  title="What goes into the brief?" hint="Which lines let the agent check its own fix, and which lines send it to work on something already ruled out?"
+  context="Un import nocturne d’exports de ventes de magasins échoue deux nuits. L’apprenant a reproduit l’échec, écarté le téléchargement des taux grâce au journal et divisé les fichiers par deux jusqu’à une ligne avec un montant entre guillemets de 1,250.00. Il écrit maintenant la consigne de l’agent de code."
+  title="Qu’est-ce qui va dans la consigne ?" hint="Quelles lignes permettent à l’agent de vérifier sa propre correction, et lesquelles l’envoient travailler sur une chose déjà écartée ?"
   options={[
-    { text: 'The command that fails and the output it gives now.', correct: true },
-    { text: 'The colleague\'s theory about the rates download, as a second thing to fix.', why: 'The log ruled the download out. Giving it to the agent as work invites a change with no evidence behind it.' },
-    { text: 'The file and the line with the quoted amount, and why a split on commas breaks it.', correct: true },
-    { text: 'Permission to change whatever the agent needs to change until the import passes.', why: 'Passing can mean skipping the bad row. The brief says what to fix and what to leave alone.' },
-    { text: 'All four nights pass, and the totals of the good nights stay the same.', correct: true },
+    { text: 'La commande qui échoue et la sortie qu’elle donne maintenant.', correct: true },
+    { text: 'La théorie du collègue sur le téléchargement des taux, comme seconde chose à corriger.', why: 'Le journal a écarté le téléchargement. Le donner à l’agent comme travail invite une modification sans preuve derrière.' },
+    { text: 'Le fichier et la ligne avec le montant entre guillemets, et pourquoi un découpage aux virgules la casse.', correct: true },
+    { text: 'L’autorisation de modifier tout ce dont l’agent a besoin jusqu’à ce que l’import passe.', why: 'Passer peut vouloir dire sauter la mauvaise ligne. La consigne dit quoi corriger et quoi laisser tranquille.' },
+    { text: 'Les quatre nuits passent, et les totaux des bonnes nuits restent les mêmes.', correct: true },
   ]}>
-Which of these belong in the brief you give the agent?
+Lesquels de ces éléments ont leur place dans la consigne que vous donnez à
+l’agent ?
 </MultiChoice>
 
 <Sort id="observed-or-assumed" phase="review" objective="coding-with-agents/verifies-agent-work/observes-and-debugs"
   concepts={['observing-a-running-system']}
-  context="A nightly import of store sales exports failed on two nights. The learner collects what is known before briefing a coding agent, and separates what was seen from what was only said or believed."
-  title="Seen, or only said?" hint="For each line, did someone run something and look at the result?"
-  buckets={['Seen in a run of the program', 'Said or believed, not checked yet']}
+  context="Un import nocturne d’exports de ventes de magasins a échoué deux nuits. L’apprenant rassemble ce qui est connu avant de donner sa consigne à un agent de code, et sépare ce qui a été vu de ce qui a seulement été dit ou cru."
+  title="Vu, ou seulement dit ?" hint="Pour chaque ligne, quelqu’un a-t-il lancé quelque chose et regardé le résultat ?"
+  buckets={['Vu dans une exécution du programme', 'Dit ou cru, pas encore vérifié']}
   items={[
-    { text: 'The failing run logs the rates as loaded', bucket: 0 },
-    { text: 'The download is often late at night', bucket: 1 },
-    { text: 'Three reruns of the 15th are rejected', bucket: 0 },
-    { text: 'The agent reports that all four nights pass', bucket: 1 },
-    { text: 'On the 15th, store-05 on its own passes', bucket: 0 },
+    { text: 'L’exécution en échec journalise les taux comme chargés', bucket: 0 },
+    { text: 'Le téléchargement est souvent en retard la nuit', bucket: 1 },
+    { text: 'Trois relances du 15 sont rejetées', bucket: 0 },
+    { text: 'L’agent annonce que les quatre nuits passent', bucket: 1 },
+    { text: 'Pour le 15, store-05 seul passe', bucket: 0 },
   ]} />
 
 <Match id="what-each-result-rules-out" phase="review" objective="coding-with-agents/verifies-agent-work/observes-and-debugs"
   concepts={['isolating-a-fault']}
-  context="A nightly import of eight store sales exports fails on some nights. The learner reruns the failing night, reads its log and halves the files, and records after each observation what it ruled out."
-  title="What does each result rule out?" hint="For each result, which suspect could not have produced it?"
-  options={['Timing or chance', 'The rates download', 'Four of the eight exports', 'The parsing step']}
+  context="Un import nocturne de huit exports de ventes de magasins échoue certaines nuits. L’apprenant relance la nuit en échec, lit son journal et divise les fichiers par deux, et note après chaque observation ce qu’elle a écarté."
+  title="Qu’est-ce que chaque résultat écarte ?" hint="Pour chaque résultat, quel suspect n’aurait pas pu le produire ?"
+  options={['L’heure ou le hasard', 'Le téléchargement des taux', 'Quatre des huit exports', 'L’étape d’analyse']}
   rows={[
-    { statement: 'Three reruns of the failing night give the same result as the night itself', option: 0, why: 'Which kind of cause would give a different result on a rerun?' },
-    { statement: 'A rerun of the failing night loads the rates in full and is still rejected', option: 1, why: 'Which step did the run complete before it failed?' },
-    { statement: 'Stores 1 to 4 pass when run on their own', option: 2, why: 'Which files could hold the bad row if these pass?' },
+    { statement: 'Trois relances de la nuit en échec donnent le même résultat que la nuit elle-même', option: 0, why: 'Quel genre de cause donnerait un résultat différent à une relance ?' },
+    { statement: 'Une relance de la nuit en échec charge entièrement les taux et elle est quand même rejetée', option: 1, why: 'Quelle étape l’exécution a-t-elle terminée avant d’échouer ?' },
+    { statement: 'Les magasins 1 à 4 passent quand on les lance seuls', option: 2, why: 'Quels fichiers pourraient contenir la mauvaise ligne si ceux-ci passent ?' },
   ]}
-  rationale="Each result rules out one suspect, and the note of what was ruled out is what keeps the search from going back to it." />
+  rationale="Chaque résultat écarte un suspect, et la note de ce qui a été écarté empêche la recherche d’y revenir." />
 
 <Choice id="three-changes-at-once" phase="review" objective="coding-with-agents/verifies-agent-work/observes-and-debugs"
   concepts={['isolating-a-fault']}
-  context="A colleague is debugging a fault that appears on some runs. They make three changes in one go and the fault stops appearing in the runs they try."
-  title="Three changes at once" hint="If one of the three changes is undone, can you say whether the fault comes back?"
+  context="Un collègue débogue un défaut qui apparaît lors de certaines exécutions. Il fait trois modifications d’un coup, et le défaut cesse d’apparaître dans les exécutions qu’il essaie."
+  title="Trois modifications à la fois" hint="Si l’une des trois modifications est annulée, pouvez-vous dire si le défaut revient ?"
   options={[
-    { text: 'That the parser change was the fix, since the parser is the most likely place for this kind of fault.', why: 'The parser is only the most likely place to look. Nothing in the runs separates the parser change from the other two.' },
-    { text: 'That the fault is fixed and verified, since the symptom no longer shows up in the runs they tried.', why: 'Verified against what? Without the reproduction steps, the runs may simply not have hit the failing input.' },
-    { text: 'Only that the symptom stopped in the runs they tried, and not which change, if any, stopped it.', correct: true },
-    { text: 'That the cache change was the fix, since caches are the usual cause of a fault that comes and goes.', why: 'A usual cause tells you where to look first. The runs changed three things and observed one outcome.' },
+    { text: 'Que la modification de l’analyseur était la correction, puisque l’analyseur est l’endroit le plus probable pour ce genre de défaut.', why: 'L’analyseur est seulement l’endroit le plus probable où chercher. Rien dans les exécutions ne sépare la modification de l’analyseur des deux autres.' },
+    { text: 'Que le défaut est corrigé et vérifié, puisque le symptôme n’apparaît plus dans les exécutions qu’il a essayées.', why: 'Vérifié au regard de quoi ? Sans les étapes de reproduction, les exécutions n’ont peut-être simplement pas rencontré l’entrée en échec.' },
+    { text: 'Seulement que le symptôme a cessé dans ses essais, sans savoir quelle modification l’a arrêté, ni même si l’une d’elles l’a fait.', correct: true },
+    { text: 'Que la modification du cache était la correction, puisque les caches sont la cause habituelle d’un défaut qui va et vient.', why: 'Une cause habituelle vous dit où chercher en premier. Les exécutions ont changé trois choses et observé un seul résultat.' },
   ]}>
-A colleague changes the parser, turns off a cache and raises the log
-level, all at once, and the fault no longer shows up. What do they know?
+Un collègue modifie l’analyseur, désactive un cache et augmente le niveau de
+journalisation, tout à la fois, et le défaut n’apparaît plus. Que sait-il ?
 </Choice>
 
 <Scenario id="the-agent-says-fixed" phase="review" objective="coding-with-agents/verifies-agent-work/observes-and-debugs"
   concepts={['observing-a-running-system']}
-  context="The learner briefed a coding agent with a reproduced cause and written reproduction steps for a nightly import that failed on two of four nights. The agent now reports the fix is done and the tests pass."
-  title="The agent says it is fixed" hint="Which of these produces a result you saw, from the steps that showed the fault?"
+  context="L’apprenant a donné à un agent de code une consigne avec une cause reproduite et des étapes de reproduction écrites, pour un import nocturne qui a échoué deux nuits sur quatre. L’agent annonce maintenant que la correction est faite et que les tests passent."
+  title="L’agent dit que c’est corrigé" hint="Laquelle de ces options produit un résultat que vous avez vu, à partir des étapes qui ont montré le défaut ?"
   options={[
-    { text: 'Close the report, since the agent ran the tests and they pass.', consequence: 'The tests are the ones that existed while the bug was there. None of them fed the importer a quoted amount.' },
-    { text: 'Run the reproduction steps yourself on all four nights and compare the totals of the good nights.', correct: true, consequence: 'The failing nights pass, and the good nights print the totals they printed before. The report can be closed with that evidence.' },
-    { text: 'Ask the agent to confirm that it ran the failing command, and close the report when it says yes.', consequence: 'The agent says yes. That is a second claim from the same source, and you still haven\'t seen a run.' },
-    { text: 'Read the diff, and close the report when the change to the parser looks right to you.', consequence: 'The diff looks right. Whether the failing night passes, and whether the good totals moved, is still unknown.' },
+    { text: 'Clore le signalement, puisque l’agent a lancé les tests et qu’ils passent.', consequence: 'Les tests sont ceux qui existaient quand le bug était là. Aucun ne donnait à l’import un montant entre guillemets.' },
+    { text: 'Lancer vous-même les étapes de reproduction sur les quatre nuits et comparer les totaux des bonnes nuits.', correct: true, consequence: 'Les nuits en échec passent, et les bonnes nuits affichent les totaux qu’elles affichaient avant. Le signalement peut être clos avec cette preuve.' },
+    { text: 'Demander à l’agent de confirmer qu’il a lancé la commande en échec, et clore le signalement quand il dit oui.', consequence: 'L’agent dit oui. C’est une seconde affirmation de la même source, et vous n’avez toujours vu aucune exécution.' },
+    { text: 'Lire le diff, et clore le signalement quand la modification de l’analyseur vous paraît juste.', consequence: 'Le diff paraît juste. On ne sait toujours pas si la nuit en échec passe, ni si les bons totaux ont bougé.' },
   ]}>
-The agent reports: "Fixed, and all tests pass." Which check do you do
-before you close the report?
+L’agent annonce : « Corrigé, et tous les tests passent. » Quel contrôle
+faites-vous avant de clore le signalement ?
 </Scenario>
 
-<Exercise stretch="Then start your own coding agent inside `~/debug-me`, brief it with what you found, and verify its fix against your reproduction steps. Compare its diff with the fix the lesson describes.">
-From the root of your clone of the course repository, copy the
-fixture's `nightly/` directory to a place of your own, and work only in
-the copy.
+<Exercise stretch="Lancez ensuite votre propre agent de code dans `~/debug-me`, donnez-lui une consigne avec ce que vous avez trouvé, et vérifiez sa correction au regard de vos étapes de reproduction. Comparez son diff avec la correction que décrit la leçon.">
+Depuis la racine de votre clone du dépôt du cours, copiez le dossier `nightly/`
+de l’exemple à un endroit à vous, et ne travaillez que dans la copie.
 
 ```sh
 cp -R site/examples/coding-with-agents/observing-and-debugging/nightly ~/debug-me
 cd ~/debug-me
 ```
 
-Take the 17th, which the lesson left alone, through the same steps. Spend
-about ten minutes. Write the reproduction steps, with how many reruns
-failed. Compare its log with a good night's and write one line on what
-the log rules out. Halve the eight files, one run at a time, and keep a
-line per run for what it ruled out. Then read the file that is left.
-This is the order that keeps a guessed fix out of your code, and it
-works the same for a bug in your own project.
+Faites passer le 17, que la leçon a laissé de côté, par les mêmes étapes.
+Comptez une dizaine de minutes. Écrivez les étapes de reproduction, avec le
+nombre de relances en échec. Comparez son journal avec celui d’une bonne nuit
+et écrivez une ligne sur ce que le journal écarte. Divisez les huit fichiers
+par deux, une exécution à la fois, et gardez une ligne par exécution pour ce
+qu’elle a écarté. Lisez ensuite le fichier qui reste. C’est l’ordre qui garde
+une correction devinée hors de votre code, et il fonctionne de la même façon
+pour un bug de votre propre projet.
 
-A good result has a reproduction that fails three runs of three, a note
-that the rerun of the 17th loads the rates in full, and a halving that
-ends at `store-03.csv`, where line 4 holds the amount `"2,180.40"`. The
-cause is the same as on the 15th. Then answer one question: if you had
-briefed the agent with the colleague's report as it was, what would it
-have changed?
+Un bon résultat a une reproduction qui échoue trois fois sur trois, une note
+qui dit que la relance du 17 charge entièrement les taux, et une division par
+deux qui s’arrête sur `store-03.csv`, dont la ligne 4 contient le montant
+`"2,180.40"`. La cause est la même que le 15. Répondez ensuite à une question :
+si vous aviez donné à l’agent le signalement du collègue tel quel, qu’aurait-il
+modifié ?
 </Exercise>
 
 <Recap>
-1. Reproduce the fault before anyone changes code. Rerun the failing input and write the steps down, and "sometimes fails" becomes a precise condition and the test the fix has to pass (@Brilliant VER).
-2. Observing a running system means reading what it recorded, the log, the output and the exit status, next to a run that worked. The log shows how far the failing run got, and a theory about a step the run completed is ruled out.
-3. Isolating a fault means halving the suspects: one change, one observation, and a note of what was ruled out. The same halving over commits is `git bisect` (@Git docs git-bisect).
-4. Brief the agent with the reproduced, explained cause and a done-criterion from the reproduction, and verify the fix by running those steps yourself.
+1. Reproduisez le défaut avant que quiconque modifie le code. Relancez l’entrée en échec et écrivez les étapes, et « échoue parfois » devient une condition précise et le test que la correction doit passer (@Brilliant VER).
+2. L’observation d’un système en marche consiste à lire ce qu’il a enregistré, le journal, la sortie et le code de sortie, à côté d’une exécution qui a marché. Le journal montre jusqu’où est allée l’exécution en échec, et une théorie sur une étape que l’exécution a terminée est écartée.
+3. Isoler un défaut consiste à diviser les suspects par deux : une modification, une observation, et une note de ce qui a été écarté. La même division sur les commits s’appelle `git bisect` (@Git docs git-bisect).
+4. Donnez à l’agent une consigne avec la cause reproduite et expliquée et un critère d’achèvement tiré de la reproduction, et vérifiez la correction en lançant vous-même ces étapes.
 </Recap>
 
 <Habit id="rerun-before-you-fix">
-The next time a bug report says a thing sometimes fails, rerun the failing case three times and write down the steps before you open the code or ask an agent for a fix.
+La prochaine fois qu’un signalement de bug dit qu’une chose échoue parfois, relancez trois fois le cas en échec et écrivez les étapes avant d’ouvrir le code ou de demander une correction à un agent.
 </Habit>

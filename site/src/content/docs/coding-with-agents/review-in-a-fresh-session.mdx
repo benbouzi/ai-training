@@ -1,142 +1,150 @@
 import { Choice, MultiChoice, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Prompt, Response, Habit } from '@components/lesson';
 
-In the previous lesson you reviewed the due-dates branch yourself, and you
-found five problems behind a summary that called the work done. In this
-lesson a second agent session reviews the same branch. You give it the diff, the
-spec and the criteria, and none of the conversation that wrote the code.
-Then you check its findings and sort them into ones to fix, ones to
-reject and ones to turn into a rule for the next session.
+Dans la leçon précédente, vous avez relu vous-même la branche des dates
+d’échéance, et vous avez trouvé cinq problèmes derrière un résumé qui déclarait
+le travail terminé. Dans cette leçon, une seconde session d’agent relit la même
+branche. Vous lui donnez le diff, la spécification et les critères, et rien de
+la conversation qui a écrit le code. Vous vérifiez ensuite ses remarques et
+vous les classez entre celles à corriger, celles à rejeter et celles à
+transformer en règle pour la session suivante.
 
-A review from a model doesn't replace yours. It is fast, and it reads
-every line of the diff. It can also be wrong, and it can find problems
-that aren't there. The lesson is about getting a useful review from it and
-weighing what comes back.
+La revue d’un modèle s’ajoute à la vôtre. Elle est rapide, et elle lit chaque
+ligne du diff. Elle peut aussi se tromper, et trouver des problèmes qui
+n’existent pas. La leçon porte sur la façon d’en obtenir une revue utile et de
+peser ce qui revient.
 
-## Why the session that wrote it is the wrong reviewer
+## Pourquoi la session qui a écrit est le mauvais relecteur
 
-The session that wrote a change holds the reasoning behind every line. Ask
-it to review its own diff and it reads the code through that reasoning and
-is biased toward its own choices. Claude Code's guide to good practice
-makes the same point. It suggests a second session for the review, because
-the model in the first one leans toward the code it produced there
+La session qui a écrit une modification garde le raisonnement derrière chaque
+ligne. Demandez-lui de relire son propre diff, et elle lit le code à travers ce
+raisonnement, avec un penchant pour ses propres choix. Le guide des bonnes
+pratiques de Claude Code fait la même remarque. Il suggère une seconde session
+pour la revue, parce que le modèle de la première penche vers le code qu’il y a
+produit (@Claude Code best practices).
+
+Une **revue en contexte neuf** est une revue faite par une session qui n’a pas
+écrit la modification. Elle reçoit le diff, la spécification et les critères à
+vérifier. Les étapes qui ont mené au code restent hors de son contexte. Son
+verdict repose alors sur ce que fait la modification, mesuré au regard de la
+spécification (@Claude Code best practices). Dans Claude Code, vous pouvez
+ouvrir une nouvelle session dans un second terminal, ou lancer `/clear` pour
+vider la session actuelle avant la revue (@Claude Code best practices). Vous
+pouvez aussi demander à la session qui a écrit de lancer un sous-agent (subagent) pour la
+revue. Un sous-agent ordinaire démarre dans un contexte à lui et rend compte,
+mais il reçoit sa tâche de la session qui a écrit (@Claude Code subagents).
+Dites à cette session de lui donner le diff, la spécification et les critères.
+Son propre récit du travail reste à l’écart. Une bifurcation (fork) est
+différente : c’est un sous-agent qui démarre avec toute la conversation
+jusque-là, et une bifurcation n’est pas un relecteur neuf
+(@Claude Code subagents). Une skill fournie, `/code-review`, fait vérifier le
+diff par un nouveau sous-agent à la recherche de bugs, donc une revue au regard
+de votre spécification demande une consigne que vous écrivez
 (@Claude Code best practices).
-
-A **fresh-context review** is a review by a session that didn't write the
-change. It receives the diff, the specification and the criteria to check.
-The steps that led to the code stay out of its context. Its verdict then
-rests on what the change does, measured against the spec
-(@Claude Code best practices). In Claude Code you can open a new session
-in a second terminal, or run `/clear` to empty the current one before the
-review (@Claude Code best practices). You can also ask the writing session
-to start a subagent for the review. An ordinary subagent starts in a
-context of its own and reports back, but it gets its task from the writing
-session (@Claude Code subagents). Tell the writing session to give it the
-diff, the spec and the criteria. Its own account of the work stays out.
-A fork is different: it is a subagent that starts with the whole
-conversation so far, and a fork isn't a fresh reviewer
-(@Claude Code subagents). A bundled `/code-review` skill has a new
-subagent check the diff for bugs, so a review against your spec needs a
-brief that you write (@Claude Code best practices).
 
 <Choice id="who-reviews" objective="coding-with-agents/verifies-agent-work/uses-a-fresh-review"
   concepts={['fresh-context-review']}
-  context="A coding agent session has just finished a feature branch against a written spec. The developer wants a model to review the branch before they read it themselves."
-  title="Which review is fresh?" hint="Which reviewer has none of the conversation that produced the code in its context?"
+  context="Une session d’agent de code vient de terminer une branche de fonctionnalité à partir d’une spécification écrite. Le développeur veut qu’un modèle relise la branche avant de la lire lui-même."
+  title="Quelle revue est neuve ?" hint="Quel relecteur n’a dans son contexte rien de la conversation qui a produit le code ?"
   options={[
-    { text: 'The same session, asked to read its diff again slowly and list every problem it can see.', why: 'The session still has every step of its own reasoning in context, and it reads the diff through it.' },
-    { text: 'A new session that gets the diff, the spec and the criteria, with no other text from the first one.', correct: true },
-    { text: 'A new session that gets the diff, the spec and the first session\'s summary of what it did and why.', why: 'The summary carries the first session\'s reasoning and claims into the new one, so the review starts from them.' },
-    { text: 'The same session, told to act as a strict reviewer who has never seen this code before.', why: 'A role in the prompt changes the tone. The whole conversation that wrote the code is still in its context.' },
+    { text: 'La même session, à qui l’on demande de relire lentement son diff et de lister chaque problème qu’elle voit.', why: 'La session a toujours chaque étape de son propre raisonnement dans son contexte, et elle lit le diff à travers lui.' },
+    { text: 'Une nouvelle session qui reçoit le diff, la spécification et les critères, sans aucun autre texte de la première.', correct: true },
+    { text: 'Une nouvelle session qui reçoit le diff, la spécification et le résumé par la première session de ce qu’elle a fait et pourquoi.', why: 'Le résumé transporte le raisonnement et les affirmations de la première session dans la nouvelle, donc la revue part d’eux.' },
+    { text: 'La même session, à qui l’on dit de jouer un relecteur strict qui n’a jamais vu ce code.', why: 'Un rôle dans le prompt change le ton. Toute la conversation qui a écrit le code est toujours dans son contexte.' },
   ]}>
-Which of these gives the branch a review from a fresh context?
+Laquelle de ces options donne à la branche une revue en contexte neuf ?
 </Choice>
 
-## What the reviewer gets
+## Ce que reçoit le relecteur
 
-The reviewer knows only what you give it. Point it at the change and at
-the spec, and define a finding for it: a line of the spec that the change
-breaks, or a change that no line of the spec asks for
-(@Claude Code best practices). A reviewer looks for what you ask it to look
-for. Ask for every possible improvement and you get a long list, whether
-the code is good or not, and each item you act on makes the change larger
-than the task. Keep the request to problems that make the program wrong or
-miss the spec. Anything else the reviewer says is a remark you may ignore
-(@Claude Code best practices).
+Le relecteur ne sait que ce que vous lui donnez. Désignez-lui la modification
+et la spécification, et définissez-lui une remarque : une ligne de la
+spécification que la modification enfreint, ou une modification qu’aucune
+ligne de la spécification ne demande (@Claude Code best practices). Un
+relecteur cherche ce que vous lui demandez de chercher. Demandez toutes les
+améliorations possibles, et vous obtenez une longue liste, que le code soit bon
+ou non, et chaque point que vous traitez rend la modification plus grosse que
+la tâche. Limitez la demande aux problèmes qui rendent le programme faux ou qui
+manquent la spécification. Tout le reste de ce que dit le relecteur est un
+commentaire que vous pouvez ignorer (@Claude Code best practices).
 
-For the due-dates branch, the brief is this. It points at `SPEC.md` rather
-than restating it. The reviewer then reads the same text the agent worked
-from. The transcript in this lesson is illustrative and doesn't record a
-specific model's words.
+Pour la branche des dates d’échéance, voici la consigne. Elle désigne
+`SPEC.md` au lieu de le reformuler. Le relecteur lit alors le même texte que
+celui à partir duquel l’agent a travaillé. La transcription de cette leçon est
+une illustration, sans reproduire les mots d’un modèle précis.
 
 <Prompt model="illustrative" recorded="illustrative">
-Review the change on this branch. Run `git diff main` to see it, and check
-it against `SPEC.md`. For each success criterion, say whether the branch
-meets it and how you checked. Then go through the limits in the spec, and
-list each file the spec gives no reason to touch. A finding is a criterion
-or a limit the branch breaks, or a change the spec didn't ask for. Write
-one line per finding, with the file and the line of the spec. Leave out
-style. Don't edit any file.
+Relis la modification de cette branche. Lance `git diff main` pour la voir, et
+compare-la à `SPEC.md`. Pour chaque critère de réussite, dis si la branche le
+satisfait et comment tu l’as vérifié. Passe ensuite en revue les limites de la
+spécification, et liste chaque fichier que la spécification ne donne aucune
+raison de toucher. Une remarque est un critère ou une limite que la branche
+enfreint, ou une modification que la spécification n’a pas demandée. Écris une
+ligne par remarque, avec le fichier et la ligne de la spécification. Laisse de
+côté le style. Ne modifie aucun fichier.
 </Prompt>
 <Response>
 ```text
-1. todo.py, overdue: returns an empty string when no item is overdue.
-   Criterion 3 asks for "nothing overdue".
-2. todo.py, main: a malformed date prints "bad date: ..." but the
-   command exits 0. Criterion 4 asks for status 2.
-3. test_todo.py: test_list_empty was deleted, and render.py no longer
-   prints "nothing to do" for an empty list. The limits say list keeps
-   working as it does.
-4. store.py: the default file changed from todos.json to .todos.json.
-   No line of the spec asks for it, and the committed list no longer
-   loads without TODO_FILE.
-5. test_clear.py: reformatted from double to single quotes. The spec
-   doesn't ask for it.
-6. todo.py, valid_date: only checks the format, so an impossible date
-   such as 2026-02-30 is accepted.
-7. todo.py: the date handling would be easier to extend in a DueDate
-   class with parse and compare methods.
+1. todo.py, overdue : renvoie une chaîne vide quand aucun élément n’est en
+   retard. Le critère 3 demande « nothing overdue ».
+2. todo.py, main : une date mal formée affiche « bad date: ... » mais la
+   commande sort avec le code 0. Le critère 4 demande le code 2.
+3. test_todo.py : test_list_empty a été supprimé, et render.py n’affiche
+   plus « nothing to do » pour une liste vide. Les limites disent que list
+   continue de fonctionner comme avant.
+4. store.py : le fichier par défaut est passé de todos.json à .todos.json.
+   Aucune ligne de la spécification ne le demande, et la liste committée
+   ne se charge plus sans TODO_FILE.
+5. test_clear.py : remis en forme des guillemets doubles aux simples. La
+   spécification ne le demande pas.
+6. todo.py, valid_date : ne vérifie que le format, donc une date
+   impossible comme 2026-02-30 est acceptée.
+7. todo.py : la gestion des dates serait plus facile à étendre dans une
+   classe DueDate avec des méthodes parse et compare.
 ```
 </Response>
 
-The review found the five problems the previous lesson found, and two
-more. The brief defined a finding and left out style, and finding 7 is
-a design suggestion anyway. A brief narrows the review, but the reviewer
-can still go outside it, so you read every finding.
+La revue a trouvé les cinq problèmes trouvés par la leçon précédente, et deux
+de plus. La consigne définissait une remarque et laissait de côté le style, et
+la remarque 7 est quand même une suggestion de conception. Une consigne
+restreint la revue, mais le relecteur peut quand même en sortir, donc vous
+lisez chaque remarque.
 
 <MultiChoice id="what-the-brief-holds" objective="coding-with-agents/verifies-agent-work/uses-a-fresh-review"
   concepts={['fresh-context-review']}
-  context="A developer writes the prompt for a new agent session that will review a feature branch. The feature was built from a written spec with success criteria and limits."
-  title="What goes in the review brief?" hint="Which lines give the reviewer something to check against, and which give it the writer's view or an open task?"
+  context="Un développeur écrit le prompt d’une nouvelle session d’agent qui va relire une branche de fonctionnalité. La fonctionnalité a été construite à partir d’une spécification écrite avec des critères de réussite et des limites."
+  title="Que contient la consigne de revue ?" hint="Quelles lignes donnent au relecteur quelque chose au regard de quoi vérifier, et lesquelles lui donnent le point de vue de l’auteur ou une tâche ouverte ?"
   options={[
-    { text: 'Run `git diff main` and check the change against `SPEC.md`.', correct: true },
-    { text: 'Here is the summary the first session wrote of what it changed and why.', why: 'That is the first session\'s reasoning. The review then checks the summary\'s story instead of the diff.' },
-    { text: 'For each success criterion, say whether it is met and how you checked.', correct: true },
-    { text: 'List every improvement you can find in the code, however small it is.', why: 'The reviewer will find many, and acting on them adds code and tests that nobody asked for.' },
-    { text: 'Count as a finding only a criterion or limit the branch breaks, or a change the spec didn\'t ask for.', correct: true },
+    { text: 'Lance `git diff main` et compare la modification à `SPEC.md`.', correct: true },
+    { text: 'Voici le résumé que la première session a écrit de ce qu’elle a modifié et pourquoi.', why: 'C’est le raisonnement de la première session. La revue vérifie alors le récit du résumé au lieu du diff.' },
+    { text: 'Pour chaque critère de réussite, dis s’il est satisfait et comment tu l’as vérifié.', correct: true },
+    { text: 'Liste chaque amélioration que tu peux trouver dans le code, aussi petite soit-elle.', why: 'Le relecteur en trouvera beaucoup, et les traiter ajoute du code et des tests que personne n’a demandés.' },
+    { text: 'Ne compte comme remarque qu’un critère ou une limite que la branche enfreint, ou une modification hors spécification.', correct: true },
   ]}>
-Select the three lines that belong in the brief for the reviewing
-session.
+Choisissez les trois lignes qui ont leur place dans la consigne de la session
+de revue.
 </MultiChoice>
 
-## Check each finding before you act on it
+## Vérifier chaque remarque avant d’agir
 
-A finding is a claim, and the reviewer is a model, so it can be wrong.
-Finding 6 sounds likely: a function that checks a date "only for the
-format" is a common bug. Before you fix or reject a finding, check it the
-same way you checked the agent's summary. Most of these findings say what
-a command does, so you can run the command.
+Une remarque est une affirmation, et le relecteur est un modèle, donc il peut
+se tromper. La remarque 6 paraît probable : une fonction qui vérifie une date
+« seulement pour le format » est un bug courant. Avant de corriger ou de
+rejeter une remarque, vérifiez-la comme vous avez vérifié le résumé de l’agent.
+La plupart de ces remarques disent ce que fait une commande, donc vous pouvez
+lancer la commande.
 
-<Predict id="run-check-findings" title="Check the findings"
+<Predict id="run-check-findings" title="Vérifier les remarques"
   answer={`1. overdue, nothing due: prints an empty line, confirmed
   2. due 1 tomorrow: exit status 0, confirmed
   3. list, empty list: prints '0 open, 0 done', confirmed
   4. list, TODO_FILE unset: prints '0 open, 0 done', confirmed
   6. due 1 2026-02-30: prints 'bad date: 2026-02-30', refuted`} run="coding-with-agents/review-in-a-fresh-session/check_findings.py">
-In a clone of the course repository, from
-`site/examples/coding-with-agents/review-in-a-fresh-session/`, run the
-script that builds the branch on a temporary copy and runs the command
-behind each finding that names one. Each line has the finding's number,
-the command, what came back, and `confirmed` or `refuted`.
+Dans un clone du dépôt du cours, depuis
+`site/examples/coding-with-agents/review-in-a-fresh-session/`, lancez le
+script qui construit la branche sur une copie temporaire et lance la commande
+derrière chaque remarque qui en nomme une. Chaque ligne donne le numéro de la
+remarque, la commande, ce qui est revenu, et `confirmed` (confirmée) ou
+`refuted` (réfutée).
 
 ```sh
 python3 check_findings.py
@@ -144,137 +152,148 @@ python3 check_findings.py
 
 </Predict>
 
-This example isn't graded. It shows the check, and the checkpoints ask
-what you do with the result. Findings 1 to 4 are confirmed. Finding 6 is
-refuted: `valid_date` uses `datetime.date.fromisoformat`, which refuses a
-day that doesn't exist. The branch already prints `bad date:` for it.
-Finding 5 is about the diff, and you read that diff in the previous lesson.
-Finding 7 is a suggestion, and no command can confirm a suggestion.
+Cet exemple n’est pas noté. Il montre la vérification, et les questions de
+contrôle demandent ce que vous faites du résultat. Les remarques 1 à 4 sont
+confirmées. La remarque 6 est réfutée : `valid_date` utilise
+`datetime.date.fromisoformat`, qui refuse un jour qui n’existe pas. La branche
+affiche déjà `bad date:` pour cette entrée. La remarque 5 porte sur le diff, et
+vous avez lu ce diff dans la leçon précédente. La remarque 7 est une
+suggestion, et aucune commande ne peut confirmer une suggestion.
 
-## Fix, reject, or turn into a rule
+## Corriger, rejeter, ou transformer en règle
 
-- **Fix it in this change.** The finding is confirmed, and it breaks a
-  criterion or a limit, or it changes something the spec never asked for.
-- **Reject it.** The check refutes it, or it is a suggestion with no gap
-  against the spec behind it. Write down why, in one line, so the next
-  reviewer doesn't raise it again.
-- **Fix it, and add a line to the project instructions.** The finding is a
-  mistake the agent has made before, so it will come back on the next task.
-  The lesson on [project instructions](/coding-with-agents/project-instructions/#fix-it-once-in-the-file)
-  gives the same trigger for a new line in `AGENTS.md`.
+- **La corriger dans cette modification.** La remarque est confirmée, et elle
+  enfreint un critère ou une limite, ou elle change une chose que la
+  spécification n’a jamais demandée.
+- **La rejeter.** La vérification la réfute, ou c’est une suggestion sans aucun
+  écart avec la spécification derrière elle. Écrivez pourquoi, en une ligne,
+  pour que le relecteur suivant ne la soulève pas de nouveau.
+- **La corriger, et ajouter une ligne aux instructions du projet.** La remarque
+  est une erreur que l’agent a déjà faite, donc elle reviendra à la tâche
+  suivante. La leçon sur les
+  [instructions de projet](/coding-with-agents/project-instructions/#la-corriger-une-fois-dans-le-fichier)
+  donne le même déclencheur pour une nouvelle ligne dans `AGENTS.md`.
 
-Suppose this is the second branch this month where an agent deleted a
-failing test to make the suite pass, and the first time an agent has
-reformatted a file outside its task. The deleted test is then fixed and
-becomes a rule, one specific line in `AGENTS.md`:
+Supposons que ce soit la deuxième branche ce mois-ci où un agent a supprimé un
+test en échec pour faire passer la suite, et la première fois qu’un agent a
+remis en forme un fichier hors de sa tâche. Le test supprimé est alors corrigé
+et devient une règle, une ligne précise dans `AGENTS.md`, écrite en anglais
+comme le reste du fichier :
 
 ```md
 - Never delete or weaken a test to make the suite pass. If a test fails after your change, fix the code, or stop and say which test fails and why.
 ```
 
+La ligne dit de ne jamais supprimer ni affaiblir un test pour faire passer la
+suite, et, si un test échoue après la modification, de corriger le code ou de
+s’arrêter en disant quel test échoue et pourquoi.
+
 <Sort id="sort-the-findings" objective="coding-with-agents/verifies-agent-work/uses-a-fresh-review"
   concepts={['fresh-context-review']}
-  context="A fresh agent session reviewed a due-dates branch against its spec and reported seven findings. The developer ran a check on each finding that names a command and read the diff for the rest. This is the second branch where an agent deleted a failing test. None of the other mistakes has happened before."
-  title="Sort the seven findings" hint="Is the finding confirmed and a gap against the spec, and has the agent made this mistake before?"
-  buckets={['Fix in this change', 'Reject', 'Fix, and add a line to AGENTS.md']}
+  context="Une session d’agent neuve a relu une branche de dates d’échéance au regard de sa spécification et a rendu sept remarques. Le développeur a vérifié chaque remarque qui nomme une commande et a lu le diff pour les autres. C’est la deuxième branche où un agent a supprimé un test en échec. Aucune des autres erreurs ne s’était produite avant."
+  title="Classer les sept remarques" hint="La remarque est-elle confirmée et constitue-t-elle un écart avec la spécification, et l’agent a-t-il déjà fait cette erreur ?"
+  buckets={['Corriger dans cette modification', 'Rejeter', 'Corriger, et ajouter une ligne à AGENTS.md']}
   items={[
-    { text: '1. overdue prints an empty line instead of nothing overdue (confirmed)', bucket: 0 },
-    { text: '2. a malformed date exits with status 0 (confirmed)', bucket: 0 },
-    { text: '3. test_list_empty deleted, and the empty list lost nothing to do (confirmed, second time)', bucket: 2 },
-    { text: '4. store.py reads .todos.json by default (confirmed)', bucket: 0 },
-    { text: '5. test_clear.py reformatted outside the spec (seen in the diff, first time)', bucket: 0 },
-    { text: '6. valid_date accepts 2026-02-30 (refuted)', bucket: 1 },
-    { text: '7. move the date handling into a DueDate class', bucket: 1 },
+    { text: '1. overdue affiche une ligne vide au lieu de nothing overdue (confirmée)', bucket: 0 },
+    { text: '2. une date mal formée sort avec le code 0 (confirmée)', bucket: 0 },
+    { text: '3. test_list_empty supprimé, et la liste vide a perdu nothing to do (confirmée, deuxième fois)', bucket: 2 },
+    { text: '4. store.py lit .todos.json par défaut (confirmée)', bucket: 0 },
+    { text: '5. test_clear.py remis en forme hors spécification (vu dans le diff, première fois)', bucket: 0 },
+    { text: '6. valid_date accepte 2026-02-30 (réfutée)', bucket: 1 },
+    { text: '7. déplacer la gestion des dates dans une classe DueDate', bucket: 1 },
   ]} />
 
-<Pitfall title="The branch that grew after the review">
-A developer asks a reviewer session for every gap it can find in a small
-change to a payment form. It reports fourteen. The developer has the
-writing session fix all of them, and the change comes back four times its
-size. It now has a new validation module and twenty more tests, and
-several of the tests send input that the form can never receive. The next
-reviewer can't see the original fix inside it. Two of the fourteen
-findings were real. Ask the reviewer only for gaps against the
-requirements, and decide on each finding before anything is changed.
+<Pitfall title="La branche qui a grossi après la revue">
+Un développeur demande à une session de revue chaque manque qu’elle peut
+trouver dans une petite modification d’un formulaire de paiement. Elle en
+signale quatorze. Le développeur fait tout corriger par la session qui a écrit,
+et la modification revient quatre fois plus grosse. Elle a maintenant un
+nouveau module de validation et vingt tests de plus, et plusieurs de ces tests
+envoient des entrées que le formulaire ne peut jamais recevoir. Le relecteur
+suivant ne voit plus la correction d’origine au milieu. Deux des quatorze
+remarques étaient réelles. Ne demandez au relecteur que les manques au regard
+des exigences, et décidez de chaque remarque avant que quoi que ce soit change.
 </Pitfall>
 
-## The review advises, and the gates decide
+## La revue conseille, et les barrières décident
 
-A review from a model is one more judgment about the change, next to
-yours. It can be wrong, and the next model can be wrong in the same way.
-The tests, the type checks and the CI job give the same answer every time
-for the same code, so they are what blocks a merge. When the fixes are in,
-run a second fresh review if you want one, and then wait for the gates.
+La revue d’un modèle est un jugement de plus sur la modification, à côté du
+vôtre. Elle peut se tromper, et le modèle suivant peut se tromper de la même
+façon. Les tests, la vérification des types et la tâche de CI donnent la même
+réponse à chaque fois pour le même code, donc ce sont eux qui bloquent une
+fusion. Une fois les corrections faites, lancez une seconde revue en contexte
+neuf si vous le voulez, puis attendez les barrières.
 
 <Scenario id="review-is-clean" objective="coding-with-agents/verifies-agent-work/uses-a-fresh-review"
   concepts={['fresh-context-review', 'deterministic-gates']}
-  context="A developer fixed the confirmed findings of a fresh-session review on a pull request. The team's CI job runs the tests and must pass before a merge."
-  title="The second review finds nothing" hint="Which of these waits for a check that gives the same answer every time?"
+  context="Un développeur a corrigé les remarques confirmées d’une revue en contexte neuf sur une pull request. La tâche de CI de l’équipe lance les tests et doit passer avant une fusion."
+  title="La seconde revue ne trouve rien" hint="Laquelle de ces options attend un contrôle qui donne la même réponse à chaque fois ?"
   options={[
-    { text: 'Ask the reviewer session to run the tests as well, and merge when it reports that they pass.', consequence: 'The reviewer says the tests pass. That is a report from a model about the tests, and the job that the team agreed on hasn\'t finished.' },
-    { text: 'Merge now, because two reviews found every problem the first one could and the second found none.', consequence: 'The CI job fails ten minutes later on main. A fix for criterion 4 broke a test the reviewer never ran.' },
-    { text: 'Wait for the CI job on the pull request, and merge when it passes.', correct: true, consequence: 'The job fails on one test. You fix it, the job passes, and the change merges on the gate the team agreed on.' },
-    { text: 'Ask the session that wrote the fixes whether they are complete, and merge if it confirms.', consequence: 'It confirms. It is the writer, and its answer comes from the reasoning that the fresh review was meant to avoid.' },
+    { text: 'Demander aussi à la session de revue de lancer les tests, et fusionner quand elle annonce qu’ils passent.', consequence: 'Le relecteur dit que les tests passent. C’est le rapport d’un modèle sur les tests, et la tâche dont l’équipe a convenu n’est pas terminée.' },
+    { text: 'Fusionner maintenant, parce que deux revues ont trouvé tous les problèmes que la première pouvait trouver et que la seconde n’en a trouvé aucun.', consequence: 'La tâche de CI échoue dix minutes plus tard sur main. Une correction du critère 4 a cassé un test que le relecteur n’a jamais lancé.' },
+    { text: 'Attendre la tâche de CI sur la pull request, et fusionner quand elle passe.', correct: true, consequence: 'La tâche échoue sur un test. Vous le corrigez, la tâche passe, et la modification est fusionnée sur la barrière dont l’équipe a convenu.' },
+    { text: 'Demander à la session qui a écrit les corrections si elles sont complètes, et fusionner si elle confirme.', consequence: 'Elle confirme. C’est l’auteur, et sa réponse vient du raisonnement que la revue en contexte neuf devait éviter.' },
   ]}>
-After your fixes, a second fresh review reports no gaps. The CI job on the
-pull request is still running. What do you do?
+Après vos corrections, une seconde revue en contexte neuf ne signale aucun
+manque. La tâche de CI de la pull request tourne encore. Que faites-vous ?
 </Scenario>
 
 <Sort id="fresh-or-not" phase="review" objective="coding-with-agents/verifies-agent-work/uses-a-fresh-review"
   concepts={['fresh-context-review']}
-  context="A developer wants a model to review a branch an agent session wrote. They consider several ways to set up the reviewer."
-  title="Is the reviewer fresh?" hint="Does the reviewer have the writing session's conversation, or a summary of it, in its context?"
-  buckets={['Fresh context', 'Not a fresh context']}
+  context="Un développeur veut qu’un modèle relise une branche écrite par une session d’agent. Il envisage plusieurs façons de mettre en place le relecteur."
+  title="Le relecteur est-il neuf ?" hint="Le relecteur a-t-il dans son contexte la conversation de la session qui a écrit, ou un résumé de cette conversation ?"
+  buckets={['Contexte neuf', 'Pas un contexte neuf']}
   items={[
-    { text: 'A subagent that the writer gives only the diff and the spec', bucket: 0 },
-    { text: 'A new session in a second terminal, given the diff and the criteria', bucket: 0 },
-    { text: 'The writing session, asked to review its own diff', bucket: 1 },
-    { text: 'A new session given the diff and the writer\'s summary of its reasons', bucket: 1 },
+    { text: 'Un sous-agent auquel l’auteur ne donne que le diff et la spécification', bucket: 0 },
+    { text: 'Une nouvelle session dans un second terminal, qui reçoit le diff et les critères', bucket: 0 },
+    { text: 'La session qui a écrit, à qui l’on demande de relire son propre diff', bucket: 1 },
+    { text: 'Une nouvelle session qui reçoit le diff et le résumé par l’auteur de ses raisons', bucket: 1 },
   ]} />
 
 <Choice id="fourteen-findings" phase="review" objective="coding-with-agents/verifies-agent-work/uses-a-fresh-review"
   concepts={['fresh-context-review']}
-  context="A developer asked a fresh agent session to list every gap it could find in a small change. The review came back with fourteen findings, and the change has a written spec."
-  title="Fourteen findings" hint="Which findings are a gap against the spec, and how do you know that a finding is true?"
+  context="Un développeur a demandé à une session d’agent neuve de lister chaque manque qu’elle pouvait trouver dans une petite modification. La revue est revenue avec quatorze remarques, et la modification a une spécification écrite."
+  title="Quatorze remarques" hint="Quelles remarques sont des écarts avec la spécification, et comment savez-vous qu’une remarque est vraie ?"
   options={[
-    { text: 'Check each finding, keep the ones that break the spec, and next time ask only for gaps against it.', correct: true },
-    { text: 'Fix all fourteen, because each one is a gap that a careful reviewer took the time to point out.', why: 'A reviewer asked for gaps returns gaps whether or not the work is good. Fixing every one adds code and tests nobody needs.' },
-    { text: 'Ignore the review, because a reviewer that reports fourteen gaps in a small change is not working.', why: 'Some of the fourteen may be real. You find out which by checking them against the spec.' },
-    { text: 'Ask the writing session which of the fourteen are right, and fix the ones it agrees with.', why: 'The writer is biased toward its own choices, which is the reason for a fresh review.' },
+    { text: 'Vérifier chaque remarque, garder celles qui enfreignent la spécification, et ne demander la prochaine fois que les écarts avec elle.', correct: true },
+    { text: 'Corriger les quatorze, parce que chacune est un manque qu’un relecteur attentif a pris le temps de signaler.', why: 'Un relecteur à qui l’on demande des manques en rend, que le travail soit bon ou non. Les corriger tous ajoute du code et des tests dont personne n’a besoin.' },
+    { text: 'Ignorer la revue, parce qu’un relecteur qui signale quatorze manques dans une petite modification ne fonctionne pas.', why: 'Certaines des quatorze sont peut-être réelles. Vous découvrez lesquelles en les vérifiant au regard de la spécification.' },
+    { text: 'Demander à la session qui a écrit lesquelles des quatorze sont justes, et corriger celles avec lesquelles elle est d’accord.', why: 'L’auteur penche vers ses propres choix, et c’est la raison d’une revue en contexte neuf.' },
   ]}>
-What do you do with the fourteen findings?
+Que faites-vous des quatorze remarques ?
 </Choice>
 
 <Choice id="merge-on-review" phase="review" objective="coding-with-agents/verifies-agent-work/uses-a-fresh-review"
   concepts={['fresh-context-review', 'deterministic-gates']}
-  context="A team uses a fresh agent session to review each pull request, and a CI job that runs the tests. The team agreed that the CI job decides whether a change merges. A developer asks which of the two may block a merge on its own."
-  title="What blocks the merge?" hint="Which of the two gives the same answer every time for the same code?"
+  context="Une équipe fait relire chaque pull request par une session d’agent neuve, et utilise une tâche de CI qui lance les tests. L’équipe a convenu que la tâche de CI décide si une modification est fusionnée. Un développeur demande lequel des deux peut bloquer une fusion à lui seul."
+  title="Qu’est-ce qui bloque la fusion ?" hint="Lequel des deux donne la même réponse à chaque fois pour le même code ?"
   options={[
-    { text: 'The fresh review, because it reads every line of the diff and the CI job reads none of them.', why: 'The review is a model\'s judgment. It can miss a problem or report one that isn\'t there, so it is advice.' },
-    { text: 'Either one, whichever finishes first, since both of them check the same change.', why: 'They check in different ways. One gives the same answer every time, and the other doesn\'t.' },
-    { text: 'Neither one, because only the developer who wrote the brief can decide to merge.', why: 'The developer weighs the review, and the team agreed that the CI job decides.' },
-    { text: 'The CI job, and the review findings are advice the developer weighs before the merge.', correct: true },
+    { text: 'La revue en contexte neuf, parce qu’elle lit chaque ligne du diff et que la tâche de CI n’en lit aucune.', why: 'La revue est le jugement d’un modèle. Elle peut manquer un problème ou en signaler un qui n’existe pas, donc c’est un conseil.' },
+    { text: 'L’un ou l’autre, le premier qui termine, puisque les deux vérifient la même modification.', why: 'Ils vérifient de façons différentes. L’un donne la même réponse à chaque fois, l’autre non.' },
+    { text: 'Ni l’un ni l’autre, parce que seul le développeur qui a écrit la consigne peut décider de fusionner.', why: 'Le développeur pèse la revue, et l’équipe a convenu que la tâche de CI décide.' },
+    { text: 'La tâche de CI, et les remarques de la revue sont des conseils que le développeur pèse avant la fusion.', correct: true },
   ]}>
-Which of the two may block a merge on its own?
+Lequel des deux peut bloquer une fusion à lui seul ?
 </Choice>
 
 <Choice id="a-finding-that-sounds-right" phase="review" objective="coding-with-agents/verifies-agent-work/uses-a-fresh-review"
   concepts={['fresh-context-review']}
-  context="A fresh agent session reviewed a branch and reported that a command accepts a date that doesn't exist, such as February 30. The finding names the command and the input."
-  title="A finding that sounds right" hint="What kind of statement is a finding, and how did you treat the agent's summary?"
+  context="Une session d’agent neuve a relu une branche et signalé qu’une commande accepte une date qui n’existe pas, comme le 30 février. La remarque nomme la commande et l’entrée."
+  title="Une remarque qui a l’air juste" hint="Quel genre d’énoncé est une remarque, et comment avez-vous traité le résumé de l’agent ?"
   options={[
-    { text: 'Fix it at once, because a date check that misses February 30 is a common bug.', why: 'Common is not the same as present. The fix may change code that already works.' },
-    { text: 'Reject it, because the brief asked the reviewer for gaps against the spec only.', why: 'An impossible date that is accepted would break the spec\'s rule on malformed dates, so it is inside the brief.' },
-    { text: 'Run the command with that date on the branch, and decide once you see the output.', correct: true },
-    { text: 'Ask the writing session whether the check handles February 30, and go by its answer.', why: 'The writer is biased toward its own code, and its answer is one more claim.' },
+    { text: 'La corriger tout de suite, parce qu’un contrôle de date qui laisse passer le 30 février est un bug courant.', why: 'Courant ne veut pas dire présent. La correction risque de modifier du code qui fonctionne déjà.' },
+    { text: 'La rejeter, parce que la consigne ne demandait au relecteur que les écarts avec la spécification.', why: 'Une date impossible acceptée enfreindrait la règle de la spécification sur les dates mal formées, donc elle entre dans la consigne.' },
+    { text: 'Lancer la commande avec cette date sur la branche, et décider une fois la sortie vue.', correct: true },
+    { text: 'Demander à la session qui a écrit si le contrôle traite le 30 février, et s’en tenir à sa réponse.', why: 'L’auteur penche vers son propre code, et sa réponse est une affirmation de plus.' },
   ]}>
-What do you do with the finding first?
+Que faites-vous d’abord de la remarque ?
 </Choice>
 
-<Exercise stretch="Then give the confirmed findings to a writing session, as one brief, and have a second fresh session review its fix with the same brief. Count what the second review finds.">
-Build the due-dates branch into a new directory with the previous lesson's
-`build.py`, from `site/examples/coding-with-agents/reviewing-the-diff/`,
-and start a new Claude Code session in the copy.
+<Exercise stretch="Donnez ensuite les remarques confirmées à une session d’écriture, en une seule consigne, et faites relire sa correction par une seconde session neuve avec la même consigne. Comptez ce que trouve la seconde revue.">
+Construisez la branche des dates d’échéance dans un nouveau dossier avec le
+`build.py` de la leçon précédente, depuis
+`site/examples/coding-with-agents/reviewing-the-diff/`, et ouvrez une nouvelle
+session Claude Code dans la copie.
 
 ```sh
 python3 build.py ~/fresh-review
@@ -282,40 +301,41 @@ cd ~/fresh-review/fixture-repo
 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude --permission-mode default
 ```
 
-The environment variable turns auto-memory off. The session then loads no
-note from an earlier session and saves none of its own
-(@Claude Code memory). Manual mode, which the flag selects, lets the agent
-read files without a prompt (@Claude Code permission modes). It asks you
-before each edit, and before each command outside a short built-in list
-of read-only ones. Read-only git commands such as `git diff` are on it
-and run without a prompt (@Claude Code permissions). The copy is yours to
-delete, so you can approve a command that runs the tests or the program.
-An approved run of the program can save the list into the copy, and
-`git status` then shows the file as untracked. Refuse every edit, because
-this session reports and doesn't fix. Type the brief from this lesson as
-your first message.
+La variable d’environnement désactive la mémoire automatique. La session ne
+charge alors aucune note d’une session précédente et n’en enregistre aucune
+(@Claude Code memory). Le mode Manual, que choisit l’option, laisse l’agent
+lire des fichiers sans demande (@Claude Code permission modes). Il vous demande
+votre accord avant chaque modification, et avant chaque commande qui ne figure
+pas dans une courte liste intégrée de commandes en lecture seule. Les
+commandes git en lecture seule comme `git diff` y figurent et tournent sans
+demande (@Claude Code permissions). La copie est à vous et vous pouvez la
+supprimer, donc vous pouvez approuver une commande qui lance les tests ou le
+programme. Une exécution approuvée du programme peut enregistrer la liste dans
+la copie, et `git status` montre alors le fichier comme non suivi. Refusez
+toute modification, parce que cette session rend compte sans corriger. Tapez
+la consigne de cette leçon comme premier message.
 
-Sort what comes back into three lists: fix, reject, and fix with a rule.
-Check each finding that names a command before you sort it, and write one
-line of reason for each rejection. Write the rule line for `AGENTS.md`,
-and don't commit it. Ten minutes is enough. Delete the directory when
-you are done.
+Classez ce qui revient en trois listes : corriger, rejeter, et corriger avec
+une règle. Vérifiez chaque remarque qui nomme une commande avant de la classer,
+et écrivez une ligne de raison pour chaque rejet. Écrivez la ligne de règle pour
+`AGENTS.md`, sans la committer. Dix minutes suffisent. Supprimez le dossier
+quand vous avez terminé.
 
-A good result has every confirmed finding in the fix list or the rule
-list, every rejection with a reason, and one rule line specific enough
-that you could check a later branch against it. Then compare the lists
-with the five findings of the previous lesson, and answer one question:
-which finding did the reviewer get that you missed, or which did you get
-that it missed?
+Un bon résultat place chaque remarque confirmée dans la liste « corriger » ou
+« règle », donne une raison à chaque rejet, et contient une ligne de règle assez
+précise pour que vous puissiez vérifier une branche ultérieure par rapport à
+elle. Comparez ensuite les listes avec les cinq remarques de la leçon
+précédente, et répondez à une question : quelle remarque le relecteur a-t-il
+trouvée que vous aviez manquée, ou laquelle avez-vous trouvée qu’il a manquée ?
 </Exercise>
 
 <Recap>
-1. A session that wrote a change is biased toward it. Give the review to a session that didn't write it, with the diff, the spec and the criteria, and none of the writer's reasoning (@Claude Code best practices).
-2. Point the reviewer at the change and the spec, and define a finding as a line of the spec the change breaks or a change outside the spec. A reviewer finds what it is asked to find, and fixing every remark makes the change larger than the task (@Claude Code best practices).
-3. A finding is a claim. Check each one before you act on it. A confirmed gap is fixed in the change, and a refuted claim or a bare suggestion is rejected with a reason. When the agent has made the mistake before, the fix also gets a line in the project instructions.
-4. The review is advice you weigh. The tests and the CI job decide whether the change merges.
+1. Une session qui a écrit une modification penche vers elle. Confiez la revue à une session qui ne l’a pas écrite, avec le diff, la spécification et les critères, et rien du raisonnement de l’auteur (@Claude Code best practices).
+2. Désignez au relecteur la modification et la spécification, et définissez une remarque comme une ligne de la spécification que la modification enfreint ou une modification hors spécification. Un relecteur trouve ce qu’on lui demande de trouver, et corriger chaque commentaire rend la modification plus grosse que la tâche (@Claude Code best practices).
+3. Une remarque est une affirmation. Vérifiez chacune avant d’agir. Un écart confirmé se corrige dans la modification, et une affirmation réfutée ou une simple suggestion se rejette avec une raison. Quand l’agent a déjà fait l’erreur, la correction reçoit aussi une ligne dans les instructions du projet.
+4. La revue est un conseil que vous pesez. Les tests et la tâche de CI décident si la modification est fusionnée.
 </Recap>
 
 <Habit id="review-in-a-new-session">
-The next time an agent finishes a change for you, give the diff and the spec to a new session for review before you read the agent's summary.
+La prochaine fois qu’un agent termine une modification pour vous, donnez le diff et la spécification à une nouvelle session pour la revue avant de lire le résumé de l’agent.
 </Habit>

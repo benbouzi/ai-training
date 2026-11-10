@@ -17,10 +17,10 @@ assumes:
     section: lhumain-dans-la-boucle
   - objective: coding-with-agents/verifies-agent-work/automates-the-check
     lesson: coding-with-agents/self-checking-loops
-    section: brief-the-loop-with-a-limit
+    section: donner-la-consigne-de-la-boucle-avec-une-limite
   - objective: coding-with-agents/verifies-agent-work/prefers-gates-to-opinions
     lesson: coding-with-agents/self-checking-loops
-    section: gates-and-second-opinions
+    section: les-barrières-et-les-seconds-avis
 extends-to:
   - label: How to use Claude Code hooks to enforce the right CLI (AI Hero, en anglais)
     href: https://www.aihero.dev/how-to-use-claude-code-hooks-to-enforce-the-right-cli

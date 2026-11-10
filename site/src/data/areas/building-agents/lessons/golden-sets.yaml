@@ -10,7 +10,7 @@ introduces: [golden-sets]
 assumes:
   - objective: coding-with-agents/verifies-agent-work/automates-the-check
     lesson: coding-with-agents/self-checking-loops
-    section: write-the-check-as-a-test
+    section: écrire-le-contrôle-sous-forme-de-test
 after: [building-agents/rubrics]
 shorts: []
 exercise:

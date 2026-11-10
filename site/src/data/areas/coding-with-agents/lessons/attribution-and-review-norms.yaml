@@ -16,7 +16,7 @@ assumes:
     section: les-trois-parties-dune-ligne-de-mention
   - objective: coding-with-agents/verifies-agent-work/reviews-others-code
     lesson: coding-with-agents/reviewing-the-diff
-    section: every-changed-file
+    section: chaque-fichier-modifié
 after:
   - coding-with-agents/reversible-changes
   - coding-with-agents/reviewing-the-diff

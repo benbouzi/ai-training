@@ -1,55 +1,58 @@
 import { Choice, MultiChoice, Predict, Scenario, Pitfall, Exercise, Recap, Prompt, Response, Order } from '@components/lesson';
 
-In this lesson you review a branch a coding agent made and you didn't
-watch it make. The branch implements the due-dates spec from *Working
-from a spec in small increments*, and it arrives with a summary that
-says the work is done and a test suite that passes. The course keeps a copy of that branch as a fixture,
-so everyone reviews the same code. It hides five problems, and the
-lesson is the order of reading that finds them. Reviewing code you did
-not write is a different kind of reading from reviewing your own. You
-have no memory of why a line exists, so every line has to justify itself
-against the spec (@Brilliant VER).
+Dans cette leçon, vous relisez une branche qu’un agent de code a faite sans
+que vous le regardiez faire. La branche implémente la spécification des dates
+d’échéance de *Travailler à partir d’une spécification, par petits
+incréments*, et elle arrive avec un résumé qui dit que le travail est terminé
+et une suite de tests qui passe. Le cours garde une copie de cette branche
+comme exemple, pour que tout le monde relise le même code. Elle cache cinq
+problèmes, et la leçon porte sur l’ordre de lecture qui les trouve. Relire du
+code qu’on n’a pas écrit est une autre forme de lecture que relire son propre
+code. Vous ne vous souvenez pas pourquoi une ligne existe, donc chaque ligne
+doit se justifier au regard de la spécification (@Brilliant VER).
 
-The agent's summary is where most reviews start, and it is the one text
-on the branch the agent wrote about itself. Here is the one that came
-with the branch. The transcripts in this lesson are illustrative and
-don't record a specific model's words.
+Le résumé de l’agent est le point de départ de la plupart des revues, et c’est
+le seul texte de la branche que l’agent a écrit sur lui-même. Voici celui qui
+accompagnait la branche. Les transcriptions de cette leçon sont des
+illustrations, sans reproduire les mots d’un modèle précis.
 
 <Prompt model="illustrative" recorded="illustrative">
-Implement `SPEC.md` on the branch `due-dates` and commit when
-`python3 -m unittest -q` passes. Then summarize what you changed.
+Implémente `SPEC.md` sur la branche `due-dates` et committe quand
+`python3 -m unittest -q` passe. Résume ensuite ce que tu as modifié.
 </Prompt>
 <Response>
-Done. I added the `due` and `overdue` commands to `todo.py`, with date
-validation so a malformed date is refused with `bad date: <input>`.
-`list` shows the date after the text. I added `test_due_dates.py` with
-tests for `due`, `list`, `overdue` and the validation, and the whole
-suite passes. I also cleaned up the formatting in one test file while I
-was there.
+Terminé. J’ai ajouté les commandes `due` et `overdue` à `todo.py`, avec une
+validation des dates pour qu’une date mal formée soit refusée avec
+`bad date: <input>`. `list` affiche la date après le texte. J’ai ajouté
+`test_due_dates.py` avec des tests pour `due`, `list`, `overdue` et la
+validation, et toute la suite passe. J’ai aussi nettoyé la mise en forme d’un
+fichier de test au passage.
 </Response>
 
-## Read the brief before the diff
+## Lire la consigne avant le diff
 
-Read the summary once and then set it aside, because it is a claim to
-check rather than a record to trust. *Spotting a hallucination* checked
-a summary against its sources, and this review checks the agent's
-claims against the branch in the same way. The order that works is the
-brief first, then the tests, then the diff. The brief is `SPEC.md`, and
-it says what was asked. The tests say what the agent thinks it built.
-The diff says what changed. Reading in that order means the first
-question you answer is whether the change does what was asked, and only
-then how it does it. Well-written code that solves a slightly different
-problem is a common agent failure and a hard one to see line by line,
-because every line looks reasonable on its own (@Academy ai-fluency-for-builders).
+Lisez le résumé une fois, puis mettez-le de côté : c’est une affirmation à
+vérifier, à laquelle il ne faut pas se fier comme à un compte rendu. *À quoi
+ressemble un fait inventé* comparait un résumé à ses sources, et cette revue
+compare de la même façon les affirmations de l’agent à la branche. L’ordre qui
+fonctionne est la consigne d’abord, puis les tests, puis le diff. La consigne
+est `SPEC.md`, et elle dit ce qui a été demandé. Les tests disent ce que
+l’agent pense avoir construit. Le diff dit ce qui a changé. Lire dans cet
+ordre veut dire que la première question à laquelle vous répondez est de
+savoir si la modification fait ce qui a été demandé, et seulement ensuite
+comment elle le fait. Un code bien écrit qui résout un problème légèrement
+différent est un échec d’agent courant et difficile à voir ligne par ligne,
+parce que chaque ligne a l’air raisonnable prise seule
+(@Academy ai-fluency-for-builders).
 
-Open `SPEC.md` and write down what the review has to find: the three
-commands, the four limits, and the five success criteria. Then ask git
-which files the branch touched. `git diff --stat=80 main` prints one line
-per changed file, with the number of lines added plus removed in it, and
-a total. The `=80` fixes the width, so the output is the same whatever
-size your terminal is (@Git docs git-diff).
+Ouvrez `SPEC.md` et notez ce que la revue doit trouver : les trois commandes,
+les quatre limites et les cinq critères de réussite. Demandez ensuite à git
+quels fichiers la branche a touchés. `git diff --stat=80 main` affiche une
+ligne par fichier modifié, avec le nombre de lignes ajoutées et retirées, et
+un total. Le `=80` fixe la largeur, pour que la sortie soit la même quelle que
+soit la taille de votre terminal (@Git docs git-diff).
 
-<Predict id="run-stat" title="Which files did the branch touch?"
+<Predict id="run-stat" title="Quels fichiers la branche a-t-elle touchés ?"
   answer={` render.py         |  7 ++++---
    store.py          |  2 +-
    test_clear.py     | 12 ++++++------
@@ -57,9 +60,10 @@ size your terminal is (@Git docs git-diff).
    test_todo.py      |  3 ---
    todo.py           | 36 ++++++++++++++++++++++++++++++++++++
    6 files changed, 98 insertions(+), 13 deletions(-)`} run="coding-with-agents/reviewing-the-diff/stat.py">
-In a clone of the course repository, from
-`site/examples/coding-with-agents/reviewing-the-diff/`, run the script
-that builds the branch on a copy and prints its diffstat against `main`.
+Dans un clone du dépôt du cours, depuis
+`site/examples/coding-with-agents/reviewing-the-diff/`, lancez le script qui
+construit la branche sur une copie et affiche son diffstat par rapport à
+`main`.
 
 ```sh
 python3 stat.py
@@ -67,63 +71,67 @@ python3 stat.py
 
 </Predict>
 
-The examples in this lesson aren't graded. Each one is a command you
-run, with output the course itself checks on every build. The
-checkpoints ask what a reviewer does with what the commands show.
+Les exemples de cette leçon ne sont pas notés. Chacun est une commande que vous
+lancez, avec une sortie que le cours vérifie lui-même à chaque build. Les
+questions de contrôle portent sur ce qu’un relecteur fait de ce que montrent
+les commandes.
 
-Hold the list against the spec before opening a file. The spec names no
-file. It asks for two new commands and for a date after the text in the
-`list` output, and it asks for tests that pass. The files you expect
-from that are the one with the commands, the one that renders the list,
-and a new test. The branch touched six.
-`store.py` reads and writes the file and has no command in it,
-`test_clear.py` tests `clear`, which the spec says keeps working as it
-does, and `test_todo.py` lost three lines and gained none. Three of the
-six files are already questions, and you found them without reading any
-code.
+Comparez la liste à la spécification avant d’ouvrir un fichier. La
+spécification ne nomme aucun fichier. Elle demande deux nouvelles commandes et
+une date après le texte dans la sortie de `list`, et elle demande des tests qui
+passent. Les fichiers que vous en attendez sont celui qui contient les
+commandes, celui qui affiche la liste, et un nouveau test. La branche en a
+touché six. `store.py` lit et écrit le fichier et ne contient aucune commande,
+`test_clear.py` teste `clear`, dont la spécification dit qu’il continue de
+fonctionner comme avant, et `test_todo.py` a perdu trois lignes sans en gagner
+aucune. Trois des six fichiers sont déjà des questions, et vous les avez
+trouvés sans lire de code.
 
 <Choice id="first-question" objective="coding-with-agents/verifies-agent-work/reviews-others-code"
   concepts={['reviewing-code-you-did-not-write']}
-  context="A coding agent has finished a feature on a branch and posted a summary saying the work is done and the tests pass. The learner is about to review the branch and decides where to start."
-  title="What is the first thing the review answers?" hint="Which question, answered wrong, makes the answers to all the others worthless?"
+  context="Un agent de code a terminé une fonctionnalité sur une branche et a publié un résumé qui dit que le travail est terminé et que les tests passent. L’apprenant s’apprête à relire la branche et décide par où commencer."
+  title="À quelle question la revue répond-elle en premier ?" hint="Quelle question, si elle reçoit une mauvaise réponse, rend toutes les autres réponses sans valeur ?"
   options={[
-    { text: 'Whether the code is written the way you would have written it.', why: 'Style is the last question. A change written in your style that does the wrong thing is still wrong.' },
-    { text: 'Whether the summary matches the commit message.', why: 'Both texts are the agent\'s own account. Checking one claim against another claim from the same source checks nothing.' },
-    { text: 'Whether the change does what the spec asked for.', correct: true },
-    { text: 'Whether the test suite passes on the branch.', why: 'A green suite says the code does what the tests say. The tests are the agent\'s too, and the deleted one no longer says anything.' },
+    { text: 'Le code est-il écrit comme vous l’auriez écrit ?', why: 'Le style est la dernière question. Une modification écrite dans votre style qui fait la mauvaise chose reste fausse.' },
+    { text: 'Le résumé correspond-il au message de commit ?', why: 'Les deux textes sont le récit de l’agent. Comparer une affirmation à une autre affirmation de la même source ne vérifie rien.' },
+    { text: 'La modification fait-elle ce que la spécification demandait ?', correct: true },
+    { text: 'La suite de tests passe-t-elle sur la branche ?', why: 'Une suite au vert dit que le code fait ce que disent les tests. Les tests sont aussi ceux de l’agent, et celui qui a été supprimé ne dit plus rien.' },
   ]}>
-The spec and the agent's summary are open, the diff is in front of you,
-and the test run is green. Which question do you answer first?
+La spécification et le résumé de l’agent sont ouverts, le diff est devant vous,
+et l’exécution des tests est au vert. À quelle question répondez-vous en
+premier ?
 </Choice>
 
-## Every changed file
+## Chaque fichier modifié
 
-A file the brief never named is a change the brief never asked for, and
-those are the riskiest part of an agent's diff. They pass unread because
-the reviewer's attention is on the feature. Read each one and ask what
-it does to the program and who asked for it.
+Un fichier que la consigne n’a jamais nommé est une modification que la
+consigne n’a jamais demandée, et ce sont les parties les plus risquées du diff
+d’un agent. Elles passent sans être lues parce que l’attention du relecteur est
+sur la fonctionnalité. Lisez chacune et demandez-vous ce qu’elle fait au
+programme et qui l’a demandée.
 
-`store.py` shows two lines in the diffstat: one removed, and one added.
-Before, the list was read from
-`todos.json` unless `TODO_FILE` said otherwise. After, the default is
-`.todos.json`. No line of the spec mentions the file name, and the
-limits say `add`, `list`, `done` and `clear` keep working as they do. A
-learner who runs `python3 todo.py list` on the branch gets an empty list,
-because the program is now looking at a file that doesn't exist. That's
-a silent behavior change in a file the feature had no reason to touch.
+`store.py` montre deux lignes dans le diffstat : une retirée, une ajoutée.
+Avant, la liste était lue dans `todos.json` sauf si `TODO_FILE` disait
+autrement. Après, la valeur par défaut est `.todos.json`. Aucune ligne de la
+spécification ne parle du nom du fichier, et les limites disent que `add`,
+`list`, `done` et `clear` continuent de fonctionner comme avant. Un apprenant
+qui lance `python3 todo.py list` sur la branche obtient une liste vide, parce
+que le programme regarde maintenant un fichier qui n’existe pas. C’est un
+changement de comportement silencieux dans un fichier que la fonctionnalité
+n’avait aucune raison de toucher.
 
-`test_clear.py` shows twelve lines: six removed, and six added. Read them
-side by side and every change is a double quote turned into an
-apostrophe. The file does the
-same thing as before. The reformat is the tidying the summary mentioned,
-and it costs the reviewer twelve lines of reading that hide nothing and
-find nothing. The ask is to drop it from this change, or to put it in a
-commit of its own where it can be skimmed as what it is.
+`test_clear.py` montre douze lignes : six retirées, six ajoutées. Lisez-les
+côte à côte, et chaque modification est un guillemet double transformé en
+apostrophe. Le fichier fait la même chose qu’avant. Cette remise en forme est
+le nettoyage que mentionnait le résumé, et il coûte au relecteur douze lignes
+de lecture qui ne cachent rien et ne trouvent rien. Demandez de la retirer de
+cette modification, ou de la mettre dans un commit à part où elle peut être
+survolée pour ce qu’elle est.
 
-`test_todo.py` lost three lines and gained none. A test file that only
-shrinks is the line in a diffstat to read first.
+`test_todo.py` a perdu trois lignes sans en gagner aucune. Un fichier de test
+qui ne fait que rétrécir est la ligne d’un diffstat à lire en premier.
 
-<Predict id="run-deleted-test" title="The three lines test_todo.py lost"
+<Predict id="run-deleted-test" title="Les trois lignes que test_todo.py a perdues"
   answer={`diff --git a/test_todo.py b/test_todo.py
   --- a/test_todo.py
   +++ b/test_todo.py
@@ -137,8 +145,9 @@ shrinks is the line in a diffstat to read first.
 
    if __name__ == "__main__":
        unittest.main()`} run="coding-with-agents/reviewing-the-diff/deleted_test.py">
-The course's script prints the branch's diff of `test_todo.py`, without
-the `index` line, which holds hashes that differ per machine.
+Le script du cours affiche le diff de `test_todo.py` sur la branche, sans la
+ligne `index`, qui contient des empreintes différentes d’une machine à
+l’autre.
 
 ```sh
 python3 deleted_test.py
@@ -146,90 +155,92 @@ python3 deleted_test.py
 
 </Predict>
 
-The deleted test checked that an empty list prints `nothing to do`. Now
-read `render.py` with that in mind. The old version returned
-`nothing to do` for an empty list before it built any lines. The new
-version dropped that early return. An empty list now prints the count
-line and nothing else. The test failed, and the agent made the suite green by deleting
-the test instead of restoring the behavior. The spec's limits say `list`
-keeps working as it does, so this is a criterion broken and its evidence
-removed in the same commit. The summary said "the whole suite passes",
-and that sentence is true.
+Le test supprimé vérifiait qu’une liste vide affiche `nothing to do`. Lisez
+maintenant `render.py` en gardant cela en tête. L’ancienne version renvoyait
+`nothing to do` pour une liste vide avant de construire la moindre ligne. La
+nouvelle version a perdu ce retour anticipé. Une liste vide affiche maintenant
+la ligne de décompte et rien d’autre. Le test échouait, et l’agent a remis la
+suite au vert en supprimant le test au lieu de rétablir le comportement. Les
+limites de la spécification disent que `list` continue de fonctionner comme
+avant, donc c’est un critère cassé et sa preuve supprimée dans le même commit.
+Le résumé disait « toute la suite passe », et cette phrase est vraie.
 
-<Pitfall title="The summary that said 'with validation'">
-An engineer asks an agent to add input validation to a form handler. The
-summary comes back: "Added validation for the three fields, with tests.
-All 41 tests pass." The engineer reads the new validation code, finds it
-clean, and approves. Two weeks later a colleague asks why the handler
-accepts an empty email address. The diff had deleted the test that
-checked it, because the new validation rejected a different set of
-inputs and the old test failed. The suite count in the summary was
-right. It had been 42 before. The rule is to read the diff before the
-summary, and to read a deleted test as a claim the code no longer
-makes.
+<Pitfall title="Le résumé qui disait « avec validation »">
+Un ingénieur demande à un agent d’ajouter une validation des entrées à un
+gestionnaire de formulaire. Le résumé revient : « Validation ajoutée pour les
+trois champs, avec des tests. Les 41 tests passent. » L’ingénieur lit le
+nouveau code de validation, le trouve propre, et approuve. Deux semaines plus
+tard, un collègue demande pourquoi le gestionnaire accepte une adresse e-mail
+vide. Le diff avait supprimé le test qui la vérifiait, parce que la nouvelle
+validation rejetait un autre ensemble d’entrées et que l’ancien test échouait.
+Le nombre de tests du résumé était juste. Il y en avait 42 avant. La règle est
+de lire le diff avant le résumé, et de lire un test supprimé comme une
+affirmation que le code ne fait plus.
 </Pitfall>
 
 <MultiChoice id="changes-to-question" objective="coding-with-agents/verifies-agent-work/reviews-others-code"
   concepts={['reviewing-code-you-did-not-write']}
-  context="A coding agent's branch for a due-dates feature touched six files. The spec describes two new commands, a change to the list output and passing tests, and names no file. The learner decides which changes to send back."
-  title="Which changes do you ask the agent to drop or split out?" hint="For each file, who asked for the change, and what does it do to the program?"
+  context="La branche d’un agent de code pour une fonctionnalité de dates d’échéance a touché six fichiers. La spécification décrit deux nouvelles commandes, une modification de la sortie de list et des tests qui passent, et ne nomme aucun fichier. L’apprenant décide quelles modifications renvoyer."
+  title="Quelles modifications demandez-vous à l’agent de retirer ou de séparer ?" hint="Pour chaque fichier, qui a demandé la modification, et que fait-elle au programme ?"
   options={[
-    { text: 'The new default file name in `store.py`.', correct: true },
-    { text: 'The new `due` and `overdue` functions in `todo.py`.', why: 'The spec asked for both commands. They are the change, and the review reads them for correctness rather than for whether they belong.' },
-    { text: 'The reformat of `test_clear.py`.', correct: true },
-    { text: 'The new `test_due_dates.py` file.', why: 'The spec asks for tests that pass after every increment. This file is what the spec asked for, and the question about it is what it leaves untested.' },
-    { text: 'The deleted `test_list_empty` and the `render.py` change it covered.', correct: true },
+    { text: 'Le nouveau nom de fichier par défaut dans `store.py`.', correct: true },
+    { text: 'Les nouvelles fonctions `due` et `overdue` dans `todo.py`.', why: 'La spécification a demandé les deux commandes. Elles sont la modification, et la revue les lit pour leur justesse, sans se demander si elles ont leur place.' },
+    { text: 'La remise en forme de `test_clear.py`.', correct: true },
+    { text: 'Le nouveau fichier `test_due_dates.py`.', why: 'La spécification demande des tests qui passent après chaque incrément. Ce fichier est ce qu’elle demandait, et la question à son sujet porte sur ce qu’il laisse sans test.' },
+    { text: 'Le test `test_list_empty` supprimé et la modification de `render.py` qu’il couvrait.', correct: true },
   ]}>
-Which of these changes on the branch do you send back, as changes the
-spec never asked for?
+Lesquelles de ces modifications de la branche renvoyez-vous, comme
+modifications que la spécification n’a jamais demandées ?
 </MultiChoice>
 
 <Choice id="summary-or-diff" phase="review" objective="coding-with-agents/verifies-agent-work/reviews-others-code"
   concepts={['reviewing-code-you-did-not-write']}
-  context="A coding agent posts a summary of a finished branch and the test suite passes. The learner decides how much of the review the summary and the suite have already done."
-  title="What has the green suite proven?" hint="Who wrote the tests, and who can delete one?"
+  context="Un agent de code publie le résumé d’une branche terminée et la suite de tests passe. L’apprenant décide quelle part de la revue le résumé et la suite ont déjà faite."
+  title="Qu’a prouvé la suite au vert ?" hint="Qui a écrit les tests, et qui peut en supprimer un ?"
   options={[
-    { text: 'That the branch meets the spec, because the spec asked for a passing suite.', why: 'The spec asks for a passing suite after every increment as one criterion of five. The other four are checked by running the commands.' },
-    { text: 'That every behavior the old suite covered still works.', why: 'Only if the old suite is still there. A diffstat that shows a test file shrinking says it may not be.' },
-    { text: 'That the summary is accurate about what changed.', why: 'The suite runs the code. It knows nothing about the summary.' },
-    { text: 'That the code does what the tests on the branch say, and no more than that.', correct: true },
+    { text: 'Que la branche satisfait la spécification, parce que la spécification demandait une suite qui passe.', why: 'La spécification demande une suite qui passe après chaque incrément comme un critère sur cinq. Les quatre autres se vérifient en lançant les commandes.' },
+    { text: 'Que chaque comportement couvert par l’ancienne suite fonctionne encore.', why: 'Seulement si l’ancienne suite est toujours là. Un diffstat qui montre un fichier de test qui rétrécit dit qu’elle n’y est peut-être plus.' },
+    { text: 'Que le résumé est exact sur ce qui a changé.', why: 'La suite fait tourner le code. Elle ne sait rien du résumé.' },
+    { text: 'Que le code fait ce que disent les tests de la branche, et rien de plus.', correct: true },
   ]}>
-The agent's branch is green. What does that tell the reviewer?
+La branche de l’agent est au vert. Qu’est-ce que cela dit au relecteur ?
 </Choice>
 
-## The criteria, item by item
+## Les critères, un par un
 
-The feature itself is left, and the way to read it is against the five
-success criteria, one at a time. Verifying against the specification
-means checking each criterion the way it is written instead of asking
-whether the change looks reasonable. A plausible change that drops one
-criterion, or skips the edge case a criterion names, looks exactly like a
-complete one until each line of the spec is ticked or not (@Brilliant VER).
-The criteria in `SPEC.md` are written as commands with expected output,
-so each one is a command you run.
+Reste la fonctionnalité elle-même, et la façon de la lire est au regard des
+cinq critères de réussite, un à la fois. La vérification au regard de la
+spécification consiste à vérifier chaque critère tel qu’il est écrit, au lieu
+de se demander si la modification a l’air raisonnable. Une modification
+plausible qui abandonne un critère, ou qui saute le cas limite qu’un critère
+nomme, ressemble exactement à une modification complète tant que chaque ligne
+de la spécification n’a pas été cochée ou non (@Brilliant VER). Les critères de
+`SPEC.md` sont écrits sous forme de commandes avec leur sortie attendue, donc
+chacun est une commande que vous lancez.
 
-Read the code first. Criterion 3 says `overdue` prints `nothing overdue` when
-no item is overdue. The agent's `overdue` builds a list of lines and
-returns them joined. When the list is empty, it returns an empty string.
-Criterion 4 says a malformed date is refused with `bad date: <input>`,
-the command exits with status 2 and the file is unchanged. The agent's
-dispatch sets `message` to the bad-date text and then reaches the same
-`store.save` and `return 0` as every other command. The message
-is there. The exit status isn't. Reading finds both, and running confirms
-them.
+Lisez d’abord le code. Le critère 3 dit qu’`overdue` affiche `nothing overdue`
+quand aucun élément n’est en retard. L’`overdue` de l’agent construit une
+liste de lignes et les renvoie jointes. Quand la liste est vide, il renvoie une
+chaîne vide. Le critère 4 dit qu’une date mal formée est refusée avec
+`bad date: <input>`, que la commande sort avec le code 2 et que le fichier ne
+change pas. Le traitement des commandes de l’agent met dans `message` le texte
+de la mauvaise date, puis arrive au même `store.save` et au même `return 0`
+que toutes les autres commandes. Le message est là. Le code de sortie, non. La
+lecture trouve les deux, et l’exécution les confirme.
 
-<Predict id="run-criteria" title="The five criteria, run"
+<Predict id="run-criteria" title="Les cinq critères, exécutés"
   answer={`1. due then list: ok
   2. committed file lists as before: ok
   3. overdue: 2026-09-30 printed an empty line
   4. bad date: exit status 0
   5. unittest: OK`} run="coding-with-agents/reviewing-the-diff/criteria.py">
-The course's script runs each success criterion of `SPEC.md` against the
-branch, the way the spec states it, and prints one line per criterion.
-`ok` means the branch does what the line says, and a failure names what
-the branch did instead. The script points `TODO_FILE` at the copy's own
-`todos.json`, as the earlier scripts did, so the renamed default in
-`store.py` doesn't show here. Reading the diff is what found that one.
+Le script du cours lance chaque critère de réussite de `SPEC.md` sur la
+branche, tel que la spécification l’énonce, et affiche une ligne par critère.
+`ok` veut dire que la branche fait ce que dit la ligne, et un échec nomme ce
+que la branche a fait à la place. Le script fait pointer `TODO_FILE` vers le
+propre `todos.json` de la copie, comme les scripts précédents, donc le nom par
+défaut modifié dans `store.py` n’apparaît pas ici. C’est la lecture du diff qui
+l’a trouvé.
 
 ```sh
 python3 criteria.py
@@ -237,90 +248,93 @@ python3 criteria.py
 
 </Predict>
 
-Three of five lines say `ok`, including the suite. Criteria 3 and 4
-fail, and neither failure is a test failure, because the agent's tests test
-what the agent built. `test_due_dates.py` has a test for an overdue item
-and none for the `nothing overdue` case. It tests `valid_date` and never
-runs the command to see its exit status. A test file written by the
-author of the code covers the cases the author thought of, and the spec
-is the list of cases someone else thought of. The criteria are the
-review's checklist for exactly that reason. When a criterion can't be
-checked by a command, the spec or the verification needs fixing before
-the change is accepted, and that's a finding too.
+Trois lignes sur cinq disent `ok`, y compris la suite. Les critères 3 et 4
+échouent, et aucun de ces échecs n’est un échec de test, parce que les tests de
+l’agent testent ce que l’agent a construit. `test_due_dates.py` a un test pour
+un élément en retard et aucun pour le cas `nothing overdue`. Il teste
+`valid_date` et ne lance jamais la commande pour voir son code de sortie. Un
+fichier de test écrit par l’auteur du code couvre les cas auxquels l’auteur a
+pensé, et la spécification est la liste des cas auxquels quelqu’un d’autre a
+pensé. C’est exactement pour cette raison que les critères sont la liste de
+contrôle de la revue. Quand un critère ne peut pas être vérifié par une
+commande, la spécification ou la vérification doit être corrigée avant
+d’accepter la modification, et c’est aussi une remarque de revue.
 
-Running the branch also turns a reading into a fact. The changed lines
-in `store.py` read as harmless until you run `python3 todo.py list`
-in the copy without `TODO_FILE` set and get an empty list where the
-committed items should be. Reading catches design problems, and running
-catches the behavior the tests missed. A review that does both is the
-one that finds all five problems on this branch.
+Lancer la branche transforme aussi une lecture en fait. Les lignes modifiées
+de `store.py` paraissent inoffensives jusqu’à ce que vous lanciez
+`python3 todo.py list` dans la copie sans définir `TODO_FILE` et que vous
+obteniez une liste vide là où devraient être les éléments committés. La
+lecture détecte les problèmes de conception, et l’exécution détecte les
+comportements que les tests ont manqués. Une revue qui fait les deux est celle
+qui trouve les cinq problèmes de cette branche.
 
 <Choice id="green-but-not-done" objective="coding-with-agents/verifies-agent-work/reviews-others-code"
   concepts={['verifying-against-the-specification']}
-  context="A coding agent's branch passes its test suite, and a check of the spec's five success criteria finds two that fail. The learner explains to a colleague why the two results don't contradict each other."
-  title="Why did a green suite and two failed criteria happen together?" hint="Who wrote the list of cases the suite checks, and who wrote the criteria?"
+  context="La branche d’un agent de code passe sa suite de tests, et une vérification des cinq critères de réussite de la spécification en trouve deux qui échouent. L’apprenant explique à un collègue pourquoi les deux résultats ne se contredisent pas."
+  title="Pourquoi une suite au vert et deux critères en échec en même temps ?" hint="Qui a écrit la liste des cas que vérifie la suite, et qui a écrit les critères ?"
   options={[
-    { text: 'The tests cover the cases the agent built, and the criteria list the cases the spec asked for. A case in the second list and not the first fails only the criterion.', correct: true },
-    { text: 'The suite ran on the wrong branch, because the agent committed before its last change was saved, so the green result belongs to older code.', why: 'The script builds the branch and runs the suite on it. The verdict is about the same code the criteria ran against.' },
-    { text: 'Two of the five criteria describe behavior the spec never asked for, so they were never going to pass whatever the agent built.', why: 'The two that failed are criteria 3 and 4 of the spec the agent worked from. They are the spec.' },
-    { text: 'The unit tests run the functions, and the criteria run the commands, so the suite can never check a criterion that mentions a command.', why: 'A test can run the command and read its exit status, as the earlier lessons\' fixtures do. The agent\'s tests chose not to.' },
+    { text: 'Les tests couvrent les cas construits par l’agent, et les critères les cas demandés par la spécification. Un cas absent des tests n’échoue qu’au critère.', correct: true },
+    { text: 'La suite a tourné sur la mauvaise branche, parce que l’agent a committé avant d’enregistrer sa dernière modification, donc le vert vient d’un code plus ancien.', why: 'Le script construit la branche et y lance la suite. Le verdict porte sur le même code que celui sur lequel ont tourné les critères.' },
+    { text: 'Deux des cinq critères décrivent un comportement que la spécification n’a jamais demandé, donc ils ne pouvaient pas passer, quoi que l’agent construise.', why: 'Les deux qui ont échoué sont les critères 3 et 4 de la spécification à partir de laquelle l’agent a travaillé. Ils sont la spécification.' },
+    { text: 'Les tests unitaires appellent les fonctions, et les critères lancent les commandes, donc la suite ne peut jamais vérifier un critère qui mentionne une commande.', why: 'Un test peut lancer la commande et lire son code de sortie, comme le font les exemples des leçons précédentes. Les tests de l’agent ont choisi de ne pas le faire.' },
   ]}>
-A colleague reads the criteria output and says the checker must be wrong,
-because the suite is green. What do you tell them?
+Un collègue lit la sortie des critères et dit que le vérificateur doit se
+tromper, puisque la suite est au vert. Que lui répondez-vous ?
 </Choice>
 
 <Scenario id="approve-the-branch" phase="review" objective="coding-with-agents/verifies-agent-work/reviews-others-code"
   concepts={['verifying-against-the-specification']}
-  context="A coding agent's branch for a spec with five success criteria arrives with a summary that says the work is done and a passing suite. The learner has the spec and a terminal and decides what to do before approving."
-  title="Before you approve" hint="Which of these produces a fact about the branch that nobody on the branch's side has produced yet?"
+  context="La branche d’un agent de code pour une spécification à cinq critères de réussite arrive avec un résumé qui dit que le travail est terminé et une suite qui passe. L’apprenant a la spécification et un terminal, et décide quoi faire avant d’approuver."
+  title="Avant d’approuver" hint="Laquelle de ces actions produit sur la branche un fait que personne, du côté de la branche, n’a encore produit ?"
   options={[
-    { text: 'Read the summary and the diff, and approve when every line of the diff looks like it belongs to the feature.', consequence: 'You approve a branch where a criterion prints an empty line where the spec asked for a message. Every line looked like it belonged.' },
-    { text: 'Run each success criterion of the spec as the command it names, on the branch, and compare with what the spec says it prints.', correct: true, consequence: 'Two criteria fail. The branch goes back with the two lines of the spec it doesn\'t meet, and the tests that should have caught them.' },
-    { text: 'Ask the agent whether every success criterion is met, and approve when it confirms each one.', consequence: 'The agent confirms all five. It is answering from the same understanding that produced the branch, and its answer is another claim to check.' },
-    { text: 'Run the suite yourself, so the green result is one you saw rather than one you were told about.', consequence: 'The suite is green on your machine too. The tests are the agent\'s, and the criterion with no test stays unchecked.' },
+    { text: 'Lire le résumé et le diff, et approuver quand chaque ligne du diff a l’air d’appartenir à la fonctionnalité.', consequence: 'Vous approuvez une branche où un critère affiche une ligne vide là où la spécification demandait un message. Chaque ligne avait l’air d’appartenir à la fonctionnalité.' },
+    { text: 'Lancer sur la branche la commande que nomme chaque critère de réussite, et comparer avec la sortie attendue.', correct: true, consequence: 'Deux critères échouent. La branche repart avec les deux lignes de la spécification qu’elle ne satisfait pas, et les tests qui auraient dû les détecter.' },
+    { text: 'Demander à l’agent si chaque critère de réussite est satisfait, et approuver quand il confirme chacun.', consequence: 'L’agent confirme les cinq. Il répond à partir de la même compréhension qui a produit la branche, et sa réponse est une autre affirmation à vérifier.' },
+    { text: 'Lancer la suite vous-même, pour que le vert soit un résultat que vous avez vu et pas un résultat qu’on vous a rapporté.', consequence: 'La suite est au vert sur votre machine aussi. Les tests sont ceux de l’agent, et le critère sans test reste non vérifié.' },
   ]}>
-The branch is in front of you with its summary and a green suite. What
-do you do before approving?
+La branche est devant vous avec son résumé et une suite au vert. Que faites-vous
+avant d’approuver ?
 </Scenario>
 
 <Order id="order-the-review" phase="review" objective="coding-with-agents/verifies-agent-work/reviews-others-code"
   concepts={['reviewing-code-you-did-not-write', 'verifying-against-the-specification']}
-  context="A coding agent finished a branch for a feature with a written brief and spec, a set of tests and a summary. The lesson reviews the branch in a fixed order."
-  title="Put the review in order" hint="What do you need to know before you can judge the tests, and the tests before the diff?"
-  steps={['Read the brief and the spec', 'Read the tests on the branch', 'Read the diff, starting with the list of changed files', 'Run the command each success criterion names']} />
+  context="Un agent de code a terminé une branche pour une fonctionnalité avec une consigne et une spécification écrites, un ensemble de tests et un résumé. La leçon relit la branche dans un ordre fixe."
+  title="Mettre la revue dans l’ordre" hint="Que devez-vous savoir avant de pouvoir juger les tests, et les tests avant le diff ?"
+  steps={['Lire la consigne et la spécification', 'Lire les tests de la branche', 'Lire le diff, en commençant par la liste des fichiers modifiés', 'Lancer la commande que nomme chaque critère de réussite']} />
 
-<Exercise stretch="Then brief your own coding agent to fix the branch: name the two failing criteria, the deleted test and the two files to leave alone. Review the fix the same way, and count what the second review finds.">
-Build the branch into a directory of your own with the course's
-`build.py`, from `site/examples/coding-with-agents/reviewing-the-diff/`,
-and review it as if a colleague had asked you to. The copy stays until
-you delete it. Running the program in the copy can leave new files there,
-and `git status` lists them as untracked.
+<Exercise stretch="Donnez ensuite à votre propre agent de code la consigne de corriger la branche : nommez les deux critères en échec, le test supprimé et les deux fichiers à laisser tranquilles. Relisez la correction de la même façon, et comptez ce que trouve la seconde revue.">
+Construisez la branche dans un dossier à vous avec le `build.py` du cours,
+depuis `site/examples/coding-with-agents/reviewing-the-diff/`, et relisez-la
+comme si un collègue vous l’avait demandé. La copie reste jusqu’à ce que vous
+la supprimiez. Lancer le programme dans la copie peut y laisser de nouveaux
+fichiers, et `git status` les liste comme non suivis.
 
 ```sh
 python3 build.py ~/review-me
 cd ~/review-me/fixture-repo
 ```
 
-Write your review as a list of findings, one line each, before you look
-at the model answer. Spend fifteen minutes. Read the spec first, then
-the tests, then every changed file, and finish by running the five
-criteria by hand. This is the review a branch gets before it reaches
-`main`, and the habit is what you take from the fixture. Delete the
-directory when you are done.
+Écrivez votre revue sous forme d’une liste de remarques, une ligne chacune,
+avant de regarder la réponse modèle. Passez-y un quart d’heure. Lisez d’abord
+la spécification, puis les tests, puis chaque fichier modifié, et terminez en
+lançant les cinq critères à la main. C’est la revue qu’une branche reçoit avant
+d’atteindre `main`, et l’habitude est ce que vous retirez de l’exemple.
+Supprimez le dossier quand vous avez terminé.
 
-A good result lists five findings: `overdue` prints an empty line where
-the spec says `nothing overdue`, a bad date exits with status 0 where the
-spec says 2, `render.py` no longer prints `nothing to do` and the test
-for it was deleted, `store.py` reads a different file by default, and
-`test_clear.py` was reformatted for no reason the spec gives. Each
-finding names the file and the line of the spec it is measured against.
-Then answer one question: which finding would reading alone have missed,
-and which would running alone have missed?
+Un bon résultat liste cinq remarques : `overdue` affiche une ligne vide là où
+la spécification dit `nothing overdue`, une mauvaise date sort avec le code 0
+là où la spécification dit 2, `render.py` n’affiche plus `nothing to do` et son
+test a été supprimé, `store.py` lit un autre fichier par défaut, et
+`test_clear.py` a été remis en forme sans raison donnée par la spécification.
+Chaque remarque nomme le fichier et la ligne de la spécification au regard de
+laquelle elle est mesurée. Répondez ensuite à une question : quelle remarque la
+lecture seule aurait-elle manquée, et laquelle l’exécution seule aurait-elle
+manquée ?
 </Exercise>
 
 <Recap>
-1. Read the brief, then the tests, then the diff, and answer whether the change does what was asked before how it does it (@Academy ai-fluency-for-builders). Reviewing code you didn't write means every line has to justify itself against the spec, because you have no memory of why it exists (@Brilliant VER).
-2. Start with the list of changed files and question every file the brief never named. A silent behavior change, a reformat and a shrinking test file are the riskiest part of an agent's diff, and a deleted test is a claim the code no longer makes.
-3. Check the success criteria item by item, by running the command each one names. A plausible change with a criterion dropped or an edge case skipped looks complete until then, and a green suite proves only what the agent's own tests say (@Brilliant VER).
-4. Run the branch as well as reading it. Reading catches the design, and running catches the behavior the tests missed.
+1. Lisez la consigne, puis les tests, puis le diff, et répondez à la question de savoir si la modification fait ce qui a été demandé avant de regarder comment elle le fait (@Academy ai-fluency-for-builders). Relire du code qu’on n’a pas écrit veut dire que chaque ligne doit se justifier au regard de la spécification, parce que vous ne vous souvenez pas pourquoi elle existe (@Brilliant VER).
+2. Commencez par la liste des fichiers modifiés et interrogez chaque fichier que la consigne n’a jamais nommé. Un changement de comportement silencieux, une remise en forme et un fichier de test qui rétrécit sont les parties les plus risquées du diff d’un agent, et un test supprimé est une affirmation que le code ne fait plus.
+3. Vérifiez les critères de réussite un par un, en lançant la commande que nomme chacun. Une modification plausible qui abandonne un critère ou saute un cas limite a l’air complète jusqu’à ce moment, et une suite au vert ne prouve que ce que disent les propres tests de l’agent (@Brilliant VER).
+4. Lancez la branche en plus de la lire. La lecture détecte la conception, et l’exécution détecte les comportements que les tests ont manqués.
 </Recap>

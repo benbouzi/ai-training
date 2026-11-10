@@ -10,7 +10,7 @@ introduces: [session-handoff]
 assumes:
   - objective: coding-with-agents/ships-with-agent/keeps-understanding
     lesson: coding-with-agents/keeping-understanding
-    section: keep-the-reasons-where-the-agent-reads-them
+    section: garder-les-raisons-là-où-lagent-les-lit
 after: [customizing-agents/compaction]
 shorts: []
 exercise:
