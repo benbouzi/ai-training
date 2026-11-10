@@ -1,61 +1,66 @@
 import { Choice, MultiChoice, Order, Predict, Scenario, Sort, Pitfall, Exercise, Recap, Habit, Prompt, Response } from '@components/lesson';
 
-A colleague asks for a change to the to-do program: "Done items clutter
-the list. Can you tidy it? I still want to see what I finished last
-month." The request sounds clear until you try to build it. Does "tidy"
-mean the `clear` command the program already has, which deletes done
-items? Or does it mean moving them somewhere they can still be read? In
-this lesson the agent interviews you about the feature before any plan
-exists. You answer its questions, and together you settle on the words
-for the design. At the end you check two files against those words: the
-spec, and the plan that a fresh session writes from it.
+Un collègue demande une modification du programme de liste de tâches : « Les
+éléments faits encombrent la liste. Vous pouvez la ranger ? Je veux quand même
+voir ce que j’ai terminé le mois dernier. » La demande paraît claire jusqu’au
+moment de la construire. « Ranger » veut-il dire la commande `clear` que le
+programme a déjà, qui supprime les éléments faits ? Ou veut-il dire les
+déplacer à un endroit où on peut encore les lire ? Dans cette leçon, l’agent
+vous interroge sur la fonctionnalité avant qu’un plan existe. Vous répondez à
+ses questions, et vous arrêtez ensemble les mots de la conception. À la fin,
+vous comparez deux fichiers à ces mots : la spécification, et le plan qu’une
+nouvelle session écrit à partir d’elle.
 
-*Deciding whether to build it at all* ended with success criteria a
-stranger could check. You can only write those once you know what the
-feature is. For a larger feature, the Claude Code best
-practices page recommends that the agent interviews you first and writes
-a spec, and that a new session then works from that spec (@Claude Code best practices).
-The agent's questions bring out the decisions you haven't made yet, at a
-point where a change to them is still cheap.
+*Décider s’il faut construire, avant tout* se terminait par des critères de
+réussite qu’un inconnu pourrait vérifier. Vous ne pouvez les écrire qu’une
+fois que vous savez ce qu’est la fonctionnalité. Pour une fonctionnalité plus
+importante, la page des bonnes pratiques de Claude Code recommande que l’agent
+vous interroge d’abord et écrive une spécification, puis qu’une nouvelle
+session travaille à partir de cette spécification
+(@Claude Code best practices). Les questions de l’agent font apparaître les
+décisions que vous n’avez pas encore prises, à un moment où les changer coûte
+encore peu.
 
-## The fixture
+## L’exemple
 
-The fixture is the to-do program from *Your first session with a coding
-agent*, some weeks later. It has a `clear` command and is split into three
-modules. It is in the course repository under
-`site/examples/coding-with-agents/agent-interviews-you/`. Copy that whole
-directory to a place of its own. The copy holds `fixture-repo/`, where the
-agent works, a script `check_terms.py` and a `sample/` directory that the
-second half of the lesson uses. The reset is to delete the copy and copy
-again. Working in a copy also keeps the course's own instruction files out
-of the session, because Claude Code, for example, loads the instruction
-files in every directory above the one it starts in (@Claude Code memory).
+L’exemple est le programme de liste de tâches de *Votre première session avec
+un agent de code*, quelques semaines plus tard. Il a une commande `clear` et
+il est découpé en trois modules. Il se trouve dans le dépôt du cours, sous
+`site/examples/coding-with-agents/agent-interviews-you/`. Copiez tout ce
+dossier à un endroit à part. La copie contient `fixture-repo/`, où l’agent
+travaille, un script `check_terms.py` et un dossier `sample/` que la seconde
+moitié de la leçon utilise. Pour réinitialiser, supprimez la copie et copiez
+de nouveau. Travailler dans une copie garde aussi les fichiers d’instructions
+du cours hors de la session, parce que Claude Code, par exemple, charge les
+fichiers d’instructions de chaque dossier au-dessus de celui où il démarre
+(@Claude Code memory).
 
-Claude Code's auto memory is on by default in local sessions. It saves
-notes that the agent writes for itself and loads them into the next session
-of the same project. It files the notes under the git repository, or
-under the project root outside one (@Claude Code memory). In this lesson a
-note from the interview would reach the fresh session that is meant to
-start without it, and a reset copy at the same path would load the notes
-again. So start every Claude Code session in this lesson with auto memory
-turned off. Change into `fixture-repo` first, because this command starts
-the agent in the directory you run it from:
+La mémoire automatique (auto memory) de Claude Code est activée par défaut
+dans les sessions locales. Elle enregistre des notes que l’agent écrit pour
+lui-même et les charge dans la session suivante du même projet. Elle range
+les notes sous le dépôt git, ou sous la racine du projet hors d’un dépôt
+(@Claude Code memory). Dans cette leçon, une note issue de l’entretien
+atteindrait la nouvelle session censée démarrer sans elle, et une copie
+réinitialisée au même chemin chargerait de nouveau les notes. Lancez donc
+chaque session Claude Code de cette leçon avec la mémoire automatique
+désactivée. Placez-vous d’abord dans `fixture-repo`, parce que cette commande
+démarre l’agent dans le dossier d’où vous la lancez :
 
 ```sh
 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude
 ```
 
-With another agent, check whether it keeps notes between sessions, and
-turn that off for this lesson. Before you start the agent, look at the
-list from `fixture-repo`.
+Avec un autre agent, vérifiez s’il garde des notes d’une session à l’autre, et
+désactivez-les pour cette leçon. Avant de lancer l’agent, regardez la liste
+depuis `fixture-repo`.
 
-<Predict id="run-list" title="Show the list"
+<Predict id="run-list" title="Afficher la liste"
   answer={`1. [ ] Buy milk
   2. [x] Call the plumber
   3. [x] Renew the passport
   4. [ ] Water the plants
   2 open, 2 done`} run="coding-with-agents/agent-interviews-you/list.py">
-Run this, and compare what you see with the output below.
+Lancez cette commande et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 todo.py list
@@ -63,111 +68,124 @@ python3 todo.py list
 
 </Predict>
 
-Two of the four items are done. `python3 todo.py clear` would delete both,
-and the colleague wants to keep them. That gap between "tidy" and `clear`
-is the first thing an interview should find.
+Deux des quatre éléments sont faits. `python3 todo.py clear` supprimerait les
+deux, et le collègue veut les garder. Cet écart entre « ranger » et `clear`
+est la première chose qu’un entretien doit trouver.
 
-## Asking for the interview
+## Demander l’entretien
 
-A design interview is a session where the agent asks and you answer. It
-comes before the agent plans anything or writes any code. Start your coding
-agent in `fixture-repo`, with auto memory off as above, and give it a short description of the feature with the request to
-interview you. Ask for questions about behavior, edge cases, risks and
-trade-offs, and tell it to skip what it can read in the code. Tell it when
-to stop, and what to write when it does.
+Un entretien de conception est une session où l’agent pose les questions et
+où vous répondez. Il a lieu avant que l’agent planifie quoi que ce soit ou
+écrive du code. Lancez votre agent de code dans `fixture-repo`, avec la
+mémoire automatique désactivée comme ci-dessus, et donnez-lui une courte
+description de la fonctionnalité avec la demande de vous interroger. Demandez
+des questions sur le comportement, les cas limites, les risques et les
+compromis, et dites-lui de sauter ce qu’il peut lire dans le code. Dites-lui
+quand s’arrêter, et quoi écrire à ce moment-là.
 
 ```text
-I want a way to tidy the to-do list. Done items clutter it, but I still
-need to see what I finished last month. Before you plan anything or
-change any code, interview me about this feature. Ask one question at a
-time. Ask about how it should behave, the edge cases, what could go
-wrong, and the trade-offs, and don't ask what you can find out from the
-code. When a word could mean two different things, ask me which one I
-mean. Keep going until nothing is open. Then write TERMS.md, one line per
-term in the form "- **term**: meaning. Avoid: word, word.", and SPEC.md,
-which uses only those terms. Put what I left undecided under
-"Open questions" in SPEC.md.
+Je veux un moyen de ranger la liste de tâches. Les éléments faits
+l’encombrent, mais j’ai toujours besoin de voir ce que j’ai terminé le
+mois dernier. Avant de planifier quoi que ce soit ou de modifier du code,
+interroge-moi sur cette fonctionnalité. Pose une question à la fois.
+Interroge-moi sur le comportement attendu, les cas limites, ce qui
+pourrait mal tourner et les compromis, et ne me demande pas ce que tu
+peux trouver dans le code. Quand un mot peut avoir deux sens, demande-moi
+lequel je veux dire. Continue jusqu’à ce que plus rien ne soit ouvert.
+Écris ensuite TERMS.md, une ligne par terme sous la forme exacte
+"- **term**: meaning. Avoid: word, word.", et SPEC.md, qui n’emploie que
+ces termes. Mets ce que j’ai laissé indécis sous "Questions ouvertes"
+dans SPEC.md.
 ```
 
-In Claude Code, the best practices page suggests naming its
-`AskUserQuestion` tool in the request (@Claude Code best practices). The
-agent then asks its questions through that tool. Another agent asks its
-questions in the chat.
+La forme des lignes de `TERMS.md` reste en anglais, parce que le script de
+contrôle de la leçon lit le mot `Avoid:`. Les termes et leurs sens peuvent
+être en français.
 
-The exchange below is illustrative. It was written for this lesson and
-not recorded from a model. It shows the kind of first question that the
-request should produce.
+Pour Claude Code, la page des bonnes pratiques suggère de nommer son outil
+`AskUserQuestion` dans la demande (@Claude Code best practices). L’agent pose
+alors ses questions avec cet outil. Un autre agent pose ses questions dans la
+conversation.
+
+L’échange ci-dessous est une illustration. Il a été écrit pour cette leçon et
+n’a pas été enregistré auprès d’un modèle. Il montre le type de première
+question que la demande devrait produire.
 
 <Prompt model="illustrative" recorded="illustrative">
-(The request above.)
+(La demande ci-dessus.)
 </Prompt>
 <Response>
-The program already has `clear`, which deletes every done item. When you
-say "tidy", do you mean `clear`, or should the done items move somewhere
-you can still read them later?
+Le programme a déjà `clear`, qui supprime tous les éléments faits. Quand vous
+dites « ranger », voulez-vous dire `clear`, ou les éléments faits doivent-ils
+aller à un endroit où vous pourrez encore les lire plus tard ?
 </Response>
 
 <Prompt model="illustrative" recorded="illustrative">
-Move them, to a file of their own. Call that "archive". `clear` stays as
-it is: it deletes, and it doesn't touch the archive.
+Les déplacer, dans un fichier à part. Appelle cela « archive ». `clear` reste
+tel quel : il supprime, et il ne touche pas à l’archive.
 </Prompt>
 <Response>
-Understood. Should the archived items keep the numbers they had in the
-list, or does the list number the open items again from 1?
+Compris. Les éléments archivés doivent-ils garder le numéro qu’ils avaient
+dans la liste, ou la liste renumérote-t-elle les éléments ouverts à partir
+de 1 ?
 </Response>
 
-The agent's first question found the word that could mean two things. Your
-answer chose one meaning and gave the new thing a name. The second question is a
-decision you might not have made before the interview. Answer each question
-with a decision. When you have none, say "not decided yet". The agent then
-lists the point under the open questions.
+La première question de l’agent a trouvé le mot qui pouvait avoir deux sens.
+Votre réponse a choisi un sens et donné un nom à la nouvelle chose. La
+deuxième question porte sur une décision que vous n’aviez peut-être pas prise
+avant l’entretien. Répondez à chaque question par une décision. Quand vous
+n’en avez pas, dites « pas encore décidé ». L’agent range alors le point
+parmi les questions ouvertes.
 
-<Pitfall title="An answer to get to the code">
-In one interview the agent asked whether archived items should record the
-date they were archived. The engineer wanted to get to the code and typed
-"yes, add the date". The spec now had a date field with its own format and
-time zone, and the fresh session built them. The `archive list`
-output grew a column that nobody had asked for, and the diff was twice the
-size it needed to be. The rule: an answer you make up to move on becomes a
-requirement the agent builds. Say "not decided yet", and the spec lists the
-point as open.
+<Pitfall title="Une réponse pour arriver au code">
+Lors d’un entretien, l’agent a demandé si les éléments archivés devaient
+garder la date de leur archivage. L’ingénieur voulait arriver au code et a
+tapé « oui, ajoute la date ». La spécification avait désormais un champ date
+avec son propre format et son fuseau horaire, et la nouvelle session les a
+construits. La sortie de `archive list` a gagné une colonne que personne
+n’avait demandée, et le diff était deux fois plus gros que nécessaire. La
+règle : une réponse inventée pour avancer devient une exigence que l’agent
+construit. Dites « pas encore décidé », et la spécification range le point
+parmi les questions ouvertes.
 </Pitfall>
 
 <Scenario id="undecided-answer" objective="coding-with-agents/specifies-work/is-interviewed-before-planning"
   concepts={['design-interview']}
-  context="An engineer has asked a coding agent to interview them about an archive feature for a small to-do program before any plan is written. At the end, the agent writes a spec with a section for open questions."
-  title="A question you have no answer for"
-  hint="Which answer leaves the spec saying only what you actually decided?"
+  context="Un ingénieur a demandé à un agent de code de l’interroger sur une fonctionnalité d’archivage pour un petit programme de liste de tâches avant qu’un plan soit écrit. À la fin, l’agent écrit une spécification avec une section pour les questions ouvertes."
+  title="Une question sans réponse"
+  hint="Quelle réponse laisse la spécification ne dire que ce que vous avez réellement décidé ?"
   options={[
-    { text: 'Say "Yes, do that", so that the interview keeps moving.', consequence: 'The spec now requires an automatic archive, and the fresh session builds it, with a counter and a test, for a choice you never made.' },
-    { text: 'Say "You decide", since the agent knows the code better.', consequence: 'The agent picks one, and the spec states it as a requirement. Nobody reads it as a guess, so nobody checks it.' },
-    { text: 'Say "Not decided yet", so it goes under the open questions.', correct: true, consequence: 'The spec lists the point as open. Nothing is built for it, and you decide it later, when someone has a reason to want it.' },
-    { text: 'Say "Stop asking and write the spec", since this is a detail.', consequence: 'The interview ends with points still open, and the agent fills the points it never asked about with its own guesses.' },
+    { text: 'Dire « Oui, fais-le », pour que l’entretien avance.', consequence: 'La spécification exige maintenant un archivage automatique, et la nouvelle session le construit, avec un compteur et un test, pour un choix que vous n’avez jamais fait.' },
+    { text: 'Dire « À toi de décider », puisque l’agent connaît mieux le code.', consequence: 'L’agent choisit, et la spécification l’énonce comme une exigence. Personne ne la lit comme une supposition, donc personne ne la vérifie.' },
+    { text: 'Dire « Pas encore décidé », pour que le point aille parmi les questions ouvertes.', correct: true, consequence: 'La spécification range le point parmi les questions ouvertes. Rien n’est construit pour lui, et vous tranchez plus tard, quand quelqu’un aura une raison de le vouloir.' },
+    { text: 'Dire « Arrête les questions et écris la spécification », puisque c’est un détail.', consequence: 'L’entretien se termine avec des points encore ouverts, et l’agent comble ceux sur lesquels il n’a jamais posé de question avec ses propres suppositions.' },
   ]}>
-The agent asks: "Should `archive` also run by itself when the list has
-more than 20 done items?" You haven't thought about it, and you have no view
-on it yet. What do you answer?
+L’agent demande : « `archive` doit-il aussi se lancer tout seul quand la liste
+contient plus de 20 éléments faits ? » Vous n’y avez pas réfléchi, et vous
+n’avez pas encore d’avis. Que répondez-vous ?
 </Scenario>
 
-## Writing down the terms
+## Écrire les termes
 
-During an interview the words drift. You say "done" and the agent says
-"completed". A sentence later the spec says "finished". Each word
-seems clear to whoever uses it. A fresh session that reads the spec sees
-three words and has to guess whether they name one thing or three, and
-some of its guesses are wrong.
+Pendant un entretien, les mots dérivent. Vous dites « fait » et l’agent dit
+« terminé ». Une phrase plus loin, la spécification dit « achevé ». Chaque mot
+paraît clair à celui qui l’emploie. Une nouvelle session qui lit la
+spécification voit trois mots et doit deviner s’ils désignent une chose ou
+trois, et certaines de ses suppositions sont fausses.
 
-The fix is a shared vocabulary: one agreed meaning for each term of the
-feature, written down, and used the same way in the conversation, the spec,
-the plan, and the code. The idea comes from domain-driven design, a way of
-building software that Eric Evans described (@Evans 2003). His free reference
-summary says to use one language in speech, writing and code, and to treat
-a change in that language as a change to the design (@Evans DDD Reference).
-This lesson takes only that part: a short list of terms, in plain words,
-each with the words to avoid.
+La solution est un vocabulaire commun : un seul sens convenu pour chaque terme
+de la fonctionnalité, écrit, et employé de la même façon dans la
+conversation, la spécification, le plan et le code. L’idée vient de la
+conception pilotée par le domaine (domain-driven design), une façon de
+construire des logiciels décrite par Eric Evans (@Evans 2003). Son résumé de
+référence gratuit dit d’employer une seule langue à l’oral, à l’écrit et dans
+le code, et de traiter un changement de cette langue comme un changement de la
+conception (@Evans DDD Reference). Cette leçon n’en prend que cette partie :
+une courte liste de termes, en mots simples, chacun avec les mots à éviter.
 
-The `sample/` directory in your copy holds the files an interview about the
-archive feature could end with. This is `sample/TERMS.md`:
+Le dossier `sample/` de votre copie contient les fichiers sur lesquels
+pourrait se terminer un entretien sur la fonctionnalité d’archivage. Ces
+fichiers d’exemple sont en anglais. Voici `sample/TERMS.md` :
 
 ```md
 # Terms
@@ -178,25 +196,25 @@ archive feature could end with. This is `sample/TERMS.md`:
 - **clear**: delete every done item from the list for good. It never touches `archive.json`. Avoid: purge, wipe.
 ```
 
-The avoid words are the ones that came up in the interview for the same
-thing, or for a different thing that is easy to confuse with it. "Hide"
-is on the list because a hidden item is still in `todos.json`, and an
-archived one is not.
+Les mots à éviter sont ceux qui sont apparus pendant l’entretien pour la même
+chose, ou pour une autre chose facile à confondre avec elle. « Hide »
+(cacher) est sur la liste parce qu’un élément caché est toujours dans
+`todos.json`, et qu’un élément archivé n’y est plus.
 
-## Checking the spec against the terms
+## Comparer la spécification aux termes
 
-`check_terms.py` reads a term list and prints every line of another file
-that uses an avoided word. It matches whole words and ignores case. Leave
-the interview session running in its own terminal, and open a second
-terminal for the script. Change into the top of your copy there and run
-the script on the sample spec.
+`check_terms.py` lit une liste de termes et affiche chaque ligne d’un autre
+fichier qui emploie un mot à éviter. Il compare des mots entiers et ignore la
+casse. Laissez la session d’entretien tourner dans son propre terminal, et
+ouvrez un second terminal pour le script. Placez-vous en haut de votre copie
+et lancez le script sur la spécification d’exemple.
 
-<Predict id="check-sample-spec" title="Check the sample spec"
+<Predict id="check-sample-spec" title="Contrôler la spécification d’exemple"
   answer={`sample/SPEC.md:15: "task" where sample/TERMS.md says "item"
   sample/SPEC.md:16: "completed" where sample/TERMS.md says "done item"
   2 words to check`} run="coding-with-agents/agent-interviews-you/sample_check.py">
-Run this in the second terminal, from the top of your copy, and compare
-what you see with the output below.
+Lancez cette commande dans le second terminal, depuis le haut de votre copie,
+et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 check_terms.py sample/TERMS.md sample/SPEC.md
@@ -204,38 +222,39 @@ python3 check_terms.py sample/TERMS.md sample/SPEC.md
 
 </Predict>
 
-Open `sample/SPEC.md` and read the two lines. Line 15 says `archive list`
-shows "the text of each task". That is a slip, and the fix is the word
-"item". Line 16 says "`clear` deletes the completed items and empties
-`archive.json`." The word is wrong, and the line also contradicts the term
-list, which says `clear` never touches the archive. A drifted word is
-sometimes a typo and sometimes a decision that the interview made one way
-and the spec wrote down another way. Read the whole line each time.
+Ouvrez `sample/SPEC.md` et lisez les deux lignes. La ligne 15 dit que
+`archive list` affiche « the text of each task ». C’est une étourderie, et la
+correction est le mot « item ». La ligne 16 dit « `clear` deletes the
+completed items and empties `archive.json`. » Le mot est faux, et la ligne
+contredit aussi la liste de termes, qui dit que `clear` ne touche jamais à
+l’archive. Un mot qui a dérivé est parfois une faute de frappe et parfois une
+décision que l’entretien a prise dans un sens et que la spécification a
+écrite dans l’autre. Lisez chaque fois la ligne entière.
 
 <Choice id="drift-in-clear" objective="coding-with-agents/specifies-work/is-interviewed-before-planning"
   concepts={['shared-vocabulary']}
-  context="A term list for a to-do program's archive feature says that clear deletes every done item from the list for good and never touches archive.json. A script that checks a spec against the term list flags the word completed in one line of the spec."
-  title="The line about clear"
-  hint="Besides the flagged word, does the rest of the line agree with the term list?"
+  context="Une liste de termes pour la fonctionnalité d’archivage d’un programme de liste de tâches dit que clear supprime définitivement de la liste chaque élément fait et ne touche jamais à archive.json. Un script qui compare une spécification à la liste de termes signale le mot completed dans une ligne de la spécification."
+  title="La ligne sur clear"
+  hint="En dehors du mot signalé, le reste de la ligne est-il d’accord avec la liste de termes ?"
   options={[
-    { text: 'Add "completed" to the meaning of done item, so that the check passes on the next run.', why: 'Two words for one thing are what the list exists to stop, and the line would still empty the archive.' },
-    { text: 'Read the line against the term list, settle with the agent what clear does, and rewrite the line.', correct: true },
-    { text: 'Change "completed" to "done" in that line, and run the check again until it reports nothing.', why: 'The check passes, but the line still says that clear empties the archive, which the term list rules out.' },
-    { text: 'Leave the line, because the agent that builds the feature knows that the two words mean the same.', why: 'A fresh session has only the files. It reads a spec and a term list that disagree, and it has to pick one.' },
+    { text: 'Ajouter « completed » au sens de done item, pour que le contrôle passe à la prochaine exécution.', why: 'Deux mots pour une même chose, c’est précisément ce que la liste doit empêcher, et la ligne viderait toujours l’archive.' },
+    { text: 'Lire la ligne au regard des termes, trancher avec l’agent ce que fait clear, et réécrire la ligne.', correct: true },
+    { text: 'Remplacer « completed » par « done » dans cette ligne, et relancer le contrôle jusqu’à ce qu’il ne signale plus rien.', why: 'Le contrôle passe, mais la ligne dit toujours que clear vide l’archive, ce que la liste de termes exclut.' },
+    { text: 'Laisser la ligne, parce que l’agent qui construit la fonctionnalité sait que les deux mots veulent dire la même chose.', why: 'Une nouvelle session n’a que les fichiers. Elle lit une spécification et une liste de termes qui se contredisent, et elle doit en choisir une.' },
   ]}>
-The check prints `sample/SPEC.md:16: "completed" where sample/TERMS.md says
-"done item"`. The line is "`clear` deletes the completed items and empties
-`archive.json`." What do you do?
+Le contrôle affiche `sample/SPEC.md:16: "completed" where sample/TERMS.md says
+"done item"`. La ligne est « `clear` deletes the completed items and empties
+`archive.json`. » Que faites-vous ?
 </Choice>
 
-Fix both lines in `sample/SPEC.md`. Change "task" to "item" in line 15,
-and rewrite line 16 as "`clear` deletes the done items and leaves
-`archive.json` as it is." Then run the check again.
+Corrigez les deux lignes de `sample/SPEC.md`. Remplacez « task » par « item »
+à la ligne 15, et réécrivez la ligne 16 ainsi : « `clear` deletes the done
+items and leaves `archive.json` as it is. » Relancez ensuite le contrôle.
 
-<Predict id="check-fixed-spec" title="Check the fixed spec"
+<Predict id="check-fixed-spec" title="Contrôler la spécification corrigée"
   answer="no avoided words in sample/SPEC.md" run="coding-with-agents/agent-interviews-you/fixed_check.py">
-Run the same command in the second terminal after the two fixes, and
-compare what you see with the output below.
+Lancez la même commande dans le second terminal après les deux corrections,
+et comparez ce que vous voyez avec la sortie ci-dessous.
 
 ```sh
 python3 check_terms.py sample/TERMS.md sample/SPEC.md
@@ -243,136 +262,139 @@ python3 check_terms.py sample/TERMS.md sample/SPEC.md
 
 </Predict>
 
-In your own interview, read and
-correct `TERMS.md` and `SPEC.md` the same way before anything else happens.
-Renaming a term after this point is a change to the design. Change the
-term list and the spec together.
+Dans votre propre entretien, lisez et corrigez `TERMS.md` et `SPEC.md` de la
+même façon avant toute autre chose. Renommer un terme après ce moment est un
+changement de la conception. Modifiez la liste de termes et la spécification
+ensemble.
 
-## Planning from the spec in a fresh session
+## Planifier à partir de la spécification dans une nouvelle session
 
-The best practices page suggests that a new session carries out the
-spec, because its context then holds the work and nothing of the long
-interview (@Claude Code best practices). Write the plan in a new session
-too. End the interview session, start a new one in `fixture-repo` with
-auto memory still off, and ask for a plan that uses the term list.
+La page des bonnes pratiques suggère qu’une nouvelle session réalise la
+spécification, parce que son contexte contient alors le travail et rien du
+long entretien (@Claude Code best practices). Écrivez aussi le plan dans une
+nouvelle session. Terminez la session d’entretien, ouvrez-en une nouvelle dans
+`fixture-repo` avec la mémoire automatique toujours désactivée, et demandez un
+plan qui emploie la liste de termes.
 
 ```text
-Read TERMS.md and SPEC.md. Write PLAN.md with the steps to build what
-SPEC.md describes, using the terms in TERMS.md and no other words for
-them. Don't change any code yet.
+Lis TERMS.md et SPEC.md. Écris PLAN.md avec les étapes pour construire ce
+que décrit SPEC.md, en employant les termes de TERMS.md et aucun autre mot
+pour les désigner. Ne modifie encore aucun code.
 ```
 
-When the plan is written, run the check on it in the second terminal, from
-the top of your copy:
+Une fois le plan écrit, lancez le contrôle dessus dans le second terminal,
+depuis le haut de votre copie :
 
 ```sh
 python3 check_terms.py fixture-repo/TERMS.md fixture-repo/PLAN.md
 ```
 
-An avoided word in the plan means one of two things. Either the plan
-slipped and you correct the word, or the spec left something open that the
-plan filled in with a guess. In the second case, the fix belongs in the
-spec first.
+Un mot à éviter dans le plan veut dire l’une de deux choses. Soit le plan a
+dérapé et vous corrigez le mot, soit la spécification a laissé ouvert un point
+que le plan a comblé par une supposition. Dans le second cas, la correction
+va d’abord dans la spécification.
 
 <Order id="interview-steps" objective="coding-with-agents/specifies-work/is-interviewed-before-planning"
   concepts={['design-interview', 'shared-vocabulary']}
-  context="The steps of taking a small feature from a one-line request to a plan, with a coding agent that interviews the engineer first and a term list that both the spec and the plan follow."
-  title="From request to plan"
-  hint="Which file must exist and be correct before a session that knows nothing of the interview can use it?"
+  context="Les étapes pour amener une petite fonctionnalité d’une demande d’une ligne jusqu’à un plan, avec un agent de code qui interroge d’abord l’ingénieur et une liste de termes que la spécification et le plan suivent tous les deux."
+  title="De la demande au plan"
+  hint="Quel fichier doit exister et être juste avant qu’une session qui ne sait rien de l’entretien puisse s’en servir ?"
   steps={[
-    'Ask the agent to interview you about the feature, before any plan',
-    'Answer each question with a decision, or with "not decided yet"',
-    'Have the agent write the term list and the spec',
-    'Read both files and correct them',
-    'Start a fresh session that writes the plan from the spec',
-    'Check the plan against the term list',
+    'Demander à l’agent de vous interroger sur la fonctionnalité, avant tout plan',
+    'Répondre à chaque question par une décision, ou par « pas encore décidé »',
+    'Faire écrire par l’agent la liste de termes et la spécification',
+    'Lire les deux fichiers et les corriger',
+    'Ouvrir une nouvelle session qui écrit le plan à partir de la spécification',
+    'Comparer le plan à la liste de termes',
   ]} />
 
 <Choice id="fresh-session-reads-two-words" phase="review"
   objective="coding-with-agents/specifies-work/is-interviewed-before-planning"
   concepts={['shared-vocabulary']}
-  context="An engineer was interviewed by a coding agent about an archive feature for a to-do program. The term list says that archive moves done items to a separate file, and it doesn't mention hide. The spec, written in the same session, uses archive in one place and hide in another."
-  title="Two words in one spec"
-  hint="What does a session that never saw the interview have to work from?"
+  context="Un ingénieur a été interrogé par un agent de code sur une fonctionnalité d’archivage pour un programme de liste de tâches. La liste de termes dit qu’archive déplace les éléments faits vers un fichier séparé, et ne mentionne pas hide. La spécification, écrite dans la même session, emploie archive à un endroit et hide à un autre."
+  title="Deux mots dans une même spécification"
+  hint="À partir de quoi une session qui n’a jamais vu l’entretien doit-elle travailler ?"
   options={[
-    { text: 'It treats the two words as one thing, because the spec is about one feature.', why: 'It might, but nothing in the files tells it so, and the term list gives hide no meaning at all.' },
-    { text: 'It asks the engineer which one is meant before it writes any of the plan.', why: 'It might ask, and it might go ahead. You cannot count on the question coming.' },
-    { text: 'It has to guess whether the two words mean one thing, and some guesses are wrong.', correct: true },
+    { text: 'Elle traite les deux mots comme une seule chose, parce que la spécification porte sur une seule fonctionnalité.', why: 'C’est possible, mais rien dans les fichiers ne le lui dit, et la liste de termes ne donne aucun sens à hide.' },
+    { text: 'Elle demande à l’ingénieur lequel est voulu avant d’écrire la moindre ligne du plan.', why: 'Elle demandera peut-être, et elle avancera peut-être. Vous ne pouvez pas compter sur la question.' },
+    { text: 'Elle doit deviner si les deux mots veulent dire la même chose, et certaines suppositions sont fausses.', correct: true },
   ]}>
-A fresh session reads this spec to write the plan. What happens with the
-two words?
+Une nouvelle session lit cette spécification pour écrire le plan. Que se
+passe-t-il avec les deux mots ?
 </Choice>
 
 <MultiChoice id="answers-that-are-decisions" phase="review"
   objective="coding-with-agents/specifies-work/is-interviewed-before-planning"
   concepts={['design-interview']}
-  context="A coding agent is interviewing an engineer about an archive feature for a to-do program before it writes a spec. The engineer has decided that archived items go to archive.json and that the open items keep their order. The engineer has no view yet on whether archive list should show the date each item was archived."
-  title="Which answers keep the spec honest?"
-  hint="Which answers tell the agent only what the engineer has actually decided?"
+  context="Un agent de code interroge un ingénieur sur une fonctionnalité d’archivage pour un programme de liste de tâches avant d’écrire une spécification. L’ingénieur a décidé que les éléments archivés vont dans archive.json et que les éléments ouverts gardent leur ordre. L’ingénieur n’a pas encore d’avis sur l’affichage par archive list de la date d’archivage de chaque élément."
+  title="Quelles réponses gardent la spécification honnête ?"
+  hint="Quelles réponses ne disent à l’agent que ce que l’ingénieur a réellement décidé ?"
   options={[
-    { text: '"Archived items go to archive.json, and the rest keep their order."', correct: true },
-    { text: '"Not decided yet. List the date under the open questions."', correct: true },
-    { text: '"Sure, show the date in the list, whatever is easiest to build."', why: 'The engineer has no view on the date, and this answer turns a passing word into a requirement.' },
-    { text: '"Use your own judgment for the date, and ask me the next one."', why: 'The agent decides, and the spec then states its choice as if the engineer had made it.' },
+    { text: '« Les éléments archivés vont dans archive.json, et les autres gardent leur ordre. »', correct: true },
+    { text: '« Pas encore décidé. Range la date parmi les questions ouvertes. »', correct: true },
+    { text: '« D’accord, affiche la date dans la liste, comme c’est le plus simple à construire. »', why: 'L’ingénieur n’a pas d’avis sur la date, et cette réponse transforme un mot en passant en exigence.' },
+    { text: '« Utilise ton propre jugement pour la date, et pose-moi la question suivante. »', why: 'L’agent décide, et la spécification énonce ensuite son choix comme si l’ingénieur l’avait fait.' },
   ]}>
-The agent asks two questions: where archived items go, and whether
-`archive list` shows the date. Which two of these answers keep the spec to
-what the engineer has decided?
+L’agent pose deux questions : où vont les éléments archivés, et si
+`archive list` affiche la date. Lesquelles de ces réponses, au nombre de deux,
+limitent la spécification à ce que l’ingénieur a décidé ?
 </MultiChoice>
 
 <Sort id="where-it-goes" phase="review"
   objective="coding-with-agents/specifies-work/is-interviewed-before-planning"
   concepts={['design-interview', 'shared-vocabulary']}
-  context="At the end of a design interview about an archive feature for a to-do program, the agent writes two files: TERMS.md, a list of terms with their meaning and the words to avoid, and SPEC.md, with the behavior and a section for open questions."
-  title="Where does each point go?"
-  hint="Is the point the meaning of a word, a behavior that was decided, or something nobody decided?"
-  buckets={['TERMS.md', 'SPEC.md, behavior', 'SPEC.md, open questions']}
+  context="À la fin d’un entretien de conception sur une fonctionnalité d’archivage pour un programme de liste de tâches, l’agent écrit deux fichiers : TERMS.md, une liste de termes avec leur sens et les mots à éviter, et SPEC.md, avec le comportement et une section pour les questions ouvertes."
+  title="Où va chaque point ?"
+  hint="Le point est-il le sens d’un mot, un comportement décidé, ou une chose que personne n’a décidée ?"
+  buckets={['TERMS.md', 'SPEC.md, comportement', 'SPEC.md, questions ouvertes']}
   items={[
-    { text: 'Archive means moving done items to archive.json. Avoid: hide.', bucket: 0 },
-    { text: 'With no done items, archive prints "nothing to archive".', bucket: 1 },
-    { text: 'Whether archive list shows a date: the engineer said "not decided yet".', bucket: 2 },
-    { text: 'Clear deletes done items for good. Avoid: purge, wipe.', bucket: 0 },
-    { text: 'Open items keep their order and are numbered again from 1.', bucket: 1 },
+    { text: 'Archive veut dire déplacer les éléments faits vers archive.json. À éviter : hide.', bucket: 0 },
+    { text: 'Sans élément fait, archive affiche « nothing to archive ».', bucket: 1 },
+    { text: 'L’affichage d’une date par archive list : l’ingénieur a dit « pas encore décidé ».', bucket: 2 },
+    { text: 'Clear supprime définitivement les éléments faits. À éviter : purge, wipe.', bucket: 0 },
+    { text: 'Les éléments ouverts gardent leur ordre et sont renumérotés à partir de 1.', bucket: 1 },
   ]} />
 
-<Exercise stretch="Ask the fresh session to build the plan, then run check_terms.py on the modules it changed, such as fixture-repo/todo.py and fixture-repo/store.py, and see whether the names in the code follow the term list too.">
-Reset your copy and let an agent interview you about an undo for `done`:
-a way to take back a `done 3` typed by mistake. Start the session with
-auto memory off, and use the request from this lesson with its first two
-sentences replaced by one or two sentences about the undo. Answer every
-question with a decision or with "not decided yet", and stop when the
-agent has written `TERMS.md` and `SPEC.md`. Read both files and correct
-them. Then run the check in the second terminal, from the top of your
-copy, until it prints `no avoided words`:
+<Exercise stretch="Demandez à la nouvelle session de construire le plan, puis lancez check_terms.py sur les modules qu’elle a modifiés, comme fixture-repo/todo.py et fixture-repo/store.py, et regardez si les noms dans le code suivent eux aussi la liste de termes.">
+Réinitialisez votre copie et laissez un agent vous interroger sur une
+annulation de `done` : un moyen de revenir sur un `done 3` tapé par erreur.
+Lancez la session avec la mémoire automatique désactivée, et utilisez la
+demande de cette leçon en remplaçant ses deux premières phrases par une ou
+deux phrases sur l’annulation. Répondez à chaque question par une décision ou
+par « pas encore décidé », et arrêtez-vous quand l’agent a écrit `TERMS.md` et
+`SPEC.md`. Lisez les deux fichiers et corrigez-les. Lancez ensuite le contrôle
+dans le second terminal, depuis le haut de votre copie, jusqu’à ce qu’il
+affiche `no avoided words` :
 
 ```sh
 python3 check_terms.py fixture-repo/TERMS.md fixture-repo/SPEC.md
 ```
 
-If it prints `no terms found`, `TERMS.md` doesn't use the line form the
-request asked for, so ask the agent to rewrite it in that form. A line it
-reports as `not in the term form` has the same fix. Then start a fresh
-session, have it write `PLAN.md` from the spec, and run the check on the
-plan. Twenty minutes is enough. You do this so the design is settled, in
-words that you and the agent share, before the agent proposes how to build
-it.
+S’il affiche `no terms found`, `TERMS.md` n’emploie pas la forme de ligne
+demandée, donc demandez à l’agent de le réécrire sous cette forme. Une ligne
+signalée comme `not in the term form` se corrige de la même façon. Ouvrez
+ensuite une nouvelle session, faites-lui écrire `PLAN.md` à partir de la
+spécification, et lancez le contrôle sur le plan. Vingt minutes suffisent. Vous
+faites cela pour que la conception soit arrêtée, avec des mots que l’agent et
+vous partagez, avant que l’agent propose comment la construire.
 
-A good result: the interview asked at least one question you had not
-thought of, and `TERMS.md` has three to six terms. The spec lists at least
-one open question or says why there are none. The check prints
-`no avoided words` for both the spec and the plan. Reflect: which question
-brought out a decision you had not made, and what would the agent have
-built if it had never asked?
+Un bon résultat : l’entretien a posé au moins une question à laquelle vous
+n’aviez pas pensé, et `TERMS.md` compte de trois à six termes. La
+spécification liste au moins une question ouverte ou dit pourquoi il n’y en a
+aucune. Le contrôle affiche `no avoided words` pour la spécification comme
+pour le plan. Prenez un moment de recul : quelle question a fait apparaître
+une décision que vous n’aviez pas prise, et qu’aurait construit l’agent s’il ne
+l’avait jamais posée ?
 </Exercise>
 
 <Recap>
-1. For a larger feature, ask the agent to interview you before it plans, and to write a spec when nothing is open (@Claude Code best practices).
-2. Answer each question with a decision, or with "not decided yet". An answer made up to move on becomes a requirement.
-3. Write the terms the interview settled into a short list, each with its meaning and the words to avoid, and use the same words in the spec, the plan and the code (@Evans DDD Reference).
-4. Check the spec and the plan against the term list. A drifted word is either a slip or a decision written down wrong, so read the whole line.
-5. Start the plan in a fresh session that works from the spec and the term list, without the interview in its context.
+1. Pour une fonctionnalité importante, demandez à l’agent de vous interroger avant de planifier, et d’écrire une spécification quand plus rien n’est ouvert (@Claude Code best practices).
+2. Répondez à chaque question par une décision, ou par « pas encore décidé ». Une réponse inventée pour avancer devient une exigence.
+3. Écrivez les termes arrêtés pendant l’entretien dans une courte liste, chacun avec son sens et les mots à éviter, et employez les mêmes mots dans la spécification, le plan et le code (@Evans DDD Reference).
+4. Comparez la spécification et le plan à la liste de termes. Un mot qui a dérivé est soit une étourderie, soit une décision mal écrite, donc lisez la ligne entière.
+5. Commencez le plan dans une nouvelle session qui travaille à partir de la spécification et de la liste de termes, sans l’entretien dans son contexte.
 </Recap>
 
 <Habit id="ask-for-the-interview">
-The next time you hand an agent a feature that takes more than one sentence to describe, ask it to interview you before it writes a plan.
+La prochaine fois que vous confiez à un agent une fonctionnalité qui demande plus d’une phrase pour être décrite, demandez-lui de vous interroger avant d’écrire un plan.
 </Habit>

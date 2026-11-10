@@ -11,7 +11,7 @@ introduces: [throwaway-prototype]
 assumes:
   - objective: coding-with-agents/specifies-work/is-interviewed-before-planning
     lesson: coding-with-agents/agent-interviews-you
-    section: asking-for-the-interview
+    section: demander-lentretien
   - objective: coding-with-agents/specifies-work/decomposes-into-components
     lesson: coding-with-agents/decomposing-the-work
     section: one-responsibility-per-component
