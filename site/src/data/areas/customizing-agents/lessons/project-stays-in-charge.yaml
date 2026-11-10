@@ -15,7 +15,7 @@ assumes:
     section: write-the-lockfile-check
   - objective: customizing-agents/adopts-a-skill-set/adopts-skills-gradually
     lesson: customizing-agents/adopting-a-skill-set
-    section: take-two-skills-at-a-time
+    section: prendre-deux-skills-à-la-fois
 extends-to: []
 sources-checked: 2026-10-07
 review-by: 2027-04-07

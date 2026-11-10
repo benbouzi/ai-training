@@ -1,89 +1,86 @@
 import { Choice, Match, MultiChoice, Predict, Sort, Scenario, Pitfall, Exercise, Recap, Habit } from '@components/lesson';
 
-A colleague recommends `workbench`, a set of eight skills for everyday
-development work, from ticket plans to commit messages. The set is
-published as one plugin, and your team wants two of its skills. In this
-lesson we vet the set the way you would vet a library and take the two
-skills. Then we check what they change in a session against what they
-add to the context.
+Un collègue recommande `workbench`, un jeu de huit skills pour le travail de
+développement courant, des plans de tickets aux messages de commit. Le jeu est
+publié sous forme d’un seul plugin, et votre équipe veut deux de ses skills. Dans
+cette leçon, nous examinons le jeu comme vous examineriez une bibliothèque, et
+nous prenons les deux skills. Nous comparons ensuite ce qu’elles changent dans
+une session avec ce qu’elles ajoutent au contexte.
 
-The set is invented for the course. It is in the course repository at
-`site/examples/customizing-agents/adopting-a-skill-set/workbench/`, next
-to a short Python script, `vet.py`, that lists what each skill in a set
-holds. The script only reads files, and nothing in this lesson installs
-the set or runs its scripts. Run the commands from that directory, and
-replace `<course-repo>` with the path to your copy of the course
-repository.
+Le jeu est inventé pour le cours. Il se trouve dans le dépôt du cours, dans
+`site/examples/customizing-agents/adopting-a-skill-set/workbench/`, à côté d’un
+court script Python, `vet.py`, qui liste ce que contient chaque skill d’un jeu.
+Le script ne fait que lire des fichiers, et rien dans cette leçon n’installe le
+jeu ni ne lance ses scripts. Lancez les commandes depuis ce dossier, et
+remplacez `<course-repo>` par le chemin de votre copie du dépôt du cours.
 
 ```sh
 cd <course-repo>/site/examples/customizing-agents/adopting-a-skill-set
 ```
 
-## What you take on with a skill set
+## Ce que vous prenez en charge avec un jeu de skills
 
-**Published skill sets** are collections of skills that a vendor or a
-developer maintains for other people to install, often as a plugin.
-Model vendors, tool makers and individual developers all publish them.
-A set like this is a dependency, and its skills act in your sessions.
-They change whenever the author releases a new version.
+**Les jeux de skills publiés** sont des collections de skills qu’un éditeur ou
+un développeur maintient pour que d’autres les installent, souvent sous forme de
+plugin. Les éditeurs de modèles, les fabricants d’outils et des développeurs
+indépendants en publient tous. Un jeu de ce genre est une dépendance, et ses
+skills agissent dans vos sessions. Elles changent chaque fois que l’auteur publie
+une nouvelle version.
 
-One set can also hold skills under different licenses. Anthropic's own
-public set is an example:
-many of its skills are under the Apache License 2.0, and its document
-skills are source-available, so you can read them, but they aren't open
-source (@anthropics skills).
+Un même jeu peut aussi contenir des skills sous des licences différentes. Le jeu
+public d’Anthropic en est un exemple : beaucoup de ses skills sont sous licence
+Apache 2.0, et ses skills de documents ont un code seulement consultable (source
+available), donc vous pouvez les lire, mais elles ne sont pas open source
+(@anthropics skills).
 
-A skill acts in more ways than its text suggests. Its instructions tell
-Claude what to do, and the steps can tell Claude to run the scripts that
-come with the skill. A skill's front matter can also have an
-`allowed-tools` field. While the skill runs, Claude may use the tools
-it lists without asking you first. That means the author of the skill
-decides part of your permissions. The field takes effect even in a
-folder that you never marked as trusted, so read it in every skill that
-you didn't write (@Claude Code skills). When the set is a plugin, it can
-bring hooks and servers as well, and the previous lesson read those.
+Une skill agit de plus de façons que son texte ne le laisse penser. Ses
+instructions disent à Claude quoi faire, et les étapes peuvent dire à Claude de
+lancer les scripts fournis avec la skill. L’en-tête d’une skill peut aussi avoir
+un champ `allowed-tools`. Pendant que la skill s’exécute, Claude peut utiliser
+les outils qu’il liste sans vous demander d’abord. L’auteur de la skill décide
+donc d’une partie de vos permissions. Le champ prend effet même dans un dossier
+que vous n’avez jamais marqué comme fiable, donc lisez-le dans chaque skill que
+vous n’avez pas écrite (@Claude Code skills). Quand le jeu est un plugin, il peut
+aussi apporter des hooks et des serveurs, et la leçon précédente les a lus.
 
-Even while nothing in it runs, a skill set has a cost. An enabled
-plugin adds a short entry to every turn of every session: the name and
-the description of each skill that Claude may start by itself. Claude
-reads the rest of a skill's `SKILL.md` only when the skill is used
-(@Claude Code plugins).
-That's the first stage that
-[Loading only what the skill needs](/customizing-agents/progressive-disclosure/)
-measured for one skill, and a set has one such entry per skill.
+Même quand rien n’y tourne, un jeu de skills a un coût. Un plugin activé ajoute
+une courte entrée à chaque tour de chaque session : le nom et la description de
+chaque skill que Claude peut lancer de lui-même. Claude ne lit le reste du
+`SKILL.md` d’une skill que quand la skill sert (@Claude Code plugins). C’est la
+première étape que [Ne charger que ce dont la skill a besoin](/customizing-agents/progressive-disclosure/)
+a mesurée pour une skill, et un jeu a une entrée de ce genre par skill.
 
-## Vet the set as you would a library
+## Examiner le jeu comme une bibliothèque
 
-Before you install a set, look for these answers.
+Avant d’installer un jeu, cherchez ces réponses.
 
-- **License.** Under which license is each skill you plan to use? The
-  open skill format has an optional `license` field in the front matter,
-  for a license name or the name of a license file next to the skill
-  (@Agent Skills spec). A skill with neither gives you no permission to
-  copy it.
-- **Maintenance.** Who maintains the set, when did it last change, and
-  how are its changes released? A changelog, versions and an issue
-  tracker answer most of this. Note the version or the commit that you
-  read.
-- **Contents.** What does each skill do? Read every skill, every script
-  and every `allowed-tools` line before you install. The previous lesson
-  did the same for a plugin's hooks and servers.
-- **Alternatives.** What else would do the job? A set of eight skills is
-  eight descriptions in your context and eight things to keep up to date.
-  When you need two of them, copying those two or writing your own can be
-  cheaper.
+- **La licence.** Sous quelle licence est chaque skill que vous comptez utiliser ?
+  Le format ouvert des skills a un champ `license` facultatif dans l’en-tête,
+  pour un nom de licence ou le nom d’un fichier de licence à côté de la skill
+  (@Agent Skills spec). Une skill qui n’a ni l’un ni l’autre ne vous donne aucune
+  permission de la copier.
+- **La maintenance.** Qui maintient le jeu, quand a-t-il changé pour la dernière
+  fois, et comment ses modifications sont-elles publiées ? Un journal des
+  modifications, des versions et un suivi des tickets répondent à l’essentiel.
+  Notez la version ou le commit que vous avez lu.
+- **Le contenu.** Que fait chaque skill ? Lisez chaque skill, chaque script et
+  chaque ligne `allowed-tools` avant d’installer. La leçon précédente a fait de
+  même pour les hooks et les serveurs d’un plugin.
+- **Les alternatives.** Qu’est-ce qui ferait aussi le travail ? Un jeu de huit
+  skills, c’est huit descriptions dans votre contexte et huit choses à tenir à
+  jour. Quand vous en avez besoin de deux, copier ces deux-là ou écrire les
+  vôtres peut coûter moins cher.
 
-`vet.py` answers the license question and part of the contents question
-for every skill at once. Each skill gets one line. It shows the license
-and the number of scripts, then who may invoke the skill and an estimate
-of the tokens its name and description add to every session. It counts
-the same text with the same rule as `inventory.py` in the previous
-lesson. A skill that only you may invoke
-counts as 0 tokens, because its description stays out of the context.
-When a skill has an `allowed-tools` line, the script prints it at the
-end of that skill's line.
+`vet.py` répond à la question de la licence et à une partie de la question du
+contenu pour toutes les skills d’un coup. Chaque skill reçoit une ligne. Elle
+montre la licence et le nombre de scripts, puis qui peut invoquer la skill et une
+estimation des jetons (tokens) que son nom et sa description ajoutent à chaque session. Il
+compte le même texte avec la même règle qu’`inventory.py` dans la leçon
+précédente. Une skill que vous seul pouvez invoquer compte pour 0 jeton, parce
+que sa description reste hors du contexte. Quand une skill a une ligne
+`allowed-tools`, le script l’affiche à la fin de la ligne de cette skill.
 
-<Predict id="vet-the-workbench-set" title="List what the workbench set holds"
+<Predict id="vet-the-workbench-set" title="Lister ce que contient le jeu workbench"
   answer={`set license: none
   marketplace workbench-market:
     plugin workbench 3.2.0: 8 skills
@@ -98,7 +95,10 @@ end of that skill's line.
     write-tests: Apache-2.0; 1 script; Claude or you; always loaded 26
   always loaded, whole set: 230`}
   run="customizing-agents/adopting-a-skill-set/whole_set.py">
-Run this, and compare with the output below.
+Lancez ceci, et comparez avec la sortie ci-dessous. Dans chaque ligne,
+« Claude or you » veut dire que Claude ou vous pouvez lancer la skill, « you
+only » que vous seul le pouvez, et « always loaded » donne les jetons toujours
+chargés.
 
 ```sh
 python3 vet.py workbench
@@ -106,104 +106,104 @@ python3 vet.py workbench
 
 </Predict>
 
-The set has no license file at the top, so each skill has its own terms.
-Every skill except two is under Apache-2.0. `release-notes` states no
-license at all, so you have no permission to copy it. `spreadsheet` has
-a license file that reserves all rights. Open
-`workbench/skills/spreadsheet/LICENSE.txt`: it allows use through the
-plugin and nothing else.
+Le jeu n’a pas de fichier de licence à sa racine, donc chaque skill a ses propres
+conditions. Toutes les skills sauf deux sont sous Apache-2.0. `release-notes`
+n’indique aucune licence, donc vous n’avez aucune permission de la copier.
+`spreadsheet` a un fichier de licence qui réserve tous les droits. Ouvrez
+`workbench/skills/spreadsheet/LICENSE.txt` : il permet l’usage par le plugin, et
+rien d’autre.
 
-Read the `setup-env` and `deploy` lines more closely. `setup-env`
-pre-approves `Bash(python3 *)`, so while it runs, Claude may run any
-`python3` command without asking you. Open
-`workbench/skills/setup-env/scripts/bootstrap.py`. It writes a settings
-file to `~/.workbench/` in your home directory, outside every project.
-That file turns on telemetry. `deploy` is the opposite case. Only you
-can start it, by typing its name. Its description stays out of the
-context.
+Lisez de plus près les lignes de `setup-env` et de `deploy`. `setup-env`
+préapprouve `Bash(python3 *)`, donc pendant qu’elle s’exécute, Claude peut lancer
+n’importe quelle commande `python3` sans vous demander. Ouvrez
+`workbench/skills/setup-env/scripts/bootstrap.py`. Il écrit un fichier de
+réglages dans `~/.workbench/` de votre dossier personnel, hors de tout projet. Ce
+fichier active la télémétrie. `deploy` est le cas inverse. Vous seul pouvez la
+lancer, en tapant son nom. Sa description reste hors du contexte.
 
-For maintenance, open `workbench/CHANGELOG.md`. It lists three releases
-in three months, each with a date and a line per change, and version
-3.2.0 is the one you read. The set's marketplace isn't one of
-Anthropic's official ones, and auto-update is off by default for such a
-marketplace (@Claude Code plugin install). An installed copy changes
-only when you update it, so you can read each new release first.
+Pour la maintenance, ouvrez `workbench/CHANGELOG.md`. Il liste trois versions en
+trois mois, chacune avec une date et une ligne par modification, et la version
+3.2.0 est celle que vous avez lue. La place de marché du jeu n’est pas l’une des
+places officielles d’Anthropic, et la mise à jour automatique est désactivée par
+défaut pour une telle place (@Claude Code plugin install). Une copie installée ne
+change que quand vous la mettez à jour, donc vous pouvez lire chaque nouvelle
+version d’abord.
 
 <MultiChoice id="which-skills-to-copy" objective="customizing-agents/adopts-a-skill-set/vets-a-skill-set"
   concepts={['published-skill-sets']}
-  context="A published skill set has no license file at its top level. Its plan-ticket and review-diff skills say license: Apache-2.0 in their front matter. Its release-notes skill has no license field and no license file. Its spreadsheet skill has a LICENSE.txt that reserves all rights and allows use only through the set's plugin."
-  title="Which skills may you copy?" hint="For each skill, what gives you permission to copy its files into another repository?"
+  context="Un jeu de skills publié n’a pas de fichier de licence à sa racine. Ses skills plan-ticket et review-diff indiquent license: Apache-2.0 dans leur en-tête. Sa skill release-notes n’a ni champ license ni fichier de licence. Sa skill spreadsheet a un LICENSE.txt qui réserve tous les droits et ne permet l’usage que par le plugin du jeu."
+  title="Quelles skills pouvez-vous copier ?" hint="Pour chaque skill, qu’est-ce qui vous donne la permission de copier ses fichiers dans un autre dépôt ?"
   options={[
-    { text: 'plan-ticket, with license: Apache-2.0', correct: true },
-    { text: 'release-notes, which states no license', why: 'Without a license, you have no permission to copy the files, whatever the rest of the set allows.' },
-    { text: 'review-diff, with license: Apache-2.0', correct: true },
-    { text: 'spreadsheet, whose LICENSE.txt reserves all rights', why: 'That file allows use through the plugin only. Copying any part of it is not allowed.' },
+    { text: 'plan-ticket, avec license: Apache-2.0', correct: true },
+    { text: 'release-notes, qui n’indique aucune licence', why: 'Sans licence, vous n’avez aucune permission de copier les fichiers, quoi que permette le reste du jeu.' },
+    { text: 'review-diff, avec license: Apache-2.0', correct: true },
+    { text: 'spreadsheet, dont le LICENSE.txt réserve tous les droits', why: 'Ce fichier ne permet que l’usage par le plugin. Copier une partie de la skill n’est pas permis.' },
   ]}>
-Your team wants to copy skills from the set into its own repository.
-Which two may it copy?
+Votre équipe veut copier des skills du jeu dans son propre dépôt. Quelles deux
+skills peut-elle copier ?
 </MultiChoice>
 
 <Choice id="what-setup-env-can-do" objective="customizing-agents/adopts-a-skill-set/vets-a-skill-set"
   concepts={['published-skill-sets']}
-  context="A published skill set has a setup-env skill under the Apache License 2.0. Its front matter has allowed-tools: Bash(python3 *), and its first step tells Claude to run scripts/bootstrap.py, a script that comes with the skill."
-  title="Read setup-env before you use it" hint="What does the allowed-tools field let Claude do while the skill runs, and what does the license say about that?"
+  context="Un jeu de skills publié a une skill setup-env sous licence Apache 2.0. Son en-tête contient allowed-tools: Bash(python3 *), et sa première étape dit à Claude de lancer scripts/bootstrap.py, un script fourni avec la skill."
+  title="Lire setup-env avant de s’en servir" hint="Que permet à Claude le champ allowed-tools pendant que la skill s’exécute, et que dit la licence à ce sujet ?"
   options={[
-    { text: 'Its Apache license shows that the skill is safe to run in your projects.', why: 'A license says what you may do with the files. It says nothing about what the script does on your computer.' },
-    { text: 'A skill holds only text, so it cannot change files outside the project.', why: 'A skill can tell Claude to run the scripts that come with it, and a script can write anywhere your user account can.' },
-    { text: 'While it runs, Claude can run any python3 command without asking, so read the script first.', correct: true },
-    { text: 'The allowed-tools line takes effect only after you approve it once.', why: 'The listed tools are pre-approved. While the skill runs, Claude uses them without asking you.' },
+    { text: 'Sa licence Apache montre que la skill peut s’exécuter sans danger dans vos projets.', why: 'Une licence dit ce que vous pouvez faire des fichiers. Elle ne dit rien de ce que fait le script sur votre ordinateur.' },
+    { text: 'Une skill ne contient que du texte, donc elle ne peut pas modifier des fichiers hors du projet.', why: 'Une skill peut dire à Claude de lancer les scripts fournis avec elle, et un script peut écrire partout où votre compte utilisateur le peut.' },
+    { text: 'Pendant qu’elle s’exécute, Claude peut lancer n’importe quelle commande python3 sans demander, donc lisez d’abord le script.', correct: true },
+    { text: 'La ligne allowed-tools ne prend effet qu’après que vous l’avez approuvée une fois.', why: 'Les outils listés sont préapprouvés. Pendant que la skill s’exécute, Claude les utilise sans vous demander.' },
   ]}>
-Which statement about `setup-env` is right?
+Que pouvez-vous affirmer de `setup-env` ?
 </Choice>
 
 <Sort id="where-the-answer-is" phase="review" objective="customizing-agents/adopts-a-skill-set/vets-a-skill-set"
   concepts={['published-skill-sets']}
-  context="You are vetting a published skill set before you install it. The set is a git repository with a changelog, one folder per skill, and a license field or a license file for some of the skills."
-  title="Where do you find the answer?" hint="Is the question about what you may do with the files, how the set changes over time, or what a skill does when it runs?"
-  buckets={['The license field or license file of the skill', 'The changelog and the history of the repository', 'The skill\'s own files and scripts']}
+  context="Vous examinez un jeu de skills publié avant de l’installer. Le jeu est un dépôt git avec un journal des modifications, un dossier par skill, et un champ de licence ou un fichier de licence pour certaines des skills."
+  title="Où trouvez-vous la réponse ?" hint="La question porte-t-elle sur ce que vous pouvez faire des fichiers, sur la façon dont le jeu évolue, ou sur ce que fait une skill quand elle s’exécute ?"
+  buckets={['Le champ ou le fichier de licence de la skill', 'Le journal des modifications et l’historique du dépôt', 'Les fichiers et les scripts de la skill elle-même']}
   items={[
-    { text: 'May the team copy this skill into its own repository?', bucket: 0 },
-    { text: 'Does anyone still release new versions of the set?', bucket: 1 },
-    { text: 'Which version did you read?', bucket: 1 },
-    { text: 'Does the skill write to your home directory?', bucket: 2 },
-    { text: 'Which tools may Claude use without asking while the skill runs?', bucket: 2 },
+    { text: 'L’équipe peut-elle copier cette skill dans son propre dépôt ?', bucket: 0 },
+    { text: 'Quelqu’un publie-t-il encore de nouvelles versions du jeu ?', bucket: 1 },
+    { text: 'Quelle version avez-vous lue ?', bucket: 1 },
+    { text: 'La skill écrit-elle dans votre dossier personnel ?', bucket: 2 },
+    { text: 'Quels outils Claude peut-il utiliser sans demander pendant que la skill s’exécute ?', bucket: 2 },
   ]} />
 
 <Scenario id="thirty-skills-for-three" phase="review" objective="customizing-agents/adopts-a-skill-set/vets-a-skill-set"
   concepts={['published-skill-sets']}
-  context="A public skill set has thirty skills, all under the Apache License 2.0. Its last release was fourteen months ago, and its issue tracker has many open reports that the skills no longer work with the current agent. Your team needs three of the skills."
-  title="An old set of thirty skills" hint="What would the team carry if it installed the whole set, and who would keep the three skills working?"
+  context="Un jeu de skills public compte trente skills, toutes sous licence Apache 2.0. Sa dernière version date de quatorze mois, et son suivi des tickets a beaucoup de signalements ouverts disant que les skills ne fonctionnent plus avec l’agent actuel. Votre équipe a besoin de trois des skills."
+  title="Un vieux jeu de trente skills" hint="Que porterait l’équipe si elle installait tout le jeu, et qui garderait les trois skills en état de marche ?"
   options={[
-    { text: 'Install the whole set, since the license allows it.', consequence: 'Thirty descriptions are in every session, for three skills, and nobody updates the set when the agent changes again.' },
-    { text: 'Install the whole set and read only the three skills you need.', consequence: 'The other twenty-seven skills still act in your sessions, and you haven\'t read them.' },
-    { text: 'Read the three skills and copy them, or write your own from their ideas.', correct: true, consequence: 'The team carries three skills that it has read and owns, and it fixes them itself when the agent changes.' },
+    { text: 'Installer tout le jeu, puisque la licence le permet.', consequence: 'Trente descriptions sont dans chaque session pour trois skills, et personne ne met à jour le jeu quand l’agent change de nouveau.' },
+    { text: 'Installer tout le jeu et ne lire que les trois skills dont vous avez besoin.', consequence: 'Les vingt-sept autres skills agissent quand même dans vos sessions, et vous ne les avez pas lues.' },
+    { text: 'Lire les trois skills et les copier, ou écrire les vôtres à partir de leurs idées.', correct: true, consequence: 'L’équipe porte trois skills qu’elle a lues et qui lui appartiennent, et elle les corrige elle-même quand l’agent change.' },
   ]}>
-What should the team do?
+Que doit faire l’équipe ?
 </Scenario>
 
-## Take two skills at a time
+## Prendre deux skills à la fois
 
-Adopt a set one or two skills at a time, and use them on real work for a
-while before you add more. When only one thing changed, a better or a
-worse result points to the skill that caused it.
+Adoptez un jeu une ou deux skills à la fois, et utilisez-les un moment sur un vrai
+travail avant d’en ajouter d’autres. Quand une seule chose a changé, un résultat
+meilleur ou pire désigne la skill qui en est la cause.
 
-A plugin doesn't let you pick from its skills. The `skillOverrides`
-setting, which hides one personal or project skill or keeps it out of
-the context, doesn't apply to skills that come from a plugin. You manage
-those with `/plugin`, by turning the whole plugin on or off
-(@Claude Code skills). When a set publishes each skill as its own
-plugin, install only the plugins you need. When it publishes one plugin,
-like `workbench`, copy the two skills whose license allows it into the
-project's `.claude/skills/` folder, and write down the version you
-copied. From then on, you take updates by hand, after you read the
-changelog.
+Un plugin ne vous laisse pas choisir parmi ses skills. Le réglage
+`skillOverrides`, qui masque une skill personnelle ou de projet ou la garde hors
+du contexte, ne s’applique pas aux skills qui viennent d’un plugin. Vous les
+gérez avec `/plugin`, en activant ou en désactivant le plugin entier
+(@Claude Code skills). Quand un jeu publie chaque skill comme son propre plugin,
+n’installez que les plugins dont vous avez besoin. Quand il publie un seul
+plugin, comme `workbench`, copiez les deux skills dont la licence le permet dans
+le dossier `.claude/skills/` du projet, et notez la version que vous avez copiée.
+À partir de là, vous prenez les mises à jour à la main, après avoir lu le journal
+des modifications.
 
-For `workbench`, take `plan-ticket` and `review-diff`. Both are under
-Apache-2.0, have no scripts and pre-approve no tools. Give `vet.py`
-their names after the set's directory, and it lists only those two, with
-their cost next to the cost of the whole set.
+Pour `workbench`, prenez `plan-ticket` et `review-diff`. Les deux sont sous
+Apache-2.0, n’ont pas de scripts et ne préapprouvent aucun outil. Donnez leurs
+noms à `vet.py` après le dossier du jeu, et il ne liste que ces deux-là, avec
+leur coût à côté du coût du jeu entier.
 
-<Predict id="vet-two-skills" title="List the two skills you take"
+<Predict id="vet-two-skills" title="Lister les deux skills que vous prenez"
   answer={`set license: none
   marketplace workbench-market:
     plugin workbench 3.2.0: 8 skills
@@ -213,7 +213,7 @@ their cost next to the cost of the whole set.
   always loaded, the 2 you named: 61
   always loaded, whole set: 230`}
   run="customizing-agents/adopting-a-skill-set/two_skills.py">
-Run this, and compare with the output below.
+Lancez ceci, et comparez avec la sortie ci-dessous.
 
 ```sh
 python3 vet.py workbench plan-ticket review-diff
@@ -221,118 +221,120 @@ python3 vet.py workbench plan-ticket review-diff
 
 </Predict>
 
-`plan-ticket` and `review-diff` add an estimated 61 tokens to every
-turn, and the whole set would add 230. The estimate is small next to a
-context window, but it is paid on every turn, and it grows with each set
-you add. When there are many skills, Claude Code also shortens or drops
-descriptions to fit its listing into a fixed share of the context, and a
-skill whose description is dropped is harder for Claude to match to a
-request (@Claude Code skills).
+`plan-ticket` et `review-diff` ajoutent environ 61 jetons à chaque tour, et le jeu
+entier en ajouterait 230. L’estimation est petite à côté d’une fenêtre de
+contexte, mais elle se paie à chaque tour, et elle grandit avec chaque jeu que
+vous ajoutez. Quand les skills sont nombreuses, Claude Code raccourcit ou
+abandonne aussi des descriptions pour faire tenir sa liste dans une part fixe du
+contexte, et une skill dont la description est abandonnée est plus difficile à
+rapprocher d’une demande pour Claude (@Claude Code skills).
 
-In a real session, check two things after you add the skills.
+Dans une vraie session, vérifiez deux choses après avoir ajouté les skills.
 
-- **What they cost.** Run `/context` before and after you add them. Its
-  Skills row shows the size of the skill listing that the model receives
+- **Ce qu’elles coûtent.** Lancez `/context` avant et après les avoir ajoutées.
+  Sa ligne Skills montre la taille de la liste des skills que reçoit le modèle
   (@Claude Code skills).
-- **What they change.** Collect two or three real prompts, and run each
-  one in a fresh session with the skill on and again with it set to
-  `"off"` in `skillOverrides`. When Claude starts a skill, you know
-  that its description matched. Only the comparison shows whether the
-  result got better (@Claude Code skills).
+- **Ce qu’elles changent.** Rassemblez deux ou trois vraies demandes, et lancez
+  chacune dans une session neuve avec la skill active, puis de nouveau avec la
+  skill réglée sur `"off"` dans `skillOverrides`. Quand Claude lance une skill,
+  vous savez que sa description a correspondu. Seule la comparaison montre si le
+  résultat s’est amélioré (@Claude Code skills).
 
-Then act on what you found. A skill that didn't change the results still
-costs context and still needs updates, so delete its folder. When you
-start a skill yourself now and then and never need Claude to start it,
-give it `disable-model-invocation: true` in its front matter, and its
-description leaves the context. After a few weeks, `/skill-doctor` lists
-the context that each skill takes and how often it was used, and it
-marks the skills that nobody ever invoked (@Claude Code skills).
+Agissez ensuite selon ce que vous avez trouvé. Une skill qui n’a pas changé les
+résultats coûte quand même du contexte et demande quand même des mises à jour,
+donc supprimez son dossier. Quand vous lancez une skill vous-même de temps en
+temps sans jamais avoir besoin que Claude la lance, donnez-lui
+`disable-model-invocation: true` dans son en-tête, et sa description quitte le
+contexte. Au bout de quelques semaines, `/skill-doctor` liste le contexte que
+prend chaque skill et sa fréquence d’usage, et signale les skills que personne
+n’a jamais invoquées (@Claude Code skills).
 
 <Scenario id="two-skills-from-one-plugin" objective="customizing-agents/adopts-a-skill-set/adopts-skills-gradually"
   concepts={['published-skill-sets']}
-  context="The workbench skill set is published as one Claude Code plugin with eight skills. Six are under the Apache License 2.0, including plan-ticket and review-diff, which have no scripts. The team wants to start with those two and add more later."
-  title="Two skills from a plugin of eight" hint="What does an enabled plugin put into every session, and which setting reaches skills that come from a plugin?"
+  context="Le jeu de skills workbench est publié comme un seul plugin Claude Code de huit skills. Six sont sous licence Apache 2.0, dont plan-ticket et review-diff, qui n’ont pas de scripts. L’équipe veut commencer par ces deux-là et en ajouter d’autres plus tard."
+  title="Deux skills d’un plugin de huit" hint="Que met un plugin activé dans chaque session, et quel réglage atteint les skills qui viennent d’un plugin ?"
   options={[
-    { text: 'Install the plugin, then set the six other skills to "off" in skillOverrides.', consequence: 'skillOverrides doesn\'t apply to plugin skills. All eight stay in every session, and a change in the results could come from any of them.' },
-    { text: 'Copy plan-ticket and review-diff into the project\'s skills folder, and note the version.', correct: true, consequence: 'Two descriptions are in the context, and any change in the results comes from one of the two skills. The team takes updates by hand after it reads the changelog.' },
-    { text: 'Install the plugin, and tell Claude in the project instructions to use only the two skills.', consequence: 'All eight descriptions are still in every session, and an instruction is a request that Claude may not follow. You can\'t tell which skill changed a result.' },
+    { text: 'Installer le plugin, puis régler les six autres skills sur « off » dans skillOverrides.', consequence: 'skillOverrides ne s’applique pas aux skills de plugin. Les huit restent dans chaque session, et un changement des résultats pourrait venir de n’importe laquelle.' },
+    { text: 'Copier plan-ticket et review-diff dans le dossier des skills du projet, et noter la version.', correct: true, consequence: 'Deux descriptions sont dans le contexte, et tout changement des résultats vient de l’une des deux skills. L’équipe prend les mises à jour à la main après avoir lu le journal des modifications.' },
+    { text: 'Installer le plugin, et dire à Claude dans les instructions du projet de n’utiliser que les deux skills.', consequence: 'Les huit descriptions sont toujours dans chaque session, et une instruction est une demande que Claude peut ne pas suivre. Vous ne pouvez pas savoir quelle skill a changé un résultat.' },
   ]}>
-How does the team start?
+Comment l’équipe commence-t-elle ?
 </Scenario>
 
 <Match id="after-a-few-weeks" objective="customizing-agents/adopts-a-skill-set/adopts-skills-gradually"
   concepts={['published-skill-sets', 'invocation-mode']}
-  context="A team adopted skills from a published set, one or two at a time, and compares runs of the same prompts in fresh sessions with a skill on and off. Each row is something the team found after a few weeks."
-  title="What do you do with each skill?" hint="Did the skill change the results, and does it need to be in the context when nobody asked for it?"
-  options={['Delete the skill', 'Set disable-model-invocation: true', 'Keep it, and add the next skill', 'Turn one off and run the same prompts again']}
+  context="Une équipe a adopté des skills d’un jeu publié, une ou deux à la fois, et compare des exécutions des mêmes demandes dans des sessions neuves avec une skill active puis désactivée. Chaque ligne du tableau est une chose que l’équipe a trouvée au bout de quelques semaines."
+  title="Que faites-vous de chaque skill ?" hint="La skill a-t-elle changé les résultats, et doit-elle être dans le contexte quand personne ne l’a demandée ?"
+  options={['Supprimer la skill', 'Régler disable-model-invocation: true', 'La garder, et ajouter la skill suivante', 'En désactiver une et relancer les mêmes demandes']}
   rows={[
-    { statement: 'The commit-message skill gave the same messages as the runs without it.', option: 0, why: 'What does a skill with no effect still cost you?' },
-    { statement: 'Only you ever start the deploy skill, and its description is in every session.', option: 1, why: 'Does Claude need its description in every session if only you start it?' },
-    { statement: 'With plan-ticket, the plans in the test runs were better than without it.', option: 2, why: 'The skill earns its place. What is the next step in a gradual adoption?' },
-    { statement: 'Results got worse after you added two skills on the same day.', option: 3, why: 'How do you find out which of the two caused it?' },
+    { statement: 'La skill de messages de commit a donné les mêmes messages que les exécutions sans elle.', option: 0, why: 'Que vous coûte encore une skill sans effet ?' },
+    { statement: 'Vous seul lancez la skill de déploiement, et sa description est dans chaque session.', option: 1, why: 'Claude a-t-il besoin de sa description dans chaque session si vous seul la lancez ?' },
+    { statement: 'Avec plan-ticket, les plans des essais étaient meilleurs que sans elle.', option: 2, why: 'La skill mérite sa place. Quelle est l’étape suivante d’une adoption progressive ?' },
+    { statement: 'Les résultats se sont dégradés après l’ajout de deux skills le même jour.', option: 3, why: 'Comment savoir laquelle des deux en est la cause ?' },
   ]}
-  rationale="Each skill stays only when the comparison shows that it helps, and one change at a time keeps each result traceable to one skill.">
-Match each finding to what you do next.
+  rationale="Chaque skill ne reste que si la comparaison montre qu’elle aide, et un seul changement à la fois permet de relier chaque résultat à une seule skill.">
+Associez chaque constat à ce que vous faites ensuite.
 </Match>
 
 <MultiChoice id="checks-after-adding" phase="review" objective="customizing-agents/adopts-a-skill-set/adopts-skills-gradually"
   concepts={['published-skill-sets']}
-  context="You copied two skills from a published set into a project's skills folder in Claude Code. You want to know what they add to every session and whether they make the results better."
-  title="Check two new skills" hint="Which of these measures the context, which compares results, and which only shows that Claude found a skill?"
+  context="Vous avez copié deux skills d’un jeu publié dans le dossier des skills d’un projet dans Claude Code. Vous voulez savoir ce qu’elles ajoutent à chaque session et si elles améliorent les résultats."
+  title="Vérifier deux nouvelles skills" hint="Lequel de ces contrôles mesure le contexte, lequel compare des résultats, et lequel montre seulement que Claude a trouvé une skill ?"
   options={[
-    { text: 'Compare the Skills row of /context before and after you add them.', correct: true },
-    { text: 'Check that Claude names the skill in its reply when it starts it.', why: 'That shows Claude found the skill. It doesn\'t show whether the result is better than without it.' },
-    { text: 'Run the same prompts in fresh sessions, with each skill on and off.', correct: true },
-    { text: 'Read the set\'s README for how much the skills improve results.', why: 'A README says what the author claims. Only your own runs show what the skill does on your work.' },
+    { text: 'Comparer la ligne Skills de /context avant et après les avoir ajoutées.', correct: true },
+    { text: 'Vérifier que Claude nomme la skill dans sa réponse quand il la lance.', why: 'Cela montre que Claude a trouvé la skill. Cela ne montre pas si le résultat est meilleur que sans elle.' },
+    { text: 'Lancer les mêmes demandes dans des sessions neuves, avec chaque skill active et désactivée.', correct: true },
+    { text: 'Lire dans le README du jeu de combien les skills améliorent les résultats.', why: 'Un README dit ce qu’affirme l’auteur. Seules vos propres exécutions montrent ce que fait la skill sur votre travail.' },
   ]}>
-Which two of these checks tell you what the skills cost and what they
-change?
+Quels sont les deux contrôles qui vous disent ce que coûtent les skills et ce
+qu’elles changent ?
 </MultiChoice>
 
 <Choice id="why-two-at-a-time" phase="review" objective="customizing-agents/adopts-a-skill-set/adopts-skills-gradually"
   concepts={['published-skill-sets']}
-  context="A team takes skills from a published set one or two at a time, and uses each on real work for a week or two before it adds the next one."
-  title="Why one or two at a time?" hint="If the results change after a new skill arrives, what do you want to be able to say?"
+  context="Une équipe prend des skills d’un jeu publié une ou deux à la fois, et utilise chacune sur un vrai travail pendant une semaine ou deux avant d’ajouter la suivante."
+  title="Pourquoi une ou deux à la fois ?" hint="Si les résultats changent après l’arrivée d’une nouvelle skill, que voulez-vous pouvoir dire ?"
   options={[
-    { text: 'A project\'s skills folder can hold only a few skills at a time.', why: 'The folder can hold any number of skills. The pace is the team\'s choice, for its own reasons.' },
-    { text: 'A skill only starts to work well after a week of use in a project.', why: 'A skill doesn\'t learn from use. The same text gives the same instructions on the first day.' },
-    { text: 'Every new skill starts a new context window for the session.', why: 'Adding a skill adds its description to the context. It doesn\'t reset the session.' },
-    { text: 'With one change at a time, a better or worse result points to one skill.', correct: true },
+    { text: 'Le dossier des skills d’un projet ne peut contenir que quelques skills à la fois.', why: 'Le dossier peut contenir autant de skills qu’on veut. Le rythme est un choix de l’équipe, pour ses propres raisons.' },
+    { text: 'Une skill ne commence à bien fonctionner qu’après une semaine d’usage dans un projet.', why: 'Une skill n’apprend pas de l’usage. Le même texte donne les mêmes instructions dès le premier jour.' },
+    { text: 'Chaque nouvelle skill ouvre une nouvelle fenêtre de contexte pour la session.', why: 'Ajouter une skill ajoute sa description au contexte. Cela ne remet pas la session à zéro.' },
+    { text: 'Avec un seul changement à la fois, un résultat meilleur ou pire désigne une seule skill.', correct: true },
   ]}>
-Why does the team add skills this slowly?
+Pourquoi l’équipe ajoute-t-elle des skills aussi lentement ?
 </Choice>
 
-<Pitfall title="Eight skills for two">
-A developer installs the whole `workbench` plugin at user scope to get
-`plan-ticket`. A month later, they find a file
-`~/.workbench/settings.json` in their home directory, with telemetry
-turned on, and they don't remember approving it. The `setup-env` skill
-matched the request "set up this project", and its `allowed-tools` line
-let Claude run `bootstrap.py` without asking. The commit messages also
-look different in every project, and it is not clear which skill did
-that. A set brings every skill in it into every session where it is
-enabled. Read the `allowed-tools` line and the scripts of each skill,
-and take only the skills you need, one or two at a time.
+<Pitfall title="Huit skills pour deux">
+Une développeuse installe tout le plugin `workbench` en portée utilisateur pour
+avoir `plan-ticket`. Un mois plus tard, elle trouve un fichier
+`~/.workbench/settings.json` dans son dossier personnel, avec la télémétrie
+activée, et elle ne se souvient pas de l’avoir approuvé. La skill `setup-env` a
+correspondu à la demande « prépare ce projet », et sa ligne `allowed-tools` a
+permis à Claude de lancer `bootstrap.py` sans demander. Les messages de commit
+ont aussi un aspect différent dans chaque projet, et on ne sait pas quelle skill
+en est la cause. Un jeu apporte chacune de ses skills dans chaque session où il
+est activé. Lisez la ligne `allowed-tools` et les scripts de chaque skill, et ne
+prenez que les skills dont vous avez besoin, une ou deux à la fois.
 </Pitfall>
 
-<Exercise stretch="After a week of real work with the two skills, run /skill-doctor, remove any skill that didn't change a result, and only then take a third one from the set.">
-Pick one public skill set yourself, for example one from a model vendor,
-a tool maker or a developer whose work you follow. Vet it, take two of
-its skills into a scratch copy of a project, and compare what they
-change with what they add to the context. Know what the skills can
-change before you start. Their steps can edit files, run their scripts
-and run commands, and an `allowed-tools` line lets Claude use the tools
-it names without asking, even in a folder you never marked as trusted
-(@Claude Code skills). The exercise uses a fresh clone with no way to
-push, and in the test sessions you ask for a plan or a report rather
-than a commit or a deploy. That protects your project and nothing else.
-A skill's scripts run with your user rights, so they can change files in
-your home directory as well. The skills you pick have to be safe outside
-the clone too.
+<Exercise stretch="Après une semaine de vrai travail avec les deux skills, lancez /skill-doctor, retirez toute skill qui n’a changé aucun résultat, et seulement ensuite prenez-en une troisième dans le jeu.">
+Choisissez vous-même un jeu de skills public, par exemple celui d’un éditeur de
+modèles, d’un fabricant d’outils ou d’un développeur dont vous suivez le travail.
+Examinez-le, prenez deux de ses skills dans une copie de brouillon d’un projet, et
+comparez ce qu’elles changent avec ce qu’elles ajoutent au contexte. Sachez ce
+que les skills peuvent changer avant de commencer. Leurs étapes peuvent modifier
+des fichiers, lancer leurs scripts et lancer des commandes, et une ligne
+`allowed-tools` permet à Claude d’utiliser les outils qu’elle nomme sans
+demander, même dans un dossier que vous n’avez jamais marqué comme fiable
+(@Claude Code skills). L’exercice utilise un clone neuf sans moyen de pousser, et
+dans les sessions de test vous demandez seulement un plan ou un rapport, jamais
+un commit ni un déploiement. Cela protège votre projet, et rien d’autre. Les scripts d’une
+skill s’exécutent avec vos droits d’utilisateur, donc ils peuvent aussi modifier
+des fichiers de votre dossier personnel. Les skills que vous choisissez doivent
+aussi être sans danger hors du clone.
 
-These commands fetch the set into `~/set-read` and show its recent
-history. The first line deletes `~/set-read`, so the commands also work
-on a second attempt. Replace `<set-url>` with the set's repository.
+Ces commandes récupèrent le jeu dans `~/set-read` et affichent son historique
+récent. La première ligne supprime `~/set-read`, donc les commandes fonctionnent
+aussi à un second essai. Remplacez `<set-url>` par le dépôt du jeu.
 
 ```sh
 rm -rf ~/set-read
@@ -341,20 +343,20 @@ git -C ~/set-read log -5 --format='%h %cs %s'
 python3 <course-repo>/site/examples/customizing-agents/adopting-a-skill-set/vet.py ~/set-read
 ```
 
-`vet.py` reads skills in `skills/<name>/SKILL.md`, and it stops with a
-message when the set has none there. If the set keeps them somewhere
-else, read the folders by hand. Write down the commit at the top of the
-log. Pick two skills whose license allows copying, run `vet.py` again
-with their names, and read every file in their folders, the scripts
-included. Both skills must have no `allowed-tools` line, and each of
-their scripts must change only files inside the project, as with
-`plan-ticket` and `review-diff` in `workbench`. If no two skills in the
-set pass, pick another set, or stop here and write the vetting part of
-the note below. Then make the scratch copy and start a session in
-it with auto memory off, so that one test run can't leave notes for the
-next (@Claude Code memory). Replace `<project>` with the path to a
-repository you work in, and `<skill-a>` and `<skill-b>` with the two
-skill names.
+`vet.py` lit les skills dans `skills/<name>/SKILL.md`, et s’arrête avec un message
+quand le jeu n’en a aucune à cet endroit. Si le jeu les range ailleurs, lisez les
+dossiers à la main. Notez le commit en haut du journal. Choisissez deux skills
+dont la licence permet la copie, relancez `vet.py` avec leurs noms, et lisez
+chaque fichier de leurs dossiers, scripts compris. Les deux skills ne doivent
+avoir aucune ligne `allowed-tools`, et chacun de leurs scripts ne doit modifier
+que des fichiers du projet, comme `plan-ticket` et `review-diff` dans
+`workbench`. Si aucune paire de skills du jeu ne passe, choisissez un autre jeu,
+ou arrêtez-vous là et écrivez la partie examen de la note ci-dessous. Créez
+ensuite la copie de brouillon et démarrez-y une session avec la mémoire
+automatique désactivée, pour qu’un essai ne puisse pas laisser de notes au
+suivant (@Claude Code memory). Remplacez `<project>` par le chemin d’un dépôt sur
+lequel vous travaillez, et `<skill-a>` et `<skill-b>` par les noms des deux
+skills.
 
 ```sh
 rm -rf ~/skill-trial
@@ -364,10 +366,10 @@ git remote remove origin
 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude
 ```
 
-Run `/context` and note the Skills row, then quit. Copy the two skills
-in, start a new session the same way, and run `/context` again. The
-`cp` line expects the skills in `skills/<name>/`, so change the paths
-if the set keeps them elsewhere.
+Lancez `/context` et notez la ligne Skills, puis quittez. Copiez les deux skills,
+démarrez une nouvelle session de la même façon, et relancez `/context`. La ligne
+`cp` attend les skills dans `skills/<name>/`, donc changez les chemins si le jeu
+les range ailleurs.
 
 ```sh
 cd ~/skill-trial
@@ -376,39 +378,39 @@ cp -R ~/set-read/skills/<skill-a> ~/set-read/skills/<skill-b> .claude/skills/
 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude
 ```
 
-For each skill, run one real prompt that it is meant for in a fresh
-session, and again in a fresh session with that skill set to `"off"`.
-The `/skills` menu sets it: select the skill, press Space until it shows
-`off`, and press Esc to save (@Claude Code skills).
+Pour chaque skill, lancez une vraie demande à laquelle elle est destinée dans une
+session neuve, puis de nouveau dans une session neuve avec cette skill réglée sur
+`"off"`. Le menu `/skills` fait ce réglage : sélectionnez la skill, appuyez sur
+Espace jusqu’à ce qu’elle affiche `off`, et appuyez sur Échap pour enregistrer
+(@Claude Code skills).
 
-A good result is a short note. It names the set, the commit you read,
-the license of each skill you took, what each of their scripts and
-`allowed-tools` lines can change, the Skills row before and after, and
-for each prompt whether the skill changed the result. It ends with what
-you would do with each of the two skills: keep it, make it user-invoked
-or delete it. Would you have found the same answers by installing the
-whole set and trying it?
+Un bon résultat est une note courte. Elle nomme le jeu, le commit que vous avez
+lu, la licence de chaque skill prise, ce que chacun de leurs scripts et de leurs
+lignes `allowed-tools` peut changer, la ligne Skills avant et après, et pour
+chaque demande si la skill a changé le résultat. Elle se termine par ce que vous
+feriez de chacune des deux skills : la garder, la rendre invocable par
+l’utilisateur seulement ou la supprimer. Auriez-vous trouvé les mêmes réponses en
+installant tout le jeu pour l’essayer ?
 </Exercise>
 
 <Recap>
-1. Published skill sets are dependencies that act in your sessions and
-   change with each release. One set can also mix licenses from one
-   skill to the next (@anthropics skills).
-2. Vet a set before you install it: the license of each skill, who
-   maintains it and how it changes, every skill, script and
-   `allowed-tools` line, and the option of writing the few skills you
-   need.
-3. Each skill that Claude may start by itself puts its name and
-   description into every session, whether it runs or not
-   (@Claude Code plugins).
-4. Take one or two skills at a time. A plugin's skills come together, so
-   copy single skills when the license allows it (@Claude Code skills).
-5. Check each skill with `/context` and with the same prompts run with
-   the skill on and off. Delete a skill that changed nothing.
+1. Les jeux de skills publiés sont des dépendances qui agissent dans vos sessions
+   et changent à chaque version. Un même jeu peut aussi mélanger les licences
+   d’une skill à l’autre (@anthropics skills).
+2. Examinez un jeu avant de l’installer : la licence de chaque skill, qui le
+   maintient et comment il évolue, chaque skill, chaque script et chaque ligne
+   `allowed-tools`, et la possibilité d’écrire vous-même les quelques skills dont
+   vous avez besoin.
+3. Chaque skill que Claude peut lancer de lui-même met son nom et sa description
+   dans chaque session, qu’elle s’exécute ou non (@Claude Code plugins).
+4. Prenez une ou deux skills à la fois. Les skills d’un plugin viennent ensemble,
+   donc copiez des skills isolées quand la licence le permet (@Claude Code skills).
+5. Vérifiez chaque skill avec `/context` et avec les mêmes demandes lancées avec
+   la skill active puis désactivée. Supprimez une skill qui n’a rien changé.
 </Recap>
 
 <Habit id="two-skills-at-a-time">
-The next time you find a skill set you like, take two of its skills and
-note the commit you read. Add a third only after one of the first two
-changed a result.
+La prochaine fois que vous trouvez un jeu de skills qui vous plaît, prenez deux
+de ses skills et notez le commit que vous avez lu. N’en ajoutez une troisième
+qu’après que l’une des deux premières a changé un résultat.
 </Habit>
