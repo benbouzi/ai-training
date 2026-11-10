@@ -15,7 +15,7 @@ assumes:
     section: les-sessions-et-le-contexte
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/first-skill
-    section: pass-three-when-a-step-fails
+    section: troisième-passage--quand-une-étape-échoue
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 extends-to:

@@ -17,7 +17,7 @@ assumes:
     section: compter-les-jetons-dune-page
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/first-skill
-    section: pass-one-the-directory-and-the-description
+    section: premier-passage--le-dossier-et-la-description
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/testing-a-skill
     section: run-it-again-and-compare

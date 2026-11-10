@@ -1,33 +1,34 @@
 import { Choice, MultiChoice, Order, Predict, Pitfall, Exercise, Recap, Sort, Scenario } from '@components/lesson';
 
-The last lesson's rule was that a procedure the agent can already do,
-but does differently each time, belongs in a skill. This lesson writes
-one. The procedure is cutting a release of a small package, and the
-result is a directory with one file that any agent reading the open skill
-format can load and follow (@AEC-17). You build the file in three passes.
-The first pass gives it a name and the sentence that makes the agent pick
-it. The second writes the steps and the check that says the result is
-right. The third adds what to do when a step fails.
+La règle de la leçon précédente disait qu’une procédure que l’agent sait déjà
+faire, mais fait différemment à chaque fois, va dans une skill. Cette leçon en
+écrit une. La procédure est la publication d’une version d’un petit paquet, et
+le résultat est un dossier avec un fichier que tout agent qui lit le format
+ouvert des skills peut charger et suivre (@AEC-17). Vous construisez le fichier
+en trois passages. Le premier lui donne un nom et la phrase qui pousse l’agent à
+le choisir. Le deuxième écrit les étapes et le contrôle qui dit que le résultat
+est juste. Le troisième ajoute quoi faire quand une étape échoue.
 
-The lesson runs three short Python scripts against the fixture, and the
-course checks their output on every build. The agent comes in at the
-exercise, where you run the finished skill from a session as you did in
-the first coding lesson.
+La leçon lance trois courts scripts Python sur l’exemple, et le cours vérifie
+leur sortie à chaque construction du site. L’agent entre en jeu dans l’exercice,
+où vous lancez la skill terminée depuis une session, comme dans la première
+leçon sur le code.
 
-## The fixture
+## L’exemple
 
-The package is a notes command in one file, in the course repository under
-`site/examples/customizing-agents/first-skill/fixture-package/`. Copy that
-directory somewhere you can throw away, because the exercise has an agent
-change files in it. Inside are `notes.py`, its tests in `test_notes.py`, a
-`CHANGELOG.md` with three releases, and `release_check.py`. The check
-reads the version out of `notes.py`, looks for a matching heading in the
-changelog, runs the tests, and prints one line. That line is the
-skill's last step, so run it once now to see what "right" looks like.
+Le paquet est une commande de notes en un seul fichier, dans le dépôt du cours
+sous `site/examples/customizing-agents/first-skill/fixture-package/`. Copiez ce
+dossier à un endroit que vous pouvez jeter, parce que l’exercice fait modifier
+des fichiers par un agent. Il contient `notes.py`, ses tests dans
+`test_notes.py`, un `CHANGELOG.md` avec trois versions, et `release_check.py`.
+Le contrôle lit la version dans `notes.py`, cherche un titre correspondant dans
+le journal des modifications, lance les tests, et affiche une ligne. Cette ligne
+est la dernière étape de la skill, donc lancez-le une fois maintenant pour voir
+à quoi ressemble « juste ».
 
-<Predict id="run-the-check" title="Run the release check"
+<Predict id="run-the-check" title="Lancer le contrôle de publication"
   answer="release 0.3.0: ok" run="customizing-agents/first-skill/check.py">
-Run this in the copied package, and compare with the output below.
+Lancez ceci dans le paquet copié, et comparez avec la sortie ci-dessous.
 
 ```sh
 python3 release_check.py
@@ -35,40 +36,42 @@ python3 release_check.py
 
 </Predict>
 
-The package also holds the finished skill at
-`.claude/skills/release/SKILL.md`. Read it at the end, and write your own
-first. Delete it from your copy if you want the exercise to test your
-version and not the one that ships with the fixture.
+Le paquet contient aussi la skill terminée, dans
+`.claude/skills/release/SKILL.md`. Lisez-la à la fin, et écrivez d’abord la
+vôtre. Supprimez-la de votre copie si vous voulez que l’exercice teste votre
+propre version.
 
-## Pass one: the directory and the description
+## Premier passage : le dossier et la description
 
-A skill is a directory with a file named `SKILL.md` in it, and the
-directory's name is the skill's name (@Agent Skills spec). Claude Code
-reads project skills from `.claude/skills/<name>/SKILL.md` and personal
-ones from `~/.claude/skills/<name>/SKILL.md`, and a project skill is
-committed so the team's agents share it (@Claude Code skills). Make the
-directory in your copy of the package:
+Une skill est un dossier qui contient un fichier nommé `SKILL.md`, et le nom du
+dossier est le nom de la skill (@Agent Skills spec). Claude Code lit les skills
+de projet dans `.claude/skills/<name>/SKILL.md` et les skills personnelles dans
+`~/.claude/skills/<name>/SKILL.md`, et une skill de projet est committée pour que
+les agents de l’équipe la partagent (@Claude Code skills). Créez le dossier dans
+votre copie du paquet :
 
 ```sh
 mkdir -p .claude/skills/release
 ```
 
-The file starts with YAML front matter between two `---` lines. The
-specification requires two fields. `name` is at most 64 characters of
-lowercase letters, digits and single hyphens, with no hyphen at the start
-or the end, and it must equal the directory name. `description` is at
-most 1024 characters and says what the skill does and when to use it
-(@Agent Skills spec). Every other field is optional.
+Le fichier commence par un en-tête YAML entre deux lignes `---`. La
+spécification des skills exige deux champs. `name` fait au plus 64 caractères,
+en lettres minuscules, chiffres et traits d’union simples, sans trait d’union au
+début ni à la fin, et il doit être égal au nom du dossier. `description` fait au
+plus 1024 caractères et dit ce que fait la skill et quand l’utiliser
+(@Agent Skills spec). Tous les autres champs sont facultatifs.
 
-The description does more work than its size suggests. At the start of a
-session Claude Code loads the name and description of every skill it can
-see. The body is loaded when a task matches the
-description, or when you type `/release` yourself. The loaded text
-remains in the conversation on later turns, until compaction trims it
-(@Claude Code skills). So
-the description is the trigger, and it should name the requests that
-should load it (@Academy introduction-to-agent-skills). Write this as the
-whole file for now:
+La description fait plus de travail que sa taille ne le laisse penser. Au début
+d’une session, Claude Code charge le nom et la description de chaque skill qu’il
+voit. Le corps est chargé quand une tâche correspond à la description, ou quand
+vous tapez vous-même `/release`. Le texte chargé reste dans la conversation aux
+tours suivants, jusqu’à ce que le compactage le réduise (@Claude Code skills).
+La description est donc le déclencheur, et elle doit nommer les demandes qui
+doivent la charger (@Academy introduction-to-agent-skills). Écrivez ceci comme
+fichier complet pour l’instant. La description est en anglais, comme le reste
+du paquet : elle dit de publier une version du paquet de notes, et de s’en
+servir quand on demande une publication, une montée du numéro de version ou
+l’étiquetage d’une nouvelle version.
 
 ```markdown
 ---
@@ -77,31 +80,33 @@ description: Cut a release of the notes package. Use when asked to release, to b
 ---
 ```
 
-The course keeps a small lint script next to the fixture that checks the
-required fields against the rules above. It reads two skills: the release
-skill in the fixture package, and `bad-skill/`, whose front matter is
-`name: Release-Notes` and an empty `description`.
+Le cours garde à côté de l’exemple un petit script de vérification qui contrôle
+les champs obligatoires selon les règles ci-dessus. Il lit deux skills : la skill
+de publication du paquet de l’exemple, et `bad-skill/`, dont l’en-tête contient
+`name: Release-Notes` et une `description` vide.
 
 <Predict id="lint-two-skills" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['skill-spec']}
-  context="A lint script checks two SKILL.md files against the Agent Skills specification: name at most 64 lowercase letters, digits and single hyphens and equal to the directory name, and a non-empty description of at most 1024 characters. The first skill is a release skill in a directory named release. The release skill's description is 108 characters long. The second is in a directory named bad-skill, with name Release-Notes and an empty description."
-  title="What does the lint report?" hint="Check the name against each rule in turn, then the description. How many rules does Release-Notes in a directory called bad-skill break?"
+  context="Un script de vérification contrôle deux fichiers SKILL.md selon la spécification Agent Skills : un name d’au plus 64 caractères en lettres minuscules, chiffres et traits d’union simples, égal au nom du dossier, et une description non vide d’au plus 1024 caractères. La première skill est une skill de publication dans un dossier nommé release. Sa description fait 108 caractères. La seconde est dans un dossier nommé bad-skill, avec le name Release-Notes et une description vide."
+  title="Que signale le script ?" hint="Comparez le name à chaque règle tour à tour, puis la description. Combien de règles Release-Notes enfreint-il dans un dossier appelé bad-skill ?"
   answer={`release: ok, description is 108 characters
   bad-skill: name has uppercase letters
   bad-skill: name does not match the directory 'bad-skill'
   bad-skill: description is missing or empty`}
   run="customizing-agents/first-skill/skill_lint.py">
-Predict the four lines the lint prints, one for the release skill and one
-per broken rule for `bad-skill`. A skill that passes gets the line
-`<directory>: ok, description is <length> characters`. A skill that fails
-gets one `<directory>: <problem>` line per broken rule, in this order:
-`name is missing`, `name is longer than 64 characters`,
-`name has uppercase letters`,
-`name has a character other than a-z, 0-9 and single hyphens`,
-`name does not match the directory '<directory>'`,
-`description is missing or empty` and
-`description is longer than 1024 characters`. The character check runs on
-the name in lowercase, so only the uppercase line reports a capital letter.
+Prédisez les quatre lignes qu’affiche le script, une pour la skill de
+publication et une par règle enfreinte pour `bad-skill`. Une skill qui passe
+reçoit la ligne `<directory>: ok, description is <length> characters`. Une skill
+qui échoue reçoit une ligne `<directory>: <problem>` par règle enfreinte, dans
+cet ordre : `name is missing` (nom absent), `name is longer than 64 characters`
+(nom de plus de 64 caractères), `name has uppercase letters` (nom avec des
+majuscules), `name has a character other than a-z, 0-9 and single hyphens`
+(nom avec un caractère autre que a-z, 0-9 et un trait d’union simple),
+`name does not match the directory '<directory>'` (nom différent du dossier),
+`description is missing or empty` (description absente ou vide) et
+`description is longer than 1024 characters` (description de plus de
+1024 caractères). Le contrôle des caractères porte sur le nom mis en minuscules,
+donc seule la ligne des majuscules signale une lettre capitale.
 
 ```sh
 python3 skill_lint.py
@@ -109,24 +114,26 @@ python3 skill_lint.py
 
 </Predict>
 
-The description above is 108 characters, far under the limit, and it
-should stay short. Every skill's description is in context on every
-turn of every session, whatever the task. Claude Code shortens a long
-description in the listing it shows the model (@Claude Code skills), so
-the end of a long one may never be read, and a description that long
-holds steps that belong in the body.
+La description ci-dessus fait 108 caractères, bien en dessous de la limite, et
+elle doit rester courte. La description de chaque skill est dans le contexte à
+chaque tour de chaque session, quelle que soit la tâche. Claude Code raccourcit
+une longue description dans la liste qu’il montre au modèle
+(@Claude Code skills), donc la fin d’une longue description peut ne jamais être
+lue, et une description aussi longue contient des étapes qui ont leur place dans
+le corps.
 
-## Pass two: when, the steps, the check
+## Deuxième passage : quand, les étapes, le contrôle
 
-The body is Markdown, and the specification doesn't restrict it beyond
-a recommendation to keep the whole file under 500 lines and move
-detailed reference material to files next to it (@Agent Skills spec).
-What the body has to do is let an agent that has none of your context run
-the procedure without asking. That takes an opening line on when to use
-it, the steps in order with the exact commands and file names, and the
-check that says the result is right.
+Le corps est en Markdown, et la spécification ne le limite pas, à part la
+recommandation de garder tout le fichier sous 500 lignes et de déplacer le
+matériel de référence détaillé dans des fichiers à côté (@Agent Skills spec). Le
+corps doit permettre à un agent qui n’a rien de votre contexte de suivre la
+procédure sans demander. Pour écrire une bonne skill, il faut une ligne
+d’ouverture sur le moment où l’utiliser, les étapes dans l’ordre avec les
+commandes et les noms de fichiers exacts, et le contrôle qui dit que le résultat
+est juste.
 
-Add this below the front matter:
+Ajoutez ceci sous l’en-tête :
 
 ```markdown
 # Release the notes package
@@ -154,46 +161,63 @@ on the branch and `git tag --list 'v*'` shows the new tag. Don't push.
 Report the version, the tag and the changelog entry you wrote.
 ```
 
-The commands and file names in that body are exact. The step says
-`python3 -m unittest -q`, because an agent on another machine that reads
-"run the tests" picks the runner it guesses. The last step is a check the
-agent can run, with the exact line it must print, so "done" is a line the
-agent reads. The "Done when" section repeats that check and adds
-the limit, "Don't push", because a release skill that pushes is a
-release skill that can't be undone with `git reset`.
+Le corps, en anglais comme le paquet, dit ceci. La skill sert quand
+l’utilisateur demande une publication du paquet. Une publication, c’est une
+montée de version, une entrée dans le journal des modifications, des tests qui
+passent et une étiquette. L’agent demande la nouvelle version si l’utilisateur
+ne l’a pas donnée, et augmente le dernier nombre pour une correction, celui du
+milieu pour une fonctionnalité. Les étapes : lancer les tests, dont la dernière
+ligne doit être `OK`. Changer la ligne `__version__` de `notes.py`. Ajouter au
+journal un titre `## <version>` avec une puce par changement visible, tirée de
+`git log`, sans inventer de changement. Lancer le contrôle, qui doit afficher
+`release <version>: ok`. Committer et étiqueter. La section « Done when »
+(terminé quand) reprend le contrôle, interdit le push, et demande de rapporter
+la version, l’étiquette et l’entrée écrite.
+
+Les commandes et les noms de fichiers de ce corps sont exacts. L’étape dit
+`python3 -m unittest -q`, parce qu’un agent sur une autre machine qui lit
+« lance les tests » choisit le lanceur qu’il devine. La dernière étape est un
+contrôle que l’agent peut lancer, avec la ligne exacte qu’il doit afficher, donc
+« terminé » est une ligne que l’agent lit. La section « Done when » répète ce
+contrôle et ajoute la limite « Don’t push » (ne pas pousser), parce qu’une skill
+de publication qui pousse est une skill de publication qu’un `git reset` ne peut
+plus annuler.
 
 <Order id="order-the-body" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A release skill runs the tests before it changes anything, then edits the version and the changelog, then runs a release check that prints ok or a FAIL line naming a problem, and commits and tags only once the check prints ok."
-  title="Order the release steps" hint="Which step must come before any file changes, which step needs the changes in place to have anything to check, which one needs the check's line, and which one needs the check to print ok?"
-  steps={['Run the tests, and stop if they fail', 'Change the version line and write its changelog entry', 'Run the release check and read its line', 'Fix what a FAIL line names and run the check again', 'Commit and tag']} />
+  context="Une skill de publication lance les tests avant de modifier quoi que ce soit, modifie ensuite la version et le journal des modifications, lance ensuite un contrôle de publication qui affiche ok ou une ligne FAIL qui nomme un problème, et ne committe et n’étiquette qu’une fois que le contrôle affiche ok."
+  title="Mettre les étapes de publication dans l’ordre" hint="Quelle étape doit précéder toute modification de fichier, quelle étape a besoin des modifications pour avoir quelque chose à contrôler, laquelle a besoin de la ligne du contrôle, et laquelle a besoin que le contrôle affiche ok ?"
+  steps={['Lancer les tests, et s’arrêter s’ils échouent', 'Changer la ligne de version et écrire son entrée dans le journal', 'Lancer le contrôle de publication et lire sa ligne', 'Corriger ce que nomme une ligne FAIL et relancer le contrôle', 'Committer et étiqueter']} />
 
-## Pass three: when a step fails
+## Troisième passage : quand une étape échoue
 
-The body so far assumes every step works. The first time an agent runs
-it, one won't. The tests fail because of a change someone left half
-done, or the check prints a `FAIL` line because the agent bumped the
-version and forgot the changelog. A skill that says nothing about that
-leaves the agent to decide, and the decisions agents make at that moment
-include "edit the check until it passes".
+Le corps actuel suppose que chaque étape fonctionne. La première fois qu’un
+agent le suit, l’une d’elles échouera. Les tests échouent à cause d’une
+modification que quelqu’un a laissée à moitié faite, ou le contrôle affiche une
+ligne `FAIL` parce que l’agent a monté la version et oublié le journal des
+modifications. Une skill qui ne dit rien de ces cas laisse l’agent décider, et
+parmi les décisions que prennent les agents à ce moment-là, il y a « modifier le
+contrôle jusqu’à ce qu’il passe ».
 
-The fixture shows what the check prints after such a half-done release.
-The script copies the package, changes the version to 0.4.0 as step 2
-says, runs the check, then adds the changelog heading from step 3 and
-runs it again.
+L’exemple montre ce qu’affiche le contrôle après une telle publication à moitié
+faite. Le script copie le paquet, passe la version à 0.4.0 comme le dit
+l’étape 2, lance le contrôle, ajoute ensuite le titre du journal de l’étape 3 et
+le relance.
 
 <Predict id="half-done-release" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="The fixture package's release check reads the version from notes.py, looks for a matching '## version' heading in CHANGELOG.md and runs the tests, then prints 'release <version>: ok' or one 'release <version>: FAIL: <problem>' line per problem. A script bumps the version to 0.4.0, runs the check, adds the changelog heading and runs it again."
-  title="What does the check print at each point?" hint="After the bump, which of the three things the check looks at is out of step with the others? What does the check print when nothing is?"
+  context="Le contrôle de publication du paquet de l’exemple lit la version dans notes.py, cherche un titre '## version' correspondant dans CHANGELOG.md et lance les tests, puis affiche 'release <version>: ok' ou une ligne 'release <version>: FAIL: <problem>' par problème. Un script passe la version à 0.4.0, lance le contrôle, ajoute le titre du journal et le relance."
+  title="Qu’affiche le contrôle à chaque étape ?" hint="Après la montée de version, laquelle des trois choses que regarde le contrôle n’est plus en accord avec les autres ? Qu’affiche le contrôle quand aucune ne l’est ?"
   answer={`after step 2: release 0.4.0: FAIL: CHANGELOG.md has no '## 0.4.0' heading
   after step 3: release 0.4.0: ok`}
   run="customizing-agents/first-skill/failing_step.py">
-Predict the two lines, one after the version bump and one after the
-changelog entry. Each line starts with `after step 2:` or `after step 3:`,
-followed by what the check prints. The problems it can name are
-`version '<version>' is not three numbers`,
-`CHANGELOG.md has no '## <version>' heading` and `the tests fail`.
+Prédisez les deux lignes, l’une après la montée de version et l’autre après
+l’entrée dans le journal. Chaque ligne commence par `after step 2:` ou
+`after step 3:` (après l’étape 2 ou 3), suivi de ce qu’affiche le contrôle. Les
+problèmes qu’il peut nommer sont `version '<version>' is not three numbers` (la
+version n’est pas formée de trois nombres), `CHANGELOG.md has no '## <version>'
+heading` (le journal n’a pas de titre pour cette version) et `the tests fail`
+(les tests échouent).
 
 ```sh
 python3 failing_step.py
@@ -201,8 +225,9 @@ python3 failing_step.py
 
 </Predict>
 
-The check names the missing step, so the skill's job is to tell the agent
-to read the line and fix what it names. Change steps 1 and 4 to:
+Le contrôle nomme l’étape manquante, donc le rôle de la skill est de dire à
+l’agent de lire la ligne et de corriger ce qu’elle nomme. Changez les étapes 1
+et 4 ainsi :
 
 ```markdown
 1. Run `python3 -m unittest -q`. The last line must be `OK`. If it is
@@ -213,157 +238,160 @@ to read the line and fix what it names. Change steps 1 and 4 to:
    Don't edit `release_check.py`.
 ```
 
-Each failure line has the same three parts. What the agent sees, what it
-does about it, and the one thing it must not do. The third part is the
-one authors skip, and it is the one that stops the agent from making the
-check pass by changing the check. Your `SKILL.md` now matches the
-finished one in the fixture, line for line.
+L’étape 1 dit maintenant de s’arrêter et de rapporter l’échec si la dernière
+ligne n’est pas `OK`, et de ne jamais publier avec un test en échec. L’étape 4
+dit de corriger ce que nomme une ligne `FAIL` et de relancer le contrôle, sans
+modifier `release_check.py`. Chaque ligne d’échec a les mêmes trois parties : ce
+que voit l’agent, ce qu’il fait, et la seule chose qu’il ne doit pas faire. La
+troisième partie est celle que les auteurs oublient, et c’est elle qui empêche
+l’agent de faire passer le contrôle en modifiant le contrôle. Votre `SKILL.md`
+correspond maintenant, ligne pour ligne, à celui de l’exemple.
 
 <MultiChoice id="what-makes-it-reusable" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill', 'skill-spec']}
-  context="A team writes a release skill for a coding agent. The question asks which lines in it let a colleague's agent, with none of the author's context, run the release without asking."
-  title="Which lines let a colleague's agent run it?" hint="For each line, ask: does an agent with none of the author's context need it to run the procedure without asking?"
+  context="Une équipe écrit une skill de publication pour un agent de code. La question demande quelles lignes permettent à l’agent d’un collègue, qui n’a rien du contexte de l’auteur, de faire la publication sans demander."
+  title="Quelles lignes permettent à l’agent d’un collègue de la suivre ?" hint="Pour chaque ligne, demandez-vous si un agent qui n’a rien du contexte de l’auteur en a besoin pour suivre la procédure sans demander."
   options={[
-    { text: 'The exact test command, `python3 -m unittest -q`, and the line it must end with.', correct: true },
-    { text: 'A note that the author prefers releasing on Fridays.', why: 'A preference the agent can\'t act on adds context and no step.' },
-    { text: 'A check the agent runs at the end, with the exact line that means the release is right.', correct: true },
-    { text: 'The full history of why the team moved from one release tool to another.', why: 'History is reference material, and a body that carries it is loaded on every use. Put it in a file the skill points to, if anywhere.' },
-    { text: 'What to do when the check prints a failure, and what not to edit.', correct: true },
+    { text: 'La commande de test exacte, `python3 -m unittest -q`, et la ligne par laquelle elle doit se terminer.', correct: true },
+    { text: 'Une note qui dit que l’auteur préfère publier le vendredi.', why: 'Une préférence sur laquelle l’agent ne peut pas agir ajoute du contexte sans ajouter d’étape.' },
+    { text: 'Un contrôle que l’agent lance à la fin, avec la ligne exacte qui veut dire que la publication est juste.', correct: true },
+    { text: 'Toute l’histoire de la raison pour laquelle l’équipe a changé d’outil de publication.', why: 'L’histoire est du matériel de référence, et un corps qui la contient la charge à chaque utilisation. Mettez-la dans un fichier vers lequel la skill renvoie, s’il faut la garder.' },
+    { text: 'Quoi faire quand le contrôle affiche un échec, et ce qu’il ne faut pas modifier.', correct: true },
   ]}>
-Which three lines earn their place in the release skill?
+Quelles trois lignes méritent leur place dans la skill de publication ?
 </MultiChoice>
 
 <Choice id="which-description-fires" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['skill-spec', 'writing-a-good-skill']}
-  context="A skill's name and description are what the agent sees before deciding whether to load the body, and the description should name the requests that should load the skill and no others."
-  title="Which description is the right trigger?" hint="Which requests should load a release skill, and which of these descriptions names those and only those?"
+  context="Le nom et la description d’une skill sont ce que voit l’agent avant de décider de charger le corps, et la description doit nommer les demandes qui doivent charger la skill, et aucune autre."
+  title="Quelle description est le bon déclencheur ?" hint="Quelles demandes doivent charger une skill de publication, et laquelle de ces descriptions nomme ces demandes et seulement elles ?"
   options={[
-    { text: '"Helps with the notes package, its version, its changelog, and its releases."', why: 'Every task in the package matches this, so the skill is loaded for work it has nothing to say about, and its body is then in context on the turns that follow.' },
-    { text: '"Cut a release of the notes package. Use when asked to release, bump the version, or tag."', correct: true },
-    { text: '"Follow the release steps below carefully, in order, and report when the work is done."', why: 'This says what to do once loaded and nothing about which requests the skill is for, so the agent has no way to match a request to it.' },
+    { text: '« Aide pour le paquet de notes, sa version, son journal des modifications et ses publications. »', why: 'Chaque tâche du paquet correspond à cette description, donc la skill est chargée pour un travail dont elle n’a rien à dire, et son corps occupe ensuite le contexte aux tours suivants.' },
+    { text: '« Publier une version du paquet de notes. À utiliser quand on demande de publier, de monter la version ou d’étiqueter. »', correct: true },
+    { text: '« Suivre attentivement les étapes de publication ci-dessous, dans l’ordre, et rendre compte une fois le travail terminé. »', why: 'Elle dit quoi faire une fois chargée, et rien des demandes pour lesquelles la skill existe, donc l’agent n’a aucun moyen de rapprocher une demande de la skill.' },
   ]}>
-Three descriptions for the same release skill. Which one loads the skill
-for the right requests and leaves it unloaded for the rest?
+Trois descriptions pour la même skill de publication. Laquelle charge la skill
+pour les bonnes demandes et la laisse de côté pour les autres ?
 </Choice>
 
 <Choice id="which-description-fires-review" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['skill-spec', 'writing-a-good-skill']}
-  context="A skill in the open skill format has a front matter description that the agent reads on every turn to decide whether to load the body, and a body with the procedure that is loaded only once a task matches."
-  title="Where does the step list go?" hint="Which part of the file does the agent read before it has decided to use the skill, and which part after?"
+  context="Une skill au format ouvert a dans son en-tête une description que l’agent lit à chaque tour pour décider de charger le corps, et un corps contenant la procédure, chargé seulement une fois qu’une tâche correspond."
+  title="Où va la liste des étapes ?" hint="Quelle partie du fichier l’agent lit-il avant d’avoir décidé d’utiliser la skill, et quelle partie après ?"
   options={[
-    { text: 'In the description, so the agent sees the steps on every turn and never misses one.', why: 'The description is in context on every turn of every session. Steps there are paid for on every task, releases or not, and the description stops working as a trigger.' },
-    { text: 'In the body below the front matter, loaded once a task matches the description.', correct: true },
-    { text: 'In a separate file next to the skill, because the body should hold only the description.', why: 'The body is where the procedure goes. A separate file is for reference material a step points to.' },
+    { text: 'Dans la description, pour que l’agent voie les étapes à chaque tour et n’en manque aucune.', why: 'La description est dans le contexte à chaque tour de chaque session. Des étapes à cet endroit se paient sur chaque tâche, publication ou non, et la description ne fonctionne plus comme déclencheur.' },
+    { text: 'Dans le corps sous l’en-tête, chargé une fois qu’une tâche correspond à la description.', correct: true },
+    { text: 'Dans un fichier séparé à côté de la skill, parce que le corps ne doit contenir que la description.', why: 'Le corps est l’endroit de la procédure. Un fichier séparé sert au matériel de référence vers lequel une étape renvoie.' },
   ]}>
-A colleague writes a release skill and asks where the numbered steps
-belong. What do you tell them?
+Un collègue écrit une skill de publication et demande où vont les étapes
+numérotées. Que lui répondez-vous ?
 </Choice>
 
 <Sort id="valid-front-matter" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['skill-spec']}
-  context="A skill sits in a directory named release-notes, with a SKILL.md file inside. The Agent Skills specification asks for a name of lowercase letters, digits and single hyphens that equals the directory name, and a description that isn't empty."
-  title="Does the line pass the spec?" hint="Check the case, the characters, the directory name and whether the description is empty."
-  buckets={['Passes the spec', 'Breaks the spec']}
+  context="Une skill se trouve dans un dossier nommé release-notes, qui contient un fichier SKILL.md. La spécification Agent Skills demande un name en lettres minuscules, chiffres et traits d’union simples, égal au nom du dossier, et une description non vide."
+  title="La ligne respecte-t-elle la spécification ?" hint="Vérifiez la casse, les caractères, le nom du dossier, et si la description est vide."
+  buckets={['Respecte la spécification', 'Enfreint la spécification']}
   items={[
     { text: 'name: release-notes', bucket: 0 },
-    { text: 'description: Draft the release notes. Use when asked for release notes.', bucket: 0 },
+    { text: 'description: Rédiger les notes de version. À utiliser quand on demande des notes de version.', bucket: 0 },
     { text: 'name: Release-Notes', bucket: 1 },
     { text: 'name: release_notes', bucket: 1 },
     { text: 'name: notes', bucket: 1 },
-    { text: 'A description line with no text after the colon', bucket: 1 },
+    { text: 'Une ligne description sans texte après les deux-points', bucket: 1 },
   ]} />
 
 <MultiChoice id="a-step-that-can-fail" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A release skill's first step runs the package's tests."
-  title="The step that runs the tests" hint="What does the agent see when the step fails, what does it do, and what must it not do?"
+  context="La première étape d’une skill de publication lance les tests du paquet."
+  title="L’étape qui lance les tests" hint="Que voit l’agent quand l’étape échoue, que fait-il, et que ne doit-il pas faire ?"
   options={[
-    { text: 'If a test fails, stop and report the name of the failing test.', correct: true },
-    { text: 'Run the tests carefully and make sure they are fine.', why: 'Careful says nothing about what to do when a test fails, which is the surprise to plan for.' },
-    { text: 'Don\'t edit a test to make it pass.', correct: true },
-    { text: 'The tests pass most days, so move on quickly.', why: 'That skips the case the step exists for. The failure is when the agent needs the line.' },
+    { text: 'Si un test échoue, s’arrêter et rapporter le nom du test en échec.', correct: true },
+    { text: 'Lancer les tests avec soin et vérifier qu’ils vont bien.', why: '« Avec soin » ne dit rien de ce qu’il faut faire quand un test échoue, qui est la surprise à prévoir.' },
+    { text: 'Ne pas modifier un test pour le faire passer.', correct: true },
+    { text: 'Les tests passent presque tous les jours, donc passer vite à la suite.', why: 'Cela saute le cas pour lequel l’étape existe. C’est lors de l’échec que l’agent a besoin de la ligne.' },
   ]}>
 
-Which two lines belong in that step?
+Quelles deux lignes ont leur place dans cette étape ?
 
 </MultiChoice>
 
 <Choice id="the-closing-check" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A release skill for a small package is being written, and its last lines are still open."
-  title="How the skill ends" hint="Which ending gives the agent a line to compare against?"
+  context="On écrit la skill de publication d’un petit paquet, et ses dernières lignes restent à écrire."
+  title="Comment la skill se termine" hint="Quelle fin donne à l’agent une ligne à laquelle se comparer ?"
   options={[
-    { text: 'Check that the version, the changelog and the tag all look good.', why: 'Looks good is a judgment the agent makes about its own work. It can\'t fail.' },
-    { text: 'Tell the user the release is done and list what changed.', why: 'A report is a claim. Nothing in it tells the agent whether the release is right.' },
-    { text: 'Run the release check if there is time left after the tag.', why: 'An optional check doesn\'t run on the day it matters, and it comes after the tag.' },
-    { text: 'Run `python3 release_check.py`, and the release is right when it prints ok.', correct: true },
+    { text: 'Vérifier que la version, le journal des modifications et l’étiquette ont l’air corrects.', why: '« Avoir l’air correct » est un jugement de l’agent sur son propre travail. Il ne peut pas échouer.' },
+    { text: 'Dire à l’utilisateur que la publication est faite et lister ce qui a changé.', why: 'Un rapport est une affirmation. Rien en lui ne dit à l’agent si la publication est juste.' },
+    { text: 'Lancer le contrôle de publication s’il reste du temps après l’étiquette.', why: 'Un contrôle facultatif ne tourne pas le jour où il compte, et il vient après l’étiquette.' },
+    { text: 'Lancer `python3 release_check.py`, et la publication est juste quand il affiche ok.', correct: true },
   ]}>
 
-Which ending lets the agent know that the release is right?
+Quelle fin permet à l’agent de savoir que la publication est juste ?
 
 </Choice>
 
 <Scenario id="the-skill-that-never-loads" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['skill-spec', 'writing-a-good-skill']}
-  context="A team's code review skill has the description 'Code review helper.' The agent reads the name and description on every turn, and it loads the body only when a task matches the description."
-  title="The skill never loads" hint="What does the agent read before it decides to load the body?"
+  context="La skill de revue de code d’une équipe a pour description « Aide à la revue de code. ». L’agent lit le nom et la description à chaque tour, et il ne charge le corps que quand une tâche correspond à la description."
+  title="La skill ne se charge jamais" hint="Que lit l’agent avant de décider de charger le corps ?"
   options={[
-    { text: 'Rewrite the description to name the requests that should load it, such as reviewing a pull request.', correct: true, consequence: 'The next "review my pull request" matches the description, and the body loads.' },
-    { text: 'Move the review steps up into the description, so the agent sees them on every turn.', consequence: 'Every turn now pays for the steps in context, and the description still doesn\'t say when to use them.' },
-    { text: 'Make the body longer and more detailed, so that the agent takes the skill seriously.', consequence: 'The agent never reads the body, because the description still doesn\'t match the request.' },
-    { text: 'Add an instruction to the project file that tells the agent to load every skill it has.', consequence: 'Every skill\'s body is loaded on every task, and the context fills with procedures nobody asked for.' },
+    { text: 'Réécrire la description pour nommer les demandes qui doivent la charger, comme la relecture d’une pull request.', correct: true, consequence: 'Le prochain « relis ma pull request » correspond à la description, et le corps se charge.' },
+    { text: 'Remonter les étapes de revue dans la description, pour que l’agent les voie à chaque tour.', consequence: 'Chaque tour paie maintenant les étapes en contexte, et la description ne dit toujours pas quand les utiliser.' },
+    { text: 'Rendre le corps plus long et plus détaillé, pour que l’agent prenne la skill au sérieux.', consequence: 'L’agent ne lit jamais le corps, parce que la description ne correspond toujours pas à la demande.' },
+    { text: 'Ajouter au fichier du projet une instruction qui dit à l’agent de charger toutes ses skills.', consequence: 'Le corps de chaque skill est chargé sur chaque tâche, et le contexte se remplit de procédures que personne n’a demandées.' },
   ]}>
 
-Colleagues ask the agent to "review my pull request", and the agent doesn't
-load the review skill. What do you change?
+Des collègues demandent à l’agent de « relire ma pull request », et l’agent ne
+charge pas la skill de revue. Que changez-vous ?
 
 </Scenario>
 
-<Pitfall title="The description that matches everything">
-A team writes a skill for updating the changelog and describes it as "Use
-when working on the notes package". For a week every session in the
-package loads it, whatever the task, and the agent starts adding a
-changelog bullet to a typo fix in the README because the loaded body
-says to. The body was fine. The description matched every request
-instead of the one it was for. Write the description as the list of
-requests that should load the skill, and read it once as a stranger to
-check that a request for something else wouldn't match.
+<Pitfall title="La description qui correspond à tout">
+Une équipe écrit une skill pour mettre à jour le journal des modifications et la
+décrit par « À utiliser quand on travaille sur le paquet de notes ». Pendant une
+semaine, chaque session dans le paquet la charge, quelle que soit la tâche, et
+l’agent se met à ajouter une puce au journal pour une faute de frappe corrigée
+dans le README, parce que le corps chargé le demande. Le corps était bon. La
+description correspondait à toutes les demandes, alors qu’elle était faite pour
+une seule. Écrivez la description comme la liste des demandes qui doivent
+charger la skill, et relisez-la une fois comme le ferait un inconnu, pour
+vérifier qu’une demande portant sur autre chose n’y correspondrait pas.
 </Pitfall>
 
-<Exercise stretch="Change one bullet in the skill's changelog step so the entry has a fixed first line, for example the date, and run the skill again in a fresh session on a fresh copy. Did the agent follow the new line without being told about it?">
-In a fresh copy of the fixture package, with your `SKILL.md` in place
-and the one that ships with the fixture deleted, start your coding agent
-in the package directory and ask it to cut release 0.4.0. Run the skill
-by typing `/release 0.4.0` if your agent supports that, or ask in
-plain words and watch whether the skill loads. The skill changes
-files: it edits `notes.py` and `CHANGELOG.md` and makes a commit and a
-tag. Run it only in the copy, and never in the course repository.
-If the copy isn't a git repository, run `git init` and commit the
-package first, so steps 3 and 5 have something to work with.
+<Exercise stretch="Changez une puce de l’étape du journal des modifications pour que l’entrée ait une première ligne fixe, par exemple la date, et relancez la skill dans une session neuve sur une copie neuve. L’agent a-t-il suivi la nouvelle ligne sans qu’on la lui signale ?">
+Dans une copie neuve du paquet de l’exemple, avec votre `SKILL.md` en place et
+celui fourni avec l’exemple supprimé, lancez votre agent de code dans le dossier
+du paquet et demandez-lui de publier la version 0.4.0. Lancez la skill en tapant
+`/release 0.4.0` si votre agent le permet, ou demandez-le avec des mots et
+regardez si la skill se charge. La skill modifie des fichiers : elle change
+`notes.py` et `CHANGELOG.md` et fait un commit et une étiquette. Lancez-la
+seulement dans la copie, et jamais dans le dépôt du cours. Si la copie n’est pas
+un dépôt git, lancez `git init` et committez d’abord le paquet, pour que les
+étapes 3 et 5 aient de quoi travailler.
 
-A good result: the agent ran the tests first, `python3 release_check.py`
-prints `release 0.4.0: ok`, `git tag --list 'v*'` shows `v0.4.0`, and
-the agent didn't push and didn't edit `release_check.py`. Where did the
-agent hesitate or ask you something? That question is a line missing
-from the skill, and the lesson on testing a skill is about finding those
-lines.
+Un bon résultat : l’agent a lancé les tests en premier,
+`python3 release_check.py` affiche `release 0.4.0: ok`, `git tag --list 'v*'`
+montre `v0.4.0`, et l’agent n’a pas poussé et n’a pas modifié `release_check.py`.
+Où l’agent a-t-il hésité ou vous a-t-il demandé quelque chose ? Chaque question
+de ce genre est une ligne qui manque à la skill, et la leçon sur le test d’une
+skill apprend à trouver ces lignes.
 </Exercise>
 
 <Recap>
-1. A skill is a directory named after the skill with a `SKILL.md` in it.
-   Its front matter needs `name` and `description`, and `name` must equal
-   the directory name (@Agent Skills spec).
-2. The description is the trigger. It is in context on every turn, and
-   the body is loaded when a task matches it or you invoke the skill,
-   and remains on later turns until compaction (@Claude Code skills).
-   Name the requests
-   that should load it and no others.
-3. The body says when to use the skill, gives the steps in order with
-   exact commands and file names, and ends with a check the agent can
-   run, with the line that means the result is right.
-4. Each step that can fail says what the agent sees, what it does about
-   it, and what it must not do. The agent then knows what to do at the
-   first surprise.
-5. A skill is done when someone else's agent runs it from a fresh
-   session without asking. The lesson on testing a skill runs it that way.
+1. Une skill est un dossier nommé d’après la skill, qui contient un `SKILL.md`.
+   Son en-tête demande `name` et `description`, et `name` doit être égal au nom
+   du dossier (@Agent Skills spec).
+2. La description est le déclencheur. Elle est dans le contexte à chaque tour,
+   et le corps est chargé quand une tâche lui correspond ou que vous invoquez la
+   skill, puis reste aux tours suivants jusqu’au compactage (@Claude Code skills).
+   Nommez les demandes qui doivent la charger, et aucune autre.
+3. Le corps dit quand utiliser la skill, donne les étapes dans l’ordre avec les
+   commandes et les noms de fichiers exacts, et se termine par un contrôle que
+   l’agent peut lancer, avec la ligne qui veut dire que le résultat est juste.
+4. Chaque étape qui peut échouer dit ce que voit l’agent, ce qu’il fait, et ce
+   qu’il ne doit pas faire. L’agent sait alors quoi faire à la première surprise.
+5. Une skill est terminée quand l’agent de quelqu’un d’autre la suit depuis une
+   session neuve sans demander. La leçon sur le test d’une skill la lance de
+   cette façon.
 </Recap>
