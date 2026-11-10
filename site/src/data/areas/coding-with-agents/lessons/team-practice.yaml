@@ -17,7 +17,7 @@ assumes:
     section: la-signature-que-seule-une-personne-donne
   - objective: coding-with-agents/works-in-team/follows-team-norms
     lesson: coding-with-agents/ci-and-hooks
-    section: run-the-gates-in-ci
+    section: lancer-les-barrières-dans-la-ci
   - objective: coding-with-agents/works-in-team/runs-parallel-work
     lesson: coding-with-agents/parallel-sessions
     section: know-what-the-worktrees-share

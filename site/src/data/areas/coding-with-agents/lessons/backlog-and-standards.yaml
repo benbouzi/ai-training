@@ -19,7 +19,7 @@ assumes:
     section: what-belongs-in-it
   - objective: coding-with-agents/works-in-team/sets-team-practice
     lesson: coding-with-agents/ci-and-hooks
-    section: further-steps-for-the-team
+    section: pour-aller-plus-loin-en-équipe
 extends-to: []
 after: [coding-with-agents/ci-and-hooks]
 shorts: []
