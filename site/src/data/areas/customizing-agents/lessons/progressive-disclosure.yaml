@@ -20,7 +20,7 @@ assumes:
     section: premier-passage--le-dossier-et-la-description
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/testing-a-skill
-    section: run-it-again-and-compare
+    section: la-relancer-et-comparer
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 after: [customizing-agents/first-skill]

@@ -1,43 +1,45 @@
 import { Choice, Match, Predict, Sort, Pitfall, Exercise, Recap, Habit, Prompt, Response, Order } from '@components/lesson';
 
-The lesson on writing your first skill ended with a release skill that
-works in the directory it was written in. This lesson runs it somewhere
-else: a clean clone, and a new session that has none of the conversation
-you had while you wrote it.
-Anthropic's guide to writing skills describes the same loop. One session
-helps you write the skill, a fresh one uses it on a real task, and you
-watch where the fresh one struggles and bring that back into the file
+La leçon sur l’écriture de votre première skill s’est terminée par une skill de
+publication qui fonctionne dans le dossier où elle a été écrite. Cette leçon la
+lance ailleurs : dans un clone propre, et dans une nouvelle session qui n’a rien
+de la conversation que vous avez eue en l’écrivant. Le guide d’Anthropic sur
+l’écriture des skills décrit la même boucle. Une session vous aide à écrire la
+skill, une session neuve l’utilise sur une vraie tâche, et vous regardez où la
+session neuve peine pour le reporter dans le fichier
 (@Claude docs best-practices).
 
-First you run the skill and read the transcript for the places where the
-agent hesitated, asked you something or guessed. Then you turn each of
-those places into a line in the skill, run it again and compare the two
-runs. Two short Python scripts show what the agent sees in each
-repository, and the course checks their output on every build.
+Vous lancez d’abord la skill et lisez dans la transcription les endroits où
+l’agent a hésité, vous a demandé quelque chose ou a deviné. Vous transformez
+ensuite chacun de ces endroits en une ligne de la skill, vous la relancez et vous
+comparez les deux exécutions. Deux courts scripts Python montrent ce que voit
+l’agent dans chaque dépôt, et le cours vérifie leur sortie à chaque construction
+du site.
 
-## Run it where it wasn't written
+## La lancer ailleurs que là où elle a été écrite
 
-A clean clone is a copy of the package with its own git repository and
-nothing else. It has none of the author's tags, history or uncommitted
-files. Make one outside the course repository. Claude Code reads the
-`CLAUDE.md` files in the directory it starts in and in every directory
-above it (@Claude Code memory), so a copy inside the course repository
-gets the course's own agent instructions as well.
+Un clone propre est une copie du paquet avec son propre dépôt git, et rien
+d’autre. Il n’a aucune des étiquettes de l’auteur, ni son historique, ni ses
+fichiers non committés. Créez-en un hors du dépôt du cours. Claude Code lit les
+fichiers `CLAUDE.md` du dossier où il démarre et de chaque dossier au-dessus
+(@Claude Code memory), donc une copie dans le dépôt du cours reçoit aussi les
+instructions pour agents du cours.
 
-Auto memory saves what one session learned for the sessions after it. It is
-on by default, and it is kept per git repository (@Claude Code memory).
-The same page says to turn it off for one project by setting
-`autoMemoryEnabled` to `false` in that project's settings, and the
-commands below do that in `.claude/settings.local.json`. They also tell
-git to ignore that file, so it never shows up as a change. Your personal
-instructions in `~/.claude/CLAUDE.md` load in every session, in every
-project (@Claude Code memory), and they still reach the test.
+La mémoire automatique enregistre ce qu’une session a appris pour les sessions
+suivantes. Elle est active par défaut, et elle est gardée par dépôt git
+(@Claude Code memory). La même page dit de la désactiver pour un projet en
+réglant `autoMemoryEnabled` à `false` dans les réglages de ce projet, et les
+commandes ci-dessous le font dans `.claude/settings.local.json`. Elles disent
+aussi à git d’ignorer ce fichier, pour qu’il n’apparaisse jamais comme une
+modification. Vos instructions personnelles dans `~/.claude/CLAUDE.md` se
+chargent dans chaque session, dans chaque projet (@Claude Code memory), et elles
+atteignent quand même le test.
 
-Run these commands from the top of your copy of the course repository, so
-that the `cp` line finds the package. The first line deletes
-`~/notes-clean`, so the commands also work on a second attempt. The
-`rm -rf __pycache__` line removes compiled files that are in the fixture
-directory if you ran its check in the course repository.
+Lancez ces commandes depuis le haut de votre copie du dépôt du cours, pour que la
+ligne `cp` trouve le paquet. La première ligne supprime `~/notes-clean`, donc les
+commandes fonctionnent aussi à un second essai. La ligne `rm -rf __pycache__`
+retire les fichiers compilés qui se trouvent dans le dossier de l’exemple si vous
+avez lancé son contrôle dans le dépôt du cours.
 
 ```sh
 rm -rf ~/notes-clean
@@ -52,25 +54,26 @@ git add .
 git commit -q -m "Import the notes package"
 ```
 
-The copy contains the release skill from the lesson on writing your
-first skill at `.claude/skills/release/SKILL.md`. Start your agent in
-`~/notes-clean`, in a new session, and type `/release 0.4.0`. In Claude
-Code the skill's directory name is the command you type
-(@Claude Code skills), and in
-another agent you can ask for release 0.4.0 in plain words. The skill
-changes files, commits and tags, and that's why it runs in this copy and
-nowhere else. The copy has no remote, so a push has nowhere to go.
+La copie contient la skill de publication de la leçon sur l’écriture de votre
+première skill, dans `.claude/skills/release/SKILL.md`. Lancez votre agent dans
+`~/notes-clean`, dans une nouvelle session, et tapez `/release 0.4.0`. Dans
+Claude Code, le nom du dossier de la skill est la commande que vous tapez
+(@Claude Code skills), et dans un autre agent vous pouvez demander la version
+0.4.0 avec des mots. La skill modifie des fichiers, committe et étiquette, et
+c’est pourquoi elle s’exécute dans cette copie et nulle part ailleurs. La copie
+n’a pas de dépôt distant, donc un push n’a nulle part où aller.
 
-Step 3 of the skill says to write one changelog bullet per change since the
-previous release and to read `git log` for the list. The first script builds two
-repositories and asks each one what step 3 needs. The author's repository
-has the package committed as release 0.3.0, a `v0.3.0` tag on that commit,
-and one change after it. The clean clone is the one you just made.
+L’étape 3 de la skill dit d’écrire une puce du journal des modifications par
+changement depuis la version précédente, et de lire `git log` pour en avoir la
+liste. Le premier script construit deux dépôts et demande à chacun ce dont
+l’étape 3 a besoin. Le dépôt de l’auteur a le paquet committé comme version
+0.3.0, une étiquette `v0.3.0` sur ce commit, et une modification après lui. Le
+clone propre est celui que vous venez de créer.
 
 <Predict id="what-step-3-sees" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A release skill tells the agent to write one changelog bullet per change since the previous release, using git log. A script builds two repositories from the same package: the author's, with the release tagged v0.3.0 and one commit after it, 'Document where notes are stored', and a clean clone with the package committed once as 'Import the notes package' and no tags. For each it prints the last release tag from git describe, and the commits since it, or the whole log when there is no tag."
-  title="What does step 3 have to work with?" hint="Which of the two repositories has a tag for git describe to find? Without a tag, what is left in the log?"
+  context="Une skill de publication dit à l’agent d’écrire une puce du journal des modifications par changement depuis la version précédente, en utilisant git log. Un script construit deux dépôts à partir du même paquet : celui de l’auteur, avec la version étiquetée v0.3.0 et un commit après elle, 'Document where notes are stored', et un clone propre où le paquet est committé une fois sous le message 'Import the notes package', sans étiquette. Pour chacun, il affiche la dernière étiquette de version trouvée par git describe, et les commits depuis cette étiquette, ou tout le journal quand il n’y a pas d’étiquette."
+  title="Avec quoi l’étape 3 doit-elle travailler ?" hint="Lequel des deux dépôts a une étiquette que git describe peut trouver ? Sans étiquette, que reste-t-il dans le journal ?"
   answer={`author's repository
     last release tag: v0.3.0
     commits since it: Document where notes are stored
@@ -78,12 +81,13 @@ and one change after it. The clean clone is the one you just made.
     last release tag: none
     whole log: Import the notes package`}
   run="customizing-agents/testing-a-skill/fresh_clone.py">
-Predict the output for both repositories. The script prints the heading
-`author's repository` or `clean clone`, and under it, indented by two
-spaces, `last release tag: <tag>` and `commits since it: <subjects>`.
-Where `git describe --tags --abbrev=0` fails, it prints
-`last release tag: none` and `whole log: <subjects>` instead. Commit
-subjects are joined with `; `.
+Prédisez la sortie pour les deux dépôts. Le script affiche le titre
+`author's repository` (dépôt de l’auteur) ou `clean clone` (clone propre), et en
+dessous, en retrait de deux espaces, `last release tag: <tag>` (dernière
+étiquette de version) et `commits since it: <subjects>` (commits depuis). Là où
+`git describe --tags --abbrev=0` échoue, il affiche à la place
+`last release tag: none` et `whole log: <subjects>` (tout le journal). Les sujets
+des commits sont joints par `; `.
 
 ```sh
 python3 fresh_clone.py
@@ -91,12 +95,13 @@ python3 fresh_clone.py
 
 </Predict>
 
-In the author's repository, step 3 has one commit to turn into one bullet.
-The clean clone gives it no tag to count from, and its only commit
-contains the whole package. The skill is silent about that case, and the
-agent has to choose for itself. Here is the kind of run that follows. It is written by the
-course to show the pattern, and it is not recorded from a model. Your
-agent's words differ.
+Dans le dépôt de l’auteur, l’étape 3 a un commit à transformer en une puce. Le
+clone propre ne lui donne aucune étiquette à partir de laquelle compter, et son
+seul commit contient tout le paquet. La skill ne dit rien de ce cas, et l’agent
+doit choisir seul. Voici le genre d’exécution qui suit. Elle est écrite par le
+cours pour montrer le schéma, et n’est pas enregistrée à partir d’un modèle. Les
+mots de votre agent seront différents. La sortie du contrôle et l’entrée du
+journal restent en anglais, comme le paquet.
 
 <Prompt model="illustrative" recorded="illustrative">
 /release 0.4.0
@@ -104,40 +109,42 @@ agent's words differ.
 <Response>
 
 ```text
-Tests pass: OK.
-There are no tags, so I can't find the commit for 0.3.0. The log has one
-commit, "Import the notes package". I'll describe the package as it is.
-Updated notes.py to 0.4.0.
-Added to CHANGELOG.md:
+Les tests passent : OK.
+Il n’y a pas d’étiquette, donc je ne trouve pas le commit de la 0.3.0. Le
+journal a un seul commit, « Import the notes package ». Je vais décrire le
+paquet tel qu’il est.
+notes.py passé en 0.4.0.
+Ajouté à CHANGELOG.md :
   ## 0.4.0
   - Notes command with list, add and --version.
 release 0.4.0: ok
-git status shows an untracked __pycache__/ directory. Should I include it
-in the release commit?
+git status montre un dossier __pycache__/ non suivi. Dois-je l’inclure dans le
+commit de publication ?
 ```
 
 </Response>
 
-Read the transcript as a list of places where the skill gave no
-instruction. The agent
-guessed at the change list and wrote a bullet for features that shipped in
-earlier releases. It asked about `__pycache__/`, which the test run in step
-1 leaves behind. The check still printed `ok`, because it looks for a
-changelog heading and never reads the bullets under it. Each of those
-places is a line the skill is missing.
+Lisez la transcription comme une liste des endroits où la skill ne donnait
+aucune instruction. L’agent a deviné la liste des changements et a écrit une
+puce pour des fonctionnalités livrées dans des versions précédentes. Il a posé
+une question sur `__pycache__/`, que l’exécution des tests de l’étape 1 laisse
+derrière elle. Le contrôle a quand même affiché `ok`, parce qu’il cherche un
+titre dans le journal et ne lit jamais les puces en dessous. Chacun de ces
+endroits est une ligne qui manque à la skill.
 
-## Turn each hesitation into a line
+## Transformer chaque hésitation en ligne
 
-In this run the hesitations came from a skill that assumed something about
-the environment, such as a tag or a clean working tree. In other runs they
-come from a step that assumes a tool is installed, or from a success test
-too vague to tell a right result from a wrong one. Anthropic's guide says
-the same about scripts: don't assume a package is installed, and name what
-the skill needs (@Claude docs best-practices).
+Dans cette exécution, les hésitations venaient d’une skill qui supposait quelque
+chose sur l’environnement, comme une étiquette ou un arbre de travail propre.
+Dans d’autres exécutions, elles viennent d’une étape qui suppose qu’un outil est
+installé, ou d’un test de réussite trop vague pour distinguer un bon résultat
+d’un mauvais. Le guide d’Anthropic dit la même chose des scripts : ne supposez
+pas qu’un paquet est installé, et nommez ce dont la skill a besoin
+(@Claude docs best-practices).
 
-The fix for the first two is a short list of checks at the top of the
-skill, each with what to do when it fails. Add this section above
-`## Steps`:
+La correction des deux premiers cas est une courte liste de vérifications en
+haut de la skill, chacune avec quoi faire quand elle échoue. Ajoutez cette
+section au-dessus de `## Steps` :
 
 ```markdown
 ## Before you start
@@ -158,7 +165,21 @@ it printed and what the user has to do. Don't fix the repository yourself.
    prints nothing, there is nothing to release. Say so and stop.
 ```
 
-Then point step 3 at that log, and make step 5 say what to commit:
+La section, en anglais comme le reste de la skill, demande de lancer quatre
+vérifications dans l’ordre, et en cas d’échec de s’arrêter et de rapporter la
+commande, ce qu’elle a affiché et ce que l’utilisateur doit faire, sans réparer
+le dépôt soi-même. Première vérification : `git` et `python3` affichent chacun
+une version, sinon l’outil manque. Deuxième : `git status --porcelain`
+n’affiche rien, ou seulement `?? __pycache__/`, sinon le dossier n’est pas un
+dépôt git ou il y a une modification non committée. Troisième :
+`git describe --tags --abbrev=0` affiche l’étiquette de la version précédente.
+S’il échoue, l’agent demande à l’utilisateur d’étiqueter le commit de la version
+précédente et s’arrête, sans le déduire du journal des modifications.
+Quatrième : `git log` depuis cette étiquette affiche au moins une ligne, sinon il
+n’y a rien à publier.
+
+Faites ensuite pointer l’étape 3 vers ce journal, et faites dire à l’étape 5 ce
+qu’il faut committer :
 
 ```markdown
 3. In `CHANGELOG.md`, add a `## <version>` heading under the title, above
@@ -171,39 +192,45 @@ Then point step 3 at that log, and make step 5 say what to commit:
    Don't commit it. Then tag the commit with `git tag v<version>`.
 ```
 
-Check 3 is the one that answers the transcript. The agent guessed because
-the skill gave it nothing to do when the tag was missing. Now it has an
-instruction, and the instruction is to stop. A skill that stops with a
-clear question is better than one that finishes with an invented
-changelog, because you see the stop, and you might not read the
-changelog.
+L’étape 3 écrit maintenant une puce par changement visible du journal de la
+quatrième vérification, laisse de côté un commit qu’un utilisateur ne
+remarquerait pas, et n’écrit jamais une puce qu’aucun commit ne justifie.
+L’étape 5 n’indexe que `notes.py` et `CHANGELOG.md`, ne committe pas le dossier
+`__pycache__` que laisse l’étape 1, puis étiquette le commit.
+
+La troisième vérification est celle qui répond à la transcription. L’agent a
+deviné parce que la skill ne lui donnait rien à faire quand l’étiquette manquait.
+Il a maintenant une instruction, et l’instruction est de s’arrêter. Une skill qui
+s’arrête sur une question claire vaut mieux qu’une skill qui termine avec un
+journal des modifications inventé, parce que vous voyez l’arrêt, alors que vous
+pourriez ne pas lire le journal.
 
 <Match id="hesitation-to-line" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A learner ran a release skill from a new session in a clean clone of a package and read the transcript. Each row is a place where an agent hesitated or was wrong, and the options are lines the learner could add to the skill."
-  title="Which line answers which hesitation?" hint="For each row, ask what the agent did not know at that moment, and which line tells it."
-  options={['Check that python3 --version prints a version, and stop if not', 'Stop and ask when git describe --tags --abbrev=0 fails', 'Stage notes.py and CHANGELOG.md only', 'Done when git describe --tags prints exactly the new tag']}
+  context="Une apprenante a lancé une skill de publication depuis une nouvelle session dans un clone propre d’un paquet, et a lu la transcription. Chaque ligne du tableau est un endroit où un agent a hésité ou s’est trompé, et les options sont des lignes que l’apprenante pourrait ajouter à la skill."
+  title="Quelle ligne répond à quelle hésitation ?" hint="Pour chaque ligne, demandez-vous ce que l’agent ne savait pas à ce moment-là, et quelle ligne le lui dit."
+  options={['Vérifier que python3 --version affiche une version, et s’arrêter sinon', 'S’arrêter et demander quand git describe --tags --abbrev=0 échoue', 'N’indexer que notes.py et CHANGELOG.md', 'Terminé quand git describe --tags affiche exactement la nouvelle étiquette']}
   rows={[
-    { statement: 'The agent found no tags and wrote bullets for features from earlier releases', option: 1, why: 'What did the agent need to know to find the changes since the last release, and what should it do without it?' },
-    { statement: 'The agent asked whether the untracked `__pycache__/` goes in the release commit', option: 2, why: 'Which line names the files that belong in the commit?' },
-    { statement: 'On a colleague\'s laptop the first command failed with "command not found"', option: 0, why: 'Which line finds a missing tool before any step depends on it?' },
-    { statement: 'The agent reported the tag as done because `git tag --list` showed it', option: 3, why: 'Which line checks where the tag points, and not only that it exists?' },
+    { statement: 'L’agent n’a trouvé aucune étiquette et a écrit des puces pour des fonctionnalités de versions précédentes', option: 1, why: 'Qu’avait besoin de savoir l’agent pour trouver les changements depuis la dernière version, et que devait-il faire sans cela ?' },
+    { statement: 'L’agent a demandé si le dossier non suivi `__pycache__/` va dans le commit de publication', option: 2, why: 'Quelle ligne nomme les fichiers qui ont leur place dans le commit ?' },
+    { statement: 'Sur le portable d’un collègue, la première commande a échoué avec « command not found »', option: 0, why: 'Quelle ligne trouve un outil manquant avant qu’une étape en dépende ?' },
+    { statement: 'L’agent a annoncé l’étiquette comme faite parce que `git tag --list` la montrait', option: 3, why: 'Quelle ligne vérifie où pointe l’étiquette, en plus de son existence ?' },
   ]}
-  rationale="Each line gives the agent the fact or the instruction it lacked at the moment it hesitated, so the next run doesn't depend on its guess.">
-Match each place where the agent hesitated to the line that answers it.
+  rationale="Chaque ligne donne à l’agent le fait ou l’instruction qui lui manquait au moment où il a hésité, pour que l’exécution suivante ne dépende pas de sa supposition.">
+Associez chaque endroit où l’agent a hésité à la ligne qui y répond.
 </Match>
 
-The last row is the vague success test. The first version of the skill's
-"Done when" section says `git tag --list 'v*'` shows the new tag. That is
-true whenever the tag exists, wherever it points. The second fixture
-releases 0.4.0 twice in the author's repository, once with `git tag` run
-before the release commit and once after it, and prints three checks each
-time.
+La dernière ligne du tableau est le test de réussite vague. La première version
+de la section « Done when » de la skill dit que `git tag --list 'v*'` montre la
+nouvelle étiquette. C’est vrai dès que l’étiquette existe, où qu’elle pointe. Le
+second script publie deux fois la version 0.4.0 dans le dépôt de l’auteur, une
+fois avec `git tag` lancé avant le commit de publication et une fois après, et
+affiche trois contrôles à chaque fois.
 
 <Predict id="which-test-sees-the-tag" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A script releases version 0.4.0 of a small package twice. The first time it runs git tag v0.4.0 before the release commit, and the second time after it. Each time it prints the package's release check, the output of git tag --list 'v*' joined on one line with spaces, and git describe --tags, which prints the tag alone when the current commit is tagged and otherwise adds a hyphen, the number of commits since the tag, a hyphen, the letter g and a hash. The repository already has the tag v0.3.0 from the previous release, and the release check prints release VERSION: ok when it passes."
-  title="Which check tells the two releases apart?" hint="Does the release check or the tag list look at where the tag points? What does git describe add when the tag is on an older commit?"
+  context="Un script publie deux fois la version 0.4.0 d’un petit paquet. La première fois, il lance git tag v0.4.0 avant le commit de publication, et la seconde fois après. Chaque fois, il affiche le contrôle de publication du paquet, la sortie de git tag --list 'v*' réunie sur une ligne avec des espaces, et git describe --tags, qui affiche l’étiquette seule quand le commit courant est étiqueté et ajoute sinon un trait d’union, le nombre de commits depuis l’étiquette, un trait d’union, la lettre g et un hash. Le dépôt a déjà l’étiquette v0.3.0 de la version précédente, et le contrôle de publication affiche release VERSION: ok quand il passe."
+  title="Quel contrôle distingue les deux publications ?" hint="Le contrôle de publication ou la liste des étiquettes regarde-t-il où pointe l’étiquette ? Qu’ajoute git describe quand l’étiquette est sur un commit plus ancien ?"
   answer={`tag before the commit
     release_check.py: release 0.4.0: ok
     git tag --list 'v*': v0.3.0 v0.4.0
@@ -213,12 +240,12 @@ time.
     git tag --list 'v*': v0.3.0 v0.4.0
     git describe --tags: v0.4.0`}
   run="customizing-agents/testing-a-skill/tag_placement.py">
-Predict the six lines under the two headings, `tag before the commit` and
-`tag after the commit`. Under each heading, indented by two spaces, the
-script prints `release_check.py:`, `git tag --list 'v*':` and
-`git describe --tags:`, each followed by a space and what that check
-prints. The script replaces the commit hash that git appends with
-`<hash>`.
+Prédisez les six lignes sous les deux titres, `tag before the commit`
+(étiquette avant le commit) et `tag after the commit` (étiquette après le
+commit). Sous chaque titre, en retrait de deux espaces, le script affiche
+`release_check.py:`, `git tag --list 'v*':` et `git describe --tags:`, chacun
+suivi d’une espace et de ce qu’affiche ce contrôle. Le script remplace le hash de
+commit que git ajoute par `<hash>`.
 
 ```sh
 python3 tag_placement.py
@@ -226,9 +253,14 @@ python3 tag_placement.py
 
 </Predict>
 
-Only `git describe --tags` differs. When the tag is one commit early,
-`v0.4.0` points at the commit before the version bump, and anyone who
-checks out that tag gets 0.3.0 code. So the new "Done when" says:
+Seul `git describe --tags` diffère. Quand l’étiquette est posée un commit trop
+tôt, `v0.4.0` pointe vers le commit d’avant la montée de version, et quiconque
+extrait cette étiquette obtient le code de la 0.3.0. La nouvelle section « Done
+when » dit donc que le contrôle affiche `release <version>: ok`, que
+`git describe --tags` affiche exactement `v<version>`, que
+`git status --porcelain` n’affiche rien ou seulement `?? __pycache__/`, sans
+push, et que le rapport donne la version, l’étiquette et l’entrée du journal,
+avec le commit dont vient chaque puce :
 
 ```markdown
 `python3 release_check.py` prints `release <version>: ok`,
@@ -239,16 +271,17 @@ Report the version, the tag and the changelog entry, with the commit
 each bullet came from.
 ```
 
-The whole revised skill is in the course repository at
+La skill révisée complète se trouve dans le dépôt du cours, dans
 `site/examples/customizing-agents/testing-a-skill/release/SKILL.md`.
 
-## Run it again and compare
+## La relancer et comparer
 
-First put the clone back as it was before the first run. These two
-commands delete the `v0.4.0` tag, and move the branch back to the import
-commit, which drops every change after it. `git tag -d` prints an error
-if the first run made no tag, and that is fine. The reset also drops
-edits you haven't committed, so run it before you revise the skill.
+Remettez d’abord le clone dans l’état où il était avant la première exécution.
+Ces deux commandes suppriment l’étiquette `v0.4.0` et ramènent la branche au
+commit d’importation, ce qui abandonne chaque modification qui le suit.
+`git tag -d` affiche une erreur si la première exécution n’a pas créé
+d’étiquette, et ce n’est pas grave. Le reset abandonne aussi les modifications
+que vous n’avez pas committées, donc lancez-le avant de réviser la skill.
 
 ```sh
 cd ~/notes-clean
@@ -256,12 +289,12 @@ git tag -d v0.4.0
 git reset -q --hard "$(git rev-list --max-parents=0 HEAD)"
 ```
 
-Now write your revisions into `.claude/skills/release/SKILL.md`, or copy
-the revised file from the course repository, and commit the change. The
-new check 2 stops on any uncommitted change, and that includes an edited
-skill. In the `cp` line, replace `<course-repo>` with the path to your
-copy of the course repository. Leave the `cp` line out if you wrote your
-own revision.
+Écrivez maintenant vos révisions dans `.claude/skills/release/SKILL.md`, ou
+copiez le fichier révisé depuis le dépôt du cours, et committez la modification.
+La nouvelle deuxième vérification s’arrête sur toute modification non committée,
+y compris une skill modifiée. Dans la ligne `cp`, remplacez `<course-repo>` par le
+chemin de votre copie du dépôt du cours. Laissez de côté la ligne `cp` si vous
+avez écrit votre propre révision.
 
 ```sh
 cd ~/notes-clean
@@ -269,35 +302,38 @@ cp <course-repo>/site/examples/customizing-agents/testing-a-skill/release/SKILL.
 git commit -q -a -m "Revise the release skill"
 ```
 
-Claude Code picks up an edited skill in the session that is already
-running (@Claude Code skills), but start a new session anyway. The old
-session still holds your answer about `__pycache__/`, and a rerun in it
-tests the skill plus that answer. Auto memory is off in this clone, and
-in Claude Code you can run `/memory` to see which memory files a session
-can load (@Claude Code memory). Type `/release 0.4.0` again.
+Claude Code prend en compte une skill modifiée dans la session déjà en cours
+(@Claude Code skills), mais démarrez quand même une nouvelle session. L’ancienne
+session contient encore votre réponse sur `__pycache__/`, et une nouvelle
+exécution dans cette session teste la skill plus cette réponse. La mémoire
+automatique est désactivée dans ce clone, et dans Claude Code vous pouvez lancer
+`/memory` pour voir quels fichiers de mémoire une session peut charger
+(@Claude Code memory). Tapez de nouveau `/release 0.4.0`.
 
-A good run now stops at check 3. The agent reports that `git describe`
-found no tag and asks you to tag the commit of the previous release. That
-is the skill working: the repository lacks a fact that no agent can work
-out, and the skill says to ask for it.
+Une bonne exécution s’arrête maintenant à la troisième vérification. L’agent
+signale que `git describe` n’a trouvé aucune étiquette et vous demande
+d’étiqueter le commit de la version précédente. C’est la skill qui fonctionne :
+il manque au dépôt un fait qu’aucun agent ne peut déduire, et la skill dit de le
+demander.
 
 <Choice id="what-the-stop-means" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A learner revised a release skill after a first test run, adding checks before the release steps. One check stops the agent and asks the user when the repository has no tag for the previous release. The learner reruns the skill in a new session in a clean clone that has no tags."
-  title="What does the rerun tell you?" hint="Which fact was missing from the repository, and could any agent have found it on its own?"
+  context="Un apprenant a révisé une skill de publication après un premier essai, en ajoutant des vérifications avant les étapes de publication. Une vérification arrête l’agent et interroge l’utilisateur quand le dépôt n’a pas d’étiquette pour la version précédente. L’apprenant relance la skill dans une nouvelle session, dans un clone propre qui n’a pas d’étiquette."
+  title="Que vous apprend la nouvelle exécution ?" hint="Quel fait manquait au dépôt, et un agent aurait-il pu le trouver seul ?"
   options={[
-    { text: 'The skill has failed, since a good skill completes the release without asking the user anything.', why: 'The repository has no record of the last release. Finishing without asking means guessing, which is what the first run did.' },
-    { text: 'The skill needs one more line that takes the previous release from the newest changelog heading.', why: 'The changelog names a version, and no commit. The agent would still guess which commits come after it.' },
-    { text: 'The skill has worked: the repository lacked a fact, and the agent stopped and asked instead of guessing.', correct: true },
-    { text: 'The rerun tells you nothing yet, since the agent stopped before it reached any of the release steps.', why: 'The checks are part of the skill, and this one did what it says. It is the line the first run showed was missing.' },
+    { text: 'La skill a échoué, puisqu’une bonne skill termine la publication sans rien demander à l’utilisateur.', why: 'Le dépôt n’a aucune trace de la dernière version. Terminer sans demander veut dire deviner, ce qu’a fait la première exécution.' },
+    { text: 'La skill a besoin d’une ligne de plus qui prend la version précédente dans le titre le plus récent du journal.', why: 'Le journal nomme une version, et aucun commit. L’agent devinerait toujours quels commits viennent après.' },
+    { text: 'La skill a fonctionné : il manquait un fait au dépôt, et l’agent s’est arrêté pour demander, sans deviner.', correct: true },
+    { text: 'La nouvelle exécution ne vous apprend encore rien, puisque l’agent s’est arrêté avant toute étape de publication.', why: 'Les vérifications font partie de la skill, et celle-ci a fait ce qu’elle dit. C’est la ligne dont la première exécution a montré l’absence.' },
   ]}>
-In the rerun, the agent stops at the new check 3 and asks you to tag the
-commit of the previous release. What does that result tell you about the
-revised skill?
+Lors de la nouvelle exécution, l’agent s’arrête à la nouvelle troisième
+vérification et vous demande d’étiqueter le commit de la version précédente. Que
+vous dit ce résultat sur la skill révisée ?
 </Choice>
 
-Now give the clone the history the skill expects. Tag the import commit,
-which holds release 0.3.0, and make one change after it:
+Donnez maintenant au clone l’historique qu’attend la skill. Étiquetez le commit
+d’importation, qui contient la version 0.3.0, et faites une modification après
+lui :
 
 ```sh
 cd ~/notes-clean
@@ -306,109 +342,113 @@ echo 'Notes are stored in `notes.json`, next to `notes.py`.' >> README.md
 git commit -q -a -m "Document where notes are stored"
 ```
 
-Start one more new session and type `/release 0.4.0`. Compare the
-transcript with the first one. Check 4 lists two commits, the skill
-revision and the README change. A user never sees the skill, so a good run
-writes one bullet, for the README change, and reports the commit it came
-from. After it, `git describe --tags` prints `v0.4.0`. If the agent
-hesitated somewhere new, that is the next line to add, and the loop is the
-same: run, read, revise, run again.
+Démarrez encore une nouvelle session et tapez `/release 0.4.0`. Comparez la
+transcription avec la première. La quatrième vérification liste deux commits, la
+révision de la skill et la modification du README. Un utilisateur ne voit jamais
+la skill, donc une bonne exécution écrit une puce, pour la modification du
+README, et rapporte le commit dont elle vient. Ensuite, `git describe --tags`
+affiche `v0.4.0`. Si l’agent a hésité à un nouvel endroit, c’est la prochaine
+ligne à ajouter, et la boucle est la même : lancer, lire, réviser, relancer.
 
 <Sort id="missing-line-or-working" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A learner tests the first version of a release skill by running it from a new session in a clean clone and reading the transcript. That version runs the tests and stops if they fail, and fixes what a FAIL line from the release check names. It has no checks before its steps, says nothing about a missing release tag, and doesn't say which files to commit."
-  title="A missing line, or the skill working?" hint="Did the skill tell the agent what to do at that moment?"
-  buckets={['A line is missing from the skill', 'The skill is working as written']}
+  context="Une apprenante teste la première version d’une skill de publication en la lançant depuis une nouvelle session dans un clone propre et en lisant la transcription. Cette version lance les tests et s’arrête s’ils échouent, et corrige ce que nomme une ligne FAIL du contrôle de publication. Elle n’a aucune vérification avant ses étapes, ne dit rien d’une étiquette de version manquante, et ne dit pas quels fichiers committer."
+  title="Une ligne manquante, ou la skill qui fonctionne ?" hint="La skill disait-elle à l’agent quoi faire à ce moment-là ?"
+  buckets={['Il manque une ligne à la skill', 'La skill fonctionne comme elle est écrite']}
   items={[
-    { text: 'The agent asked whether to commit an untracked __pycache__ directory', bucket: 0 },
-    { text: 'The agent stopped because a test failed, and reported the failing test', bucket: 1 },
-    { text: 'The agent found no release tag and described the whole package in the changelog', bucket: 0 },
-    { text: 'The release check printed a FAIL line, and the agent added the missing changelog heading', bucket: 1 },
+    { text: 'L’agent a demandé s’il fallait committer un dossier __pycache__ non suivi', bucket: 0 },
+    { text: 'L’agent s’est arrêté parce qu’un test a échoué, et a rapporté le test en échec', bucket: 1 },
+    { text: 'L’agent n’a trouvé aucune étiquette de version et a décrit tout le paquet dans le journal', bucket: 0 },
+    { text: 'Le contrôle de publication a affiché une ligne FAIL, et l’agent a ajouté le titre manquant au journal', bucket: 1 },
   ]} />
 
 <Choice id="which-line-fails-it" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A release skill ends with a Done when section, the test the agent runs to decide that the release is right. In one run the agent created the tag v0.4.0 one commit before the release commit, so the tag points at the old code."
-  title="Which line fails the wrong release?" hint="Which of these looks at where the tag points, and which only at whether it exists or at the files?"
+  context="Une skill de publication se termine par une section Done when, le test que lance l’agent pour décider que la publication est juste. Dans une exécution, l’agent a créé l’étiquette v0.4.0 un commit avant le commit de publication, donc l’étiquette pointe vers l’ancien code."
+  title="Quelle ligne fait échouer la mauvaise publication ?" hint="Lequel de ces contrôles regarde où pointe l’étiquette, et lesquels regardent seulement si elle existe, ou les fichiers ?"
   options={[
-    { text: 'The tag list from `git tag --list \'v*\'` includes `v0.4.0`.', why: 'The tag exists, so this passes wherever the tag points.' },
-    { text: 'The output of `git describe --tags` is exactly `v0.4.0`.', correct: true },
-    { text: 'The release check `python3 release_check.py` prints `ok`.', why: 'The check reads the files in the working tree, which are right. It never looks at the tag.' },
-    { text: 'The agent reports the version, the tag and the changelog entry.', why: 'A report repeats what the agent believes it did, and checks nothing.' },
+    { text: 'La liste d’étiquettes de `git tag --list \'v*\'` contient `v0.4.0`.', why: 'L’étiquette existe, donc ce contrôle passe, où que pointe l’étiquette.' },
+    { text: 'La sortie de `git describe --tags` est exactement `v0.4.0`.', correct: true },
+    { text: 'Le contrôle de publication `python3 release_check.py` affiche `ok`.', why: 'Le contrôle lit les fichiers de l’arbre de travail, qui sont justes. Il ne regarde jamais l’étiquette.' },
+    { text: 'L’agent rapporte la version, l’étiquette et l’entrée du journal.', why: 'Un rapport répète ce que l’agent croit avoir fait, et ne vérifie rien.' },
   ]}>
-An agent tagged `v0.4.0` one commit before the release commit. Which
-"Done when" line fails that release?
+Un agent a étiqueté `v0.4.0` un commit avant le commit de publication. Quelle
+ligne de « Done when » fait échouer cette publication ?
 </Choice>
 
 <Choice id="guess-or-ask" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="A release skill tells the agent to write one changelog bullet per commit since the tag of the previous release. In a colleague's clean clone there are no tags, and in a test run the agent wrote a changelog for the whole package."
-  title="What should the skill say when the tag is missing?" hint="Which of these gives the agent the fact it lacks, and which ones leave it to work the fact out?"
+  context="Une skill de publication dit à l’agent d’écrire une puce du journal par commit depuis l’étiquette de la version précédente. Dans le clone propre d’un collègue, il n’y a aucune étiquette, et lors d’un essai l’agent a écrit un journal pour tout le paquet."
+  title="Que doit dire la skill quand l’étiquette manque ?" hint="Laquelle de ces lignes donne à l’agent le fait qui lui manque, et lesquelles le laissent le déduire ?"
   options={[
-    { text: 'If there is no tag, stop and ask the user to tag the commit of the previous release.', correct: true },
-    { text: 'If there is no tag, take the newest heading in CHANGELOG.md as the previous release.', why: 'The heading names a version and no commit, so the agent still guesses which commits come after it.' },
-    { text: 'If there is no tag, list every commit in the log as a change in the new release.', why: 'That repeats the changes of earlier releases, which is the wrong changelog from the test run.' },
+    { text: 'S’il n’y a pas d’étiquette, s’arrêter et demander à l’utilisateur d’étiqueter le commit de la version précédente.', correct: true },
+    { text: 'S’il n’y a pas d’étiquette, prendre le titre le plus récent de CHANGELOG.md comme version précédente.', why: 'Le titre nomme une version et aucun commit, donc l’agent devine toujours quels commits viennent après.' },
+    { text: 'S’il n’y a pas d’étiquette, lister chaque commit du journal comme un changement de la nouvelle version.', why: 'Cela répète les changements des versions précédentes, ce qui est le mauvais journal de l’essai.' },
   ]}>
-You are revising the skill after that run. Which line do you add?
+Vous révisez la skill après cet essai. Quelle ligne ajoutez-vous ?
 </Choice>
 
 <Order id="order-the-test" phase="review" objective="customizing-agents/writes-skill/packages-a-procedure"
   concepts={['writing-a-good-skill']}
-  context="The lesson tests a skill so that the conversation the author had while writing it can't fill a gap for the agent."
-  title="Put the test in order" hint="What has to be fresh before the run, and what do you do with what you read afterwards?"
-  steps={['Make a clean clone of the repository', 'Start a new session with auto memory off', 'Run the skill as a colleague would ask for it', 'Read the transcript for each place the agent hesitated', 'Add a line for each one, and rerun in a new session']} />
+  context="La leçon teste une skill de façon que la conversation que l’auteur a eue en l’écrivant ne puisse pas combler un manque pour l’agent."
+  title="Mettre le test dans l’ordre" hint="Qu’est-ce qui doit être neuf avant l’exécution, et que faites-vous de ce que vous lisez ensuite ?"
+  steps={['Créer un clone propre du dépôt', 'Démarrer une nouvelle session avec la mémoire automatique désactivée', 'Lancer la skill comme un collègue la demanderait', 'Lire dans la transcription chaque endroit où l’agent a hésité', 'Ajouter une ligne pour chacun, et relancer dans une nouvelle session']} />
 
-<Pitfall title="The skill that only worked at home">
-An engineer writes a release skill in their own clone, runs it three times
-there, and shares it. On a colleague's laptop the agent writes a changelog
-from the whole history and commits a `__pycache__` directory. The
-engineer's clone had the tags, and weeks earlier they had told their agent
-not to commit `__pycache__`. Claude Code can keep a correction like that
-in auto memory, which is on by default and stored per repository on one
-machine (@Claude Code memory). The skill never said it, and the engineer's
-agent remembered it for them. Test a skill in a clean clone in a new
-directory, and ask a colleague to run it once on their machine before you
-rely on it.
+<Pitfall title="La skill qui ne marchait qu’à la maison">
+Un ingénieur écrit une skill de publication dans son propre clone, la lance trois
+fois à cet endroit, et la partage. Sur le portable d’une collègue, l’agent écrit
+un journal à partir de tout l’historique et committe un dossier `__pycache__`.
+Le clone de l’ingénieur avait les étiquettes, et quelques semaines plus tôt il
+avait dit à son agent de ne pas committer `__pycache__`. Claude Code peut garder
+une correction de ce genre dans la mémoire automatique, qui est active par
+défaut et enregistrée par dépôt sur une machine (@Claude Code memory). La skill
+ne l’a jamais dit, et c’est l’agent de l’ingénieur qui s’en souvenait pour lui.
+Testez une skill dans un clone propre, dans un nouveau dossier, et demandez à un
+collègue de la lancer une fois sur sa machine avant de compter sur elle.
 </Pitfall>
 
-<Exercise stretch="Ask a colleague to run your revised skill in their own clean clone, on their own machine, without help from you. Add one line for each question their agent asked.">
-If you followed along with the walkthrough, your runs in `~/notes-clean`
-are the exercise, and you can go to the result below. Otherwise make a
-clean clone with the commands in the first section. They delete and
-recreate `~/notes-clean`, and the clone has the release skill from the
-lesson on writing your first skill in it. The skill edits `notes.py`
-and `CHANGELOG.md`, commits and tags, so run it only in that copy, which
-has no remote to push to. In a new session, type `/release 0.4.0`, and
-write down each place in the transcript where the agent hesitated, asked
-you something or guessed. For each one, add a check, a failure step or a
-sharper "Done when" line to the skill. Then reset the clone, commit the
-revised skill and rerun in a new session, as in the last section.
+<Exercise stretch="Demandez à un collègue de lancer votre skill révisée dans son propre clone propre, sur sa propre machine, sans votre aide. Ajoutez une ligne pour chaque question que son agent a posée.">
+Si vous avez suivi la démonstration, vos exécutions dans `~/notes-clean` sont
+l’exercice, et vous pouvez passer au résultat ci-dessous. Sinon, créez un clone
+propre avec les commandes de la première section. Elles suppriment et recréent
+`~/notes-clean`, et le clone contient la skill de publication de la leçon sur
+l’écriture de votre première skill. La skill modifie `notes.py` et
+`CHANGELOG.md`, committe et étiquette, donc lancez-la seulement dans cette copie,
+qui n’a aucun dépôt distant vers lequel pousser. Dans une nouvelle session,
+tapez `/release 0.4.0`, et notez chaque endroit de la transcription où l’agent a
+hésité, vous a demandé quelque chose ou a deviné. Pour chacun, ajoutez à la skill
+une vérification, une étape d’échec ou une ligne « Done when » plus précise.
+Remettez ensuite le clone à zéro, committez la skill révisée et relancez-la dans
+une nouvelle session, comme dans la dernière section.
 
-A good result: your list has at least two places, each with the line
-that answers it. The rerun stops at the missing tag instead of guessing,
-and after you tag `v0.3.0` and make one change, it finishes with one
-changelog bullet and `git describe --tags` printing `v0.4.0`. Which of
-your hesitations came from something you knew and never wrote down?
+Un bon résultat : votre liste compte au moins deux endroits, chacun avec la ligne
+qui y répond. La nouvelle exécution s’arrête sur l’étiquette manquante sans
+deviner, et après que vous avez étiqueté `v0.3.0` et fait une modification, elle
+se termine avec une puce dans le journal et `git describe --tags` qui affiche
+`v0.4.0`. Laquelle de vos hésitations venait de quelque chose que vous saviez
+sans l’avoir jamais écrit ?
 </Exercise>
 
 <Recap>
-1. Test a skill in a clean clone and a new session, with auto memory off
-   (@Claude Code memory), so the conversation you had while writing it
-   can't fill a gap for the agent (@Claude docs best-practices). Your
-   personal instructions still load, and a colleague's machine is the test
-   without them.
-2. Read the transcript for each place the agent hesitated, asked or
-   guessed. Each one is a line missing from the skill.
-3. A missing line is often a check on the environment before the steps,
-   a step that names the tool or state it needs, or a success test exact
-   enough to fail a wrong result.
-4. When a fact is missing from the repository, the right line tells the
-   agent to stop and ask. A clear stop is better than a guess that
-   passes the check.
-5. Rerun in a new session after each revision, and compare the two runs.
+1. Testez une skill dans un clone propre et une nouvelle session, avec la mémoire
+   automatique désactivée (@Claude Code memory), pour que la conversation que
+   vous avez eue en l’écrivant ne puisse pas combler un manque pour l’agent
+   (@Claude docs best-practices). Vos instructions personnelles se chargent
+   quand même, et la machine d’un collègue est le test qui s’en passe.
+2. Lisez dans la transcription chaque endroit où l’agent a hésité, demandé ou
+   deviné. Chacun est une ligne qui manque à la skill.
+3. Une ligne manquante est souvent une vérification de l’environnement avant les
+   étapes, une étape qui nomme l’outil ou l’état dont elle a besoin, ou un test
+   de réussite assez exact pour faire échouer un mauvais résultat.
+4. Quand un fait manque au dépôt, la bonne ligne dit à l’agent de s’arrêter et
+   de demander. Un arrêt clair vaut mieux qu’une supposition qui passe le
+   contrôle.
+5. Relancez dans une nouvelle session après chaque révision, et comparez les deux
+   exécutions.
 </Recap>
 
 <Habit id="rerun-before-sharing">
-The next time you write or change a skill, run it once in a new session on
-a clean copy before you share it, and read where the agent hesitated.
+La prochaine fois que vous écrivez ou modifiez une skill, lancez-la une fois dans
+une nouvelle session sur une copie propre avant de la partager, et lisez où
+l’agent a hésité.
 </Habit>
