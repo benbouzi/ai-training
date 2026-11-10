@@ -16,7 +16,7 @@ assumes:
     section: lancrage-et-ce-quil-ne-corrige-pas
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
-    section: what-belongs-in-it
+    section: ce-qui-a-sa-place-dedans
 sources-checked: 2026-09-25
 review-by: 2027-03-25
 extends-to:

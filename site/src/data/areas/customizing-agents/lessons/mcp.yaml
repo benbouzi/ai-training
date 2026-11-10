@@ -13,7 +13,7 @@ introduces: [server, client, transport, mcp-primitives, mcp-vs-cli, tool-cost, m
 assumes:
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
-    section: when-instructions-arent-enough
+    section: quand-les-instructions-ne-suffisent-pas
 extends-to:
   - label: Hooks et permissions
     href: /customizing-agents/hooks-permissions/

@@ -13,7 +13,7 @@ assumes:
     section: un-modèle-dans-une-boucle-avec-deux-outils
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
-    section: what-belongs-in-it
+    section: ce-qui-a-sa-place-dedans
 after: [customizing-agents/instructions]
 shorts:
   - >-

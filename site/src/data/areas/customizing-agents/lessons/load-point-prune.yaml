@@ -12,7 +12,7 @@ introduces: [loading-versus-pointing, pruning-instructions]
 assumes:
   - objective: customizing-agents/configures-agent/writes-project-instructions
     lesson: customizing-agents/instructions
-    section: what-doesnt-belong
+    section: ce-qui-na-pas-sa-place-dedans
 extends-to:
   - label: Les règles limitées à certains chemins dans Claude Code
     href: https://code.claude.com/docs/en/memory#path-specific-rules
