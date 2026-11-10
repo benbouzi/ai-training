@@ -12,7 +12,7 @@ introduces: [published-skill-sets]
 assumes:
   - objective: customizing-agents/writes-skill/evaluates-a-plugin
     lesson: customizing-agents/plugins
-    section: install-it-copy-one-skill-or-leave-it
+    section: linstaller-en-copier-une-skill-ou-y-renoncer
   - objective: customizing-agents/writes-skill/discloses-progressively
     lesson: customizing-agents/progressive-disclosure
     section: ce-que-lit-lagent-et-quand
