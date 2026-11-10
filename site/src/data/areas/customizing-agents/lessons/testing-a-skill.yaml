@@ -11,7 +11,7 @@ introduces: []
 assumes:
   - objective: coding-with-agents/ships-with-agent/runs-a-session
     lesson: coding-with-agents/first-session
-    section: sessions-and-context
+    section: les-sessions-et-le-contexte
   - objective: customizing-agents/writes-skill/packages-a-procedure
     lesson: customizing-agents/first-skill
     section: pass-three-when-a-step-fails

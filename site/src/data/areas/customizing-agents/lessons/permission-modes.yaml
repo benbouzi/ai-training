@@ -13,7 +13,7 @@ assumes:
     section: le-rayon-dimpact
   - objective: coding-with-agents/ships-with-agent/runs-a-session
     lesson: coding-with-agents/first-session
-    section: the-first-change-and-the-permissions-prompt
+    section: la-première-modification-et-la-demande-dautorisation
 sources-checked: 2026-09-21
 review-by: 2027-03-21
 after: [customizing-agents/instructions]

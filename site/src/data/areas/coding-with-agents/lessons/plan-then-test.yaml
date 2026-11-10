@@ -11,7 +11,7 @@ introduces: [plan-mode, test-driven-change]
 assumes:
   - objective: coding-with-agents/ships-with-agent/gives-the-right-context
     lesson: coding-with-agents/first-session
-    section: give-the-right-context
+    section: donner-le-bon-contexte
 sources-checked: 2026-09-23
 review-by: 2027-03-23
 extends-to:

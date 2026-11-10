@@ -11,7 +11,7 @@ introduces: [skill-spec, writing-a-good-skill]
 assumes:
   - objective: coding-with-agents/ships-with-agent/runs-a-session
     lesson: coding-with-agents/first-session
-    section: start-the-agent-and-ask-it-to-explain
+    section: lancer-lagent-et-lui-demander-dexpliquer
 sources-checked: 2026-09-24
 review-by: 2027-03-24
 extends-to:

@@ -11,7 +11,7 @@ introduces: [dependency-hygiene, supply-chain-risk]
 assumes:
   - objective: coding-with-agents/ships-with-agent/runs-a-session
     lesson: coding-with-agents/first-session
-    section: review-the-diff
+    section: relire-le-diff
   - objective: safety/judges-agent-risk/names-blast-radius
     lesson: safety/agent-risk
     section: le-rayon-dimpact
